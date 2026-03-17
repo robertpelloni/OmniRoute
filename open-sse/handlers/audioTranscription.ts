@@ -13,7 +13,11 @@ import { getCorsOrigin } from "../utils/cors.ts";
  * - HuggingFace Inference: POST raw binary to /models/{model_id}
  */
 
-import { getTranscriptionProvider, parseTranscriptionModel } from "../config/audioRegistry.ts";
+import {
+  getTranscriptionProvider,
+  parseTranscriptionModel,
+  type AudioProvider,
+} from "../config/audioRegistry.ts";
 import { buildAuthHeaders } from "../config/registryUtils.ts";
 import { errorResponse } from "../utils/error.ts";
 
@@ -26,13 +30,28 @@ type TranscriptionCredentials = {
  * Return a CORS error response from an upstream fetch failure
  */
 function upstreamErrorResponse(res, errText) {
-  return new Response(errText, {
-    status: res.status,
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": getCorsOrigin(),
-    },
-  });
+  // Always return JSON so the client can parse the error reliably
+  let errorMessage: string;
+  try {
+    const parsed = JSON.parse(errText);
+    errorMessage =
+      parsed?.err_msg ||
+      parsed?.error?.message ||
+      parsed?.error ||
+      parsed?.message ||
+      parsed?.detail ||
+      errText;
+  } catch {
+    errorMessage = errText || `Upstream error (${res.status})`;
+  }
+
+  return Response.json(
+    { error: { message: errorMessage, code: res.status } },
+    {
+      status: res.status,
+      headers: { "Access-Control-Allow-Origin": getCorsOrigin() },
+    }
+  );
 }
 
 /**
@@ -71,9 +90,14 @@ async function handleDeepgramTranscription(providerConfig, file, modelId, token)
 
   const data = await res.json();
   // Transform Deepgram response to OpenAI Whisper format
-  const text = data.results?.channels?.[0]?.alternatives?.[0]?.transcript || "";
+  const text = data.results?.channels?.[0]?.alternatives?.[0]?.transcript ?? null;
 
-  return Response.json({ text }, { headers: { "Access-Control-Allow-Origin": getCorsOrigin() } });
+  // null means the audio had no recognizable speech (music, silence, etc.)
+  // Return it explicitly so the client can distinguish from a credentials error
+  return Response.json(
+    { text: text ?? "", noSpeechDetected: text === null || text === "" },
+    { headers: { "Access-Control-Allow-Origin": getCorsOrigin() } }
+  );
 }
 
 /**
@@ -215,9 +239,13 @@ async function handleHuggingFaceTranscription(providerConfig, file, modelId, tok
 export async function handleAudioTranscription({
   formData,
   credentials,
+  resolvedProvider = null,
+  resolvedModel = null,
 }: {
   formData: FormData;
   credentials?: TranscriptionCredentials | null;
+  resolvedProvider?: AudioProvider | null;
+  resolvedModel?: string | null;
 }): Promise<Response> {
   const model = formData.get("model");
   if (typeof model !== "string" || !model) {
@@ -230,8 +258,14 @@ export async function handleAudioTranscription({
   }
   const file = fileEntry as Blob & { name?: unknown };
 
-  const { provider: providerId, model: modelId } = parseTranscriptionModel(model);
-  const providerConfig = providerId ? getTranscriptionProvider(providerId) : null;
+  // Use pre-resolved provider/model from route handler if available (supports dynamic provider_nodes).
+  let providerConfig = resolvedProvider;
+  let modelId = resolvedModel;
+  if (!providerConfig) {
+    const parsed = parseTranscriptionModel(model);
+    providerConfig = parsed.provider ? getTranscriptionProvider(parsed.provider) : null;
+    modelId = parsed.model;
+  }
 
   if (!providerConfig) {
     return errorResponse(
@@ -244,7 +278,7 @@ export async function handleAudioTranscription({
   const token =
     providerConfig.authType === "none" ? null : credentials?.apiKey || credentials?.accessToken;
   if (providerConfig.authType !== "none" && !token) {
-    return errorResponse(401, `No credentials for transcription provider: ${providerId}`);
+    return errorResponse(401, `No credentials for transcription provider: ${providerConfig.id}`);
   }
 
   // Route to provider-specific handler

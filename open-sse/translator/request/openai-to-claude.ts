@@ -24,6 +24,7 @@ type ClaudeTool = {
   description: string;
   input_schema: Record<string, unknown>;
   cache_control?: { type: string; ttl?: string };
+  defer_loading?: boolean;
 };
 
 // Convert OpenAI request to Claude format
@@ -122,6 +123,43 @@ export function openaiToClaudeRequest(model, body, stream) {
 
     flushCurrentMessage();
 
+    // Remove assistant messages with empty content (can happen when all tool_use blocks were skipped)
+    result.messages = result.messages.filter((msg) => {
+      if (msg.role === "assistant" && Array.isArray(msg.content) && msg.content.length === 0) {
+        return false;
+      }
+      return true;
+    });
+
+    // Filter orphaned tool_result blocks whose tool_use_id has no matching tool_use
+    const allToolUseIds = new Set<string>();
+    for (const msg of result.messages) {
+      if (msg.role === "assistant" && Array.isArray(msg.content)) {
+        for (const block of msg.content) {
+          if (block.type === "tool_use" && block.id) {
+            allToolUseIds.add(String(block.id));
+          }
+        }
+      }
+    }
+    for (const msg of result.messages) {
+      if (msg.role === "user" && Array.isArray(msg.content)) {
+        msg.content = msg.content.filter((block) => {
+          if (block.type === "tool_result" && block.tool_use_id) {
+            return allToolUseIds.has(String(block.tool_use_id));
+          }
+          return true;
+        });
+      }
+    }
+    // Remove user messages that became empty after orphan filtering
+    result.messages = result.messages.filter((msg) => {
+      if (msg.role === "user" && Array.isArray(msg.content) && msg.content.length === 0) {
+        return false;
+      }
+      return true;
+    });
+
     // Add cache_control to last assistant message
     for (let i = result.messages.length - 1; i >= 0; i--) {
       const message = result.messages[i];
@@ -191,6 +229,23 @@ export function openaiToClaudeRequest(model, body, stream) {
   // Tool choice
   if (body.tool_choice) {
     result.tool_choice = convertOpenAIToolChoice(body.tool_choice);
+  }
+
+  // response_format: inject JSON structured output instruction into system prompt.
+  // Claude doesn't natively support response_format, so we insert a system-level instruction.
+  // NOTE: systemParts are consumed later (after this block) — they're accumulated here.
+  if (body.response_format) {
+    const fmt = body.response_format;
+    if (fmt.type === "json_schema" && fmt.json_schema?.schema) {
+      const schemaJson = JSON.stringify(fmt.json_schema.schema, null, 2);
+      systemParts.push(
+        `You must respond with valid JSON that strictly follows this JSON schema:\n\`\`\`json\n${schemaJson}\n\`\`\`\nRespond ONLY with the JSON object, no other text.`
+      );
+    } else if (fmt.type === "json_object") {
+      systemParts.push(
+        "You must respond with valid JSON. Respond ONLY with a JSON object, no other text."
+      );
+    }
   }
 
   // Thinking configuration

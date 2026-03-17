@@ -8,6 +8,16 @@ _Din universelle API-proxy — ét slutpunkt, 36+ udbydere, ingen nedetid. Nu me
 
 ---
 
+### 🆕 What's New in v2.7.0
+
+- **Pluggable RouterStrategy** — rules, cost, and latency routing strategies
+- **Multilingual intent detection** — routing scoring in 30+ languages
+- **Request deduplication** — prevent duplicate API calls via content hash
+- **New providers:** Grok-4 Fast (xAI), GLM-5 / Z.AI, MiniMax M2.5, Kimi K2.5
+- **Updated pricing:** Grok-4 Fast $0.20/$0.50/M, GLM-5 $0.50/M, MiniMax M2.5 $0.30/M
+
+---
+
 <div align="center">
 
 [![npm version](https://img.shields.io/npm/v/omniroute?color=cb3837&logo=npm)](https://www.npmjs.com/package/omniroute)
@@ -1660,15 +1670,9 @@ gh release create v2.0.0 --title "v2.0.0" --generate-notes
 
 ## 📊 Stjernehistorie
 
-<a href="https://star-history.com/#diegosouzapw/OmniRoute&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=diegosouzapw/OmniRoute&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=diegosouzapw/OmniRoute&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=diegosouzapw/OmniRoute&type=Date" />
- </picture>
-</a>
+## Stargazers over time
 
----
+## [![Stargazers over time](https://starchart.cc/diegosouzapw/OmniRoute.svg?variant=adaptive)](https://starchart.cc/diegosouzapw/OmniRoute)
 
 ## 🙏 Tak
 

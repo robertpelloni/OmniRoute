@@ -32,6 +32,17 @@ import {
 import { getModelsByProviderId } from "@/shared/constants/models";
 import { useCopyToClipboard } from "@/shared/hooks/useCopyToClipboard";
 
+function normalizeCodexLimitPolicy(policy: unknown): { use5h: boolean; useWeekly: boolean } {
+  const record =
+    policy && typeof policy === "object" && !Array.isArray(policy)
+      ? (policy as Record<string, unknown>)
+      : {};
+  return {
+    use5h: typeof record.use5h === "boolean" ? record.use5h : true,
+    useWeekly: typeof record.useWeekly === "boolean" ? record.useWeekly : true,
+  };
+}
+
 export default function ProviderDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -49,6 +60,7 @@ export default function ProviderDetailPage() {
   const [headerImgError, setHeaderImgError] = useState(false);
   const { copied, copy } = useCopyToClipboard();
   const t = useTranslations("providers");
+  const notify = useNotificationStore();
   const hasAutoOpened = useRef(false);
   const userDismissed = useRef(false);
   const [proxyTarget, setProxyTarget] = useState(null);
@@ -89,6 +101,7 @@ export default function ProviderDetailPage() {
   const isOpenAICompatible = isOpenAICompatibleProvider(providerId);
   const isAnthropicCompatible = isAnthropicCompatibleProvider(providerId);
   const isCompatible = isOpenAICompatible || isAnthropicCompatible;
+  const isSearchProvider = providerId.endsWith("-search");
 
   const providerStorageAlias = isCompatible ? providerId : providerAlias;
   const providerDisplayAlias = isCompatible ? providerNode?.prefix || providerId : providerAlias;
@@ -311,6 +324,63 @@ export default function ProviderDetailPage() {
     }
   };
 
+  const handleToggleCodexLimit = async (connectionId, field, enabled) => {
+    try {
+      const target = connections.find((connection) => connection.id === connectionId);
+      if (!target) return;
+
+      const providerSpecificData =
+        target.providerSpecificData && typeof target.providerSpecificData === "object"
+          ? target.providerSpecificData
+          : {};
+      const existingPolicy =
+        providerSpecificData.codexLimitPolicy &&
+        typeof providerSpecificData.codexLimitPolicy === "object"
+          ? providerSpecificData.codexLimitPolicy
+          : {};
+
+      const nextPolicy = {
+        ...normalizeCodexLimitPolicy(existingPolicy),
+        [field]: enabled,
+      };
+
+      const res = await fetch(`/api/providers/${connectionId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          providerSpecificData: {
+            ...providerSpecificData,
+            codexLimitPolicy: nextPolicy,
+          },
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        notify.error(data.error || "Failed to update Codex limit policy");
+        return;
+      }
+
+      setConnections((prev) =>
+        prev.map((connection) =>
+          connection.id === connectionId
+            ? {
+                ...connection,
+                providerSpecificData: {
+                  ...(connection.providerSpecificData || {}),
+                  codexLimitPolicy: nextPolicy,
+                },
+              }
+            : connection
+        )
+      );
+      notify.success("Codex limit policy updated");
+    } catch (error) {
+      console.error("Error toggling Codex quota policy:", error);
+      notify.error("Failed to update Codex limit policy");
+    }
+  };
+
   const handleRetestConnection = async (connectionId) => {
     if (!connectionId || retestingId) return;
     setRetestingId(connectionId);
@@ -326,6 +396,28 @@ export default function ProviderDetailPage() {
       console.error("Error retesting connection:", error);
     } finally {
       setRetestingId(null);
+    }
+  };
+
+  // T12: Manual token refresh
+  const [refreshingId, setRefreshingId] = useState<string | null>(null);
+  const handleRefreshToken = async (connectionId: string) => {
+    if (refreshingId) return;
+    setRefreshingId(connectionId);
+    try {
+      const res = await fetch(`/api/providers/${connectionId}/refresh`, { method: "POST" });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success) {
+        notify.success(t("tokenRefreshed"));
+        await fetchConnections();
+      } else {
+        notify.error(data.error || t("tokenRefreshFailed"));
+      }
+    } catch (error) {
+      console.error("Error refreshing token:", error);
+      notify.error(t("tokenRefreshFailed"));
+    } finally {
+      setRefreshingId(null);
     }
   };
 
@@ -918,6 +1010,11 @@ export default function ProviderDetailPage() {
                   onMoveDown={() => handleSwapPriority(conn, connections[index + 1])}
                   onToggleActive={(isActive) => handleUpdateConnectionStatus(conn.id, isActive)}
                   onToggleRateLimit={(enabled) => handleToggleRateLimit(conn.id, enabled)}
+                  isCodex={providerId === "codex"}
+                  onToggleCodex5h={(enabled) => handleToggleCodexLimit(conn.id, "use5h", enabled)}
+                  onToggleCodexWeekly={(enabled) =>
+                    handleToggleCodexLimit(conn.id, "useWeekly", enabled)
+                  }
                   onRetest={() => handleRetestConnection(conn.id)}
                   isRetesting={retestingId === conn.id}
                   onEdit={() => {
@@ -926,6 +1023,8 @@ export default function ProviderDetailPage() {
                   }}
                   onDelete={() => handleDelete(conn.id)}
                   onReauth={isOAuth ? () => setShowOAuthModal(true) : undefined}
+                  onRefreshToken={isOAuth ? () => handleRefreshToken(conn.id) : undefined}
+                  isRefreshing={refreshingId === conn.id}
                   onProxy={() =>
                     setProxyTarget({
                       level: "key",
@@ -962,21 +1061,43 @@ export default function ProviderDetailPage() {
         )}
       </Card>
 
-      {/* Models */}
-      <Card>
-        <h2 className="text-lg font-semibold mb-4">{t("availableModels")}</h2>
-        {renderModelsSection()}
+      {/* Models — hidden for search providers (they don't have models) */}
+      {!isSearchProvider && (
+        <Card>
+          <h2 className="text-lg font-semibold mb-4">{t("availableModels")}</h2>
+          {renderModelsSection()}
 
-        {/* Custom Models — available for ALL providers */}
-        {!isCompatible && (
-          <CustomModelsSection
-            providerId={providerId}
-            providerAlias={providerDisplayAlias}
-            copied={copied}
-            onCopy={copy}
-          />
-        )}
-      </Card>
+          {/* Custom Models — available for non-compatible, non-search providers */}
+          {!isCompatible && (
+            <CustomModelsSection
+              providerId={providerId}
+              providerAlias={providerDisplayAlias}
+              copied={copied}
+              onCopy={copy}
+            />
+          )}
+        </Card>
+      )}
+
+      {/* Search provider info */}
+      {isSearchProvider && (
+        <Card>
+          <h2 className="text-lg font-semibold mb-4">{t("searchProvider") || "Search Provider"}</h2>
+          <p className="text-sm text-text-muted">
+            {t("searchProviderDesc") ||
+              "This provider is used for web search via POST /v1/search. No model configuration needed — search providers are ready to use once an API key is connected."}
+          </p>
+          {providerId === "perplexity-search" && (
+            <div className="mt-3 flex items-center gap-2 px-3 py-2 rounded-lg bg-blue-500/10 border border-blue-500/20">
+              <span className="material-symbols-outlined text-sm text-blue-400">link</span>
+              <p className="text-xs text-blue-300">
+                Uses the same API key as <strong>Perplexity</strong> (chat provider). If you already
+                have Perplexity configured, no additional setup is needed.
+              </p>
+            </div>
+          )}
+        </Card>
+      )}
 
       {/* Modals */}
       {providerId === "kiro" ? (
@@ -1631,16 +1752,23 @@ function CustomModelsSection({ providerId, providerAlias, copied, onCopy }) {
                         </div>
 
                         <div className="flex-1 min-w-[240px]">
-                          <span className="text-xs text-text-muted mb-1 block">Supported Endpoints</span>
+                          <span className="text-xs text-text-muted mb-1 block">
+                            Supported Endpoints
+                          </span>
                           <div className="flex items-center gap-3 flex-wrap">
                             {["chat", "embeddings", "images", "audio"].map((ep) => (
-                              <label key={ep} className="flex items-center gap-1.5 text-xs text-text-main cursor-pointer">
+                              <label
+                                key={ep}
+                                className="flex items-center gap-1.5 text-xs text-text-main cursor-pointer"
+                              >
                                 <input
                                   type="checkbox"
                                   checked={editingEndpoints.includes(ep)}
                                   onChange={(e) => {
                                     if (e.target.checked) {
-                                      setEditingEndpoints((prev) => (prev.includes(ep) ? prev : [...prev, ep]));
+                                      setEditingEndpoints((prev) =>
+                                        prev.includes(ep) ? prev : [...prev, ep]
+                                      );
                                     } else {
                                       setEditingEndpoints((prev) => prev.filter((x) => x !== ep));
                                     }
@@ -2143,12 +2271,15 @@ function getStatusPresentation(connection, effectiveStatus, isCooldown, t) {
 function ConnectionRow({
   connection,
   isOAuth,
+  isCodex,
   isFirst,
   isLast,
   onMoveUp,
   onMoveDown,
   onToggleActive,
   onToggleRateLimit,
+  onToggleCodex5h,
+  onToggleCodexWeekly,
   onRetest,
   isRetesting,
   onEdit,
@@ -2158,6 +2289,8 @@ function ConnectionRow({
   hasProxy,
   proxySource,
   proxyHost,
+  onRefreshToken,
+  isRefreshing,
 }) {
   const t = useTranslations("providers");
   const displayName = isOAuth
@@ -2166,6 +2299,24 @@ function ConnectionRow({
 
   // Use useState + useEffect for impure Date.now() to avoid calling during render
   const [isCooldown, setIsCooldown] = useState(false);
+  // T12: token expiry status — lazy init avoids calling Date.now() during render;
+  // updates every 30s via interval only (no sync setState in effect body).
+  const getTokenMinsLeft = () => {
+    if (!isOAuth || !connection.expiresAt) return null;
+    const expiresMs = new Date(connection.expiresAt).getTime();
+    return Math.floor((expiresMs - Date.now()) / 60000);
+  };
+  const [tokenMinsLeft, setTokenMinsLeft] = useState<number | null>(getTokenMinsLeft);
+
+  useEffect(() => {
+    if (!isOAuth || !connection.expiresAt) return;
+    const update = () => {
+      const expiresMs = new Date(connection.expiresAt).getTime();
+      setTokenMinsLeft(Math.floor((expiresMs - Date.now()) / 60000));
+    };
+    const iv = setInterval(update, 30000);
+    return () => clearInterval(iv);
+  }, [isOAuth, connection.expiresAt]);
 
   useEffect(() => {
     const checkCooldown = () => {
@@ -2190,6 +2341,16 @@ function ConnectionRow({
 
   const statusPresentation = getStatusPresentation(connection, effectiveStatus, isCooldown, t);
   const rateLimitEnabled = !!connection.rateLimitProtection;
+  const codexPolicy =
+    connection.providerSpecificData &&
+    typeof connection.providerSpecificData === "object" &&
+    connection.providerSpecificData.codexLimitPolicy &&
+    typeof connection.providerSpecificData.codexLimitPolicy === "object"
+      ? connection.providerSpecificData.codexLimitPolicy
+      : {};
+  const normalizedCodexPolicy = normalizeCodexLimitPolicy(codexPolicy);
+  const codex5hEnabled = normalizedCodexPolicy.use5h;
+  const codexWeeklyEnabled = normalizedCodexPolicy.useWeekly;
 
   return (
     <div
@@ -2222,6 +2383,25 @@ function ConnectionRow({
             <Badge variant={statusPresentation.statusVariant as any} size="sm" dot>
               {statusPresentation.statusLabel}
             </Badge>
+            {/* T12: Token expiry status indicator (state-driven, no Date.now in render) */}
+            {tokenMinsLeft !== null &&
+              (tokenMinsLeft < 0 ? (
+                <span
+                  className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-xs font-medium bg-red-500/15 text-red-500"
+                  title={`Token expired: ${connection.expiresAt}`}
+                >
+                  <span className="material-symbols-outlined text-[11px]">error</span>
+                  expired
+                </span>
+              ) : tokenMinsLeft < 30 ? (
+                <span
+                  className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-xs font-medium bg-amber-500/15 text-amber-500"
+                  title={`Token expires in ${tokenMinsLeft}m`}
+                >
+                  <span className="material-symbols-outlined text-[11px]">warning</span>
+                  {`~${tokenMinsLeft}m`}
+                </span>
+              ) : null)}
             {isCooldown && connection.isActive !== false && (
               <CooldownTimer until={connection.rateLimitedUntil} />
             )}
@@ -2260,6 +2440,35 @@ function ConnectionRow({
               <span className="material-symbols-outlined text-[13px]">shield</span>
               {rateLimitEnabled ? t("rateLimitProtected") : t("rateLimitUnprotected")}
             </button>
+            {isCodex && (
+              <>
+                <span className="text-text-muted/30 select-none">|</span>
+                <button
+                  onClick={() => onToggleCodex5h?.(!codex5hEnabled)}
+                  className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs font-medium transition-all cursor-pointer ${
+                    codex5hEnabled
+                      ? "bg-blue-500/15 text-blue-500 hover:bg-blue-500/25"
+                      : "bg-black/[0.03] dark:bg-white/[0.03] text-text-muted/50 hover:text-text-muted hover:bg-black/[0.06] dark:hover:bg-white/[0.06]"
+                  }`}
+                  title="Toggle Codex 5h limit policy"
+                >
+                  <span className="material-symbols-outlined text-[13px]">timer</span>
+                  5h {codex5hEnabled ? "ON" : "OFF"}
+                </button>
+                <button
+                  onClick={() => onToggleCodexWeekly?.(!codexWeeklyEnabled)}
+                  className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs font-medium transition-all cursor-pointer ${
+                    codexWeeklyEnabled
+                      ? "bg-violet-500/15 text-violet-500 hover:bg-violet-500/25"
+                      : "bg-black/[0.03] dark:bg-white/[0.03] text-text-muted/50 hover:text-text-muted hover:bg-black/[0.06] dark:hover:bg-white/[0.06]"
+                  }`}
+                  title="Toggle Codex weekly limit policy"
+                >
+                  <span className="material-symbols-outlined text-[13px]">date_range</span>
+                  Weekly {codexWeeklyEnabled ? "ON" : "OFF"}
+                </button>
+              </>
+            )}
             {hasProxy &&
               (() => {
                 const colorClass =
@@ -2306,13 +2515,28 @@ function ConnectionRow({
         >
           {t("retest")}
         </Button>
+        {/* T12: Manual token refresh for OAuth accounts */}
+        {onRefreshToken && (
+          <Button
+            size="sm"
+            variant="ghost"
+            icon="token"
+            loading={isRefreshing}
+            disabled={connection.isActive === false || isRefreshing}
+            onClick={onRefreshToken}
+            className="!h-7 !px-2 text-xs text-amber-500 hover:text-amber-400"
+            title="Refresh OAuth token manually"
+          >
+            Token
+          </Button>
+        )}
         <Toggle
           size="sm"
           checked={connection.isActive ?? true}
           onChange={onToggleActive}
           title={(connection.isActive ?? true) ? t("disableConnection") : t("enableConnection")}
         />
-        <div className="flex gap-1 ml-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="flex gap-1 ml-1 transition-opacity">
           {onReauth && (
             <button
               onClick={onReauth}
@@ -2325,6 +2549,7 @@ function ConnectionRow({
           <button
             onClick={onEdit}
             className="p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded text-text-muted hover:text-primary"
+            title={t("edit")}
           >
             <span className="material-symbols-outlined text-[18px]">edit</span>
           </button>
@@ -2335,7 +2560,11 @@ function ConnectionRow({
           >
             <span className="material-symbols-outlined text-[18px]">vpn_lock</span>
           </button>
-          <button onClick={onDelete} className="p-2 hover:bg-red-500/10 rounded text-red-500">
+          <button
+            onClick={onDelete}
+            className="p-2 hover:bg-red-500/10 rounded text-red-500"
+            title={t("delete")}
+          >
             <span className="material-symbols-outlined text-[18px]">delete</span>
           </button>
         </div>
@@ -2360,14 +2589,18 @@ ConnectionRow.propTypes = {
     lastErrorSource: PropTypes.string,
     errorCode: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     globalPriority: PropTypes.number,
+    providerSpecificData: PropTypes.object,
   }).isRequired,
   isOAuth: PropTypes.bool.isRequired,
+  isCodex: PropTypes.bool,
   isFirst: PropTypes.bool.isRequired,
   isLast: PropTypes.bool.isRequired,
   onMoveUp: PropTypes.func.isRequired,
   onMoveDown: PropTypes.func.isRequired,
   onToggleActive: PropTypes.func.isRequired,
   onToggleRateLimit: PropTypes.func.isRequired,
+  onToggleCodex5h: PropTypes.func,
+  onToggleCodexWeekly: PropTypes.func,
   onRetest: PropTypes.func.isRequired,
   isRetesting: PropTypes.bool,
   onEdit: PropTypes.func.isRequired,
@@ -2558,6 +2791,8 @@ function EditConnectionModal({ isOpen, connection, onSave, onClose }) {
   const [validating, setValidating] = useState(false);
   const [validationResult, setValidationResult] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [extraApiKeys, setExtraApiKeys] = useState<string[]>([]);
+  const [newExtraKey, setNewExtraKey] = useState("");
 
   useEffect(() => {
     if (connection) {
@@ -2567,6 +2802,10 @@ function EditConnectionModal({ isOpen, connection, onSave, onClose }) {
         apiKey: "",
         healthCheckInterval: connection.healthCheckInterval ?? 60,
       });
+      // Load existing extra keys from providerSpecificData
+      const existing = connection.providerSpecificData?.extraApiKeys;
+      setExtraApiKeys(Array.isArray(existing) ? existing : []);
+      setNewExtraKey("");
       setTestResult(null);
       setValidationResult(null);
     }
@@ -2653,6 +2892,13 @@ function EditConnectionModal({ isOpen, connection, onSave, onClose }) {
           updates.rateLimitedUntil = null;
         }
       }
+      // Persist extra API keys in providerSpecificData
+      if (!isOAuth) {
+        updates.providerSpecificData = {
+          ...(connection.providerSpecificData || {}),
+          extraApiKeys: extraApiKeys.filter((k) => k.trim().length > 0),
+        };
+      }
       await onSave(updates);
     } finally {
       setSaving(false);
@@ -2737,6 +2983,68 @@ function EditConnectionModal({ isOpen, connection, onSave, onClose }) {
           </>
         )}
 
+        {/* T07: Extra API Keys for round-robin rotation */}
+        {!isOAuth && (
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium text-text-main">
+              Extra API Keys
+              <span className="ml-2 text-[11px] font-normal text-text-muted">
+                (round-robin rotation — optional)
+              </span>
+            </label>
+            {extraApiKeys.length > 0 && (
+              <div className="flex flex-col gap-1.5">
+                {extraApiKeys.map((key, idx) => (
+                  <div key={idx} className="flex items-center gap-2">
+                    <span className="flex-1 font-mono text-xs bg-sidebar/50 px-3 py-2 rounded border border-border text-text-muted truncate">
+                      {`Key #${idx + 2}: ${key.slice(0, 6)}...${key.slice(-4)}`}
+                    </span>
+                    <button
+                      onClick={() => setExtraApiKeys(extraApiKeys.filter((_, i) => i !== idx))}
+                      className="p-1.5 rounded hover:bg-red-500/10 text-red-400 hover:text-red-500"
+                      title="Remove this key"
+                    >
+                      <span className="material-symbols-outlined text-[16px]">close</span>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+            <div className="flex gap-2">
+              <input
+                type="password"
+                value={newExtraKey}
+                onChange={(e) => setNewExtraKey(e.target.value)}
+                placeholder="Add another API key..."
+                className="flex-1 text-sm bg-sidebar/50 border border-border rounded px-3 py-2 text-text-main placeholder:text-text-muted focus:ring-1 focus:ring-primary outline-none"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && newExtraKey.trim()) {
+                    setExtraApiKeys([...extraApiKeys, newExtraKey.trim()]);
+                    setNewExtraKey("");
+                  }
+                }}
+              />
+              <button
+                onClick={() => {
+                  if (newExtraKey.trim()) {
+                    setExtraApiKeys([...extraApiKeys, newExtraKey.trim()]);
+                    setNewExtraKey("");
+                  }
+                }}
+                disabled={!newExtraKey.trim()}
+                className="px-3 py-2 rounded bg-primary/10 text-primary hover:bg-primary/20 disabled:opacity-40 text-sm font-medium"
+              >
+                Add
+              </button>
+            </div>
+            {extraApiKeys.length > 0 && (
+              <p className="text-[11px] text-text-muted">
+                {extraApiKeys.length + 1} keys total — rotating round-robin on each request.
+              </p>
+            )}
+          </div>
+        )}
+
         {/* Test Connection */}
         {!isCompatible && (
           <div className="flex items-center gap-3">
@@ -2790,11 +3098,14 @@ function EditCompatibleNodeModal({ isOpen, node, onSave, onClose, isAnthropic })
     prefix: "",
     apiType: "chat",
     baseUrl: "https://api.openai.com/v1",
+    chatPath: "",
+    modelsPath: "",
   });
   const [saving, setSaving] = useState(false);
   const [checkKey, setCheckKey] = useState("");
   const [validating, setValidating] = useState(false);
   const [validationResult, setValidationResult] = useState(null);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   useEffect(() => {
     if (node) {
@@ -2805,7 +3116,10 @@ function EditCompatibleNodeModal({ isOpen, node, onSave, onClose, isAnthropic })
         baseUrl:
           node.baseUrl ||
           (isAnthropic ? "https://api.anthropic.com/v1" : "https://api.openai.com/v1"),
+        chatPath: node.chatPath || "",
+        modelsPath: node.modelsPath || "",
       });
+      setShowAdvanced(!!(node.chatPath || node.modelsPath));
     }
   }, [node, isAnthropic]);
 
@@ -2822,6 +3136,8 @@ function EditCompatibleNodeModal({ isOpen, node, onSave, onClose, isAnthropic })
         name: formData.name,
         prefix: formData.prefix,
         baseUrl: formData.baseUrl,
+        chatPath: formData.chatPath || "",
+        modelsPath: formData.modelsPath || "",
       };
       if (!isAnthropic) {
         payload.apiType = formData.apiType;
@@ -2842,6 +3158,7 @@ function EditCompatibleNodeModal({ isOpen, node, onSave, onClose, isAnthropic })
           baseUrl: formData.baseUrl,
           apiKey: checkKey,
           type: isAnthropic ? "anthropic-compatible" : "openai-compatible",
+          modelsPath: formData.modelsPath || "",
         }),
       });
       const data = await res.json();
@@ -2897,6 +3214,39 @@ function EditCompatibleNodeModal({ isOpen, node, onSave, onClose, isAnthropic })
             type: isAnthropic ? t("anthropic") : t("openai"),
           })}
         />
+        <button
+          type="button"
+          className="text-sm text-text-muted hover:text-text-primary flex items-center gap-1"
+          onClick={() => setShowAdvanced(!showAdvanced)}
+          aria-expanded={showAdvanced}
+          aria-controls="advanced-settings"
+        >
+          <span
+            className={`transition-transform ${showAdvanced ? "rotate-90" : ""}`}
+            aria-hidden="true"
+          >
+            ▶
+          </span>
+          {t("advancedSettings")}
+        </button>
+        {showAdvanced && (
+          <div id="advanced-settings" className="flex flex-col gap-3 pl-2 border-l-2 border-border">
+            <Input
+              label={t("chatPathLabel")}
+              value={formData.chatPath}
+              onChange={(e) => setFormData({ ...formData, chatPath: e.target.value })}
+              placeholder={isAnthropic ? "/messages" : t("chatPathPlaceholder")}
+              hint={t("chatPathHint")}
+            />
+            <Input
+              label={t("modelsPathLabel")}
+              value={formData.modelsPath}
+              onChange={(e) => setFormData({ ...formData, modelsPath: e.target.value })}
+              placeholder={t("modelsPathPlaceholder")}
+              hint={t("modelsPathHint")}
+            />
+          </div>
+        )}
         <div className="flex gap-2">
           <Input
             label={t("apiKeyForCheck")}
@@ -2947,6 +3297,8 @@ EditCompatibleNodeModal.propTypes = {
     prefix: PropTypes.string,
     apiType: PropTypes.string,
     baseUrl: PropTypes.string,
+    chatPath: PropTypes.string,
+    modelsPath: PropTypes.string,
   }),
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,

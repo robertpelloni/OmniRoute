@@ -51,6 +51,8 @@ const comboStrategySchema = z.enum([
   "random",
   "least-used",
   "cost-optimized",
+  "strict-random",
+  "auto",
 ]);
 
 const comboRuntimeConfigSchema = z
@@ -77,6 +79,7 @@ export const createComboSchema = z.object({
   models: z.array(comboModelEntry).optional().default([]),
   strategy: comboStrategySchema.optional().default("priority"),
   config: comboConfigSchema,
+  allowedProviders: z.array(z.string().max(200)).optional(),
 });
 
 // ──── Auto-Combo Schemas ────
@@ -89,6 +92,7 @@ const scoringWeightsSchema = z
     latencyInv: z.number().min(0).max(1),
     taskFit: z.number().min(0).max(1),
     stability: z.number().min(0).max(1),
+    tierPriority: z.number().min(0).max(1).optional().default(0.05),
   })
   .optional();
 
@@ -124,10 +128,24 @@ export const updateSettingsSchema = z.object({
   hideHealthCheckLogs: z.boolean().optional(),
   // Routing settings (#134)
   fallbackStrategy: z
-    .enum(["fill-first", "round-robin", "p2c", "random", "least-used", "cost-optimized"])
+    .enum([
+      "fill-first",
+      "round-robin",
+      "p2c",
+      "random",
+      "least-used",
+      "cost-optimized",
+      "strict-random",
+    ])
     .optional(),
   wildcardAliases: z.array(z.object({ pattern: z.string(), target: z.string() })).optional(),
   stickyRoundRobinLimit: z.number().int().min(0).max(1000).optional(),
+  // Auto intent classifier settings (multilingual routing)
+  intentDetectionEnabled: z.boolean().optional(),
+  intentSimpleMaxWords: z.number().int().min(1).max(500).optional(),
+  intentExtraCodeKeywords: z.array(z.string().max(100)).optional(),
+  intentExtraReasoningKeywords: z.array(z.string().max(100)).optional(),
+  intentExtraSimpleKeywords: z.array(z.string().max(100)).optional(),
   // Protocol toggles (default: disabled)
   mcpEnabled: z.boolean().optional(),
   a2aEnabled: z.boolean().optional(),
@@ -367,6 +385,58 @@ export const resetStatsActionSchema = z.object({
   action: z.literal("reset-stats"),
 });
 
+const pricingSyncSourceSchema = z.enum(["litellm"]);
+
+export const pricingSyncRequestSchema = z
+  .object({
+    sources: z.array(pricingSyncSourceSchema).min(1).optional(),
+    dryRun: z.boolean().optional(),
+  })
+  .strict();
+
+const taskRoutingModelMapSchema = z
+  .object({
+    coding: z.string().max(200).optional(),
+    creative: z.string().max(200).optional(),
+    analysis: z.string().max(200).optional(),
+    vision: z.string().max(200).optional(),
+    summarization: z.string().max(200).optional(),
+    background: z.string().max(200).optional(),
+    chat: z.string().max(200).optional(),
+  })
+  .strict();
+
+export const updateTaskRoutingSchema = z
+  .object({
+    enabled: z.boolean().optional(),
+    taskModelMap: taskRoutingModelMapSchema.optional(),
+    detectionEnabled: z.boolean().optional(),
+  })
+  .strict()
+  .superRefine((value, ctx) => {
+    if (
+      value.enabled === undefined &&
+      value.taskModelMap === undefined &&
+      value.detectionEnabled === undefined
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "No valid fields to update",
+        path: [],
+      });
+    }
+  });
+
+export const taskRoutingActionSchema = z.discriminatedUnion("action", [
+  resetStatsActionSchema,
+  z
+    .object({
+      action: z.literal("detect"),
+      body: jsonObjectSchema.optional(),
+    })
+    .strict(),
+]);
+
 export const updateComboDefaultsSchema = z
   .object({
     comboDefaults: comboRuntimeConfigSchema.optional(),
@@ -438,6 +508,12 @@ export const updateThinkingBudgetSchema = z
     }
   });
 
+export const updateCodexServiceTierSchema = z
+  .object({
+    enabled: z.boolean(),
+  })
+  .strict();
+
 const ipFilterModeSchema = z.enum(["blacklist", "whitelist"]);
 const tempBanSchema = z.object({
   ip: z.string().trim().min(1),
@@ -482,7 +558,7 @@ export const removeModelAliasSchema = z.object({
   from: z.string().trim().min(1),
 });
 
-const proxyConfigSchema = z
+export const proxyConfigSchema = z
   .object({
     type: z
       .preprocess(
@@ -551,6 +627,67 @@ export const testProxySchema = z.object({
     password: z.string().optional(),
   }),
 });
+
+export const createProxyRegistrySchema = z
+  .object({
+    name: z.string().trim().min(1, "name is required").max(120),
+    type: z
+      .preprocess(
+        (value) => (typeof value === "string" ? value.trim().toLowerCase() : value),
+        z.enum(["http", "https", "socks5"])
+      )
+      .optional()
+      .default("http"),
+    host: z.string().trim().min(1, "host is required").max(255),
+    port: z.coerce.number().int().min(1).max(65535),
+    username: z.string().optional(),
+    password: z.string().optional(),
+    region: z.string().trim().max(64).nullable().optional(),
+    notes: z.string().trim().max(1000).nullable().optional(),
+    status: z.enum(["active", "inactive"]).optional().default("active"),
+  })
+  .strict();
+
+export const updateProxyRegistrySchema = createProxyRegistrySchema.partial().extend({
+  id: z.string().trim().min(1, "id is required"),
+});
+
+export const proxyAssignmentSchema = z
+  .object({
+    scope: z.enum(["global", "provider", "account", "combo", "key"]),
+    scopeId: z.string().trim().nullable().optional(),
+    proxyId: z.string().trim().nullable().optional(),
+  })
+  .strict()
+  .superRefine((value, ctx) => {
+    if (value.scope !== "global" && !value.scopeId?.trim()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "scopeId is required for provider/account/combo/key scope",
+        path: ["scopeId"],
+      });
+    }
+  });
+
+export const bulkProxyAssignmentSchema = z
+  .object({
+    scope: z.enum(["global", "provider", "account", "combo", "key"]),
+    scopeIds: z.array(z.string().trim().min(1)).optional().default([]),
+    proxyId: z.string().trim().nullable().optional(),
+  })
+  .strict()
+  .superRefine((value, ctx) => {
+    if (
+      value.scope !== "global" &&
+      (!Array.isArray(value.scopeIds) || value.scopeIds.length === 0)
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "scopeIds is required for provider/account/combo/key scope",
+        path: ["scopeIds"],
+      });
+    }
+  });
 
 const jsonRecordSchema = z.record(z.string(), z.unknown());
 const nonEmptyJsonRecordSchema = jsonRecordSchema.refine(
@@ -675,6 +812,7 @@ export const updateComboSchema = z
     strategy: comboStrategySchema.optional(),
     config: comboRuntimeConfigSchema.optional(),
     isActive: z.boolean().optional(),
+    allowedProviders: z.array(z.string().max(200)).optional(),
   })
   .superRefine((value, ctx) => {
     if (
@@ -682,7 +820,8 @@ export const updateComboSchema = z
       value.models === undefined &&
       value.strategy === undefined &&
       value.config === undefined &&
-      value.isActive === undefined
+      value.isActive === undefined &&
+      value.allowedProviders === undefined
     ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -705,13 +844,34 @@ export const evalRunSuiteSchema = z.object({
   outputs: z.record(z.string(), z.string()),
 });
 
+const accessScheduleSchema = z.object({
+  enabled: z.boolean(),
+  from: z.string().regex(/^\d{2}:\d{2}$/, "Time must be in HH:MM format"),
+  until: z.string().regex(/^\d{2}:\d{2}$/, "Time must be in HH:MM format"),
+  days: z.array(z.number().int().min(0).max(6)).min(1, "At least one day is required").max(7),
+  tz: z.string().min(1).max(100),
+});
+
 export const updateKeyPermissionsSchema = z
   .object({
+    name: z.string().trim().min(1).max(200).optional(),
     allowedModels: z.array(z.string().trim().min(1)).max(1000).optional(),
+    allowedConnections: z.array(z.string().uuid()).max(100).optional(),
     noLog: z.boolean().optional(),
+    autoResolve: z.boolean().optional(),
+    isActive: z.boolean().optional(),
+    accessSchedule: z.union([accessScheduleSchema, z.null()]).optional(),
   })
   .superRefine((value, ctx) => {
-    if (value.allowedModels === undefined && value.noLog === undefined) {
+    if (
+      value.name === undefined &&
+      value.allowedModels === undefined &&
+      value.allowedConnections === undefined &&
+      value.noLog === undefined &&
+      value.autoResolve === undefined &&
+      value.isActive === undefined &&
+      value.accessSchedule === undefined
+    ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "No valid fields to update",
@@ -727,6 +887,8 @@ export const createProviderNodeSchema = z
     apiType: z.enum(["chat", "responses"]).optional(),
     baseUrl: z.string().trim().min(1).optional(),
     type: z.enum(["openai-compatible", "anthropic-compatible"]).optional(),
+    chatPath: z.string().trim().startsWith("/").max(500).optional().or(z.literal("")),
+    modelsPath: z.string().trim().startsWith("/").max(500).optional().or(z.literal("")),
   })
   .superRefine((value, ctx) => {
     const nodeType = value.type || "openai-compatible";
@@ -744,12 +906,15 @@ export const updateProviderNodeSchema = z.object({
   prefix: z.string().trim().min(1, "Prefix is required"),
   apiType: z.enum(["chat", "responses"]).optional(),
   baseUrl: z.string().trim().min(1, "Base URL is required"),
+  chatPath: z.string().trim().startsWith("/").max(500).optional().or(z.literal("")),
+  modelsPath: z.string().trim().startsWith("/").max(500).optional().or(z.literal("")),
 });
 
 export const providerNodeValidateSchema = z.object({
   baseUrl: z.string().trim().min(1, "Base URL and API key required"),
   apiKey: z.string().trim().min(1, "Base URL and API key required"),
   type: z.enum(["openai-compatible", "anthropic-compatible"]).optional(),
+  modelsPath: z.string().trim().startsWith("/").max(500).optional().or(z.literal("")),
 });
 
 export const updateProviderConnectionSchema = z
@@ -769,6 +934,7 @@ export const updateProviderConnectionSchema = z
     rateLimitedUntil: z.union([z.string(), z.null()]).optional(),
     lastTested: z.union([z.string(), z.null()]).optional(),
     healthCheckInterval: z.coerce.number().int().min(0).optional(),
+    group: z.union([z.string().max(100), z.null()]).optional(),
     // Partial patch of per-connection provider-specific settings (e.g. quota toggles)
     providerSpecificData: z.record(z.string(), z.unknown()).optional(),
   })
@@ -785,10 +951,13 @@ export const updateProviderConnectionSchema = z
 export const providersBatchTestSchema = z
   .object({
     mode: z.enum(["provider", "oauth", "free", "apikey", "compatible", "all"]),
-    providerId: z.string().trim().min(1).optional(),
+    // Frontend may send null when mode != 'provider' — accept and treat as missing
+    providerId: z.string().trim().min(1).nullable().optional(),
   })
   .superRefine((value, ctx) => {
-    if (value.mode === "provider" && !value.providerId) {
+    // Treat null same as undefined
+    const pid = value.providerId ?? null;
+    if (value.mode === "provider" && !pid) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "providerId is required when mode=provider",
@@ -911,4 +1080,138 @@ export const guideSettingsSaveSchema = z.object({
   baseUrl: z.string().trim().min(1).optional(),
   apiKey: z.string().optional(),
   model: z.string().trim().min(1, "Model is required"),
+});
+
+// ── Search Schemas ─────────────────────────────────────────────────────
+// Unified search request/response schemas. Final contract — all fields optional
+// with defaults. New features add implementations, not new fields.
+// Multi-query deferred to POST /v1/search/batch (separate PRD).
+
+export const v1SearchSchema = z
+  .object({
+    // Core
+    query: z
+      .string()
+      .trim()
+      .min(1, "Query is required")
+      .max(500, "Query must be 500 characters or fewer"),
+    provider: z
+      .enum(["serper-search", "brave-search", "perplexity-search", "exa-search", "tavily-search"])
+      .optional(),
+    max_results: z.coerce.number().int().min(1).max(100).default(5),
+    search_type: z.enum(["web", "news"]).default("web"),
+    offset: z.coerce.number().int().min(0).default(0),
+
+    // Locale
+    country: z.string().max(2).toUpperCase().optional(),
+    language: z.string().min(2).max(5).optional(),
+    time_range: z.enum(["any", "day", "week", "month", "year"]).optional(),
+
+    // Content control
+    content: z
+      .object({
+        snippet: z.boolean().default(true),
+        full_page: z.boolean().default(false),
+        format: z.enum(["text", "markdown"]).default("text"),
+        max_characters: z.coerce.number().int().min(100).max(100000).optional(),
+      })
+      .optional(),
+
+    // Filters
+    filters: z
+      .object({
+        include_domains: z.array(z.string().max(253)).max(20).optional(),
+        exclude_domains: z.array(z.string().max(253)).max(20).optional(),
+        safe_search: z.enum(["off", "moderate", "strict"]).optional(),
+      })
+      .optional(),
+
+    // Answer synthesis (Phase 2 — returns null until implemented)
+    synthesis: z
+      .object({
+        strategy: z.enum(["none", "auto", "provider", "internal"]).default("none"),
+        model: z.string().optional(),
+        max_tokens: z.coerce.number().int().min(1).max(4000).optional(),
+      })
+      .optional(),
+
+    // Provider-specific passthrough
+    provider_options: z.record(z.string(), z.unknown()).optional(),
+
+    // Strict mode — reject if provider doesn't support a requested filter
+    strict_filters: z.boolean().default(false),
+  })
+  .catchall(z.unknown());
+
+export const searchResultSchema = z.object({
+  title: z.string(),
+  url: z.string(),
+  display_url: z.string().optional(),
+  snippet: z.string(),
+  position: z.number().int().positive(),
+  score: z.number().min(0).max(1).nullable().optional(),
+  published_at: z.string().nullable().optional(),
+  favicon_url: z.string().nullable().optional(),
+  content: z
+    .object({
+      format: z.enum(["text", "markdown"]).optional(),
+      text: z.string().optional(),
+      length: z.number().int().optional(),
+    })
+    .nullable()
+    .optional(),
+  metadata: z
+    .object({
+      author: z.string().nullable().optional(),
+      language: z.string().nullable().optional(),
+      source_type: z
+        .enum(["article", "blog", "forum", "video", "academic", "news", "other"])
+        .nullable()
+        .optional(),
+      image_url: z.string().nullable().optional(),
+    })
+    .nullable()
+    .optional(),
+  citation: z.object({
+    provider: z.string(),
+    retrieved_at: z.string(),
+    rank: z.number().int().positive(),
+  }),
+  provider_raw: z.record(z.string(), z.unknown()).nullable().optional(),
+});
+
+export const v1SearchResponseSchema = z.object({
+  id: z.string(),
+  provider: z.string(),
+  query: z.string(),
+  results: z.array(searchResultSchema),
+  cached: z.boolean(),
+  answer: z
+    .object({
+      source: z.enum(["none", "provider", "internal"]).optional(),
+      text: z.string().nullable().optional(),
+      model: z.string().nullable().optional(),
+    })
+    .nullable()
+    .optional(),
+  usage: z.object({
+    queries_used: z.number().int().min(0),
+    search_cost_usd: z.number().min(0),
+    llm_tokens: z.number().int().min(0).optional(),
+  }),
+  metrics: z.object({
+    response_time_ms: z.number().int().min(0),
+    upstream_latency_ms: z.number().int().min(0).optional(),
+    gateway_latency_ms: z.number().int().min(0).optional(),
+    total_results_available: z.number().int().nullable(),
+  }),
+  errors: z
+    .array(
+      z.object({
+        provider: z.string(),
+        code: z.string(),
+        message: z.string(),
+      })
+    )
+    .optional(),
 });

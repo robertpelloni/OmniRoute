@@ -87,7 +87,14 @@ export default function OAuthModal({
         });
 
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error);
+        if (!res.ok) {
+          const errMsg =
+            typeof data.error === "object" && data.error !== null
+              ? ((data.error as Record<string, unknown>).message as string) ||
+                JSON.stringify(data.error)
+              : data.error || "Exchange failed";
+          throw new Error(errMsg);
+        }
 
         setStep("success");
         onSuccess?.();
@@ -180,7 +187,14 @@ export default function OAuthModal({
 
         const res = await fetch(`/api/oauth/${provider}/device-code`);
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error);
+        if (!res.ok) {
+          const errMsg =
+            typeof data.error === "object" && data.error !== null
+              ? ((data.error as Record<string, unknown>).message as string) ||
+                JSON.stringify(data.error)
+              : data.error || "Request failed";
+          throw new Error(errMsg);
+        }
 
         setDeviceData(data);
 
@@ -281,7 +295,14 @@ export default function OAuthModal({
         `/api/oauth/${provider}/authorize?redirect_uri=${encodeURIComponent(redirectUri)}`
       );
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
+      if (!res.ok) {
+        const errMsg =
+          typeof data.error === "object" && data.error !== null
+            ? ((data.error as Record<string, unknown>).message as string) ||
+              JSON.stringify(data.error)
+            : data.error || "Authorization failed";
+        throw new Error(errMsg);
+      }
 
       setAuthData({ ...data, redirectUri });
 
@@ -412,6 +433,51 @@ export default function OAuthModal({
     };
   }, [authData, exchangeTokens]);
 
+  // Fix #344: Detect when OAuth popup is closed without completing authorization
+  // Some providers (like iFlow) redirect to their own chat UI instead of sending a callback,
+  // leaving the modal stuck at "Waiting for Authorization" forever.
+  useEffect(() => {
+    if (step !== "waiting" || isDeviceCode || !popupRef.current) return;
+
+    let closed = false;
+    const popupClosedInterval = setInterval(() => {
+      if (callbackProcessedRef.current) {
+        clearInterval(popupClosedInterval);
+        return;
+      }
+      try {
+        if (popupRef.current?.closed) {
+          closed = true;
+          clearInterval(popupClosedInterval);
+          // Popup was closed without completing OAuth — switch to manual input mode
+          // so user can paste the callback URL from their browser address bar
+          if (step === "waiting") {
+            setStep("input");
+          }
+        }
+      } catch {
+        // Cross-origin access may throw — ignore
+      }
+    }, 1000);
+
+    // Safety timeout: 5 minutes
+    const safetyTimeout = setTimeout(
+      () => {
+        if (!callbackProcessedRef.current && step === "waiting") {
+          clearInterval(popupClosedInterval);
+          setStep("input");
+        }
+      },
+      5 * 60 * 1000
+    );
+
+    return () => {
+      clearInterval(popupClosedInterval);
+      clearTimeout(safetyTimeout);
+    };
+     
+  }, [step, isDeviceCode]);
+
   // Handle manual URL input
   const handleManualSubmit = async () => {
     try {
@@ -450,8 +516,12 @@ export default function OAuthModal({
               </span>
             </div>
             <h3 className="text-lg font-semibold mb-2">Waiting for Authorization</h3>
-            <p className="text-sm text-text-muted mb-4">
+            <p className="text-sm text-text-muted mb-2">
               Complete the authorization in the popup window.
+            </p>
+            <p className="text-xs text-text-muted mb-4 opacity-70">
+              If the popup closes without redirecting back (e.g. iFlow), this dialog will
+              automatically switch to manual URL input mode.
             </p>
             <Button variant="ghost" onClick={() => setStep("input")}>
               Popup blocked? Enter URL manually

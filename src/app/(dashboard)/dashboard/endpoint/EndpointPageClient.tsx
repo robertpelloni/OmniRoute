@@ -33,11 +33,29 @@ export default function APIPageClient({ machineId }) {
   const [viewTab, setViewTab] = useState("api");
   const [mcpStatus, setMcpStatus] = useState<any>(null);
   const [a2aStatus, setA2aStatus] = useState<any>(null);
+  const [searchProviders, setSearchProviders] = useState<any[]>([]);
 
   const { copied, copy } = useCopyToClipboard();
 
+  const fetchSearchProviders = async () => {
+    try {
+      const res = await fetch("/v1/search");
+      if (res.ok) {
+        const data = await res.json();
+        setSearchProviders(data.data || []);
+      }
+    } catch {
+      // Search endpoint may not be available
+    }
+  };
+
   useEffect(() => {
-    Promise.allSettled([loadCloudSettings(), fetchModels(), fetchProtocolStatus()]).finally(() => {
+    Promise.allSettled([
+      loadCloudSettings(),
+      fetchModels(),
+      fetchProtocolStatus(),
+      fetchSearchProviders(),
+    ]).finally(() => {
       setLoading(false);
     });
   }, []);
@@ -86,7 +104,8 @@ export default function APIPageClient({ machineId }) {
       (m) => m.type === "audio" && m.subtype === "speech" && !m.parent
     );
     const moderation = allModels.filter((m) => m.type === "moderation" && !m.parent);
-    return { chat, embeddings, images, rerank, audioTranscription, audioSpeech, moderation };
+    const music = allModels.filter((m) => m.type === "music" && !m.parent);
+    return { chat, embeddings, images, rerank, audioTranscription, audioSpeech, moderation, music };
   }, [allModels]);
 
   const postCloudAction = async (action, timeoutMs = CLOUD_ACTION_TIMEOUT_MS) => {
@@ -392,6 +411,7 @@ export default function APIPageClient({ machineId }) {
                       endpointData.audioTranscription,
                       endpointData.audioSpeech,
                       endpointData.moderation,
+                      endpointData.music,
                     ].filter((a) => a.length > 0).length + 2,
                 })}
               </p>
@@ -439,6 +459,27 @@ export default function APIPageClient({ machineId }) {
                 expanded={expandedEndpoint === "responses"}
                 onToggle={() =>
                   setExpandedEndpoint(expandedEndpoint === "responses" ? null : "responses")
+                }
+                copy={copy}
+                copied={copied}
+                baseUrl={currentEndpoint}
+              />
+
+              {/* Legacy Completions */}
+              <EndpointSection
+                icon="text_fields"
+                iconColor="text-orange-500"
+                iconBg="bg-orange-500/10"
+                title={t("completionsLegacy") || "Completions (Legacy)"}
+                path="/v1/completions"
+                description={
+                  t("completionsLegacyDesc") ||
+                  "Legacy OpenAI text completions — accepts both prompt and messages format"
+                }
+                models={endpointData.chat}
+                expanded={expandedEndpoint === "completions"}
+                onToggle={() =>
+                  setExpandedEndpoint(expandedEndpoint === "completions" ? null : "completions")
                 }
                 copy={copy}
                 copied={copied}
@@ -530,8 +571,68 @@ export default function APIPageClient({ machineId }) {
                 copied={copied}
                 baseUrl={currentEndpoint}
               />
+
+              {/* Music Generation */}
+              <EndpointSection
+                icon="music_note"
+                iconColor="text-fuchsia-500"
+                iconBg="bg-fuchsia-500/10"
+                title={t("musicGeneration") || "Music Generation"}
+                path="/v1/music/generations"
+                description={
+                  t("musicDesc") ||
+                  "Generate music and audio tracks via ComfyUI (Stable Audio, MusicGen)"
+                }
+                models={endpointData.music}
+                expanded={expandedEndpoint === "music"}
+                onToggle={() => setExpandedEndpoint(expandedEndpoint === "music" ? null : "music")}
+                copy={copy}
+                copied={copied}
+                baseUrl={currentEndpoint}
+              />
             </div>
           </div>
+
+          {/* Search & Discovery */}
+          {searchProviders.length > 0 && (
+            <div className="mb-6">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="material-symbols-outlined text-sm text-cyan-400">
+                  travel_explore
+                </span>
+                <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider">
+                  {t("categorySearch") || "Search & Discovery"}
+                </h3>
+                <div className="flex-1 h-px bg-border/50" />
+              </div>
+              <div className="flex flex-col gap-3">
+                <EndpointSection
+                  icon="search"
+                  iconColor="text-cyan-500"
+                  iconBg="bg-cyan-500/10"
+                  title={t("webSearch") || "Web Search"}
+                  path="/v1/search"
+                  description={
+                    t("webSearchDesc") ||
+                    "Unified web search across multiple providers with automatic failover and caching"
+                  }
+                  models={searchProviders.map((p) => ({
+                    id: p.id,
+                    name: p.name,
+                    owned_by: p.id,
+                    type: "search",
+                  }))}
+                  expanded={expandedEndpoint === "search"}
+                  onToggle={() =>
+                    setExpandedEndpoint(expandedEndpoint === "search" ? null : "search")
+                  }
+                  copy={copy}
+                  copied={copied}
+                  baseUrl={currentEndpoint}
+                />
+              </div>
+            </div>
+          )}
 
           {/* Utility & Management */}
           <div>

@@ -11,6 +11,16 @@ _Tu proxy de API universal — un endpoint, 36+ proveedores, cero tiempo de inac
 
 ---
 
+### 🆕 Novedades en v2.7.0
+
+- **RouterStrategy enchufable** — estrategias de reglas, costo y latencia
+- **Detección de intención multilingüe** — puntuación de enrutamiento en 30+ idiomas
+- **Deduplicación de solicitudes** — evita llamadas duplicadas por hash de contenido
+- **Nuevos proveedores:** Grok-4 Fast (xAI), GLM-5 / Z.AI, MiniMax M2.5, Kimi K2.5
+- **Precios actualizados:** Grok-4 Fast $0.20/$0.50/M, GLM-5 $0.50/M, MiniMax M2.5 $0.30/M
+
+---
+
 ### 🚀 New in v2.0.9+ — Playground, CLI Fingerprints & ACP
 
 | Feature                                    | What It Does                                                                                                                                  |
@@ -1405,15 +1415,9 @@ gh release create v1.0.6 --title "v1.0.6" --generate-notes
 
 ## 📊 Historial de Stars
 
-<a href="https://star-history.com/#diegosouzapw/OmniRoute&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=diegosouzapw/OmniRoute&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=diegosouzapw/OmniRoute&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=diegosouzapw/OmniRoute&type=Date" />
- </picture>
-</a>
+## Stargazers over time
 
----
+## [![Stargazers over time](https://starchart.cc/diegosouzapw/OmniRoute.svg?variant=adaptive)](https://starchart.cc/diegosouzapw/OmniRoute)
 
 ## 🙏 Agradecimientos
 

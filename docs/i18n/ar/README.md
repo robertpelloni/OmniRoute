@@ -8,6 +8,16 @@ _وكيل API العالمي الخاص بك - نقطة نهاية واحدة، 
 
 ---
 
+### 🆕 الجديد في v2.7.0
+
+- **RouterStrategy قابل للتوصيل** — استراتيجيات القواعد والتكلفة والكمون
+- **كشف النية متعدد اللغات** — تسجيل التوجيه بأكثر من 30 لغة
+- **إلغاء تكرار الطلبات** — تجنب مكالمات API المكررة عبر تجزئة المحتوى
+- **مزودون جدد:** Grok-4 Fast (xAI) وGLM-5 / Z.AI وMiniMax M2.5 وKimi K2.5
+- **أسعار محدثة:** Grok-4 Fast $0.20/$0.50/M، GLM-5 $0.50/M، MiniMax M2.5 $0.30/M
+
+---
+
 <div align="center">
 
 [![إصدار npm](https://img.shields.io/npm/v/omniroute?color=cb3837&logo=npm)](https://www.npmjs.com/package/omniroute)
@@ -1651,15 +1661,9 @@ gh release create v2.0.0 --title "v2.0.0" --generate-notes
 
 ## 📊 تاريخ النجوم
 
-<a href="https://star-history.com/#diegosouzapw/OmniRoute&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=diegosouzapw/OmniRoute&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=diegosouzapw/OmniRoute&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=diegosouzapw/OmniRoute&type=Date" />
- </picture>
-</a>
+## Stargazers over time
 
----
+## [![Stargazers over time](https://starchart.cc/diegosouzapw/OmniRoute.svg?variant=adaptive)](https://starchart.cc/diegosouzapw/OmniRoute)
 
 ## 🙏 شكر وتقدير
 

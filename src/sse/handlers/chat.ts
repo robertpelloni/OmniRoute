@@ -42,6 +42,14 @@ import { generateRequestId } from "../../shared/utils/requestId";
 import { recordCost } from "../../domain/costRules";
 import { logAuditEvent } from "../../lib/compliance/index";
 import { enforceApiKeyPolicy } from "../../shared/utils/apiKeyPolicy";
+import {
+  applyTaskAwareRouting,
+  getTaskRoutingConfig,
+} from "@omniroute/open-sse/services/taskAwareRouter.ts";
+import {
+  isFallbackDecision,
+  shouldUseFallback,
+} from "@omniroute/open-sse/services/emergencyFallback.ts";
 
 /**
  * Handle chat completion request
@@ -77,6 +85,24 @@ export async function handleChat(request: any, clientRawRequest: any = null) {
   }
   telemetry.endPhase();
 
+  // T01 — Accept header negotiation
+  // If client asks for text/event-stream via the Accept header AND the JSON body
+  // does not explicitly set stream=false, treat it as stream=true.
+  // This ensures compatibility with curl/httpx and similar non-OpenAI clients.
+  //
+  // FIX #302: OpenAI Python SDK sends Accept: application/json, text/event-stream
+  // in every request — even when called with stream=False. We must NOT override
+  // an explicit stream=false body field, as that silently breaks tool_calls and
+  // structured completions for SDK users who rely on non-streaming mode.
+  const acceptHeader = request.headers.get("accept") || "";
+  if (acceptHeader.includes("text/event-stream") && body.stream === undefined) {
+    body = { ...body, stream: true };
+    log.debug(
+      "STREAM",
+      "Accept: text/event-stream header → overriding stream=true (body had no stream field)"
+    );
+  }
+
   // Build clientRawRequest for logging (if not provided)
   if (!clientRawRequest) {
     const url = new URL(request.url);
@@ -111,7 +137,9 @@ export async function handleChat(request: any, clientRawRequest: any = null) {
 
   // Optional strict API key mode for /v1 endpoints.
   // Keep disabled by default to preserve local-mode compatibility.
-  if (process.env.REQUIRE_API_KEY === "true") {
+  // Exception: X-Internal-Test header bypasses auth for admin-side combo health checks (#350)
+  const isInternalTest = request.headers?.get?.("x-internal-test") === "combo-health-check";
+  if (process.env.REQUIRE_API_KEY === "true" && !isInternalTest) {
     if (!apiKey) {
       log.warn("AUTH", "Missing API key while REQUIRE_API_KEY=true");
       return errorResponse(HTTP_STATUS.UNAUTHORIZED, "Missing API key");
@@ -141,9 +169,30 @@ export async function handleChat(request: any, clientRawRequest: any = null) {
   const apiKeyInfo = policy.apiKeyInfo;
   telemetry.endPhase();
 
+  // T05 — Task-Aware Smart Routing
+  // Detect the semantic task type and optionally route to the optimal model
+  let resolvedModelStr = modelStr;
+  let taskRouteInfo: { taskType: string; wasRouted: boolean } | null = null;
+  if (getTaskRoutingConfig().enabled) {
+    telemetry.startPhase("task-route");
+    const tr = applyTaskAwareRouting(modelStr, body);
+    if (tr.wasRouted) {
+      resolvedModelStr = tr.model;
+      body = { ...body, model: tr.model };
+      log.info(
+        "T05",
+        `Task-Aware: detected="${tr.taskType}" → model override: ${modelStr} → ${tr.model}`
+      );
+    } else if (tr.taskType !== "chat") {
+      log.debug("T05", `Task-Aware: detected="${tr.taskType}" (no override configured)`);
+    }
+    taskRouteInfo = { taskType: tr.taskType, wasRouted: tr.wasRouted };
+    telemetry.endPhase();
+  }
+
   // Check if model is a combo (has multiple models with fallback)
   telemetry.startPhase("resolve");
-  const combo = await getCombo(modelStr);
+  const combo = await getCombo(resolvedModelStr);
   if (combo) {
     log.info(
       "CHAT",
@@ -164,7 +213,11 @@ export async function handleChat(request: any, clientRawRequest: any = null) {
         return false;
       }
 
-      const creds = await getProviderCredentials(provider);
+      const creds = await getProviderCredentials(
+        provider,
+        null,
+        apiKeyInfo?.allowedConnections ?? null
+      );
       if (!creds || creds.allRateLimited) return false;
       return true;
     };
@@ -221,13 +274,14 @@ async function handleSingleModelChat(
   request: any = null,
   comboName: string | null = null,
   apiKeyInfo: any = null,
-  telemetry: any = null
+  telemetry: any = null,
+  runtimeOptions: { emergencyFallbackTried?: boolean } = {}
 ) {
   // 1. Resolve model → provider/model
   const resolved = await resolveModelOrError(modelStr, body);
   if (resolved.error) return resolved.error;
 
-  const { provider, model, sourceFormat, targetFormat } = resolved;
+  const { provider, model, sourceFormat, targetFormat, extendedContext } = resolved;
 
   // 2. Pipeline gates (availability + circuit breaker)
   const gate = checkPipelineGates(provider, model);
@@ -248,7 +302,11 @@ async function handleSingleModelChat(
   let lastStatus = null;
 
   while (true) {
-    const credentials = await getProviderCredentials(provider, excludeConnectionId);
+    const credentials = await getProviderCredentials(
+      provider,
+      excludeConnectionId,
+      apiKeyInfo?.allowedConnections ?? null
+    );
 
     if (!credentials || credentials.allRateLimited) {
       if (lastStatus === 429 || lastStatus === 503) {
@@ -290,6 +348,7 @@ async function handleSingleModelChat(
       apiKeyInfo,
       userAgent,
       comboName,
+      extendedContext,
     });
     if (telemetry) telemetry.endPhase();
 
@@ -318,6 +377,53 @@ async function handleSingleModelChat(
       return result.response;
     }
 
+    // Emergency fallback for budget exhaustion (402 / billing / quota keywords):
+    // reroute to a free model (default provider/model: nvidia + openai/gpt-oss-120b) exactly once.
+    if (!runtimeOptions.emergencyFallbackTried) {
+      const fallbackDecision = shouldUseFallback(
+        Number(result.status || 0),
+        String(result.error || ""),
+        Array.isArray(body?.tools) && body.tools.length > 0
+      );
+
+      if (isFallbackDecision(fallbackDecision)) {
+        const fallbackModelStr = `${fallbackDecision.provider}/${fallbackDecision.model}`;
+        const currentModelStr = `${provider}/${model}`;
+
+        if (fallbackModelStr !== currentModelStr) {
+          const fallbackBody = { ...body, model: fallbackModelStr };
+
+          // Cap output on emergency fallback to avoid unexpected long responses.
+          const maxTokens = Math.min(
+            Number(
+              fallbackBody.max_tokens ??
+                fallbackBody.max_completion_tokens ??
+                fallbackDecision.maxOutputTokens
+            ) || fallbackDecision.maxOutputTokens,
+            fallbackDecision.maxOutputTokens
+          );
+          fallbackBody.max_tokens = maxTokens;
+          fallbackBody.max_completion_tokens = maxTokens;
+
+          log.warn(
+            "EMERGENCY_FALLBACK",
+            `${currentModelStr} -> ${fallbackModelStr} | reason=${fallbackDecision.reason}`
+          );
+
+          return handleSingleModelChat(
+            fallbackBody,
+            fallbackModelStr,
+            clientRawRequest,
+            request,
+            comboName,
+            apiKeyInfo,
+            telemetry,
+            { ...runtimeOptions, emergencyFallbackTried: true }
+          );
+        }
+      }
+    }
+
     // 6. Mark account as quota-exhausted on 429 response
     if (result.status === 429) {
       markAccountExhaustedFrom429(credentials.connectionId, provider);
@@ -328,7 +434,8 @@ async function handleSingleModelChat(
       credentials.connectionId,
       result.status,
       result.error,
-      provider
+      provider,
+      model
     );
 
     if (shouldFallback) {
@@ -366,7 +473,7 @@ async function resolveModelOrError(modelStr: string, body: any) {
     return { error: errorResponse(HTTP_STATUS.BAD_REQUEST, "Invalid model format") };
   }
 
-  const { provider, model } = modelInfo;
+  const { provider, model, extendedContext } = modelInfo;
   const sourceFormat = detectFormat(body);
   const providerAlias = PROVIDER_ID_TO_ALIAS[provider] || provider;
 
@@ -378,13 +485,14 @@ async function resolveModelOrError(modelStr: string, body: any) {
     log.info("ROUTING", `Custom model apiFormat=responses → targetFormat=openai-responses`);
   }
 
+  const ctxTag = extendedContext && providerAlias === "claude" ? " [1m]" : "";
   if (modelStr !== `${provider}/${model}`) {
-    log.info("ROUTING", `${modelStr} → ${provider}/${model}`);
+    log.info("ROUTING", `${modelStr} → ${provider}/${model}${ctxTag}`);
   } else {
-    log.info("ROUTING", `Provider: ${provider}, Model: ${model}`);
+    log.info("ROUTING", `Provider: ${provider}, Model: ${model}${ctxTag}`);
   }
 
-  return { provider, model, sourceFormat, targetFormat };
+  return { provider, model, sourceFormat, targetFormat, extendedContext };
 }
 
 /**
@@ -437,6 +545,7 @@ async function executeChatWithBreaker({
   apiKeyInfo,
   userAgent,
   comboName,
+  extendedContext,
 }: any): Promise<{ result: any; tlsFingerprintUsed: boolean }> {
   let tlsFingerprintUsed = false;
 
@@ -445,7 +554,7 @@ async function executeChatWithBreaker({
       runWithProxyContext(proxyInfo?.proxy || null, () =>
         (handleChatCore as any)({
           body: { ...body, model: `${provider}/${model}` },
-          modelInfo: { provider, model },
+          modelInfo: { provider, model, extendedContext },
           credentials: refreshedCredentials,
           log: logger,
           clientRawRequest,
