@@ -53,6 +53,7 @@ export const OAUTH_PROVIDERS = {
   },
 };
 
+// API Key Providers
 export const APIKEY_PROVIDERS = {
   openrouter: {
     id: "openrouter",
@@ -73,6 +74,15 @@ export const APIKEY_PROVIDERS = {
     textIcon: "GL",
     website: "https://open.bigmodel.cn",
   },
+  "bailian-coding-plan": {
+    id: "bailian-coding-plan",
+    alias: "bcp",
+    name: "Alibaba Coding Plan",
+    icon: "code",
+    color: "#FF6A00",
+    textIcon: "BCP",
+    website: "https://www.alibabacloud.com/help/en/model-studio/coding-plan",
+  },
   kimi: {
     id: "kimi",
     alias: "kimi",
@@ -81,6 +91,15 @@ export const APIKEY_PROVIDERS = {
     color: "#1E3A8A",
     textIcon: "KM",
     website: "https://kimi.moonshot.cn",
+  },
+  "kimi-coding-apikey": {
+    id: "kimi-coding-apikey",
+    alias: "kmca",
+    name: "Kimi Coding (API Key)",
+    icon: "psychology",
+    color: "#1E40AF",
+    textIcon: "KC",
+    website: "https://kimi.com",
   },
   minimax: {
     id: "minimax",
@@ -99,6 +118,24 @@ export const APIKEY_PROVIDERS = {
     color: "#DC2626",
     textIcon: "MC",
     website: "https://www.minimaxi.com",
+  },
+  alicode: {
+    id: "alicode",
+    alias: "alicode",
+    name: "Alibaba",
+    icon: "cloud",
+    color: "#FF6A00",
+    textIcon: "ALi",
+    website: "https://bailian.console.aliyun.com",
+  },
+  "alicode-intl": {
+    id: "alicode-intl",
+    alias: "alicode-intl",
+    name: "Alibaba Intl",
+    icon: "cloud",
+    color: "#FF6A00",
+    textIcon: "ALi",
+    website: "https://modelstudio.console.alibabacloud.com",
   },
   openai: {
     id: "openai",

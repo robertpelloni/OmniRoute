@@ -78,6 +78,22 @@ interface LegacyProvider {
   clientVersion?: string;
 }
 
+const KIMI_CODING_SHARED = {
+  format: "claude",
+  executor: "default",
+  baseUrl: "https://api.kimi.com/coding/v1/messages",
+  authHeader: "x-api-key",
+  headers: {
+    "Anthropic-Version": "2023-06-01",
+    "Anthropic-Beta": "claude-code-20250219,interleaved-thinking-2025-05-14",
+  },
+  models: [
+    { id: "kimi-k2.5", name: "Kimi K2.5" },
+    { id: "kimi-k2.5-thinking", name: "Kimi K2.5 Thinking" },
+    { id: "kimi-latest", name: "Kimi Latest" },
+  ] as RegistryModel[],
+} as const;
+
 // ── Registry ──────────────────────────────────────────────────────────────
 
 export const REGISTRY: Record<string, RegistryEntry> = {
@@ -521,6 +537,32 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     ],
   },
 
+  "bailian-coding-plan": {
+    id: "bailian-coding-plan",
+    alias: "bcp",
+    format: "claude",
+    executor: "default",
+    baseUrl: "https://coding-intl.dashscope.aliyuncs.com/apps/anthropic/v1/messages",
+    chatPath: "/messages",
+    urlSuffix: "?beta=true",
+    authType: "apikey",
+    authHeader: "x-api-key",
+    headers: {
+      "Anthropic-Version": "2023-06-01",
+      "Anthropic-Beta": "claude-code-20250219,interleaved-thinking-2025-05-14",
+    },
+    models: [
+      { id: "qwen3.5-plus", name: "Qwen3.5 Plus" },
+      { id: "qwen3-max-2026-01-23", name: "Qwen3 Max (2026-01-23)" },
+      { id: "qwen3-coder-next", name: "Qwen3 Coder Next" },
+      { id: "qwen3-coder-plus", name: "Qwen3 Coder Plus" },
+      { id: "MiniMax-M2.5", name: "MiniMax M2.5" },
+      { id: "glm-5", name: "GLM 5" },
+      { id: "glm-4.7", name: "GLM 4.7" },
+      { id: "kimi-k2.5", name: "Kimi K2.5" },
+    ],
+  },
+
   zai: {
     id: "zai",
     alias: "zai",
@@ -559,16 +601,9 @@ export const REGISTRY: Record<string, RegistryEntry> = {
   "kimi-coding": {
     id: "kimi-coding",
     alias: "kmc",
-    format: "claude",
-    executor: "default",
-    baseUrl: "https://api.kimi.com/coding/v1/messages",
+    ...KIMI_CODING_SHARED,
     urlSuffix: "?beta=true",
     authType: "oauth",
-    authHeader: "x-api-key",
-    headers: {
-      "Anthropic-Version": "2023-06-01",
-      "Anthropic-Beta": "claude-code-20250219,interleaved-thinking-2025-05-14",
-    },
     oauth: {
       clientIdEnv: "KIMI_CODING_OAUTH_CLIENT_ID",
       clientIdDefault: "17e5f671-d194-4dfb-9706-5516cb48c098",
@@ -576,11 +611,13 @@ export const REGISTRY: Record<string, RegistryEntry> = {
       refreshUrl: "https://auth.kimi.com/api/oauth/token",
       authUrl: "https://auth.kimi.com/api/oauth/device_authorization",
     },
-    models: [
-      { id: "kimi-k2.5", name: "Kimi K2.5" },
-      { id: "kimi-k2.5-thinking", name: "Kimi K2.5 Thinking" },
-      { id: "kimi-latest", name: "Kimi Latest" },
-    ],
+  },
+
+  "kimi-coding-apikey": {
+    id: "kimi-coding-apikey",
+    alias: "kmca",
+    ...KIMI_CODING_SHARED,
+    authType: "apikey",
   },
 
   kilocode: {
@@ -696,6 +733,46 @@ export const REGISTRY: Record<string, RegistryEntry> = {
       { id: "minimax-m2.5", name: "MiniMax M2.5" },
       { id: "MiniMax-M2.5", name: "MiniMax M2.5 (Legacy Alias)" },
       { id: "MiniMax-M2.1", name: "MiniMax M2.1" },
+    ],
+  },
+
+  alicode: {
+    id: "alicode",
+    alias: "alicode",
+    format: "openai",
+    executor: "default",
+    baseUrl: "https://coding.dashscope.aliyuncs.com/v1/chat/completions",
+    authType: "apikey",
+    authHeader: "bearer",
+    models: [
+      { id: "qwen3.5-plus", name: "Qwen3.5 Plus" },
+      { id: "kimi-k2.5", name: "Kimi K2.5" },
+      { id: "glm-5", name: "GLM 5" },
+      { id: "MiniMax-M2.5", name: "MiniMax M2.5" },
+      { id: "qwen3-max-2026-01-23", name: "Qwen3 Max" },
+      { id: "qwen3-coder-next", name: "Qwen3 Coder Next" },
+      { id: "qwen3-coder-plus", name: "Qwen3 Coder Plus" },
+      { id: "glm-4.7", name: "GLM 4.7" },
+    ],
+  },
+
+  "alicode-intl": {
+    id: "alicode-intl",
+    alias: "alicode-intl",
+    format: "openai",
+    executor: "default",
+    baseUrl: "https://coding-intl.dashscope.aliyuncs.com/v1/chat/completions",
+    authType: "apikey",
+    authHeader: "bearer",
+    models: [
+      { id: "qwen3.5-plus", name: "Qwen3.5 Plus" },
+      { id: "kimi-k2.5", name: "Kimi K2.5" },
+      { id: "glm-5", name: "GLM 5" },
+      { id: "MiniMax-M2.5", name: "MiniMax M2.5" },
+      { id: "qwen3-max-2026-01-23", name: "Qwen3 Max" },
+      { id: "qwen3-coder-next", name: "Qwen3 Coder Next" },
+      { id: "qwen3-coder-plus", name: "Qwen3 Coder Plus" },
+      { id: "glm-4.7", name: "GLM 4.7" },
     ],
   },
 

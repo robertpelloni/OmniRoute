@@ -7,10 +7,8 @@ import { detectFormat } from "../../open-sse/services/provider.ts";
 import { shouldUseNativeCodexPassthrough } from "../../open-sse/handlers/chatCore.ts";
 import { translateRequest } from "../../open-sse/translator/index.ts";
 import { GithubExecutor } from "../../open-sse/executors/github.ts";
-import {
-  CodexExecutor,
-  setDefaultFastServiceTierEnabled,
-} from "../../open-sse/executors/codex.ts";
+import { DefaultExecutor } from "../../open-sse/executors/default.ts";
+import { CodexExecutor, setDefaultFastServiceTierEnabled } from "../../open-sse/executors/codex.ts";
 import { translateNonStreamingResponse } from "../../open-sse/handlers/responseTranslator.ts";
 import { extractUsageFromResponse } from "../../open-sse/handlers/usageExtractor.ts";
 import { parseSSEToResponsesOutput } from "../../open-sse/handlers/sseParser.ts";
@@ -58,6 +56,14 @@ test("GithubExecutor keeps non-codex model on /chat/completions", () => {
   const executor = new GithubExecutor();
   const url = executor.buildUrl("gpt-5", true);
   assert.match(url, /\/chat\/completions$/);
+});
+
+test("DefaultExecutor uses x-api-key for kimi-coding-apikey", () => {
+  const executor = new DefaultExecutor("kimi-coding-apikey");
+  const headers = executor.buildHeaders({ apiKey: "sk-kimi-test" }, true);
+
+  assert.equal(headers["x-api-key"], "sk-kimi-test");
+  assert.equal(headers.Authorization, undefined);
 });
 
 test("CodexExecutor forces stream=true for upstream compatibility", () => {
@@ -112,6 +118,24 @@ test("shouldUseNativeCodexPassthrough only enables responses-native Codex reques
     shouldUseNativeCodexPassthrough({
       provider: "codex",
       sourceFormat: FORMATS.OPENAI_RESPONSES,
+      endpointPath: "/v1/responses/compact",
+    }),
+    true
+  );
+
+  assert.equal(
+    shouldUseNativeCodexPassthrough({
+      provider: "codex",
+      sourceFormat: FORMATS.OPENAI_RESPONSES,
+      endpointPath: "/v1/responses/items/history",
+    }),
+    true
+  );
+
+  assert.equal(
+    shouldUseNativeCodexPassthrough({
+      provider: "codex",
+      sourceFormat: FORMATS.OPENAI_RESPONSES,
       endpointPath: "/v1/chat/completions",
     }),
     false
@@ -140,6 +164,18 @@ test("CodexExecutor always requests SSE accept header", () => {
   assert.equal(headers.Accept, "text/event-stream");
 });
 
+test("CodexExecutor does not request SSE accept header for compact requests", () => {
+  const executor = new CodexExecutor();
+  const headers = executor.buildHeaders(
+    {
+      accessToken: "test-token",
+      requestEndpointPath: "/v1/responses/compact",
+    },
+    false
+  );
+  assert.equal(headers.Accept, undefined);
+});
+
 test("CodexExecutor preserves native responses payloads for Codex passthrough", () => {
   const executor = new CodexExecutor();
   const transformed = executor.transformRequest(
@@ -165,6 +201,41 @@ test("CodexExecutor preserves native responses payloads for Codex passthrough", 
   assert.deepEqual(transformed.metadata, { source: "codex-client" });
   assert.equal(transformed.reasoning_effort, "high");
   assert.ok(!("_nativeCodexPassthrough" in transformed));
+});
+
+test("CodexExecutor strips streaming fields for compact passthrough", () => {
+  const executor = new CodexExecutor();
+  const transformed = executor.transformRequest(
+    "gpt-5.1-codex",
+    {
+      model: "gpt-5.1-codex",
+      input: "compact this session",
+      stream: false,
+      stream_options: { include_usage: true },
+      _nativeCodexPassthrough: true,
+    },
+    false,
+    {
+      requestEndpointPath: "/v1/responses/compact",
+    }
+  );
+
+  assert.equal("stream" in transformed, false);
+  assert.equal("stream_options" in transformed, false);
+  assert.ok(!("_nativeCodexPassthrough" in transformed));
+});
+
+test("CodexExecutor routes responses subpaths to matching upstream paths", () => {
+  const executor = new CodexExecutor();
+  const compactUrl = executor.buildUrl("gpt-5.1-codex", true, 0, {
+    requestEndpointPath: "/v1/responses/compact",
+  });
+  assert.match(compactUrl, /\/responses\/compact$/);
+
+  const genericSubpathUrl = executor.buildUrl("gpt-5.1-codex", true, 0, {
+    requestEndpointPath: "/v1/responses/items/history",
+  });
+  assert.match(genericSubpathUrl, /\/responses\/items\/history$/);
 });
 
 test("translateNonStreamingResponse converts Responses API payload to OpenAI chat.completion", () => {

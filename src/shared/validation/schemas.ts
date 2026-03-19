@@ -1,5 +1,14 @@
 import { z } from "zod";
 
+function isHttpUrl(value: string): boolean {
+  try {
+    const parsed = new URL(value);
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 // Re-export validation helpers from dedicated module to avoid webpack barrel-file
 // optimization bug that truncates exports from large files.
 export { validateBody, isValidationFailure } from "./helpers";
@@ -15,6 +24,21 @@ export const createProviderSchema = z.object({
   globalPriority: z.number().int().min(1).max(100).nullable().optional(),
   defaultModel: z.string().max(200).nullable().optional(),
   testStatus: z.string().max(50).optional(),
+  providerSpecificData: z
+    .record(z.string(), z.unknown())
+    .optional()
+    .superRefine((data, ctx) => {
+      if (!data) return;
+      const baseUrl = data.baseUrl;
+      if (baseUrl === undefined) return;
+      if (typeof baseUrl !== "string" || !isHttpUrl(baseUrl)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "providerSpecificData.baseUrl must be a valid http(s) URL",
+          path: ["baseUrl"],
+        });
+      }
+    }),
 });
 
 // ──── API Key Schemas ────
@@ -80,6 +104,9 @@ export const createComboSchema = z.object({
   strategy: comboStrategySchema.optional().default("priority"),
   config: comboConfigSchema,
   allowedProviders: z.array(z.string().max(200)).optional(),
+  system_message: z.string().max(50000).optional(),
+  tool_filter_regex: z.string().max(1000).optional(),
+  context_cache_protection: z.boolean().optional(),
 });
 
 // ──── Auto-Combo Schemas ────
@@ -320,6 +347,7 @@ export const providerModelMutationSchema = z.object({
   source: z.string().trim().max(80).optional(),
   apiFormat: z.enum(["chat-completions", "responses"]).default("chat-completions"),
   supportedEndpoints: z.array(z.enum(["chat", "embeddings", "images", "audio"])).default(["chat"]),
+  normalizeToolCallId: z.boolean().optional(),
 });
 
 const pricingFieldsSchema = z
@@ -813,6 +841,9 @@ export const updateComboSchema = z
     config: comboRuntimeConfigSchema.optional(),
     isActive: z.boolean().optional(),
     allowedProviders: z.array(z.string().max(200)).optional(),
+    system_message: z.string().max(50000).optional(),
+    tool_filter_regex: z.string().max(1000).optional(),
+    context_cache_protection: z.boolean().optional(),
   })
   .superRefine((value, ctx) => {
     if (
@@ -821,7 +852,10 @@ export const updateComboSchema = z
       value.strategy === undefined &&
       value.config === undefined &&
       value.isActive === undefined &&
-      value.allowedProviders === undefined
+      value.allowedProviders === undefined &&
+      value.system_message === undefined &&
+      value.tool_filter_regex === undefined &&
+      value.context_cache_protection === undefined
     ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -936,7 +970,21 @@ export const updateProviderConnectionSchema = z
     healthCheckInterval: z.coerce.number().int().min(0).optional(),
     group: z.union([z.string().max(100), z.null()]).optional(),
     // Partial patch of per-connection provider-specific settings (e.g. quota toggles)
-    providerSpecificData: z.record(z.string(), z.unknown()).optional(),
+    providerSpecificData: z
+      .record(z.string(), z.unknown())
+      .optional()
+      .superRefine((data, ctx) => {
+        if (!data) return;
+        const baseUrl = data.baseUrl;
+        if (baseUrl === undefined) return;
+        if (typeof baseUrl !== "string" || !isHttpUrl(baseUrl)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "providerSpecificData.baseUrl must be a valid http(s) URL",
+            path: ["baseUrl"],
+          });
+        }
+      }),
   })
   .superRefine((value, ctx) => {
     if (Object.keys(value).length === 0) {
