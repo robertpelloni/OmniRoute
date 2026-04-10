@@ -4,6 +4,15 @@
 
 ---
 
+## [3.6.0] - 2026-04-10
+### ✨ New Features
+- Initial Go port groundwork
+- Added CLIProxyAPIPlus submodule
+- Updated documentation files (VISION, MEMORY, DEPLOY, etc.)
+- Enhanced UI with more descriptive labels and tooltips
+
+---
+
 ## [3.5.9] — 2026-04-09
 
 ### ✨ New Features
