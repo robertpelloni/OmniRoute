@@ -2820,3 +2820,14 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### Added
 
 - Multiple provider integrations and dashboard improvements
+
+## [3.5.10] - 2024-04-10
+### Added
+- Created `omniroute-go` module to begin porting the core API/routing logic to Go for superior concurrency and robustness.
+- Added `github.com/robertpelloni/CLIProxyAPIPlus` as a git submodule to assimilate best architectural patterns and upstream improvements.
+- Added extensive provider definitions missing from OmniRoute but present in CLIProxyAPIPlus (`iFlow`, `CodeBuddy`, `GitLab Duo`, `Kilo`).
+- Added exhaustive documentation via `VISION.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `IDEAS.md`.
+- Added extensive UI tooltips across the Next.js `providers` dashboard to significantly improve user experience and clarity regarding API Keys, Priorities, and Fallbacks.
+
+### Changed
+- Standardized provider array list structures in `src/shared/constants/providers.ts`.
