@@ -4,8 +4,19 @@
 
 ---
 
-## [3.6.0] - 2026-04-10
+## [3.6.1] - 2026-04-12
+
 ### ✨ New Features
+
+- Ported OAuth Model Alias configuration to Go internal/config
+- Added detailed tooltips to Provider Limits UI components
+
+---
+
+## [3.6.0] - 2026-04-10
+
+### ✨ New Features
+
 - Initial Go port groundwork
 - Added CLIProxyAPIPlus submodule
 - Updated documentation files (VISION, MEMORY, DEPLOY, etc.)

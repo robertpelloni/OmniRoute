@@ -83,12 +83,16 @@ func purgeExpiredCaches() {
 				delete(sc.entries, k)
 			}
 		}
-		isEmpty := len(sc.entries) == 0
-		sc.mu.Unlock()
-		// Remove cache bucket if empty
-		if isEmpty {
-			signatureCache.Delete(key)
+
+		if len(sc.entries) == 0 {
+			// Instead of just unlocking, we attempt a compare and delete to prevent a race
+			// where an item is added right after the unlock but before we delete the sync.Map entry
+			sc.mu.Unlock()
+			signatureCache.CompareAndDelete(key, value)
+		} else {
+			sc.mu.Unlock()
 		}
+
 		return true
 	})
 }
