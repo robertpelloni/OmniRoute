@@ -135,7 +135,7 @@ export default function AppearanceTab() {
         <h3 className="text-lg font-semibold">{t("appearance")}</h3>
       </div>
       <div className="flex flex-col gap-4">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between" title="Toggle between light and dark themes immediately">
           <div>
             <p className="font-medium">{t("darkMode")}</p>
             <p className="text-sm text-text-muted">{t("switchThemes")}</p>
@@ -171,7 +171,7 @@ export default function AppearanceTab() {
           </div>
         </div>
 
-        <div className="pt-4 border-t border-border">
+        <div className="pt-4 border-t border-border" title="Customize the primary accent color used throughout the interface">
           <p className="font-medium mb-1">{t("themeAccent")}</p>
           <p className="text-sm text-text-muted mb-3">{t("themeAccentDesc")}</p>
 
@@ -224,7 +224,7 @@ export default function AppearanceTab() {
         </div>
 
         <div className="pt-4 border-t border-border">
-          <div className="mb-3">
+          <div className="mb-3" title="Customize which sidebar sections are visible to reduce clutter">
             <p className="font-medium">{t("sidebarVisibilityToggle")}</p>
             <p className="text-sm text-text-muted">
               {getSettingsLabel(
