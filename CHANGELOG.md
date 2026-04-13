@@ -4,6 +4,14 @@
 
 ---
 
+## [3.6.5] - 2026-04-12
+
+### ✨ New Features
+
+- Ported Vertex Compat configuration logic into Go internal/config
+
+---
+
 ## [3.6.4] - 2026-04-12
 
 ### ✨ New Features
