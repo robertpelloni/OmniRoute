@@ -4,6 +4,15 @@
 
 ---
 
+## [3.6.3] - 2026-04-12
+
+### ✨ New Features
+
+- Ported provider identification constants to Go internal/constant
+- Added tooltips to CLIProxyAPI dashboard settings tab
+
+---
+
 ## [3.6.2] - 2026-04-12
 
 ### ✨ New Features
