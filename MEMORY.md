@@ -5,3 +5,4 @@
 - 2026-04-12 (Session 2): Added tooltips to UI limits and quotas tracking section. Ported OAuth alias structures to Go configuration module.
 - 2026-04-12 (Session 3): Found that `CLIProxyAPIPlus` auth mechanisms are deeply tied to standard `misc` libraries from the proxy repo. Will need to strategically rewrite those rather than blind-copy. Added tooltips to ComplianceTab UI.
 - 2026-04-12 (Session 4): Ported standard provider identification constants to Go `internal/constant`. Added descriptive tooltips to the CLIProxyAPI backend configuration tab.
+- 2026-04-12 (Session 5): Began establishing the Go provider registry by extracting Kilo provider structures from the submodule into `internal/registry`. Added UI tooltips for the Agents page.

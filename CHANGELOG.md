@@ -4,6 +4,15 @@
 
 ---
 
+## [3.6.4] - 2026-04-12
+
+### ✨ New Features
+
+- Ported provider model registries (Kilo models) to Go internal/registry
+- Added missing UI tooltips to the Agents dashboard page
+
+---
+
 ## [3.6.3] - 2026-04-12
 
 ### ✨ New Features
