@@ -4,6 +4,14 @@
 
 ---
 
+## [3.6.2] - 2026-04-12
+
+### ✨ New Features
+
+- Added detailed tooltips and titles to the Compliance UI
+
+---
+
 ## [3.6.1] - 2026-04-12
 
 ### ✨ New Features
