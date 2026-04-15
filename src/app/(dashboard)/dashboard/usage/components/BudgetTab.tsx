@@ -155,8 +155,11 @@ export default function BudgetTab() {
   return (
     <div className="flex flex-col gap-6">
       {/* Key Selector */}
-      <Card className="p-6">
-        <div className="flex items-center gap-3 mb-4">
+      <Card
+        className="p-6"
+        title="Configure spending budgets to automatically stop requests when limits are exceeded"
+      >
+        <div className="flex items-center gap-3 mb-4" title="Select an API key to configure limits">
           <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-500">
             <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
               account_balance_wallet

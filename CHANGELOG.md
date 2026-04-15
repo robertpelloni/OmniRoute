@@ -4,6 +4,15 @@
 
 ---
 
+## [3.6.8] - 2026-04-12
+
+### ✨ New Features
+
+- Ported base proxy usage tracking structures to Go internal/usage
+- Added missing UI tooltips to the Dashboard Budget management tab
+
+---
+
 ## [3.6.7] - 2026-04-12
 
 ### ✨ New Features
