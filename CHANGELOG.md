@@ -4,6 +4,15 @@
 
 ---
 
+## [3.6.11] - 2026-04-12
+
+### ✨ New Features
+
+- Added expanded `Kiro` provider model mappings to TS `providerRegistry.ts` (syncing with Go port discoveries)
+- Added missing UI tooltips to the Models Dev Sync settings tab
+
+---
+
 ## [3.6.10] - 2026-04-12
 
 ### ✨ New Features

@@ -12,3 +12,4 @@ Brought `SDKConfig` from `CLIProxyAPIPlus` to the Go backend and documented UI i
 Continued UI and Go port enhancements. Added accessibility `title` to Budget tracking tabs, and brought over the core `usage` tracking interface into the Go router design. Tests running perfectly. Version bumped to 3.6.8.
 Continued UI and Go port enhancements. Added WebSockets and HTTP structures via `internal/wsrelay` and `internal/buildinfo`. Improved tooltip accessibility on ProxyTab settings. Version bumped to 3.6.9.
 Paused Go logic to ensure the current TS build receives equal feature functionality (added `kilo/auto` model identity). Improved tooltips on two UI settings pages. Version bumped to 3.6.10.
+Continued maintaining 100% TS parity by pushing Go port discoveries backwards. Added expanded Kiro provider logic to the `providerRegistry.ts`. Finalized tooltips on more dashboard settings. Tests passed. Bumped version to 3.6.11.

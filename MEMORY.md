@@ -12,3 +12,4 @@
 - 2026-04-12 (Session 9): Ported `usage` package from `CLIProxyAPIPlus` to internal Go backend. Annotated `BudgetTab` UI with comprehensive tooltips.
 - 2026-04-12 (Session 10): Ported `wsrelay` and `buildinfo` proxy packages. Added UI tooltips for ProxyTab.
 - 2026-04-12 (Session 11): Reflected Go port logic inside the TS `providerRegistry.ts` (added `kilo/auto`). Expanded settings tooltips (ComboDefaults/ModelAliases).
+- 2026-04-12 (Session 12): Kept TS logic synced with recently ported Go features. Migrated Kiro's expanded Claude provider model mapping backwards from the CLIProxyAPIPlus submodule spec to the active TS backend `open-sse/config/providerRegistry.ts`.
