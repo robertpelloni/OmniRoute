@@ -4,6 +4,15 @@
 
 ---
 
+## [3.6.9] - 2026-04-12
+
+### ✨ New Features
+
+- Ported proxy wsrelay and buildinfo logic to Go
+- Added missing UI tooltips to the Dashboard Proxy settings tab
+
+---
+
 ## [3.6.8] - 2026-04-12
 
 ### ✨ New Features

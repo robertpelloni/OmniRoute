@@ -10,3 +10,4 @@ Continued Go port by implementing Vertex AI Compatibility config structures into
 Another phase of the Go port integration complete. Expanded the provider schema structures (`internal/registry`) and added UI tooltips to settings. Version bumped to 3.6.6.
 Brought `SDKConfig` from `CLIProxyAPIPlus` to the Go backend and documented UI improvements on Security settings tab. Tests fully pass. Kept versions synced. Version 3.6.7.
 Continued UI and Go port enhancements. Added accessibility `title` to Budget tracking tabs, and brought over the core `usage` tracking interface into the Go router design. Tests running perfectly. Version bumped to 3.6.8.
+Continued UI and Go port enhancements. Added WebSockets and HTTP structures via `internal/wsrelay` and `internal/buildinfo`. Improved tooltip accessibility on ProxyTab settings. Version bumped to 3.6.9.

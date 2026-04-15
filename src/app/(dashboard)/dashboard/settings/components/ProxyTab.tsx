@@ -99,9 +99,12 @@ export default function ProxyTab() {
   return (
     <>
       <div className="flex flex-col gap-6">
-        <Card className="p-0 overflow-hidden">
+        <Card
+          className="p-0 overflow-hidden"
+          title="Configure the main proxy server to route all traffic through"
+        >
           <div className="p-6">
-            <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-2 mb-4" title="Global proxy connection settings">
               <span className="material-symbols-outlined text-xl text-primary" aria-hidden="true">
                 vpn_lock
               </span>
@@ -134,8 +137,8 @@ export default function ProxyTab() {
         </Card>
 
         <ProxyRegistryManager />
-        <Card className="p-6 mt-4">
-          <div className="flex items-center justify-between">
+        <Card className="p-6 mt-4" title="Enable debug mode for verbose proxy logging">
+          <div className="flex items-center justify-between" title="Toggle debug level logging">
             <div>
               <p className="font-medium">{t("debugToggle")}</p>
             </div>
@@ -173,18 +176,12 @@ export default function ProxyTab() {
                 size="sm"
                 variant="primary"
                 onClick={updateUsageTokenBuffer}
-                disabled={
-                  bufferSaving ||
-                  loading ||
-                  parseInt(bufferInput, 10) === usageTokenBuffer
-                }
+                disabled={bufferSaving || loading || parseInt(bufferInput, 10) === usageTokenBuffer}
               >
                 {bufferSaving ? tc("saving") : tc("save")}
               </Button>
               {usageTokenBuffer !== null && parseInt(bufferInput, 10) !== usageTokenBuffer && (
-                <span className="text-xs text-text-muted">
-                  Current: {usageTokenBuffer}
-                </span>
+                <span className="text-xs text-text-muted">Current: {usageTokenBuffer}</span>
               )}
             </div>
           </div>
