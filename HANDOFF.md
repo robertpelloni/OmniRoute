@@ -11,3 +11,4 @@ Another phase of the Go port integration complete. Expanded the provider schema 
 Brought `SDKConfig` from `CLIProxyAPIPlus` to the Go backend and documented UI improvements on Security settings tab. Tests fully pass. Kept versions synced. Version 3.6.7.
 Continued UI and Go port enhancements. Added accessibility `title` to Budget tracking tabs, and brought over the core `usage` tracking interface into the Go router design. Tests running perfectly. Version bumped to 3.6.8.
 Continued UI and Go port enhancements. Added WebSockets and HTTP structures via `internal/wsrelay` and `internal/buildinfo`. Improved tooltip accessibility on ProxyTab settings. Version bumped to 3.6.9.
+Paused Go logic to ensure the current TS build receives equal feature functionality (added `kilo/auto` model identity). Improved tooltips on two UI settings pages. Version bumped to 3.6.10.

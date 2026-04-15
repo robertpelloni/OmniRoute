@@ -96,8 +96,8 @@ export default function ComboDefaultsTab() {
   };
 
   return (
-    <Card>
-      <div className="flex items-center gap-3 mb-4">
+    <Card title="Manage global default values for agent combinations">
+      <div className="flex items-center gap-3 mb-4" title="Combo defaults configuration area">
         <div className="p-2 rounded-lg bg-amber-500/10 text-amber-500">
           <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
             tune

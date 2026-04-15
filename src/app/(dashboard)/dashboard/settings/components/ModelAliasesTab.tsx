@@ -74,8 +74,8 @@ export default function ModelAliasesTab() {
   const customEntries = Object.entries(custom);
 
   return (
-    <Card>
-      <div className="flex items-center gap-3 mb-5">
+    <Card title="Manage mapping definitions to auto-forward deprecated or custom model IDs to their active replacements">
+      <div className="flex items-center gap-3 mb-5" title="Model Aliases Configuration">
         <div className="p-2 rounded-lg bg-amber-500/10 text-amber-500">
           <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
             swap_horiz

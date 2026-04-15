@@ -4,6 +4,15 @@
 
 ---
 
+## [3.6.10] - 2026-04-12
+
+### ✨ New Features
+
+- Added `kilo/auto` model definition to providerRegistry mirroring the Go port implementation
+- Added missing UI tooltips to the Combo Defaults and Model Aliases settings tabs
+
+---
+
 ## [3.6.9] - 2026-04-12
 
 ### ✨ New Features

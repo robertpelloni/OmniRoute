@@ -11,3 +11,4 @@
 - 2026-04-12 (Session 8): Ported `SDKConfig` configurations to Go `internal/config`. Added UI tooltips for the Security Settings page.
 - 2026-04-12 (Session 9): Ported `usage` package from `CLIProxyAPIPlus` to internal Go backend. Annotated `BudgetTab` UI with comprehensive tooltips.
 - 2026-04-12 (Session 10): Ported `wsrelay` and `buildinfo` proxy packages. Added UI tooltips for ProxyTab.
+- 2026-04-12 (Session 11): Reflected Go port logic inside the TS `providerRegistry.ts` (added `kilo/auto`). Expanded settings tooltips (ComboDefaults/ModelAliases).
