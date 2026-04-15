@@ -4,6 +4,15 @@
 
 ---
 
+## [3.6.6] - 2026-04-12
+
+### ✨ New Features
+
+- Ported provider model registries and conversion schemas to Go internal/registry
+- Added missing UI tooltips to Cache settings page
+
+---
+
 ## [3.6.5] - 2026-04-12
 
 ### ✨ New Features

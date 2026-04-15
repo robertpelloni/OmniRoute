@@ -5,6 +5,7 @@ type ThinkingSupport struct {
 	Max            int
 	ZeroAllowed    bool
 	DynamicAllowed bool
+	Levels         []string
 }
 
 type ModelInfo struct {
