@@ -4,6 +4,15 @@
 
 ---
 
+## [3.6.7] - 2026-04-12
+
+### ✨ New Features
+
+- Ported base proxy SDK configuration objects to Go internal/config
+- Added missing UI tooltips to the Dashboard Security settings tab
+
+---
+
 ## [3.6.6] - 2026-04-12
 
 ### ✨ New Features

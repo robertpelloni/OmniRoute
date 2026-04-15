@@ -8,3 +8,4 @@
 - 2026-04-12 (Session 5): Began establishing the Go provider registry by extracting Kilo provider structures from the submodule into `internal/registry`. Added UI tooltips for the Agents page.
 - 2026-04-12 (Session 6): Ported Vertex Compat configs to `internal/config`. Fixed missing helper methods in `models.go`.
 - 2026-04-12 (Session 7): Continued porting provider definitions to `internal/registry` and added tooltips to the cache settings UI page.
+- 2026-04-12 (Session 8): Ported `SDKConfig` configurations to Go `internal/config`. Added UI tooltips for the Security Settings page.

@@ -8,3 +8,4 @@ Another phase of the Go port integration complete. Setup generic identifier cons
 Continued Go port with provider registry structures. Added tooltips to Agents dashboard page. Kept tests and version history fully synced. Version bumped to 3.6.4.
 Continued Go port by implementing Vertex AI Compatibility config structures into `internal/config`. No UI changes necessary for this round as they were finalized in the last pass. Version bumped to 3.6.5.
 Another phase of the Go port integration complete. Expanded the provider schema structures (`internal/registry`) and added UI tooltips to settings. Version bumped to 3.6.6.
+Brought `SDKConfig` from `CLIProxyAPIPlus` to the Go backend and documented UI improvements on Security settings tab. Tests fully pass. Kept versions synced. Version 3.6.7.
