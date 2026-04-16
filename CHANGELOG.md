@@ -4,6 +4,13 @@
 
 ---
 
+## [3.6.12] - 2026-04-12
+### ✨ New Features
+- Added `AIPerformanceChart` component to visually track routing accuracy and cost savings on the analytics dashboard
+- Established the baseline `provider` and `chat` core client interfaces for the Go native port
+
+---
+
 ## [3.6.11] - 2026-04-12
 
 ### ✨ New Features

@@ -25,4 +25,5 @@ export {
   ProviderCostDonut,
   ModelOverTimeChart,
   ProviderTable,
+  AIPerformanceChart,
 } from "./charts";
