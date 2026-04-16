@@ -266,7 +266,9 @@ Request middleware including `promptInjectionGuard.ts`.
 - **Memory/Skills** are cross-cutting: affect MCP tools, request pipeline, and A2A skills
 
 ## Submodules
+
 - **CLIProxyAPIPlus**: Located in `submodules/CLIProxyAPIPlus` - Third party provider support.
 
 ## Versioning
+
 - Always increment the version number for each build in `package.json` and `CHANGELOG.md`. Current version is referenced globally.

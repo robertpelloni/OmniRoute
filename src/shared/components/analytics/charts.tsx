@@ -24,6 +24,8 @@ import {
   Pie,
   AreaChart,
   Area,
+  CartesianGrid,
+  Legend,
 } from "recharts";
 
 function createDateFormatter(locale: string, options: Intl.DateTimeFormatOptions) {
@@ -1441,14 +1443,70 @@ export function AIPerformanceChart({ dailyTrend }) {
                 <stop offset="95%" stopColor="#3B82F6" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="opacity-10" />
-            <XAxis dataKey="date" tick={{ fontSize: 11, fill: "currentColor", opacity: 0.5 }} tickLine={false} axisLine={false} tickFormatter={(val) => val.split("-").slice(1).join("/")} minTickGap={30} />
-            <YAxis yAxisId="left" tick={{ fontSize: 11, fill: "currentColor", opacity: 0.5 }} tickLine={false} axisLine={false} tickFormatter={(val) => `${(val * 100).toFixed(0)}%`} />
-            <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11, fill: "currentColor", opacity: 0.5 }} tickLine={false} axisLine={false} tickFormatter={(val) => `$${val.toFixed(2)}`} />
-            <Tooltip contentStyle={{ backgroundColor: "var(--color-surface)", borderColor: "var(--color-border)", borderRadius: "8px", fontSize: "12px", color: "var(--color-text-main)" }} formatter={(val: number, name: string) => [name === "Accuracy" ? `${(val * 100).toFixed(1)}%` : `$${val.toFixed(3)}`, name]} labelFormatter={(label) => `Date: ${label}`} />
+            <CartesianGrid
+              strokeDasharray="3 3"
+              vertical={false}
+              stroke="currentColor"
+              className="opacity-10"
+            />
+            <XAxis
+              dataKey="date"
+              tick={{ fontSize: 11, fill: "currentColor", opacity: 0.5 }}
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(val) => val.split("-").slice(1).join("/")}
+              minTickGap={30}
+            />
+            <YAxis
+              yAxisId="left"
+              tick={{ fontSize: 11, fill: "currentColor", opacity: 0.5 }}
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(val) => `${(val * 100).toFixed(0)}%`}
+            />
+            <YAxis
+              yAxisId="right"
+              orientation="right"
+              tick={{ fontSize: 11, fill: "currentColor", opacity: 0.5 }}
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(val) => `$${val.toFixed(2)}`}
+            />
+            <Tooltip
+              contentStyle={{
+                backgroundColor: "var(--color-surface)",
+                borderColor: "var(--color-border)",
+                borderRadius: "8px",
+                fontSize: "12px",
+                color: "var(--color-text-main)",
+              }}
+              formatter={(val: number, name: string) => [
+                name === "Accuracy" ? `${(val * 100).toFixed(1)}%` : `$${val.toFixed(3)}`,
+                name,
+              ]}
+              labelFormatter={(label) => `Date: ${label}`}
+            />
             <Legend wrapperStyle={{ fontSize: "12px" }} />
-            <Area yAxisId="left" type="monotone" dataKey="aiRoutingAccuracy" name="Accuracy" stroke="#10B981" strokeWidth={2} fillOpacity={1} fill="url(#colorAccuracy)" />
-            <Area yAxisId="right" type="monotone" dataKey="aiCostSavings" name="Cost Savings" stroke="#3B82F6" strokeWidth={2} fillOpacity={1} fill="url(#colorSavings)" />
+            <Area
+              yAxisId="left"
+              type="monotone"
+              dataKey="aiRoutingAccuracy"
+              name="Accuracy"
+              stroke="#10B981"
+              strokeWidth={2}
+              fillOpacity={1}
+              fill="url(#colorAccuracy)"
+            />
+            <Area
+              yAxisId="right"
+              type="monotone"
+              dataKey="aiCostSavings"
+              name="Cost Savings"
+              stroke="#3B82F6"
+              strokeWidth={2}
+              fillOpacity={1}
+              fill="url(#colorSavings)"
+            />
           </AreaChart>
         </ResponsiveContainer>
       </div>

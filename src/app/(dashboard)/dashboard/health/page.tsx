@@ -192,7 +192,10 @@ export default function HealthPage() {
 
       {/* System Info Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="p-4" title="System Uptime: Shows how long the server has been running since the last restart">
+        <Card
+          className="p-4"
+          title="System Uptime: Shows how long the server has been running since the last restart"
+        >
           <div className="flex items-center gap-3 mb-2">
             <div className="flex items-center justify-center size-8 rounded-lg bg-primary/10 text-primary">
               <span className="material-symbols-outlined text-[18px]">timer</span>
@@ -202,7 +205,10 @@ export default function HealthPage() {
           <p className="text-xl font-semibold text-text-main">{formatUptime(system.uptime)}</p>
         </Card>
 
-        <Card className="p-4" title="Application Version: Displays current OmniRoute version and underlying Node.js version">
+        <Card
+          className="p-4"
+          title="Application Version: Displays current OmniRoute version and underlying Node.js version"
+        >
           <div className="flex items-center gap-3 mb-2">
             <div className="flex items-center justify-center size-8 rounded-lg bg-blue-500/10 text-blue-500">
               <span className="material-symbols-outlined text-[18px]">info</span>
@@ -215,7 +221,10 @@ export default function HealthPage() {
           </p>
         </Card>
 
-        <Card className="p-4" title="Memory Usage: Shows Resident Set Size (RSS) and V8 engine heap memory utilization">
+        <Card
+          className="p-4"
+          title="Memory Usage: Shows Resident Set Size (RSS) and V8 engine heap memory utilization"
+        >
           <div className="flex items-center gap-3 mb-2">
             <div className="flex items-center justify-center size-8 rounded-lg bg-purple-500/10 text-purple-500">
               <span className="material-symbols-outlined text-[18px]">memory</span>

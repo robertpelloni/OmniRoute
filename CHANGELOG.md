@@ -4,8 +4,26 @@
 
 ---
 
-## [3.6.12] - 2026-04-12
+## [3.6.13] - 2026-04-12
+
 ### ✨ New Features
+
+- Established the baseline `provider` and `chat` core client interfaces for the Go native port
+
+---
+
+## [3.6.13] - 2026-04-12
+
+### ✨ New Features
+
+- Verified Zed credentials feature is actively functioning; continued Dashboard accessibility UX upgrades with `title` attributes on IP Filters and Background Degradation
+
+---
+
+## [3.6.13] - 2026-04-12
+
+### ✨ New Features
+
 - Added `AIPerformanceChart` component to visually track routing accuracy and cost savings on the analytics dashboard
 - Established the baseline `provider` and `chat` core client interfaces for the Go native port
 
