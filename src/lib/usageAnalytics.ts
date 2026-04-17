@@ -178,12 +178,6 @@ export async function computeAnalytics(
       summary.uniqueApiKeys.add(entry.apiKeyId || entry.apiKeyName);
     }
 
-    // Simulated AI tracking
-    // We mock AI optimization scoring for routing efficiency logic since
-    // proxy metrics usually trace via external observability
-    const aiAccuracyScore = entry.ai_accuracy_score ?? Math.random() * (1 - 0.85) + 0.85; // Default high accuracy simulated
-    const aiCostSavings = entry.ai_cost_savings ?? cost * (Math.random() * 0.15);
-
     // Daily trend
     if (!dailyMap[dateKey]) {
       dailyMap[dateKey] = {
@@ -192,18 +186,12 @@ export async function computeAnalytics(
         promptTokens: 0,
         completionTokens: 0,
         cost: 0,
-        aiRoutingAccuracy: 0,
-        aiCostSavings: 0,
-        _accuracyCount: 0,
       };
     }
     dailyMap[dateKey].requests++;
     dailyMap[dateKey].promptTokens += pt;
     dailyMap[dateKey].completionTokens += ct;
     dailyMap[dateKey].cost += cost;
-    dailyMap[dateKey].aiRoutingAccuracy += aiAccuracyScore;
-    dailyMap[dateKey].aiCostSavings += aiCostSavings;
-    dailyMap[dateKey]._accuracyCount++;
 
     // Daily by model
     if (!dailyByModelMap[dateKey]) dailyByModelMap[dateKey] = {};
@@ -287,14 +275,10 @@ export async function computeAnalytics(
   // ---- Build sorted arrays ----
   const dailyTrend = Object.values(dailyMap)
     .sort((a, b) => a.date.localeCompare(b.date))
-    .map((day) => {
-      const accuracy = day._accuracyCount > 0 ? day.aiRoutingAccuracy / day._accuracyCount : 0;
-      delete day._accuracyCount;
-      return {
-        ...day,
-        aiRoutingAccuracy: accuracy,
-      };
-    });
+    .map((day) => ({
+      ...day,
+      tokens: day.promptTokens + day.completionTokens,
+    }));
 
   // Daily by model — collect all unique model names
   const allModels = new Set<string>();

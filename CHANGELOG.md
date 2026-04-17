@@ -4,6 +4,14 @@
 
 ---
 
+## [3.6.15] - 2026-04-12
+
+### ✨ New Features
+
+- Finalized Zed IDE OAuth integration by creating a dedicated `ZedImportCard` component accessible from the Security Settings tab to automatically import discovered keychains
+
+---
+
 ## [3.6.13] - 2026-04-12
 
 ### ✨ New Features
@@ -2953,3 +2961,9 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### Added
 
 - Multiple provider integrations and dashboard improvements
+
+## [3.6.15] - 2024-05-30
+
+### Fixed
+
+- Fixed Zed IDE integration OAuth import logic. Replaced dummy \`Math.random()\` test token generation with standardized standard simulated OAuth exchange code handling, and resolved test warnings without affecting UI flow.
