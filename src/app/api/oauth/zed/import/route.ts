@@ -25,22 +25,16 @@ export async function POST(request: Request) {
         },
       });
 
-      // Since this is a proxy API and we don't have real zed credentials in testing,
-      // we'll loosely check if the network call succeeded even if auth failed for the mock tests.
-      // But for the sake of the specification, let's assume zedResponse.ok is required
-      // or at least we catch the failure.
-
-      if (!zedResponse.ok && zedResponse.status !== 401 && zedResponse.status !== 403) {
-        // It might actually return 401 if it's a fake test token
-        // If it's a real server error (500), we throw.
-        if (zedResponse.status >= 500) {
-          throw new Error(`Zed API returned ${zedResponse.status}`);
-        }
+      if (!zedResponse.ok) {
+        // Specifically block on any non-OK status (including 401/403) for strict OAuth validation
+        throw new Error(`Zed API returned ${zedResponse.status}`);
       }
     } catch (e: any) {
-      console.warn(
-        "[Zed Validation] Validation fetch failed, but proceeding for tests:",
-        e.message
+      // In a strict mock testing environment we might need to simulate a failure
+      // or intercept this fetch. But for correct API validation logic, we MUST throw:
+      return NextResponse.json(
+        { success: false, error: `Invalid Zed credentials: ${e.message}` },
+        { status: 401 }
       );
     }
 

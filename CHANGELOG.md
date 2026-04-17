@@ -2967,3 +2967,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### Fixed
 
 - Fixed Zed IDE integration OAuth import logic. Replaced dummy \`Math.random()\` test token generation with standardized standard simulated OAuth exchange code handling, and resolved test warnings without affecting UI flow.
+
+### Fixed
+- Fixed Zed IDE OAuth validation not rejecting failed connections (`src/app/api/oauth/zed/import/route.ts`).
+- Fixed Zed Import UI flow missing components. Added `ZedImportCard.tsx` back into settings UI.
+- Removed fake usage statistics for `AIPerformanceChart` which was requested but resulted in inaccurate data generation.

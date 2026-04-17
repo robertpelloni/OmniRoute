@@ -221,8 +221,6 @@ export default function UsageAnalytics() {
         ]}
       />
 
-      {/* AI Performance Chart */}
-
       {/* Activity Heatmap + Weekly Widgets */}
       <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4 items-stretch">
         <ActivityHeatmap activityMap={analytics?.activityMap} />
