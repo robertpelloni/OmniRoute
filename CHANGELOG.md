@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+
 
 ---
 
@@ -2921,6 +2921,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 
 ## [2.3.9] - 2026-03-12
 
+## [3.6.17] - 2026-04-17
 ### Added
 
 - **/v1/completions**: New legacy OpenAI completions endpoint — accepts both `prompt` string and `messages` array, normalizes to chat format automatically
@@ -2958,6 +2959,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 
 ## [2.3.4] - 2026-03-10
 
+## [3.6.17] - 2026-04-17
 ### Added
 
 - Multiple provider integrations and dashboard improvements
@@ -2972,3 +2974,11 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - Fixed Zed IDE OAuth validation not rejecting failed connections (`src/app/api/oauth/zed/import/route.ts`).
 - Fixed Zed Import UI flow missing components. Added `ZedImportCard.tsx` back into settings UI.
 - Removed fake usage statistics for `AIPerformanceChart` which was requested but resulted in inaccurate data generation.
+
+
+
+## [3.6.17] - 2026-04-17
+### Added
+- Added comprehensive Go sqlite database initialization module (`internal/db/sqlite.go`).
+- Added base generic `Provider` and `Manager` interfaces for future Go routing (`internal/providers`).
+- Added extensive UI tooltips to Providers and Quotas dashboards.

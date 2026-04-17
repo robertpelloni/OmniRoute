@@ -433,6 +433,7 @@ export default function ProviderLimits() {
           <div className="flex rounded-lg border border-border overflow-hidden">
             <button
               onClick={() => handleSetGroupBy("none")}
+              title="Show a flat list of all provider limits without grouping"
               className="px-2.5 py-1.5 text-[12px] font-medium cursor-pointer border-none"
               style={{
                 background: groupBy === "none" ? "var(--color-bg-subtle)" : "transparent",
@@ -443,6 +444,7 @@ export default function ProviderLimits() {
             </button>
             <button
               onClick={() => handleSetGroupBy("environment")}
+              title="Group provider limits logically by their connection environment tags"
               className="px-2.5 py-1.5 text-[12px] font-medium cursor-pointer border-none"
               style={{
                 background: groupBy === "environment" ? "var(--color-bg-subtle)" : "transparent",
@@ -458,6 +460,7 @@ export default function ProviderLimits() {
           <button
             onClick={refreshAll}
             disabled={refreshingAll}
+            title="Force refresh all quota limitations and usage from all active providers"
             className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-bg-subtle border border-border text-text-main text-[13px] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             <span

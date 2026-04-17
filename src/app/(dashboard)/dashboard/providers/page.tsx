@@ -552,14 +552,14 @@ export default function ProvidersPage() {
               </button>
             )}
             {ccCompatibleProviderEnabled && (
-              <Button size="sm" icon="add" onClick={() => setShowAddCcCompatibleModal(true)}>
+              <Button size="sm" icon="add" title="Add a custom Copilot-compatible Provider via OmniRoute registry" onClick={() => setShowAddCcCompatibleModal(true)}>
                 {ADD_CC_COMPATIBLE_LABEL}
               </Button>
             )}
-            <Button size="sm" icon="add" onClick={() => setShowAddAnthropicCompatibleModal(true)}>
+            <Button size="sm" icon="add" title="Add an Anthropic-compatible Provider like open source Claude wrappers" onClick={() => setShowAddAnthropicCompatibleModal(true)}>
               {t("addAnthropicCompatible")}
             </Button>
-            <Button size="sm" icon="add" onClick={() => setShowAddCompatibleModal(true)}>
+            <Button size="sm" icon="add" title="Add any OpenAI-compatible custom provider endpoint like vLLM" onClick={() => setShowAddCompatibleModal(true)}>
               {t("addOpenAICompatible")}
             </Button>
           </div>
