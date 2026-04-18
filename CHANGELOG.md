@@ -2982,3 +2982,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - Added comprehensive Go sqlite database initialization module (`internal/db/sqlite.go`).
 - Added base generic `Provider` and `Manager` interfaces for future Go routing (`internal/providers`).
 - Added extensive UI tooltips to Providers and Quotas dashboards.
+
+
+### Added
+- Completed initial HTTP server setup for Go port (`internal/server/router.go` & `cmd/omniroute/main.go`).
+- Exposed placeholder `/api/v1/chat/completions` proxy endpoint internally using Go HTTP multiplexers mapping via `providers.Manager`.
