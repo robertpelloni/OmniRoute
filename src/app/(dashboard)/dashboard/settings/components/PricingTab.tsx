@@ -232,8 +232,7 @@ export default function PricingTab() {
           />
         </div>
         {selectedProvider && (
-          <button
-            onClick={() => setSelectedProvider(null)}
+          <button aria-label="Action button"             onClick={() => setSelectedProvider(null)}
             className="px-3 py-2 text-xs bg-primary/10 text-primary border border-primary/20 rounded-lg hover:bg-primary/20 transition-colors flex items-center gap-1"
           >
             <span className="material-symbols-outlined text-sm">close</span>
@@ -245,8 +244,7 @@ export default function PricingTab() {
       {/* Provider Pills (quick filter) */}
       <div className="flex flex-wrap gap-1.5">
         {allProviders.map((p) => (
-          <button
-            key={p.alias}
+          <button aria-label="Action button"             key={p.alias}
             onClick={() => selectProviderFilter(p.alias)}
             className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
               selectedProvider === p.alias
@@ -333,8 +331,7 @@ function ProviderSection({
       }`}
     >
       {/* Header (click to expand) */}
-      <button
-        onClick={onToggle}
+      <button aria-label="Action button"         onClick={onToggle}
         className="w-full flex items-center justify-between px-4 py-3 hover:bg-bg-hover/50 transition-colors text-left"
       >
         <div className="flex items-center gap-3">
@@ -387,8 +384,7 @@ function ProviderSection({
               {provider.modelCount} {t("models")} • {pricedCount} {t("withPricing")}
             </span>
             <div className="flex items-center gap-2">
-              <button
-                onClick={(e) => {
+              <button aria-label="Action button"                 onClick={(e) => {
                   e.stopPropagation();
                   onReset();
                 }}
@@ -396,8 +392,7 @@ function ProviderSection({
               >
                 {t("resetDefaults")}
               </button>
-              <button
-                onClick={(e) => {
+              <button aria-label="Action button"                 onClick={(e) => {
                   e.stopPropagation();
                   onSave();
                 }}

@@ -90,8 +90,7 @@ export default function IPFilterSection() {
       {/* Mode selector */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 mb-5">
         {MODES.map((m) => (
-          <button
-            key={m.value}
+          <button aria-label="Action button"             key={m.value}
             onClick={() => setMode(m.value)}
             disabled={loading}
             className={`flex flex-col items-center gap-1.5 p-3 rounded-lg border text-center transition-all ${
@@ -167,8 +166,7 @@ export default function IPFilterSection() {
                                bg-red-500/10 text-red-400 border border-red-500/20"
                   >
                     {ip}
-                    <button
-                      onClick={() => removeIP(ip, "blacklist")}
+                    <button aria-label="Action button"                       onClick={() => removeIP(ip, "blacklist")}
                       className="hover:text-red-300"
                     >
                       <span className="material-symbols-outlined text-[14px]">close</span>
@@ -193,8 +191,7 @@ export default function IPFilterSection() {
                                bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
                   >
                     {ip}
-                    <button
-                      onClick={() => removeIP(ip, "whitelist")}
+                    <button aria-label="Action button"                       onClick={() => removeIP(ip, "whitelist")}
                       className="hover:text-emerald-300"
                     >
                       <span className="material-symbols-outlined text-[14px]">close</span>
@@ -226,8 +223,7 @@ export default function IPFilterSection() {
                       <span className="text-xs text-text-muted tabular-nums">
                         {t("minLeft", { min: Math.ceil(ban.remainingMs / 60000) })}
                       </span>
-                      <button
-                        onClick={() => removeBan(ban.ip)}
+                      <button aria-label="Action button"                         onClick={() => removeBan(ban.ip)}
                         className="text-text-muted hover:text-orange-400"
                       >
                         <span className="material-symbols-outlined text-[16px]">delete</span>

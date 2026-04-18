@@ -105,8 +105,7 @@ export default function ThinkingBudgetTab() {
       {/* Mode selector */}
       <div className="grid grid-cols-2 gap-2 mb-5">
         {MODES.map((m) => (
-          <button
-            key={m.value}
+          <button aria-label="Action button"             key={m.value}
             onClick={() => save({ mode: m.value })}
             disabled={loading || saving}
             className={`flex items-start gap-3 p-3 rounded-lg border text-left transition-all ${
@@ -169,8 +168,7 @@ export default function ThinkingBudgetTab() {
           <p className="text-xs text-text-muted mb-3">{t("adaptiveHint")}</p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {EFFORTS.map((e) => (
-              <button
-                key={e.value}
+              <button aria-label="Action button"                 key={e.value}
                 onClick={() => save({ effortLevel: e.value })}
                 disabled={loading || saving}
                 className={`px-3 py-2 rounded-lg text-xs font-medium border transition-all ${

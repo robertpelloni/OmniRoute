@@ -97,7 +97,7 @@ function ProviderProfilesCard({ profiles, onSave, saving }) {
           </div>
           {editMode ? (
             <div className="flex flex-wrap justify-end gap-2">
-              <Button size="sm" variant="secondary" onClick={() => setEditMode(false)}>
+              <Button title="Execute this action" size="sm" variant="secondary" onClick={() => setEditMode(false)}>
                 {tc("cancel")}
               </Button>
               <Button
@@ -111,7 +111,7 @@ function ProviderProfilesCard({ profiles, onSave, saving }) {
               </Button>
             </div>
           ) : (
-            <Button size="sm" variant="secondary" icon="edit" onClick={() => setEditMode(true)}>
+            <Button title="Execute this action" size="sm" variant="secondary" icon="edit" onClick={() => setEditMode(true)}>
               {tc("edit")}
             </Button>
           )}
@@ -194,7 +194,7 @@ function RateLimitCard({ rateLimitStatus, defaults, onSaveDefaults, saving }) {
           </div>
           {editMode ? (
             <div className="flex gap-2">
-              <Button size="sm" variant="secondary" onClick={() => setEditMode(false)}>
+              <Button title="Execute this action" size="sm" variant="secondary" onClick={() => setEditMode(false)}>
                 {tc("cancel")}
               </Button>
               <Button
@@ -208,7 +208,7 @@ function RateLimitCard({ rateLimitStatus, defaults, onSaveDefaults, saving }) {
               </Button>
             </div>
           ) : (
-            <Button size="sm" variant="secondary" icon="edit" onClick={() => setEditMode(true)}>
+            <Button title="Execute this action" size="sm" variant="secondary" icon="edit" onClick={() => setEditMode(true)}>
               {tc("edit")}
             </Button>
           )}
@@ -441,7 +441,7 @@ function PoliciesCard() {
             <h2 className="text-lg font-bold">{t("policiesLocked")}</h2>
           </div>
           {hasIssues && (
-            <Button size="sm" variant="ghost" onClick={fetchPolicies}>
+            <Button title="Execute this action" size="sm" variant="ghost" onClick={fetchPolicies}>
               <span className="material-symbols-outlined text-[16px]">refresh</span>
             </Button>
           )}
@@ -644,7 +644,7 @@ export default function ResilienceTab() {
           <span className="material-symbols-outlined">error</span>
           <span className="text-sm">{error}</span>
         </div>
-        <Button size="sm" variant="secondary" icon="refresh" onClick={loadData} className="mt-3">
+        <Button title="Execute this action" size="sm" variant="secondary" icon="refresh" onClick={loadData} className="mt-3">
           {t("retry")}
         </Button>
       </Card>

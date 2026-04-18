@@ -126,8 +126,7 @@ export default function ComboDefaultsTab() {
             className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-1 p-0.5 rounded-md bg-black/5 dark:bg-white/5"
           >
             {strategyOptions.map((s) => (
-              <button
-                key={s.value}
+              <button aria-label="Action button"                 key={s.value}
                 role="tab"
                 aria-selected={comboDefaults.strategy === s.value}
                 onClick={() => setComboDefaults((prev) => ({ ...prev, strategy: s.value }))}
@@ -335,8 +334,7 @@ export default function ComboDefaultsTab() {
                 aria-label={t("providerTimeoutAria", { provider })}
               />
               <span className="text-[10px] text-text-muted">{t("ms")}</span>
-              <button
-                onClick={() => removeProviderOverride(provider)}
+              <button aria-label="Action button"                 onClick={() => removeProviderOverride(provider)}
                 className="ml-auto text-red-400 hover:text-red-500 transition-colors"
                 aria-label={t("removeProviderOverrideAria", { provider })}
               >
@@ -370,7 +368,7 @@ export default function ComboDefaultsTab() {
 
         {/* Save */}
         <div className="pt-3 border-t border-border/50">
-          <Button variant="primary" size="sm" onClick={saveComboDefaults} loading={saving}>
+          <Button title="Execute this action" variant="primary" size="sm" onClick={saveComboDefaults} loading={saving}>
             {t("saveComboDefaults")}
           </Button>
         </div>

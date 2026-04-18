@@ -143,7 +143,7 @@ export default function AppearanceTab() {
             <p className="font-medium">{t("darkMode")}</p>
             <p className="text-sm text-text-muted">{t("switchThemes")}</p>
           </div>
-          <Toggle checked={isDark} onChange={() => setTheme(isDark ? "light" : "dark")} />
+          <Toggle title="Toggle this setting on or off" checked={isDark} onChange={() => setTheme(isDark ? "light" : "dark")} />
         </div>
 
         <div className="pt-4 border-t border-border">
@@ -153,8 +153,7 @@ export default function AppearanceTab() {
             className="inline-flex p-1 rounded-lg bg-black/5 dark:bg-white/5"
           >
             {["light", "dark", "system"].map((option) => (
-              <button
-                key={option}
+              <button aria-label="Action button"                 key={option}
                 role="tab"
                 aria-selected={theme === option}
                 onClick={() => setTheme(option)}
@@ -185,8 +184,7 @@ export default function AppearanceTab() {
             {presetThemes.map((item) => {
               const active = colorTheme === item.id;
               return (
-                <button
-                  key={item.id}
+                <button aria-label="Action button"                   key={item.id}
                   onClick={() => setColorTheme(item.id)}
                   className={cn(
                     "flex items-center justify-between gap-2 p-2 rounded-lg border transition-colors",
@@ -223,7 +221,7 @@ export default function AppearanceTab() {
               maxLength={7}
               className={`flex-1 h-10 px-3 rounded-lg bg-surface border text-sm text-text-main focus:outline-none ${isValidHex ? "border-border focus:border-primary" : "border-red-400 focus:border-red-500"}`}
             />
-            <Button onClick={() => setCustomColorTheme(customThemeColor)} disabled={!isValidHex}>
+            <Button title="Execute this action" onClick={() => setCustomColorTheme(customThemeColor)} disabled={!isValidHex}>
               {t("themeCreate")}
             </Button>
           </div>

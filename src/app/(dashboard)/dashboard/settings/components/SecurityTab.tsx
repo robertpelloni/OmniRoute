@@ -164,7 +164,7 @@ export default function SecurityTab() {
               )}
 
               <div className="pt-2">
-                <Button type="submit" variant="primary" loading={passLoading}>
+                <Button title="Execute this action" type="submit" variant="primary" loading={passLoading}>
                   {settings.hasPassword ? t("updatePassword") : t("setPassword")}
                 </Button>
               </div>
@@ -207,8 +207,7 @@ export default function SecurityTab() {
               {Object.values(AI_PROVIDERS).map((provider: any) => {
                 const isBlocked = blockedProviders.includes(provider.id);
                 return (
-                  <button
-                    key={provider.id}
+                  <button aria-label="Action button"                     key={provider.id}
                     onClick={() => toggleBlockedProvider(provider.id)}
                     disabled={loading}
                     className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all border ${

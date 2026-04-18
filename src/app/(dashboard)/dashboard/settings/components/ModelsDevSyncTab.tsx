@@ -209,8 +209,7 @@ export default function ModelsDevSyncTab() {
             <p className="text-sm font-medium">{t("modelsDevEnabled")}</p>
             <p className="text-xs text-text-muted mt-0.5">{t("modelsDevEnabledDesc")}</p>
           </div>
-          <button
-            onClick={toggleEnabled}
+          <button aria-label="Action button"             onClick={toggleEnabled}
             disabled={saving}
             className={`relative w-11 h-6 rounded-full transition-colors ${
               enabled ? "bg-blue-500" : "bg-border"
@@ -253,8 +252,7 @@ export default function ModelsDevSyncTab() {
 
         {/* Manual sync button */}
         <div className="flex items-center gap-3">
-          <button
-            onClick={triggerSync}
+          <button aria-label="Action button"             onClick={triggerSync}
             disabled={syncing}
             className="px-4 py-2 text-sm font-medium rounded-lg bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-50 transition-colors flex items-center gap-2"
           >

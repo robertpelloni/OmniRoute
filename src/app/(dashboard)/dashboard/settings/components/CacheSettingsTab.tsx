@@ -82,8 +82,7 @@ export default function CacheSettingsTab() {
             title="Toggle Semantic Caching on or off"
           >
             <span className="text-sm text-text-muted">{t("enabled")}</span>
-            <button
-              onClick={() =>
+            <button aria-label="Action button"               onClick={() =>
                 setConfig((c) => ({ ...c, semanticCacheEnabled: !c.semanticCacheEnabled }))
               }
               className={`relative w-10 h-5 rounded-full transition-colors ${
@@ -136,8 +135,7 @@ export default function CacheSettingsTab() {
 
           <label className="flex items-center justify-between">
             <span className="text-sm text-text-muted">{t("enabled")}</span>
-            <button
-              onClick={() =>
+            <button aria-label="Action button"               onClick={() =>
                 setConfig((c) => ({ ...c, promptCacheEnabled: !c.promptCacheEnabled }))
               }
               className={`relative w-10 h-5 rounded-full transition-colors ${
@@ -192,7 +190,7 @@ export default function CacheSettingsTab() {
 
         {/* Save */}
         <div className="pt-4 border-t border-border/30">
-          <Button onClick={handleSave} disabled={saving} size="sm">
+          <Button title="Execute this action" onClick={handleSave} disabled={saving} size="sm">
             {saving ? t("saving") : t("save")}
           </Button>
         </div>
