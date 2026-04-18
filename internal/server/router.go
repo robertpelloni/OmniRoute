@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	"omniroute/internal/db"
 	"omniroute/internal/providers"
 )
 
@@ -55,12 +56,32 @@ func (s *Server) HandleChatCompletions(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// For MVP of the Go port, hardcode routing to the default OpenAI provider.
-	// In the future, this will lookup database registries to resolve the model.
-	provider, err := s.ProviderManager.GetProvider("openai")
+	// Resolve the target model and provider dynamically
+	modelToRequest := req.Model
+	if modelToRequest == "" {
+		modelToRequest = "gpt-3.5-turbo" // Default fallback
+	}
+
+	mapping, err := db.GetModelMapping(modelToRequest)
 	if err != nil {
-		http.Error(w, "Provider not found", http.StatusInternalServerError)
+		log.Printf("Failed to resolve model mapping for %s: %v", modelToRequest, err)
+		http.Error(w, "Internal server error resolving model", http.StatusInternalServerError)
 		return
+	}
+
+	// Update the request with the true target model name
+	req.Model = mapping.TargetModel
+
+	// Get the corresponding provider implementation
+	provider, err := s.ProviderManager.GetProvider(mapping.Provider)
+	if err != nil {
+		log.Printf("Provider '%s' not found for model '%s'", mapping.Provider, modelToRequest)
+		// Fallback to OpenAI if provider not found
+		provider, err = s.ProviderManager.GetProvider("openai")
+		if err != nil {
+			http.Error(w, "Provider not found", http.StatusInternalServerError)
+			return
+		}
 	}
 
 	// Read API key from Authorization header
