@@ -2987,3 +2987,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### Added
 - Completed initial HTTP server setup for Go port (`internal/server/router.go` & `cmd/omniroute/main.go`).
 - Exposed placeholder `/api/v1/chat/completions` proxy endpoint internally using Go HTTP multiplexers mapping via `providers.Manager`.
+
+
+### Fixed
+- Completed CLI tool OAuth mapping for Zed (`src/app/api/cli-tools/zed/zed-import/route.ts`) which stores successfully generated tokens into the internal API keys registry logic (`src/lib/db/apiKeys.ts`).
