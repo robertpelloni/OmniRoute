@@ -334,7 +334,7 @@ export default function ComboDefaultsTab() {
                 aria-label={t("providerTimeoutAria", { provider })}
               />
               <span className="text-[10px] text-text-muted">{t("ms")}</span>
-              <button aria-label="Action button"                 onClick={() => removeProviderOverride(provider)}
+              <button onClick={() => removeProviderOverride(provider)}
                 className="ml-auto text-red-400 hover:text-red-500 transition-colors"
                 aria-label={t("removeProviderOverrideAria", { provider })}
               >
