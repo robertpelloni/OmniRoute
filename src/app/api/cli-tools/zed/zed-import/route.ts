@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
-import { createApiKey } from "@/lib/db/apiKeys";
+import { getDbInstance } from "@/lib/db/core";
+import fs from "fs";
+import path from "path";
+import os from "os";
 
 export async function POST(request: Request) {
   const authError = await requireManagementAuth(request);
@@ -8,62 +11,79 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json().catch(() => ({}));
-    const { token, clientId, clientSecret, machineId = "zed-ide" } = body;
+    const { keyId } = body;
 
-    // Use whichever was provided. It could be an explicit token or client secret acting as token.
-    const oauthToken = token || clientSecret;
-
-    if (!oauthToken) {
+    if (!keyId) {
       return NextResponse.json(
-        { success: false, error: "Missing OAuth token or clientSecret" },
+        { success: false, error: "Missing keyId in request body" },
         { status: 400 }
       );
     }
 
-    // Validate the token against Zed's /api/user endpoint
-    let zedAccount = "Zed User";
-    try {
-      const zedResponse = await fetch("https://api.zed.dev/api/user", {
-        headers: {
-          Authorization: `Bearer ${oauthToken}`,
-        },
-      });
+    const db = getDbInstance();
+    const apiKeyRow = db.prepare("SELECT key FROM api_keys WHERE id = ? AND is_active = 1").get(keyId) as { key: string } | undefined;
 
-      if (!zedResponse.ok) {
-        if (zedResponse.status === 401 || zedResponse.status === 403) {
-          return NextResponse.json(
-            { success: false, error: "Invalid Zed IDE OAuth Token" },
-            { status: 401 }
-          );
-        }
-        throw new Error(`Zed API returned HTTP ${zedResponse.status}`);
-      }
-
-      // Read the user name if possible
-      const zedData = await zedResponse.json().catch(() => ({}));
-      if (zedData && zedData.login) {
-        zedAccount = zedData.login;
-      }
-    } catch (e: any) {
-      // Only fail if it's explicitly unauthorized, otherwise we assume it's a proxy test token issue
-      console.warn("[Zed User Validation] Fetch failed, proceeding cautiously:", e.message);
-      // In a true environment we might hard-fail here depending on strictness requirements,
-      // but typically external API checks can be flaky.
+    if (!apiKeyRow) {
+      return NextResponse.json(
+        { success: false, error: "Invalid or inactive key ID" },
+        { status: 404 }
+      );
     }
 
-    // Store the Zed proxy key natively using the system's apiKeys database layer
-    // (This creates an OmniRoute API key mapped to this specific user machine ID)
-    const newApiKey = await createApiKey(`Zed OAuth Key (${zedAccount})`, machineId);
+    // Determine path to zed config file depending on OS
+    const homeDir = os.homedir();
+    // Typical paths. For simplicity, writing to ~/.config/zed/settings.json
+    let configDir = path.join(homeDir, ".config", "zed");
+    if (os.platform() === 'darwin') {
+        configDir = path.join(homeDir, ".config", "zed");
+    } else if (os.platform() === 'win32') {
+        configDir = path.join(process.env.APPDATA || homeDir, "zed");
+    }
+
+    const settingsPath = path.join(configDir, "settings.json");
+
+    let settings: any = {};
+    if (fs.existsSync(settingsPath)) {
+        try {
+            const raw = fs.readFileSync(settingsPath, 'utf8');
+            settings = JSON.parse(raw);
+        } catch (e) {
+            console.error("Failed to parse Zed settings, creating new", e);
+        }
+    } else {
+        // Create directory if it doesn't exist
+        fs.mkdirSync(configDir, { recursive: true });
+    }
+
+    // Determine the base URL the app is running on. In production this might need to come from ENV
+    const protocol = request.headers.get("x-forwarded-proto") || "http";
+    const host = request.headers.get("host") || "localhost:3000";
+    const baseUrl = `${protocol}://${host}/api/v1`;
+
+    // Write Anthropic / OpenAI configuration overriding to use OmniRoute
+    settings.language_models = settings.language_models || {};
+
+    // OpenAI override
+    settings.language_models.openai = settings.language_models.openai || {};
+    settings.language_models.openai.api_url = baseUrl;
+    // Note: Due to Zed constraints, sometimes the API key needs to be set differently
+    // but the standard approach is just to inject it via env vars, or if Zed adds
+    // explicit key support for custom urls. We'll set the key in the JSON for hypothetical usage.
+    settings.language_models.openai.api_key = apiKeyRow.key;
+
+    // Anthropic override
+    settings.language_models.anthropic = settings.language_models.anthropic || {};
+    settings.language_models.anthropic.api_url = baseUrl;
+    settings.language_models.anthropic.api_key = apiKeyRow.key;
+
+    fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2), "utf8");
 
     return NextResponse.json({
       success: true,
-      message: "Zed IDE credentials mapped successfully",
-      apiKeyId: newApiKey.id, // return the generated ID
-      apiKeyName: newApiKey.name,
-      zedAccount,
+      message: "Zed IDE credentials configured successfully",
     });
   } catch (error: any) {
-    console.error("[Zed OAuth Import] Failed to map credentials:", error);
+    console.error("[Zed Config Import] Failed to write settings:", error);
     return NextResponse.json(
       { success: false, error: error.message || "Internal server error" },
       { status: 500 }

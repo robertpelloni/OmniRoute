@@ -1,6 +1,16 @@
 # Changelog
 
 ## [Unreleased]
+## [3.6.21] - 2024-04-10
+### Added
+- Completed `ZedToolCard` integration for writing configurations directly to `~/.config/zed/settings.json` locally using `keyId`.
+
+# Changelog
+
+## [Unreleased]
+## [3.6.21] - 2024-04-10
+### Added
+- Completed `ZedToolCard` integration for writing configurations directly to `~/.config/zed/settings.json` locally using `keyId`.
 
 ## [3.6.21] - 2024-04-10
 
