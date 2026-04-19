@@ -102,7 +102,9 @@ export default function RoutingTab() {
           style={{ gridAutoRows: "1fr" }}
         >
           {STRATEGIES.map((s) => (
-            <button aria-label="Action button"               key={s.value}
+            <button
+              aria-label="Action button"
+              key={s.value}
               onClick={() => updateSetting({ fallbackStrategy: s.value })}
               disabled={loading}
               className={`flex flex-col items-center gap-2 p-4 rounded-lg border text-center transition-all ${
@@ -295,7 +297,9 @@ export default function RoutingTab() {
                   </span>
                   <span className="font-mono text-text-main break-all">{a.target}</span>
                 </div>
-                <button aria-label="Action button"                   onClick={() => removeAlias(i)}
+                <button
+                  aria-label="Action button"
+                  onClick={() => removeAlias(i)}
                   className="shrink-0 text-text-muted hover:text-red-400 transition-colors"
                 >
                   <span className="material-symbols-outlined text-[16px]">close</span>
@@ -370,7 +374,9 @@ export default function RoutingTab() {
               desc: "Always remove client cache_control headers, let OmniRoute manage caching",
             },
           ].map((option) => (
-            <button aria-label="Action button"               key={option.value}
+            <button
+              aria-label="Action button"
+              key={option.value}
               onClick={() => updateSetting({ alwaysPreserveClientCache: option.value })}
               disabled={loading}
               className={`w-full flex flex-col items-start gap-1 p-3 rounded-lg border text-left transition-all ${

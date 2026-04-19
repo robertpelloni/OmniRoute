@@ -395,7 +395,13 @@ export default function SystemStorageTab() {
 
       {/* Export / Import */}
       <div className="flex flex-wrap items-center gap-2 mb-4">
-        <Button title="Execute this action" variant="outline" size="sm" onClick={handleExport} loading={exportLoading}>
+        <Button
+          title="Execute this action"
+          variant="outline"
+          size="sm"
+          onClick={handleExport}
+          loading={exportLoading}
+        >
           <span className="material-symbols-outlined text-[14px] mr-1" aria-hidden="true">
             download
           </span>
@@ -428,7 +434,13 @@ export default function SystemStorageTab() {
           </span>
           {t("exportAll")}
         </Button>
-        <Button title="Execute this action" variant="outline" size="sm" onClick={handleImportClick} loading={importLoading}>
+        <Button
+          title="Execute this action"
+          variant="outline"
+          size="sm"
+          onClick={handleImportClick}
+          loading={importLoading}
+        >
           <span className="material-symbols-outlined text-[14px] mr-1" aria-hidden="true">
             upload
           </span>
@@ -441,13 +453,25 @@ export default function SystemStorageTab() {
           className="hidden"
           onChange={handleFileSelected}
         />
-        <Button title="Execute this action" variant="outline" size="sm" onClick={handleExportJson} loading={exportLoading}>
+        <Button
+          title="Execute this action"
+          variant="outline"
+          size="sm"
+          onClick={handleExportJson}
+          loading={exportLoading}
+        >
           <span className="material-symbols-outlined text-[14px] mr-1" aria-hidden="true">
             data_object
           </span>
           Export JSON
         </Button>
-        <Button title="Execute this action" variant="outline" size="sm" onClick={handleImportJsonClick} loading={importLoading}>
+        <Button
+          title="Execute this action"
+          variant="outline"
+          size="sm"
+          onClick={handleImportJsonClick}
+          loading={importLoading}
+        >
           <span className="material-symbols-outlined text-[14px] mr-1" aria-hidden="true">
             data_object
           </span>
@@ -486,7 +510,12 @@ export default function SystemStorageTab() {
                 >
                   {t("yesImport")}
                 </Button>
-                <Button title="Execute this action" variant="outline" size="sm" onClick={handleImportCancel}>
+                <Button
+                  title="Execute this action"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleImportCancel}
+                >
                   {tc("cancel")}
                 </Button>
               </div>
@@ -753,7 +782,9 @@ export default function SystemStorageTab() {
                   <span className="text-xs text-text-muted">
                     {t("backupsAvailable", { count: backups.length })}
                   </span>
-                  <button aria-label="Action button"                     onClick={loadBackups}
+                  <button
+                    aria-label="Action button"
+                    onClick={loadBackups}
                     className="text-xs text-primary hover:underline flex items-center gap-1"
                   >
                     <span className="material-symbols-outlined text-[14px]" aria-hidden="true">

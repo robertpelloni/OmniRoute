@@ -82,7 +82,9 @@ export default function CodexServiceTierTab() {
             Codex fast mode is sent upstream as `service_tier=priority`.
           </p>
         </div>
-        <button aria-label="Action button"           onClick={() => save(!enabled)}
+        <button
+          aria-label="Action button"
+          onClick={() => save(!enabled)}
           disabled={loading || saving}
           className={`relative inline-flex h-6 w-11 items-center rounded-full border transition-colors ${
             enabled
