@@ -1,21 +1,17 @@
 # OmniRoute TODO List
 
 ## Immediate Bugs/Fixes
-
-- [ ] Go `internal/server/router.go` currently hardcodes provider routing. Update it to use dynamic model resolution.
-- [ ] Double check `/api/cli-tools/zed/zed-import` returns the correct shape for the desktop CLI.
+*   [ ] Double check `/api/cli-tools/zed/zed-import` handles missing Zed `.config` folders gracefully on Windows.
+*   [ ] Fix relative path aliases (e.g. `@/lib/db`) failing Turbopack Next.js builds. (Addressed in v3.6.21)
 
 ## Short-Term Features
-
-- [ ] Expand `internal/providers` interface in Go to cover `Stream()` natively.
-- [ ] Map Anthropic `claude-3` message attributes to standard OpenAI completions via Go.
-- [ ] Migrate `A2A` protocol executors from `open-sse/executors` (TS) to Go.
+*   [ ] Wire up `internal/auth/metrics.go` `TokenScorer` to `internal/server/router.go`.
+*   [ ] Build Go provider implementations (`OpenAI`, `Anthropic`, `Gemini`) satisfying `StreamExecutor`.
+*   [ ] Migrate `A2A` protocol executors from `open-sse/executors` (TS) to Go.
 
 ## Code Quality/Refactoring
-
-- [ ] Centralize i18n Next.js strings that were injected for tooltips into the actual `messages/en.json` file.
-- [ ] Migrate `better-sqlite3` typescript schema directly into Go migrations.
+*   [ ] Centralize i18n Next.js strings that were injected for tooltips into the actual `messages/en.json` file.
+*   [ ] Migrate `better-sqlite3` typescript schema directly into Go migrations.
 
 ## Submodule Tasks
-
-- [ ] Read documentation of `CLIProxyAPIPlus` and extract overlapping features to merge into `omniroute`.
+*   [ ] Dig deeper into `CLIProxyAPIPlus/internal/registry` and see if `model_updater.go` can be used to automatically sync OpenRouter definitions.
