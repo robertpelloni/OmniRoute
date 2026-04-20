@@ -2,10 +2,12 @@
 
 ## [Unreleased]
 
-## [3.6.24] - 2024-04-10
+## [3.6.25] - 2024-04-10
+
 ### Added
-- Completed GeminiProvider Go port (internal/providers/gemini.go).
-- Implemented GeminiProvider Server-Sent Events stream translation natively in Go (internal/providers/gemini_stream.go), adapting Google streamGenerateContent?alt=sse response payload back to standard OpenAI format.
+
+- Integrated `TokenScorer` from `internal/auth/metrics.go` directly into the `internal/server/router.go` execution pipeline, providing advanced, latency-aware provider credential load-balancing dynamically for every request.
+- Added SQLite query logic (`GetActiveTokensForProvider`) inside `internal/db/providers_db.go` to extract all available upstream credentials for targeted model routing.
 
 ## [3.6.23] - 2024-04-10
 
@@ -23,6 +25,13 @@
 # Changelog
 
 ## [Unreleased]
+
+## [3.6.25] - 2024-04-10
+
+### Added
+
+- Integrated `TokenScorer` from `internal/auth/metrics.go` directly into the `internal/server/router.go` execution pipeline, providing advanced, latency-aware provider credential load-balancing dynamically for every request.
+- Added SQLite query logic (`GetActiveTokensForProvider`) inside `internal/db/providers_db.go` to extract all available upstream credentials for targeted model routing.
 
 ## [3.6.23] - 2024-04-10
 

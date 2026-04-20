@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	"omniroute/internal/auth"
 	"omniroute/internal/db"
 	"omniroute/internal/providers"
 )
@@ -15,6 +16,7 @@ import (
 type Server struct {
 	ProviderManager *providers.Manager
 	Client          *http.Client
+	Scorer          *auth.TokenScorer
 }
 
 // NewServer initializes the HTTP server dependencies.
@@ -24,6 +26,7 @@ func NewServer(pm *providers.Manager) *Server {
 		Client: &http.Client{
 			Timeout: 60 * time.Second,
 		},
+		Scorer: auth.NewTokenScorer(),
 	}
 }
 
@@ -84,17 +87,21 @@ func (s *Server) HandleChatCompletions(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// Read API key from Authorization header
-	authHeader := r.Header.Get("Authorization")
-	var apiKey string
-	if len(authHeader) > 7 && authHeader[:7] == "Bearer " {
-		apiKey = authHeader[7:]
-	}
-
-	if apiKey == "" {
-		http.Error(w, "Unauthorized: missing API key", http.StatusUnauthorized)
+	// Select the best API key for the target provider using the TokenScorer
+	availableTokens, err := db.GetActiveTokensForProvider(mapping.Provider)
+	if err != nil || len(availableTokens) == 0 {
+		log.Printf("No available tokens found for provider '%s': %v", mapping.Provider, err)
+		http.Error(w, "Service Unavailable: No upstream credentials found", http.StatusServiceUnavailable)
 		return
 	}
+
+	bestToken := s.Scorer.SelectBestToken(availableTokens)
+	if bestToken == "" {
+		http.Error(w, "Service Unavailable: Failed to select upstream credentials", http.StatusServiceUnavailable)
+		return
+	}
+
+	start := time.Now()
 
 	// Check if this is a streaming request
 	if req.Stream {
@@ -108,7 +115,13 @@ func (s *Server) HandleChatCompletions(w http.ResponseWriter, r *http.Request) {
 		ctx, cancel := context.WithCancel(r.Context())
 		defer cancel()
 
-		if err := streamExecutor.ExecuteStream(ctx, s.Client, &req, apiKey, w); err != nil {
+		err := streamExecutor.ExecuteStream(ctx, s.Client, &req, bestToken, w)
+
+		// Record metrics after stream completes
+		latency := time.Since(start)
+		s.Scorer.RecordRequest(bestToken, err == nil, latency)
+
+		if err != nil {
 			log.Printf("Provider stream execution failed: %v", err)
 			// Status headers are typically already sent by ExecuteStream if it started proxying data,
 			// so writing an http.Error here may be too late.
@@ -119,7 +132,12 @@ func (s *Server) HandleChatCompletions(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), 50*time.Second)
 	defer cancel()
 
-	resp, err := provider.Execute(ctx, s.Client, &req, apiKey)
+	resp, err := provider.Execute(ctx, s.Client, &req, bestToken)
+
+	// Record metrics after request completes
+	latency := time.Since(start)
+	s.Scorer.RecordRequest(bestToken, err == nil, latency)
+
 	if err != nil {
 		log.Printf("Provider execution failed: %v", err)
 		http.Error(w, "Provider execution failed", http.StatusBadGateway)
