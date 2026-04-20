@@ -1,17 +1,21 @@
 # OmniRoute Session Handoff Document
 
-## Current Status (v3.6.22)
-*   **Go Port Foundation**: We now have a dynamic model routing engine (`internal/db/models.go` + `internal/server/router.go`), auth middleware, and the baseline structure for Server-Sent Events proxying (`internal/providers/stream.go`).
-*   **Submodule Integration**: Successfully added `CLIProxyAPIPlus` and ported its core load balancing/metrics tracking engine into `internal/auth/metrics.go` (`TokenScorer`). This provides sophisticated scoring (latency, quota, recency) to govern token multiplexing.
-*   **UI/TypeScript Fixes**: The Zed IDE OAuth credential mapping flow is 100% complete, including token extraction, DB insertion, and explicit native writing to `~/.config/zed/settings.json`.
+## Current Status (v3.6.23)
+
+- **Go Provider Migration**: The Go backend now has functional, SSE-capable adapters for both `OpenAI` and `Anthropic` providers natively (`internal/providers/`). The Anthropic provider includes a real-time translation pipeline to map Anthropic `content_block_delta` SSE frames back into standard OpenAI `chat.completion.chunk` structures without blocking the streaming connection.
+- **Dynamic Router**: Both providers are registered into the Go proxy pool (`internal/providers/manager.go`) and automatically targeted based on the DB model resolution inside `internal/server/router.go`.
+- **Submodule Integration**: `CLIProxyAPIPlus` remains imported, and its logic for `TokenScorer` was ported over.
+- **UI/TypeScript**: Zed IDE OAuth flows are fully verified and untouched.
 
 ## Immediate Next Steps for Next Session
-1.  **Implement Specific Go Providers**: Now that the core HTTP proxy router, dynamic DB lookups, and SSE streaming interfaces (`StreamExecutor`) exist in Go, we need to port the explicit logic for Anthropic, Gemini, and OpenAI over to `internal/providers/`. They must implement the `StreamExecutor` interface.
-2.  **Hook up TokenScorer**: Connect the newly added `TokenScorer` from `internal/auth/metrics.go` to the actual request pipeline in `internal/server/router.go` to balance incoming load among multiple available keys for a given model alias.
-3.  **UI Analytics Sync**: Make sure the new Go metrics (`internal/auth/metrics.go`) are surfaced through the `api/v1/search/analytics` endpoint so the Next.js UI dashboards remain functional.
+
+1.  **Port Gemini Provider**: We have OpenAI and Anthropic. To complete the "Big Three", implement the Google Gemini adapter (`internal/providers/gemini.go`) and its `StreamExecutor`.
+2.  **Activate TokenScorer**: Connect the newly added `TokenScorer` from `internal/auth/metrics.go` to the actual request pipeline in `internal/server/router.go` to balance incoming load among multiple available keys for a given model alias.
+3.  **A2A Protocol**: Investigate migrating `open-sse/executors` (the Agent-to-Agent protocol logic) to Go.
 
 ## Notes
-*   Always preserve environment variables when switching bash sessions.
-*   Do not `git add` compiled binaries (like `omniroute` or `server.log`).
-*   Follow `pre_commit_instructions` carefully. Ensure all TS changes pass `npm run build` and `npm run lint`. Ensure all Go changes pass `go build` and `go test`.
-*   Maintain the strict `CHANGELOG.md` format: `# Changelog \n\n## [Unreleased] \n\n## [Version] - Date`.
+
+- Always preserve environment variables when switching bash sessions.
+- Do not `git add` compiled binaries (like `omniroute` or `server.log`).
+- Follow `pre_commit_instructions` carefully. Ensure all TS changes pass `npm run build` and `npm run lint`. Ensure all Go changes pass `go build` and `go test`.
+- Maintain the strict `CHANGELOG.md` format: `# Changelog \n\n## [Unreleased] \n\n## [Version] - Date`. Do not blindly `sed` entire files without checking for destructive overwrites.

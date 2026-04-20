@@ -96,6 +96,26 @@ func (s *Server) HandleChatCompletions(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Check if this is a streaming request
+	if req.Stream {
+		streamExecutor, ok := provider.(providers.StreamExecutor)
+		if !ok {
+			log.Printf("Provider '%s' does not support streaming", provider.Name())
+			http.Error(w, "Provider does not support streaming", http.StatusNotImplemented)
+			return
+		}
+
+		ctx, cancel := context.WithCancel(r.Context())
+		defer cancel()
+
+		if err := streamExecutor.ExecuteStream(ctx, s.Client, &req, apiKey, w); err != nil {
+			log.Printf("Provider stream execution failed: %v", err)
+			// Status headers are typically already sent by ExecuteStream if it started proxying data,
+			// so writing an http.Error here may be too late.
+		}
+		return
+	}
+
 	ctx, cancel := context.WithTimeout(r.Context(), 50*time.Second)
 	defer cancel()
 
