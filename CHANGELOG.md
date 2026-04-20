@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+## [3.6.24] - 2024-04-10
+### Added
+- Completed GeminiProvider Go port (internal/providers/gemini.go).
+- Implemented GeminiProvider Server-Sent Events stream translation natively in Go (internal/providers/gemini_stream.go), adapting Google streamGenerateContent?alt=sse response payload back to standard OpenAI format.
+
 ## [3.6.23] - 2024-04-10
 
 ### Added
