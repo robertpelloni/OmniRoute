@@ -1,16 +1,15 @@
 # OmniRoute Session Handoff Document
 
-## Current Status (v3.6.25)
+## Current Status (v3.6.26)
 
-- **TokenScorer Integration**: The Go port load-balancer is now active! `internal/server/router.go` fetches all active API keys mapped to a target provider via `internal/db/providers_db.go`. It passes these to `auth.TokenScorer` (ported from the `CLIProxyAPIPlus` submodule), which calculates the optimal key to use based on latency, quota, and success rates, executing the `StreamExecutor` and dynamically tracking the results.
+- **TokenScorer Integration**: The `internal/server/router.go` seamlessly interacts with `TokenScorer` to load-balance tokens based on latency and success rate. Additionally, we have created an `api/v1/metrics` endpoint in the Go backend that dumps this runtime telemetry natively.
+- **Next.js UI Analytics Integration**: The legacy Next.js `/api/usage/analytics` endpoint now intercepts requests, hits the Go `/api/v1/metrics` proxy, and gracefully attaches the `goTokenScorer` results back out to the React components. This seamlessly preserves the charting logic without causing TS build errors.
 - **Go Provider Migration Complete (Big 3)**: The Go backend now has functional, SSE-capable adapters for all three core providers: `OpenAI`, `Anthropic`, and `Gemini` inside (`internal/providers/`).
-- **Gemini Nuances**: Google's `streamGenerateContent?alt=sse` response sends chunks arrays instead of nested choices. We have mapped this dynamically inside `gemini_stream.go` back into the OpenAI `chat.completion.chunk` expected shape so clients don't see the difference.
 - **Submodule Integration**: `CLIProxyAPIPlus` remains imported. Its logic for `TokenScorer` was successfully ported over and wired up.
-- **UI/TypeScript**: Zed IDE OAuth flows are fully verified and untouched.
 
 ## Immediate Next Steps for Next Session
 
-1.  **Expose Metrics**: The metrics tracked by `TokenScorer` in Go need to be surfaced back to the Next.js UI. The `api/v1/search/analytics` or the `usageAnalytics.ts` endpoints will likely need a native Go replacement that fetches data directly from the `TokenScorer` memory struct.
+1.  **Refine Go Error Handling**: The `HandleChatCompletions` endpoint currently intercepts a `stream == true` request and relies heavily on implicit connection lifecycles. We should review `fallback chaining` - if `TokenScorer` returns a key that fails the upstream request (e.g. 502/429), the Go server should retry with the _next_ best token before hard failing.
 2.  **A2A Protocol**: Investigate migrating `open-sse/executors` (the Agent-to-Agent protocol logic) to Go.
 
 ## Notes

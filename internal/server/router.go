@@ -37,6 +37,9 @@ func (s *Server) SetupRouter() *http.ServeMux {
 	// OpenAI Compatible API Endpoints
 	mux.HandleFunc("/api/v1/chat/completions", s.HandleChatCompletions)
 
+	// Internal proxy metrics endpoint
+	mux.HandleFunc("/api/v1/metrics", s.HandleMetrics)
+
 	// Health check
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
@@ -147,5 +150,21 @@ func (s *Server) HandleChatCompletions(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(resp); err != nil {
 		log.Printf("Failed to encode response: %v", err)
+	}
+}
+
+// HandleMetrics exposes the internal TokenScorer load balancing metrics for UI consumption.
+func (s *Server) HandleMetrics(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	metrics := s.Scorer.GetAllMetrics()
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(w).Encode(metrics); err != nil {
+		log.Printf("Failed to encode metrics response: %v", err)
 	}
 }

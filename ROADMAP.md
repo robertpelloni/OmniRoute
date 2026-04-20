@@ -22,7 +22,8 @@
 
 - [x] Analyze `CLIProxyAPIPlus` submodule architecture.
 - [x] Integrate advanced proxy metrics/load balancing from `CLIProxyAPIPlus` into the main OmniRoute Go binary (`internal/auth/metrics.go`).
-- [x] Wire up load balancing and fallback chaining via Go native concurrency.
+- [x] Expose `TokenScorer` native metrics to `api/v1/search/analytics` in the Next.js UI dashboards.
+- [ ] Wire up load balancing and fallback chaining via Go native concurrency.
 - [ ] Abstract configuration parameters for load balancer.
 
 ## Phase 3: Client Expansion

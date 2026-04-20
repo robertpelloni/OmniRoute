@@ -8,14 +8,14 @@ import (
 
 // TokenMetrics holds performance metrics for a single token.
 type TokenMetrics struct {
-	SuccessRate    float64   // Success rate (0.0 - 1.0)
-	AvgLatency     float64   // Average latency in milliseconds
-	QuotaRemaining float64   // Remaining quota (0.0 - 1.0)
-	LastUsed       time.Time // Last usage timestamp
-	FailCount      int       // Consecutive failure count
-	TotalRequests  int       // Total request count
-	successCount   int       // Internal: successful request count
-	totalLatency   float64   // Internal: cumulative latency
+	SuccessRate    float64   `json:"successRate"`
+	AvgLatency     float64   `json:"avgLatency"`
+	QuotaRemaining float64   `json:"quotaRemaining"`
+	LastUsed       time.Time `json:"lastUsed"`
+	FailCount      int       `json:"failCount"`
+	TotalRequests  int       `json:"totalRequests"`
+	successCount   int       `json:"-"`
+	totalLatency   float64   `json:"-"`
 }
 
 // TokenScorer manages token metrics and scoring.
@@ -23,7 +23,6 @@ type TokenScorer struct {
 	mu      sync.RWMutex
 	metrics map[string]*TokenMetrics
 
-	// Scoring weights
 	successRateWeight    float64
 	quotaWeight          float64
 	latencyWeight        float64
@@ -73,25 +72,21 @@ func (s *TokenScorer) RecordRequest(tokenKey string, success bool, latency time.
 		m.FailCount++
 	}
 
-	// Update derived metrics
 	if m.TotalRequests > 0 {
 		m.SuccessRate = float64(m.successCount) / float64(m.TotalRequests)
 		m.AvgLatency = m.totalLatency / float64(m.TotalRequests)
 	}
 }
 
-// CalculateScore computes the score for a token (higher is better).
+// CalculateScore computes the score for a token.
 func (s *TokenScorer) CalculateScore(tokenKey string) float64 {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
 	m, ok := s.metrics[tokenKey]
 	if !ok {
-		return 1.0 // New tokens get a high initial score
+		return 1.0
 	}
-
-	successScore := m.SuccessRate
-	quotaScore := m.QuotaRemaining
 
 	latencyScore := math.Exp(-m.AvgLatency / 1000.0)
 	if m.TotalRequests == 0 {
@@ -104,8 +99,8 @@ func (s *TokenScorer) CalculateScore(tokenKey string) float64 {
 		lastUsedScore = 1.0
 	}
 
-	score := s.successRateWeight*successScore +
-		s.quotaWeight*quotaScore +
+	score := s.successRateWeight*m.SuccessRate +
+		s.quotaWeight*m.QuotaRemaining +
 		s.latencyWeight*latencyScore +
 		s.lastUsedWeight*lastUsedScore
 
@@ -138,4 +133,16 @@ func (s *TokenScorer) SelectBestToken(tokens []string) string {
 	}
 
 	return bestToken
+}
+
+// GetAllMetrics returns a copy of all current token metrics for external observation.
+func (s *TokenScorer) GetAllMetrics() map[string]TokenMetrics {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	copyMetrics := make(map[string]TokenMetrics, len(s.metrics))
+	for k, v := range s.metrics {
+		copyMetrics[k] = *v
+	}
+	return copyMetrics
 }

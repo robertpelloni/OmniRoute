@@ -18,6 +18,7 @@ func NewManager() *Manager {
 	// Register default providers here.
 	m.RegisterProvider(NewOpenAIProvider(""))
 	m.RegisterProvider(NewAnthropicProvider(""))
+	m.RegisterProvider(NewGeminiProvider(""))
 
 	return m
 }

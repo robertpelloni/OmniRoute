@@ -2,14 +2,13 @@
 
 ## Immediate Bugs/Fixes
 
-- [ ] Double check `/api/cli-tools/zed/zed-import` handles missing Zed `.config` folders gracefully on Windows.
 - [ ] Verify the `AnthropicProvider` handles multi-modal image content blocks correctly inside `mapRequest`.
 - [ ] Enhance `GeminiProvider` mapping for arrays of complex `Parts`.
+- [ ] Ensure `HandleChatCompletions` executes retries for keys that yield 429 status codes.
 
 ## Short-Term Features
 
 - [ ] Verify `TokenScorer` weight variables are dynamically tunable via `config.yaml`.
-- [ ] Surface the Go proxy performance metrics natively via `api/v1/search/analytics` endpoint so the Next.js UI dashboards remain functional.
 - [ ] Migrate `A2A` protocol executors from `open-sse/executors` (TS) to Go.
 
 ## Code Quality/Refactoring
