@@ -74,8 +74,8 @@ export default function IPFilterSection() {
   const activeMode = !config.enabled ? "disabled" : config.mode;
 
   return (
-    <Card>
-      <div className="flex items-center gap-3 mb-5">
+    <Card title="Manage network security policies to permit or restrict incoming traffic by IP address">
+      <div className="flex items-center gap-3 mb-5" title="IP Filtering and Access Control Options">
         <div className="p-2 rounded-lg bg-red-500/10 text-red-500">
           <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
             security
@@ -91,6 +91,7 @@ export default function IPFilterSection() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 mb-5">
         {MODES.map((m) => (
           <button
+            aria-label="Action button"
             key={m.value}
             onClick={() => setMode(m.value)}
             disabled={loading}
@@ -168,6 +169,7 @@ export default function IPFilterSection() {
                   >
                     {ip}
                     <button
+                      aria-label="Action button"
                       onClick={() => removeIP(ip, "blacklist")}
                       className="hover:text-red-300"
                     >
@@ -194,6 +196,7 @@ export default function IPFilterSection() {
                   >
                     {ip}
                     <button
+                      aria-label="Action button"
                       onClick={() => removeIP(ip, "whitelist")}
                       className="hover:text-emerald-300"
                     >
@@ -227,6 +230,7 @@ export default function IPFilterSection() {
                         {t("minLeft", { min: Math.ceil(ban.remainingMs / 60000) })}
                       </span>
                       <button
+                        aria-label="Action button"
                         onClick={() => removeBan(ban.ip)}
                         className="text-text-muted hover:text-orange-400"
                       >

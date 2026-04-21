@@ -135,7 +135,12 @@ export default function FallbackChainsEditor() {
           <h3 className="text-lg font-semibold">{t("fallbackChainsTitle")}</h3>
           <p className="text-sm text-text-muted">{t("fallbackChainsDesc")}</p>
         </div>
-        <Button size="sm" variant="primary" onClick={() => setShowCreate(!showCreate)}>
+        <Button
+          title="Execute this action"
+          size="sm"
+          variant="primary"
+          onClick={() => setShowCreate(!showCreate)}
+        >
           {showCreate ? tc("cancel") : t("addChain")}
         </Button>
       </div>
@@ -157,7 +162,13 @@ export default function FallbackChainsEditor() {
               onChange={(e) => setNewProviders(e.target.value)}
             />
           </div>
-          <Button variant="primary" size="sm" onClick={handleCreate} loading={saving}>
+          <Button
+            title="Execute this action"
+            variant="primary"
+            size="sm"
+            onClick={handleCreate}
+            loading={saving}
+          >
             {t("createChain")}
           </Button>
         </div>
@@ -202,6 +213,7 @@ export default function FallbackChainsEditor() {
                   </div>
                 </div>
                 <button
+                  aria-label="Action button"
                   onClick={() => handleDelete(model)}
                   className="text-text-muted hover:text-red-400 transition-colors ml-2"
                   title={t("deleteChain")}

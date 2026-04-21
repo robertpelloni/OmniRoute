@@ -58,20 +58,32 @@ export default function CacheSettingsTab() {
   }
 
   return (
-    <Card className="p-6">
+    <Card
+      className="p-6"
+      title="Configure system caching logic including Semantic cache and Prompt cache"
+    >
       <h3 className="text-lg font-semibold text-text-main flex items-center gap-2 mb-4">
-        <span className="material-symbols-outlined text-[20px]">cached</span>
+        <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
+          cached
+        </span>
         {t("cacheSettings")}
       </h3>
 
       <div className="space-y-6">
         {/* Semantic Cache */}
-        <div className="space-y-3">
+        <div
+          className="space-y-3"
+          title="Settings for Semantic Caching which maps similar questions to previous answers"
+        >
           <h4 className="text-sm font-medium text-text-main">{t("semanticCache")}</h4>
 
-          <label className="flex items-center justify-between">
+          <label
+            className="flex items-center justify-between"
+            title="Toggle Semantic Caching on or off"
+          >
             <span className="text-sm text-text-muted">{t("enabled")}</span>
             <button
+              aria-label="Action button"
               onClick={() =>
                 setConfig((c) => ({ ...c, semanticCacheEnabled: !c.semanticCacheEnabled }))
               }
@@ -126,6 +138,7 @@ export default function CacheSettingsTab() {
           <label className="flex items-center justify-between">
             <span className="text-sm text-text-muted">{t("enabled")}</span>
             <button
+              aria-label="Action button"
               onClick={() =>
                 setConfig((c) => ({ ...c, promptCacheEnabled: !c.promptCacheEnabled }))
               }
@@ -181,7 +194,7 @@ export default function CacheSettingsTab() {
 
         {/* Save */}
         <div className="pt-4 border-t border-border/30">
-          <Button onClick={handleSave} disabled={saving} size="sm">
+          <Button title="Execute this action" onClick={handleSave} disabled={saving} size="sm">
             {saving ? t("saving") : t("save")}
           </Button>
         </div>

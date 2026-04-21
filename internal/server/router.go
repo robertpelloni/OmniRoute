@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"time"
 
-	"omniroute/internal/auth"
 	"omniroute/internal/db"
 	"omniroute/internal/providers"
 )
@@ -16,7 +15,6 @@ import (
 type Server struct {
 	ProviderManager *providers.Manager
 	Client          *http.Client
-	Scorer          *auth.TokenScorer
 }
 
 // NewServer initializes the HTTP server dependencies.
@@ -26,7 +24,6 @@ func NewServer(pm *providers.Manager) *Server {
 		Client: &http.Client{
 			Timeout: 60 * time.Second,
 		},
-		Scorer: auth.NewTokenScorer(),
 	}
 }
 
@@ -36,9 +33,6 @@ func (s *Server) SetupRouter() *http.ServeMux {
 
 	// OpenAI Compatible API Endpoints
 	mux.HandleFunc("/api/v1/chat/completions", s.HandleChatCompletions)
-
-	// Internal proxy metrics endpoint
-	mux.HandleFunc("/api/v1/metrics", s.HandleMetrics)
 
 	// Health check
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
@@ -90,119 +84,50 @@ func (s *Server) HandleChatCompletions(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// Select the best API key for the target provider using the TokenScorer
-	availableTokens, err := db.GetActiveTokensForProvider(mapping.Provider)
-	if err != nil || len(availableTokens) == 0 {
-		log.Printf("No available tokens found for provider '%s': %v", mapping.Provider, err)
-		http.Error(w, "Service Unavailable: No upstream credentials found", http.StatusServiceUnavailable)
+	// Read API key from Authorization header
+	authHeader := r.Header.Get("Authorization")
+	var apiKey string
+	if len(authHeader) > 7 && authHeader[:7] == "Bearer " {
+		apiKey = authHeader[7:]
+	}
+
+	if apiKey == "" {
+		http.Error(w, "Unauthorized: missing API key", http.StatusUnauthorized)
 		return
 	}
 
-	// Retry Fallback Loop
-	maxAttempts := len(availableTokens)
-	if maxAttempts > 3 {
-		maxAttempts = 3 // Cap retries
-	}
-
-	var lastErr error
-	triedTokens := make(map[string]bool)
-
-	for attempt := 0; attempt < maxAttempts; attempt++ {
-		// Filter out tokens we've already tried and failed
-		var untriedTokens []string
-		for _, t := range availableTokens {
-			if !triedTokens[t] {
-				untriedTokens = append(untriedTokens, t)
-			}
+	// Check if this is a streaming request
+	if req.Stream {
+		streamExecutor, ok := provider.(providers.StreamExecutor)
+		if !ok {
+			log.Printf("Provider '%s' does not support streaming", provider.Name())
+			http.Error(w, "Provider does not support streaming", http.StatusNotImplemented)
+			return
 		}
 
-		if len(untriedTokens) == 0 {
-			break
+		ctx, cancel := context.WithCancel(r.Context())
+		defer cancel()
+
+		if err := streamExecutor.ExecuteStream(ctx, s.Client, &req, apiKey, w); err != nil {
+			log.Printf("Provider stream execution failed: %v", err)
+			// Status headers are typically already sent by ExecuteStream if it started proxying data,
+			// so writing an http.Error here may be too late.
 		}
-
-		bestToken := s.Scorer.SelectBestToken(untriedTokens)
-		if bestToken == "" {
-			break
-		}
-
-		triedTokens[bestToken] = true
-		start := time.Now()
-
-		// Check if this is a streaming request
-		if req.Stream {
-			streamExecutor, ok := provider.(providers.StreamExecutor)
-			if !ok {
-				log.Printf("Provider '%s' does not support streaming", provider.Name())
-				http.Error(w, "Provider does not support streaming", http.StatusNotImplemented)
-				return
-			}
-
-			// We need a cancellable context for each attempt
-			ctx, cancel := context.WithCancel(r.Context())
-
-			// Stream execution
-			err := streamExecutor.ExecuteStream(ctx, s.Client, &req, bestToken, w)
-
-			latency := time.Since(start)
-			s.Scorer.RecordRequest(bestToken, err == nil, latency)
-
-			cancel()
-
-			if err != nil {
-				lastErr = err
-				log.Printf("Provider stream execution failed (Attempt %d): %v", attempt+1, err)
-				// If context was cancelled by client, don't retry.
-				if r.Context().Err() != nil {
-					return
-				}
-				// Retry on next loop iteration
-				continue
-			}
-			return // Success
-		}
-
-		// Synchronous execution
-		ctx, cancel := context.WithTimeout(r.Context(), 50*time.Second)
-		resp, err := provider.Execute(ctx, s.Client, &req, bestToken)
-
-		latency := time.Since(start)
-		s.Scorer.RecordRequest(bestToken, err == nil, latency)
-
-		cancel()
-
-		if err != nil {
-			lastErr = err
-			log.Printf("Provider execution failed (Attempt %d): %v", attempt+1, err)
-			if r.Context().Err() != nil {
-				return
-			}
-			continue
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		if err := json.NewEncoder(w).Encode(resp); err != nil {
-			log.Printf("Failed to encode response: %v", err)
-		}
-		return // Success
-	}
-
-	// If we exhaust the loop, return the last error
-	log.Printf("All fallback retries exhausted. Last error: %v", lastErr)
-	http.Error(w, "Service Unavailable: Upstream providers failed", http.StatusBadGateway)
-}
-
-// HandleMetrics exposes the internal TokenScorer load balancing metrics for UI consumption.
-func (s *Server) HandleMetrics(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
-	metrics := s.Scorer.GetAllMetrics()
+	ctx, cancel := context.WithTimeout(r.Context(), 50*time.Second)
+	defer cancel()
+
+	resp, err := provider.Execute(ctx, s.Client, &req, apiKey)
+	if err != nil {
+		log.Printf("Provider execution failed: %v", err)
+		http.Error(w, "Provider execution failed", http.StatusBadGateway)
+		return
+	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(metrics); err != nil {
-		log.Printf("Failed to encode metrics response: %v", err)
+	if err := json.NewEncoder(w).Encode(resp); err != nil {
+		log.Printf("Failed to encode response: %v", err)
 	}
 }

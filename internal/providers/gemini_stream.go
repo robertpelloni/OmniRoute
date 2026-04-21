@@ -56,10 +56,16 @@ func (p *GeminiProvider) ExecuteStream(ctx context.Context, client *http.Client,
 		return fmt.Errorf("upstream returned non-200 status code: %d", resp.StatusCode)
 	}
 
+	w.Header().Set("Content-Type", "text/event-stream")
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Connection", "keep-alive")
+	if f, ok := w.(http.Flusher); ok {
+		f.Flush()
+	}
+
 	reader := bufio.NewReader(resp.Body)
 	// Create a stable synthetic ID for the duration of the stream (Gemini lacks per-chunk IDs)
 	syntheticID := fmt.Sprintf("chatcmpl-%d", time.Now().UnixNano())
-	headersWritten := false
 
 	for {
 		select {
@@ -80,14 +86,6 @@ func (p *GeminiProvider) ExecuteStream(ctx context.Context, client *http.Client,
 			line = strings.TrimSpace(line)
 			if line == "" {
 				continue
-			}
-
-			if !headersWritten {
-				w.Header().Set("Content-Type", "text/event-stream")
-				w.Header().Set("Cache-Control", "no-cache")
-				w.Header().Set("Connection", "keep-alive")
-				w.WriteHeader(http.StatusOK)
-				headersWritten = true
 			}
 
 			if strings.HasPrefix(line, "data: ") {

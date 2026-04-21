@@ -103,6 +103,7 @@ export default function RoutingTab() {
         >
           {STRATEGIES.map((s) => (
             <button
+              aria-label="Action button"
               key={s.value}
               onClick={() => updateSetting({ fallbackStrategy: s.value })}
               disabled={loading}
@@ -297,6 +298,7 @@ export default function RoutingTab() {
                   <span className="font-mono text-text-main break-all">{a.target}</span>
                 </div>
                 <button
+                  aria-label="Action button"
                   onClick={() => removeAlias(i)}
                   className="shrink-0 text-text-muted hover:text-red-400 transition-colors"
                 >
@@ -373,6 +375,7 @@ export default function RoutingTab() {
             },
           ].map((option) => (
             <button
+              aria-label="Action button"
               key={option.value}
               onClick={() => updateSetting({ alwaysPreserveClientCache: option.value })}
               disabled={loading}

@@ -135,12 +135,19 @@ export default function AppearanceTab() {
         <h3 className="text-lg font-semibold">{t("appearance")}</h3>
       </div>
       <div className="flex flex-col gap-4">
-        <div className="flex items-center justify-between">
+        <div
+          className="flex items-center justify-between"
+          title="Toggle between light and dark themes immediately"
+        >
           <div>
             <p className="font-medium">{t("darkMode")}</p>
             <p className="text-sm text-text-muted">{t("switchThemes")}</p>
           </div>
-          <Toggle checked={isDark} onChange={() => setTheme(isDark ? "light" : "dark")} />
+          <Toggle
+            title="Toggle this setting on or off"
+            checked={isDark}
+            onChange={() => setTheme(isDark ? "light" : "dark")}
+          />
         </div>
 
         <div className="pt-4 border-t border-border">
@@ -151,6 +158,7 @@ export default function AppearanceTab() {
           >
             {["light", "dark", "system"].map((option) => (
               <button
+                aria-label="Action button"
                 key={option}
                 role="tab"
                 aria-selected={theme === option}
@@ -171,7 +179,10 @@ export default function AppearanceTab() {
           </div>
         </div>
 
-        <div className="pt-4 border-t border-border">
+        <div
+          className="pt-4 border-t border-border"
+          title="Customize the primary accent color used throughout the interface"
+        >
           <p className="font-medium mb-1">{t("themeAccent")}</p>
           <p className="text-sm text-text-muted mb-3">{t("themeAccentDesc")}</p>
 
@@ -180,6 +191,7 @@ export default function AppearanceTab() {
               const active = colorTheme === item.id;
               return (
                 <button
+                  aria-label="Action button"
                   key={item.id}
                   onClick={() => setColorTheme(item.id)}
                   className={cn(
@@ -217,14 +229,21 @@ export default function AppearanceTab() {
               maxLength={7}
               className={`flex-1 h-10 px-3 rounded-lg bg-surface border text-sm text-text-main focus:outline-none ${isValidHex ? "border-border focus:border-primary" : "border-red-400 focus:border-red-500"}`}
             />
-            <Button onClick={() => setCustomColorTheme(customThemeColor)} disabled={!isValidHex}>
+            <Button
+              title="Execute this action"
+              onClick={() => setCustomColorTheme(customThemeColor)}
+              disabled={!isValidHex}
+            >
               {t("themeCreate")}
             </Button>
           </div>
         </div>
 
         <div className="pt-4 border-t border-border">
-          <div className="mb-3">
+          <div
+            className="mb-3"
+            title="Customize which sidebar sections are visible to reduce clutter"
+          >
             <p className="font-medium">{t("sidebarVisibilityToggle")}</p>
             <p className="text-sm text-text-muted">
               {getSettingsLabel(

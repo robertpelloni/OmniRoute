@@ -634,10 +634,21 @@ export default function ProxyRegistryManager() {
           </div>
 
           <div className="flex items-center justify-end gap-2 pt-2 border-t border-border">
-            <Button size="sm" variant="secondary" onClick={() => setModalOpen(false)}>
+            <Button
+              title="Execute this action"
+              size="sm"
+              variant="secondary"
+              onClick={() => setModalOpen(false)}
+            >
               Cancel
             </Button>
-            <Button size="sm" icon="save" onClick={handleSave} loading={saving}>
+            <Button
+              title="Execute this action"
+              size="sm"
+              icon="save"
+              onClick={handleSave}
+              loading={saving}
+            >
               Save
             </Button>
           </div>
@@ -701,7 +712,12 @@ export default function ProxyRegistryManager() {
           )}
 
           <div className="flex items-center justify-end gap-2 pt-2 border-t border-border">
-            <Button size="sm" variant="secondary" onClick={() => setBulkOpen(false)}>
+            <Button
+              title="Execute this action"
+              size="sm"
+              variant="secondary"
+              onClick={() => setBulkOpen(false)}
+            >
               Cancel
             </Button>
             <Button

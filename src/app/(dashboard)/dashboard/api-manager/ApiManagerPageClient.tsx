@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo, useCallback, memo } from "react";
 import { Card, Button, Input, Modal, CardSkeleton } from "@/shared/components";
 import { useCopyToClipboard } from "@/shared/hooks/useCopyToClipboard";
 import { useTranslations } from "next-intl";
+import ZedImportCard from "../settings/components/ZedImportCard";
 
 // Constants for validation
 const MAX_KEY_NAME_LENGTH = 100;
@@ -494,6 +495,8 @@ export default function ApiManagerPageClient() {
           </Card>
         </div>
       )}
+
+      <ZedImportCard />
 
       {/* Header Card */}
       <Card>
