@@ -333,8 +333,8 @@ export default function SystemStorageTab() {
   };
 
   return (
-    <Card title="Manage application storage, database backups, and data portability">
-      <div className="flex items-center gap-3 mb-4" title="System storage overview">
+    <Card>
+      <div className="flex items-center gap-3 mb-4">
         <div className="p-2 rounded-lg bg-green-500/10 text-green-500">
           <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
             database
@@ -344,20 +344,14 @@ export default function SystemStorageTab() {
           <h3 className="text-lg font-semibold">{t("systemStorage")}</h3>
           <p className="text-xs text-text-muted">{t("allDataLocal")}</p>
         </div>
-        <Badge variant="success" size="sm" title="Active database driver">
+        <Badge variant="success" size="sm">
           {storageHealth.driver || "json"}
         </Badge>
       </div>
 
       {/* Storage info grid */}
-      <div
-        className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4"
-        title="Detailed storage metrics and paths"
-      >
-        <div
-          className="p-3 rounded-lg bg-bg border border-border"
-          title="Physical location of the SQLite database file"
-        >
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+        <div className="p-3 rounded-lg bg-bg border border-border">
           <p className="text-[11px] text-text-muted uppercase tracking-wide mb-1">
             {t("databasePath")}
           </p>
@@ -395,13 +389,7 @@ export default function SystemStorageTab() {
 
       {/* Export / Import */}
       <div className="flex flex-wrap items-center gap-2 mb-4">
-        <Button
-          title="Execute this action"
-          variant="outline"
-          size="sm"
-          onClick={handleExport}
-          loading={exportLoading}
-        >
+        <Button variant="outline" size="sm" onClick={handleExport} loading={exportLoading}>
           <span className="material-symbols-outlined text-[14px] mr-1" aria-hidden="true">
             download
           </span>
@@ -434,13 +422,7 @@ export default function SystemStorageTab() {
           </span>
           {t("exportAll")}
         </Button>
-        <Button
-          title="Execute this action"
-          variant="outline"
-          size="sm"
-          onClick={handleImportClick}
-          loading={importLoading}
-        >
+        <Button variant="outline" size="sm" onClick={handleImportClick} loading={importLoading}>
           <span className="material-symbols-outlined text-[14px] mr-1" aria-hidden="true">
             upload
           </span>
@@ -453,25 +435,13 @@ export default function SystemStorageTab() {
           className="hidden"
           onChange={handleFileSelected}
         />
-        <Button
-          title="Execute this action"
-          variant="outline"
-          size="sm"
-          onClick={handleExportJson}
-          loading={exportLoading}
-        >
+        <Button variant="outline" size="sm" onClick={handleExportJson} loading={exportLoading}>
           <span className="material-symbols-outlined text-[14px] mr-1" aria-hidden="true">
             data_object
           </span>
           Export JSON
         </Button>
-        <Button
-          title="Execute this action"
-          variant="outline"
-          size="sm"
-          onClick={handleImportJsonClick}
-          loading={importLoading}
-        >
+        <Button variant="outline" size="sm" onClick={handleImportJsonClick} loading={importLoading}>
           <span className="material-symbols-outlined text-[14px] mr-1" aria-hidden="true">
             data_object
           </span>
@@ -510,12 +480,7 @@ export default function SystemStorageTab() {
                 >
                   {t("yesImport")}
                 </Button>
-                <Button
-                  title="Execute this action"
-                  variant="outline"
-                  size="sm"
-                  onClick={handleImportCancel}
-                >
+                <Button variant="outline" size="sm" onClick={handleImportCancel}>
                   {tc("cancel")}
                 </Button>
               </div>
@@ -783,7 +748,6 @@ export default function SystemStorageTab() {
                     {t("backupsAvailable", { count: backups.length })}
                   </span>
                   <button
-                    aria-label="Action button"
                     onClick={loadBackups}
                     className="text-xs text-primary hover:underline flex items-center gap-1"
                   >

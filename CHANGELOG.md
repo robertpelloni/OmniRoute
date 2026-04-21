@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [3.6.28] - 2024-04-10
+
+### Fixed
+
+- Hardened Go `StreamExecutor` headers implementation (`internal/providers/*_stream.go`) to defer writing `200 OK` explicitly until the first bytes are successfully retrieved from upstream. This prevents empty headers from locking the client connection and allows seamless proxy fallback retries if the remote provider fails mid-connection.
+
 ## [3.6.27] - 2024-04-10
 
 ### Added

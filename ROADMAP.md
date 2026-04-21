@@ -16,7 +16,7 @@
 - [x] Add `Stream()` support to Go `internal/providers` interface.
 - [x] Migrate Anthropic provider mappings to Go `StreamExecutor`.
 - [x] Migrate Gemini provider mappings to Go `StreamExecutor`.
-- [ ] Replace TypeScript API proxy endpoints with native Go endpoints.
+- [ ] Replace TypeScript API proxy endpoints with native Go endpoints (`getExecutor`).
 
 ## Phase 2: Feature Assimilation
 

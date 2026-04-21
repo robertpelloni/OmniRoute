@@ -62,16 +62,10 @@ func (p *AnthropicProvider) ExecuteStream(ctx context.Context, client *http.Clie
 		return fmt.Errorf("upstream returned non-200 status code: %d", resp.StatusCode)
 	}
 
-	w.Header().Set("Content-Type", "text/event-stream")
-	w.Header().Set("Cache-Control", "no-cache")
-	w.Header().Set("Connection", "keep-alive")
-	if f, ok := w.(http.Flusher); ok {
-		f.Flush()
-	}
-
 	reader := bufio.NewReader(resp.Body)
 	var currentID string
 	var currentModel string
+	headersWritten := false
 
 	for {
 		select {
@@ -89,6 +83,14 @@ func (p *AnthropicProvider) ExecuteStream(ctx context.Context, client *http.Clie
 			line = strings.TrimSpace(line)
 			if line == "" {
 				continue
+			}
+
+			if !headersWritten {
+				w.Header().Set("Content-Type", "text/event-stream")
+				w.Header().Set("Cache-Control", "no-cache")
+				w.Header().Set("Connection", "keep-alive")
+				w.WriteHeader(http.StatusOK)
+				headersWritten = true
 			}
 
 			if strings.HasPrefix(line, "data: ") {

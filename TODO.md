@@ -4,10 +4,10 @@
 
 - [ ] Verify the `AnthropicProvider` handles multi-modal image content blocks correctly inside `mapRequest`.
 - [ ] Enhance `GeminiProvider` mapping for arrays of complex `Parts`.
-- [ ] Ensure `ExecuteStream` avoids flushing `200 OK` headers until the upstream stream yields the first data block, to allow seamless fallback retries on immediate disconnects.
 
 ## Short-Term Features
 
+- [ ] Replace `getExecutor` from `open-sse/executors/index.ts` with Go equivalent logic in `internal/providers/manager.go`.
 - [ ] Verify `TokenScorer` weight variables are dynamically tunable via `config.yaml`.
 - [ ] Migrate `A2A` protocol executors from `open-sse/executors` (TS) to Go.
 

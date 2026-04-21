@@ -110,7 +110,7 @@ export default function PoliciesPanel() {
             <p className="text-sm text-text-muted">{t("activeIssuesDetected")}</p>
           </div>
         </div>
-        <Button title="Execute this action" size="sm" variant="ghost" onClick={fetchPolicies}>
+        <Button size="sm" variant="ghost" onClick={fetchPolicies}>
           <span className="material-symbols-outlined text-[16px]">refresh</span>
         </Button>
       </div>

@@ -178,8 +178,8 @@ export default function ModelsDevSyncTab() {
   return (
     <div className="flex flex-col gap-6">
       {/* Main sync card */}
-      <Card title="Manage synchronization of remote model registry catalog metadata">
-        <div className="flex items-center gap-3 mb-5" title="Model catalog sync status">
+      <Card>
+        <div className="flex items-center gap-3 mb-5">
           <div className="p-2 rounded-lg bg-blue-500/10 text-blue-500">
             <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
               database
@@ -210,7 +210,6 @@ export default function ModelsDevSyncTab() {
             <p className="text-xs text-text-muted mt-0.5">{t("modelsDevEnabledDesc")}</p>
           </div>
           <button
-            aria-label="Action button"
             onClick={toggleEnabled}
             disabled={saving}
             className={`relative w-11 h-6 rounded-full transition-colors ${
@@ -255,7 +254,6 @@ export default function ModelsDevSyncTab() {
         {/* Manual sync button */}
         <div className="flex items-center gap-3">
           <button
-            aria-label="Action button"
             onClick={triggerSync}
             disabled={syncing}
             className="px-4 py-2 text-sm font-medium rounded-lg bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-50 transition-colors flex items-center gap-2"

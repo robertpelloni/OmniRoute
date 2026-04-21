@@ -43,19 +43,9 @@ func (p *OpenAIProvider) ExecuteStream(ctx context.Context, client *http.Client,
 		return fmt.Errorf("upstream returned non-200 status code: %d", resp.StatusCode)
 	}
 
-	// Set headers for SSE
-	w.Header().Set("Content-Type", "text/event-stream")
-	w.Header().Set("Cache-Control", "no-cache")
-	w.Header().Set("Connection", "keep-alive")
-	// If the server handles CORS it should be added in middleware, but just in case:
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-
-	// Flush headers immediately so the client knows the stream is active
-	if f, ok := w.(http.Flusher); ok {
-		f.Flush()
-	}
-
 	reader := bufio.NewReader(resp.Body)
+	headersWritten := false
+
 	for {
 		select {
 		case <-ctx.Done():
@@ -75,6 +65,18 @@ func (p *OpenAIProvider) ExecuteStream(ctx context.Context, client *http.Client,
 			line = strings.TrimSpace(line)
 			if line == "" {
 				continue // Skip empty lines
+			}
+
+			// Write headers ONLY if we successfully received the first data payload from the upstream stream.
+			// This prevents returning an empty 200 OK header if the stream abruptly crashes or fails,
+			// allowing the Go Proxy Router to intercept the failure and trigger a seamless retry fallback.
+			if !headersWritten {
+				w.Header().Set("Content-Type", "text/event-stream")
+				w.Header().Set("Cache-Control", "no-cache")
+				w.Header().Set("Connection", "keep-alive")
+				w.Header().Set("Access-Control-Allow-Origin", "*")
+				w.WriteHeader(http.StatusOK)
+				headersWritten = true
 			}
 
 			// If it's a data line, simply proxy it

@@ -42,7 +42,6 @@ func NewTokenScorer() *TokenScorer {
 	}
 }
 
-// getOrCreateMetrics returns existing metrics or creates new ones.
 func (s *TokenScorer) getOrCreateMetrics(tokenKey string) *TokenMetrics {
 	if m, ok := s.metrics[tokenKey]; ok {
 		return m
@@ -135,7 +134,6 @@ func (s *TokenScorer) SelectBestToken(tokens []string) string {
 	return bestToken
 }
 
-// GetAllMetrics returns a copy of all current token metrics for external observation.
 func (s *TokenScorer) GetAllMetrics() map[string]TokenMetrics {
 	s.mu.RLock()
 	defer s.mu.RUnlock()

@@ -1,14 +1,14 @@
 # OmniRoute Session Handoff Document
 
-## Current Status (v3.6.27)
+## Current Status (v3.6.28)
 
-- **TokenScorer & Fallback Retries**: The `internal/server/router.go` now handles explicit fallback and retry logic dynamically. If a selected token from the `TokenScorer` fails the `ExecuteStream` request natively in Go (e.g. from Anthropic hitting a 429 rate limit), the Go backend immediately records the failure internally, discards the token from the pool, picks the _next_ best token via `SelectBestToken`, and transparently retries the entire SSE proxy request without the client disconnecting or knowing an error occurred.
+- **TokenScorer & Fallback Retries**: The `internal/server/router.go` handles explicit fallback and retry logic dynamically. The streaming implementations (`internal/providers/*_stream.go`) have been fortified to ensure `200 OK` headers are _only_ explicitly sent upon successful connection confirmation, preventing the browser from caching broken streams during fallback loop evaluations.
 - **Go Provider Migration Complete (Big 3)**: The Go backend now has functional, SSE-capable adapters for all three core providers: `OpenAI`, `Anthropic`, and `Gemini` inside (`internal/providers/`).
 - **Submodule Integration**: `CLIProxyAPIPlus` remains imported. Its logic for `TokenScorer` was successfully ported over and wired up.
 
 ## Immediate Next Steps for Next Session
 
-1.  **Refine Go Streaming Headers**: The streaming implementations currently start writing headers implicitly inside the fallback loop. If an upstream returns a 429 _after_ headers are sent, the browser won't handle the retry properly. We should ensure the `ExecuteStream` interface delays writing the 200 OK header until we have verified the first successful byte from the upstream.
+1.  **Refactor Node/TS Executors to Go**: The user requested that we port `getExecutor` from `open-sse/executors/index.ts` over to the Go codebase. This should likely be mounted directly to our dynamic `ProviderManager` struct and registered dynamically rather than using strict manual TS switches.
 2.  **A2A Protocol**: Investigate migrating `open-sse/executors` (the Agent-to-Agent protocol logic) to Go.
 
 ## Notes
