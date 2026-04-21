@@ -1,15 +1,14 @@
 # OmniRoute Session Handoff Document
 
-## Current Status (v3.6.26)
+## Current Status (v3.6.27)
 
-- **TokenScorer Integration**: The `internal/server/router.go` seamlessly interacts with `TokenScorer` to load-balance tokens based on latency and success rate. Additionally, we have created an `api/v1/metrics` endpoint in the Go backend that dumps this runtime telemetry natively.
-- **Next.js UI Analytics Integration**: The legacy Next.js `/api/usage/analytics` endpoint now intercepts requests, hits the Go `/api/v1/metrics` proxy, and gracefully attaches the `goTokenScorer` results back out to the React components. This seamlessly preserves the charting logic without causing TS build errors.
+- **TokenScorer & Fallback Retries**: The `internal/server/router.go` now handles explicit fallback and retry logic dynamically. If a selected token from the `TokenScorer` fails the `ExecuteStream` request natively in Go (e.g. from Anthropic hitting a 429 rate limit), the Go backend immediately records the failure internally, discards the token from the pool, picks the _next_ best token via `SelectBestToken`, and transparently retries the entire SSE proxy request without the client disconnecting or knowing an error occurred.
 - **Go Provider Migration Complete (Big 3)**: The Go backend now has functional, SSE-capable adapters for all three core providers: `OpenAI`, `Anthropic`, and `Gemini` inside (`internal/providers/`).
 - **Submodule Integration**: `CLIProxyAPIPlus` remains imported. Its logic for `TokenScorer` was successfully ported over and wired up.
 
 ## Immediate Next Steps for Next Session
 
-1.  **Refine Go Error Handling**: The `HandleChatCompletions` endpoint currently intercepts a `stream == true` request and relies heavily on implicit connection lifecycles. We should review `fallback chaining` - if `TokenScorer` returns a key that fails the upstream request (e.g. 502/429), the Go server should retry with the _next_ best token before hard failing.
+1.  **Refine Go Streaming Headers**: The streaming implementations currently start writing headers implicitly inside the fallback loop. If an upstream returns a 429 _after_ headers are sent, the browser won't handle the retry properly. We should ensure the `ExecuteStream` interface delays writing the 200 OK header until we have verified the first successful byte from the upstream.
 2.  **A2A Protocol**: Investigate migrating `open-sse/executors` (the Agent-to-Agent protocol logic) to Go.
 
 ## Notes

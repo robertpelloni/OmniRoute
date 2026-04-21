@@ -4,7 +4,7 @@
 
 - [ ] Verify the `AnthropicProvider` handles multi-modal image content blocks correctly inside `mapRequest`.
 - [ ] Enhance `GeminiProvider` mapping for arrays of complex `Parts`.
-- [ ] Ensure `HandleChatCompletions` executes retries for keys that yield 429 status codes.
+- [ ] Ensure `ExecuteStream` avoids flushing `200 OK` headers until the upstream stream yields the first data block, to allow seamless fallback retries on immediate disconnects.
 
 ## Short-Term Features
 

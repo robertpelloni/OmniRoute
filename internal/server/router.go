@@ -98,59 +98,97 @@ func (s *Server) HandleChatCompletions(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	bestToken := s.Scorer.SelectBestToken(availableTokens)
-	if bestToken == "" {
-		http.Error(w, "Service Unavailable: Failed to select upstream credentials", http.StatusServiceUnavailable)
-		return
+	// Retry Fallback Loop
+	maxAttempts := len(availableTokens)
+	if maxAttempts > 3 {
+		maxAttempts = 3 // Cap retries
 	}
 
-	start := time.Now()
+	var lastErr error
+	triedTokens := make(map[string]bool)
 
-	// Check if this is a streaming request
-	if req.Stream {
-		streamExecutor, ok := provider.(providers.StreamExecutor)
-		if !ok {
-			log.Printf("Provider '%s' does not support streaming", provider.Name())
-			http.Error(w, "Provider does not support streaming", http.StatusNotImplemented)
-			return
+	for attempt := 0; attempt < maxAttempts; attempt++ {
+		// Filter out tokens we've already tried and failed
+		var untriedTokens []string
+		for _, t := range availableTokens {
+			if !triedTokens[t] {
+				untriedTokens = append(untriedTokens, t)
+			}
 		}
 
-		ctx, cancel := context.WithCancel(r.Context())
-		defer cancel()
+		if len(untriedTokens) == 0 {
+			break
+		}
 
-		err := streamExecutor.ExecuteStream(ctx, s.Client, &req, bestToken, w)
+		bestToken := s.Scorer.SelectBestToken(untriedTokens)
+		if bestToken == "" {
+			break
+		}
 
-		// Record metrics after stream completes
+		triedTokens[bestToken] = true
+		start := time.Now()
+
+		// Check if this is a streaming request
+		if req.Stream {
+			streamExecutor, ok := provider.(providers.StreamExecutor)
+			if !ok {
+				log.Printf("Provider '%s' does not support streaming", provider.Name())
+				http.Error(w, "Provider does not support streaming", http.StatusNotImplemented)
+				return
+			}
+
+			// We need a cancellable context for each attempt
+			ctx, cancel := context.WithCancel(r.Context())
+
+			// Stream execution
+			err := streamExecutor.ExecuteStream(ctx, s.Client, &req, bestToken, w)
+
+			latency := time.Since(start)
+			s.Scorer.RecordRequest(bestToken, err == nil, latency)
+
+			cancel()
+
+			if err != nil {
+				lastErr = err
+				log.Printf("Provider stream execution failed (Attempt %d): %v", attempt+1, err)
+				// If context was cancelled by client, don't retry.
+				if r.Context().Err() != nil {
+					return
+				}
+				// Retry on next loop iteration
+				continue
+			}
+			return // Success
+		}
+
+		// Synchronous execution
+		ctx, cancel := context.WithTimeout(r.Context(), 50*time.Second)
+		resp, err := provider.Execute(ctx, s.Client, &req, bestToken)
+
 		latency := time.Since(start)
 		s.Scorer.RecordRequest(bestToken, err == nil, latency)
 
+		cancel()
+
 		if err != nil {
-			log.Printf("Provider stream execution failed: %v", err)
-			// Status headers are typically already sent by ExecuteStream if it started proxying data,
-			// so writing an http.Error here may be too late.
+			lastErr = err
+			log.Printf("Provider execution failed (Attempt %d): %v", attempt+1, err)
+			if r.Context().Err() != nil {
+				return
+			}
+			continue
 		}
-		return
+
+		w.Header().Set("Content-Type", "application/json")
+		if err := json.NewEncoder(w).Encode(resp); err != nil {
+			log.Printf("Failed to encode response: %v", err)
+		}
+		return // Success
 	}
 
-	ctx, cancel := context.WithTimeout(r.Context(), 50*time.Second)
-	defer cancel()
-
-	resp, err := provider.Execute(ctx, s.Client, &req, bestToken)
-
-	// Record metrics after request completes
-	latency := time.Since(start)
-	s.Scorer.RecordRequest(bestToken, err == nil, latency)
-
-	if err != nil {
-		log.Printf("Provider execution failed: %v", err)
-		http.Error(w, "Provider execution failed", http.StatusBadGateway)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(resp); err != nil {
-		log.Printf("Failed to encode response: %v", err)
-	}
+	// If we exhaust the loop, return the last error
+	log.Printf("All fallback retries exhausted. Last error: %v", lastErr)
+	http.Error(w, "Service Unavailable: Upstream providers failed", http.StatusBadGateway)
 }
 
 // HandleMetrics exposes the internal TokenScorer load balancing metrics for UI consumption.

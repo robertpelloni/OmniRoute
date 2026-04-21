@@ -70,19 +70,6 @@ export async function GET(request) {
 
     const analytics: any = await computeAnalytics(history, range, connectionMap);
 
-    // Fetch live Go metrics if running behind the new Go proxy
-    try {
-      // Internal URL assumption, depending on how Go mounts Next.js
-      const goMetricsResp = await fetch("http://127.0.0.1:3000/api/v1/metrics").catch(() => null);
-      if (goMetricsResp && goMetricsResp.ok) {
-        const tokenScorerMetrics = await goMetricsResp.json();
-        // Inject the active live metrics payload into the frontend stats
-        analytics.goTokenScorer = tokenScorerMetrics;
-      }
-    } catch (e) {
-      console.warn("[Analytics] Could not connect to Go metrics proxy", e);
-    }
-
     // T01: fallback transparency metrics from call_logs (requested_model vs routed model).
     try {
       const db = getDbInstance();

@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+## [3.6.27] - 2024-04-10
+
+### Added
+
+- Implemented robust proxy fallback retry logic directly into the Go `internal/server/router.go` layer.
+- If a target `StreamExecutor` or standard `Execute` call fails due to upstream unreliability (e.g. 429/502), the `TokenScorer` instantly penalizes the key and the router transparently retries the identical stream parameters using the next best optimal token in the pool, shielding clients from failure.
+
 ## [3.6.26] - 2024-04-10
 
 ### Added
