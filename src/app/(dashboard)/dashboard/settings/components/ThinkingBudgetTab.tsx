@@ -106,7 +106,7 @@ export default function ThinkingBudgetTab() {
       <div className="grid grid-cols-2 gap-2 mb-5">
         {MODES.map((m) => (
           <button
-            aria-label="Action button"
+
             key={m.value}
             onClick={() => save({ mode: m.value })}
             disabled={loading || saving}
@@ -171,7 +171,7 @@ export default function ThinkingBudgetTab() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {EFFORTS.map((e) => (
               <button
-                aria-label="Action button"
+
                 key={e.value}
                 onClick={() => save({ effortLevel: e.value })}
                 disabled={loading || saving}

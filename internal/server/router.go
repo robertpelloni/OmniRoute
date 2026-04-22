@@ -1,12 +1,15 @@
 package server
 
 import (
+	"bytes"
+	"context"
 	"encoding/json"
+	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"time"
 
-	"omniroute/internal/auth"
 	"omniroute/internal/combo"
 	"omniroute/internal/db"
 	"omniroute/internal/providers"
@@ -16,22 +19,17 @@ import (
 type Server struct {
 	ProviderManager *providers.Manager
 	Client          *http.Client
-	Scorer          *auth.TokenScorer
 	ComboEngine     *combo.Engine
 }
 
 // NewServer initializes the HTTP server dependencies.
-func NewServer(pm *providers.Manager) *Server {
-	client := &http.Client{
-		Timeout: 60 * time.Second,
-	}
-	scorer := auth.NewTokenScorer()
-
+func NewServer(pm *providers.Manager, engine *combo.Engine) *Server {
 	return &Server{
 		ProviderManager: pm,
-		Client:          client,
-		Scorer:          scorer,
-		ComboEngine:     combo.NewEngine(pm, client, scorer),
+		Client: &http.Client{
+			Timeout: 60 * time.Second,
+		},
+		ComboEngine: engine,
 	}
 }
 
@@ -41,9 +39,6 @@ func (s *Server) SetupRouter() *http.ServeMux {
 
 	// OpenAI Compatible API Endpoints
 	mux.HandleFunc("/api/v1/chat/completions", s.HandleChatCompletions)
-
-	// Internal proxy metrics endpoint
-	mux.HandleFunc("/api/v1/metrics", s.HandleMetrics)
 
 	// Health check
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
@@ -61,32 +56,25 @@ func (s *Server) HandleChatCompletions(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	bodyBytes, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Error reading request body", http.StatusInternalServerError)
+		return
+	}
+	r.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
+
 	var req providers.ProviderRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+	if err := json.Unmarshal(bodyBytes, &req); err != nil {
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
 		return
 	}
 
+	// Resolve the target model and provider dynamically
 	modelToRequest := req.Model
 	if modelToRequest == "" {
 		modelToRequest = "gpt-3.5-turbo" // Default fallback
-		req.Model = modelToRequest
 	}
 
-	// Check if the requested model is actually a Combo alias (e.g. "fastest", "cheapest")
-	comboRoute, isCombo := combo.GetComboRoute(modelToRequest)
-	if isCombo {
-		log.Printf("Executing combo route for '%s'", modelToRequest)
-		ctx := r.Context()
-		if err := s.ComboEngine.ExecuteCombo(ctx, comboRoute, &req, w); err != nil {
-			log.Printf("Combo execution failed entirely: %v", err)
-			// Status headers may already be sent if it failed mid-stream
-			// Fallback: we could send a manual error payload here, but ExecuteCombo handles it largely.
-		}
-		return
-	}
-
-	// If not a combo, proceed with normal single-provider mapping
 	mapping, err := db.GetModelMapping(modelToRequest)
 	if err != nil {
 		log.Printf("Failed to resolve model mapping for %s: %v", modelToRequest, err)
@@ -94,30 +82,104 @@ func (s *Server) HandleChatCompletions(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Single provider routing logic delegates directly to the combo engine using a 1-length array
-	singleRoute := combo.ComboRoute{
-		ID:        modelToRequest,
-		Providers: []string{mapping.Provider},
+	// Read API key from Authorization header
+	authHeader := r.Header.Get("Authorization")
+	var clientApiKey string
+	if len(authHeader) > 7 && authHeader[:7] == "Bearer " {
+		clientApiKey = authHeader[7:]
 	}
 
-	ctx := r.Context()
-	if err := s.ComboEngine.ExecuteCombo(ctx, singleRoute, &req, w); err != nil {
-		log.Printf("Single provider execution failed via combo engine: %v", err)
-	}
-}
+	// Use combo engine if available
+	if s.ComboEngine != nil {
+		// Example combo chain, ideally retrieved from DB
+		chain := combo.ProviderChain{
+			Providers: []string{mapping.Provider, "openai", "anthropic"},
+		}
 
-// HandleMetrics exposes the internal TokenScorer load balancing metrics for UI consumption.
-func (s *Server) HandleMetrics(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		ctx := r.Context()
+		err := s.ComboEngine.Route(ctx, chain, r, func(providerName string, token string) error {
+			provider, pErr := s.ProviderManager.GetProvider(providerName)
+			if pErr != nil {
+				return pErr
+			}
+
+			// Use the resolved token from DB, or fallback to client token
+			apiKey := token
+			if apiKey == "" {
+				apiKey = clientApiKey
+			}
+
+			// Update the request with the true target model name
+			// This would ideally lookup the provider's specific model mapping
+			req.Model = mapping.TargetModel
+
+			if req.Stream {
+				streamExecutor, ok := provider.(providers.StreamExecutor)
+				if !ok {
+					return fmt.Errorf("provider does not support streaming")
+				}
+
+				return streamExecutor.ExecuteStream(ctx, s.Client, &req, apiKey, w)
+			}
+
+			resp, eErr := provider.Execute(ctx, s.Client, &req, apiKey)
+			if eErr != nil {
+				return eErr
+			}
+
+			w.Header().Set("Content-Type", "application/json")
+			return json.NewEncoder(w).Encode(resp)
+		})
+
+		if err != nil {
+			log.Printf("Combo routing failed: %v", err)
+			http.Error(w, "All providers failed", http.StatusBadGateway)
+		}
 		return
 	}
 
-	metrics := s.Scorer.GetAllMetrics()
+	// Fallback to basic routing
+	req.Model = mapping.TargetModel
+	provider, err := s.ProviderManager.GetProvider(mapping.Provider)
+	if err != nil {
+		log.Printf("Provider '%s' not found for model '%s'", mapping.Provider, modelToRequest)
+		// Fallback to OpenAI if provider not found
+		provider, _ = s.ProviderManager.GetProvider("openai")
+	}
+
+	if clientApiKey == "" {
+		http.Error(w, "Unauthorized: missing API key", http.StatusUnauthorized)
+		return
+	}
+
+	if req.Stream {
+		streamExecutor, ok := provider.(providers.StreamExecutor)
+		if !ok {
+			http.Error(w, "Provider does not support streaming", http.StatusNotImplemented)
+			return
+		}
+
+		ctx, cancel := context.WithCancel(r.Context())
+		defer cancel()
+
+		if err := streamExecutor.ExecuteStream(ctx, s.Client, &req, clientApiKey, w); err != nil {
+			log.Printf("Provider stream execution failed: %v", err)
+		}
+		return
+	}
+
+	ctx, cancel := context.WithTimeout(r.Context(), 50*time.Second)
+	defer cancel()
+
+	resp, err := provider.Execute(ctx, s.Client, &req, clientApiKey)
+	if err != nil {
+		log.Printf("Provider execution failed: %v", err)
+		http.Error(w, "Provider execution failed", http.StatusBadGateway)
+		return
+	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(metrics); err != nil {
-		log.Printf("Failed to encode metrics response: %v", err)
+	if err := json.NewEncoder(w).Encode(resp); err != nil {
+		log.Printf("Failed to encode response: %v", err)
 	}
 }

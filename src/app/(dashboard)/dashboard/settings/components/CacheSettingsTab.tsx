@@ -83,7 +83,7 @@ export default function CacheSettingsTab() {
           >
             <span className="text-sm text-text-muted">{t("enabled")}</span>
             <button
-              aria-label="Action button"
+
               onClick={() =>
                 setConfig((c) => ({ ...c, semanticCacheEnabled: !c.semanticCacheEnabled }))
               }
@@ -138,7 +138,7 @@ export default function CacheSettingsTab() {
           <label className="flex items-center justify-between">
             <span className="text-sm text-text-muted">{t("enabled")}</span>
             <button
-              aria-label="Action button"
+
               onClick={() =>
                 setConfig((c) => ({ ...c, promptCacheEnabled: !c.promptCacheEnabled }))
               }

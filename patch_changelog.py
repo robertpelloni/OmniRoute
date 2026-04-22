@@ -4,7 +4,7 @@ with open("CHANGELOG.md", "r") as f:
     content = f.read()
 
 new_log = """
-## [3.6.30] - 2024-04-10
+## [3.6.31] - 2024-04-10
 ### Added
 - Completed Go port of TS A2A protocol `getExecutor` routing alias logic into `internal/providers/manager.go`. The native Go load-balancer now intrinsically understands routing aliases like "cu", "pol", and automatically treats unknown providers like "openrouter" as an `OpenAIProvider` stream.
 - Implemented `combo.Engine` in Go to natively handle fallback multi-provider routing and `TokenScorer` API key selection.
@@ -12,7 +12,7 @@ new_log = """
 
 """
 
-if "## [3.6.30]" not in content:
+if "## [3.6.31]" not in content:
     content = content.replace("## [Unreleased]\n", "## [Unreleased]\n" + new_log)
 
 with open("CHANGELOG.md", "w") as f:

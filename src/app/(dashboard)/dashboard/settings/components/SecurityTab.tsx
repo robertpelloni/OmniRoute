@@ -213,7 +213,7 @@ export default function SecurityTab() {
                 const isBlocked = blockedProviders.includes(provider.id);
                 return (
                   <button
-                    aria-label="Action button"
+
                     key={provider.id}
                     onClick={() => toggleBlockedProvider(provider.id)}
                     disabled={loading}

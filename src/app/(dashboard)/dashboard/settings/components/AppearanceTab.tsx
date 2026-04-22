@@ -158,7 +158,7 @@ export default function AppearanceTab() {
           >
             {["light", "dark", "system"].map((option) => (
               <button
-                aria-label="Action button"
+
                 key={option}
                 role="tab"
                 aria-selected={theme === option}
@@ -191,7 +191,7 @@ export default function AppearanceTab() {
               const active = colorTheme === item.id;
               return (
                 <button
-                  aria-label="Action button"
+
                   key={item.id}
                   onClick={() => setColorTheme(item.id)}
                   className={cn(
