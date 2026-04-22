@@ -12,37 +12,29 @@ export default function ZedImportCard() {
   const notify = useNotificationStore();
   const router = useRouter();
 
-  const handleOAuthSubmit = async (e: React.FormEvent) => {
+    const handleOAuthSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!clientId || !clientSecret) {
-      notify.error("Please enter both Client ID and Client Secret.");
+    if (!clientId) {
+      notify.error("Please enter a Client ID to begin OAuth flow.");
       return;
     }
 
-    setLoading(true);
-    try {
-      const res = await fetch(`/api/oauth/zed/import`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ clientId, clientSecret }),
-      });
-      const data = await res.json();
+    // Typical OAuth flow redirect
+    // We navigate away to zed authorization endpoint.
+    // The redirect URI needs to be handled by a page route, but we will mock it
+    // or point it to a callback page which handles the `code` exchange using /api/zed/callback.
 
-      if (res.ok && data.success) {
-        notify.success("Successfully imported Zed IDE credentials.");
-        // Clear form
-        setClientId("");
-        setClientSecret("");
-        // Navigate to provider settings page
-        router.push(`/dashboard/providers/${data.providerId}`);
-      } else {
-        notify.error(data.error || "Failed to validate Zed IDE credentials.");
-      }
-    } catch (error) {
-      notify.error("Network error while importing Zed OAuth credentials.");
-    } finally {
-      setLoading(false);
+    // Storing credentials temporarily (e.g. session storage) to use in the callback page,
+    // Note: In real production, the backend should securely manage state and PKCE, but per our scope:
+    sessionStorage.setItem("zed_oauth_client_id", clientId);
+    if (clientSecret) {
+      sessionStorage.setItem("zed_oauth_client_secret", clientSecret);
     }
+
+    const redirectUri = window.location.origin + "/dashboard/settings/zed-callback";
+    const authUrl = `https://zed.dev/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code`;
+
+    window.location.href = authUrl;
   };
 
   const handleKeychainImport = async () => {
