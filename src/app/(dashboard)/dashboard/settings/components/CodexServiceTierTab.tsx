@@ -83,7 +83,6 @@ export default function CodexServiceTierTab() {
           </p>
         </div>
         <button
-
           onClick={() => save(!enabled)}
           disabled={loading || saving}
           className={`relative inline-flex h-6 w-11 items-center rounded-full border transition-colors ${

@@ -158,7 +158,6 @@ export default function AppearanceTab() {
           >
             {["light", "dark", "system"].map((option) => (
               <button
-
                 key={option}
                 role="tab"
                 aria-selected={theme === option}
@@ -191,7 +190,6 @@ export default function AppearanceTab() {
               const active = colorTheme === item.id;
               return (
                 <button
-
                   key={item.id}
                   onClick={() => setColorTheme(item.id)}
                   className={cn(

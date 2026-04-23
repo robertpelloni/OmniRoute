@@ -1,12 +1,12 @@
 
-> omniroute@3.6.23 build
+> omniroute@3.6.31 build
 > node scripts/build-next-isolated.mjs
 
 ▲ Next.js 16.2.3 (Turbopack)
 - Environments: .env
 
   Creating an optimized production build ...
-Turbopack build encountered 3 warnings:
+Turbopack build encountered 4 warnings:
 ./next.config.mjs
 Encountered unexpected file in NFT list
 A file was traced that indicates that the whole project was traced unintentionally. Somewhere in the import trace below, there are:
@@ -17,6 +17,27 @@ To resolve this, you can
 - only use them in development, or
 - make sure they are statically scoped to some subfolder: path.join(process.cwd(), 'data', bar), or
 - add ignore comments: path.join(/*turbopackIgnore: true*/ process.cwd(), bar)
+
+Import trace:
+  App Route:
+    ./next.config.mjs
+    ./src/app/api/openapi/spec/route.ts
+
+
+./next.config.mjs
+Encountered unexpected file in NFT list
+A file was traced that indicates that the whole project was traced unintentionally. Somewhere in the import trace below, there are:
+- filesystem operations (like path.join, path.resolve or fs.readFile), or
+- very dynamic requires (like require('./' + foo)).
+To resolve this, you can
+- remove them if possible, or
+- only use them in development, or
+- make sure they are statically scoped to some subfolder: path.join(process.cwd(), 'data', bar), or
+- add ignore comments: path.join(/*turbopackIgnore: true*/ process.cwd(), bar)
+
+Output asset trace:
+  [output]/.next/server/app/api/pricing/sync/route.js
+  [output]/.next/server/chunks/[root-of-the-server]__07.ui7z._.js
 
 Import trace:
   App Route:
@@ -58,7 +79,8 @@ To resolve this, you can
 
 Output asset trace:
   [output]/.next/server/instrumentation.js
-  [output]/.next/server/chunks/src_lib_0j-wze8._.js
+  [output]/.next/server/chunks/src_0dt1kol._.js
+  [output]/.next/server/chunks/[root-of-the-server]__0xsmopk._.js
 
 Import trace:
   App Route:
@@ -66,9 +88,9 @@ Import trace:
     ./src/app/api/openapi/spec/route.ts
 
 
-✓ Compiled successfully in 53s
+✓ Compiled successfully in 68s
   Skipping validation of types
-  Finished TypeScript config validation in 10ms ...
+  Finished TypeScript config validation in 21ms ...
   Collecting page data using 3 workers ...
 [CREDENTIALS] No external credentials file found, using defaults.
 [DB] Build phase detected — using in-memory SQLite (read-only)
@@ -87,8 +109,8 @@ Import trace:
   Generating static pages using 3 workers (56/227)
   Generating static pages using 3 workers (113/227)
   Generating static pages using 3 workers (170/227)
+✓ Generating static pages using 3 workers (227/227) in 1316ms
 [ModelSync] Scheduler started — interval: 24h
-✓ Generating static pages using 3 workers (227/227) in 1082ms
   Finalizing page optimization ...
 
 Route (app)

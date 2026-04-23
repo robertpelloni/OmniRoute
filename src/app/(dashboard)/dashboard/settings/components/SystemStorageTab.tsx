@@ -783,7 +783,6 @@ export default function SystemStorageTab() {
                     {t("backupsAvailable", { count: backups.length })}
                   </span>
                   <button
-
                     onClick={loadBackups}
                     className="text-xs text-primary hover:underline flex items-center gap-1"
                   >

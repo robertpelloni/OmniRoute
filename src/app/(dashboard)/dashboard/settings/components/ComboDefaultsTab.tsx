@@ -127,7 +127,6 @@ export default function ComboDefaultsTab() {
           >
             {strategyOptions.map((s) => (
               <button
-
                 key={s.value}
                 role="tab"
                 aria-selected={comboDefaults.strategy === s.value}

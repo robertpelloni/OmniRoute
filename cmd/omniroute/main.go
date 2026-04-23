@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 
 	"omniroute/internal/auth"
+	"omniroute/internal/combo"
 	"omniroute/internal/db"
 	"omniroute/internal/providers"
 	"omniroute/internal/server"
@@ -35,7 +36,10 @@ func main() {
 	providerManager := providers.NewManager()
 
 	// Initialize Server Router
-	srv := server.NewServer(providerManager)
+	scorer := auth.NewDefaultTokenScorer()
+	tokenProvider := &db.DefaultTokenProvider{Tokens: make(map[string][]string)}
+	engine := combo.NewEngine(scorer, tokenProvider)
+	srv := server.NewServer(providerManager, engine)
 	router := srv.SetupRouter()
 
 	// Add global middleware for Authentication routing

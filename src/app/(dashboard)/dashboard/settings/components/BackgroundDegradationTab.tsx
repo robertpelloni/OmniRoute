@@ -121,7 +121,6 @@ export default function BackgroundDegradationTab() {
           </p>
         </div>
         <button
-
           onClick={() => save({ enabled: !config.enabled })}
           disabled={loading || saving}
           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
@@ -177,7 +176,6 @@ export default function BackgroundDegradationTab() {
                 className="flex-1 px-3 py-2 rounded-lg text-sm bg-surface border border-border/50 focus:border-sky-500/50 focus:outline-none"
               />
               <button
-
                 onClick={addMapping}
                 disabled={saving || !newFrom.trim() || !newTo.trim()}
                 className="px-3 py-2 rounded-lg text-sm font-medium bg-sky-500/10 text-sky-500 hover:bg-sky-500/20 disabled:opacity-50 transition-all"
@@ -197,7 +195,6 @@ export default function BackgroundDegradationTab() {
                     </span>
                     <code className="text-xs text-sky-400/80 flex-1 truncate">{to}</code>
                     <button
-
                       onClick={() => removeMapping(from)}
                       disabled={saving}
                       className="p-1 rounded hover:bg-red-500/10 text-text-muted hover:text-red-400 transition-all"
@@ -230,7 +227,6 @@ export default function BackgroundDegradationTab() {
                 className="flex-1 px-3 py-2 rounded-lg text-sm bg-surface border border-border/50 focus:border-sky-500/50 focus:outline-none"
               />
               <button
-
                 onClick={addPattern}
                 disabled={saving || !newPattern.trim()}
                 className="px-3 py-2 rounded-lg text-sm font-medium bg-sky-500/10 text-sky-500 hover:bg-sky-500/20 disabled:opacity-50 transition-all"
@@ -248,7 +244,6 @@ export default function BackgroundDegradationTab() {
                 >
                   {pattern}
                   <button
-
                     onClick={() => removePattern(idx)}
                     className="hover:text-red-400 transition-colors"
                     disabled={saving}
