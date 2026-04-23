@@ -74,8 +74,8 @@ export default function IPFilterSection() {
   const activeMode = !config.enabled ? "disabled" : config.mode;
 
   return (
-    <Card title="Manage network security policies to permit or restrict incoming traffic by IP address">
-      <div className="flex items-center gap-3 mb-5" title="IP Filtering and Access Control Options">
+    <Card>
+      <div className="flex items-center gap-3 mb-5">
         <div className="p-2 rounded-lg bg-red-500/10 text-red-500">
           <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
             security

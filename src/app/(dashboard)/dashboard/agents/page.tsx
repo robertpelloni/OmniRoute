@@ -213,7 +213,7 @@ export default function AgentsPage() {
       )}
 
       {/* Setup Guide */}
-      <Card title="Quick setup instructions to connect external CLI agents">
+      <Card>
         <div className="flex items-center justify-between gap-3 mb-4">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-blue-500/10 text-blue-500">
@@ -258,7 +258,7 @@ export default function AgentsPage() {
       </Card>
 
       {/* CLI Fingerprint Matching */}
-      <Card title="Manage client application fingerprinting for CLI protocol support">
+      <Card>
         <div className="flex items-center gap-3 mb-4">
           <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
             <span className="material-symbols-outlined text-[20px]" aria-hidden="true">

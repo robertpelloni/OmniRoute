@@ -140,11 +140,11 @@ export default function SessionInfoCard() {
       </div>
 
       <div className="flex gap-3 mt-4 pt-4 border-t border-border/50">
-        <Button title="Execute this action" variant="secondary" onClick={handleClearStorage}>
+        <Button variant="secondary" onClick={handleClearStorage}>
           {t("clearLocalData")}
         </Button>
         {session?.authenticated && (
-          <Button title="Execute this action" variant="danger" onClick={handleLogout}>
+          <Button variant="danger" onClick={handleLogout}>
             {t("logout")}
           </Button>
         )}

@@ -24,8 +24,6 @@ import {
   Pie,
   AreaChart,
   Area,
-  CartesianGrid,
-  Legend,
 } from "recharts";
 
 function createDateFormatter(locale: string, options: Intl.DateTimeFormatOptions) {

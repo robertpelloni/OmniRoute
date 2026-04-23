@@ -96,8 +96,8 @@ export default function ComboDefaultsTab() {
   };
 
   return (
-    <Card title="Manage global default values for agent combinations">
-      <div className="flex items-center gap-3 mb-4" title="Combo defaults configuration area">
+    <Card>
+      <div className="flex items-center gap-3 mb-4">
         <div className="p-2 rounded-lg bg-amber-500/10 text-amber-500">
           <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
             tune
@@ -370,13 +370,7 @@ export default function ComboDefaultsTab() {
 
         {/* Save */}
         <div className="pt-3 border-t border-border/50">
-          <Button
-            title="Execute this action"
-            variant="primary"
-            size="sm"
-            onClick={saveComboDefaults}
-            loading={saving}
-          >
+          <Button variant="primary" size="sm" onClick={saveComboDefaults} loading={saving}>
             {t("saveComboDefaults")}
           </Button>
         </div>

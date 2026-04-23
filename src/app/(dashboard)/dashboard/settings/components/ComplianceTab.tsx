@@ -92,12 +92,10 @@ export default function ComplianceTab() {
   );
 
   return (
-    <Card className="p-6" title="Audit and compliance logs tracking changes across the platform">
-      <div className="flex items-center justify-between mb-4" title="Compliance log overview">
+    <Card className="p-6">
+      <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-text-main flex items-center gap-2">
-          <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
-            policy
-          </span>
+          <span className="material-symbols-outlined text-[20px]">policy</span>
           {t("auditLog")}
         </h3>
         <ColumnToggle columns={allColumns} visible={visibleCols} onToggle={handleToggleCol} />

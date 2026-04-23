@@ -178,8 +178,8 @@ export default function ModelsDevSyncTab() {
   return (
     <div className="flex flex-col gap-6">
       {/* Main sync card */}
-      <Card title="Manage synchronization of remote model registry catalog metadata">
-        <div className="flex items-center gap-3 mb-5" title="Model catalog sync status">
+      <Card>
+        <div className="flex items-center gap-3 mb-5">
           <div className="p-2 rounded-lg bg-blue-500/10 text-blue-500">
             <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
               database

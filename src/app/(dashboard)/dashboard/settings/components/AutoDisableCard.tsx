@@ -81,13 +81,7 @@ export default function AutoDisableCard() {
               </Button>
             </div>
           ) : (
-            <Button
-              title="Execute this action"
-              size="sm"
-              variant="secondary"
-              icon="edit"
-              onClick={() => setEditMode(true)}
-            >
+            <Button size="sm" variant="secondary" icon="edit" onClick={() => setEditMode(true)}>
               {tc("edit")}
             </Button>
           )}

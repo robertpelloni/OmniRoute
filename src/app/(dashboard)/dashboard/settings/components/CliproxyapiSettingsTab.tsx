@@ -133,12 +133,10 @@ export default function CliproxyapiSettingsTab() {
         </div>
       )}
 
-      <Card padding="md" title="Configure CLIProxyAPI integration options">
-        <div className="flex items-center gap-3 mb-4" title="CLIProxyAPI routing configuration">
+      <Card padding="md">
+        <div className="flex items-center gap-3 mb-4">
           <div className="size-8 rounded-lg flex items-center justify-center bg-indigo-500/10">
-            <span className="material-symbols-outlined text-indigo-500 text-xl" aria-hidden="true">
-              swap_horiz
-            </span>
+            <span className="material-symbols-outlined text-indigo-500 text-xl">swap_horiz</span>
           </div>
           <div>
             <h3 className="font-medium text-sm">CLIProxyAPI Fallback</h3>
@@ -185,10 +183,7 @@ export default function CliproxyapiSettingsTab() {
         </div>
       </Card>
 
-      <Card
-        padding="md"
-        title="Displays the current running state and version of the CLIProxyAPI backend tool"
-      >
+      <Card padding="md">
         <h3 className="font-medium text-sm mb-4">CLIProxyAPI Status</h3>
         {loading ? (
           <div className="flex items-center gap-2 text-text-muted text-sm">

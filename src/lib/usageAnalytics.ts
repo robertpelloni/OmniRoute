@@ -273,12 +273,7 @@ export async function computeAnalytics(
   }
 
   // ---- Build sorted arrays ----
-  const dailyTrend = Object.values(dailyMap)
-    .sort((a, b) => a.date.localeCompare(b.date))
-    .map((day) => ({
-      ...day,
-      tokens: day.promptTokens + day.completionTokens,
-    }));
+  const dailyTrend = Object.values(dailyMap).sort((a, b) => a.date.localeCompare(b.date));
 
   // Daily by model — collect all unique model names
   const allModels = new Set<string>();

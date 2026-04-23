@@ -85,8 +85,8 @@ export default function BackgroundDegradationTab() {
   const mapEntries = Object.entries(config.degradationMap || {}) as [string, string][];
 
   return (
-    <Card title="Manage automatic cost optimization for non-interactive background tasks">
-      <div className="flex items-center gap-3 mb-5" title="Background Task Optimization">
+    <Card>
+      <div className="flex items-center gap-3 mb-5">
         <div className="p-2 rounded-lg bg-sky-500/10 text-sky-500">
           <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
             speed

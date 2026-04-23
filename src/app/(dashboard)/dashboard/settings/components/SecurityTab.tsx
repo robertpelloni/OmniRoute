@@ -100,8 +100,8 @@ export default function SecurityTab() {
 
   return (
     <div className="flex flex-col gap-6">
-      <Card title="Manage application security settings and user access">
-        <div className="flex items-center gap-3 mb-4" title="Dashboard Security Configuration">
+      <Card>
+        <div className="flex items-center gap-3 mb-4">
           <div className="p-2 rounded-lg bg-primary/10 text-primary">
             <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
               shield
@@ -164,12 +164,7 @@ export default function SecurityTab() {
               )}
 
               <div className="pt-2">
-                <Button
-                  title="Execute this action"
-                  type="submit"
-                  variant="primary"
-                  loading={passLoading}
-                >
+                <Button type="submit" variant="primary" loading={passLoading}>
                   {settings.hasPassword ? t("updatePassword") : t("setPassword")}
                 </Button>
               </div>

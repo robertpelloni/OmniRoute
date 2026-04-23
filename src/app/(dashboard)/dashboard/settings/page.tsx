@@ -21,7 +21,6 @@ import MemorySkillsTab from "./components/MemorySkillsTab";
 import ModelsDevSyncTab from "./components/ModelsDevSyncTab";
 import ResilienceTab from "./components/ResilienceTab";
 import CliproxyapiSettingsTab from "./components/CliproxyapiSettingsTab";
-import ZedImportCard from "./components/ZedImportCard";
 
 const tabs = [
   { id: "general", labelKey: "general", icon: "settings" },
@@ -101,12 +100,7 @@ export default function SettingsPage() {
             </div>
           )}
 
-          {activeTab === "security" && (
-            <div className="flex flex-col gap-6">
-              <SecurityTab />
-              <ZedImportCard />
-            </div>
-          )}
+          {activeTab === "security" && <SecurityTab />}
 
           {activeTab === "routing" && (
             <div className="flex flex-col gap-6">

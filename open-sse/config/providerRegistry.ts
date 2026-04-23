@@ -453,11 +453,7 @@ export const REGISTRY: Record<string, RegistryEntry> = {
       authUrl: "https://prod.us-east-1.auth.desktop.kiro.dev",
     },
     models: [
-      { id: "claude-sonnet-4.6", name: "Claude Sonnet 4.6" },
       { id: "claude-sonnet-4.5", name: "Claude Sonnet 4.5" },
-      { id: "claude-sonnet-4", name: "Claude Sonnet 4" },
-      { id: "claude-opus-4.6", name: "Claude Opus 4.6" },
-      { id: "claude-opus-4.5", name: "Claude Opus 4.5" },
       { id: "claude-haiku-4.5", name: "Claude Haiku 4.5" },
     ],
   },
