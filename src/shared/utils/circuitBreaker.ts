@@ -123,16 +123,14 @@ export class CircuitBreaker {
    * @throws {Error} If circuit is OPEN
    */
   async execute(fn) {
+    this._refreshOpenState();
+
     if (this.state === STATE.OPEN) {
-      if (this._shouldAttemptReset()) {
-        this._transition(STATE.HALF_OPEN);
-      } else {
-        throw new CircuitBreakerOpenError(
-          `Circuit breaker "${this.name}" is OPEN. Try again later.`,
-          this.name,
-          this._timeUntilReset()
-        );
-      }
+      throw new CircuitBreakerOpenError(
+        `Circuit breaker "${this.name}" is OPEN. Try again later.`,
+        this.name,
+        this._timeUntilReset()
+      );
     }
 
     if (this.state === STATE.HALF_OPEN && this.halfOpenAllowed <= 0) {
@@ -164,8 +162,10 @@ export class CircuitBreaker {
    * @returns {boolean}
    */
   canExecute() {
+    this._refreshOpenState();
+
     if (this.state === STATE.CLOSED) return true;
-    if (this.state === STATE.OPEN) return this._shouldAttemptReset();
+    if (this.state === STATE.OPEN) return false;
     if (this.state === STATE.HALF_OPEN) return this.halfOpenAllowed > 0;
     return false;
   }
@@ -175,12 +175,26 @@ export class CircuitBreaker {
    * @returns {{ name: string, state: string, failureCount: number, lastFailureTime: number|null }}
    */
   getStatus() {
+    this._refreshOpenState();
+
     return {
       name: this.name,
       state: this.state,
       failureCount: this.failureCount,
       lastFailureTime: this.lastFailureTime,
+      retryAfterMs: this.getRetryAfterMs(),
     };
+  }
+
+  /**
+   * Get remaining wait time before the breaker allows execution again.
+   * @returns {number}
+   */
+  getRetryAfterMs() {
+    this._refreshOpenState();
+
+    if (this.state === STATE.CLOSED) return 0;
+    return this._timeUntilReset();
   }
 
   /**
@@ -197,13 +211,21 @@ export class CircuitBreaker {
   // ─── Internal Methods ────────────────────────
 
   _onSuccess() {
-    if (this.state === STATE.HALF_OPEN) {
+    if (this.state === STATE.OPEN) {
+      // Direct call from combo path: timeout elapsed and request succeeded
+      // without going through execute(), so transition OPEN → CLOSED directly
+      this._transition(STATE.CLOSED);
+      this.failureCount = 0;
+      this.successCount = 0;
+      this.lastFailureTime = null;
+    } else if (this.state === STATE.HALF_OPEN) {
       this.successCount++;
       this._transition(STATE.CLOSED);
       this.failureCount = 0;
+    } else {
+      // In CLOSED state, just reset failure count
+      this.failureCount = 0;
     }
-    // In CLOSED state, just reset failure count
-    this.failureCount = 0;
     this._persistToDb();
   }
 
@@ -211,7 +233,9 @@ export class CircuitBreaker {
     this.failureCount++;
     this.lastFailureTime = Date.now();
 
-    if (this.state === STATE.HALF_OPEN) {
+    if (this.state === STATE.OPEN) {
+      // Already OPEN — just update persistence (re-tripped by combo path)
+    } else if (this.state === STATE.HALF_OPEN) {
       this._transition(STATE.OPEN);
     } else if (this.failureCount >= this.failureThreshold) {
       this._transition(STATE.OPEN);
@@ -227,6 +251,13 @@ export class CircuitBreaker {
   _timeUntilReset() {
     if (!this.lastFailureTime) return 0;
     return Math.max(0, this.resetTimeout - (Date.now() - this.lastFailureTime));
+  }
+
+  _refreshOpenState() {
+    if (this.state === STATE.OPEN && this._shouldAttemptReset()) {
+      this._transition(STATE.HALF_OPEN);
+      this._persistToDb();
+    }
   }
 
   _transition(newState) {
@@ -264,7 +295,29 @@ export function getCircuitBreaker(name: string, options?: CircuitBreakerOptions)
   if (!registry.has(name)) {
     registry.set(name, new CircuitBreaker(name, options));
   }
-  return registry.get(name)!;
+  const breaker = registry.get(name)!;
+  if (options) {
+    if (typeof options.failureThreshold === "number") {
+      breaker.failureThreshold = options.failureThreshold;
+    }
+    if (typeof options.resetTimeout === "number") {
+      breaker.resetTimeout = options.resetTimeout;
+    }
+    if (typeof options.halfOpenRequests === "number") {
+      breaker.halfOpenRequests = options.halfOpenRequests;
+      if (breaker.state === STATE.HALF_OPEN) {
+        breaker.halfOpenAllowed = Math.min(breaker.halfOpenAllowed, breaker.halfOpenRequests);
+      }
+    }
+    if (typeof options.onStateChange === "function") {
+      breaker.onStateChange = options.onStateChange;
+    }
+    if (typeof options.isFailure === "function") {
+      breaker.isFailure = options.isFailure;
+    }
+    breaker._persistToDb();
+  }
+  return breaker;
 }
 
 /**

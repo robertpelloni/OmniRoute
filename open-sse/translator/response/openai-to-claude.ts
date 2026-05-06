@@ -93,7 +93,18 @@ export function openaiToClaudeResponse(chunk, state) {
   }
 
   // Handle reasoning_content (thinking) - GLM, DeepSeek, etc.
-  const reasoningContent = delta?.reasoning_content || delta?.reasoning;
+  // Also supports 'reasoning' field alias and reasoning_details[] (StepFun/OpenRouter)
+  let reasoningContent = delta?.reasoning_content || delta?.reasoning;
+  if (!reasoningContent && Array.isArray(delta?.reasoning_details)) {
+    const parts: string[] = [];
+    for (const detail of delta.reasoning_details) {
+      if (detail && typeof detail === "object") {
+        const text = detail.text || detail.content;
+        if (typeof text === "string" && text) parts.push(text);
+      }
+    }
+    if (parts.length > 0) reasoningContent = parts.join("");
+  }
   if (reasoningContent) {
     stopTextBlock(state, results);
 
@@ -173,10 +184,21 @@ export function openaiToClaudeResponse(chunk, state) {
       if (tc.function?.arguments) {
         const toolInfo = state.toolCalls.get(idx);
         if (toolInfo) {
+          let deltaStr = tc.function.arguments;
+
+          // Fix #1852: Strip empty string and array placeholders from streaming tool arguments
+          if (deltaStr.includes('""') || deltaStr.includes("[]") || deltaStr.includes("[ ]")) {
+            deltaStr = deltaStr
+              .replace(/,"[a-zA-Z0-9_]+":""/g, "")
+              .replace(/"[a-zA-Z0-9_]+":"",/g, "")
+              .replace(/,"[a-zA-Z0-9_]+":\s*\[\s*\]/g, "")
+              .replace(/"[a-zA-Z0-9_]+":\s*\[\s*\],?/g, "");
+          }
+
           results.push({
             type: "content_block_delta",
             index: toolInfo.blockIndex,
-            delta: { type: "input_json_delta", partial_json: tc.function.arguments },
+            delta: { type: "input_json_delta", partial_json: deltaStr },
           });
         }
       }

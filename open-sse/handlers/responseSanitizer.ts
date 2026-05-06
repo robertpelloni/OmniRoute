@@ -16,6 +16,14 @@ const ALLOWED_USAGE_FIELDS = new Set([
   "prompt_tokens_details",
   "completion_tokens_details",
 ]);
+const ALLOWED_RESPONSES_USAGE_FIELDS = new Set([
+  "input_tokens",
+  "output_tokens",
+  "total_tokens",
+  "input_tokens_details",
+  "output_tokens_details",
+  "estimated",
+]);
 
 type JsonRecord = Record<string, unknown>;
 
@@ -32,9 +40,32 @@ function toNumber(value: unknown): number | undefined {
   return typeof value === "number" && Number.isFinite(value) ? value : undefined;
 }
 
-// ── Think tag regex ────────────────────────────────────────────────────────
-// Matches <think>...</think> blocks (greedy, dotAll)
-const THINK_TAG_REGEX = /<think>([\s\S]*?)<\/think>/gi;
+function hasVisibleMessageContent(content: unknown): boolean {
+  if (typeof content === "string") {
+    return content.trim().length > 0;
+  }
+
+  if (!Array.isArray(content)) return false;
+
+  return content.some((contentPart) => {
+    const part = toRecord(contentPart);
+    if (!part) return false;
+    if (typeof part.text === "string" && part.text.trim().length > 0) return true;
+    if (typeof part.content === "string" && part.content.trim().length > 0) return true;
+    const partType = toString(part.type);
+    return Boolean(partType && partType !== "thinking" && partType !== "reasoning");
+  });
+}
+
+// Matches <think>...</think> blocks and <thinking>...</thinking> (greedy, dotAll)
+const THINK_TAG_REGEX = /<(?:think|thinking)>([\s\S]*?)<\/(?:think|thinking)>/gi;
+
+// #638, #727: Collapse runs of 2+ consecutive newlines into \n\n
+// Tool call responses from thinking models often accumulate excessive newlines
+const EXCESSIVE_NEWLINES = /\n{2,}/g;
+function collapseExcessiveNewlines(text: string): string {
+  return text.replace(EXCESSIVE_NEWLINES, "\n\n");
+}
 
 /**
  * Extract <think> blocks from text content and return separated parts.
@@ -107,6 +138,47 @@ export function sanitizeOpenAIResponse(body: unknown): unknown {
   return sanitized;
 }
 
+export function sanitizeResponsesApiResponse(body: unknown): unknown {
+  const bodyRecord = toRecord(body);
+  if (!bodyRecord) return body;
+
+  if (Array.isArray(bodyRecord.choices)) {
+    return convertOpenAIResponseToResponses(bodyRecord);
+  }
+
+  const responseRoot =
+    bodyRecord.object === "response"
+      ? bodyRecord
+      : toRecord(bodyRecord.response ?? bodyRecord) || bodyRecord;
+
+  const sanitized: JsonRecord = {
+    id: normalizeResponsesId(responseRoot.id),
+    object: "response",
+    created_at:
+      toNumber(responseRoot.created_at) ??
+      toNumber(responseRoot.created) ??
+      Math.floor(Date.now() / 1000),
+    model: toString(responseRoot.model) || "unknown",
+    status: toString(responseRoot.status) || "completed",
+    background: typeof responseRoot.background === "boolean" ? responseRoot.background : false,
+    error: responseRoot.error ?? null,
+  };
+
+  const output = sanitizeResponsesOutput(responseRoot.output);
+  sanitized.output = output;
+
+  const outputText = extractResponsesOutputText(output);
+  if (outputText.length > 0) {
+    sanitized.output_text = outputText;
+  }
+
+  if (responseRoot.usage !== undefined) {
+    sanitized.usage = sanitizeResponsesUsage(responseRoot.usage);
+  }
+
+  return sanitized;
+}
+
 /**
  * Sanitize a single choice object.
  */
@@ -157,7 +229,7 @@ function sanitizeMessage(msg: unknown): unknown {
   // Handle content — extract <think> tags
   if (typeof msgRecord.content === "string") {
     const { content, thinking } = extractThinkingFromContent(msgRecord.content);
-    sanitized.content = content;
+    sanitized.content = collapseExcessiveNewlines(content);
 
     // Set reasoning_content from <think> tags (if not already set)
     if (thinking && !msgRecord.reasoning_content) {
@@ -170,6 +242,51 @@ function sanitizeMessage(msg: unknown): unknown {
   // Preserve existing reasoning_content (from providers that natively support it)
   if (msgRecord.reasoning_content && !sanitized.reasoning_content) {
     sanitized.reasoning_content = msgRecord.reasoning_content;
+  }
+
+  // Handle 'reasoning' field alias (some providers use this instead of reasoning_content)
+  if (
+    msgRecord.reasoning &&
+    typeof msgRecord.reasoning === "string" &&
+    !sanitized.reasoning_content
+  ) {
+    sanitized.reasoning_content = msgRecord.reasoning;
+  }
+
+  // Handle reasoning_details[] array (StepFun/OpenRouter format)
+  // Structure: [{ type: "reasoning.text", text: "...", format: "unknown", index: 0 }]
+  if (Array.isArray(msgRecord.reasoning_details) && !sanitized.reasoning_content) {
+    const reasoningParts: string[] = [];
+    for (const detail of msgRecord.reasoning_details) {
+      const detailObj = detail && typeof detail === "object" ? (detail as JsonRecord) : null;
+      if (!detailObj) continue;
+      const detailType = typeof detailObj.type === "string" ? detailObj.type : "";
+      const detailText =
+        typeof detailObj.text === "string"
+          ? detailObj.text
+          : typeof detailObj.content === "string"
+            ? detailObj.content
+            : "";
+      if (
+        detailText &&
+        (detailType === "reasoning" ||
+          detailType === "reasoning.text" ||
+          detailType === "thinking" ||
+          detailType === "")
+      ) {
+        reasoningParts.push(detailText);
+      }
+    }
+    if (reasoningParts.length > 0) {
+      sanitized.reasoning_content = reasoningParts.join("");
+    }
+  }
+
+  // Non-streaming responses should not expose both visible content and reasoning_content.
+  // Some clients drop the visible assistant text or render duplicated panels when both fields
+  // are present in the final payload. Keep reasoning_content only for reasoning-only messages.
+  if (sanitized.reasoning_content !== undefined && hasVisibleMessageContent(sanitized.content)) {
+    delete sanitized.reasoning_content;
   }
 
   // Preserve tool_calls
@@ -193,6 +310,17 @@ function sanitizeUsage(usage: unknown): unknown {
   if (!usageRecord) return usage;
 
   const sanitized: JsonRecord = {};
+
+  // Cross-map Claude-style → OpenAI-style field names.
+  // Some providers return input_tokens/output_tokens instead of prompt_tokens/completion_tokens.
+  // Without this mapping, the whitelist filter below strips them, resulting in NaN/0 tokens (#617).
+  if (usageRecord.input_tokens !== undefined && usageRecord.prompt_tokens === undefined) {
+    usageRecord.prompt_tokens = usageRecord.input_tokens;
+  }
+  if (usageRecord.output_tokens !== undefined && usageRecord.completion_tokens === undefined) {
+    usageRecord.completion_tokens = usageRecord.output_tokens;
+  }
+
   for (const key of ALLOWED_USAGE_FIELDS) {
     if (usageRecord[key] !== undefined) {
       sanitized[key] = usageRecord[key];
@@ -211,6 +339,74 @@ function sanitizeUsage(usage: unknown): unknown {
   return sanitized;
 }
 
+function sanitizeResponsesUsage(usage: unknown): unknown {
+  const usageRecord = toRecord(usage);
+  if (!usageRecord) return usage;
+
+  const normalized: JsonRecord = { ...usageRecord };
+
+  if (normalized.prompt_tokens !== undefined && normalized.input_tokens === undefined) {
+    normalized.input_tokens = normalized.prompt_tokens;
+  }
+  if (normalized.completion_tokens !== undefined && normalized.output_tokens === undefined) {
+    normalized.output_tokens = normalized.completion_tokens;
+  }
+  if (
+    normalized.prompt_tokens_details !== undefined &&
+    normalized.input_tokens_details === undefined
+  ) {
+    normalized.input_tokens_details = normalized.prompt_tokens_details;
+  }
+  if (
+    normalized.completion_tokens_details !== undefined &&
+    normalized.output_tokens_details === undefined
+  ) {
+    normalized.output_tokens_details = normalized.completion_tokens_details;
+  }
+
+  const inputDetails = toRecord(normalized.input_tokens_details) || {};
+  if (
+    normalized.cache_read_input_tokens !== undefined &&
+    inputDetails.cached_tokens === undefined
+  ) {
+    inputDetails.cached_tokens = normalized.cache_read_input_tokens;
+  }
+  if (
+    normalized.cache_creation_input_tokens !== undefined &&
+    inputDetails.cache_creation_tokens === undefined
+  ) {
+    inputDetails.cache_creation_tokens = normalized.cache_creation_input_tokens;
+  }
+  if (Object.keys(inputDetails).length > 0) {
+    normalized.input_tokens_details = inputDetails;
+  }
+
+  const outputDetails = toRecord(normalized.output_tokens_details) || {};
+  if (normalized.reasoning_tokens !== undefined && outputDetails.reasoning_tokens === undefined) {
+    outputDetails.reasoning_tokens = normalized.reasoning_tokens;
+  }
+  if (Object.keys(outputDetails).length > 0) {
+    normalized.output_tokens_details = outputDetails;
+  }
+
+  const sanitized: JsonRecord = {};
+  for (const key of ALLOWED_RESPONSES_USAGE_FIELDS) {
+    if (normalized[key] !== undefined) {
+      sanitized[key] = normalized[key];
+    }
+  }
+
+  const inputTokens = toNumber(sanitized.input_tokens) ?? 0;
+  const outputTokens = toNumber(sanitized.output_tokens) ?? 0;
+  const totalTokens = toNumber(sanitized.total_tokens) ?? inputTokens + outputTokens;
+
+  sanitized.input_tokens = inputTokens;
+  sanitized.output_tokens = outputTokens;
+  sanitized.total_tokens = totalTokens;
+
+  return sanitized;
+}
+
 /**
  * Normalize response ID to use chatcmpl- prefix.
  */
@@ -222,6 +418,238 @@ function normalizeResponseId(id: unknown): string {
   if (id.startsWith("chatcmpl-")) return id;
   // Keep custom IDs but don't break them
   return id;
+}
+
+function normalizeResponsesId(id: unknown): string {
+  if (!id || typeof id !== "string") {
+    return `resp_${crypto.randomUUID().replace(/-/g, "").slice(0, 24)}`;
+  }
+  if (id.startsWith("resp_")) return id;
+  return `resp_${id}`;
+}
+
+function sanitizeResponsesOutput(output: unknown): JsonRecord[] {
+  if (!Array.isArray(output)) return [];
+
+  return output
+    .map((item, index) => sanitizeResponsesOutputItem(item, index))
+    .filter((item): item is JsonRecord => item !== null);
+}
+
+function sanitizeResponsesOutputItem(item: unknown, index: number): JsonRecord | null {
+  const itemRecord = toRecord(item);
+  if (!itemRecord) return null;
+
+  const type = toString(itemRecord.type) || "message";
+
+  if (type === "message") {
+    const content = sanitizeResponsesMessageContent(itemRecord.content);
+    const sanitized: JsonRecord = {
+      id: toString(itemRecord.id) || `msg_${index}`,
+      type: "message",
+      role: toString(itemRecord.role) || "assistant",
+      content,
+    };
+    return sanitized;
+  }
+
+  if (type === "reasoning") {
+    const summary = Array.isArray(itemRecord.summary)
+      ? itemRecord.summary
+          .map((part) => {
+            const partRecord = toRecord(part);
+            if (!partRecord) return null;
+            return {
+              type: toString(partRecord.type) || "summary_text",
+              text: collapseExcessiveNewlines(toString(partRecord.text) || ""),
+            };
+          })
+          .filter((part): part is { type: string; text: string } => part !== null)
+      : [];
+
+    return {
+      id: toString(itemRecord.id) || `rs_${index}`,
+      type: "reasoning",
+      summary,
+    };
+  }
+
+  if (type === "function_call") {
+    const callId = toString(itemRecord.call_id) || toString(itemRecord.id) || `call_${index}`;
+    return {
+      id: toString(itemRecord.id) || `fc_${callId}`,
+      type: "function_call",
+      call_id: callId,
+      name: toString(itemRecord.name) || "",
+      arguments:
+        typeof itemRecord.arguments === "string"
+          ? itemRecord.arguments
+          : JSON.stringify(itemRecord.arguments || {}),
+    };
+  }
+
+  if (type === "function_call_output") {
+    return {
+      id: toString(itemRecord.id) || `fco_${toString(itemRecord.call_id) || index}`,
+      type: "function_call_output",
+      call_id: toString(itemRecord.call_id) || "",
+      output: itemRecord.output ?? "",
+    };
+  }
+
+  return { ...itemRecord, type };
+}
+
+function sanitizeResponsesMessageContent(content: unknown): JsonRecord[] {
+  if (typeof content === "string") {
+    if (content.length === 0) return [];
+    return [
+      {
+        type: "output_text",
+        text: collapseExcessiveNewlines(content),
+        annotations: [],
+      },
+    ];
+  }
+
+  if (!Array.isArray(content)) return [];
+
+  return content
+    .map((part) => {
+      const partRecord = toRecord(part);
+      if (!partRecord) {
+        if (typeof part === "string") {
+          return {
+            type: "output_text",
+            text: collapseExcessiveNewlines(part),
+            annotations: [],
+          };
+        }
+        return null;
+      }
+
+      const partType = toString(partRecord.type);
+      if (
+        partType === "output_text" ||
+        partType === "text" ||
+        ((partType === undefined || partType === "") && typeof partRecord.text === "string")
+      ) {
+        return {
+          ...partRecord,
+          type: "output_text",
+          text: collapseExcessiveNewlines(toString(partRecord.text) || ""),
+          annotations: Array.isArray(partRecord.annotations) ? partRecord.annotations : [],
+        };
+      }
+
+      return { ...partRecord };
+    })
+    .filter((part): part is JsonRecord => part !== null);
+}
+
+function extractResponsesOutputText(output: JsonRecord[]): string {
+  const parts: string[] = [];
+
+  for (const item of output) {
+    if (item.type !== "message" || !Array.isArray(item.content)) continue;
+    for (const part of item.content) {
+      const partRecord = toRecord(part);
+      if (!partRecord) continue;
+      if (
+        (partRecord.type === "output_text" || partRecord.type === "text") &&
+        typeof partRecord.text === "string" &&
+        partRecord.text.length > 0
+      ) {
+        parts.push(partRecord.text);
+      }
+    }
+  }
+
+  return parts.join("");
+}
+
+function convertOpenAIResponseToResponses(openaiResponse: JsonRecord): JsonRecord {
+  const responseId = normalizeResponsesId(openaiResponse.id);
+  const createdAt = toNumber(openaiResponse.created) ?? Math.floor(Date.now() / 1000);
+  const model = toString(openaiResponse.model) || "unknown";
+  const choice = Array.isArray(openaiResponse.choices)
+    ? (toRecord(openaiResponse.choices[0]) ?? {})
+    : {};
+  const message = toRecord(choice.message) || {};
+  const output: JsonRecord[] = [];
+
+  const reasoningContent =
+    toString(message.reasoning_content) ||
+    (typeof message.reasoning === "string" ? message.reasoning : "");
+  if (reasoningContent) {
+    output.push({
+      id: `rs_${responseId}_0`,
+      type: "reasoning",
+      summary: [{ type: "summary_text", text: reasoningContent }],
+    });
+  }
+
+  const hasToolCalls = Array.isArray(message.tool_calls) && message.tool_calls.length > 0;
+  const messageContent = sanitizeResponsesMessageContent(message.content);
+  if (messageContent.length > 0 || (!hasToolCalls && !reasoningContent)) {
+    output.push({
+      id: `msg_${responseId}_0`,
+      type: "message",
+      role: toString(message.role) || "assistant",
+      content:
+        messageContent.length > 0
+          ? messageContent
+          : [{ type: "output_text", text: "", annotations: [] }],
+    });
+  }
+
+  const toolCalls = Array.isArray(message.tool_calls)
+    ? message.tool_calls
+    : message.function_call
+      ? [
+          {
+            id: toString(choice.id) || "call_0",
+            type: "function",
+            function: message.function_call,
+          },
+        ]
+      : [];
+
+  for (let index = 0; index < toolCalls.length; index += 1) {
+    const toolCall = toRecord(toolCalls[index]) || {};
+    const fn = toRecord(toolCall.function) || {};
+    const callId = toString(toolCall.id) || `call_${index}`;
+    output.push({
+      id: `fc_${callId}`,
+      type: "function_call",
+      call_id: callId,
+      name: toString(fn.name) || "",
+      arguments:
+        typeof fn.arguments === "string" ? fn.arguments : JSON.stringify(fn.arguments || {}),
+    });
+  }
+
+  const sanitized: JsonRecord = {
+    id: responseId,
+    object: "response",
+    created_at: createdAt,
+    model,
+    status: "completed",
+    background: false,
+    error: null,
+    output,
+  };
+
+  const outputText = extractResponsesOutputText(output);
+  if (outputText.length > 0) {
+    sanitized.output_text = outputText;
+  }
+
+  if (openaiResponse.usage !== undefined) {
+    sanitized.usage = sanitizeResponsesUsage(openaiResponse.usage);
+  }
+
+  return sanitized;
 }
 
 /**
@@ -255,9 +683,37 @@ export function sanitizeStreamingChunk(parsed: unknown): unknown {
         if (deltaRecord) {
           const delta: JsonRecord = {};
           if (deltaRecord.role !== undefined) delta.role = deltaRecord.role;
-          if (deltaRecord.content !== undefined) delta.content = deltaRecord.content;
+          if (deltaRecord.content !== undefined) {
+            delta.content =
+              typeof deltaRecord.content === "string"
+                ? collapseExcessiveNewlines(deltaRecord.content)
+                : deltaRecord.content;
+          }
           if (deltaRecord.reasoning_content !== undefined) {
             delta.reasoning_content = deltaRecord.reasoning_content;
+          }
+          if (deltaRecord.reasoning_text !== undefined) {
+            delta.reasoning_text = deltaRecord.reasoning_text;
+          } else if (typeof deltaRecord.reasoning === "string" && deltaRecord.reasoning) {
+            // Alias: some providers use 'reasoning' instead of 'reasoning_content'
+            delta.reasoning_content = deltaRecord.reasoning;
+          } else if (Array.isArray(deltaRecord.reasoning_details)) {
+            // StepFun/OpenRouter: reasoning_details[{type:"reasoning.text", text:"..."}]
+            const parts: string[] = [];
+            for (const detail of deltaRecord.reasoning_details) {
+              const d = detail && typeof detail === "object" ? (detail as JsonRecord) : null;
+              if (!d) continue;
+              const text =
+                typeof d.text === "string"
+                  ? d.text
+                  : typeof d.content === "string"
+                    ? d.content
+                    : "";
+              if (text) parts.push(text);
+            }
+            if (parts.length > 0) {
+              delta.reasoning_content = parts.join("");
+            }
           }
           if (deltaRecord.tool_calls !== undefined) delta.tool_calls = deltaRecord.tool_calls;
           if (deltaRecord.function_call !== undefined)

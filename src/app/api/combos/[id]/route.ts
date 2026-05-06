@@ -9,12 +9,18 @@ import {
 } from "@/lib/localDb";
 import { getConsistentMachineId } from "@/shared/utils/machineId";
 import { syncToCloud } from "@/lib/cloudSync";
+import { validateCompositeTiersConfig } from "@/lib/combos/compositeTiers";
+import { normalizeComboModels } from "@/lib/combos/steps";
 import { validateComboDAG } from "@omniroute/open-sse/services/combo.ts";
 import { updateComboSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
+import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
 
 // GET /api/combos/[id] - Get combo by ID
 export async function GET(request, { params }) {
+  const authError = await requireManagementAuth(request);
+  if (authError) return authError;
+
   try {
     const { id } = await params;
     const combo = await getComboById(id);
@@ -32,6 +38,9 @@ export async function GET(request, { params }) {
 
 // PUT /api/combos/[id] - Update combo
 export async function PUT(request, { params }) {
+  const authError = await requireManagementAuth(request);
+  if (authError) return authError;
+
   let rawBody;
   try {
     rawBody = await request.json();
@@ -53,7 +62,49 @@ export async function PUT(request, { params }) {
     if (isValidationFailure(validation)) {
       return NextResponse.json({ error: validation.error }, { status: 400 });
     }
-    const body = validation.data;
+    const currentCombo = await getComboById(id);
+    if (!currentCombo) {
+      return NextResponse.json({ error: "Combo not found" }, { status: 404 });
+    }
+    const allCombos = await getCombos();
+
+    const comboName = validation.data.name || currentCombo.name;
+    const normalizedUpdate = { ...validation.data };
+    if (normalizedUpdate.compressionOverride !== undefined) {
+      const legacyCompressionOverride = normalizedUpdate.compressionOverride;
+      const nextConfig =
+        currentCombo.config &&
+        typeof currentCombo.config === "object" &&
+        !Array.isArray(currentCombo.config)
+          ? { ...currentCombo.config }
+          : {};
+      if (legacyCompressionOverride) {
+        nextConfig.compressionMode = legacyCompressionOverride;
+      } else {
+        delete nextConfig.compressionMode;
+      }
+      normalizedUpdate.config = nextConfig;
+      delete normalizedUpdate.compressionOverride;
+    }
+
+    const body = normalizedUpdate.models
+      ? {
+          ...normalizedUpdate,
+          models: normalizeComboModels(normalizedUpdate.models, {
+            comboName,
+            allCombos,
+          }),
+        }
+      : normalizedUpdate;
+    const nextComboState = {
+      ...currentCombo,
+      ...body,
+      name: comboName,
+    };
+    const compositeValidation = validateCompositeTiersConfig(nextComboState);
+    if (!compositeValidation.success) {
+      return NextResponse.json({ error: compositeValidation.error }, { status: 400 });
+    }
 
     // Check if name already exists (exclude current combo)
     if (body.name) {
@@ -65,10 +116,8 @@ export async function PUT(request, { params }) {
 
     // Validate nested combo DAG (no circular references, max depth)
     if (body.models) {
-      const allCombos = await getCombos();
       // Update the combo in the list temporarily for validation
       const updatedCombos = allCombos.map((c) => (c.id === id ? { ...c, ...body } : c));
-      const comboName = body.name || (await getComboById(id))?.name;
       if (comboName) {
         try {
           validateComboDAG(comboName, updatedCombos);
@@ -79,10 +128,6 @@ export async function PUT(request, { params }) {
     }
 
     const combo = await updateCombo(id, body);
-
-    if (!combo) {
-      return NextResponse.json({ error: "Combo not found" }, { status: 404 });
-    }
 
     // Auto sync to Cloud if enabled
     await syncToCloudIfEnabled();
@@ -96,6 +141,9 @@ export async function PUT(request, { params }) {
 
 // DELETE /api/combos/[id] - Delete combo
 export async function DELETE(request, { params }) {
+  const authError = await requireManagementAuth(request);
+  if (authError) return authError;
+
   try {
     const { id } = await params;
     const success = await deleteCombo(id);

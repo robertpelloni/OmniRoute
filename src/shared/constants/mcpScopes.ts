@@ -16,8 +16,15 @@ export const MCP_SCOPE_LIST = [
   "read:usage",
   "read:models",
   "execute:completions",
+  "execute:search",
   "write:budget",
   "write:resilience",
+  "pricing:write",
+  "read:cache",
+  "write:cache",
+  "read:compression",
+  "write:compression",
+  "read:proxies",
 ] as const;
 
 export type McpScope = (typeof MCP_SCOPE_LIST)[number];
@@ -33,6 +40,7 @@ export const MCP_TOOL_SCOPES: Record<string, readonly McpScope[]> = {
   omniroute_switch_combo: ["write:combos"],
   omniroute_check_quota: ["read:quota"],
   omniroute_route_request: ["execute:completions"],
+  omniroute_web_search: ["execute:search"],
   omniroute_cost_report: ["read:usage"],
   omniroute_list_models_catalog: ["read:models"],
 
@@ -45,6 +53,18 @@ export const MCP_TOOL_SCOPES: Record<string, readonly McpScope[]> = {
   omniroute_best_combo_for_task: ["read:combos", "read:health"],
   omniroute_explain_route: ["read:health", "read:usage"],
   omniroute_get_session_snapshot: ["read:usage"],
+  omniroute_db_health_check: ["read:health", "write:resilience"],
+  omniroute_sync_pricing: ["pricing:write"],
+  omniroute_cache_stats: ["read:cache"],
+  omniroute_cache_flush: ["write:cache"],
+  omniroute_compression_status: ["read:compression"],
+  omniroute_compression_configure: ["write:compression"],
+  omniroute_set_compression_engine: ["write:compression"],
+  omniroute_list_compression_combos: ["read:compression"],
+  omniroute_compression_combo_stats: ["read:compression"],
+  omniroute_oneproxy_fetch: ["read:proxies"],
+  omniroute_oneproxy_rotate: ["read:proxies"],
+  omniroute_oneproxy_stats: ["read:proxies"],
 } as const;
 
 // ============ Scope Groups ============
@@ -58,13 +78,21 @@ export const MCP_SCOPE_PRESETS = {
     "read:quota",
     "read:usage",
     "read:models",
+    "read:cache",
+    "read:compression",
   ] as const satisfies readonly McpScope[],
 
   /** Full access including writes and execution */
   full: [...MCP_SCOPE_LIST] as McpScope[],
 
   /** Monitoring only — health and metrics */
-  monitor: ["read:health", "read:quota", "read:usage"] as const satisfies readonly McpScope[],
+  monitor: [
+    "read:health",
+    "read:quota",
+    "read:usage",
+    "read:cache",
+    "read:compression",
+  ] as const satisfies readonly McpScope[],
 
   /** Agent — can execute completions and read state */
   agent: [
@@ -73,7 +101,10 @@ export const MCP_SCOPE_PRESETS = {
     "read:quota",
     "read:usage",
     "read:models",
+    "read:cache",
+    "read:compression",
     "execute:completions",
+    "execute:search",
   ] as const satisfies readonly McpScope[],
 } as const;
 

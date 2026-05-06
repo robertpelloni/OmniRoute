@@ -17,7 +17,7 @@ import { createInterface } from "node:readline";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { existsSync } from "node:fs";
-import { createHash } from "node:crypto";
+import bcrypt from "bcryptjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -34,8 +34,10 @@ function ask(question) {
   return new Promise((resolve) => rl.question(question, resolve));
 }
 
-function hashPassword(password) {
-  return createHash("sha256").update(password).digest("hex");
+function generateSecretDigest(input) {
+  // Use bcrypt with a salt round of 10 to match login/route.ts expectations
+  // and resolve CodeQL js/insufficient-password-hash warning.
+  return bcrypt.hashSync(input, 10);
 }
 
 console.log("\n🔑 OmniRoute — Password Reset\n");
@@ -68,10 +70,10 @@ async function main() {
     console.log("ℹ️  No password is currently set.");
   }
 
-  const password = await ask("Enter new password (min 4 chars): ");
+  const password = await ask("Enter new password (min 8 chars): ");
 
-  if (!password || password.length < 4) {
-    console.error("\n❌ Password must be at least 4 characters.\n");
+  if (!password || password.length < 8) {
+    console.error("\n❌ Password must be at least 8 characters.\n");
     db.close();
     rl.close();
     process.exit(1);
@@ -86,7 +88,7 @@ async function main() {
     process.exit(1);
   }
 
-  const hashed = hashPassword(password);
+  const hashed = generateSecretDigest(password);
 
   // Upsert the password
   const stmt = db.prepare(`

@@ -5,8 +5,13 @@
 import { v4 as uuidv4 } from "uuid";
 import { getDbInstance, rowToCamel, cleanNulls } from "./core";
 import { backupDbFile } from "./backup";
-import { encryptConnectionFields, decryptConnectionFields } from "./encryption";
+import {
+  encryptConnectionFields,
+  decryptConnectionFields,
+  migrateLegacyEncryptedString,
+} from "./encryption";
 import { invalidateDbCache } from "./readCache";
+import { normalizeProviderSpecificData } from "@/lib/providers/requestDefaults";
 
 type JsonRecord = Record<string, unknown>;
 
@@ -18,6 +23,26 @@ interface StatementLike<TRow = unknown> {
 
 interface DbLike {
   prepare: <TRow = unknown>(sql: string) => StatementLike<TRow>;
+}
+
+function withNullableMaxConcurrent(
+  record: JsonRecord,
+  source: JsonRecord | null | undefined
+): JsonRecord {
+  if (!source || !Object.hasOwn(source, "maxConcurrent")) {
+    return record;
+  }
+
+  const sourceMaxConcurrent = source.maxConcurrent;
+  const normalizedMaxConcurrent =
+    typeof sourceMaxConcurrent === "number" || sourceMaxConcurrent === null
+      ? sourceMaxConcurrent
+      : record.maxConcurrent;
+
+  return {
+    ...record,
+    maxConcurrent: normalizedMaxConcurrent,
+  };
 }
 
 function toRecord(value: unknown): JsonRecord {
@@ -55,18 +80,28 @@ export async function getProviderConnections(filter: JsonRecord = {}) {
   sql += " ORDER BY priority ASC, updated_at DESC";
 
   const rows = db.prepare(sql).all(params);
-  return rows.map((r) => decryptConnectionFields(cleanNulls(rowToCamel(r))));
+  return rows.map((r) => {
+    const camelRow = rowToCamel(r);
+    return decryptConnectionFields(withNullableMaxConcurrent(cleanNulls(camelRow), camelRow));
+  });
 }
 
 export async function getProviderConnectionById(id: string) {
   const db = getDbInstance() as unknown as DbLike;
   const row = db.prepare("SELECT * FROM provider_connections WHERE id = ?").get(id);
-  return row ? decryptConnectionFields(cleanNulls(rowToCamel(row))) : null;
+  if (!row) return null;
+
+  const camelRow = rowToCamel(row);
+  return decryptConnectionFields(withNullableMaxConcurrent(cleanNulls(camelRow), camelRow));
 }
 
 export async function createProviderConnection(data: JsonRecord) {
   const db = getDbInstance() as unknown as DbLike;
   const now = new Date().toISOString();
+  const normalizedProviderSpecificData = normalizeProviderSpecificData(
+    toStringOrNull(data.provider),
+    data.providerSpecificData
+  );
 
   // Upsert check
   // For Codex/OpenAI, a single email can have multiple workspaces (Team + Personal)
@@ -121,10 +156,14 @@ export async function createProviderConnection(data: JsonRecord) {
   if (existing) {
     const existingId = toStringOrNull(existing.id);
     if (!existingId) return null;
-    const merged = { ...toRecord(rowToCamel(existing)), ...data, updatedAt: now };
+    const merged: JsonRecord = { ...toRecord(rowToCamel(existing)), ...data, updatedAt: now };
+    merged.providerSpecificData = normalizeProviderSpecificData(
+      toStringOrNull(merged.provider),
+      merged.providerSpecificData
+    );
     _updateConnectionRow(db, existingId, merged);
     backupDbFile("pre-write");
-    return cleanNulls(merged);
+    return withNullableMaxConcurrent(cleanNulls(merged), merged);
   }
 
   // Generate name: prefer explicit name, then email, then a stable short-ID label.
@@ -186,14 +225,15 @@ export async function createProviderConnection(data: JsonRecord) {
     "consecutiveUseCount",
     "rateLimitProtection",
     "group",
+    "maxConcurrent",
   ];
   for (const field of optionalFields) {
     if (data[field] !== undefined && data[field] !== null) {
       connection[field] = data[field];
     }
   }
-  if (data.providerSpecificData && Object.keys(data.providerSpecificData).length > 0) {
-    connection.providerSpecificData = data.providerSpecificData;
+  if (normalizedProviderSpecificData && Object.keys(normalizedProviderSpecificData).length > 0) {
+    connection.providerSpecificData = normalizedProviderSpecificData;
   }
 
   _insertConnectionRow(db, encryptConnectionFields({ ...connection }));
@@ -204,7 +244,7 @@ export async function createProviderConnection(data: JsonRecord) {
   backupDbFile("pre-write");
   invalidateDbCache("connections"); // Bust connections read cache
 
-  return cleanNulls(connection);
+  return withNullableMaxConcurrent(cleanNulls(connection), connection);
 }
 
 function _insertConnectionRow(db: DbLike, conn: JsonRecord) {
@@ -218,7 +258,8 @@ function _insertConnectionRow(db: DbLike, conn: JsonRecord) {
       rate_limited_until, health_check_interval, last_health_check_at,
       last_tested, api_key, id_token, provider_specific_data,
       expires_in, display_name, global_priority, default_model,
-      token_type, consecutive_use_count, rate_limit_protection, last_used_at, "group", created_at, updated_at
+      token_type, consecutive_use_count, rate_limit_protection, last_used_at, "group", max_concurrent,
+      created_at, updated_at
     ) VALUES (
       @id, @provider, @authType, @name, @email, @priority, @isActive,
       @accessToken, @refreshToken, @expiresAt, @tokenExpiresAt,
@@ -227,7 +268,8 @@ function _insertConnectionRow(db: DbLike, conn: JsonRecord) {
       @rateLimitedUntil, @healthCheckInterval, @lastHealthCheckAt,
       @lastTested, @apiKey, @idToken, @providerSpecificData,
       @expiresIn, @displayName, @globalPriority, @defaultModel,
-      @tokenType, @consecutiveUseCount, @rateLimitProtection, @lastUsedAt, @group, @createdAt, @updatedAt
+      @tokenType, @consecutiveUseCount, @rateLimitProtection, @lastUsedAt, @group, @maxConcurrent,
+      @createdAt, @updatedAt
     )
   `
   ).run({
@@ -270,6 +312,7 @@ function _insertConnectionRow(db: DbLike, conn: JsonRecord) {
       conn.rateLimitProtection === true || conn.rateLimitProtection === 1 ? 1 : 0,
     lastUsedAt: conn.lastUsedAt || null,
     group: conn.group || null,
+    maxConcurrent: conn.maxConcurrent ?? null,
     createdAt: conn.createdAt,
     updatedAt: conn.updatedAt,
   });
@@ -295,6 +338,7 @@ function _updateConnectionRow(db: DbLike, id: string, data: JsonRecord) {
       rate_limit_protection = @rateLimitProtection,
       last_used_at = @lastUsedAt,
       "group" = @group,
+      max_concurrent = @maxConcurrent,
       updated_at = @updatedAt
     WHERE id = @id
   `
@@ -338,6 +382,7 @@ function _updateConnectionRow(db: DbLike, id: string, data: JsonRecord) {
       data.rateLimitProtection === true || data.rateLimitProtection === 1 ? 1 : 0,
     lastUsedAt: data.lastUsedAt || null,
     group: data.group || null,
+    maxConcurrent: data.maxConcurrent ?? null,
     updatedAt: now,
   });
 }
@@ -347,7 +392,15 @@ export async function updateProviderConnection(id: string, data: JsonRecord) {
   const existing = db.prepare("SELECT * FROM provider_connections WHERE id = ?").get(id);
   if (!existing) return null;
 
-  const merged = { ...rowToCamel(existing), ...data, updatedAt: new Date().toISOString() };
+  const merged: JsonRecord = {
+    ...toRecord(rowToCamel(existing)),
+    ...data,
+    updatedAt: new Date().toISOString(),
+  };
+  merged.providerSpecificData = normalizeProviderSpecificData(
+    toStringOrNull(merged.provider),
+    merged.providerSpecificData
+  );
   _updateConnectionRow(db, id, encryptConnectionFields({ ...merged }));
   backupDbFile("pre-write");
   invalidateDbCache("connections"); // Bust connections read cache
@@ -361,7 +414,7 @@ export async function updateProviderConnection(id: string, data: JsonRecord) {
     _reorderConnections(db, providerId);
   }
 
-  return cleanNulls(merged);
+  return withNullableMaxConcurrent(cleanNulls(merged), merged);
 }
 
 export async function deleteProviderConnection(id: string) {
@@ -369,6 +422,7 @@ export async function deleteProviderConnection(id: string) {
   const existing = db.prepare("SELECT provider FROM provider_connections WHERE id = ?").get(id);
   if (!existing) return false;
 
+  db.prepare("DELETE FROM quota_snapshots WHERE connection_id = ?").run(id);
   db.prepare("DELETE FROM provider_connections WHERE id = ?").run(id);
   const existingRecord = toRecord(existing);
   const providerId =
@@ -383,6 +437,22 @@ export async function deleteProviderConnection(id: string) {
 
 export async function deleteProviderConnectionsByProvider(providerId: string) {
   const db = getDbInstance() as unknown as DbLike;
+  const connectionIds = db
+    .prepare("SELECT id FROM provider_connections WHERE provider = ?")
+    .all(providerId)
+    .map((row) => {
+      const record = toRecord(row);
+      return typeof record.id === "string" ? record.id : null;
+    })
+    .filter((id): id is string => id !== null);
+
+  if (connectionIds.length > 0) {
+    const deleteSnapshots = db.prepare("DELETE FROM quota_snapshots WHERE connection_id = ?");
+    for (const connectionId of connectionIds) {
+      deleteSnapshots.run(connectionId);
+    }
+  }
+
   const result = db.prepare("DELETE FROM provider_connections WHERE provider = ?").run(providerId);
   backupDbFile("pre-write");
   return result.changes;
@@ -419,6 +489,67 @@ export async function getDistinctGroups(): Promise<string[]> {
     )
     .all() as Array<{ group?: string }>;
   return rows.map((r) => String(r.group ?? "")).filter(Boolean);
+}
+
+// ──────────────── Auto Migration ────────────────
+
+/**
+ * Scans all connections and re-encrypts any fields using the old dynamic salt
+ * so they use the new canonical static salt.
+ */
+export function autoMigrateLegacyEncryptedConnections(): number {
+  const db = getDbInstance() as unknown as DbLike;
+  const rows = db.prepare("SELECT * FROM provider_connections").all();
+  let migratedCount = 0;
+
+  for (const row of rows) {
+    const camelRow = rowToCamel(row);
+    if (!camelRow) continue;
+
+    let updatedRow = false;
+
+    const encryptedFields = ["apiKey", "idToken", "accessToken", "refreshToken"];
+    for (const field of encryptedFields) {
+      if (typeof camelRow[field] === "string") {
+        const { updated, value } = migrateLegacyEncryptedString(camelRow[field] as string);
+        if (updated) {
+          camelRow[field] = value;
+          updatedRow = true;
+        }
+      }
+    }
+
+    if (updatedRow) {
+      // camelRow[field] is already re-encrypted!
+      // But _updateConnectionRow does not re-encrypt automatically, so we pass it safely.
+      // Wait, _updateConnectionRow runs the full data through `encryptConnectionFields`,
+      // but `encryptConnectionFields` will re-encrypt plain text.
+      // BUT `migrateLegacyEncryptedString` returns ALREADY ENCRYPTED ciphertext!
+      // Wait... if we pass ALREADY ENCRYPTED text to `_updateConnectionRow`,
+      // `encryptConnectionFields` in `_updateConnectionRow` will encrypt it AGAIN!
+      // Let's modify the DB directly so we don't double encrypt.
+
+      db.prepare(
+        "UPDATE provider_connections SET api_key = @apiKey, id_token = @idToken, access_token = @accessToken, refresh_token = @refreshToken, updated_at = @updatedAt WHERE id = @id"
+      ).run({
+        id: camelRow.id,
+        apiKey: camelRow.apiKey ?? null,
+        idToken: camelRow.idToken ?? null,
+        accessToken: camelRow.accessToken ?? null,
+        refreshToken: camelRow.refreshToken ?? null,
+        updatedAt: new Date().toISOString(),
+      });
+      migratedCount++;
+    }
+  }
+
+  if (migratedCount > 0) {
+    backupDbFile("pre-write");
+    invalidateDbCache("connections");
+    console.log(`[DB] Auto-migrated ${migratedCount} connection(s) to new static-salt encryption.`);
+  }
+
+  return migratedCount;
 }
 
 // ──────────────── Provider Nodes ────────────────
@@ -512,4 +643,99 @@ export async function deleteProviderNode(id: string) {
   db.prepare("DELETE FROM provider_nodes WHERE id = ?").run(id);
   backupDbFile("pre-write");
   return rowToCamel(existing);
+}
+
+// ──────────────── T05: Rate-Limit DB Persistence ──────────────────────────
+// Allows rate-limit state to survive token refresh without being accidentally
+// cleared. DB column rate_limited_until already exists in schema.
+// Ref: sub2api PR #1218 (fix(openai): prevent rescheduling rate-limited accounts)
+
+/**
+ * T05: Persist when a connection is rate-limited, directly in DB.
+ * This survives token refresh — OAuth flows must NOT override this field.
+ *
+ * @param connectionId - The provider_connections.id
+ * @param until - Epoch ms when the rate limit expires (null to clear)
+ */
+export function setConnectionRateLimitUntil(connectionId: string, until: number | null): void {
+  const db = getDbInstance() as unknown as DbLike;
+  db.prepare(
+    "UPDATE provider_connections SET rate_limited_until = ?, updated_at = ? WHERE id = ?"
+  ).run(until, new Date().toISOString(), connectionId);
+  invalidateDbCache("connections");
+}
+
+/**
+ * T05: Check if a connection is currently rate-limited (DB-backed).
+ * Use this before account selection to skip transiently rate-limited accounts.
+ *
+ * @returns true if rate_limited_until is set and in the future
+ */
+export function isConnectionRateLimited(connectionId: string): boolean {
+  const db = getDbInstance() as unknown as DbLike;
+  const row = db
+    .prepare("SELECT rate_limited_until FROM provider_connections WHERE id = ?")
+    .get(connectionId) as { rate_limited_until?: number | null } | undefined;
+  if (!row?.rate_limited_until) return false;
+  return Date.now() < row.rate_limited_until;
+}
+
+/**
+ * T05: Get all connections for a provider that are currently rate-limited.
+ * Returns an array of { id, rateLimitedUntil } for dashboard display.
+ */
+export function getRateLimitedConnections(
+  provider: string
+): Array<{ id: string; rateLimitedUntil: number }> {
+  const db = getDbInstance() as unknown as DbLike;
+  const now = Date.now();
+  const rows = db
+    .prepare(
+      "SELECT id, rate_limited_until FROM provider_connections WHERE provider = ? AND rate_limited_until > ?"
+    )
+    .all(provider, now) as Array<{ id: string; rate_limited_until: number }>;
+  return rows.map((r) => ({ id: r.id, rateLimitedUntil: r.rate_limited_until }));
+}
+
+// ──────────────── T13: Stale Quota Display Fix ─────────────────────────────
+// Codex/Claude quotas display stale cumulative usage after the window resets.
+// By comparing resetAt timestamp to now(), we can show 0 when window has passed.
+// Ref: sub2api PR #1171 (fix: quota display shows stale cumulative usage after reset)
+
+/**
+ * T13: Get effective quota usage, zeroing it out if the window has already reset.
+ *
+ * @param used - Stored usage value (tokens used in the window)
+ * @param resetAt - ISO-8601 string or epoch ms when the window resets, or null
+ * @returns Effective usage: 0 if window expired, original value otherwise
+ */
+export function getEffectiveQuotaUsage(
+  used: number,
+  resetAt: string | number | null | undefined
+): number {
+  if (!resetAt) return used;
+  const resetTime = typeof resetAt === "number" ? resetAt : new Date(resetAt).getTime();
+  if (isNaN(resetTime)) return used;
+  // Window has passed — display should show 0 (pending next snapshot)
+  if (Date.now() >= resetTime) return 0;
+  return used;
+}
+
+/**
+ * T13: Format a reset countdown as a human-readable string: "2h 35m" or "4m 30s".
+ * Returns null if resetAt is in the past or not set.
+ */
+export function formatResetCountdown(resetAt: string | number | null | undefined): string | null {
+  if (!resetAt) return null;
+  const resetTime = typeof resetAt === "number" ? resetAt : new Date(resetAt).getTime();
+  if (isNaN(resetTime)) return null;
+  const diffMs = resetTime - Date.now();
+  if (diffMs <= 0) return null;
+  const totalSeconds = Math.floor(diffMs / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  if (hours > 0) return `${hours}h ${minutes}m`;
+  if (minutes > 0) return `${minutes}m ${seconds}s`;
+  return `${seconds}s`;
 }

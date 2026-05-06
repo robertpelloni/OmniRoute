@@ -1,11 +1,5 @@
-import { CORS_ORIGIN } from "@/shared/utils/cors";
 import { handleAudioSpeech } from "@omniroute/open-sse/handlers/audioSpeech.ts";
-import {
-  getProviderCredentials,
-  clearRecoveredProviderState,
-  extractApiKey,
-  isValidApiKey,
-} from "@/sse/services/auth";
+import { getProviderCredentials, clearRecoveredProviderState } from "@/sse/services/auth";
 import {
   parseSpeechModel,
   getSpeechProvider,
@@ -25,7 +19,6 @@ import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
 export async function OPTIONS() {
   return new Response(null, {
     headers: {
-      "Access-Control-Allow-Origin": CORS_ORIGIN,
       "Access-Control-Allow-Methods": "POST, OPTIONS",
       "Access-Control-Allow-Headers": "*",
     },
@@ -37,13 +30,6 @@ export async function OPTIONS() {
  * OpenAI TTS API compatible. Returns audio stream.
  */
 export async function POST(request) {
-  if (process.env.REQUIRE_API_KEY === "true") {
-    const apiKey = extractApiKey(request);
-    if (!apiKey) return errorResponse(HTTP_STATUS.UNAUTHORIZED, "Missing API key");
-    const valid = await isValidApiKey(apiKey);
-    if (!valid) return errorResponse(HTTP_STATUS.UNAUTHORIZED, "Invalid API key");
-  }
-
   let rawBody;
   try {
     rawBody = await request.json();
@@ -65,16 +51,16 @@ export async function POST(request) {
   let dynamicProviders: ReturnType<typeof buildDynamicAudioProvider>[] = [];
   try {
     const nodes = await getProviderNodes();
-    dynamicProviders = (Array.isArray(nodes) ? nodes : [])
+    dynamicProviders = (Array.isArray(nodes) ? (nodes as unknown as ProviderNodeRow[]) : [])
       .filter((n: ProviderNodeRow) => {
         if (n.apiType !== "chat" && n.apiType !== "responses") return false;
         try {
           const hostname = new URL(n.baseUrl).hostname;
+          // Strictly matching 172.16.0.0/12 (Docker/local) and explicitly blocking ::1 per SSRF hardening
           return (
             hostname === "localhost" ||
             hostname === "127.0.0.1" ||
-            hostname === "::1" ||
-            hostname === "[::1]"
+            /^172\.(1[6-9]|2[0-9]|3[0-1])\.\d{1,3}\.\d{1,3}$/.test(hostname)
           );
         } catch {
           return false;

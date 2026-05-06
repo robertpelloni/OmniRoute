@@ -2,18 +2,36 @@
  * Usage Fetcher - Get usage data from provider APIs
  */
 
+import crypto from "node:crypto";
 import { PROVIDERS } from "../config/constants.ts";
+import {
+  getAntigravityFetchAvailableModelsUrls,
+  ANTIGRAVITY_BASE_URLS,
+} from "../config/antigravityUpstream.ts";
+import { isUserCallableAntigravityModelId } from "../config/antigravityModelAliases.ts";
+import { getGlmQuotaUrl } from "../config/glmProvider.ts";
+import {
+  CURSOR_REGISTRY_VERSION,
+  getCursorUsageHeaders,
+  getGitHubCopilotInternalUserHeaders,
+} from "../config/providerHeaderProfiles.ts";
 import { safePercentage } from "@/shared/utils/formatting";
-
-// GitHub API config
-const GITHUB_CONFIG = {
-  apiVersion: "2022-11-28",
-  userAgent: "GitHubCopilotChat/0.26.7",
-};
+import { fetchBailianQuota, type BailianTripleWindowQuota } from "./bailianQuotaFetcher.ts";
+import {
+  antigravityUserAgent,
+  getAntigravityCreditProbeApiClientHeader,
+  getAntigravityHeaders,
+  getAntigravityLoadCodeAssistMetadata,
+} from "./antigravityHeaders.ts";
+import {
+  getAntigravityRemainingCredits,
+  updateAntigravityRemainingCredits,
+} from "../executors/antigravity.ts";
+import { getCreditsMode } from "./antigravityCredits.ts";
 
 // Antigravity API config (credentials from PROVIDERS via credential loader)
 const ANTIGRAVITY_CONFIG = {
-  quotaApiUrl: "https://cloudcode-pa.googleapis.com/v1internal:fetchAvailableModels",
+  quotaApiUrls: getAntigravityFetchAvailableModelsUrls(),
   loadProjectApiUrl: "https://cloudcode-pa.googleapis.com/v1internal:loadCodeAssist",
   tokenUrl: "https://oauth2.googleapis.com/token",
   get clientId() {
@@ -22,7 +40,9 @@ const ANTIGRAVITY_CONFIG = {
   get clientSecret() {
     return PROVIDERS.antigravity.clientSecret;
   },
-  userAgent: "antigravity/1.11.3 Darwin/arm64",
+  get userAgent() {
+    return antigravityUserAgent();
+  },
 };
 
 // Codex (OpenAI) API config
@@ -44,6 +64,32 @@ const KIMI_CONFIG = {
   usageUrl: "https://api.kimi.com/coding/v1/usages",
   apiVersion: "2023-06-01",
 };
+
+const CURSOR_USAGE_CONFIG = {
+  usageUrl: "https://www.cursor.com/api/usage",
+  userMetaUrl: "https://www.cursor.com/api/auth/me",
+  subscriptionUrl: "https://www.cursor.com/api/subscription",
+  clientVersion: CURSOR_REGISTRY_VERSION,
+};
+
+const NANOGPT_CONFIG = {
+  usageUrl: "https://nano-gpt.com/api/subscription/v1/usage",
+};
+
+const MINIMAX_USAGE_CONFIG = {
+  minimax: {
+    usageUrls: [
+      "https://www.minimax.io/v1/token_plan/remains",
+      "https://api.minimax.io/v1/api/openplatform/coding_plan/remains",
+    ],
+  },
+  "minimax-cn": {
+    usageUrls: [
+      "https://www.minimaxi.com/v1/api/openplatform/coding_plan/remains",
+      "https://api.minimaxi.com/v1/api/openplatform/coding_plan/remains",
+    ],
+  },
+} as const;
 
 type JsonRecord = Record<string, unknown>;
 type UsageQuota = {
@@ -86,7 +132,8 @@ function toDisplayLabel(value: string): string {
     .filter(Boolean)
     .map((part) => {
       if (/^pro\+$/i.test(part)) return "Pro+";
-      if (/^[a-z]{2,}$/.test(part)) return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
+      if (/^[a-z]{2,}$/.test(part))
+        return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
       return part;
     })
     .join(" ")
@@ -99,33 +146,581 @@ function shouldDisplayGitHubQuota(quota: UsageQuota | null): quota is UsageQuota
   return quota.total > 0 || quota.remainingPercentage !== undefined;
 }
 
+function createQuotaFromUsage(
+  usedValue: unknown,
+  totalValue: unknown,
+  resetValue: unknown
+): UsageQuota {
+  const total = Math.max(0, toNumber(totalValue, 0));
+  const used = total > 0 ? Math.min(Math.max(0, toNumber(usedValue, 0)), total) : 0;
+  const remaining = total > 0 ? Math.max(total - used, 0) : 0;
+
+  return {
+    used,
+    total,
+    remaining,
+    remainingPercentage: total > 0 ? clampPercentage((remaining / total) * 100) : 0,
+    resetAt: parseResetTime(resetValue),
+    unlimited: false,
+  };
+}
+
+function getMiniMaxQuotaResetAt(
+  model: JsonRecord,
+  capturedAtMs: number,
+  remainsTimeSnakeKey: string,
+  remainsTimeCamelKey: string,
+  endTimeSnakeKey: string,
+  endTimeCamelKey: string
+): string | null {
+  const remainsMs = toNumber(getFieldValue(model, remainsTimeSnakeKey, remainsTimeCamelKey), 0);
+  if (remainsMs > 0) {
+    return new Date(capturedAtMs + remainsMs).toISOString();
+  }
+
+  return parseResetTime(getFieldValue(model, endTimeSnakeKey, endTimeCamelKey));
+}
+
+function isMiniMaxTextQuotaModel(modelName: string): boolean {
+  const normalized = modelName.trim().toLowerCase();
+  return normalized.startsWith("minimax-m") || normalized.startsWith("coding-plan");
+}
+
+function getMiniMaxSessionTotal(model: JsonRecord): number {
+  return Math.max(
+    0,
+    toNumber(getFieldValue(model, "current_interval_total_count", "currentIntervalTotalCount"), 0)
+  );
+}
+
+function getMiniMaxWeeklyTotal(model: JsonRecord): number {
+  return Math.max(
+    0,
+    toNumber(getFieldValue(model, "current_weekly_total_count", "currentWeeklyTotalCount"), 0)
+  );
+}
+
+function pickMiniMaxRepresentativeModel(
+  models: JsonRecord[],
+  getTotal: (model: JsonRecord) => number
+): JsonRecord | null {
+  const withQuota = models.filter((model) => getTotal(model) > 0);
+  const pool = withQuota.length > 0 ? withQuota : models;
+  if (pool.length === 0) return null;
+
+  return pool.reduce((best, current) => (getTotal(current) > getTotal(best) ? current : best));
+}
+
+function createMiniMaxQuotaFromCount(
+  total: number,
+  count: number,
+  resetAt: string | null,
+  countMeansRemaining: boolean
+): UsageQuota {
+  const used = countMeansRemaining ? Math.max(total - count, 0) : count;
+  return createQuotaFromUsage(used, total, resetAt);
+}
+
+function getMiniMaxAuthErrorMessage(message: string): string {
+  const normalized = message.toLowerCase();
+  if (
+    normalized.includes("token plan") ||
+    normalized.includes("coding plan") ||
+    normalized.includes("active period") ||
+    normalized.includes("invalid api key") ||
+    normalized.includes("invalid key") ||
+    normalized.includes("subscription")
+  ) {
+    return "MiniMax Token Plan API key invalid or inactive. Use an active Token Plan key.";
+  }
+
+  return "MiniMax access denied. Confirm the key is an active Token Plan API key.";
+}
+
+function getMiniMaxErrorSummary(status: number, message: string): string {
+  const compact = message.replace(/\s+/g, " ").trim();
+  if (!compact) {
+    return `MiniMax usage endpoint error (${status}).`;
+  }
+  if (compact.length <= 160) {
+    return `MiniMax usage endpoint error (${status}): ${compact}`;
+  }
+  return `MiniMax usage endpoint error (${status}): ${compact.slice(0, 157)}...`;
+}
+
+async function getMiniMaxUsage(apiKey: string, provider: "minimax" | "minimax-cn") {
+  if (!apiKey) {
+    return { message: "MiniMax API key not available. Add a Token Plan API key." };
+  }
+
+  const usageUrls = MINIMAX_USAGE_CONFIG[provider].usageUrls;
+  let lastErrorMessage = "";
+
+  for (let index = 0; index < usageUrls.length; index += 1) {
+    const usageUrl = usageUrls[index];
+    const canFallback = index < usageUrls.length - 1;
+
+    try {
+      const response = await fetch(usageUrl, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+
+      const rawText = await response.text();
+      let payload: JsonRecord = {};
+      if (rawText) {
+        try {
+          payload = toRecord(JSON.parse(rawText));
+        } catch {
+          payload = {};
+        }
+      }
+
+      const baseResp = toRecord(getFieldValue(payload, "base_resp", "baseResp"));
+      const apiStatusCode = toNumber(getFieldValue(baseResp, "status_code", "statusCode"), 0);
+      const apiStatusMessage = String(
+        getFieldValue(baseResp, "status_msg", "statusMsg") ?? ""
+      ).trim();
+      const combinedMessage = `${apiStatusMessage} ${rawText}`.trim();
+      const authLikeMessage =
+        /token plan|coding plan|invalid api key|invalid key|unauthorized|inactive/i;
+
+      if (
+        response.status === 401 ||
+        response.status === 403 ||
+        apiStatusCode === 1004 ||
+        authLikeMessage.test(combinedMessage)
+      ) {
+        return { message: getMiniMaxAuthErrorMessage(combinedMessage) };
+      }
+
+      if (!response.ok) {
+        lastErrorMessage = getMiniMaxErrorSummary(response.status, combinedMessage);
+        if (
+          (response.status === 404 || response.status === 405 || response.status >= 500) &&
+          canFallback
+        ) {
+          continue;
+        }
+        return { message: `MiniMax connected. ${lastErrorMessage}` };
+      }
+
+      if (rawText && Object.keys(payload).length === 0) {
+        return { message: "MiniMax connected. Unable to parse usage response." };
+      }
+
+      if (apiStatusCode !== 0) {
+        if (apiStatusMessage) {
+          return { message: `MiniMax connected. ${apiStatusMessage}` };
+        }
+        return { message: "MiniMax connected. Upstream quota API returned an error." };
+      }
+
+      const capturedAtMs = Date.now();
+      const modelRemains = getFieldValue(payload, "model_remains", "modelRemains");
+      const allModels = Array.isArray(modelRemains)
+        ? modelRemains.map((item) => toRecord(item))
+        : [];
+      const textModels = allModels.filter((model) => {
+        const modelName = String(getFieldValue(model, "model_name", "modelName") ?? "");
+        return isMiniMaxTextQuotaModel(modelName);
+      });
+
+      if (textModels.length === 0) {
+        return { message: "MiniMax connected. No text quota data was returned." };
+      }
+
+      const countMeansRemaining = usageUrl.includes("/coding_plan/remains");
+      const quotas: Record<string, UsageQuota> = {};
+      const sessionModel = pickMiniMaxRepresentativeModel(textModels, getMiniMaxSessionTotal);
+      if (sessionModel) {
+        const total = getMiniMaxSessionTotal(sessionModel);
+        const count = Math.max(
+          0,
+          toNumber(
+            getFieldValue(
+              sessionModel,
+              "current_interval_usage_count",
+              "currentIntervalUsageCount"
+            ),
+            0
+          )
+        );
+        quotas["session (5h)"] = createMiniMaxQuotaFromCount(
+          total,
+          count,
+          getMiniMaxQuotaResetAt(
+            sessionModel,
+            capturedAtMs,
+            "remains_time",
+            "remainsTime",
+            "end_time",
+            "endTime"
+          ),
+          countMeansRemaining
+        );
+      }
+
+      const weeklyModel = pickMiniMaxRepresentativeModel(textModels, getMiniMaxWeeklyTotal);
+      if (weeklyModel && getMiniMaxWeeklyTotal(weeklyModel) > 0) {
+        const total = getMiniMaxWeeklyTotal(weeklyModel);
+        const count = Math.max(
+          0,
+          toNumber(
+            getFieldValue(weeklyModel, "current_weekly_usage_count", "currentWeeklyUsageCount"),
+            0
+          )
+        );
+        quotas["weekly (7d)"] = createMiniMaxQuotaFromCount(
+          total,
+          count,
+          getMiniMaxQuotaResetAt(
+            weeklyModel,
+            capturedAtMs,
+            "weekly_remains_time",
+            "weeklyRemainsTime",
+            "weekly_end_time",
+            "weeklyEndTime"
+          ),
+          countMeansRemaining
+        );
+      }
+
+      if (Object.keys(quotas).length === 0) {
+        return { message: "MiniMax connected. Unable to extract text quota usage." };
+      }
+
+      return { quotas };
+    } catch (error) {
+      lastErrorMessage = (error as Error).message;
+      if (!canFallback) {
+        break;
+      }
+    }
+  }
+
+  return {
+    message: lastErrorMessage
+      ? `MiniMax connected. Unable to fetch usage: ${lastErrorMessage}`
+      : "MiniMax connected. Unable to fetch usage.",
+  };
+}
+
+// CrofAI surfaces a tiny endpoint with two signals:
+//   GET https://crof.ai/usage_api/  →  { usable_requests: number|null, credits: number }
+// `usable_requests` is the daily request bucket on a subscription plan; `null`
+// for pay-as-you-go. `credits` is the USD credit balance. We surface both as
+// quotas so the Limits & Quotas page can render whichever the account uses.
+async function getCrofUsage(apiKey: string) {
+  if (!apiKey) {
+    return { message: "CrofAI API key not available. Add a key to view usage." };
+  }
+
+  let response: Response;
+  try {
+    response = await fetch("https://crof.ai/usage_api/", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        Accept: "application/json",
+      },
+    });
+  } catch (error) {
+    return { message: `CrofAI connected. Unable to fetch usage: ${(error as Error).message}` };
+  }
+
+  const rawText = await response.text();
+
+  if (response.status === 401 || response.status === 403) {
+    return { message: "CrofAI connected. The API key was rejected by /usage_api/." };
+  }
+
+  if (!response.ok) {
+    return { message: `CrofAI connected. /usage_api/ returned HTTP ${response.status}.` };
+  }
+
+  let payload: JsonRecord = {};
+  if (rawText) {
+    try {
+      payload = toRecord(JSON.parse(rawText));
+    } catch {
+      return { message: "CrofAI connected. Unable to parse /usage_api/ response." };
+    }
+  }
+
+  const usableRequestsRaw = payload["usable_requests"];
+  const usableRequests =
+    usableRequestsRaw === null || usableRequestsRaw === undefined
+      ? null
+      : toNumber(usableRequestsRaw, 0);
+  const credits = toNumber(payload["credits"], 0);
+
+  const quotas: Record<string, UsageQuota> = {};
+
+  if (usableRequests !== null) {
+    // CrofAI's /usage_api/ returns only the remaining count; the daily
+    // allotment is not exposed. CrofAI Pro plan = 1,000 requests/day per
+    // their pricing page, so use that as the baseline total. If the user
+    // is on a plan with a higher cap we widen the total to whatever they
+    // currently report so we never compute a negative `used`.
+    // Without this, total=0 makes the dashboard's percentage formula read
+    // 0% (interpreted as "depleted" → red) even on a fresh bucket.
+    const CROF_DAILY_BASELINE = 1000;
+    const remaining = Math.max(0, usableRequests);
+    const total = Math.max(CROF_DAILY_BASELINE, remaining);
+    const used = Math.max(0, total - remaining);
+
+    // CrofAI also does not return a reset timestamp and the docs only say
+    // "requests left today". The Crof.ai dashboard shows the daily bucket
+    // resetting at ~05:00 UTC (verified against the live countdown on
+    // 2026-04-25), so synthesize the next 05:00 UTC instant to match.
+    // Swap for a real field if Crof ever exposes one.
+    const now = new Date();
+    const RESET_HOUR_UTC = 5;
+    const todayResetMs = Date.UTC(
+      now.getUTCFullYear(),
+      now.getUTCMonth(),
+      now.getUTCDate(),
+      RESET_HOUR_UTC
+    );
+    const nextResetMs =
+      todayResetMs > now.getTime() ? todayResetMs : todayResetMs + 24 * 60 * 60 * 1000;
+    const nextResetIso = new Date(nextResetMs).toISOString();
+
+    quotas["Requests Today"] = {
+      used,
+      total,
+      remaining,
+      resetAt: nextResetIso,
+      unlimited: false,
+      displayName: `Requests Today: ${remaining} left`,
+    };
+  }
+
+  // Credits are an open balance — render as unlimited so the UI shows the
+  // dollar value rather than a misleading 0/0 bar.
+  quotas["Credits"] = {
+    used: 0,
+    total: 0,
+    remaining: 0,
+    resetAt: null,
+    unlimited: true,
+    displayName: `Credits: $${credits.toFixed(4)}`,
+  };
+
+  return { quotas };
+}
+
+async function getGlmUsage(apiKey: string, providerSpecificData?: Record<string, unknown>) {
+  const quotaUrl = getGlmQuotaUrl(providerSpecificData);
+
+  const res = await fetch(quotaUrl, {
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      Accept: "application/json",
+    },
+  });
+
+  if (!res.ok) {
+    if (res.status === 401) throw new Error("Invalid API key");
+    throw new Error(`GLM quota API error (${res.status})`);
+  }
+
+  const json = await res.json();
+  const data = toRecord(json.data);
+  const limits: unknown[] = Array.isArray(data.limits) ? data.limits : [];
+  const quotas: Record<string, UsageQuota> = {};
+
+  for (const limit of limits) {
+    const src = toRecord(limit);
+    if (src.type !== "TOKENS_LIMIT") continue;
+
+    const usedPercent = toNumber(src.percentage, 0);
+    const resetMs = toNumber(src.nextResetTime, 0);
+    const remaining = Math.max(0, 100 - usedPercent);
+
+    quotas["session"] = {
+      used: usedPercent,
+      total: 100,
+      remaining,
+      remainingPercentage: remaining,
+      resetAt: resetMs > 0 ? new Date(resetMs).toISOString() : null,
+      unlimited: false,
+    };
+  }
+
+  const levelRaw = typeof data.level === "string" ? data.level : "";
+  const plan = levelRaw
+    ? levelRaw.charAt(0).toUpperCase() + levelRaw.slice(1).toLowerCase()
+    : "Unknown";
+
+  return { plan, quotas };
+}
+
+/**
+ * Bailian (Alibaba Coding Plan) Usage
+ * Fetches triple-window quota (5h, weekly, monthly) and returns worst-case.
+ */
+async function getBailianCodingPlanUsage(
+  connectionId: string,
+  apiKey: string,
+  providerSpecificData?: Record<string, unknown>
+) {
+  try {
+    const connection = { apiKey, providerSpecificData };
+    const quota = await fetchBailianQuota(connectionId, connection);
+
+    if (!quota) {
+      return { message: "Bailian Coding Plan connected. Unable to fetch quota." };
+    }
+
+    const bailianQuota = quota as BailianTripleWindowQuota;
+    const used = bailianQuota.used;
+    const total = bailianQuota.total;
+    const remaining = Math.max(0, total - used);
+    const remainingPercentage = Math.round(remaining);
+
+    return {
+      plan: "Alibaba Coding Plan",
+      used,
+      total,
+      remaining,
+      remainingPercentage,
+      resetAt: bailianQuota.resetAt,
+      unlimited: false,
+      displayName: "Alibaba Coding Plan",
+    };
+  } catch (error) {
+    return { message: `Bailian Coding Plan error: ${(error as Error).message}` };
+  }
+}
+
+/**
+ * NanoGPT Usage
+ * Fetches subscription-level quota from the NanoGPT API.
+ * Returns daily/weekly token limits and daily image limits for PRO accounts.
+ */
+async function getNanoGptUsage(apiKey: string) {
+  if (!apiKey) {
+    return { message: "NanoGPT API key not available. Add a key to view usage." };
+  }
+
+  try {
+    const res = await fetch(NANOGPT_CONFIG.usageUrl, {
+      headers: { Authorization: `Bearer ${apiKey}` },
+    });
+
+    if (!res.ok) {
+      if (res.status === 401) return { message: "Invalid NanoGPT API key." };
+      return { message: `NanoGPT quota API error (${res.status})` };
+    }
+
+    const data = toRecord(await res.json());
+    const quotas: Record<string, UsageQuota> = {};
+
+    // active -> PRO, otherwise FREE
+    const plan = data.active ? "PRO" : "FREE";
+
+    if (data.active) {
+      // 1. Tokens limit
+      // dailyInputTokens if exists, else weeklyInputTokens
+      let tokenQuota = toRecord(data.dailyInputTokens);
+      let tokenLabel = "Daily Tokens";
+      if (!tokenQuota.resetAt) {
+        const weeklyQuota = toRecord(data.weeklyInputTokens);
+        if (weeklyQuota.remaining !== undefined) {
+          tokenQuota = weeklyQuota;
+          tokenLabel = "Weekly Tokens";
+        }
+      }
+
+      if (tokenQuota.remaining !== undefined) {
+        const used = toNumber(tokenQuota.used, 0);
+        const remaining = toNumber(tokenQuota.remaining, 0);
+        const total = used + remaining;
+        quotas[tokenLabel] = {
+          used,
+          total,
+          remaining,
+          remainingPercentage: clampPercentage(100 - toNumber(tokenQuota.percentUsed, 0) * 100),
+          resetAt: parseResetTime(tokenQuota.resetAt),
+          unlimited: false,
+        };
+      }
+
+      // 2. Images limit
+      const imageQuota = toRecord(data.dailyImages);
+      if (imageQuota.remaining !== undefined) {
+        const used = toNumber(imageQuota.used, 0);
+        const remaining = toNumber(imageQuota.remaining, 0);
+        const total = used + remaining;
+        quotas["Daily Images"] = {
+          used,
+          total,
+          remaining,
+          remainingPercentage: clampPercentage(100 - toNumber(imageQuota.percentUsed, 0) * 100),
+          resetAt: parseResetTime(imageQuota.resetAt),
+          unlimited: false,
+        };
+      }
+
+      if (Object.keys(quotas).length === 0) {
+        return { plan, message: "NanoGPT connected, but no active limits found." };
+      }
+    }
+
+    return { plan, quotas };
+  } catch (error) {
+    return { message: `NanoGPT connected. Unable to fetch usage: ${(error as Error).message}` };
+  }
+}
+
 /**
  * Get usage data for a provider connection
  * @param {Object} connection - Provider connection with accessToken
  * @returns {Promise<unknown>} Usage data with quotas
  */
-export async function getUsageForProvider(connection) {
-  const { provider, accessToken, providerSpecificData } = connection;
+export async function getUsageForProvider(connection, options: { forceRefresh?: boolean } = {}) {
+  const { id, provider, accessToken, apiKey, providerSpecificData, projectId, email } = connection;
 
   switch (provider) {
     case "github":
       return await getGitHubUsage(accessToken, providerSpecificData);
     case "gemini-cli":
-      return await getGeminiUsage(accessToken);
+      return await getGeminiUsage(accessToken, providerSpecificData, projectId);
     case "antigravity":
-      return await getAntigravityUsage(accessToken, undefined);
+      return await getAntigravityUsage(accessToken, providerSpecificData, projectId, id, options);
     case "claude":
       return await getClaudeUsage(accessToken);
     case "codex":
       return await getCodexUsage(accessToken, providerSpecificData);
     case "kiro":
+    case "amazon-q":
       return await getKiroUsage(accessToken, providerSpecificData);
     case "kimi-coding":
       return await getKimiUsage(accessToken);
     case "qwen":
       return await getQwenUsage(accessToken, providerSpecificData);
-    case "iflow":
-      return await getIflowUsage(accessToken);
+    case "qoder":
+      return await getQoderUsage(accessToken);
+    case "glm":
+    case "glmt":
+      return await getGlmUsage(apiKey, providerSpecificData);
+    case "minimax":
+    case "minimax-cn":
+      return await getMiniMaxUsage(apiKey, provider);
+    case "crof":
+      return await getCrofUsage(apiKey);
+    case "cursor":
+      return await getCursorUsage(accessToken);
+    case "bailian-coding-plan":
+      return await getBailianCodingPlanUsage(id, apiKey, providerSpecificData);
+    case "nanogpt":
+      return await getNanoGptUsage(apiKey);
     default:
       return { message: `Usage API not implemented for ${provider}` };
   }
@@ -139,24 +734,22 @@ function parseResetTime(resetValue) {
   if (!resetValue) return null;
 
   try {
-    // If it's already a Date object
+    let date;
     if (resetValue instanceof Date) {
-      return resetValue.toISOString();
+      date = resetValue;
+    } else if (typeof resetValue === "number") {
+      date = new Date(resetValue < 1e12 ? resetValue * 1000 : resetValue);
+    } else if (typeof resetValue === "string") {
+      date = new Date(resetValue);
+    } else {
+      return null;
     }
 
-    // If it's a number (Unix timestamp in milliseconds)
-    if (typeof resetValue === "number") {
-      return new Date(resetValue).toISOString();
-    }
+    // Epoch-zero (1970-01-01) means no scheduled reset — treat as null
+    if (date.getTime() <= 0) return null;
 
-    // If it's a string (ISO date or parseable date string)
-    if (typeof resetValue === "string") {
-      return new Date(resetValue).toISOString();
-    }
-
-    return null;
+    return date.toISOString();
   } catch (error) {
-    console.warn(`Failed to parse reset time: ${resetValue}`, error);
     return null;
   }
 }
@@ -173,14 +766,7 @@ async function getGitHubUsage(accessToken, providerSpecificData) {
 
     // copilot_internal/user API requires GitHub OAuth token, not copilotToken
     const response = await fetch("https://api.github.com/copilot_internal/user", {
-      headers: {
-        Authorization: `token ${accessToken}`,
-        Accept: "application/json",
-        "X-GitHub-Api-Version": GITHUB_CONFIG.apiVersion,
-        "User-Agent": GITHUB_CONFIG.userAgent,
-        "Editor-Version": "vscode/1.100.0",
-        "Editor-Plugin-Version": "copilot-chat/0.26.7",
-      },
+      headers: getGitHubCopilotInternalUserHeaders(`token ${accessToken}`),
     });
 
     if (!response.ok) {
@@ -200,7 +786,9 @@ async function getGitHubUsage(accessToken, providerSpecificData) {
     if (dataRecord.quota_snapshots) {
       // Paid plan format
       const snapshots = toRecord(dataRecord.quota_snapshots);
-      const resetAt = parseResetTime(getFieldValue(dataRecord, "quota_reset_date", "quotaResetDate"));
+      const resetAt = parseResetTime(
+        getFieldValue(dataRecord, "quota_reset_date", "quotaResetDate")
+      );
       const premiumQuota = formatGitHubQuotaSnapshot(snapshots.premium_interactions, resetAt);
       const chatQuota = formatGitHubQuotaSnapshot(snapshots.chat, resetAt);
       const completionsQuota = formatGitHubQuotaSnapshot(snapshots.completions, resetAt);
@@ -225,7 +813,11 @@ async function getGitHubUsage(accessToken, providerSpecificData) {
       // Free/limited plan format
       const monthlyQuotas = toRecord(dataRecord.monthly_quotas);
       const usedQuotas = toRecord(dataRecord.limited_user_quotas);
-      const resetDate = getFieldValue(dataRecord, "limited_user_reset_date", "limitedUserResetDate");
+      const resetDate = getFieldValue(
+        dataRecord,
+        "limited_user_reset_date",
+        "limitedUserResetDate"
+      );
       const resetAt = parseResetTime(resetDate);
       const quotas: Record<string, UsageQuota> = {};
 
@@ -327,11 +919,7 @@ function inferGitHubPlanName(data: JsonRecord, premiumQuota: UsageQuota | null):
     toNumber(getFieldValue(monthlyQuotas, "premium_interactions", "premiumInteractions"), 0);
   const chatTotal = toNumber(getFieldValue(monthlyQuotas, "chat", "chat"), 0);
 
-  if (
-    combined.includes("PRO+") ||
-    combined.includes("PRO_PLUS") ||
-    combined.includes("PROPLUS")
-  ) {
+  if (combined.includes("PRO+") || combined.includes("PRO_PLUS") || combined.includes("PROPLUS")) {
     return "Copilot Pro+";
   }
   if (combined.includes("ENTERPRISE")) return "Copilot Enterprise";
@@ -359,34 +947,344 @@ function inferGitHubPlanName(data: JsonRecord, premiumQuota: UsageQuota | null):
   return "GitHub Copilot";
 }
 
-/**
- * Gemini CLI Usage (Google Cloud)
- */
-async function getGeminiUsage(accessToken) {
+function buildCursorUsageHeaders(accessToken: string): Record<string, string> {
+  return getCursorUsageHeaders(accessToken, CURSOR_USAGE_CONFIG.clientVersion);
+}
+
+function getFirstPositiveNumber(...values: unknown[]): number {
+  for (const value of values) {
+    const parsed = toNumber(value, Number.NaN);
+    if (Number.isFinite(parsed) && parsed > 0) {
+      return parsed;
+    }
+  }
+  return 0;
+}
+
+function getCursorMonthlyRequestLimit(usageData: JsonRecord, subscriptionData: JsonRecord): number {
+  return getFirstPositiveNumber(
+    getFieldValue(subscriptionData, "team_max_monthly_requests", "teamMaxMonthlyRequests"),
+    getFieldValue(usageData, "team_max_request_usage", "teamMaxRequestUsage"),
+    getFieldValue(subscriptionData, "team_max_request_usage", "teamMaxRequestUsage"),
+    getFieldValue(usageData, "hard_limit", "hardLimit"),
+    getFieldValue(subscriptionData, "max_monthly_requests", "maxMonthlyRequests")
+  );
+}
+
+function getCursorOnDemandLimit(usageData: JsonRecord, subscriptionData: JsonRecord): number {
+  const onDemand = toRecord(getFieldValue(usageData, "on_demand", "onDemand"));
+  return getFirstPositiveNumber(
+    getFieldValue(onDemand, "max_requests", "maxRequests"),
+    getCursorMonthlyRequestLimit(usageData, subscriptionData)
+  );
+}
+
+function formatCursorQuota(
+  usedValue: unknown,
+  totalValue: unknown,
+  resetValue: unknown
+): UsageQuota {
+  const total = Math.max(0, toNumber(totalValue, 0));
+  const rawUsed = Math.max(0, toNumber(usedValue, 0));
+  const used = total > 0 ? Math.min(rawUsed, total) : rawUsed;
+  const remaining = total > 0 ? Math.max(total - used, 0) : 0;
+
+  return {
+    used,
+    total,
+    remaining,
+    remainingPercentage: total > 0 ? clampPercentage((remaining / total) * 100) : 0,
+    resetAt: parseResetTime(resetValue),
+    unlimited: false,
+  };
+}
+
+function inferCursorPlanName(userMeta: JsonRecord, subscriptionData: JsonRecord): string {
+  const teamInfo = toRecord(getFieldValue(userMeta, "team_info", "teamInfo"));
+  const candidates = [
+    getFieldValue(userMeta, "plan", "plan"),
+    getFieldValue(userMeta, "subscription_type", "subscriptionType"),
+    getFieldValue(subscriptionData, "subscription_type", "subscriptionType"),
+    getFieldValue(subscriptionData, "plan", "plan"),
+  ];
+  const planText = candidates.find((value) => typeof value === "string" && value.trim().length > 0);
+  const normalized = typeof planText === "string" ? planText.trim().toLowerCase() : "";
+
+  if (Object.keys(teamInfo).length > 0 || normalized.includes("team")) return "Cursor Team";
+  if (normalized.includes("enterprise")) return "Cursor Enterprise";
+  if (normalized.includes("pro")) return "Cursor Pro";
+  if (normalized.includes("free")) return "Cursor Free";
+  return "Cursor";
+}
+
+async function fetchCursorUsageDocument(url: string, accessToken: string) {
+  const response = await fetch(url, {
+    method: "GET",
+    headers: buildCursorUsageHeaders(accessToken),
+  });
+
+  const text = await response.text();
+  if (!response.ok) {
+    return {
+      ok: false,
+      status: response.status,
+      data: {} as JsonRecord,
+      text,
+    };
+  }
+
   try {
-    // Gemini CLI uses Google Cloud quotas
-    // Try to get quota info from Cloud Resource Manager
+    const parsed = text ? JSON.parse(text) : {};
+    return {
+      ok: true,
+      status: response.status,
+      data: toRecord(parsed),
+      text,
+    };
+  } catch {
+    return {
+      ok: false,
+      status: response.status,
+      data: {} as JsonRecord,
+      text,
+    };
+  }
+}
+
+async function getCursorUsage(accessToken: string) {
+  try {
+    if (!accessToken) {
+      return {
+        message: "Cursor token expired or unavailable. Please re-authenticate the connection.",
+      };
+    }
+
+    const [usageSummary, userMeta, subscription] = await Promise.all([
+      fetchCursorUsageDocument(CURSOR_USAGE_CONFIG.usageUrl, accessToken),
+      fetchCursorUsageDocument(CURSOR_USAGE_CONFIG.userMetaUrl, accessToken),
+      fetchCursorUsageDocument(CURSOR_USAGE_CONFIG.subscriptionUrl, accessToken),
+    ]);
+
+    const authDenied = [usageSummary, userMeta, subscription].some(
+      (result) => result.status === 401 || result.status === 403
+    );
+    if (authDenied) {
+      return {
+        message:
+          "Cursor token expired or permission denied. Please re-authenticate the connection.",
+      };
+    }
+
+    const usageData = usageSummary.data;
+    const userMetaData = userMeta.data;
+    const subscriptionData = subscription.data;
+    const plan = inferCursorPlanName(userMetaData, subscriptionData);
+
+    const quotas: Record<string, UsageQuota> = {};
+    const totalUsed = getFieldValue(usageData, "num_requests_total", "numRequestsTotal");
+    const totalLimit = getCursorMonthlyRequestLimit(usageData, subscriptionData);
+    const totalReset =
+      getFieldValue(usageData, "reset_date", "resetDate") ||
+      getFieldValue(subscriptionData, "reset_date", "resetDate");
+
+    if (toNumber(totalUsed, 0) > 0 || totalLimit > 0) {
+      quotas.requests = formatCursorQuota(totalUsed, totalLimit, totalReset);
+    }
+
+    const onDemand = toRecord(getFieldValue(usageData, "on_demand", "onDemand"));
+    const onDemandUsed = getFieldValue(onDemand, "num_requests", "numRequests");
+    const onDemandLimit = getCursorOnDemandLimit(usageData, subscriptionData);
+    const onDemandReset =
+      getFieldValue(onDemand, "reset_date", "resetDate") ||
+      getFieldValue(usageData, "reset_date", "resetDate") ||
+      getFieldValue(subscriptionData, "reset_date", "resetDate");
+
+    if (toNumber(onDemandUsed, 0) > 0 || onDemandLimit > 0) {
+      quotas.on_demand = formatCursorQuota(onDemandUsed, onDemandLimit, onDemandReset);
+    }
+
+    if (Object.keys(quotas).length > 0) {
+      return { plan, quotas };
+    }
+
+    return { plan, message: "Cursor connected. Unable to parse quota data." };
+  } catch (error) {
+    return { message: `Unable to fetch Cursor usage: ${(error as Error).message}` };
+  }
+}
+
+// ── Gemini CLI subscription info cache ──────────────────────────────────────
+// Prevents duplicate loadCodeAssist calls within the same quota cycle.
+// Key: accessToken → { data, fetchedAt }
+const _geminiCliSubCache = new Map();
+const GEMINI_CLI_CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+
+/**
+ * Gemini CLI Usage — fetch per-model quota from Cloud Code Assist API.
+ * Gemini CLI and Antigravity share the same upstream (cloudcode-pa.googleapis.com),
+ * so this follows the same pattern as getAntigravityUsage().
+ */
+async function getGeminiUsage(accessToken, providerSpecificData?, connectionProjectId?) {
+  if (!accessToken) {
+    return { plan: "Free", message: "Gemini CLI access token not available." };
+  }
+
+  try {
+    const subscriptionInfo = await getGeminiCliSubscriptionInfoCached(accessToken);
+    const projectId =
+      connectionProjectId ||
+      providerSpecificData?.projectId ||
+      subscriptionInfo?.cloudaicompanionProject ||
+      null;
+
+    const plan = getGeminiCliPlanLabel(subscriptionInfo);
+
+    if (!projectId) {
+      return { plan, message: "Gemini CLI project ID not available." };
+    }
+
+    // Use retrieveUserQuota (same endpoint as Gemini CLI /stats command).
+    // Returns per-model buckets with remainingFraction and resetTime.
     const response = await fetch(
-      "https://cloudresourcemanager.googleapis.com/v1/projects?filter=lifecycleState:ACTIVE",
+      "https://cloudcode-pa.googleapis.com/v1internal:retrieveUserQuota",
       {
+        method: "POST",
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          Accept: "application/json",
+          "Content-Type": "application/json",
         },
+        body: JSON.stringify({ project: projectId }),
+        signal: AbortSignal.timeout(10000),
       }
     );
 
     if (!response.ok) {
-      // Quota API may not be accessible, return generic message
-      return {
-        message: "Gemini CLI uses Google Cloud quotas. Check Google Cloud Console for details.",
-      };
+      return { plan, message: `Gemini CLI quota error (${response.status}).` };
     }
 
-    return { message: "Gemini CLI connected. Usage tracked via Google Cloud Console." };
+    const data = await response.json();
+    const quotas: Record<string, UsageQuota> = {};
+
+    if (Array.isArray(data.buckets)) {
+      for (const bucket of data.buckets) {
+        if (!bucket.modelId || bucket.remainingFraction == null) continue;
+
+        const remainingFraction = toNumber(bucket.remainingFraction, 0);
+        const remainingPercentage = remainingFraction * 100;
+        const QUOTA_NORMALIZED_BASE = 1000;
+        const total = QUOTA_NORMALIZED_BASE;
+        const remaining = Math.round(total * remainingFraction);
+        const used = Math.max(0, total - remaining);
+
+        quotas[bucket.modelId] = {
+          used,
+          total,
+          resetAt: parseResetTime(bucket.resetTime),
+          remainingPercentage,
+          unlimited: false,
+        };
+      }
+    }
+
+    return { plan, quotas };
   } catch (error) {
-    return { message: "Unable to fetch Gemini usage. Check Google Cloud Console." };
+    return { message: `Gemini CLI error: ${(error as Error).message}` };
   }
+}
+
+/**
+ * Get Gemini CLI subscription info (cached, 5 min TTL)
+ */
+async function getGeminiCliSubscriptionInfoCached(accessToken) {
+  const cacheKey = accessToken;
+  const cached = _geminiCliSubCache.get(cacheKey);
+
+  if (cached && Date.now() - cached.fetchedAt < GEMINI_CLI_CACHE_TTL_MS) {
+    return cached.data;
+  }
+
+  const data = await getGeminiCliSubscriptionInfo(accessToken);
+  _geminiCliSubCache.set(cacheKey, { data, fetchedAt: Date.now() });
+  return data;
+}
+
+/**
+ * Get Gemini CLI subscription info using correct headers.
+ */
+async function getGeminiCliSubscriptionInfo(accessToken) {
+  try {
+    const response = await fetch("https://cloudcode-pa.googleapis.com/v1internal:loadCodeAssist", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        metadata: {
+          ideType: "IDE_UNSPECIFIED",
+          platform: "PLATFORM_UNSPECIFIED",
+          pluginType: "GEMINI",
+        },
+      }),
+    });
+
+    if (!response.ok) return null;
+
+    return await response.json();
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Map Gemini CLI subscription tier to display label (same tiers as Antigravity).
+ */
+function getGeminiCliPlanLabel(subscriptionInfo) {
+  if (!subscriptionInfo || Object.keys(subscriptionInfo).length === 0) return "Free";
+
+  let tierId = "";
+  if (Array.isArray(subscriptionInfo.allowedTiers)) {
+    for (const tier of subscriptionInfo.allowedTiers) {
+      if (tier.isDefault && tier.id) {
+        tierId = tier.id.trim().toUpperCase();
+        break;
+      }
+    }
+  }
+
+  if (!tierId) {
+    tierId = (subscriptionInfo.currentTier?.id || "").toUpperCase();
+  }
+
+  if (tierId) {
+    if (tierId.includes("ULTRA")) return "Ultra";
+    if (tierId.includes("PRO")) return "Pro";
+    if (tierId.includes("ENTERPRISE")) return "Enterprise";
+    if (tierId.includes("BUSINESS") || tierId.includes("STANDARD")) return "Business";
+    if (tierId.includes("FREE") || tierId.includes("INDIVIDUAL") || tierId.includes("LEGACY"))
+      return "Free";
+  }
+
+  const tierName =
+    subscriptionInfo.currentTier?.name ||
+    subscriptionInfo.currentTier?.displayName ||
+    subscriptionInfo.subscriptionType ||
+    subscriptionInfo.tier ||
+    "";
+  const upper = tierName.toUpperCase();
+
+  if (upper.includes("ULTRA")) return "Ultra";
+  if (upper.includes("PRO")) return "Pro";
+  if (upper.includes("ENTERPRISE")) return "Enterprise";
+  if (upper.includes("STANDARD") || upper.includes("BUSINESS")) return "Business";
+  if (upper.includes("INDIVIDUAL") || upper.includes("FREE")) return "Free";
+
+  if (subscriptionInfo.currentTier?.upgradeSubscriptionType) return "Free";
+  if (tierName) {
+    return tierName.charAt(0).toUpperCase() + tierName.slice(1).toLowerCase();
+  }
+
+  return "Free";
 }
 
 // ── Antigravity subscription info cache ──────────────────────────────────────
@@ -394,6 +1292,84 @@ async function getGeminiUsage(accessToken) {
 // Key: truncated accessToken → { data, fetchedAt }
 const _antigravitySubCache = new Map();
 const ANTIGRAVITY_CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+const ANTIGRAVITY_MODELS_CACHE_TTL_MS = 60 * 1000;
+const ANTIGRAVITY_CREDIT_PROBE_TTL_MS = 5 * 60 * 1000;
+const _antigravityAvailableModelsCache = new Map<string, { data: unknown; fetchedAt: number }>();
+const _antigravityAvailableModelsInflight = new Map<string, Promise<unknown>>();
+const _antigravityCreditProbeCache = new Map<string, { data: number | null; fetchedAt: number }>();
+const _antigravityCreditProbeInflight = new Map<string, Promise<number | null>>();
+
+interface AntigravityUsageOptions {
+  forceRefresh?: boolean;
+}
+
+function buildAntigravityUsageCacheKey(accessToken: string, projectId?: string | null): string {
+  return `${accessToken.substring(0, 16)}:${projectId || "default"}`;
+}
+
+async function fetchAntigravityAvailableModelsCached(
+  accessToken: string,
+  projectId?: string | null,
+  options: AntigravityUsageOptions = {}
+): Promise<unknown> {
+  if (!accessToken) throw new Error("Access token is required");
+
+  const cacheKey = buildAntigravityUsageCacheKey(accessToken, projectId);
+  const cached = _antigravityAvailableModelsCache.get(cacheKey);
+  if (
+    !options.forceRefresh &&
+    cached &&
+    Date.now() - cached.fetchedAt < ANTIGRAVITY_MODELS_CACHE_TTL_MS
+  ) {
+    return cached.data;
+  }
+
+  const inflight = _antigravityAvailableModelsInflight.get(cacheKey);
+  if (inflight) return inflight;
+
+  const promise = (async () => {
+    let response: Response | null = null;
+    let lastError: Error | null = null;
+
+    for (const quotaApiUrl of ANTIGRAVITY_CONFIG.quotaApiUrls) {
+      try {
+        response = await fetch(quotaApiUrl, {
+          method: "POST",
+          headers: getAntigravityHeaders("fetchAvailableModels", accessToken),
+          body: JSON.stringify(projectId ? { project: projectId } : {}),
+          signal: AbortSignal.timeout(10000),
+        });
+
+        if (response.ok || response.status === 401 || response.status === 403) {
+          break;
+        }
+      } catch (error) {
+        lastError = error as Error;
+      }
+    }
+
+    if (!response) {
+      throw lastError || new Error("Antigravity API unavailable");
+    }
+
+    if (response.status === 403) {
+      return { __antigravityForbidden: true };
+    }
+
+    if (!response.ok) {
+      throw new Error(`Antigravity API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    _antigravityAvailableModelsCache.set(cacheKey, { data, fetchedAt: Date.now() });
+    return data;
+  })().finally(() => {
+    _antigravityAvailableModelsInflight.delete(cacheKey);
+  });
+
+  _antigravityAvailableModelsInflight.set(cacheKey, promise);
+  return promise;
+}
 
 /**
  * Map raw loadCodeAssist tier data to short display labels.
@@ -456,94 +1432,240 @@ function getAntigravityPlanLabel(subscriptionInfo) {
 }
 
 /**
- * Antigravity Usage - Fetch quota from Google Cloud Code API
- * Now calls loadCodeAssist ONCE (cached) and reuses for projectId + plan.
+ * Proactive credit balance probe for Antigravity.
+ *
+ * Fires a minimal streamGenerateContent request with GOOGLE_ONE_AI credits enabled
+ * and maxOutputTokens=1 to extract the `remainingCredits` field from the SSE stream.
+ * This uses ~1 credit but lets us show the balance on the dashboard without waiting
+ * for a real user request.
+ *
+ * Returns the credit balance, or null if the probe failed.
  */
-async function getAntigravityUsage(accessToken, providerSpecificData) {
-  try {
-    // Single cached call for subscription info (provides both projectId and plan)
-    const subscriptionInfo = await getAntigravitySubscriptionInfoCached(accessToken);
-    const projectId = subscriptionInfo?.cloudaicompanionProject || null;
+async function probeAntigravityCreditBalance(
+  accessToken: string,
+  accountId: string,
+  projectId?: string | null,
+  options: AntigravityUsageOptions = {}
+): Promise<number | null> {
+  if (!accessToken) return null;
 
-    // Fetch quota data
-    const response = await fetch(ANTIGRAVITY_CONFIG.quotaApiUrl, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "User-Agent": ANTIGRAVITY_CONFIG.userAgent,
-        "Content-Type": "application/json",
+  const cacheKey = buildAntigravityUsageCacheKey(accessToken, projectId || accountId);
+  const cached = _antigravityCreditProbeCache.get(cacheKey);
+  if (
+    !options.forceRefresh &&
+    cached &&
+    Date.now() - cached.fetchedAt < ANTIGRAVITY_CREDIT_PROBE_TTL_MS
+  ) {
+    return cached.data;
+  }
+
+  const inflight = _antigravityCreditProbeInflight.get(cacheKey);
+  if (inflight) return inflight;
+
+  const promise = probeAntigravityCreditBalanceUncached(accessToken, accountId, projectId)
+    .then(
+      (data) => {
+        _antigravityCreditProbeCache.set(cacheKey, { data, fetchedAt: Date.now() });
+        return data;
       },
-      body: JSON.stringify(projectId ? { project: projectId } : {}),
+      (error) => {
+        _antigravityCreditProbeCache.set(cacheKey, { data: null, fetchedAt: Date.now() });
+        throw error;
+      }
+    )
+    .finally(() => {
+      _antigravityCreditProbeInflight.delete(cacheKey);
     });
 
-    if (response.status === 403) {
+  _antigravityCreditProbeInflight.set(cacheKey, promise);
+  return promise;
+}
+
+async function probeAntigravityCreditBalanceUncached(
+  accessToken: string,
+  accountId: string,
+  projectId?: string | null
+): Promise<number | null> {
+  try {
+    if (!projectId) return null;
+
+    // Try all base URLs (some accounts only work with specific endpoints)
+    for (const baseUrl of ANTIGRAVITY_BASE_URLS) {
+      const url = `${baseUrl}/v1internal:streamGenerateContent?alt=sse`;
+
+      const sessionId = `-${crypto.randomUUID()}`;
+      const body = {
+        project: projectId,
+        model: "gemini-2-flash",
+        userAgent: "antigravity",
+        requestType: "agent",
+        requestId: `credits-probe-${Date.now()}`,
+        enabledCreditTypes: ["GOOGLE_ONE_AI"],
+        request: {
+          model: "gemini-2-flash",
+          contents: [{ role: "user", parts: [{ text: "hi" }] }],
+          generationConfig: { maxOutputTokens: 1 },
+          sessionId,
+        },
+      };
+
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "User-Agent": antigravityUserAgent(),
+        "X-Goog-Api-Client": getAntigravityCreditProbeApiClientHeader(),
+        Accept: "text/event-stream",
+      };
+
+      try {
+        const res = await fetch(url, {
+          method: "POST",
+          headers,
+          body: JSON.stringify(body),
+          signal: AbortSignal.timeout(10_000),
+        });
+
+        if (!res.ok) continue;
+
+        // Read the full SSE response and scan for remainingCredits
+        const rawSSE = await res.text();
+        const lines = rawSSE.split("\n");
+
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed.startsWith("data:")) continue;
+          const payload = trimmed.slice(5).trim();
+          if (payload === "[DONE]") break;
+          try {
+            const parsed = JSON.parse(payload);
+            if (Array.isArray(parsed?.remainingCredits)) {
+              const googleCredit = parsed.remainingCredits.find(
+                (c: { creditType?: string }) => c?.creditType === "GOOGLE_ONE_AI"
+              );
+              if (googleCredit) {
+                const balance = parseInt(googleCredit.creditAmount, 10);
+                if (!isNaN(balance)) {
+                  updateAntigravityRemainingCredits(accountId, balance);
+                  return balance;
+                }
+              }
+            }
+          } catch {
+            // Skip malformed SSE lines
+          }
+        }
+      } catch {
+        // Individual endpoint failure; try next
+      }
+    }
+
+    return null;
+  } catch {
+    // Probe is best-effort — don't let it break the usage fetch
+    return null;
+  }
+}
+
+/**
+ * Antigravity Usage - Fetch quota from Google Cloud Code API
+ * Uses fetchAvailableModels API which returns ALL models (including Claude)
+ * with per-model quotaInfo (remainingFraction, resetTime).
+ * retrieveUserQuota only returns Gemini models — not suitable for Antigravity.
+ */
+async function getAntigravityUsage(
+  accessToken,
+  providerSpecificData,
+  connectionProjectId?,
+  connectionId?,
+  options: AntigravityUsageOptions = {}
+) {
+  if (!accessToken) {
+    return { plan: "Free", message: "Antigravity access token not available." };
+  }
+
+  try {
+    const subscriptionInfo = await getAntigravitySubscriptionInfoCached(accessToken);
+    const projectId = connectionProjectId || subscriptionInfo?.cloudaicompanionProject || null;
+
+    // Derive accountId for credit balance cache.
+    // Must match executor key: credentials.connectionId
+    const accountId: string = connectionId || "unknown";
+
+    // Read cached credit balance (hydrated from DB on first access)
+    let creditBalance = getAntigravityRemainingCredits(accountId);
+
+    // If no cached balance and credits mode is enabled, fire a minimal probe
+    const creditsMode = getCreditsMode();
+    if ((options.forceRefresh || creditBalance === null) && creditsMode !== "off") {
+      creditBalance = await probeAntigravityCreditBalance(
+        accessToken,
+        accountId,
+        projectId,
+        options
+      );
+    }
+
+    const data = await fetchAntigravityAvailableModelsCached(accessToken, projectId, options);
+    const dataObj = toRecord(data);
+    if (dataObj.__antigravityForbidden === true) {
       return { message: "Antigravity access forbidden. Check subscription." };
     }
-
-    if (!response.ok) {
-      throw new Error(`Antigravity API error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    const dataObj = toRecord(data);
     const modelEntries = toRecord(dataObj.models);
     const quotas: Record<string, UsageQuota> = {};
 
-    // Parse model quotas (inspired by vscode-antigravity-cockpit)
-    if (Object.keys(modelEntries).length > 0) {
-      // Filter only recommended/important models (must match PROVIDER_MODELS ag ids)
-      const importantModels = [
-        "claude-opus-4-6-thinking",
-        "claude-sonnet-4-6",
-        "gemini-3.1-pro-high",
-        "gemini-3.1-pro-low",
-        "gemini-3-flash",
-        "gpt-oss-120b-medium",
-      ];
+    // Parse per-model quota info from fetchAvailableModels response.
+    for (const [modelKey, infoValue] of Object.entries(modelEntries)) {
+      const info = toRecord(infoValue);
+      const quotaInfo = toRecord(info.quotaInfo);
 
-      for (const [modelKey, infoValue] of Object.entries(modelEntries)) {
-        const info = toRecord(infoValue);
-        const quotaInfo = toRecord(info.quotaInfo);
-        // Skip models without quota info
-        if (Object.keys(quotaInfo).length === 0) {
-          continue;
-        }
-
-        // Skip internal models and non-important models
-        if (info.isInternal === true || !importantModels.includes(modelKey)) {
-          continue;
-        }
-
-        const remainingFraction = toNumber(quotaInfo.remainingFraction, 0);
-        const remainingPercentage = remainingFraction * 100;
-
-        // Convert percentage to used/total for UI compatibility
-        // QUOTA_NORMALIZED_BASE is an arbitrary base for converting fractions
-        // to integer used/total pairs that the dashboard UI can display as bars.
-        const QUOTA_NORMALIZED_BASE = 1000;
-        const total = QUOTA_NORMALIZED_BASE;
-        const remaining = Math.round(total * remainingFraction);
-        const used = total - remaining;
-
-        // Use modelKey as key (matches PROVIDER_MODELS id)
-        quotas[modelKey] = {
-          used,
-          total,
-          resetAt: parseResetTime(quotaInfo.resetTime),
-          remainingPercentage,
-          unlimited: false,
-          displayName: typeof info.displayName === "string" ? info.displayName : modelKey,
-        };
+      // Skip internal, excluded, and models without quota info
+      if (
+        info.isInternal === true ||
+        !isUserCallableAntigravityModelId(modelKey) ||
+        Object.keys(quotaInfo).length === 0
+      ) {
+        continue;
       }
+
+      const rawFraction = toNumber(quotaInfo.remainingFraction, -1);
+      const resetAt = parseResetTime(quotaInfo.resetTime);
+      // Default to 100% when the API doesn't report a fraction
+      const remainingFraction = rawFraction < 0 ? 1 : rawFraction;
+      // Models with no resetTime and full remaining are unlimited (e.g. tab-completion models)
+      const isUnlimited = !resetAt && remainingFraction >= 1;
+      const remainingPercentage = remainingFraction * 100;
+      const QUOTA_NORMALIZED_BASE = 1000;
+      const total = QUOTA_NORMALIZED_BASE;
+      const remaining = Math.round(total * remainingFraction);
+      const used = isUnlimited ? 0 : Math.max(0, total - remaining);
+
+      quotas[modelKey] = {
+        used,
+        total: isUnlimited ? 0 : total,
+        resetAt,
+        remainingPercentage: isUnlimited ? 100 : remainingPercentage,
+        unlimited: isUnlimited,
+      };
     }
 
     return {
       plan: getAntigravityPlanLabel(subscriptionInfo),
-      quotas,
+      quotas: {
+        ...quotas,
+        ...(creditBalance !== null && {
+          credits: {
+            used: 0,
+            total: 0,
+            remaining: creditBalance,
+            unlimited: false,
+            resetAt: null,
+          },
+        }),
+      },
       subscriptionInfo,
     };
   } catch (error) {
-    return { message: `Antigravity error: ${error.message}` };
+    return { message: `Antigravity error: ${(error as Error).message}` };
   }
 }
 
@@ -572,24 +1694,8 @@ async function getAntigravitySubscriptionInfo(accessToken) {
   try {
     const response = await fetch(ANTIGRAVITY_CONFIG.loadProjectApiUrl, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-        "User-Agent": "google-api-nodejs-client/9.15.1",
-        "X-Goog-Api-Client": "google-cloud-sdk vscode_cloudshelleditor/0.1",
-        "Client-Metadata": JSON.stringify({
-          ideType: "IDE_UNSPECIFIED",
-          platform: "PLATFORM_UNSPECIFIED",
-          pluginType: "GEMINI",
-        }),
-      },
-      body: JSON.stringify({
-        metadata: {
-          ideType: "IDE_UNSPECIFIED",
-          platform: "PLATFORM_UNSPECIFIED",
-          pluginType: "GEMINI",
-        },
-      }),
+      headers: getAntigravityHeaders("loadCodeAssist", accessToken),
+      body: JSON.stringify({ metadata: getAntigravityLoadCodeAssistMetadata() }),
     });
 
     if (!response.ok) return null;
@@ -655,8 +1761,18 @@ async function getClaudeUsage(accessToken) {
         }
       }
 
+      // Try to extract plan tier from the OAuth response
+      const planRaw =
+        typeof data.tier === "string"
+          ? data.tier
+          : typeof data.plan === "string"
+            ? data.plan
+            : typeof data.subscription_type === "string"
+              ? data.subscription_type
+              : null;
+
       return {
-        plan: "Claude Code",
+        plan: planRaw || "Claude Code",
         quotas,
         extraUsage: data.extra_usage ?? null,
       };
@@ -843,7 +1959,7 @@ async function getCodexUsage(accessToken, providerSpecificData: Record<string, u
       quotas,
     };
   } catch (error) {
-    throw new Error(`Failed to fetch Codex usage: ${error.message}`);
+    return { message: `Failed to fetch Codex usage: ${(error as Error).message}` };
   }
 }
 
@@ -1115,13 +2231,26 @@ async function getQwenUsage(accessToken, providerSpecificData) {
 }
 
 /**
- * iFlow Usage
+ * Qoder Usage
  */
-async function getIflowUsage(accessToken) {
+async function getQoderUsage(accessToken) {
   try {
-    // iFlow may have usage endpoint
-    return { message: "iFlow connected. Usage tracked per request." };
+    // Qoder may have usage endpoint
+    return { message: "Qoder connected. Usage tracked per request." };
   } catch (error) {
-    return { message: "Unable to fetch iFlow usage." };
+    return { message: "Unable to fetch Qoder usage." };
   }
 }
+
+export const __testing = {
+  parseResetTime,
+  formatGitHubQuotaSnapshot,
+  inferGitHubPlanName,
+  buildCursorUsageHeaders,
+  formatCursorQuota,
+  getCursorMonthlyRequestLimit,
+  getCursorOnDemandLimit,
+  inferCursorPlanName,
+  getGeminiCliPlanLabel,
+  getAntigravityPlanLabel,
+};

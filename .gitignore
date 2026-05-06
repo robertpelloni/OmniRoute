@@ -5,6 +5,12 @@
 omnirouteCloud/
 omnirouteSite/
 
+# Root-level underscore-prefixed directories (private/draft — never commit)
+/_*/
+
+# Draft features documentation (internal only)
+docs/new-features/
+
 # dependencies
 node_modules/
 /.pnp
@@ -14,9 +20,12 @@ node_modules/
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
+.data/
+.next-playwright/
 
 # testing
 coverage/
+coverage**
 
 # next.js
 .next/
@@ -50,6 +59,7 @@ next-env.d.ts
 
 # data and logs
 data/
+.data/
 logs/*
 
 # analysis directories (generated, not tracked)
@@ -57,37 +67,6 @@ logs/*
 antigravity-manager-analysis/
 .sisyphus/
 .plans/
-
-# docs (allow specific tracked files)
-docs/*
-!docs/ARCHITECTURE.md
-!docs/CODEBASE_DOCUMENTATION.md
-!docs/CONTRIBUTING.md
-!docs/USER_GUIDE.md
-!docs/API_REFERENCE.md
-!docs/TROUBLESHOOTING.md
-!docs/EXECUTION_CONTEXT_PROVIDER_SYNC.md
-!docs/TASK_NEBIUS_BACKEND_ENABLEMENT.md
-!docs/frontend-backend-provider-gap-report.md
-!docs/openapi.yaml
-!docs/RELEASE_CHECKLIST.md
-!docs/PLANO-IMPLANTACAO.md
-!docs/TASKS.md
-!docs/FASE-*.md
-!docs/adr/
-!docs/cli-tools/
-!docs/planning/
-!docs/improvement-plans/
-!docs/api/
-!docs/VM_DEPLOYMENT_GUIDE.md
-!docs/FEATURES.md
-!docs/screenshots/
-!docs/i18n/
-!docs/i18n/**
-!docs/A2A-SERVER.md
-!docs/AUTO-COMBO.md
-!docs/MCP-SERVER.md
-!docs/CLI-TOOLS.md
 
 # open-sse tests
 open-sse/test/*
@@ -100,6 +79,7 @@ test-results/
 playwright-report/
 blob-report/
 cloud/
+.tmp/
 
 # Security Analysis (standalone project with own git)
 security-analysis/
@@ -108,17 +88,18 @@ security-analysis/
 clipr/
 app.log
 *.tgz
+.gh-discussions.json
 
 # Backup directories
 app.__qa_backup/
+.app-build-backup-*/
 
 # Production standalone build (created by scripts/prepublish.mjs)
 # Conflicts with Next.js App Router detection in dev (root app/ shadows src/app/)
 # npm publish still includes it via package.json "files" field
 /app/
 
-# Electron (subproject dependency lock and build artifacts)
-electron/package-lock.json
+# Electron
 electron/dist-electron/
 electron/node_modules/
 icon.iconset/
@@ -130,3 +111,34 @@ vscode-extension/
 *.sqlite-shm
 *.sqlite-wal
 *.sqlite-journal
+
+# Compiled npm-package build artifact (not source, should not be in git)
+/app
+
+# IDEA
+.idea/
+
+# Local OpenCode agent config
+.config/
+
+# Empty/dangling files
+typescript
+
+# Gemini Antigravity agent data
+.gemini/
+
+# Superpowers plans/specs (internal tooling, not project code)
+docs/superpowers/
+
+# GitNexus local index
+.gitnexus
+.worktrees
+bin/omniroute.mjs
+
+# Consistent with .dockerignore / .npmignore
+.omc/
+audit-report.json
+bun.lock
+
+# Private environment variables for .http-client
+http-client.private.env.json

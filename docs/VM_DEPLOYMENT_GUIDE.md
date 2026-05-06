@@ -106,7 +106,7 @@ NODE_ENV=production
 HOSTNAME=0.0.0.0
 DATA_DIR=/app/data
 STORAGE_DRIVER=sqlite
-ENABLE_REQUEST_LOGS=true
+APP_LOG_TO_FILE=true
 AUTH_COOKIE_SECURE=false
 REQUIRE_API_KEY=false
 
@@ -213,8 +213,8 @@ server {
         # SSE (Server-Sent Events) — streaming AI responses
         proxy_buffering off;
         proxy_cache off;
-        proxy_read_timeout 300s;
-        proxy_send_timeout 300s;
+        proxy_read_timeout 600s;
+        proxy_send_timeout 600s;
     }
 }
 
@@ -227,6 +227,10 @@ server {
 }
 NGINX
 ```
+
+Keep reverse-proxy stream timeouts aligned with your OmniRoute timeout env vars. If you raise
+`FETCH_TIMEOUT_MS` / `STREAM_IDLE_TIMEOUT_MS`, raise `proxy_read_timeout` / `proxy_send_timeout`
+above the same threshold.
 
 ### 3.3 Enable and Test
 

@@ -2,12 +2,18 @@ import { NextResponse } from "next/server";
 import { getCombos, createCombo, getComboByName, isCloudEnabled } from "@/lib/localDb";
 import { getConsistentMachineId } from "@/shared/utils/machineId";
 import { syncToCloud } from "@/lib/cloudSync";
+import { validateCompositeTiersConfig } from "@/lib/combos/compositeTiers";
+import { normalizeComboModels } from "@/lib/combos/steps";
 import { validateComboDAG } from "@omniroute/open-sse/services/combo.ts";
 import { createComboSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
+import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
 
 // GET /api/combos - Get all combos
-export async function GET() {
+export async function GET(request: Request) {
+  const authError = await requireManagementAuth(request);
+  if (authError) return authError;
+
   try {
     const combos = await getCombos();
     return NextResponse.json({ combos });
@@ -19,6 +25,9 @@ export async function GET() {
 
 // POST /api/combos - Create new combo
 export async function POST(request) {
+  const authError = await requireManagementAuth(request);
+  if (authError) return authError;
+
   try {
     const body = await request.json();
 
@@ -27,7 +36,20 @@ export async function POST(request) {
     if (isValidationFailure(validation)) {
       return NextResponse.json({ error: validation.error }, { status: 400 });
     }
-    const { name, models, strategy, config } = validation.data;
+    const allCombos = await getCombos();
+    const normalizedModels = normalizeComboModels(validation.data.models, {
+      comboName: validation.data.name,
+      allCombos,
+    });
+    const comboInput = {
+      ...validation.data,
+      models: normalizedModels,
+    };
+    const { name, strategy, config } = comboInput;
+    const compositeValidation = validateCompositeTiersConfig(comboInput);
+    if (!compositeValidation.success) {
+      return NextResponse.json({ error: compositeValidation.error }, { status: 400 });
+    }
 
     // Check if name already exists
     const existing = await getComboByName(name);
@@ -36,16 +58,20 @@ export async function POST(request) {
     }
 
     // Validate nested combo DAG (no circular references, max depth)
-    const allCombos = await getCombos();
     // Temporarily add the new combo to validate its graph
-    const tempCombo = { name, models: models || [], strategy, config };
+    const tempCombo = {
+      ...comboInput,
+      name,
+      strategy,
+      config,
+    };
     try {
       validateComboDAG(name, [...allCombos, tempCombo]);
     } catch (dagError) {
       return NextResponse.json({ error: dagError.message }, { status: 400 });
     }
 
-    const combo = await createCombo({ name, models: models || [], strategy, config });
+    const combo = await createCombo(comboInput);
 
     // Auto sync to Cloud if enabled
     await syncToCloudIfEnabled();

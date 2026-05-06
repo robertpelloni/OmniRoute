@@ -1,10 +1,18 @@
 import { NextResponse } from "next/server";
 import { CursorService } from "@/lib/oauth/services/cursor";
-import { createProviderConnection, isCloudEnabled } from "@/models";
+import { createProviderConnection, isCloudEnabled, resolveProxyForProvider } from "@/models";
 import { getConsistentMachineId } from "@/shared/utils/machineId";
 import { syncToCloud } from "@/lib/cloudSync";
 import { cursorImportSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
+import { isAuthRequired, isAuthenticated } from "@/shared/utils/apiAuth";
+import { runWithProxyContext } from "@omniroute/open-sse/utils/proxyFetch.ts";
+
+async function requireOAuthImportAuth(request: Request) {
+  if (!(await isAuthRequired(request))) return null;
+  if (await isAuthenticated(request)) return null;
+  return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+}
 
 /**
  * POST /api/oauth/cursor/import
@@ -14,7 +22,10 @@ import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
  * - accessToken: string - Access token from cursorAuth/accessToken
  * - machineId: string - Machine ID from storage.serviceMachineId
  */
-export async function POST(request: any) {
+export async function POST(request: Request) {
+  const authResponse = await requireOAuthImportAuth(request);
+  if (authResponse) return authResponse;
+
   let rawBody;
   try {
     rawBody = await request.json();
@@ -39,8 +50,13 @@ export async function POST(request: any) {
 
     const cursorService = new CursorService();
 
-    // Validate token by making API call
-    const tokenData = await cursorService.validateImportToken(accessToken.trim(), machineId.trim());
+    // Resolve proxy for this provider (provider-level → global → direct)
+    const proxy = await resolveProxyForProvider("cursor");
+
+    // Validate token by making API call (through proxy if configured)
+    const tokenData = await runWithProxyContext(proxy, () =>
+      cursorService.validateImportToken(accessToken.trim(), machineId?.trim())
+    );
 
     // Try to extract user info from token
     const userInfo = cursorService.extractUserInfo(tokenData.accessToken);
@@ -83,7 +99,10 @@ export async function POST(request: any) {
  * GET /api/oauth/cursor/import
  * Get instructions for importing Cursor token
  */
-export async function GET() {
+export async function GET(request: Request) {
+  const authResponse = await requireOAuthImportAuth(request);
+  if (authResponse) return authResponse;
+
   const cursorService = new CursorService();
   const instructions = cursorService.getTokenStorageInstructions();
 

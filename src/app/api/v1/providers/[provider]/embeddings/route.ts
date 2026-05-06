@@ -1,5 +1,4 @@
-import { CORS_ORIGIN } from "@/shared/utils/cors";
-import { errorResponse } from "@omniroute/open-sse/utils/error.ts";
+import { errorResponse, unavailableResponse } from "@omniroute/open-sse/utils/error.ts";
 import { HTTP_STATUS } from "@omniroute/open-sse/config/constants.ts";
 import { getRegistryEntry } from "@omniroute/open-sse/config/providerRegistry.ts";
 import {
@@ -20,7 +19,6 @@ import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
 export async function OPTIONS() {
   return new Response(null, {
     headers: {
-      "Access-Control-Allow-Origin": CORS_ORIGIN,
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
       "Access-Control-Allow-Headers": "*",
     },
@@ -53,14 +51,6 @@ export async function POST(request, { params }) {
   }
   const body = validation.data;
 
-  // Optional API key validation
-  if (process.env.REQUIRE_API_KEY === "true") {
-    const apiKey = extractApiKey(request);
-    if (!apiKey || !(await isValidApiKey(apiKey))) {
-      return errorResponse(HTTP_STATUS.UNAUTHORIZED, "Invalid API key");
-    }
-  }
-
   // Add provider prefix if missing
   if (body.model && !body.model.includes("/")) {
     body.model = `${providerAlias}/${body.model}`;
@@ -84,6 +74,14 @@ export async function POST(request, { params }) {
   const credentials = await getProviderCredentials(providerEntry.id);
   if (!credentials) {
     return errorResponse(HTTP_STATUS.BAD_REQUEST, `No credentials for provider: ${rawProvider}`);
+  }
+  if (credentials.allRateLimited) {
+    return unavailableResponse(
+      HTTP_STATUS.RATE_LIMITED,
+      `[${rawProvider}] All accounts rate limited`,
+      credentials.retryAfter,
+      credentials.retryAfterHuman
+    );
   }
 
   const result = await handleEmbedding({ body, credentials, log });

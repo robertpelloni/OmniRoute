@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Card, CardSkeleton } from "@/shared/components";
+import { Card, CardSkeleton, SegmentedControl } from "@/shared/components";
 import { CLI_TOOLS } from "@/shared/constants/cliTools";
 import {
   PROVIDER_MODELS,
@@ -18,12 +18,34 @@ import {
   DefaultToolCard,
   AntigravityToolCard,
   CopilotToolCard,
+  CustomCliCard,
 } from "./components";
 import { useTranslations } from "next-intl";
+import { DEFAULT_DISPLAY_BASE_URL } from "@/shared/hooks";
 
 const CLOUD_URL = process.env.NEXT_PUBLIC_CLOUD_URL;
+const AUTO_CONFIGURED_TOOL_IDS = new Set([
+  "claude",
+  "codex",
+  "droid",
+  "openclaw",
+  "cline",
+  "kilo",
+  "copilot",
+]);
+const GUIDED_TOOL_IDS = new Set([
+  "cursor",
+  "windsurf",
+  "continue",
+  "opencode",
+  "hermes",
+  "amp",
+  "qwen",
+]);
+const MITM_TOOL_IDS = new Set(["antigravity", "kiro"]);
+const CUSTOM_TOOL_IDS = new Set(["custom"]);
 
-export default function CLIToolsPageClient({ machineId }) {
+export default function CLIToolsPageClient({ machineId: _machineId }) {
   const t = useTranslations("cliTools");
   const [connections, setConnections] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -33,12 +55,26 @@ export default function CLIToolsPageClient({ machineId }) {
   const [apiKeys, setApiKeys] = useState([]);
   const [toolStatuses, setToolStatuses] = useState({});
   const [statusesLoaded, setStatusesLoaded] = useState(false);
+  const [dynamicModels, setDynamicModels] = useState([]);
+  const [activeCategory, setActiveCategory] = useState("auto");
+  const translateOrFallback = useCallback(
+    (key, fallback, values = undefined) => {
+      try {
+        const translated = t(key, values);
+        return translated === key || translated === `cliTools.${key}` ? fallback : translated;
+      } catch {
+        return fallback;
+      }
+    },
+    [t]
+  );
 
   useEffect(() => {
     fetchConnections();
     loadCloudSettings();
     fetchApiKeys();
     fetchToolStatuses();
+    fetchDynamicModels();
   }, []);
 
   const loadCloudSettings = async () => {
@@ -55,7 +91,7 @@ export default function CLIToolsPageClient({ machineId }) {
 
   const fetchApiKeys = async () => {
     try {
-      const res = await fetch("/api/keys");
+      const res = await fetch("/api/cli-tools/keys");
       if (res.ok) {
         const data = await res.json();
         setApiKeys(data.keys || []);
@@ -97,6 +133,18 @@ export default function CLIToolsPageClient({ machineId }) {
     }
   };
 
+  const fetchDynamicModels = async () => {
+    try {
+      const res = await fetch("/v1/models");
+      if (res.ok) {
+        const data = await res.json();
+        setDynamicModels(data?.data || []);
+      }
+    } catch (error) {
+      console.log("Error fetching dynamic models:", error);
+    }
+  };
+
   const getActiveProviders = () => {
     return connections.filter((c) => c.isActive !== false);
   };
@@ -106,6 +154,7 @@ export default function CLIToolsPageClient({ machineId }) {
     const models = [];
     const seenModels = new Set();
 
+    // First: add static models from the constants
     activeProviders.forEach((conn) => {
       const alias = PROVIDER_ID_TO_ALIAS[conn.provider] || conn.provider;
       const providerModels = getModelsByProviderId(conn.provider);
@@ -122,6 +171,31 @@ export default function CLIToolsPageClient({ machineId }) {
             modelId: m.id,
           });
         }
+      });
+    });
+
+    // Second: add dynamic models from /v1/models (fills gaps for Kiro, OpenCode, custom providers)
+    const activeProviderIds = new Set(activeProviders.map((c) => c.provider));
+    const activeAliases = new Set(
+      activeProviders.map((c) => PROVIDER_ID_TO_ALIAS[c.provider] || c.provider)
+    );
+    dynamicModels.forEach((dm) => {
+      const modelId = dm.id || dm;
+      if (seenModels.has(modelId)) return;
+      // Parse alias/model format
+      const slashIdx = modelId.indexOf("/");
+      if (slashIdx === -1) return;
+      const alias = modelId.substring(0, slashIdx);
+      const bareModel = modelId.substring(slashIdx + 1);
+      if (!activeAliases.has(alias) && !activeProviderIds.has(alias)) return;
+      seenModels.add(modelId);
+      models.push({
+        value: modelId,
+        label: modelId,
+        provider: alias,
+        alias: alias,
+        connectionName: "",
+        modelId: bareModel,
       });
     });
 
@@ -153,7 +227,7 @@ export default function CLIToolsPageClient({ machineId }) {
     if (typeof window !== "undefined") {
       return window.location.origin;
     }
-    return "http://localhost:20128";
+    return DEFAULT_DISPLAY_BASE_URL;
   };
 
   if (loading || !statusesLoaded) {
@@ -170,6 +244,14 @@ export default function CLIToolsPageClient({ machineId }) {
 
   const availableModels = getAllAvailableModels();
   const hasActiveProviders = availableModels.length > 0;
+  const toolEntries = Object.entries(CLI_TOOLS).filter(([toolId]) => {
+    if (activeCategory === "all") return true;
+    if (activeCategory === "auto") return AUTO_CONFIGURED_TOOL_IDS.has(toolId);
+    if (activeCategory === "guided") return GUIDED_TOOL_IDS.has(toolId);
+    if (activeCategory === "mitm") return MITM_TOOL_IDS.has(toolId);
+    if (activeCategory === "custom") return CUSTOM_TOOL_IDS.has(toolId);
+    return true;
+  });
 
   const renderToolCard = (toolId, tool) => {
     const commonProps = {
@@ -266,6 +348,16 @@ export default function CLIToolsPageClient({ machineId }) {
             cloudEnabled={cloudEnabled}
           />
         );
+      case "custom":
+        return (
+          <CustomCliCard
+            key={toolId}
+            {...commonProps}
+            availableModels={availableModels}
+            hasActiveProviders={hasActiveProviders}
+            cloudEnabled={cloudEnabled}
+          />
+        );
       default:
         // #487: Any tool with configType "mitm" should use the MITM card (Start/Stop controls)
         if (tool.configType === "mitm") {
@@ -291,8 +383,70 @@ export default function CLIToolsPageClient({ machineId }) {
     }
   };
 
+  const getToolDocsHref = (toolId, tool) => {
+    if (typeof tool.docsUrl === "string" && tool.docsUrl.trim()) {
+      return tool.docsUrl.trim();
+    }
+    return `/docs?section=cli-tools&tool=${toolId}`;
+  };
+
+  const getToolUseCase = (toolId, tool) => {
+    const fallbackDescription = translateOrFallback(`toolDescriptions.${toolId}`, tool.description);
+    return translateOrFallback(`toolUseCases.${toolId}`, fallbackDescription);
+  };
+
   return (
     <div className="flex flex-col gap-6">
+      <Card>
+        <div className="flex items-start gap-3">
+          <div className="p-2 rounded-lg bg-primary/10 text-primary">
+            <span className="material-symbols-outlined text-[20px]">tips_and_updates</span>
+          </div>
+          <div className="flex-1 min-w-0">
+            <h2 className="text-sm font-semibold">{t("howItWorks")}</h2>
+            <div className="mt-2 grid grid-cols-1 md:grid-cols-3 gap-2 text-xs text-text-muted">
+              <div className="rounded-lg border border-border/50 bg-black/[0.02] dark:bg-white/[0.02] p-2.5">
+                {t("installationGuide")}
+              </div>
+              <div className="rounded-lg border border-border/50 bg-black/[0.02] dark:bg-white/[0.02] p-2.5">
+                {t("configureEndpoint")}
+              </div>
+              <div className="rounded-lg border border-border/50 bg-black/[0.02] dark:bg-white/[0.02] p-2.5">
+                {t("testConnection")}
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      <Card>
+        <div className="flex flex-col gap-4">
+          <div className="flex items-start justify-between gap-4 flex-wrap">
+            <div>
+              <h2 className="text-sm font-semibold">{t("toolCategories")}</h2>
+              <p className="text-xs text-text-muted mt-1">{t("toolCategoriesDesc")}</p>
+            </div>
+            <span className="text-xs text-text-muted">
+              {t("visibleToolsCount", { count: toolEntries.length })}
+            </span>
+          </div>
+          <SegmentedControl
+            options={[
+              { value: "auto", label: t("autoConfiguredTab") },
+              { value: "guided", label: t("guidedClientsTab") },
+              { value: "mitm", label: t("mitmClientsTab") },
+              {
+                value: "custom",
+                label: translateOrFallback("customCliTab", "Custom CLI"),
+              },
+              { value: "all", label: t("allToolsTab") },
+            ]}
+            value={activeCategory}
+            onChange={setActiveCategory}
+          />
+        </div>
+      </Card>
+
       {!hasActiveProviders && (
         <Card className="border-yellow-500/50 bg-yellow-500/5">
           <div className="flex items-center gap-3">
@@ -308,7 +462,38 @@ export default function CLIToolsPageClient({ machineId }) {
       )}
 
       <div className="flex flex-col gap-4">
-        {Object.entries(CLI_TOOLS).map(([toolId, tool]) => renderToolCard(toolId, tool))}
+        {toolEntries.map(([toolId, tool]) => {
+          const docsHref = getToolDocsHref(toolId, tool);
+          const isExternalDocs = /^https?:\/\//i.test(docsHref);
+          return (
+            <div key={toolId} className="flex flex-col gap-2.5">
+              {renderToolCard(toolId, tool)}
+              <div className="rounded-lg border border-border/50 bg-black/[0.02] dark:bg-white/[0.02] p-3">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2.5">
+                  <div className="min-w-0">
+                    <p className="text-[11px] font-semibold uppercase tracking-wide text-text-muted">
+                      {t("whenToUseLabel")}
+                    </p>
+                    <p className="text-xs text-text-muted mt-1 break-words">
+                      {getToolUseCase(toolId, tool)}
+                    </p>
+                  </div>
+                  <a
+                    href={docsHref}
+                    target={isExternalDocs ? "_blank" : undefined}
+                    rel={isExternalDocs ? "noopener noreferrer" : undefined}
+                    className="inline-flex items-center gap-1.5 text-xs text-primary hover:text-primary/80 transition-colors whitespace-nowrap"
+                  >
+                    <span className="material-symbols-outlined text-[14px]" aria-hidden="true">
+                      menu_book
+                    </span>
+                    {t("openToolDocs")}
+                  </a>
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

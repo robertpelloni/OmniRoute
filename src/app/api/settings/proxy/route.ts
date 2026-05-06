@@ -4,12 +4,19 @@ import {
   getProxyForLevel,
   deleteProxyForLevel,
   resolveProxyForConnection,
+  getProxyAssignments,
+  getProxyById,
 } from "../../../../lib/localDb";
 import { clearDispatcherCache } from "@omniroute/open-sse/utils/proxyDispatcher";
 import { updateProxyConfigSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
-import { createErrorResponse, createErrorResponseFromUnknown } from "@/lib/api/errorResponse";
+import {
+  createErrorResponse,
+  createErrorResponseFromUnknown,
+  type ApiErrorType,
+} from "@/lib/api/errorResponse";
 import type { z } from "zod";
+import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
 
 const BASE_SUPPORTED_PROXY_TYPES = new Set(["http", "https"]);
 type UpdateProxyConfigInput = z.infer<typeof updateProxyConfigSchema>;
@@ -114,6 +121,9 @@ function normalizeProxyPayload(body: UpdateProxyConfigInput): UpdateProxyConfigI
  * Or: ?resolve=connectionId to resolve effective proxy
  */
 export async function GET(request: Request) {
+  const authError = await requireManagementAuth(request);
+  if (authError) return authError;
+
   try {
     const { searchParams } = new URL(request.url);
     const level = searchParams.get("level");
@@ -126,7 +136,30 @@ export async function GET(request: Request) {
       return Response.json(result);
     }
 
-    // Get proxy for a specific level
+    // Get proxy for a specific level - check Proxy Registry first
+    if (level === "global") {
+      const assignments = await getProxyAssignments({ scope: "global" });
+      if (assignments.length > 0 && assignments[0].proxyId) {
+        const proxyData = await getProxyById(assignments[0].proxyId, { includeSecrets: true });
+        if (proxyData) {
+          return Response.json({
+            level: "global",
+            id: null,
+            proxy: {
+              type: proxyData.type,
+              host: proxyData.host,
+              port: proxyData.port,
+              username: proxyData.username,
+              password: proxyData.password,
+            },
+          });
+        }
+      }
+      // Fallback to old system
+      const proxy = await getProxyForLevel(level, id);
+      return Response.json({ level, id, proxy });
+    }
+
     if (level) {
       const proxy = await getProxyForLevel(level, id);
       return Response.json({ level, id, proxy });
@@ -145,6 +178,9 @@ export async function GET(request: Request) {
  * Body: { level, id?, proxy } or legacy { global?, providers? }
  */
 export async function PUT(request: Request) {
+  const authError = await requireManagementAuth(request);
+  if (authError) return authError;
+
   let rawBody: unknown;
   try {
     rawBody = await request.json();
@@ -174,7 +210,8 @@ export async function PUT(request: Request) {
   } catch (error) {
     const routeError = toApiRouteError(error);
     const status = Number(routeError.status) || 500;
-    const type = routeError.type || (status === 400 ? "invalid_request" : "server_error");
+    const type = (routeError.type ||
+      (status === 400 ? "invalid_request" : "server_error")) as ApiErrorType;
     return createErrorResponse({ status, message: routeError.message, type });
   }
 }
@@ -184,6 +221,9 @@ export async function PUT(request: Request) {
  * Query: ?level=provider&id=xxx
  */
 export async function DELETE(request: Request) {
+  const authError = await requireManagementAuth(request);
+  if (authError) return authError;
+
   try {
     const { searchParams } = new URL(request.url);
     const level = searchParams.get("level");

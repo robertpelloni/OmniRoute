@@ -3,20 +3,34 @@
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import PropTypes from "prop-types";
 import ThemeToggle from "./ThemeToggle";
 import TokenHealthBadge from "./TokenHealthBadge";
+import DegradationBadge from "./DegradationBadge";
 import LanguageSelector from "./LanguageSelector";
+import ProviderIcon from "./ProviderIcon";
 import { useTranslations } from "next-intl";
 import {
   OAUTH_PROVIDERS,
   APIKEY_PROVIDERS,
   FREE_PROVIDERS,
+  CLAUDE_CODE_COMPATIBLE_PREFIX,
   OPENAI_COMPATIBLE_PREFIX,
   ANTHROPIC_COMPATIBLE_PREFIX,
 } from "@/shared/constants/providers";
+import { useIsElectron } from "@/shared/hooks/useElectron";
 
-function usePageInfo(pathname: string | null) {
+const isE2EMode = process.env.NEXT_PUBLIC_OMNIROUTE_E2E_MODE === "1";
+
+type HeaderProps = {
+  onMenuClick?: () => void;
+  showMenuButton?: boolean;
+};
+
+function usePageInfo(pathname: string | null): {
+  title: string;
+  description: string;
+  breadcrumbs: { label: string; href?: string; image?: string; providerId?: string }[];
+} {
   const t = useTranslations("header");
 
   if (!pathname) return { title: "", description: "", breadcrumbs: [] };
@@ -34,7 +48,18 @@ function usePageInfo(pathname: string | null) {
         description: "",
         breadcrumbs: [
           { label: t("providers"), href: "/dashboard/providers" },
-          { label: providerInfo.name, image: `/providers/${providerInfo.id}.png` },
+          { label: providerInfo.name, providerId: providerInfo.id },
+        ],
+      };
+    }
+
+    if (providerId.startsWith(CLAUDE_CODE_COMPATIBLE_PREFIX)) {
+      return {
+        title: "CC Compatible",
+        description: "",
+        breadcrumbs: [
+          { label: t("providers"), href: "/dashboard/providers" },
+          { label: "CC Compatible", providerId: "claude" },
         ],
       };
     }
@@ -45,7 +70,7 @@ function usePageInfo(pathname: string | null) {
         description: "",
         breadcrumbs: [
           { label: t("providers"), href: "/dashboard/providers" },
-          { label: t("openaiCompatible"), image: "/providers/oai-cc.png" },
+          { label: t("openaiCompatible"), providerId: "oai-cc" },
         ],
       };
     }
@@ -56,7 +81,7 @@ function usePageInfo(pathname: string | null) {
         description: "",
         breadcrumbs: [
           { label: t("providers"), href: "/dashboard/providers" },
-          { label: t("anthropicCompatible"), image: "/providers/anthropic-m.png" },
+          { label: t("anthropicCompatible"), providerId: "anthropic-m" },
         ],
       };
     }
@@ -99,11 +124,16 @@ function usePageInfo(pathname: string | null) {
   return { title: "", description: "", breadcrumbs: [] };
 }
 
-export default function Header({ onMenuClick, showMenuButton = true }) {
+export default function Header({ onMenuClick, showMenuButton = true }: HeaderProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const isElectron = useIsElectron();
   const t = useTranslations("header");
   const { title, description, breadcrumbs } = usePageInfo(pathname);
+  const isMacElectron =
+    isElectron &&
+    typeof window !== "undefined" &&
+    (window as any).electronAPI?.platform === "darwin";
 
   const handleLogout = async () => {
     try {
@@ -118,7 +148,12 @@ export default function Header({ onMenuClick, showMenuButton = true }) {
   };
 
   return (
-    <header className="flex items-center justify-between px-8 py-5 border-b border-black/5 dark:border-white/5 bg-bg/80 backdrop-blur-xl z-10 sticky top-0">
+    <header
+      className="sticky top-0 z-10 flex items-center justify-between border-b border-black/5 bg-bg px-8 py-5 dark:border-white/5"
+      style={{
+        paddingTop: isMacElectron ? "calc(1.25rem + var(--desktop-safe-top))" : undefined,
+      }}
+    >
       {/* Mobile menu button */}
       <div className="flex items-center gap-3 lg:hidden">
         {showMenuButton && (
@@ -167,6 +202,9 @@ export default function Header({ onMenuClick, showMenuButton = true }) {
                         }}
                       />
                     )}
+                    {crumb.providerId && (
+                      <ProviderIcon providerId={crumb.providerId} size={28} type="color" />
+                    )}
                     <h1 className="text-2xl font-semibold text-text-main tracking-tight">
                       {crumb.label}
                     </h1>
@@ -191,8 +229,9 @@ export default function Header({ onMenuClick, showMenuButton = true }) {
         {/* Theme toggle */}
         <ThemeToggle />
 
-        {/* Token health */}
-        <TokenHealthBadge />
+        {/* Degradation & Token health */}
+        {!isE2EMode && <DegradationBadge />}
+        {!isE2EMode && <TokenHealthBadge />}
 
         {/* Logout button */}
         <button
@@ -206,8 +245,3 @@ export default function Header({ onMenuClick, showMenuButton = true }) {
     </header>
   );
 }
-
-Header.propTypes = {
-  onMenuClick: PropTypes.func,
-  showMenuButton: PropTypes.bool,
-};

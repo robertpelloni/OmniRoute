@@ -1,4 +1,4 @@
-import { getCorsOrigin } from "./cors.ts";
+import { CORS_HEADERS } from "./cors.ts";
 import { detectFormat } from "../services/provider.ts";
 import { translateResponse, initState } from "../translator/index.ts";
 import { FORMATS } from "../translator/formats.ts";
@@ -20,7 +20,8 @@ import { formatSSE } from "./stream.ts";
  * @returns {object|null} Bypass response or null to proceed normally
  */
 export function handleBypassRequest(body, model, userAgent = "") {
-  if (!userAgent.includes("claude-cli")) return null;
+  const normalizedUserAgent = typeof userAgent === "string" ? userAgent : "";
+  if (!normalizedUserAgent.includes("claude-cli")) return null;
   if (!body.messages?.length) return null;
 
   const messages = body.messages;
@@ -123,7 +124,6 @@ function createNonStreamingResponse(sourceFormat, model) {
       response: new Response(JSON.stringify(openaiResponse), {
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": getCorsOrigin(),
         },
       }),
     };
@@ -157,7 +157,6 @@ function createNonStreamingResponse(sourceFormat, model) {
     response: new Response(JSON.stringify(finalResponse), {
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": getCorsOrigin(),
       },
     }),
   };
@@ -205,7 +204,6 @@ function createStreamingResponse(sourceFormat, model) {
         "Content-Type": "text/event-stream",
         "Cache-Control": "no-cache",
         Connection: "keep-alive",
-        "Access-Control-Allow-Origin": getCorsOrigin(),
       },
     }),
   };

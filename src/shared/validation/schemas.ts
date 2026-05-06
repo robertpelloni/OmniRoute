@@ -1,4 +1,14 @@
 import { z } from "zod";
+import {
+  ACCOUNT_FALLBACK_STRATEGY_VALUES,
+  ROUTING_STRATEGY_VALUES,
+} from "@/shared/constants/routingStrategies";
+import { SUPPORTED_BATCH_ENDPOINTS } from "@/shared/constants/batchEndpoints";
+import { MAX_REQUEST_BODY_LIMIT_MB, MIN_REQUEST_BODY_LIMIT_MB } from "@/shared/constants/bodySize";
+import { COMBO_CONFIG_MODES } from "@/shared/constants/comboConfigMode";
+import { isLocalProvider } from "@/shared/constants/providers";
+import { HIDEABLE_SIDEBAR_ITEM_IDS } from "@/shared/constants/sidebarVisibility";
+import { isForbiddenUpstreamHeaderName } from "@/shared/constants/upstreamHeaders";
 
 function isHttpUrl(value: string): boolean {
   try {
@@ -9,6 +19,221 @@ function isHttpUrl(value: string): boolean {
   }
 }
 
+const CODEX_REASONING_EFFORT_VALUES = new Set(["none", "low", "medium", "high", "xhigh"]);
+const REQUEST_DEFAULT_SERVICE_TIER_VALUES = new Set(["priority", "fast"]);
+
+function validateProviderSpecificData(
+  data: Record<string, unknown> | undefined,
+  ctx: z.RefinementCtx
+): void {
+  if (!data) return;
+
+  const baseUrl = data.baseUrl;
+  if (baseUrl !== undefined && (typeof baseUrl !== "string" || !isHttpUrl(baseUrl))) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "providerSpecificData.baseUrl must be a valid http(s) URL",
+      path: ["baseUrl"],
+    });
+  }
+
+  const customUserAgent = data.customUserAgent;
+  if (
+    customUserAgent !== undefined &&
+    customUserAgent !== null &&
+    (typeof customUserAgent !== "string" || customUserAgent.length > 500)
+  ) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "providerSpecificData.customUserAgent must be a string up to 500 chars",
+      path: ["customUserAgent"],
+    });
+  }
+
+  const cx = data.cx;
+  if (cx !== undefined && cx !== null && (typeof cx !== "string" || cx.length > 500)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "providerSpecificData.cx must be a string up to 500 chars",
+      path: ["cx"],
+    });
+  }
+
+  const openaiStoreEnabled = data.openaiStoreEnabled;
+  if (openaiStoreEnabled !== undefined && typeof openaiStoreEnabled !== "boolean") {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "providerSpecificData.openaiStoreEnabled must be a boolean",
+      path: ["openaiStoreEnabled"],
+    });
+  }
+
+  const blockExtraUsage = data.blockExtraUsage;
+  if (blockExtraUsage !== undefined && typeof blockExtraUsage !== "boolean") {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "providerSpecificData.blockExtraUsage must be a boolean",
+      path: ["blockExtraUsage"],
+    });
+  }
+
+  const autoFetchModels = data.autoFetchModels;
+  if (autoFetchModels !== undefined && typeof autoFetchModels !== "boolean") {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "providerSpecificData.autoFetchModels must be a boolean",
+      path: ["autoFetchModels"],
+    });
+  }
+
+  const disableStreamOptions = data.disableStreamOptions;
+  if (disableStreamOptions !== undefined && typeof disableStreamOptions !== "boolean") {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "providerSpecificData.disableStreamOptions must be a boolean",
+      path: ["disableStreamOptions"],
+    });
+  }
+
+  const requestDefaults = data.requestDefaults;
+  if (requestDefaults !== undefined) {
+    if (!requestDefaults || typeof requestDefaults !== "object" || Array.isArray(requestDefaults)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "providerSpecificData.requestDefaults must be an object",
+        path: ["requestDefaults"],
+      });
+    } else {
+      const requestDefaultsRecord = requestDefaults as Record<string, unknown>;
+      const reasoningEffort = requestDefaultsRecord.reasoningEffort;
+      if (
+        reasoningEffort !== undefined &&
+        reasoningEffort !== null &&
+        (typeof reasoningEffort !== "string" ||
+          !CODEX_REASONING_EFFORT_VALUES.has(reasoningEffort.trim().toLowerCase()))
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message:
+            "providerSpecificData.requestDefaults.reasoningEffort must be one of none, low, medium, high, xhigh",
+          path: ["requestDefaults", "reasoningEffort"],
+        });
+      }
+
+      const serviceTier = requestDefaultsRecord.serviceTier;
+      if (
+        serviceTier !== undefined &&
+        serviceTier !== null &&
+        (typeof serviceTier !== "string" ||
+          !REQUEST_DEFAULT_SERVICE_TIER_VALUES.has(serviceTier.trim().toLowerCase()))
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message:
+            "providerSpecificData.requestDefaults.serviceTier must be priority when provided",
+          path: ["requestDefaults", "serviceTier"],
+        });
+      }
+
+      const context1m = requestDefaultsRecord.context1m;
+      if (context1m !== undefined && context1m !== null && typeof context1m !== "boolean") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "providerSpecificData.requestDefaults.context1m must be a boolean",
+          path: ["requestDefaults", "context1m"],
+        });
+      }
+    }
+  }
+
+  // [Oracle CONDITIONAL] consoleApiKey는 bailian-coding-plan 전용 필드.
+  // 다른 프로바이더 공통 규약으로 재사용하지 않는다.
+  const consoleApiKey = data.consoleApiKey;
+  if (consoleApiKey !== undefined && consoleApiKey !== null && typeof consoleApiKey !== "string") {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "providerSpecificData.consoleApiKey must be a string",
+      path: ["consoleApiKey"],
+    });
+  }
+  if (typeof consoleApiKey === "string" && consoleApiKey.length > 10000) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "providerSpecificData.consoleApiKey must be at most 10000 characters",
+      path: ["consoleApiKey"],
+    });
+  }
+
+  const groupTag = data.tag;
+  if (
+    groupTag !== undefined &&
+    groupTag !== null &&
+    (typeof groupTag !== "string" || groupTag.length > 100)
+  ) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "providerSpecificData.tag must be a string up to 100 chars",
+      path: ["tag"],
+    });
+  }
+
+  const routingTags = data.tags;
+  if (routingTags !== undefined && routingTags !== null) {
+    if (!Array.isArray(routingTags) || routingTags.length > 50) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "providerSpecificData.tags must be an array with at most 50 items",
+        path: ["tags"],
+      });
+    } else if (
+      routingTags.some(
+        (tag) => typeof tag !== "string" || tag.trim().length === 0 || tag.trim().length > 64
+      )
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message:
+          "providerSpecificData.tags must contain non-empty strings up to 64 characters each",
+        path: ["tags"],
+      });
+    }
+  }
+
+  const excludedModels = data.excludedModels ?? data.excluded_models;
+  if (excludedModels !== undefined && excludedModels !== null) {
+    if (typeof excludedModels === "string") {
+      if (excludedModels.length > 5000) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "providerSpecificData.excludedModels string must be up to 5000 chars",
+          path: ["excludedModels"],
+        });
+      }
+    } else if (!Array.isArray(excludedModels) || excludedModels.length > 100) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "providerSpecificData.excludedModels must be an array with at most 100 items",
+        path: ["excludedModels"],
+      });
+    } else if (
+      excludedModels.some(
+        (pattern) =>
+          typeof pattern !== "string" ||
+          pattern.trim().length === 0 ||
+          pattern.trim().length > 200 ||
+          pattern.trim() === "**"
+      )
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message:
+          "providerSpecificData.excludedModels must contain non-empty patterns up to 200 characters",
+        path: ["excludedModels"],
+      });
+    }
+  }
+}
+
 // Re-export validation helpers from dedicated module to avoid webpack barrel-file
 // optimization bug that truncates exports from large files.
 export { validateBody, isValidationFailure } from "./helpers";
@@ -16,100 +241,95 @@ export type { ValidationResult } from "./helpers";
 
 // ──── Provider Schemas ────
 
-export const createProviderSchema = z.object({
-  provider: z.string().min(1).max(100),
-  apiKey: z.string().min(1).max(10000),
-  name: z.string().min(1).max(200),
-  priority: z.number().int().min(1).max(100).optional(),
-  globalPriority: z.number().int().min(1).max(100).nullable().optional(),
-  defaultModel: z.string().max(200).nullable().optional(),
-  testStatus: z.string().max(50).optional(),
-  providerSpecificData: z
-    .record(z.string(), z.unknown())
-    .optional()
-    .superRefine((data, ctx) => {
-      if (!data) return;
-      const baseUrl = data.baseUrl;
-      if (baseUrl === undefined) return;
-      if (typeof baseUrl !== "string" || !isHttpUrl(baseUrl)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "providerSpecificData.baseUrl must be a valid http(s) URL",
-          path: ["baseUrl"],
-        });
-      }
-    }),
-});
+export const createProviderSchema = z
+  .object({
+    provider: z.string().min(1).max(100),
+    apiKey: z.string().max(10000).optional(),
+    name: z.string().min(1).max(200),
+    priority: z.number().int().min(1).max(100).optional(),
+    globalPriority: z.number().int().min(1).max(100).nullable().optional(),
+    defaultModel: z.string().max(200).nullable().optional(),
+    testStatus: z.string().max(50).optional(),
+    providerSpecificData: z
+      .record(z.string(), z.unknown())
+      .optional()
+      .superRefine((data, ctx) => {
+        validateProviderSpecificData(data, ctx);
+      }),
+  })
+  .superRefine((data, ctx) => {
+    const apiKey = typeof data.apiKey === "string" ? data.apiKey.trim() : "";
+    const apiKeyOptional =
+      data.provider === "searxng-search" ||
+      data.provider === "petals" ||
+      isLocalProvider(data.provider);
+    if (!apiKeyOptional && apiKey.length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "API key is required",
+        path: ["apiKey"],
+      });
+    }
+
+    const cx =
+      data.providerSpecificData && typeof data.providerSpecificData === "object"
+        ? (data.providerSpecificData as Record<string, unknown>).cx
+        : undefined;
+    if (
+      data.provider === "google-pse-search" &&
+      (typeof cx !== "string" || cx.trim().length === 0)
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Programmable Search Engine ID (cx) is required",
+        path: ["providerSpecificData", "cx"],
+      });
+    }
+  });
 
 // ──── API Key Schemas ────
 
 export const createKeySchema = z.object({
   name: z.string().min(1, "Name is required").max(200),
+  noLog: z.boolean().optional(),
+});
+
+export const createSyncTokenSchema = z.object({
+  name: z.string().trim().min(1, "Name is required").max(200),
 });
 
 // ──── Combo Schemas ────
 
-// A model entry can be a plain string (legacy) or an object with weight
-const comboModelEntry = z.union([
-  z.string(),
-  z.object({
-    model: z.string().min(1),
-    weight: z.number().min(0).max(100).default(0),
-  }),
-]);
+const comboStepMetaSchema = {
+  id: z.string().trim().min(1).max(200).optional(),
+  weight: z.number().min(0).max(100).optional().default(0),
+  label: z.string().trim().min(1).max(200).optional(),
+};
 
-// Per-combo config overrides
-const comboConfigSchema = z
-  .object({
-    maxRetries: z.number().int().min(0).max(10).optional(),
-    retryDelayMs: z.number().int().min(0).max(60000).optional(),
-    timeoutMs: z.number().int().min(1000).max(600000).optional(),
-    healthCheckEnabled: z.boolean().optional(),
-  })
-  .optional();
-
-const comboStrategySchema = z.enum([
-  "priority",
-  "weighted",
-  "round-robin",
-  "random",
-  "least-used",
-  "cost-optimized",
-  "strict-random",
-  "auto",
-]);
-
-const comboRuntimeConfigSchema = z
-  .object({
-    strategy: comboStrategySchema.optional(),
-    maxRetries: z.coerce.number().int().min(0).max(10).optional(),
-    retryDelayMs: z.coerce.number().int().min(0).max(60000).optional(),
-    timeoutMs: z.coerce.number().int().min(1000).max(600000).optional(),
-    concurrencyPerModel: z.coerce.number().int().min(1).max(20).optional(),
-    queueTimeoutMs: z.coerce.number().int().min(1000).max(120000).optional(),
-    healthCheckEnabled: z.boolean().optional(),
-    healthCheckTimeoutMs: z.coerce.number().int().min(100).max(30000).optional(),
-    maxComboDepth: z.coerce.number().int().min(1).max(10).optional(),
-    trackMetrics: z.boolean().optional(),
-  })
-  .strict();
-
-export const createComboSchema = z.object({
-  name: z
-    .string()
-    .min(1, "Name is required")
-    .max(100)
-    .regex(/^[a-zA-Z0-9_/.-]+$/, "Name can only contain letters, numbers, -, _, / and ."),
-  models: z.array(comboModelEntry).optional().default([]),
-  strategy: comboStrategySchema.optional().default("priority"),
-  config: comboConfigSchema,
-  allowedProviders: z.array(z.string().max(200)).optional(),
-  system_message: z.string().max(50000).optional(),
-  tool_filter_regex: z.string().max(1000).optional(),
-  context_cache_protection: z.boolean().optional(),
+const comboModelStepInputSchema = z.object({
+  kind: z.literal("model").optional(),
+  provider: z.string().trim().min(1).max(120).optional(),
+  providerId: z.string().trim().min(1).max(120).optional(),
+  model: z.string().trim().min(1).max(300),
+  connectionId: z.string().trim().min(1).max(200).nullable().optional(),
+  tags: z.array(z.string().trim().min(1).max(100)).max(20).optional(),
+  ...comboStepMetaSchema,
 });
 
-// ──── Auto-Combo Schemas ────
+const comboRefStepInputSchema = z.object({
+  kind: z.literal("combo-ref"),
+  comboName: z.string().trim().min(1).max(100),
+  ...comboStepMetaSchema,
+});
+
+// A combo entry can be a plain string (legacy), a legacy object, or a structured ComboStep.
+const comboModelEntry = z.union([
+  z.string().trim().min(1).max(300),
+  comboModelStepInputSchema,
+  comboRefStepInputSchema,
+]);
+
+export const comboStrategySchema = z.enum(ROUTING_STRATEGY_VALUES);
 
 const scoringWeightsSchema = z
   .object({
@@ -123,18 +343,81 @@ const scoringWeightsSchema = z
   })
   .optional();
 
-export const createAutoComboSchema = z.object({
-  id: z.string().trim().min(1, "id is required").max(100),
-  name: z.string().trim().min(1, "name is required").max(200),
-  candidatePool: z.array(z.string().min(1)).optional().default([]),
-  weights: scoringWeightsSchema,
-  modePack: z.string().max(100).optional(),
-  budgetCap: z.number().positive().optional(),
-  explorationRate: z.number().min(0).max(1).optional().default(0.05),
+const compositeTierEntrySchema = z
+  .object({
+    stepId: z.string().trim().min(1).max(200),
+    fallbackTier: z.string().trim().min(1).max(100).optional(),
+    label: z.string().trim().min(1).max(200).optional(),
+    description: z.string().trim().min(1).max(500).optional(),
+  })
+  .strict();
+
+const compositeTiersSchema = z
+  .object({
+    defaultTier: z.string().trim().min(1).max(100),
+    tiers: z.record(z.string().trim().min(1).max(100), compositeTierEntrySchema),
+  })
+  .strict();
+
+const compressionModeSchema = z.enum([
+  "off",
+  "lite",
+  "standard",
+  "aggressive",
+  "ultra",
+  "rtk",
+  "stacked",
+]);
+const comboCompressionOverrideSchema = z.union([z.literal(""), compressionModeSchema]);
+
+const comboRuntimeConfigSchema = z
+  .object({
+    strategy: comboStrategySchema.optional(),
+    maxRetries: z.coerce.number().int().min(0).max(10).optional(),
+    retryDelayMs: z.coerce.number().int().min(0).max(60000).optional(),
+    timeoutMs: z.coerce.number().int().min(1000).optional(),
+    concurrencyPerModel: z.coerce.number().int().min(1).max(20).optional(),
+    queueTimeoutMs: z.coerce.number().int().min(1000).max(120000).optional(),
+    healthCheckEnabled: z.boolean().optional(),
+    healthCheckTimeoutMs: z.coerce.number().int().min(100).max(30000).optional(),
+    handoffThreshold: z.coerce.number().min(0.5).max(0.94).optional(),
+    handoffModel: z.string().trim().max(200).optional(),
+    handoffProviders: z.array(z.string().trim().min(1).max(100)).max(10).optional(),
+    maxMessagesForSummary: z.coerce.number().int().min(5).max(100).optional(),
+    maxComboDepth: z.coerce.number().int().min(1).max(10).optional(),
+    trackMetrics: z.boolean().optional(),
+    compressionMode: compressionModeSchema.optional(),
+    // Auto-Combo / LKGP Extensions
+    candidatePool: z.array(z.string().min(1)).optional(),
+    weights: scoringWeightsSchema.optional(),
+    modePack: z.string().max(100).optional(),
+    budgetCap: z.number().positive().optional(),
+    explorationRate: z.number().min(0).max(1).optional(),
+    routerStrategy: z.string().optional(),
+    compositeTiers: compositeTiersSchema.optional(),
+  })
+  .strict();
+
+export const createComboSchema = z.object({
+  name: z
+    .string()
+    .min(1, "Name is required")
+    .max(100)
+    .regex(/^[a-zA-Z0-9_/.-]+$/, "Name can only contain letters, numbers, -, _, / and ."),
+  models: z.array(comboModelEntry).optional().default([]),
+  strategy: comboStrategySchema.optional().default("priority"),
+  config: comboRuntimeConfigSchema.optional(),
+  allowedProviders: z.array(z.string().max(200)).optional(),
+  system_message: z.string().max(50000).optional(),
+  tool_filter_regex: z.string().max(1000).optional(),
+  context_cache_protection: z.boolean().optional(),
+  context_length: z.number().int().min(1000).max(2000000).optional(),
 });
 
 // ──── Settings Schemas ────
 // FASE-01: Removed .passthrough() — only explicitly listed fields are accepted
+
+const settingsFallbackStrategySchema = z.enum(ACCOUNT_FALLBACK_STRATEGY_VALUES);
 
 export const updateSettingsSchema = z.object({
   newPassword: z.string().min(1).max(200).optional(),
@@ -142,31 +425,32 @@ export const updateSettingsSchema = z.object({
   theme: z.string().max(50).optional(),
   language: z.string().max(10).optional(),
   requireLogin: z.boolean().optional(),
-  enableRequestLogs: z.boolean().optional(),
   enableSocks5Proxy: z.boolean().optional(),
   instanceName: z.string().max(100).optional(),
   corsOrigins: z.string().max(500).optional(),
-  logRetentionDays: z.number().int().min(1).max(365).optional(),
   cloudUrl: z.string().max(500).optional(),
   baseUrl: z.string().max(500).optional(),
   setupComplete: z.boolean().optional(),
-  requireAuthForModels: z.boolean().optional(),
   blockedProviders: z.array(z.string().max(100)).optional(),
   hideHealthCheckLogs: z.boolean().optional(),
+  hideEndpointCloudflaredTunnel: z.boolean().optional(),
+  hideEndpointTailscaleFunnel: z.boolean().optional(),
+  hideEndpointNgrokTunnel: z.boolean().optional(),
+  bruteForceProtection: z.boolean().optional(),
+  hiddenSidebarItems: z.array(z.enum(HIDEABLE_SIDEBAR_ITEM_IDS)).optional(),
+  comboConfigMode: z.enum(COMBO_CONFIG_MODES).optional(),
   // Routing settings (#134)
-  fallbackStrategy: z
-    .enum([
-      "fill-first",
-      "round-robin",
-      "p2c",
-      "random",
-      "least-used",
-      "cost-optimized",
-      "strict-random",
-    ])
-    .optional(),
+  fallbackStrategy: settingsFallbackStrategySchema.optional(),
   wildcardAliases: z.array(z.object({ pattern: z.string(), target: z.string() })).optional(),
   stickyRoundRobinLimit: z.number().int().min(0).max(1000).optional(),
+  requestRetry: z.number().int().min(0).max(10).optional(),
+  maxRetryIntervalSec: z.number().int().min(0).max(300).optional(),
+  maxBodySizeMb: z
+    .number()
+    .int()
+    .min(MIN_REQUEST_BODY_LIMIT_MB)
+    .max(MAX_REQUEST_BODY_LIMIT_MB)
+    .optional(),
   // Auto intent classifier settings (multilingual routing)
   intentDetectionEnabled: z.boolean().optional(),
   intentSimpleMaxWords: z.number().int().min(1).max(500).optional(),
@@ -176,12 +460,18 @@ export const updateSettingsSchema = z.object({
   // Protocol toggles (default: disabled)
   mcpEnabled: z.boolean().optional(),
   a2aEnabled: z.boolean().optional(),
+  wsAuth: z.boolean().optional(),
 });
 
 // ──── Auth Schemas ────
 
 export const loginSchema = z.object({
   password: z.string().min(1, "Password is required").max(200),
+});
+
+export const dbBackupCleanupSchema = z.object({
+  keepLatest: z.number().int().min(1).max(200).optional(),
+  retentionDays: z.number().int().min(0).max(3650).optional(),
 });
 
 // ──── API Route Payload Schemas (T06) ────
@@ -233,7 +523,7 @@ export const v1EmbeddingsSchema = z
 export const v1ImageGenerationSchema = z
   .object({
     model: modelIdSchema,
-    prompt: nonEmptyStringSchema,
+    prompt: nonEmptyStringSchema.optional(),
   })
   .catchall(z.unknown());
 
@@ -288,15 +578,38 @@ export const v1CountTokensSchema = z
   })
   .catchall(z.unknown());
 
-export const setBudgetSchema = z.object({
-  apiKeyId: z.string().trim().min(1, "apiKeyId is required"),
-  dailyLimitUsd: z.coerce.number().positive("dailyLimitUsd must be greater than zero"),
-  monthlyLimitUsd: z.coerce
-    .number()
-    .positive("monthlyLimitUsd must be greater than zero")
-    .optional(),
-  warningThreshold: z.coerce.number().min(0).max(1).optional(),
-});
+export const setBudgetSchema = z
+  .object({
+    apiKeyId: z.string().trim().min(1, "apiKeyId is required"),
+    dailyLimitUsd: z.coerce.number().positive("dailyLimitUsd must be greater than zero").optional(),
+    weeklyLimitUsd: z.coerce
+      .number()
+      .positive("weeklyLimitUsd must be greater than zero")
+      .optional(),
+    monthlyLimitUsd: z.coerce
+      .number()
+      .positive("monthlyLimitUsd must be greater than zero")
+      .optional(),
+    warningThreshold: z.coerce.number().min(0).max(1).optional(),
+    resetInterval: z.enum(["daily", "weekly", "monthly"]).optional(),
+    resetTime: z
+      .string()
+      .trim()
+      .regex(/^\d{2}:\d{2}$/, "resetTime must be in HH:MM format")
+      .optional(),
+  })
+  .superRefine((value, ctx) => {
+    const hasAnyLimit = [value.dailyLimitUsd, value.weeklyLimitUsd, value.monthlyLimitUsd].some(
+      (entry) => typeof entry === "number" && Number.isFinite(entry) && entry > 0
+    );
+    if (!hasAnyLimit) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "At least one budget limit must be provided",
+        path: ["dailyLimitUsd"],
+      });
+    }
+  });
 
 export const policyActionSchema = z
   .object({
@@ -335,15 +648,34 @@ export const updateModelAliasSchema = z.object({
   alias: z.string().trim().min(1, "Alias is required").max(200),
 });
 
-export const clearModelAvailabilitySchema = z.object({
-  provider: z.string().trim().min(1, "provider is required").max(120),
-  model: modelIdSchema,
-});
+/** Align with `sanitizeUpstreamHeadersMap` — allow non-ASCII names; reject Host / hop-by-hop / whitespace / ":". */
+const upstreamHeaderNameSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(128)
+  .refine((s) => !/[\r\n\0]/.test(s), { message: "header name cannot contain control characters" })
+  .refine((s) => !/\s/.test(s), { message: "header name cannot contain whitespace" })
+  .refine((s) => !s.includes(":"), { message: "header name cannot contain ':'" })
+  .refine((s) => !isForbiddenUpstreamHeaderName(s), { message: "header name is not allowed" });
+
+const upstreamHeaderValueSchema = z
+  .string()
+  .max(4096)
+  .refine((s) => !/[\r\n]/.test(s), { message: "header value cannot contain line breaks" });
+
+const upstreamHeadersRecordSchema = z
+  .record(upstreamHeaderNameSchema, upstreamHeaderValueSchema)
+  .refine((rec) => Object.keys(rec).length <= 16, { message: "at most 16 custom headers" })
+  .refine((rec) => !Object.keys(rec).some((k) => isForbiddenUpstreamHeaderName(k)), {
+    message: "forbidden header name in record",
+  });
 
 const modelCompatPerProtocolSchema = z
   .object({
     normalizeToolCallId: z.boolean().optional(),
     preserveOpenAIDeveloperRole: z.boolean().optional(),
+    upstreamHeaders: upstreamHeadersRecordSchema.optional(),
   })
   .strict();
 
@@ -352,12 +684,37 @@ export const providerModelMutationSchema = z.object({
   modelId: z.string().trim().min(1, "modelId is required").max(240),
   modelName: z.string().trim().max(240).optional(),
   source: z.string().trim().max(80).optional(),
-  apiFormat: z.enum(["chat-completions", "responses"]).default("chat-completions"),
-  supportedEndpoints: z.array(z.enum(["chat", "embeddings", "images", "audio"])).default(["chat"]),
+  apiFormat: z
+    .enum([
+      "chat-completions",
+      "responses",
+      "embeddings",
+      "rerank",
+      "audio-transcriptions",
+      "audio-speech",
+      "images-generations",
+    ])
+    .default("chat-completions"),
+  supportedEndpoints: z
+    .array(
+      z.enum([
+        "chat",
+        "embeddings",
+        "rerank",
+        "images",
+        "audio",
+        "audio-transcriptions",
+        "audio-speech",
+        "images-generations",
+      ])
+    )
+    .default(["chat"]),
   normalizeToolCallId: z.boolean().optional(),
   preserveOpenAIDeveloperRole: z.boolean().nullable().optional(),
+  upstreamHeaders: upstreamHeadersRecordSchema.nullable().optional(),
+  /** Zod 4: `z.record(z.enum([...]), …)` requires every enum key; use `partialRecord` for sparse patches. */
   compatByProtocol: z
-    .record(z.enum(["openai", "openai-responses", "claude"]), modelCompatPerProtocolSchema)
+    .partialRecord(z.enum(["openai", "openai-responses", "claude"]), modelCompatPerProtocolSchema)
     .optional(),
 });
 
@@ -381,7 +738,7 @@ export const toggleRateLimitSchema = z.object({
   enabled: z.boolean(),
 });
 
-const resilienceProfileSchema = z.object({
+const legacyResilienceProfileSchema = z.object({
   transientCooldown: z.number().min(0),
   rateLimitCooldown: z.number().min(0),
   maxBackoffLevel: z.number().int().min(0),
@@ -389,30 +746,87 @@ const resilienceProfileSchema = z.object({
   circuitBreakerReset: z.number().min(0),
 });
 
-const resilienceDefaultsSchema = z
+const legacyResilienceDefaultsSchema = z
   .object({
     requestsPerMinute: z.number().int().min(1).optional(),
-    minTimeBetweenRequests: z.number().int().min(1).optional(),
+    minTimeBetweenRequests: z.number().int().min(0).optional(),
     concurrentRequests: z.number().int().min(1).optional(),
+  })
+  .strict();
+
+const requestQueueSettingsSchema = z
+  .object({
+    autoEnableApiKeyProviders: z.boolean().optional(),
+    requestsPerMinute: z.number().int().min(1).optional(),
+    minTimeBetweenRequestsMs: z.number().int().min(0).optional(),
+    concurrentRequests: z.number().int().min(1).optional(),
+    maxWaitMs: z.number().int().min(1).optional(),
+  })
+  .strict();
+
+const connectionCooldownProfileSchema = z
+  .object({
+    baseCooldownMs: z.number().int().min(0).optional(),
+    useUpstreamRetryHints: z.boolean().optional(),
+    maxBackoffSteps: z.number().int().min(0).optional(),
+  })
+  .strict();
+
+const providerBreakerProfileSchema = z
+  .object({
+    failureThreshold: z.number().int().min(1).optional(),
+    resetTimeoutMs: z.number().int().min(1000).optional(),
+  })
+  .strict();
+
+const waitForCooldownSettingsSchema = z
+  .object({
+    enabled: z.boolean().optional(),
+    maxRetries: z.number().int().min(0).max(10).optional(),
+    maxRetryWaitSec: z.number().int().min(0).max(300).optional(),
   })
   .strict();
 
 export const updateResilienceSchema = z
   .object({
-    profiles: z
+    requestQueue: requestQueueSettingsSchema.optional(),
+    connectionCooldown: z
       .object({
-        oauth: resilienceProfileSchema.optional(),
-        apikey: resilienceProfileSchema.optional(),
+        oauth: connectionCooldownProfileSchema.optional(),
+        apikey: connectionCooldownProfileSchema.optional(),
       })
       .strict()
       .optional(),
-    defaults: resilienceDefaultsSchema.optional(),
+    providerBreaker: z
+      .object({
+        oauth: providerBreakerProfileSchema.optional(),
+        apikey: providerBreakerProfileSchema.optional(),
+      })
+      .strict()
+      .optional(),
+    waitForCooldown: waitForCooldownSettingsSchema.optional(),
+    profiles: z
+      .object({
+        oauth: legacyResilienceProfileSchema.optional(),
+        apikey: legacyResilienceProfileSchema.optional(),
+      })
+      .strict()
+      .optional(),
+    defaults: legacyResilienceDefaultsSchema.optional(),
   })
+  .strict()
   .superRefine((value, ctx) => {
-    if (!value.profiles && !value.defaults) {
+    if (
+      !value.requestQueue &&
+      !value.connectionCooldown &&
+      !value.providerBreaker &&
+      !value.waitForCooldown &&
+      !value.profiles &&
+      !value.defaults
+    ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Must provide profiles or defaults",
+        message: "Must provide resilience settings to update",
         path: [],
       });
     }
@@ -489,6 +903,24 @@ export const updateComboDefaultsSchema = z
         path: [],
       });
     }
+
+    if (value.comboDefaults?.compositeTiers) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "compositeTiers is only supported on concrete combos",
+        path: ["comboDefaults", "compositeTiers"],
+      });
+    }
+
+    for (const [providerId, config] of Object.entries(value.providerOverrides || {})) {
+      if (config?.compositeTiers) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "compositeTiers is only supported on concrete combos",
+          path: ["providerOverrides", providerId, "compositeTiers"],
+        });
+      }
+    }
   });
 
 export const updateRequireLoginSchema = z
@@ -547,11 +979,53 @@ export const updateThinkingBudgetSchema = z
     }
   });
 
-export const updateCodexServiceTierSchema = z
+const payloadRuleModelSpecSchema = z
   .object({
-    enabled: z.boolean(),
+    name: z.string().trim().min(1),
+    protocol: z.string().trim().min(1).optional(),
   })
   .strict();
+
+const payloadMutationRuleSchema = z
+  .object({
+    models: z.array(payloadRuleModelSpecSchema).min(1),
+    params: z
+      .record(z.string().trim().min(1), z.unknown())
+      .refine((value) => Object.keys(value).length > 0, "params must contain at least one path"),
+  })
+  .strict();
+
+const payloadFilterRuleSchema = z
+  .object({
+    models: z.array(payloadRuleModelSpecSchema).min(1),
+    params: z.array(z.string().trim().min(1)).min(1),
+  })
+  .strict();
+
+export const updatePayloadRulesSchema = z
+  .object({
+    default: z.array(payloadMutationRuleSchema).optional(),
+    override: z.array(payloadMutationRuleSchema).optional(),
+    filter: z.array(payloadFilterRuleSchema).optional(),
+    defaultRaw: z.array(payloadMutationRuleSchema).optional(),
+    "default-raw": z.array(payloadMutationRuleSchema).optional(),
+  })
+  .strict()
+  .superRefine((value, ctx) => {
+    if (
+      value.default === undefined &&
+      value.override === undefined &&
+      value.filter === undefined &&
+      value.defaultRaw === undefined &&
+      value["default-raw"] === undefined
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "No valid fields to update",
+        path: [],
+      });
+    }
+  });
 
 const ipFilterModeSchema = z.enum(["blacklist", "whitelist"]);
 const tempBanSchema = z.object({
@@ -691,6 +1165,15 @@ export const updateProxyRegistrySchema = createProxyRegistrySchema.partial().ext
   id: z.string().trim().min(1, "id is required"),
 });
 
+export const bulkImportProxiesSchema = z
+  .object({
+    items: z
+      .array(createProxyRegistrySchema)
+      .min(1, "At least one proxy is required")
+      .max(100, "Maximum 100 proxies per import"),
+  })
+  .strict();
+
 export const proxyAssignmentSchema = z
   .object({
     scope: z.enum(["global", "provider", "account", "combo", "key"]),
@@ -734,21 +1217,8 @@ const nonEmptyJsonRecordSchema = jsonRecordSchema.refine(
   "Body must be a non-empty object"
 );
 
-const translatorLogFileSchema = z.enum([
-  "1_req_client.json",
-  "2_req_source.json",
-  "3_req_openai.json",
-  "4_req_target.json",
-  "5_res_provider.txt",
-]);
-
 export const translatorDetectSchema = z.object({
   body: nonEmptyJsonRecordSchema,
-});
-
-export const translatorSaveSchema = z.object({
-  file: translatorLogFileSchema,
-  content: z.string().min(1, "Content is required").max(1_000_000, "Content is too large"),
 });
 
 export const translatorSendSchema = z.object({
@@ -777,8 +1247,8 @@ export const translatorTranslateSchema = z
 export const oauthExchangeSchema = z.object({
   code: z.string().trim().min(1),
   redirectUri: z.string().trim().min(1),
-  codeVerifier: z.string().trim().min(1),
-  state: z.string().optional(),
+  codeVerifier: z.string().trim().min(1).optional(),
+  state: z.string().nullable().optional(),
 });
 
 export const oauthPollSchema = z.object({
@@ -789,7 +1259,7 @@ export const oauthPollSchema = z.object({
 
 export const cursorImportSchema = z.object({
   accessToken: z.string().trim().min(1, "Access token is required"),
-  machineId: z.string().trim().min(1, "Machine ID is required"),
+  machineId: z.string().trim().optional(),
 });
 
 export const kiroImportSchema = z.object({
@@ -855,6 +1325,8 @@ export const updateComboSchema = z
     system_message: z.string().max(50000).optional(),
     tool_filter_regex: z.string().max(1000).optional(),
     context_cache_protection: z.boolean().optional(),
+    context_length: z.number().int().min(1000).max(2000000).optional(),
+    compressionOverride: comboCompressionOverrideSchema.optional(),
   })
   .superRefine((value, ctx) => {
     if (
@@ -866,12 +1338,28 @@ export const updateComboSchema = z
       value.allowedProviders === undefined &&
       value.system_message === undefined &&
       value.tool_filter_regex === undefined &&
-      value.context_cache_protection === undefined
+      value.context_cache_protection === undefined &&
+      value.context_length === undefined &&
+      value.compressionOverride === undefined
     ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "No valid fields to update",
         path: [],
+      });
+    }
+  });
+
+export const reorderCombosSchema = z
+  .object({
+    comboIds: z.array(z.string().trim().min(1).max(200)).min(1).max(1000),
+  })
+  .superRefine((value, ctx) => {
+    if (new Set(value.comboIds).size !== value.comboIds.length) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "comboIds must be unique",
+        path: ["comboIds"],
       });
     }
   });
@@ -884,9 +1372,74 @@ export const dbBackupRestoreSchema = z.object({
   backupId: z.string().trim().min(1, "backupId is required"),
 });
 
-export const evalRunSuiteSchema = z.object({
-  suiteId: z.string().trim().min(1, "suiteId is required"),
-  outputs: z.record(z.string(), z.string()),
+const evalTargetSchema = z
+  .object({
+    type: z.enum(["suite-default", "model", "combo"]),
+    id: z.string().trim().min(1).optional().nullable(),
+  })
+  .superRefine((value, ctx) => {
+    if (value.type === "suite-default") {
+      return;
+    }
+
+    if (typeof value.id !== "string" || value.id.trim().length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "target.id is required for model and combo targets",
+        path: ["id"],
+      });
+    }
+  });
+
+const evalMessageSchema = z.object({
+  role: z.string().trim().min(1, "message.role is required").max(50),
+  content: z.string().trim().min(1, "message.content is required").max(20000),
+});
+
+const evalCaseBuilderSchema = z.object({
+  id: z.string().trim().min(1).optional(),
+  name: z.string().trim().min(1, "case.name is required").max(200),
+  model: z.string().trim().min(1).max(300).optional().nullable(),
+  input: z.object({
+    messages: z.array(evalMessageSchema).min(1, "At least one message is required").max(32),
+    max_tokens: z.number().int().min(1).max(8192).optional(),
+  }),
+  expected: z.object({
+    strategy: z.enum(["contains", "exact", "regex"]),
+    value: z.string().trim().min(1, "expected.value is required").max(20000),
+  }),
+  tags: z.array(z.string().trim().min(1).max(64)).max(20).optional(),
+});
+
+export const evalRunSuiteSchema = z
+  .object({
+    suiteId: z.string().trim().min(1, "suiteId is required"),
+    outputs: z.record(z.string(), z.string()).optional(),
+    target: evalTargetSchema.optional(),
+    compareTarget: evalTargetSchema.optional(),
+    apiKeyId: z.string().trim().min(1, "apiKeyId must not be empty").optional(),
+  })
+  .superRefine((value, ctx) => {
+    if (value.compareTarget) {
+      const primaryType = value.target?.type || "suite-default";
+      const primaryId = value.target?.id?.trim() || "";
+      const compareId = value.compareTarget.id?.trim() || "";
+
+      if (primaryType === value.compareTarget.type && primaryId === compareId) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "compareTarget must differ from target",
+          path: ["compareTarget"],
+        });
+      }
+    }
+  });
+
+export const evalSuiteSaveSchema = z.object({
+  id: z.string().trim().min(1).optional(),
+  name: z.string().trim().min(1, "name is required").max(200),
+  description: z.string().trim().max(2000).optional(),
+  cases: z.array(evalCaseBuilderSchema).min(1, "At least one case is required").max(200),
 });
 
 const accessScheduleSchema = z.object({
@@ -905,6 +1458,7 @@ export const updateKeyPermissionsSchema = z
     noLog: z.boolean().optional(),
     autoResolve: z.boolean().optional(),
     isActive: z.boolean().optional(),
+    maxSessions: z.number().int().min(0).max(10000).optional(),
     accessSchedule: z.union([accessScheduleSchema, z.null()]).optional(),
   })
   .superRefine((value, ctx) => {
@@ -915,6 +1469,7 @@ export const updateKeyPermissionsSchema = z
       value.noLog === undefined &&
       value.autoResolve === undefined &&
       value.isActive === undefined &&
+      value.maxSessions === undefined &&
       value.accessSchedule === undefined
     ) {
       ctx.addIssue({
@@ -929,9 +1484,19 @@ export const createProviderNodeSchema = z
   .object({
     name: z.string().trim().min(1, "Name is required"),
     prefix: z.string().trim().min(1, "Prefix is required"),
-    apiType: z.enum(["chat", "responses"]).optional(),
+    apiType: z
+      .enum([
+        "chat",
+        "responses",
+        "embeddings",
+        "audio-transcriptions",
+        "audio-speech",
+        "images-generations",
+      ])
+      .optional(),
     baseUrl: z.string().trim().min(1).optional(),
     type: z.enum(["openai-compatible", "anthropic-compatible"]).optional(),
+    compatMode: z.enum(["cc"]).optional(),
     chatPath: z.string().trim().startsWith("/").max(500).optional().or(z.literal("")),
     modelsPath: z.string().trim().startsWith("/").max(500).optional().or(z.literal("")),
   })
@@ -949,7 +1514,16 @@ export const createProviderNodeSchema = z
 export const updateProviderNodeSchema = z.object({
   name: z.string().trim().min(1, "Name is required"),
   prefix: z.string().trim().min(1, "Prefix is required"),
-  apiType: z.enum(["chat", "responses"]).optional(),
+  apiType: z
+    .enum([
+      "chat",
+      "responses",
+      "embeddings",
+      "audio-transcriptions",
+      "audio-speech",
+      "images-generations",
+    ])
+    .optional(),
   baseUrl: z.string().trim().min(1, "Base URL is required"),
   chatPath: z.string().trim().startsWith("/").max(500).optional().or(z.literal("")),
   modelsPath: z.string().trim().startsWith("/").max(500).optional().or(z.literal("")),
@@ -957,8 +1531,10 @@ export const updateProviderNodeSchema = z.object({
 
 export const providerNodeValidateSchema = z.object({
   baseUrl: z.string().trim().min(1, "Base URL and API key required"),
-  apiKey: z.string().trim().min(1, "Base URL and API key required"),
+  apiKey: z.string().trim().optional(),
   type: z.enum(["openai-compatible", "anthropic-compatible"]).optional(),
+  compatMode: z.enum(["cc"]).optional(),
+  chatPath: z.string().trim().startsWith("/").max(500).optional().or(z.literal("")),
   modelsPath: z.string().trim().startsWith("/").max(500).optional().or(z.literal("")),
 });
 
@@ -980,21 +1556,13 @@ export const updateProviderConnectionSchema = z
     lastTested: z.union([z.string(), z.null()]).optional(),
     healthCheckInterval: z.coerce.number().int().min(0).optional(),
     group: z.union([z.string().max(100), z.null()]).optional(),
+    maxConcurrent: z.union([z.null(), z.coerce.number().int().min(0)]).optional(),
     // Partial patch of per-connection provider-specific settings (e.g. quota toggles)
     providerSpecificData: z
       .record(z.string(), z.unknown())
       .optional()
       .superRefine((data, ctx) => {
-        if (!data) return;
-        const baseUrl = data.baseUrl;
-        if (baseUrl === undefined) return;
-        if (typeof baseUrl !== "string" || !isHttpUrl(baseUrl)) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "providerSpecificData.baseUrl must be a valid http(s) URL",
-            path: ["baseUrl"],
-          });
-        }
+        validateProviderSpecificData(data, ctx);
       }),
   })
   .superRefine((value, ctx) => {
@@ -1009,7 +1577,19 @@ export const updateProviderConnectionSchema = z
 
 export const providersBatchTestSchema = z
   .object({
-    mode: z.enum(["provider", "oauth", "free", "apikey", "compatible", "all"]),
+    mode: z.enum([
+      "provider",
+      "oauth",
+      "free",
+      "apikey",
+      "compatible",
+      "all",
+      "web-cookie",
+      "search",
+      "audio",
+      "local",
+      "upstream-proxy",
+    ]),
     // Frontend may send null when mode != 'provider' — accept and treat as missing
     providerId: z.string().trim().min(1).nullable().optional(),
   })
@@ -1025,10 +1605,24 @@ export const providersBatchTestSchema = z
     }
   });
 
-export const validateProviderApiKeySchema = z.object({
-  provider: z.string().trim().min(1, "Provider and API key required"),
-  apiKey: z.string().trim().min(1, "Provider and API key required"),
-});
+export const validateProviderApiKeySchema = z
+  .object({
+    provider: z.string().trim().min(1, "Provider and API key required"),
+    apiKey: z.string().trim().optional(),
+    validationModelId: z.string().trim().optional(),
+    customUserAgent: z.string().trim().max(500).optional(),
+    baseUrl: z.string().trim().url().optional(),
+    cx: z.string().trim().max(500).optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.provider === "google-pse-search" && !data.cx) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Programmable Search Engine ID (cx) is required",
+        path: ["cx"],
+      });
+    }
+  });
 
 const geminiPartSchema = z
   .object({
@@ -1123,8 +1717,11 @@ export const cliSettingsEnvSchema = z.object({
 
 export const cliModelConfigSchema = z.object({
   baseUrl: z.string().trim().min(1, "baseUrl and model are required"),
-  apiKey: z.string().optional(),
+  apiKey: z.string().nullable().optional(),
   model: z.string().trim().min(1, "baseUrl and model are required"),
+  reasoningEffort: z.enum(["none", "low", "medium", "high", "xhigh"]).optional(),
+  wireApi: z.enum(["chat", "responses"]).optional(),
+  modelMappings: z.record(z.string().trim().min(1), z.string().trim().min(1)).optional(),
 });
 
 export const codexProfileNameSchema = z.object({
@@ -1135,11 +1732,18 @@ export const codexProfileIdSchema = z.object({
   profileId: z.string().trim().min(1, "profileId is required"),
 });
 
-export const guideSettingsSaveSchema = z.object({
-  baseUrl: z.string().trim().min(1).optional(),
-  apiKey: z.string().optional(),
-  model: z.string().trim().min(1, "Model is required"),
-});
+export const guideSettingsSaveSchema = z
+  .object({
+    baseUrl: z.string().trim().min(1).optional(),
+    apiKey: z.string().optional(),
+    model: z.string().trim().min(1, "Model is required").optional(),
+    models: z.array(z.string().trim().min(1, "Models must be non-empty")).min(1).optional(),
+    modelLabels: z.record(z.string(), z.string().trim().min(1)).optional(),
+  })
+  .refine((data) => !!data.model || !!data.models?.length, {
+    message: "Model is required",
+    path: ["model"],
+  });
 
 // ── Search Schemas ─────────────────────────────────────────────────────
 // Unified search request/response schemas. Final contract — all fields optional
@@ -1155,7 +1759,18 @@ export const v1SearchSchema = z
       .min(1, "Query is required")
       .max(500, "Query must be 500 characters or fewer"),
     provider: z
-      .enum(["serper-search", "brave-search", "perplexity-search", "exa-search", "tavily-search"])
+      .enum([
+        "serper-search",
+        "brave-search",
+        "perplexity-search",
+        "exa-search",
+        "tavily-search",
+        "google-pse-search",
+        "linkup-search",
+        "searchapi-search",
+        "youcom-search",
+        "searxng-search",
+      ])
       .optional(),
     max_results: z.coerce.number().int().min(1).max(100).default(5),
     search_type: z.enum(["web", "news"]).default("web"),
@@ -1272,5 +1887,37 @@ export const v1SearchResponseSchema = z.object({
         message: z.string(),
       })
     )
+    .optional(),
+});
+
+// ─── Auto-disable banned/error accounts ───────────────────────────────────
+export const updateAutoDisableAccountsSchema = z
+  .object({
+    enabled: z.boolean(),
+    threshold: z.number().int().min(1).max(10).optional(),
+  })
+  .strict();
+
+export const versionManagerToolSchema = z.object({
+  tool: z.string().trim().min(1),
+});
+
+export const versionManagerInstallSchema = versionManagerToolSchema.extend({
+  version: z.string().trim().optional(),
+});
+
+export const v1BatchCreateSchema = z.object({
+  input_file_id: z.string().min(1),
+  endpoint: z.enum(SUPPORTED_BATCH_ENDPOINTS),
+  completion_window: z.enum(["24h"]),
+  metadata: z
+    .record(z.string().max(64), z.string().max(512))
+    .refine((m) => Object.keys(m).length <= 16, { message: "metadata may have at most 16 keys" })
+    .optional(),
+  output_expires_after: z
+    .object({
+      anchor: z.enum(["created_at"]),
+      seconds: z.number().int().min(3600).max(2592000),
+    })
     .optional(),
 });

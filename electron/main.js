@@ -61,8 +61,46 @@ let mainWindow = null;
 let tray = null;
 let nextServer = null;
 let serverPort = 20128;
+let isServerStopped = false;
 
 const getServerUrl = () => `http://localhost:${serverPort}`;
+
+function resolveNodeExecutable(env = process.env) {
+  // #1081: Ensure Next.js standalone runs using Electron's Node runtime
+  // instead of a randomly found system Node to prevent ABI architecture mismatches.
+  return process.execPath;
+}
+
+function resolveServerNodePath(env = process.env) {
+  const seen = new Set();
+  const entries = [];
+
+  const addEntry = (entry) => {
+    if (!entry || typeof entry !== "string") return;
+    const trimmed = entry.trim();
+    if (!trimmed) return;
+    const normalized = path.normalize(trimmed);
+    if (seen.has(normalized)) return; // already included
+    if (!fs.existsSync(normalized)) {
+      console.debug("[Electron] NODE_PATH candidate not found (skipped):", normalized);
+      return;
+    }
+    seen.add(normalized);
+    entries.push(normalized);
+  };
+
+  for (const existing of (env.NODE_PATH || "").split(path.delimiter)) {
+    addEntry(existing);
+  }
+
+  // Electron-builder installs native modules like better-sqlite3 under
+  // app.asar.unpacked, while the standalone bundle still carries helper deps
+  // such as bindings/file-uri-to-path inside resources/app/node_modules.
+  addEntry(path.join(process.resourcesPath, "app.asar.unpacked", "node_modules"));
+  addEntry(path.join(NEXT_SERVER_PATH, "node_modules"));
+
+  return entries.join(path.delimiter);
+}
 
 function resolveDataDir(overridePath, env = process.env) {
   if (overridePath && overridePath.trim()) return path.resolve(overridePath);
@@ -242,14 +280,26 @@ function installUpdate() {
 // ── Content Security Policy (#15) ──────────────────────────
 function setupContentSecurityPolicy() {
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    const scriptSrc = isDev
+      ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:"
+      : "script-src 'self' 'unsafe-inline' blob:";
     const csp = [
       "default-src 'self'",
-      `connect-src 'self' http://localhost:* ws://localhost:* https://*.omniroute.online https://*.omniroute.dev`,
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+      "base-uri 'self'",
+      "object-src 'none'",
+      "frame-ancestors 'none'",
+      "frame-src 'none'",
+      "child-src 'none'",
+      "form-action 'self'",
+      scriptSrc,
+      "script-src-attr 'none'",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com data:",
       "img-src 'self' data: blob: https:",
-      "media-src 'self'",
+      "media-src 'self' data: blob:",
+      `connect-src 'self' http://localhost:* http://127.0.0.1:* ws://localhost:* ws://127.0.0.1:* https://*.omniroute.online https://*.omniroute.dev`,
+      "worker-src 'self' blob:",
+      "manifest-src 'self'",
     ].join("; ");
 
     callback({
@@ -281,6 +331,7 @@ function createWindow() {
       contextIsolation: true,
       nodeIntegration: false,
       webSecurity: true,
+      webviewTag: false,
     },
     show: false,
     backgroundColor: "#0a0a0a",
@@ -516,17 +567,22 @@ function startNextServer() {
     }
   }
 
+  const nodeExecutable = resolveNodeExecutable(serverEnv);
+
   console.log("[Electron] Starting Next.js server on port", serverPort);
+  console.log("[Electron] Using Node executable:", nodeExecutable);
   sendToRenderer("server-status", { status: "starting", port: serverPort });
 
   // Fix #10: Use pipe instead of inherit for logging & readiness detection
-  nextServer = spawn("node", [serverScript], {
+  nextServer = spawn(nodeExecutable, [serverScript], {
     cwd: NEXT_SERVER_PATH,
     env: {
       ...serverEnv,
       DATA_DIR: dataDir,
       PORT: String(serverPort),
       NODE_ENV: "production",
+      ELECTRON_RUN_AS_NODE: "1",
+      NODE_PATH: resolveServerNodePath(serverEnv),
     },
     stdio: "pipe",
   });
@@ -681,9 +737,21 @@ app.on("window-all-closed", () => {
 });
 
 // Clean up before quit
-app.on("before-quit", () => {
-  app.isQuitting = true;
-  stopNextServer();
+app.on("before-quit", async (event) => {
+  if (nextServer && !isServerStopped) {
+    event.preventDefault(); // Stop immediate quit
+    app.isQuitting = true;
+
+    // Stop server and wait up to 5s for graceful WAL checkpoint
+    const serverToStop = nextServer;
+    stopNextServer();
+    await waitForServerExit(serverToStop, 5000);
+
+    isServerStopped = true;
+    app.quit(); // Resume quit safely
+  } else {
+    app.isQuitting = true;
+  }
 });
 
 // Global error handlers

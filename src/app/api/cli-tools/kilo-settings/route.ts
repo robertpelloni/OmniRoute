@@ -4,11 +4,13 @@ import { NextResponse } from "next/server";
 import fs from "fs/promises";
 import path from "path";
 import os from "os";
+import { requireCliToolsAuth } from "@/lib/api/requireCliToolsAuth";
 import { ensureCliConfigWriteAllowed, getCliRuntimeStatus } from "@/shared/services/cliRuntime";
 import { createBackup } from "@/shared/services/backupService";
 import { saveCliToolLastConfigured, deleteCliToolLastConfigured } from "@/lib/db/cliToolState";
 import { cliModelConfigSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
+import { resolveApiKey } from "@/shared/services/apiKeyResolver";
 
 const KILO_DATA_DIR = path.join(os.homedir(), ".local", "share", "kilo");
 const AUTH_PATH = path.join(KILO_DATA_DIR, "auth.json");
@@ -37,7 +39,10 @@ const hasOmniRouteConfig = (auth) => {
 };
 
 // GET - Check kilo CLI and read current settings
-export async function GET() {
+export async function GET(request: Request) {
+  const authError = await requireCliToolsAuth(request);
+  if (authError) return authError;
+
   try {
     const runtime = await getCliRuntimeStatus("kilo");
 
@@ -108,6 +113,9 @@ export async function GET() {
 
 // POST - Configure Kilo Code to use OmniRoute as OpenAI-compatible provider
 export async function POST(request) {
+  const authError = await requireCliToolsAuth(request);
+  if (authError) return authError;
+
   let rawBody;
   try {
     rawBody = await request.json();
@@ -129,11 +137,15 @@ export async function POST(request) {
       return NextResponse.json({ error: writeGuard }, { status: 403 });
     }
 
+    // (#549) Extract keyId BEFORE validation — Zod strips unknown fields!
+    const keyId = typeof rawBody?.keyId === "string" ? rawBody.keyId.trim() : null;
+
     const validation = validateBody(cliModelConfigSchema, rawBody);
     if (isValidationFailure(validation)) {
       return NextResponse.json({ error: validation.error }, { status: 400 });
     }
-    const { baseUrl, apiKey, model } = validation.data;
+    const { baseUrl, model } = validation.data;
+    const apiKey = await resolveApiKey(keyId, validation.data.apiKey);
 
     // Ensure directories exist
     await fs.mkdir(KILO_DATA_DIR, { recursive: true });
@@ -212,7 +224,10 @@ export async function POST(request) {
 }
 
 // DELETE - Remove OmniRoute config from Kilo
-export async function DELETE() {
+export async function DELETE(request: Request) {
+  const authError = await requireCliToolsAuth(request);
+  if (authError) return authError;
+
   try {
     const writeGuard = ensureCliConfigWriteAllowed();
     if (writeGuard) {

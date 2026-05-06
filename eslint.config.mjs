@@ -10,6 +10,17 @@ const eslintConfig = [
       "no-eval": "error",
       "no-implied-eval": "error",
       "no-new-func": "error",
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "prop-types",
+              message: "PropTypes are deprecated. Use TypeScript types/interfaces instead.",
+            },
+          ],
+        },
+      ],
     },
   },
   // Relaxed rules for open-sse and tests (incremental adoption)
@@ -29,8 +40,10 @@ const eslintConfig = [
     ignores: [
       // Next.js build output
       ".next/**",
+      "src/.next/**",
       "out/**",
       "build/**",
+      "coverage/**",
       "next-env.d.ts",
       // Scripts and binaries
       "scripts/**",
@@ -39,6 +52,8 @@ const eslintConfig = [
       "node_modules/**",
       // VS Code extension and its large test fixtures
       "vscode-extension/**",
+      "_references/**",
+      "_mono_repo/**",
       // Electron app
       "electron/**",
       // Docs
@@ -49,7 +64,11 @@ const eslintConfig = [
       "playwright-report/**",
       "test-results/**",
       // Subdirectory .next build output (app/ subdir)
+      "app/**",
       "app/.next/**",
+      "app/bin/**",
+      "app.__qa_backup/**",
+      "app/app.__qa_backup/**",
       // CLI package copy directory
       "clipr/**",
     ],

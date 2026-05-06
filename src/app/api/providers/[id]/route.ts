@@ -1,4 +1,9 @@
 import { NextResponse } from "next/server";
+import { getAuditRequestContext, logAuditEvent } from "@/lib/compliance/index";
+import {
+  getProviderAuditTarget,
+  summarizeProviderConnectionForAudit,
+} from "@/lib/compliance/providerAudit";
 import {
   getProviderConnectionById,
   updateProviderConnection,
@@ -9,6 +14,15 @@ import { getConsistentMachineId } from "@/shared/utils/machineId";
 import { syncToCloud } from "@/lib/cloudSync";
 import { updateProviderConnectionSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
+import {
+  normalizeProviderSpecificData,
+  sanitizeProviderSpecificDataForResponse,
+} from "@/lib/providers/requestDefaults";
+import {
+  buildClaudeExtraUsageStateClearUpdate,
+  isClaudeExtraUsageBlockEnabled,
+} from "@/lib/providers/claudeExtraUsage";
+import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
 
 function normalizeCodexLimitPolicy(
   incoming: unknown,
@@ -36,6 +50,9 @@ function normalizeCodexLimitPolicy(
 
 // GET /api/providers/[id] - Get single connection
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const authError = await requireManagementAuth(request);
+  if (authError) return authError;
+
   try {
     const { id } = await params;
     const connection = await getProviderConnectionById(id);
@@ -50,6 +67,11 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
     delete result.accessToken;
     delete result.refreshToken;
     delete result.idToken;
+    if (result.providerSpecificData) {
+      result.providerSpecificData = sanitizeProviderSpecificDataForResponse(
+        result.providerSpecificData
+      );
+    }
 
     return NextResponse.json({ connection: result });
   } catch (error) {
@@ -60,6 +82,10 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
 
 // PUT /api/providers/[id] - Update connection
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const authError = await requireManagementAuth(request);
+  if (authError) return authError;
+
+  const auditContext = getAuditRequestContext(request);
   let rawBody;
   try {
     rawBody = await request.json();
@@ -98,10 +124,12 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       rateLimitedUntil,
       lastTested,
       healthCheckInterval,
+      group,
+      maxConcurrent,
       providerSpecificData: incomingPsd,
     } = body;
 
-    const existing = await getProviderConnectionById(id);
+    const existing = (await getProviderConnectionById(id)) as Record<string, any> | null;
     if (!existing) {
       return NextResponse.json({ error: "Connection not found" }, { status: 404 });
     }
@@ -122,6 +150,8 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     if (rateLimitedUntil !== undefined) updateData.rateLimitedUntil = rateLimitedUntil;
     if (lastTested !== undefined) updateData.lastTested = lastTested;
     if (healthCheckInterval !== undefined) updateData.healthCheckInterval = healthCheckInterval;
+    if (group !== undefined) updateData.group = group;
+    if (maxConcurrent !== undefined) updateData.maxConcurrent = maxConcurrent;
 
     // Merge providerSpecificData (partial update — preserve existing keys not sent by caller)
     if (incomingPsd !== undefined && incomingPsd !== null && typeof incomingPsd === "object") {
@@ -142,7 +172,25 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         }
       }
 
-      updateData.providerSpecificData = mergedPsd;
+      updateData.providerSpecificData =
+        normalizeProviderSpecificData(existing.provider, mergedPsd) || {};
+
+      if (!isClaudeExtraUsageBlockEnabled(existing.provider, updateData.providerSpecificData)) {
+        const clearExtraUsageUpdate = buildClaudeExtraUsageStateClearUpdate({
+          provider: existing.provider,
+          testStatus: existing.testStatus,
+          lastError: existing.lastError,
+          lastErrorAt: existing.lastErrorAt,
+          lastErrorType: existing.lastErrorType,
+          lastErrorSource: existing.lastErrorSource,
+          errorCode: existing.errorCode,
+          rateLimitedUntil: existing.rateLimitedUntil,
+          backoffLevel: existing.backoffLevel,
+        });
+        if (clearExtraUsageUpdate) {
+          Object.assign(updateData, clearExtraUsageUpdate);
+        }
+      }
     }
 
     const updated = await updateProviderConnection(id, updateData);
@@ -153,9 +201,30 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     delete result.accessToken;
     delete result.refreshToken;
     delete result.idToken;
+    if (result.providerSpecificData) {
+      result.providerSpecificData = sanitizeProviderSpecificDataForResponse(
+        result.providerSpecificData
+      );
+    }
 
     // Auto sync to Cloud if enabled
     await syncToCloudIfEnabled();
+
+    logAuditEvent({
+      action: "provider.credentials.updated",
+      actor: "admin",
+      target: getProviderAuditTarget(updated || existing),
+      resourceType: "provider_credentials",
+      status: "success",
+      ipAddress: auditContext.ipAddress || undefined,
+      requestId: auditContext.requestId,
+      metadata: {
+        provider: existing.provider,
+        changedFields: Object.keys(updateData),
+        before: summarizeProviderConnectionForAudit(existing),
+        after: summarizeProviderConnectionForAudit(updated),
+      },
+    });
 
     return NextResponse.json({ connection: result });
   } catch (error) {
@@ -166,16 +235,52 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
 // DELETE /api/providers/[id] - Delete connection
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const authError = await requireManagementAuth(request);
+  if (authError) return authError;
+
+  const auditContext = getAuditRequestContext(request);
+
   try {
     const { id } = await params;
+
+    // Fetch connection before deleting to check provider type
+    const connection = (await getProviderConnectionById(id)) as Record<string, any> | null;
+    if (!connection) {
+      return NextResponse.json({ error: "Connection not found" }, { status: 404 });
+    }
 
     const deleted = await deleteProviderConnection(id);
     if (!deleted) {
       return NextResponse.json({ error: "Connection not found" }, { status: 404 });
     }
 
+    // Clean up synced available models for this connection
+    try {
+      const { deleteSyncedAvailableModelsForConnection } = await import("@/lib/db/models");
+      await deleteSyncedAvailableModelsForConnection(connection.provider, id);
+    } catch (e) {
+      console.error(
+        `Failed to clean up synced models for deleted ${connection.provider} connection:`,
+        e
+      );
+    }
+
     // Auto sync to Cloud if enabled
     await syncToCloudIfEnabled();
+
+    logAuditEvent({
+      action: "provider.credentials.revoked",
+      actor: "admin",
+      target: getProviderAuditTarget(connection),
+      resourceType: "provider_credentials",
+      status: "success",
+      ipAddress: auditContext.ipAddress || undefined,
+      requestId: auditContext.requestId,
+      metadata: {
+        provider: connection.provider,
+        connection: summarizeProviderConnectionForAudit(connection),
+      },
+    });
 
     return NextResponse.json({ message: "Connection deleted successfully" });
   } catch (error) {

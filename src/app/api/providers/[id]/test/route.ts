@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
+import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
 import {
   getProviderConnectionById,
   updateProviderConnection,
@@ -14,6 +16,11 @@ import { getAccessToken } from "@omniroute/open-sse/services/tokenRefresh.ts";
 import { saveCallLog } from "@/lib/usageDb";
 import { logProxyEvent } from "@/lib/proxyLogger";
 import { runWithProxyContext } from "@omniroute/open-sse/utils/proxyFetch.ts";
+import {
+  buildGitLabOAuthEndpoints,
+  isGitLabDirectAccessDisabled,
+  resolveGitLabOAuthBaseUrl,
+} from "@/lib/oauth/gitlab";
 
 // OAuth provider test endpoints
 const OAUTH_TEST_CONFIG = {
@@ -50,14 +57,17 @@ const OAUTH_TEST_CONFIG = {
     authPrefix: "Bearer ",
     extraHeaders: { "User-Agent": "OmniRoute", Accept: "application/vnd.github+json" },
   },
-  iflow: {
-    // iFlow's getUserInfo endpoint returns 400 without a specific format.
-    // Use checkExpiry instead — actual connectivity is validated via real requests.
-    checkExpiry: true,
+  "gitlab-duo": {
+    getUrl: (connection: any) =>
+      buildGitLabOAuthEndpoints(resolveGitLabOAuthBaseUrl(connection?.providerSpecificData))
+        .directAccessUrl,
+    method: "POST",
+    authHeader: "Authorization",
+    authPrefix: "Bearer ",
     refreshable: true,
   },
   qwen: {
-    // portal.qwen.ai/v1/models returns 404 — endpoint no longer exists.
+    // DashScope (previously portal.qwen.ai) /v1/models might return 404 or auth issues.
     // Use checkExpiry instead — actual connectivity is validated via real requests.
     checkExpiry: true,
     refreshable: true,
@@ -85,12 +95,22 @@ const OAUTH_TEST_CONFIG = {
     checkExpiry: true,
     refreshable: true,
   },
+  "amazon-q": {
+    checkExpiry: true,
+    refreshable: true,
+  },
 };
 
 const CLI_RUNTIME_PROVIDER_MAP = {
   cline: "cline",
   kilocode: "kilo",
+  qoder: "qoder",
 };
+
+/** POST body is optional; when present, only known fields are validated. */
+const providerConnectionTestBodySchema = z.object({
+  validationModelId: z.string().max(500).optional(),
+});
 
 function toSafeMessage(value: any, fallback = "Unknown error"): string {
   if (typeof value !== "string") return fallback;
@@ -199,8 +219,12 @@ function classifyFailure({
   );
 }
 
-async function getProviderRuntimeStatus(provider: string) {
-  const toolId = CLI_RUNTIME_PROVIDER_MAP[provider];
+async function getProviderRuntimeStatus(connection: any) {
+  const provider = typeof connection?.provider === "string" ? connection.provider : "";
+  let toolId = CLI_RUNTIME_PROVIDER_MAP[provider];
+  if (provider === "qoder" && connection?.authType !== "apikey") {
+    toolId = null;
+  }
   if (!toolId) return null;
 
   try {
@@ -390,7 +414,8 @@ async function testOAuthConnection(connection: any) {
       ...config.extraHeaders,
     };
 
-    const res = await fetch(config.url, {
+    const url = typeof config.getUrl === "function" ? config.getUrl(connection) : config.url;
+    const res = await fetch(url, {
       method: config.method,
       headers,
     });
@@ -403,6 +428,19 @@ async function testOAuthConnection(connection: any) {
         newTokens,
         diagnosis: makeDiagnosis("ok", "upstream", null, null),
       };
+    }
+
+    if (connection.provider === "gitlab-duo") {
+      const gitlabText = await res.text();
+      if (isGitLabDirectAccessDisabled(res.status, gitlabText)) {
+        return {
+          valid: true,
+          error: null,
+          refreshed,
+          newTokens,
+          diagnosis: makeDiagnosis("ok", "upstream", null, null),
+        };
+      }
     }
 
     // If 401/403 and we haven't tried refresh yet, only attempt refresh
@@ -418,7 +456,7 @@ async function testOAuthConnection(connection: any) {
       const tokens = await refreshOAuthToken(connection);
       if (tokens) {
         // Retry with new token
-        const retryRes = await fetch(config.url, {
+        const retryRes = await fetch(url, {
           method: config.method,
           headers: {
             [config.authHeader]: `${config.authPrefix}${tokens.accessToken}`,
@@ -516,6 +554,7 @@ async function testApiKeyConnection(connection: any) {
   return {
     valid: !!result.valid,
     error,
+    warning: result.warning || null,
     diagnosis,
   };
 }
@@ -523,9 +562,10 @@ async function testApiKeyConnection(connection: any) {
 /**
  * Core test logic — reusable by test-batch without HTTP self-calls.
  * @param {string} connectionId
+ * @param {string} validationModelId Optional custom model ID to test connection with
  * @returns {Promise<object>} Test result (same shape as the JSON response)
  */
-export async function testSingleConnection(connectionId: string) {
+export async function testSingleConnection(connectionId: string, validationModelId?: string) {
   const connection = await getProviderConnectionById(connectionId);
 
   if (!connection) {
@@ -557,7 +597,7 @@ export async function testSingleConnection(connectionId: string) {
 
   let result;
   const startTime = Date.now();
-  const runtime = await getProviderRuntimeStatus(provider);
+  const runtime = await getProviderRuntimeStatus(connection);
 
   if ((runtime as any)?.diagnosis) {
     result = {
@@ -567,8 +607,17 @@ export async function testSingleConnection(connectionId: string) {
       diagnosis: (runtime as any).diagnosis,
     };
   } else if (connection.authType === "apikey") {
+    const enrichedConnection = validationModelId
+      ? {
+          ...connection,
+          providerSpecificData: {
+            ...((connection.providerSpecificData as any) || {}),
+            validationModelId,
+          },
+        }
+      : connection;
     result = await runWithProxyContext(proxyInfo?.proxy || null, () =>
-      testApiKeyConnection(connection)
+      testApiKeyConnection(enrichedConnection)
     );
   } else {
     result = await runWithProxyContext(proxyInfo?.proxy || null, () =>
@@ -657,6 +706,7 @@ export async function testSingleConnection(connectionId: string) {
   return {
     valid: result.valid,
     error: result.error,
+    warning: result.warning || null,
     refreshed: result.refreshed || false,
     diagnosis,
     latencyMs,
@@ -670,7 +720,20 @@ export async function testSingleConnection(connectionId: string) {
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    const data = await testSingleConnection(id);
+
+    let rawBody: unknown = {};
+    try {
+      rawBody = await request.json();
+    } catch {
+      // Empty or non-JSON body — treat as {}
+    }
+    const validation = validateBody(providerConnectionTestBodySchema, rawBody);
+    if (isValidationFailure(validation)) {
+      return NextResponse.json({ error: validation.error }, { status: 400 });
+    }
+    const { validationModelId } = validation.data;
+
+    const data = await testSingleConnection(id, validationModelId);
 
     if (data.error === "Connection not found") {
       return NextResponse.json({ error: "Connection not found" }, { status: 404 });

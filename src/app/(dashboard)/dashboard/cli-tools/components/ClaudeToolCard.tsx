@@ -5,6 +5,10 @@ import { Card, Button, ModelSelectModal, ManualConfigModal } from "@/shared/comp
 import Image from "next/image";
 import CliStatusBadge from "./CliStatusBadge";
 import { useTranslations } from "next-intl";
+import {
+  getStoredClaudeAuthValue,
+  normalizeClaudeBaseUrl,
+} from "@/shared/services/claudeCliConfig";
 
 const CLOUD_URL = process.env.NEXT_PUBLIC_CLOUD_URL;
 
@@ -98,9 +102,12 @@ export default function ClaudeToolCard({
         }
       });
       // Restore selected key from file: match token stored in file against known keys
-      const tokenFromFile = env.ANTHROPIC_AUTH_TOKEN;
+      const tokenFromFile = getStoredClaudeAuthValue(env);
       if (tokenFromFile) {
-        const matchedKey = apiKeys?.find((k) => k.key === tokenFromFile);
+        // (#523) Keys from /api/keys are masked (first 8 + "****" + last 4).
+        // Mask the token from file to compare against the masked list.
+        const maskedToken = tokenFromFile.slice(0, 8) + "****" + tokenFromFile.slice(-4);
+        const matchedKey = apiKeys?.find((k) => k.key === maskedToken);
         if (matchedKey) setSelectedApiKey(matchedKey.id);
       }
     }
@@ -121,12 +128,12 @@ export default function ClaudeToolCard({
 
   const getEffectiveBaseUrl = () => {
     const url = customBaseUrl || baseUrl;
-    return url.endsWith("/v1") ? url : `${url}/v1`;
+    return normalizeClaudeBaseUrl(url);
   };
 
   const getDisplayUrl = () => {
     const url = customBaseUrl || baseUrl;
-    return url.endsWith("/v1") ? url : `${url}/v1`;
+    return normalizeClaudeBaseUrl(url);
   };
 
   const handleApplySettings = async () => {
@@ -136,16 +143,12 @@ export default function ClaudeToolCard({
       const env: any = { ANTHROPIC_BASE_URL: getEffectiveBaseUrl() };
 
       // (#523) Prefer keyId lookup so the backend writes the real key to disk.
-      // Fall back to sk_omniroute for localhost-only setups without a key.
+      // If no key is selected, leave auth unset so local installs can rely on
+      // anonymous access instead of persisting a fake placeholder token.
       const selectedKeyId = selectedApiKey?.trim() || (apiKeys?.length > 0 ? apiKeys[0].id : null);
-      const skOmnirouteFallback = !cloudEnabled ? "sk_omniroute" : null;
-
-      if (!selectedKeyId && skOmnirouteFallback) {
-        env.ANTHROPIC_AUTH_TOKEN = skOmnirouteFallback;
-      }
 
       tool.defaultModels.forEach((model) => {
-        const targetModel = modelMappings[model.alias];
+        const targetModel = modelMappings[model.alias] || model.defaultValue || "";
         if (targetModel && model.envKey) env[model.envKey] = targetModel;
       });
 
@@ -166,7 +169,12 @@ export default function ClaudeToolCard({
           settings: { ...prev?.settings, env },
         }));
       } else {
-        setMessage({ type: "error", text: data.error || t("failedApplySettings") });
+        setMessage({
+          type: "error",
+          text:
+            (typeof data.error === "string" ? data.error : data.error?.message) ||
+            t("failedApplySettings"),
+        });
       }
     } catch (error) {
       setMessage({ type: "error", text: error.message });
@@ -188,7 +196,12 @@ export default function ClaudeToolCard({
         );
         setSelectedApiKey("");
       } else {
-        setMessage({ type: "error", text: data.error || t("failedResetSettings") });
+        setMessage({
+          type: "error",
+          text:
+            (typeof data.error === "string" ? data.error : data.error?.message) ||
+            t("failedResetSettings"),
+        });
       }
     } catch (error) {
       setMessage({ type: "error", text: error.message });
@@ -208,13 +221,13 @@ export default function ClaudeToolCard({
 
   // Generate settings.json content for manual copy
   const getManualConfigs = () => {
-    const keyToUse =
-      selectedApiKey && selectedApiKey.trim()
-        ? selectedApiKey
-        : !cloudEnabled
-          ? "sk_omniroute"
-          : "<API_KEY_FROM_DASHBOARD>";
-    const env = { ANTHROPIC_BASE_URL: getEffectiveBaseUrl(), ANTHROPIC_AUTH_TOKEN: keyToUse };
+    const env = { ANTHROPIC_BASE_URL: getEffectiveBaseUrl() };
+    if (selectedApiKey && selectedApiKey.trim()) {
+      env.ANTHROPIC_AUTH_TOKEN = "<API_KEY_FROM_DASHBOARD>";
+    } else if (cloudEnabled) {
+      env.ANTHROPIC_AUTH_TOKEN = "<API_KEY_FROM_DASHBOARD>";
+    }
+
     tool.defaultModels.forEach((model) => {
       const targetModel = modelMappings[model.alias];
       if (targetModel && model.envKey) env[model.envKey] = targetModel;
@@ -254,7 +267,12 @@ export default function ClaudeToolCard({
         checkClaudeStatus();
         fetchBackups();
       } else {
-        setMessage({ type: "error", text: data.error || t("failedRestore") });
+        setMessage({
+          type: "error",
+          text:
+            (typeof data.error === "string" ? data.error : data.error?.message) ||
+            t("failedRestore"),
+        });
       }
     } catch (error) {
       setMessage({ type: "error", text: error.message });
@@ -425,7 +443,7 @@ export default function ClaudeToolCard({
                     </select>
                   ) : (
                     <span className="flex-1 text-xs text-text-muted px-2 py-1.5">
-                      {cloudEnabled ? t("noApiKeysCreateOne") : t("defaultOmnirouteKey")}
+                      {cloudEnabled ? t("noApiKeysCreateOne") : t("noApiKeysAvailable")}
                     </span>
                   )}
                 </div>
@@ -439,13 +457,6 @@ export default function ClaudeToolCard({
                     <span className="material-symbols-outlined text-text-muted text-[14px]">
                       arrow_forward
                     </span>
-                    <input
-                      type="text"
-                      value={modelMappings[model.alias] || ""}
-                      onChange={(e) => onModelMappingChange(model.alias, e.target.value)}
-                      placeholder={t("providerModelPlaceholder")}
-                      className="flex-1 px-2 py-1.5 bg-surface rounded border border-border text-xs focus:outline-none focus:ring-1 focus:ring-primary/50"
-                    />
                     <button
                       onClick={() => openModelSelector(model.alias)}
                       disabled={!hasActiveProviders}
@@ -453,6 +464,13 @@ export default function ClaudeToolCard({
                     >
                       {t("selectModel")}
                     </button>
+                    <input
+                      type="text"
+                      value={modelMappings[model.alias] || ""}
+                      onChange={(e) => onModelMappingChange(model.alias, e.target.value)}
+                      placeholder={t("providerModelPlaceholder")}
+                      className="flex-1 px-2 py-1.5 bg-surface rounded border border-border text-xs focus:outline-none focus:ring-1 focus:ring-primary/50"
+                    />
                     {modelMappings[model.alias] && (
                       <button
                         onClick={() => onModelMappingChange(model.alias, "")}

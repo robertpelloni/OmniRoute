@@ -1,6 +1,20 @@
 import { HTTP_STATUS, FETCH_TIMEOUT_MS } from "../config/constants.ts";
 import { applyFingerprint, isCliCompatEnabled } from "../config/cliFingerprints.ts";
 import { getRotatingApiKey } from "../services/apiKeyRotator.ts";
+import { getOpenAICompatibleType, isClaudeCodeCompatible } from "../services/provider.ts";
+import type { ProviderRequestDefaults } from "../services/providerRequestDefaults.ts";
+import { signRequestBody } from "../services/claudeCodeCCH.ts";
+import {
+  appendAnthropicBetaHeader,
+  CONTEXT_1M_BETA_HEADER,
+  modelSupportsContext1mBeta,
+} from "../services/claudeCodeCompatible.ts";
+import { getClaudeCodeCompatibleRequestDefaults } from "@/lib/providers/requestDefaults";
+import { supportsXHighEffort } from "../config/providerModels.ts";
+import { remapToolNamesInRequest } from "../services/claudeCodeToolRemapper.ts";
+import { obfuscateInBody } from "../services/claudeCodeObfuscation.ts";
+import { randomUUID } from "node:crypto";
+import { createHash } from "node:crypto";
 
 /**
  * Sanitizes a custom API path to prevent path traversal attacks.
@@ -31,6 +45,9 @@ export type ProviderConfig = {
   refreshUrl?: string;
   authUrl?: string;
   headers?: Record<string, string>;
+  requestDefaults?: ProviderRequestDefaults;
+  timeoutMs?: number;
+  format?: string;
 };
 
 export type ProviderCredentials = {
@@ -39,6 +56,7 @@ export type ProviderCredentials = {
   apiKey?: string;
   expiresAt?: string;
   connectionId?: string; // T07: used for API key rotation index
+  maxConcurrent?: number | null;
   providerSpecificData?: JsonRecord;
   requestEndpointPath?: string;
 };
@@ -58,24 +76,84 @@ export type ExecuteInput = {
   signal?: AbortSignal | null;
   log?: ExecutorLog | null;
   extendedContext?: boolean;
+  /** Merged after auth + CLI fingerprint headers (values override same-named defaults). */
+  upstreamExtraHeaders?: Record<string, string> | null;
+  /** Original client request headers (read-only). Executors may forward select headers upstream. */
+  clientHeaders?: Record<string, string> | null;
+  /** Callback to persist tokens that are proactively refreshed during execution. */
+  onCredentialsRefreshed?: (newCredentials: ProviderCredentials) => Promise<void> | void;
 };
 
-function mergeAbortSignals(primary: AbortSignal, secondary: AbortSignal): AbortSignal {
+export type CountTokensInput = {
+  body: Record<string, unknown>;
+  credentials: ProviderCredentials;
+  log?: ExecutorLog | null;
+  model: string;
+  signal?: AbortSignal | null;
+};
+
+/** Apply model-level extra upstream headers (e.g. Authentication, X-Custom-Auth). */
+export function mergeUpstreamExtraHeaders(
+  headers: Record<string, string>,
+  extra?: Record<string, string> | null
+): void {
+  if (!extra) return;
+  for (const [k, v] of Object.entries(extra)) {
+    if (typeof k === "string" && k.length > 0 && typeof v === "string") {
+      if (k.toLowerCase() === "user-agent") {
+        setUserAgentHeader(headers, v);
+        continue;
+      }
+      headers[k] = v;
+    }
+  }
+}
+
+export function getCustomUserAgent(providerSpecificData?: JsonRecord | null): string | null {
+  const customUserAgent =
+    typeof providerSpecificData?.customUserAgent === "string"
+      ? providerSpecificData.customUserAgent.trim()
+      : "";
+  return customUserAgent || null;
+}
+
+export function setUserAgentHeader(headers: Record<string, string>, userAgent: string): void {
+  headers["User-Agent"] = userAgent;
+  if ("user-agent" in headers) {
+    headers["user-agent"] = userAgent;
+  }
+}
+
+export function applyConfiguredUserAgent(
+  headers: Record<string, string>,
+  providerSpecificData?: JsonRecord | null
+): void {
+  const customUserAgent = getCustomUserAgent(providerSpecificData);
+  if (customUserAgent) {
+    setUserAgentHeader(headers, customUserAgent);
+  }
+}
+
+export function mergeAbortSignals(primary: AbortSignal, secondary: AbortSignal): AbortSignal {
   const controller = new AbortController();
 
-  const abortBoth = () => {
+  const abortFrom = (source: AbortSignal) => {
     if (!controller.signal.aborted) {
-      controller.abort();
+      controller.abort(source.reason);
     }
   };
 
-  if (primary.aborted || secondary.aborted) {
-    abortBoth();
+  if (primary.aborted) {
+    abortFrom(primary);
+    return controller.signal;
+  }
+  if (secondary.aborted) {
+    abortFrom(secondary);
     return controller.signal;
   }
 
-  primary.addEventListener("abort", abortBoth, { once: true });
-  secondary.addEventListener("abort", abortBoth, { once: true });
+  primary.addEventListener("abort", () => abortFrom(primary), { once: true });
+  secondary.addEventListener("abort", () => abortFrom(secondary), { once: true });
   return controller.signal;
 }
 
@@ -105,6 +183,14 @@ export class BaseExecutor {
     return this.getBaseUrls().length || 1;
   }
 
+  getTimeoutMs() {
+    const configured = this.config?.timeoutMs;
+    if (typeof configured !== "number" || !Number.isFinite(configured)) {
+      return FETCH_TIMEOUT_MS;
+    }
+    return Math.max(1, Math.floor(configured));
+  }
+
   buildUrl(
     model: string,
     stream: boolean,
@@ -121,14 +207,24 @@ export class BaseExecutor {
       const rawPath = typeof psd?.chatPath === "string" && psd.chatPath ? psd.chatPath : null;
       const customPath = rawPath && sanitizePath(rawPath) ? rawPath : null;
       if (customPath) return `${normalized}${customPath}`;
-      const path = this.provider.includes("responses") ? "/responses" : "/chat/completions";
+      const path =
+        getOpenAICompatibleType(this.provider, psd) === "responses"
+          ? "/responses"
+          : "/chat/completions";
       return `${normalized}${path}`;
     }
     const baseUrls = this.getBaseUrls();
     return baseUrls[urlIndex] || baseUrls[0] || this.config.baseUrl;
   }
 
-  buildHeaders(credentials: ProviderCredentials, stream = true): Record<string, string> {
+  buildHeaders(
+    credentials: ProviderCredentials,
+    stream = true,
+    clientHeaders?: Record<string, string> | null,
+    model?: string
+  ): Record<string, string> {
+    void clientHeaders;
+    void model;
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
       ...this.config.headers,
@@ -141,9 +237,7 @@ export class BaseExecutor {
       const envKey = `${providerId.toUpperCase().replace(/[^A-Z0-9]/g, "_")}_USER_AGENT`;
       const envUA = process.env[envKey]?.trim();
       if (envUA) {
-        // Override both common casing variants
-        headers["User-Agent"] = envUA;
-        if (headers["user-agent"]) headers["user-agent"] = envUA;
+        setUserAgentHeader(headers, envUA);
       }
     }
 
@@ -160,9 +254,7 @@ export class BaseExecutor {
       headers["Authorization"] = `Bearer ${effectiveKey}`;
     }
 
-    if (stream) {
-      headers["Accept"] = "text/event-stream";
-    }
+    headers["Accept"] = stream ? "text/event-stream" : "application/json";
 
     return headers;
   }
@@ -177,6 +269,42 @@ export class BaseExecutor {
     void model;
     void stream;
     void credentials;
+
+    // Fix #1674: Remove empty string values from optional parameters
+    // like tool descriptions to avoid upstream validation failures.
+    if (body && typeof body === "object" && !Array.isArray(body)) {
+      const cloned = { ...body } as Record<string, unknown>;
+
+      if (Array.isArray(cloned.tools)) {
+        cloned.tools = cloned.tools.map((tool: unknown) => {
+          if (tool && typeof tool === "object" && !Array.isArray(tool)) {
+            const toolRecord = tool as JsonRecord;
+            const toolFunction = toolRecord.function;
+            if (toolFunction && typeof toolFunction === "object" && !Array.isArray(toolFunction)) {
+              const func = { ...(toolFunction as JsonRecord) };
+              if (func.description === "") delete func.description;
+              if (typeof func.name !== "string" || func.name.trim() === "") {
+                func.name = "unnamed_tool";
+              }
+              return { ...toolRecord, function: func };
+            }
+          }
+          return tool;
+        });
+      }
+
+      // Fix #1884: Cursor sends prompt_cache_retention which breaks strict upstream endpoints
+      delete cloned.prompt_cache_retention;
+
+      // Also clean up top level optional fields that commonly cause issues when empty
+      const optionalKeys = ["user", "stop", "seed", "response_format"];
+      for (const key of optionalKeys) {
+        if (cloned[key] === "") delete cloned[key];
+      }
+
+      return cloned;
+    }
+
     return body;
   }
 
@@ -186,6 +314,9 @@ export class BaseExecutor {
 
   // Intra-URL retry config: retry same URL before falling back to next node
   static readonly RETRY_CONFIG = { maxAttempts: 2, delayMs: 2000 };
+  // Timeout for receiving the initial upstream response headers. Once the response
+  // starts streaming, STREAM_IDLE_TIMEOUT_MS / Undici bodyTimeout handle stalls.
+  static FETCH_START_TIMEOUT_MS = FETCH_TIMEOUT_MS;
 
   // Override in subclass for provider-specific refresh
   async refreshCredentials(credentials: ProviderCredentials, log: ExecutorLog | null) {
@@ -194,8 +325,8 @@ export class BaseExecutor {
     return null;
   }
 
-  needsRefresh(credentials: ProviderCredentials) {
-    if (!credentials.expiresAt) return false;
+  needsRefresh(credentials?: ProviderCredentials | null) {
+    if (!credentials?.expiresAt) return false;
     const expiresAtMs = new Date(credentials.expiresAt).getTime();
     return expiresAtMs - Date.now() < 5 * 60 * 1000;
   }
@@ -204,49 +335,300 @@ export class BaseExecutor {
     return { status: response.status, message: bodyText || `HTTP ${response.status}` };
   }
 
-  async execute({ model, body, stream, credentials, signal, log, extendedContext }: ExecuteInput) {
+  buildCountTokensUrl(model: string, credentials: ProviderCredentials | null = null) {
+    void model;
+    void credentials;
+    const baseUrl = this.buildUrl(model, false, 0, credentials);
+    if (typeof baseUrl !== "string" || baseUrl.length === 0) return null;
+    if (this.config?.format !== "claude" || !baseUrl.includes("/messages")) return null;
+
+    const [path, query = ""] = baseUrl.split("?");
+    const normalizedPath = path.endsWith("/messages")
+      ? `${path}/count_tokens`
+      : `${path}/count_tokens`;
+    return query ? `${normalizedPath}?${query}` : normalizedPath;
+  }
+
+  async countTokens({ model, body, credentials, signal, log }: CountTokensInput) {
+    const url = this.buildCountTokensUrl(model, credentials);
+    if (!url) return null;
+
+    const headers = this.buildHeaders(credentials, false);
+    const requestBody =
+      body && typeof body === "object"
+        ? {
+            ...body,
+            model,
+          }
+        : { model };
+
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    let activeSignal = signal || null;
+    let controller: AbortController | null = null;
+    const timeoutMs = this.getTimeoutMs();
+
+    if (!activeSignal) {
+      controller = new AbortController();
+      timeoutId = setTimeout(() => controller?.abort(), timeoutMs);
+      activeSignal = controller.signal;
+    }
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(requestBody),
+        signal: activeSignal || undefined,
+      });
+
+      const text = await response.text();
+      if (!response.ok) {
+        const parsedError = this.parseError(response, text);
+        throw new Error(parsedError.message);
+      }
+
+      const parsed = text ? JSON.parse(text) : {};
+      const inputTokens = Number(parsed?.input_tokens);
+      if (!Number.isFinite(inputTokens)) {
+        throw new Error("Provider count_tokens response missing input_tokens");
+      }
+
+      return { input_tokens: inputTokens, provider: this.provider, source: "provider" };
+    } catch (error) {
+      log?.debug?.(
+        "COUNT_TOKENS",
+        `${this.provider}/${model} real count unavailable: ${error instanceof Error ? error.message : String(error)}`
+      );
+      return null;
+    } finally {
+      if (timeoutId) clearTimeout(timeoutId);
+    }
+  }
+
+  async execute({
+    model,
+    body,
+    stream,
+    credentials,
+    signal,
+    log,
+    extendedContext,
+    upstreamExtraHeaders,
+    clientHeaders,
+  }: ExecuteInput) {
     const fallbackCount = this.getFallbackCount();
     let lastError: unknown = null;
     let lastStatus = 0;
+    let activeCredentials = credentials;
     // Track per-URL intra-retry attempts to avoid infinite loops
     const retryAttemptsByUrl: Record<number, number> = {};
 
-    for (let urlIndex = 0; urlIndex < fallbackCount; urlIndex++) {
-      const url = this.buildUrl(model, stream, urlIndex, credentials);
-      const headers = this.buildHeaders(credentials, stream);
-
-      // Append 1M context beta header when [1m] suffix was used
-      // Only supported for specific Claude models per Anthropic docs
-      if (extendedContext) {
-        const EXTENDED_CONTEXT_MODELS = [
-          "claude-opus-4-6",
-          "claude-sonnet-4-6",
-          "claude-sonnet-4-5",
-          "claude-sonnet-4",
-        ];
-        const baseModel = model.replace(/-\d{8}$/, "");
-        if (
-          EXTENDED_CONTEXT_MODELS.some((m) => baseModel === m || model === m || model.startsWith(m))
-        ) {
-          const existing = headers["Anthropic-Beta"];
-          if (existing) {
-            headers["Anthropic-Beta"] = existing + ",context-1m-2025-08-07";
-          } else {
-            headers["Anthropic-Beta"] = "context-1m-2025-08-07";
+    if (this.needsRefresh(credentials)) {
+      try {
+        const refreshed = await this.refreshCredentials(credentials, log || null);
+        if (refreshed) {
+          activeCredentials = {
+            ...credentials,
+            ...refreshed,
+          };
+          // Persist the proactively refreshed credentials to prevent consuming rotating tokens
+          // without updating the central database connection.
+          if (arguments[0].onCredentialsRefreshed) {
+            await arguments[0].onCredentialsRefreshed(refreshed);
           }
         }
+      } catch (error) {
+        log?.warn?.(
+          "TOKEN",
+          `Credential refresh failed for ${this.provider}: ${error instanceof Error ? error.message : String(error)}`
+        );
+      }
+    }
+
+    for (let urlIndex = 0; urlIndex < fallbackCount; urlIndex++) {
+      const url = this.buildUrl(model, stream, urlIndex, activeCredentials);
+      const headers = this.buildHeaders(activeCredentials, stream, clientHeaders, model);
+      applyConfiguredUserAgent(headers, activeCredentials?.providerSpecificData);
+
+      const ccRequestDefaults = isClaudeCodeCompatible(this.provider)
+        ? getClaudeCodeCompatibleRequestDefaults(activeCredentials?.providerSpecificData)
+        : {};
+      const shouldForwardExtendedContext =
+        extendedContext &&
+        modelSupportsContext1mBeta(model) &&
+        !isClaudeCodeCompatible(this.provider);
+      const shouldForwardCcCompatibleContext1m =
+        isClaudeCodeCompatible(this.provider) && ccRequestDefaults.context1m === true;
+      if (shouldForwardExtendedContext || shouldForwardCcCompatibleContext1m) {
+        appendAnthropicBetaHeader(headers, CONTEXT_1M_BETA_HEADER);
       }
 
-      const transformedBody = this.transformRequest(model, body, stream, credentials);
+      const transformedBody = await this.transformRequest(model, body, stream, activeCredentials);
 
       try {
-        // For non-streaming requests, apply a fetch timeout to prevent stalled connections.
-        // Streaming requests skip the timeout — they use stream idle detection instead.
-        const timeoutSignal = !stream ? AbortSignal.timeout(FETCH_TIMEOUT_MS) : null;
+        // Only enforce the timeout while waiting for the initial fetch() response.
+        // Once headers arrive, active streams must not be cut off by total elapsed time;
+        // post-start stalls are handled separately by STREAM_IDLE_TIMEOUT_MS / bodyTimeout.
+        const fetchStartTimeoutMs = this.getTimeoutMs();
+        const timeoutController = fetchStartTimeoutMs > 0 ? new AbortController() : null;
+        let timeoutId: ReturnType<typeof setTimeout> | null = null;
+        if (timeoutController) {
+          timeoutId = setTimeout(() => {
+            const timeoutError = new Error(
+              `Fetch timeout after ${fetchStartTimeoutMs}ms on ${url}`
+            );
+            timeoutError.name = "TimeoutError";
+            timeoutController.abort(timeoutError);
+          }, fetchStartTimeoutMs);
+        }
+        const timeoutSignal = timeoutController?.signal ?? null;
         const combinedSignal =
           signal && timeoutSignal
             ? mergeAbortSignals(signal, timeoutSignal)
             : signal || timeoutSignal;
+
+        const isClaudeCodeClient =
+          clientHeaders?.["x-app"] === "cli" ||
+          (clientHeaders?.["user-agent"] &&
+            clientHeaders["user-agent"].toLowerCase().includes("claude-code")) ||
+          (clientHeaders?.["user-agent"] &&
+            clientHeaders["user-agent"].toLowerCase().includes("claude-cli"));
+
+        if (
+          this.provider === "claude" &&
+          isClaudeCodeClient &&
+          typeof transformedBody === "object" &&
+          transformedBody !== null
+        ) {
+          const tb = transformedBody as Record<string, unknown>;
+          remapToolNamesInRequest(tb);
+          obfuscateInBody(tb);
+
+          const ccVersion = "2.1.121";
+          // Fix #1638: Use a stable fingerprint instead of message-derived one.
+          // The original computeFingerprint() hashed first-user-message chars, which
+          // changes every conversation turn. This mutated the system[] prefix on each
+          // request, invalidating Anthropic's prompt-cache prefix and forcing ~100%
+          // cache_create (vs 96% cache_read with a stable prefix). Using a per-day
+          // hash keeps the billing header format while preserving cache affinity.
+          const dayStamp = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+          const fp = createHash("sha256")
+            .update(`${dayStamp}${ccVersion}`)
+            .digest("hex")
+            .slice(0, 3);
+          const billingLine = `x-anthropic-billing-header: cc_version=${ccVersion}.${fp}; cc_entrypoint=cli; cch=00000;`;
+
+          if (Array.isArray(tb.system)) {
+            const sysBlocks = tb.system as Array<Record<string, unknown>>;
+            // Fix #1712: Remove any existing billing headers from the client
+            // to prevent stacking that breaks Anthropic prompt cache prefix matching.
+            for (let i = sysBlocks.length - 1; i >= 0; i--) {
+              const block = sysBlocks[i];
+              if (
+                block &&
+                typeof block.text === "string" &&
+                block.text.startsWith("x-anthropic-billing-header:")
+              ) {
+                sysBlocks.splice(i, 1);
+              }
+            }
+            const firstSystemCacheControl =
+              sysBlocks[0] &&
+              typeof sysBlocks[0] === "object" &&
+              !Array.isArray(sysBlocks[0]) &&
+              sysBlocks[0].cache_control
+                ? sysBlocks[0].cache_control
+                : undefined;
+            const billingBlock: Record<string, unknown> = { type: "text", text: billingLine };
+            if (firstSystemCacheControl) {
+              billingBlock.cache_control = firstSystemCacheControl;
+            }
+            sysBlocks.unshift(billingBlock);
+          } else if (typeof tb.system === "string") {
+            tb.system = [
+              { type: "text", text: billingLine },
+              { type: "text", text: tb.system },
+            ];
+          } else {
+            tb.system = [{ type: "text", text: billingLine }];
+          }
+
+          if (!tb.metadata || typeof tb.metadata !== "object") {
+            tb.metadata = {
+              user_id: JSON.stringify({
+                device_id: createHash("sha256").update("omniroute").digest("hex").slice(0, 24),
+                account_uuid: "",
+                session_id: randomUUID(),
+              }),
+            };
+          }
+
+          const supportsAdaptiveThinking = supportsXHighEffort("claude", model);
+
+          // Fix #1761: Only inject adaptive thinking/high effort if the client didn't
+          // explicitly set these fields. This allows users to opt-out by sending
+          // `thinking: null` or `output_config: { effort: "low" }` to prevent forced
+          // quota drain on Claude Max accounts.
+          const originalBody = body as Record<string, unknown>;
+          const clientExplicitThinking = originalBody?.thinking !== undefined;
+          const clientExplicitEffort = originalBody?.output_config !== undefined;
+
+          if (supportsAdaptiveThinking && !tb.thinking && !clientExplicitThinking) {
+            tb.thinking = { type: "adaptive" };
+          }
+
+          if (supportsAdaptiveThinking && !tb.context_management && !clientExplicitThinking) {
+            tb.context_management = {
+              edits: [{ type: "clear_thinking_20251015", keep: "all" }],
+            };
+          }
+
+          if (supportsAdaptiveThinking && !tb.output_config && !clientExplicitEffort) {
+            tb.output_config = { effort: "high" };
+          }
+
+          const ccHeaders: Record<string, string> = {
+            "anthropic-version": "2023-06-01",
+            "anthropic-beta":
+              "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,redact-thinking-2026-02-12,context-management-2025-06-27,prompt-caching-scope-2026-01-05,advisor-tool-2026-03-01,advanced-tool-use-2025-11-20,effort-2025-11-24",
+            "anthropic-dangerous-direct-browser-access": "true",
+            "x-app": "cli",
+            "User-Agent": `claude-cli/${ccVersion} (external, cli)`,
+            "X-Stainless-Package-Version": "0.81.0",
+            "X-Stainless-Timeout": "600",
+            "accept-language": "*",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            connection: "keep-alive",
+            "x-client-request-id": randomUUID(),
+            "X-Claude-Code-Session-Id": randomUUID(),
+          };
+          // Remove any existing case variants of ccHeaders keys before merging.
+          // The claude provider config sets "Anthropic-Version" (Title-Case) while
+          // ccHeaders uses all-lowercase keys.  Both JS keys normalise to the same
+          // HTTP header name, so undici would combine them into "2023-06-01, 2023-06-01"
+          // causing a 400 from Anthropic (see issue #1454).
+          const ccKeysLower = new Set(Object.keys(ccHeaders).map((k) => k.toLowerCase()));
+          for (const key of Object.keys(headers)) {
+            if (ccKeysLower.has(key.toLowerCase())) {
+              delete headers[key];
+            }
+          }
+          Object.assign(headers, ccHeaders);
+          delete headers["X-Stainless-Helper-Method"];
+
+          // Add X-Stainless headers to match real Claude Code
+          headers["X-Stainless-Arch"] = "x64";
+          headers["X-Stainless-Lang"] = "js";
+          headers["X-Stainless-OS"] = "Windows";
+          headers["X-Stainless-Runtime"] = "node";
+          headers["X-Stainless-Runtime-Version"] = "v24.3.0";
+          headers["X-Stainless-Retry-Count"] = "0";
+          delete headers["X-Stainless-Os"];
+
+          console.log(
+            `[CLAUDE-PATCH] provider=${this.provider} tools remapped, billing header injected, body fields added, headers patched`
+          );
+        }
 
         // Apply CLI fingerprint ordering if enabled for this provider
         let finalHeaders = headers;
@@ -258,6 +640,14 @@ export class BaseExecutor {
           bodyString = fingerprinted.bodyString;
         }
 
+        // CCH signing: Claude Code-compatible providers AND native claude provider
+        // require an xxHash64 integrity token over the serialized body.
+        if (isClaudeCodeCompatible(this.provider) || this.provider === "claude") {
+          bodyString = await signRequestBody(bodyString);
+        }
+
+        mergeUpstreamExtraHeaders(finalHeaders, upstreamExtraHeaders);
+
         const fetchOptions: RequestInit = {
           method: "POST",
           headers: finalHeaders,
@@ -265,7 +655,15 @@ export class BaseExecutor {
         };
         if (combinedSignal) fetchOptions.signal = combinedSignal;
 
-        const response = await fetch(url, fetchOptions);
+        let response;
+        try {
+          response = await fetch(url, fetchOptions);
+        } finally {
+          if (timeoutId) {
+            clearTimeout(timeoutId);
+            timeoutId = null;
+          }
+        }
 
         // Intra-URL retry: if 429 and we haven't exhausted per-URL retries, wait and retry the same URL
         if (
@@ -289,12 +687,12 @@ export class BaseExecutor {
           continue;
         }
 
-        return { response, url, headers, transformedBody };
+        return { response, url, headers: finalHeaders, transformedBody };
       } catch (error) {
         // Distinguish timeout errors from other abort errors
         const err = error instanceof Error ? error : new Error(String(error));
         if (err.name === "TimeoutError") {
-          log?.warn?.("TIMEOUT", `Fetch timeout after ${FETCH_TIMEOUT_MS}ms on ${url}`);
+          log?.warn?.("TIMEOUT", `Fetch timeout after ${this.getTimeoutMs()}ms on ${url}`);
         }
         lastError = err;
         if (urlIndex + 1 < fallbackCount) {

@@ -11,6 +11,14 @@ const GPT_5_3_CODEX_PRICING = {
   cache_creation: 5.0,
 };
 
+const GPT_5_5_PRICING = {
+  input: 5.0,
+  output: 30.0,
+  cached: 0.5,
+  reasoning: 30.0,
+  cache_creation: 5.0,
+};
+
 const CLAUDE_OPUS_4_PRICING = {
   input: 15.0,
   output: 75.0,
@@ -43,11 +51,91 @@ const CLAUDE_SONNET_46_PRICING = {
   cache_creation: 3.0,
 };
 
+const GLM_PRICING = {
+  "glm-5.1": {
+    input: 1.2,
+    output: 5,
+    cached: 0.3,
+    reasoning: 5,
+    cache_creation: 1.2,
+  },
+  "glm-5": {
+    input: 1.0,
+    output: 3.2,
+    cached: 0.2,
+    reasoning: 4.8,
+    cache_creation: 1.0,
+  },
+  "glm-5-turbo": {
+    input: 1.2,
+    output: 4.0,
+    cached: 0.24,
+    reasoning: 4.0,
+    cache_creation: 1.2,
+  },
+  "glm-4.7-flash": {
+    input: 0,
+    output: 0,
+    cached: 0,
+    reasoning: 0,
+    cache_creation: 0,
+  },
+  "glm-4.7": {
+    input: 0.6,
+    output: 2.2,
+    cached: 0.11,
+    reasoning: 2.2,
+    cache_creation: 0.6,
+  },
+  "glm-4.6": {
+    input: 0.6,
+    output: 2.2,
+    cached: 0.11,
+    reasoning: 2.2,
+    cache_creation: 0.6,
+  },
+  "glm-4.6v": {
+    input: 0.3,
+    output: 0.9,
+    cached: 0.05,
+    reasoning: 0.9,
+    cache_creation: 0.3,
+  },
+  "glm-4.5v": {
+    input: 0.6,
+    output: 1.8,
+    cached: 0.11,
+    reasoning: 1.8,
+    cache_creation: 0.6,
+  },
+  "glm-4.5": {
+    input: 0.6,
+    output: 2.2,
+    cached: 0.11,
+    reasoning: 2.2,
+    cache_creation: 0.6,
+  },
+  "glm-4.5-air": {
+    input: 0.2,
+    output: 1.1,
+    cached: 0.03,
+    reasoning: 1.1,
+    cache_creation: 0.2,
+  },
+};
+
 export const DEFAULT_PRICING = {
   // OAuth Providers (using aliases)
 
   // Claude Code (cc)
   cc: {
+    "claude-opus-4-7": {
+      input: 5.0,
+      output: 25.0,
+      cached: 2.5,
+      reasoning: 25.0,
+      cache_creation: 5.0,
+    },
     "claude-opus-4-6": {
       input: 5.0,
       output: 25.0,
@@ -87,6 +175,15 @@ export const DEFAULT_PRICING = {
 
   // OpenAI Codex (cx)
   cx: {
+    "codex-auto-review": GPT_5_5_PRICING,
+    // GPT 5.5
+    "gpt-5.5": GPT_5_5_PRICING,
+    "gpt5.5": GPT_5_5_PRICING,
+    "gpt-5.5-xhigh": GPT_5_5_PRICING,
+    "gpt-5.5-high": GPT_5_5_PRICING,
+    "gpt-5.5-medium": GPT_5_5_PRICING,
+    "gpt-5.5-low": GPT_5_5_PRICING,
+    "gpt-5.5-none": GPT_5_5_PRICING,
     // GPT 5.4
     "gpt-5.4": {
       input: 5.0,
@@ -101,6 +198,21 @@ export const DEFAULT_PRICING = {
       cached: 2.5,
       reasoning: 30.0,
       cache_creation: 5.0,
+    },
+    // T12: fallback pricing for gpt-5.4 mini variants
+    "gpt-5.4-mini": {
+      input: 1.5,
+      output: 6.0,
+      cached: 0.75,
+      reasoning: 9.0,
+      cache_creation: 1.5,
+    },
+    "gpt5.4-mini": {
+      input: 1.5,
+      output: 6.0,
+      cached: 0.75,
+      reasoning: 9.0,
+      cache_creation: 1.5,
     },
     // GPT 5.3 Codex family (all same pricing tier)
     "gpt-5.3-codex": GPT_5_3_CODEX_PRICING,
@@ -174,9 +286,16 @@ export const DEFAULT_PRICING = {
     },
   },
 
-  // Gemini CLI (gc)
-  gc: {
+  // Gemini CLI
+  "gemini-cli": {
     "gemini-3-flash-preview": {
+      input: 0.5,
+      output: 3.0,
+      cached: 0.03,
+      reasoning: 4.5,
+      cache_creation: 0.5,
+    },
+    "gemini-3.1-flash-lite-preview": {
       input: 0.5,
       output: 3.0,
       cached: 0.03,
@@ -197,6 +316,7 @@ export const DEFAULT_PRICING = {
       reasoning: 18.0,
       cache_creation: 2.0,
     },
+
     "gemini-2.5-pro": {
       input: 2.0,
       output: 12.0,
@@ -254,7 +374,7 @@ export const DEFAULT_PRICING = {
     },
   },
 
-  // iFlow AI (if)
+  // Qoder AI (if)
   if: {
     "qwen3-coder-plus": {
       input: 1.0,
@@ -481,6 +601,7 @@ export const DEFAULT_PRICING = {
 
   // OpenAI
   openai: {
+    "gpt-5.5": GPT_5_5_PRICING,
     "gpt-4o": {
       input: 2.5,
       output: 10.0,
@@ -691,9 +812,27 @@ export const DEFAULT_PRICING = {
       reasoning: 2.19,
       cache_creation: 0.55,
     },
+    // DeepSeek V4 Pro — promo until 2026-05-31, then list ($0.145 / $3.48)
+    "deepseek-v4-pro": {
+      input: 0.435,
+      output: 0.87,
+      cached: 0.0036,
+      reasoning: 0.87,
+      cache_creation: 0.435,
+    },
+    "deepseek-v4-flash": {
+      input: 0.07,
+      output: 0.28,
+      cached: 0.014,
+      reasoning: 0.28,
+      cache_creation: 0.07,
+    },
   },
 
   // OpenRouter
+  agentrouter: {
+    auto: { input: 2.0, output: 8.0 },
+  },
   openrouter: {
     auto: {
       input: 2.0,
@@ -705,43 +844,8 @@ export const DEFAULT_PRICING = {
   },
 
   // GLM
-  glm: {
-    "glm-5": {
-      input: 1.0,
-      output: 3.2,
-      cached: 0.5,
-      reasoning: 4.8,
-      cache_creation: 1.0,
-    },
-    "glm-5-turbo": {
-      input: 1.2,
-      output: 4.0,
-      cached: 0.6,
-      reasoning: 6.0,
-      cache_creation: 1.2,
-    },
-    "glm-4.7": {
-      input: 0.75,
-      output: 3.0,
-      cached: 0.375,
-      reasoning: 4.5,
-      cache_creation: 0.75,
-    },
-    "glm-4.6": {
-      input: 0.5,
-      output: 2.0,
-      cached: 0.25,
-      reasoning: 3.0,
-      cache_creation: 0.5,
-    },
-    "glm-4.6v": {
-      input: 0.75,
-      output: 3.0,
-      cached: 0.375,
-      reasoning: 4.5,
-      cache_creation: 0.75,
-    },
-  },
+  glm: GLM_PRICING,
+  glmt: GLM_PRICING,
 
   // Kimi (Moonshot)
   kimi: {
@@ -761,6 +865,20 @@ export const DEFAULT_PRICING = {
       reasoning: 4.5,
       cache_creation: 0.6,
     },
+    "kimi-k2.5-thinking": {
+      input: 0.6,
+      output: 3.0,
+      cached: 0.3,
+      reasoning: 4.5,
+      cache_creation: 0.6,
+    },
+    "kimi-for-coding": {
+      input: 0.6,
+      output: 3.0,
+      cached: 0.3,
+      reasoning: 4.5,
+      cache_creation: 0.6,
+    },
     "moonshot-kimi-k2.5": {
       input: 0.6,
       output: 3.0,
@@ -768,6 +886,30 @@ export const DEFAULT_PRICING = {
       reasoning: 4.5,
       cache_creation: 0.6,
     },
+  },
+
+  // Kimi Coding aliases (OAuth/API key)
+  kmc: {
+    "kimi-k2.5": { input: 0.6, output: 3.0, cached: 0.3, reasoning: 4.5, cache_creation: 0.6 },
+    "kimi-k2.5-thinking": {
+      input: 0.6,
+      output: 3.0,
+      cached: 0.3,
+      reasoning: 4.5,
+      cache_creation: 0.6,
+    },
+    "kimi-latest": { input: 1.0, output: 4.0, cached: 0.5, reasoning: 6.0, cache_creation: 1.0 },
+  },
+  kmca: {
+    "kimi-k2.5": { input: 0.6, output: 3.0, cached: 0.3, reasoning: 4.5, cache_creation: 0.6 },
+    "kimi-k2.5-thinking": {
+      input: 0.6,
+      output: 3.0,
+      cached: 0.3,
+      reasoning: 4.5,
+      cache_creation: 0.6,
+    },
+    "kimi-latest": { input: 1.0, output: 4.0, cached: 0.5, reasoning: 6.0, cache_creation: 1.0 },
   },
 
   // MiniMax
@@ -789,18 +931,42 @@ export const DEFAULT_PRICING = {
     // MiniMax M2.5 — mais barato que M2.1, reasoning + tools
     // Context: 204.800 tokens | Max Output: 16.384 tokens
     "minimax-m2.5": {
-      input: 0.3,
-      output: 1.2,
-      cached: 0.15,
-      reasoning: 1.8,
-      cache_creation: 0.3,
+      input: 0.27,
+      output: 0.95,
+      cached: 0.135,
+      reasoning: 1.425,
+      cache_creation: 0.27,
     },
     "MiniMax-M2.5": {
-      input: 0.3,
-      output: 1.2,
-      cached: 0.15,
-      reasoning: 1.8,
-      cache_creation: 0.3,
+      input: 0.27,
+      output: 0.95,
+      cached: 0.135,
+      reasoning: 1.425,
+      cache_creation: 0.27,
+    },
+    // T12: MiniMax M2.7 — new default model (sub2api PR #1120)
+    // Upgraded from M2.5, same API endpoint api.minimax.io
+    // Pricing estimated, check https://platform.minimaxi.com/document/Price
+    "minimax-m2.7": {
+      input: 0.4,
+      output: 1.6,
+      cached: 0.2,
+      reasoning: 2.4,
+      cache_creation: 0.4,
+    },
+    "MiniMax-M2.7": {
+      input: 0.4,
+      output: 1.6,
+      cached: 0.2,
+      reasoning: 2.4,
+      cache_creation: 0.4,
+    },
+    "minimax-m2.7-highspeed": {
+      input: 0.4,
+      output: 1.6,
+      cached: 0.2,
+      reasoning: 2.4,
+      cache_creation: 0.4,
     },
   },
 
@@ -1083,11 +1249,11 @@ export const DEFAULT_PRICING = {
   // ─────────────────────────────────────────────────────────────────────
   zai: {
     "glm-5": {
-      input: 1.0,
-      output: 3.2,
-      cached: 0.5,
-      reasoning: 4.8,
-      cache_creation: 1.0,
+      input: 0.38,
+      output: 1.98,
+      cached: 0.19,
+      reasoning: 2.97,
+      cache_creation: 0.38,
     },
     "glm-5-turbo": {
       input: 1.2,
@@ -1095,6 +1261,13 @@ export const DEFAULT_PRICING = {
       cached: 0.6,
       reasoning: 6.0,
       cache_creation: 1.2,
+    },
+    "glm-4.7": {
+      input: 0.38,
+      output: 1.98,
+      cached: 0.19,
+      reasoning: 2.97,
+      cache_creation: 0.38,
     },
   },
 
@@ -1172,7 +1345,7 @@ type TokenUsage = Record<string, number | undefined>;
 
 /**
  * Get pricing for a specific provider and model
- * @param {string} provider - Provider ID (e.g., "openai", "cc", "gc")
+ * @param {string} provider - Provider ID (e.g., "openai", "cc", "gemini-cli")
  * @param {string} model - Model ID
  * @returns {object|null} Pricing object or null if not found
  */
@@ -1198,15 +1371,7 @@ export function getDefaultPricing() {
   return DEFAULT_PRICING;
 }
 
-/**
- * Format cost for display
- * @param {number} cost - Cost in dollars
- * @returns {string} Formatted cost string
- */
-export function formatCost(cost: number | null | undefined): string {
-  if (cost === null || cost === undefined || isNaN(cost)) return "$0.00";
-  return `$${cost.toFixed(2)}`;
-}
+export { formatCost } from "../utils/formatting";
 
 /**
  * Calculate cost from tokens and pricing

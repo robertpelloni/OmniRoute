@@ -1,11 +1,7 @@
-import { CORS_ORIGIN } from "@/shared/utils/cors";
+// Allow large audio/video file uploads — 5min for processing large files (up to 2GB)
+export const maxDuration = 300;
 import { handleAudioTranscription } from "@omniroute/open-sse/handlers/audioTranscription.ts";
-import {
-  getProviderCredentials,
-  clearRecoveredProviderState,
-  extractApiKey,
-  isValidApiKey,
-} from "@/sse/services/auth";
+import { getProviderCredentials, clearRecoveredProviderState } from "@/sse/services/auth";
 import {
   parseTranscriptionModel,
   getTranscriptionProvider,
@@ -23,7 +19,6 @@ import { getProviderNodes } from "@/lib/localDb";
 export async function OPTIONS() {
   return new Response(null, {
     headers: {
-      "Access-Control-Allow-Origin": CORS_ORIGIN,
       "Access-Control-Allow-Methods": "POST, OPTIONS",
       "Access-Control-Allow-Headers": "*",
     },
@@ -35,14 +30,6 @@ export async function OPTIONS() {
  * OpenAI Whisper API compatible (multipart/form-data)
  */
 export async function POST(request) {
-  // Optional API key validation
-  if (process.env.REQUIRE_API_KEY === "true") {
-    const apiKey = extractApiKey(request);
-    if (!apiKey) return errorResponse(HTTP_STATUS.UNAUTHORIZED, "Missing API key");
-    const valid = await isValidApiKey(apiKey);
-    if (!valid) return errorResponse(HTTP_STATUS.UNAUTHORIZED, "Invalid API key");
-  }
-
   let formData;
   try {
     formData = await request.formData();
@@ -63,16 +50,16 @@ export async function POST(request) {
   let dynamicProviders: ReturnType<typeof buildDynamicAudioProvider>[] = [];
   try {
     const nodes = await getProviderNodes();
-    dynamicProviders = (Array.isArray(nodes) ? nodes : [])
+    dynamicProviders = (Array.isArray(nodes) ? (nodes as unknown as ProviderNodeRow[]) : [])
       .filter((n: ProviderNodeRow) => {
         if (n.apiType !== "chat" && n.apiType !== "responses") return false;
         try {
           const hostname = new URL(n.baseUrl).hostname;
+          // Strictly matching 172.16.0.0/12 (Docker/local) and explicitly blocking ::1 per SSRF hardening
           return (
             hostname === "localhost" ||
             hostname === "127.0.0.1" ||
-            hostname === "::1" ||
-            hostname === "[::1]"
+            /^172\.(1[6-9]|2[0-9]|3[0-1])\.\d{1,3}\.\d{1,3}$/.test(hostname)
           );
         } catch {
           return false;

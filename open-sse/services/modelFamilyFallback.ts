@@ -11,6 +11,10 @@
  * (commit 6cea566, Mar 8 2026).
  */
 
+import { getModelContextLimit } from "../../src/lib/modelCapabilities";
+import { parseModel } from "./model.ts";
+import { CONTEXT_OVERFLOW_REGEX } from "./errorClassifier.ts";
+
 // ── Model Family Definitions ─────────────────────────────────────────────────
 
 /**
@@ -69,6 +73,7 @@ const MODEL_FAMILIES: Record<string, string[]> = {
   "gemini-2.5-pro-preview-06-05": ["gemini-2.5-pro", "gemini-2.5-pro-exp-03-25"],
 
   // Claude Opus family
+  "claude-opus-4-7": ["claude-opus-4-6", "claude-opus-4-5-20251101", "claude-sonnet-4-6"],
   "claude-opus-4-6": ["claude-opus-4-6-thinking", "claude-opus-4-5-20251101", "claude-sonnet-4-6"],
   "claude-opus-4-6-thinking": ["claude-opus-4-6", "claude-opus-4-5-20251101"],
 
@@ -101,6 +106,7 @@ const MODEL_UNAVAILABLE_FRAGMENTS = [
   "does not support",
   "not enabled for",
   "access to model",
+  "improperly formed request", // Kiro 400 (model unavailable)
 ];
 
 /**
@@ -113,6 +119,11 @@ export function isModelUnavailableError(status: number, errorMessage: string): b
 
   const msg = errorMessage.toLowerCase();
   return MODEL_UNAVAILABLE_FRAGMENTS.some((fragment) => msg.includes(fragment));
+}
+
+export function isContextOverflowError(status: number, errorMessage: string): boolean {
+  if (status !== 400) return false;
+  return CONTEXT_OVERFLOW_REGEX.test(errorMessage);
 }
 
 // ── Fallback Resolution ──────────────────────────────────────────────────────
@@ -128,12 +139,18 @@ export function getNextFamilyFallback(
   currentModel: string,
   triedModels: Set<string>
 ): string | null {
-  const family = MODEL_FAMILIES[currentModel];
+  const parsed = parseModel(currentModel);
+  const bareModel = parsed.model || currentModel;
+  const prefix =
+    parsed.provider || parsed.providerAlias ? `${parsed.provider || parsed.providerAlias}/` : "";
+
+  const family = MODEL_FAMILIES[bareModel];
   if (!family) return null;
 
   for (const candidate of family) {
-    if (!triedModels.has(candidate)) {
-      return candidate;
+    const fullCandidate = `${prefix}${candidate}`;
+    if (!triedModels.has(fullCandidate)) {
+      return fullCandidate;
     }
   }
 
@@ -144,14 +161,53 @@ export function getNextFamilyFallback(
  * Check if a model belongs to any registered family.
  */
 export function isInModelFamily(model: string): boolean {
-  return model in MODEL_FAMILIES;
+  const parsed = parseModel(model);
+  const bareModel = parsed.model || model;
+  return bareModel in MODEL_FAMILIES;
 }
 
 /**
  * Get all members of a model's family (including itself).
  */
 export function getModelFamily(model: string): string[] {
-  const family = MODEL_FAMILIES[model];
+  const parsed = parseModel(model);
+  const bareModel = parsed.model || model;
+  const prefix =
+    parsed.provider || parsed.providerAlias ? `${parsed.provider || parsed.providerAlias}/` : "";
+
+  const family = MODEL_FAMILIES[bareModel];
   if (!family) return [model];
-  return [model, ...family];
+  return [model, ...family.map((c) => `${prefix}${c}`)];
+}
+
+/**
+ * Find a model with larger context window from a list of candidate models.
+ * Uses models.dev synced capabilities to compare context limits.
+ */
+export function findLargerContextModel(
+  currentModel: string,
+  availableModels: string[]
+): string | null {
+  const currentParsed = parseModel(currentModel);
+  const currentProvider = currentParsed.provider || currentParsed.providerAlias || "unknown";
+  const currentModelId = currentParsed.model || currentModel;
+  const currentLimit = getModelContextLimit(currentProvider, currentModelId) ?? 0;
+
+  let bestModel: string | null = null;
+  let bestLimit = currentLimit;
+
+  for (const candidate of availableModels) {
+    if (candidate === currentModel) continue;
+    const parsed = parseModel(candidate);
+    const provider = parsed.provider || parsed.providerAlias || "unknown";
+    const modelId = parsed.model || candidate;
+    const limit = getModelContextLimit(provider, modelId) ?? 0;
+
+    if (limit > bestLimit) {
+      bestLimit = limit;
+      bestModel = candidate;
+    }
+  }
+
+  return bestModel;
 }

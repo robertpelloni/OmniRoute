@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
-import { getSettings } from "@/lib/localDb";
+import { getProviderConnections, getSettings } from "@/lib/localDb";
+import { buildHealthPayload } from "@/lib/monitoring/observability";
 import { APP_CONFIG } from "@/shared/constants/config";
+import { AI_PROVIDERS } from "@/shared/constants/providers";
+import { isAuthenticated } from "@/shared/utils/apiAuth";
 
 /**
  * GET /api/monitoring/health — System health overview
@@ -11,51 +14,44 @@ import { APP_CONFIG } from "@/shared/constants/config";
 export async function GET() {
   try {
     const { getAllCircuitBreakerStatuses } = await import("@/shared/utils/circuitBreaker");
-    const { getAllRateLimitStatus } = await import("@omniroute/open-sse/services/rateLimitManager");
+    const { getAllRateLimitStatus, getLearnedLimits } =
+      await import("@omniroute/open-sse/services/rateLimitManager");
     const { getAllModelLockouts } = await import("@omniroute/open-sse/services/accountFallback");
     const { getInflightCount } = await import("@omniroute/open-sse/services/requestDedup.ts");
+    const { getQuotaMonitorSummary, getQuotaMonitorSnapshots } =
+      await import("@omniroute/open-sse/services/quotaMonitor.ts");
+    const { getActiveSessions, getAllActiveSessionCountsByKey } =
+      await import("@omniroute/open-sse/services/sessionManager.ts");
 
     const settings = await getSettings();
+    const connections = await getProviderConnections();
     const circuitBreakers = getAllCircuitBreakerStatuses();
     const rateLimitStatus = getAllRateLimitStatus();
+    const learnedLimits = getLearnedLimits();
     const lockouts = getAllModelLockouts();
+    const quotaMonitorSummary = getQuotaMonitorSummary();
+    const quotaMonitorMonitors = getQuotaMonitorSnapshots();
+    const activeSessions = getActiveSessions();
+    const activeSessionsByKey = getAllActiveSessionCountsByKey();
     const { getAllHealthStatuses } = await import("@/lib/localHealthCheck");
-
-    // System info
-    const system = {
-      version: APP_CONFIG.version,
-      nodeVersion: process.version,
-      uptime: process.uptime(),
-      memoryUsage: process.memoryUsage(),
-      pid: process.pid,
-      platform: process.platform,
-    };
-
-    // Provider health summary (circuitBreakers is an Array of { name, state, ... })
-    const providerHealth = {};
-    for (const cb of circuitBreakers) {
-      // Skip test circuit breakers (leftover from unit tests)
-      if (cb.name.startsWith("test-") || cb.name.startsWith("test_")) continue;
-      providerHealth[cb.name] = {
-        state: cb.state,
-        failures: cb.failureCount || 0,
-        lastFailure: cb.lastFailureTime,
-      };
-    }
-
-    return NextResponse.json({
-      status: "healthy",
-      timestamp: new Date().toISOString(),
-      system,
-      providerHealth,
-      localProviders: getAllHealthStatuses(),
+    const payload = buildHealthPayload({
+      appVersion: APP_CONFIG.version,
+      catalogCount: Object.keys(AI_PROVIDERS).length,
+      settings,
+      connections,
+      circuitBreakers,
       rateLimitStatus,
+      learnedLimits,
       lockouts,
-      dedup: {
-        inflightRequests: getInflightCount(),
-      },
-      setupComplete: settings?.setupComplete || false,
+      localProviders: getAllHealthStatuses(),
+      inflightRequests: getInflightCount(),
+      quotaMonitorSummary,
+      quotaMonitorMonitors,
+      activeSessions,
+      activeSessionsByKey,
     });
+
+    return NextResponse.json(payload);
   } catch (error) {
     console.error("[API] GET /api/monitoring/health error:", error);
     return NextResponse.json({ status: "error", error: "Health check failed" }, { status: 500 });
@@ -68,7 +64,11 @@ export async function GET() {
  * Resets all provider circuit breakers to CLOSED state,
  * clearing failure counts and persisted state.
  */
-export async function DELETE() {
+export async function DELETE(request: Request) {
+  if (!(await isAuthenticated(request))) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const { resetAllCircuitBreakers, getAllCircuitBreakerStatuses } =
       await import("@/shared/utils/circuitBreaker");

@@ -1,5 +1,7 @@
-import { getCorsOrigin } from "./cors.ts";
-import { ERROR_TYPES, DEFAULT_ERROR_MESSAGES } from "../config/constants.ts";
+import { CORS_HEADERS } from "./cors.ts";
+import { getDefaultErrorMessage, getErrorInfo } from "../config/errorConfig.ts";
+import { normalizePayloadForLog } from "@/lib/logPayloads";
+import type { ModelCooldownErrorPayload } from "@/types";
 
 /**
  * Build OpenAI-compatible error response body
@@ -8,15 +10,11 @@ import { ERROR_TYPES, DEFAULT_ERROR_MESSAGES } from "../config/constants.ts";
  * @returns {object} Error response object
  */
 export function buildErrorBody(statusCode, message) {
-  const errorInfo =
-    ERROR_TYPES[statusCode] ||
-    (statusCode >= 500
-      ? { type: "server_error", code: "internal_server_error" }
-      : { type: "invalid_request_error", code: "" });
+  const errorInfo = getErrorInfo(statusCode);
 
   return {
     error: {
-      message: message || DEFAULT_ERROR_MESSAGES[statusCode] || "An error occurred",
+      message: message || getDefaultErrorMessage(statusCode),
       type: errorInfo.type,
       code: errorInfo.code,
     },
@@ -34,7 +32,6 @@ export function errorResponse(statusCode, message) {
     status: statusCode,
     headers: {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": getCorsOrigin(),
     },
   });
 }
@@ -49,6 +46,28 @@ export async function writeStreamError(writer, statusCode, message) {
   const errorBody = buildErrorBody(statusCode, message);
   const encoder = new TextEncoder();
   await writer.write(encoder.encode(`data: ${JSON.stringify(errorBody)}\n\n`));
+}
+
+function normalizeRetryAfterSeconds(retryAfter?: string | number | Date | null): number {
+  if (typeof retryAfter === "number" && Number.isFinite(retryAfter)) {
+    if (retryAfter > 0 && retryAfter < 1_000_000_000) {
+      return Math.max(Math.ceil(retryAfter), 1);
+    }
+
+    const retryTimeMs = new Date(retryAfter).getTime();
+    if (Number.isFinite(retryTimeMs)) {
+      return Math.max(Math.ceil((retryTimeMs - Date.now()) / 1000), 1);
+    }
+  }
+
+  if (retryAfter instanceof Date || typeof retryAfter === "string") {
+    const retryTimeMs = new Date(retryAfter).getTime();
+    if (Number.isFinite(retryTimeMs)) {
+      return Math.max(Math.ceil((retryTimeMs - Date.now()) / 1000), 1);
+    }
+  }
+
+  return 1;
 }
 
 /**
@@ -91,14 +110,16 @@ export function parseAntigravityRetryTime(message) {
  * Parse upstream provider error response
  * @param {Response} response - Fetch response from provider
  * @param {string} provider - Provider name (for Antigravity-specific parsing)
- * @returns {Promise<{statusCode: number, message: string, retryAfterMs: number|null}>}
+ * @returns {Promise<{statusCode: number, message: string, retryAfterMs: number|null, responseBody: unknown}>}
  */
 export async function parseUpstreamError(response, provider = null) {
   let message = "";
   let retryAfterMs = null;
+  let responseBody = null;
 
   try {
     const text = await response.text();
+    responseBody = normalizePayloadForLog(text);
 
     // Try parse as JSON
     try {
@@ -109,19 +130,58 @@ export async function parseUpstreamError(response, provider = null) {
     }
   } catch {
     message = `Upstream error: ${response.status}`;
+    responseBody = { _rawText: message };
   }
 
   const messageStr = typeof message === "string" ? message : JSON.stringify(message);
+
+  const retryAfterHeader = response.headers?.get?.("retry-after");
+  if (retryAfterHeader && !retryAfterMs) {
+    const retryAfterSec = Number.parseInt(retryAfterHeader, 10);
+    if (Number.isFinite(retryAfterSec) && retryAfterSec > 0) {
+      retryAfterMs = retryAfterSec * 1000;
+    } else {
+      const retryAfterDate = new Date(retryAfterHeader).getTime();
+      if (Number.isFinite(retryAfterDate) && retryAfterDate > Date.now()) {
+        retryAfterMs = retryAfterDate - Date.now();
+      }
+    }
+  }
 
   // Parse Antigravity-specific retry time from error message
   if (provider === "antigravity" && response.status === 429) {
     retryAfterMs = parseAntigravityRetryTime(messageStr);
   }
 
+  // Also parse retry time for other providers (Qwen, etc.) with "quota will reset after XhYmZs" format
+  if (response.status === 429 && !retryAfterMs) {
+    retryAfterMs = parseAntigravityRetryTime(messageStr);
+  }
+
+  // Generic providers: "Please retry after 20s"
+  if (response.status === 429 && !retryAfterMs) {
+    const retryMatch = messageStr.match(/retry\s+after\s+(\d+)\s*s/i);
+    if (retryMatch) {
+      retryAfterMs = Number.parseInt(retryMatch[1], 10) * 1000;
+    }
+  }
+
+  // Cap maximum retry time at 24 hours to prevent infinite wait
+  const MAX_RETRY_MS = 24 * 60 * 60 * 1000;
+  if (retryAfterMs && retryAfterMs > MAX_RETRY_MS) {
+    retryAfterMs = MAX_RETRY_MS;
+  }
+
+  const responseHeaders: Record<string, string> | null = response.headers
+    ? Object.fromEntries(response.headers.entries())
+    : null;
+
   return {
     statusCode: response.status,
     message: messageStr,
     retryAfterMs,
+    responseBody,
+    responseHeaders,
   };
 }
 
@@ -172,8 +232,7 @@ export function unavailableResponse(
   retryAfter?: string | number | Date | null,
   retryAfterHuman?: string
 ) {
-  const retryTimeMs = retryAfter ? new Date(retryAfter).getTime() : Date.now() + 1000;
-  const retryAfterSec = Math.max(Math.ceil((retryTimeMs - Date.now()) / 1000), 1);
+  const retryAfterSec = normalizeRetryAfterSeconds(retryAfter);
   const msg = retryAfterHuman ? `${message} (${retryAfterHuman})` : message;
   return new Response(JSON.stringify({ error: { message: msg } }), {
     status: statusCode,
@@ -182,6 +241,79 @@ export function unavailableResponse(
       "Retry-After": String(retryAfterSec),
     },
   });
+}
+
+export function providerCircuitOpenResponse(
+  provider: string,
+  retryAfter?: string | number | Date | null
+) {
+  const retryAfterSec = normalizeRetryAfterSeconds(retryAfter);
+  return new Response(
+    JSON.stringify({
+      error: {
+        message: `Provider ${provider} circuit breaker is open`,
+        type: "server_error",
+        code: "provider_circuit_open",
+        provider,
+        retry_after: retryAfterSec,
+      },
+    }),
+    {
+      status: 503,
+      headers: {
+        "Content-Type": "application/json",
+        "Retry-After": String(retryAfterSec),
+        "X-OmniRoute-Provider-Breaker": "open",
+      },
+    }
+  );
+}
+
+export function buildModelCooldownBody({
+  model,
+  retryAfterSec,
+}: {
+  model?: string | null;
+  retryAfterSec: number;
+}): ModelCooldownErrorPayload {
+  const resolvedModel = typeof model === "string" && model.trim().length > 0 ? model.trim() : null;
+
+  return {
+    error: {
+      message: resolvedModel
+        ? `All credentials for model ${resolvedModel} are cooling down`
+        : "All credentials for the requested model are cooling down",
+      type: "rate_limit_error",
+      code: "model_cooldown",
+      ...(resolvedModel ? { model: resolvedModel } : {}),
+      reset_seconds: Math.max(Math.ceil(retryAfterSec), 1),
+    },
+  };
+}
+
+export function modelCooldownResponse({
+  model,
+  retryAfter,
+}: {
+  model?: string | null;
+  retryAfter?: string | number | Date | null;
+}) {
+  const retryAfterSec = normalizeRetryAfterSeconds(retryAfter);
+  return new Response(
+    JSON.stringify(
+      buildModelCooldownBody({
+        model,
+        retryAfterSec,
+      })
+    ),
+    {
+      status: 429,
+      headers: {
+        "Content-Type": "application/json",
+        "Retry-After": String(retryAfterSec),
+      },
+    }
+  );
 }
 
 /**

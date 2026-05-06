@@ -11,8 +11,32 @@ import { getDbInstance } from "../db/core";
 import { getPendingRequests } from "./usageHistory";
 import { getAccountDisplayName } from "@/lib/display/names";
 import { calculateCost } from "./costCalculator";
+import { getRawDataCutoffDate, isAggregationEnabled } from "./aggregateHistory";
 
 type JsonRecord = Record<string, unknown>;
+type UsageBucket = {
+  requests: number;
+  promptTokens: number;
+  completionTokens: number;
+  cost: number;
+};
+
+type UsageBreakdown = UsageBucket & {
+  rawModel?: string;
+  provider?: string;
+  lastUsed?: string;
+  connectionId?: string;
+  accountName?: string;
+  apiKeyId?: string | null;
+  apiKeyName?: string;
+};
+
+type ActiveRequest = {
+  model: string;
+  provider: string;
+  account: string;
+  count: number;
+};
 
 function asRecord(value: unknown): JsonRecord {
   return value && typeof value === "object" && !Array.isArray(value) ? (value as JsonRecord) : {};
@@ -33,10 +57,58 @@ function toStringOrEmpty(value: unknown): string {
 
 /**
  * Get aggregated usage stats.
+ * Uses UNION of recent raw data and older aggregated data when aggregation is enabled.
  */
 export async function getUsageStats() {
   const db = getDbInstance();
-  const rows = db.prepare("SELECT * FROM usage_history ORDER BY timestamp ASC").all() as unknown[];
+  const aggregationEnabled = await isAggregationEnabled();
+
+  let rows: unknown[];
+
+  if (aggregationEnabled) {
+    const cutoffDate = await getRawDataCutoffDate();
+
+    // UNION: recent raw data + older aggregated data
+    const unionQuery = `
+      SELECT 
+        provider,
+        model,
+        timestamp,
+        connection_id,
+        api_key_id,
+        api_key_name,
+        tokens_input,
+        tokens_output,
+        tokens_cache_read,
+        tokens_cache_creation,
+        tokens_reasoning
+      FROM usage_history
+      WHERE DATE(timestamp) >= ?
+      
+      UNION ALL
+      
+      SELECT 
+        provider,
+        model,
+        date || ' 12:00:00' as timestamp,
+        NULL as connection_id,
+        NULL as api_key_id,
+        NULL as api_key_name,
+        total_input_tokens as tokens_input,
+        total_output_tokens as tokens_output,
+        0 as tokens_cache_read,
+        0 as tokens_cache_creation,
+        0 as tokens_reasoning
+      FROM daily_usage_summary
+      WHERE date < ?
+      
+      ORDER BY timestamp ASC
+    `;
+
+    rows = db.prepare(unionQuery).all(cutoffDate, cutoffDate) as unknown[];
+  } else {
+    rows = db.prepare("SELECT * FROM usage_history ORDER BY timestamp ASC").all() as unknown[];
+  }
 
   const { getProviderConnections } = await import("@/lib/localDb");
   let allConnections: unknown[] = [];
@@ -56,7 +128,19 @@ export async function getUsageStats() {
 
   const pendingRequests = getPendingRequests();
 
-  const stats = {
+  const stats: {
+    totalRequests: number;
+    totalPromptTokens: number;
+    totalCompletionTokens: number;
+    totalCost: number;
+    byProvider: Record<string, UsageBreakdown>;
+    byModel: Record<string, UsageBreakdown>;
+    byAccount: Record<string, UsageBreakdown>;
+    byApiKey: Record<string, UsageBreakdown>;
+    last10Minutes: UsageBucket[];
+    pending: ReturnType<typeof getPendingRequests>;
+    activeRequests: ActiveRequest[];
+  } = {
     totalRequests: rows.length,
     totalPromptTokens: 0,
     totalCompletionTokens: 0,
@@ -91,7 +175,7 @@ export async function getUsageStats() {
   const now = new Date();
   const currentMinuteStart = new Date(Math.floor(now.getTime() / 60000) * 60000);
 
-  const bucketMap = {};
+  const bucketMap: Record<number, UsageBucket> = {};
   for (let i = 0; i < 10; i++) {
     const bucketTime = new Date(currentMinuteStart.getTime() - (9 - i) * 60 * 1000);
     const bucketKey = bucketTime.getTime();
@@ -169,7 +253,7 @@ export async function getUsageStats() {
     stats.byModel[modelKey].promptTokens += promptTokens;
     stats.byModel[modelKey].completionTokens += completionTokens;
     stats.byModel[modelKey].cost += entryCost;
-    if (new Date(timestamp) > new Date(stats.byModel[modelKey].lastUsed)) {
+    if (new Date(timestamp) > new Date(stats.byModel[modelKey].lastUsed || timestamp)) {
       stats.byModel[modelKey].lastUsed = timestamp;
     }
 
@@ -195,7 +279,7 @@ export async function getUsageStats() {
       stats.byAccount[accountKey].promptTokens += promptTokens;
       stats.byAccount[accountKey].completionTokens += completionTokens;
       stats.byAccount[accountKey].cost += entryCost;
-      if (new Date(timestamp) > new Date(stats.byAccount[accountKey].lastUsed)) {
+      if (new Date(timestamp) > new Date(stats.byAccount[accountKey].lastUsed || timestamp)) {
         stats.byAccount[accountKey].lastUsed = timestamp;
       }
     }
@@ -220,7 +304,7 @@ export async function getUsageStats() {
       stats.byApiKey[apiKey].promptTokens += promptTokens;
       stats.byApiKey[apiKey].completionTokens += completionTokens;
       stats.byApiKey[apiKey].cost += entryCost;
-      if (new Date(timestamp) > new Date(stats.byApiKey[apiKey].lastUsed)) {
+      if (new Date(timestamp) > new Date(stats.byApiKey[apiKey].lastUsed || timestamp)) {
         stats.byApiKey[apiKey].lastUsed = timestamp;
       }
     }

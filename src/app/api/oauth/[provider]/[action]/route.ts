@@ -12,11 +12,11 @@ import {
   updateProviderConnection,
   getProviderConnections,
   isCloudEnabled,
+  resolveProxyForProvider,
 } from "@/models";
 import { getConsistentMachineId } from "@/shared/utils/machineId";
 import { syncToCloud } from "@/lib/cloudSync";
 import { startLocalServer } from "@/lib/oauth/utils/server";
-import { getProxyConfig } from "@/lib/localDb";
 import { runWithProxyContext } from "@omniroute/open-sse/utils/proxyFetch.ts";
 import {
   jsonObjectSchema,
@@ -24,6 +24,7 @@ import {
   oauthPollSchema,
 } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
+import { isAuthRequired, isAuthenticated } from "@/shared/utils/apiAuth";
 
 // Use globalThis to persist callback server state across Next.js HMR reloads
 if (!globalThis.__codexCallbackState) {
@@ -42,6 +43,12 @@ function safeEqual(a: string | null | undefined, b: string | null | undefined): 
   return timingSafeEqual(ba, bb);
 }
 
+async function requireOAuthRouteAuth(request: Request) {
+  if (!(await isAuthRequired(request))) return null;
+  if (await isAuthenticated(request)) return null;
+  return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+}
+
 /**
  * Dynamic OAuth API Route
  * Handles: authorize, exchange, device-code, poll, start-callback-server, poll-callback
@@ -53,6 +60,9 @@ export async function GET(
   request: Request,
   { params }: { params: Promise<{ provider: string; action: string }> }
 ) {
+  const authResponse = await requireOAuthRouteAuth(request);
+  if (authResponse) return authResponse;
+
   try {
     const { provider, action } = await params;
     const { searchParams } = new URL(request.url);
@@ -60,6 +70,14 @@ export async function GET(
     if (action === "authorize") {
       const redirectUri = searchParams.get("redirect_uri") || "http://localhost:8080/callback";
       const authData = generateAuthData(provider, redirectUri);
+      if (provider === "qoder" && !authData.authUrl) {
+        return NextResponse.json({
+          ...authData,
+          supported: false,
+          error:
+            "Qoder browser OAuth is experimental and disabled by default. Configure QODER_OAUTH_* environment variables or use a Personal Access Token.",
+        });
+      }
       return NextResponse.json(authData);
     }
 
@@ -73,15 +91,45 @@ export async function GET(
       }
 
       const authData = generateAuthData(provider, null);
+      const startUrl = searchParams.get("startUrl");
+      const region = searchParams.get("region") || "us-east-1";
 
-      // For providers that don't use PKCE (like GitHub), don't pass codeChallenge
+      // Resolve proxy for this provider (provider-level → global → direct)
+      const proxy = await resolveProxyForProvider(provider);
+
+      // Request device code (through proxy if configured)
       let deviceData;
-      if (provider === "github" || provider === "kiro" || provider === "kilocode") {
-        // GitHub, Kiro, and KiloCode don't use PKCE for device code
-        deviceData = await (requestDeviceCode as any)(provider);
+      if (
+        provider === "github" ||
+        provider === "kiro" ||
+        provider === "amazon-q" ||
+        provider === "kimi-coding" ||
+        provider === "kilocode"
+      ) {
+        // GitHub, Kiro/Amazon Q, Kimi Coding, and KiloCode don't use PKCE for device code
+        if ((provider === "kiro" || provider === "amazon-q") && startUrl) {
+          const providerOverrideConfig = {
+            ...providerData.config,
+            startUrl,
+            region,
+            skipIssuerUrlForRegistration: true,
+            registerClientUrl: `https://oidc.${region}.amazonaws.com/client/register`,
+            deviceAuthUrl: `https://oidc.${region}.amazonaws.com/device_authorization`,
+            tokenUrl: `https://oidc.${region}.amazonaws.com/token`,
+            ssoOidcEndpoint: `https://oidc.${region}.amazonaws.com`,
+          };
+
+          deviceData = await runWithProxyContext(proxy, () =>
+            (requestDeviceCode as any)(provider, null, providerOverrideConfig)
+          );
+        } else {
+          deviceData = await runWithProxyContext(proxy, () => (requestDeviceCode as any)(provider));
+        }
       } else {
         // Qwen and other providers use PKCE
-        deviceData = await requestDeviceCode(provider, authData.codeChallenge);
+        deviceData = await runWithProxyContext(proxy, () =>
+          requestDeviceCode(provider, authData.codeChallenge)
+        );
       }
 
       return NextResponse.json({
@@ -174,6 +222,9 @@ export async function POST(
   request: Request,
   { params }: { params: Promise<{ provider: string; action: string }> }
 ) {
+  const authResponse = await requireOAuthRouteAuth(request);
+  if (authResponse) return authResponse;
+
   try {
     const { provider, action } = await params;
     let rawBody: any = {};
@@ -215,15 +266,33 @@ export async function POST(
     }
 
     if (action === "exchange") {
-      const { code, redirectUri, codeVerifier, state } = body;
+      const { code, redirectUri, connectionId, codeVerifier, state } = body;
+      const normalizedState = typeof state === "string" && state.length > 0 ? state : undefined;
+      const providerData = getProvider(provider);
+
+      if (providerData.flowType === "authorization_code_pkce" && !codeVerifier) {
+        return NextResponse.json(
+          {
+            error: {
+              message: "Invalid request",
+              details: [
+                {
+                  field: "codeVerifier",
+                  message: `Code verifier is required for ${provider} OAuth exchange`,
+                },
+              ],
+            },
+          },
+          { status: 400 }
+        );
+      }
 
       // Resolve proxy for this provider (provider-level → global → direct)
-      const proxyConfig = await getProxyConfig();
-      const proxy = proxyConfig.providers?.[provider] || proxyConfig.global || null;
+      const proxy = await resolveProxyForProvider(provider);
 
       // Exchange code for tokens (through proxy if configured)
       const tokenData = await runWithProxyContext(proxy, () =>
-        exchangeTokens(provider, code, redirectUri, codeVerifier, state)
+        exchangeTokens(provider, code, redirectUri, codeVerifier, normalizedState)
       );
 
       // Normalize: if name is missing, use email or displayName as fallback so accounts
@@ -241,6 +310,7 @@ export async function POST(
       if (tokenData.email) {
         const existing = await getProviderConnections({ provider });
         const match = existing.find((c: any) => {
+          if (c.id && safeEqual(connectionId, c.id)) return true;
           // safeEqual: constant-time comparison to prevent timing attacks (CWE-208, finding #258-6/7)
           if (!safeEqual(c.email, tokenData.email) || c.authType !== "oauth") return false;
           // For Codex, also check workspaceId to avoid overwriting different workspace connections
@@ -285,21 +355,31 @@ export async function POST(
     }
 
     if (action === "poll") {
-      const { deviceCode, codeVerifier, extraData } = body;
+      const { deviceCode, connectionId, codeVerifier, extraData } = body;
 
-      // For providers that don't use PKCE (like GitHub, Kiro, Kimi Coding), don't pass codeVerifier
+      // Resolve proxy for this provider (provider-level → global → direct)
+      const proxy = await resolveProxyForProvider(provider);
+
+      // Poll for token (through proxy if configured)
       let result;
       if (provider === "github" || provider === "kimi-coding" || provider === "kilocode") {
-        result = await (pollForToken as any)(provider, deviceCode);
-      } else if (provider === "kiro") {
+        // For providers that don't use PKCE (GitHub, Kimi Coding, KiloCode), don't pass codeVerifier
+        result = await runWithProxyContext(proxy, () =>
+          (pollForToken as any)(provider, deviceCode)
+        );
+      } else if (provider === "kiro" || provider === "amazon-q") {
         // Kiro needs extraData (clientId, clientSecret) from device code response
-        result = await (pollForToken as any)(provider, deviceCode, null, extraData);
+        result = await runWithProxyContext(proxy, () =>
+          (pollForToken as any)(provider, deviceCode, null, extraData)
+        );
       } else {
         // Qwen and other providers use PKCE
         if (!codeVerifier) {
           return NextResponse.json({ error: "Missing code verifier" }, { status: 400 });
         }
-        result = await (pollForToken as any)(provider, deviceCode, codeVerifier);
+        result = await runWithProxyContext(proxy, () =>
+          (pollForToken as any)(provider, deviceCode, codeVerifier)
+        );
       }
 
       if (result.success) {
@@ -317,6 +397,7 @@ export async function POST(
         if (result.tokens.email) {
           const existing = await getProviderConnections({ provider });
           const match = existing.find((c: any) => {
+            if (c.id && safeEqual(connectionId, c.id)) return true;
             // safeEqual: constant-time comparison to prevent timing attacks (CWE-208, finding #258-8/9)
             if (!safeEqual(c.email, result.tokens.email) || c.authType !== "oauth") return false;
             // For Codex, also check workspaceId to avoid overwriting different workspace connections
@@ -371,6 +452,8 @@ export async function POST(
     }
 
     if (action === "poll-callback") {
+      const { connectionId } = body;
+
       // Poll for Codex callback server result
       if (provider !== "codex") {
         return NextResponse.json(
@@ -421,8 +504,7 @@ export async function POST(
 
       try {
         // Resolve proxy for this provider
-        const proxyConfig = await getProxyConfig();
-        const proxy = proxyConfig.providers?.[provider] || proxyConfig.global || null;
+        const proxy = await resolveProxyForProvider(provider);
 
         // Exchange code for tokens (through proxy if configured)
         const tokenData = await runWithProxyContext(proxy, () =>
@@ -443,6 +525,7 @@ export async function POST(
         if (tokenData.email) {
           const existing = await getProviderConnections({ provider });
           const match = existing.find((c: any) => {
+            if (c.id && safeEqual(connectionId, c.id)) return true;
             // safeEqual: constant-time comparison to prevent timing attacks (CWE-208, finding #258-6/7)
             if (!safeEqual(c.email, tokenData.email) || c.authType !== "oauth") return false;
             // For Codex, also check workspaceId to avoid overwriting different workspace connections

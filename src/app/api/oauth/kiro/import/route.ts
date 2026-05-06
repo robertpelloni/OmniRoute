@@ -1,16 +1,27 @@
 import { NextResponse } from "next/server";
 import { KiroService } from "@/lib/oauth/services/kiro";
-import { createProviderConnection, isCloudEnabled } from "@/models";
+import { createProviderConnection, isCloudEnabled, resolveProxyForProvider } from "@/models";
 import { getConsistentMachineId } from "@/shared/utils/machineId";
 import { syncToCloud } from "@/lib/cloudSync";
 import { kiroImportSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
+import { isAuthRequired, isAuthenticated } from "@/shared/utils/apiAuth";
+import { runWithProxyContext } from "@omniroute/open-sse/utils/proxyFetch.ts";
+
+async function requireOAuthImportAuth(request: Request) {
+  if (!(await isAuthRequired(request))) return null;
+  if (await isAuthenticated(request)) return null;
+  return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+}
 
 /**
  * POST /api/oauth/kiro/import
  * Import and validate refresh token from Kiro IDE
  */
-export async function POST(request: any) {
+export async function POST(request: Request) {
+  const authResponse = await requireOAuthImportAuth(request);
+  if (authResponse) return authResponse;
+
   let rawBody;
   try {
     rawBody = await request.json();
@@ -27,6 +38,8 @@ export async function POST(request: any) {
   }
 
   try {
+    const { searchParams } = new URL(request.url);
+    const targetProvider = searchParams.get("targetProvider") === "amazon-q" ? "amazon-q" : "kiro";
     const validation = validateBody(kiroImportSchema, rawBody);
     if (isValidationFailure(validation)) {
       return NextResponse.json({ error: validation.error }, { status: 400 });
@@ -35,15 +48,20 @@ export async function POST(request: any) {
 
     const kiroService = new KiroService();
 
-    // Validate and refresh token
-    const tokenData = await kiroService.validateImportToken(refreshToken.trim());
+    // Resolve proxy for this provider (provider-level → global → direct)
+    const proxy = await resolveProxyForProvider(targetProvider);
+
+    // Validate and refresh token (through proxy if configured)
+    const tokenData = await runWithProxyContext(proxy, () =>
+      kiroService.validateImportToken(refreshToken.trim())
+    );
 
     // Extract email from JWT if available
     const email = kiroService.extractEmailFromJWT(tokenData.accessToken);
 
     // Save to database
     const connection: any = await createProviderConnection({
-      provider: "kiro",
+      provider: targetProvider,
       authType: "oauth",
       accessToken: tokenData.accessToken,
       refreshToken: tokenData.refreshToken,
@@ -69,7 +87,7 @@ export async function POST(request: any) {
       },
     });
   } catch (error: any) {
-    console.log("Kiro import token error:", error);
+    console.log("Kiro-compatible import token error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

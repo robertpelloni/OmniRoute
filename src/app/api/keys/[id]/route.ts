@@ -9,9 +9,14 @@ import { getConsistentMachineId } from "@/shared/utils/machineId";
 import { syncToCloud } from "@/lib/cloudSync";
 import { updateKeyPermissionsSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
+import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
+import * as log from "@/sse/utils/logger";
 
 // GET /api/keys/[id] - Get single API key
 export async function GET(request, { params }) {
+  const authError = await requireManagementAuth(request);
+  if (authError) return authError;
+
   try {
     const { id } = await params;
     const key = await getApiKeyById(id);
@@ -27,13 +32,16 @@ export async function GET(request, { params }) {
       key: keyValue ? keyValue.slice(0, 8) + "****" + keyValue.slice(-4) : null,
     });
   } catch (error) {
-    console.log("Error fetching key:", error);
+    log.error("keys", "Error fetching key", error);
     return NextResponse.json({ error: "Failed to fetch key" }, { status: 500 });
   }
 }
 
 // PATCH /api/keys/[id] - Update API key permissions/privacy controls
 export async function PATCH(request, { params }) {
+  const authError = await requireManagementAuth(request);
+  if (authError) return authError;
+
   let rawBody;
   try {
     rawBody = await request.json();
@@ -62,6 +70,7 @@ export async function PATCH(request, { params }) {
       noLog,
       autoResolve,
       isActive,
+      maxSessions,
       accessSchedule,
     } = validation.data;
 
@@ -72,6 +81,7 @@ export async function PATCH(request, { params }) {
     if (noLog !== undefined) payload.noLog = noLog;
     if (autoResolve !== undefined) payload.autoResolve = autoResolve;
     if (isActive !== undefined) payload.isActive = isActive;
+    if (maxSessions !== undefined) payload.maxSessions = maxSessions;
     if (accessSchedule !== undefined) payload.accessSchedule = accessSchedule;
 
     const updated = await updateApiKeyPermissions(id, payload);
@@ -90,16 +100,20 @@ export async function PATCH(request, { params }) {
       ...(noLog !== undefined && { noLog }),
       ...(autoResolve !== undefined && { autoResolve }),
       ...(isActive !== undefined && { isActive }),
+      ...(maxSessions !== undefined && { maxSessions }),
       ...(accessSchedule !== undefined && { accessSchedule }),
     });
   } catch (error) {
-    console.log("Error updating key permissions:", error);
+    log.error("keys", "Error updating key permissions", error);
     return NextResponse.json({ error: "Failed to update permissions" }, { status: 500 });
   }
 }
 
 // DELETE /api/keys/[id] - Delete API key
 export async function DELETE(request, { params }) {
+  const authError = await requireManagementAuth(request);
+  if (authError) return authError;
+
   try {
     const { id } = await params;
 
@@ -113,7 +127,7 @@ export async function DELETE(request, { params }) {
 
     return NextResponse.json({ message: "Key deleted successfully" });
   } catch (error) {
-    console.log("Error deleting key:", error);
+    log.error("keys", "Error deleting key", error);
     return NextResponse.json({ error: "Failed to delete key" }, { status: 500 });
   }
 }
@@ -129,6 +143,6 @@ async function syncKeysToCloudIfEnabled() {
     const machineId = await getConsistentMachineId();
     await syncToCloud(machineId);
   } catch (error) {
-    console.log("Error syncing keys to cloud:", error);
+    log.error("keys", "Error syncing keys to cloud", error);
   }
 }

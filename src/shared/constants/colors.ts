@@ -19,7 +19,7 @@ export const PROVIDER_COLORS = {
   codex: { bg: "#10A37F", text: "#fff", label: "Codex" },
   gemini: { bg: "#34A853", text: "#fff", label: "Gemini" },
   qwen: { bg: "#6366F1", text: "#fff", label: "Qwen" },
-  iflow: { bg: "#EC4899", text: "#fff", label: "iFlow" },
+  qoder: { bg: "#EC4899", text: "#fff", label: "Qoder" },
   fireworks: { bg: "#F97316", text: "#fff", label: "Fireworks" },
   kimi: { bg: "#06B6D4", text: "#fff", label: "Kimi" },
   "gemini-cli": { bg: "#34A853", text: "#fff", label: "Gemini CLI" },
@@ -30,12 +30,22 @@ export const PROVIDER_COLORS = {
 // ═══════════════════════════════════════════
 
 export const PROTOCOL_COLORS = {
-  openai: { bg: "#10A37F", text: "#fff", label: "OpenAI" },
+  openai: { bg: "#1A1A2E", text: "#fff", label: "OpenAI-Chat" },
+  "openai-responses": { bg: "#1A1A2E", text: "#fff", label: "OpenAI-Responses" },
   claude: { bg: "#D97757", text: "#fff", label: "Claude" },
   gemini: { bg: "#4285F4", text: "#fff", label: "Gemini" },
   warmup: { bg: "#F59E0B", text: "#000", label: "Warmup" },
   bypass: { bg: "#6B7280", text: "#fff", label: "Bypass" },
 };
+
+const PROTOCOL_KEY_ALIASES = {
+  "openai-chat": "openai",
+  "openai-response": "openai-responses",
+};
+
+function normalizeProtocolKey(protocol) {
+  return PROTOCOL_KEY_ALIASES[protocol] || protocol;
+}
 
 // ═══════════════════════════════════════════
 // Proxy Type Colors (ProxyLogger)
@@ -130,6 +140,24 @@ export function getProviderColor(provider) {
       bg: "#374151",
       text: "#fff",
       label: (provider || "-").toUpperCase(),
+    }
+  );
+}
+
+/**
+ * Get default fallback for a protocol color lookup.
+ * @param {string} protocol - Protocol key
+ * @param {string} fallbackProvider - Provider key to use as a secondary protocol key
+ * @returns {{ bg: string, text: string, label: string }}
+ */
+export function getProtocolColor(protocol, fallbackProvider) {
+  const normalized = normalizeProtocolKey(protocol);
+  return (
+    PROTOCOL_COLORS[normalized] ||
+    PROTOCOL_COLORS[fallbackProvider] || {
+      bg: "#6B7280",
+      text: "#fff",
+      label: (protocol || fallbackProvider || "-").toUpperCase(),
     }
   );
 }

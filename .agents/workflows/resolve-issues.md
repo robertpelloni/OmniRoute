@@ -6,7 +6,11 @@ description: Fetch all open GitHub issues, analyze bugs, resolve what's possible
 
 ## Overview
 
-This workflow fetches all open issues from the project's GitHub repository, classifies them, analyzes bugs, resolves what can be fixed, and triages issues with insufficient information. **It does NOT merge or release automatically** — it creates a PR and waits for user validation before merging.
+This workflow fetches all open issues from the project's GitHub repository, classifies them, analyzes bugs, proposes a resolution plan, waits for user validation, and ONLY THEN implements the fixes, commits, and closes the issues on the current release branch (`release/vX.Y.Z`). It does NOT merge or release automatically — the release branch is later merged via PR to main.
+
+> **BRANCH RULE**: All work MUST happen on the current `release/vX.Y.Z` branch. Never create separate `fix/` branches. If no release branch exists yet, create one first using `/generate-release` Phase 1 steps 1–5.
+
+> **⛔ PR PROHIBITION**: If a fix is associated with a contributor's PR, you MUST merge their PR — NEVER close it and re-implement the fix yourself. See `/review-prs` workflow for the full policy. The `gh pr close` command is FORBIDDEN unless the repository owner explicitly requests it.
 
 ## Steps
 
@@ -17,15 +21,45 @@ This workflow fetches all open issues from the project's GitHub repository, clas
 - Run: `git -C <project_root> remote get-url origin` to extract the owner/repo
 - Parse the owner and repo name from the URL
 
-### 2. Fetch All Open Issues
+### 2. Ensure Release Branch Exists
 
 // turbo
 
-- Run: `gh issue list --repo <owner>/<repo> --state open --limit 500 --json number,title,labels,body,comments,createdAt,author`
-- Parse the JSON output to get a list of **all** open issues
-- Sort by oldest first (FIFO)
+Before doing any work, ensure you are on the current release branch:
 
-### 3. Classify Each Issue
+```bash
+# Check current branch
+git branch --show-current
+
+# If on main, determine next version and create the release branch
+VERSION=$(node -p "require('./package.json').version")
+NEXT=$(node -p "const [a,b,c]=('$VERSION').split('.').map(Number); c>=9?a+'.'+(b+1)+'.0':a+'.'+b+'.'+(c+1)")
+git checkout -b release/v$NEXT
+npm version patch --no-git-tag-version
+npm install
+```
+
+If already on a `release/vX.Y.Z` branch, continue working there.
+
+### 3. Fetch All Open Issues
+
+// turbo-all
+
+**⚠️ CRITICAL**: The JSON output of `gh issue list` can be truncated by the tool, silently hiding issues. You MUST use the two-step approach below to guarantee **all** issues are fetched.
+
+**Step 3a — Get Issue numbers only** (small output, never truncated):
+
+- Run: `gh issue list --repo <owner>/<repo> --state open --limit 500 --json number --jq '.[].number'`
+- This outputs one issue number per line. Count them and confirm total.
+
+**Step 3b — Fetch full metadata for each Issue** (one call per issue):
+
+- For each issue number from step 3a, run:
+  `gh issue view <NUMBER> --repo <owner>/<repo> --json number,title,labels,body,comments,createdAt,author`
+- You may batch these into parallel calls (up to 4 at a time).
+- Sort by oldest first (FIFO).
+
+### 4. Classify Each Issue
 
 For each issue, determine its type:
 
@@ -36,85 +70,97 @@ For each issue, determine its type:
 
 Focus ONLY on **Bugs** for resolution. Feature requests and questions should be skipped with a note in the final report.
 
-### 4. Analyze Each Bug — For each bug issue:
+### 5. Deep-Read Each Bug Issue (One-by-One Analysis)
 
-#### 4a. Check Information Sufficiency
+**IMPORTANT**: Read each bug issue thoroughly, one at a time, before moving to the next. This is NOT a batch process — each issue needs focused attention.
 
-Verify the issue contains enough information to reproduce and fix:
+#### 5a. Understand the Problem
+
+For each bug issue, perform the full analysis:
+
+1. **Read the entire body** — including Description, Steps to Reproduce, Expected/Actual Behavior, Error Logs, and Screenshots
+2. **Read ALL comments** — including bot triage comments (Kilo, etc.) and owner/community responses. Pay attention to:
+   - Whether someone already responded with a fix
+   - Whether a community member confirmed the issue is resolved
+   - Whether the issue was marked as duplicate by a bot. **WARNING: DO NOT blindly trust bot duplicate labels (e.g., kilo-duplicate). Bots make mistakes. You MUST read the full conversation and do your own independent analysis to determine if it is truly a duplicate or a distinct bug.**
+3. **Identify the claimed error** — extract the exact error message, status code, and provider/model involved
+
+#### 5b. Check Information Sufficiency
+
+Verify the issue contains enough to act on:
 
 - [ ] Clear description of the problem
-- [ ] Steps to reproduce
-- [ ] Error messages or logs
+- [ ] Steps to reproduce OR error logs
+- [ ] Provider/model/version information
 - [ ] Expected vs actual behavior
 
-#### 4b. If Information Is INSUFFICIENT
+#### 5c. Determine Issue Disposition
 
-Call the `/issue-triage` workflow (located at `~/.gemini/antigravity/global_workflows/issue-triage.md`):
-// turbo
+For each bug, classify into one of 5 actions:
 
-- Post a comment asking for more details using `gh issue comment`
-- Add `needs-info` label using `gh issue edit`
-- Mark this issue as **DEFERRED** and move to the next one
+| Disposition                  | When to Apply                                                                                                          | Action                                                  |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| **✅ CLOSE — Already Fixed** | Owner responded with fix + no user follow-up, OR community confirmed fix                                               | Close with comment citing which version fixed it        |
+| **✅ CLOSE — Duplicate**     | You have independently verified the issue is a duplicate (do NOT rely solely on bot flags) + user provides no new info | Close referencing the original issue                    |
+| **✅ CLOSE — Stale**         | We requested logs/info > 7 days ago with no reply                                                                      | Close thanking the user, invite to reopen if needed     |
+| **📝 RESPOND — Needs Info**  | Issue is real but missing critical reproduction details                                                                | Comment asking for specifics per `/issue-triage`        |
+| **📝 RESPOND — User Config** | Error is caused by unsupported env (Node version, wrong model path, missing API enablement)                            | Comment explaining the user-side fix                    |
+| **🔧 FIX — Code Change**     | Root cause is confirmed in the codebase                                                                                | Research, propose solution in report, wait for approval |
 
-#### 4c. If Information Is SUFFICIENT
+#### 5d. For "FIX — Code Change" Issues
 
-Proceed with resolution:
+Before coding, perform deep source analysis to formulate a plan:
 
-1. **Create a fix branch** — `git checkout -b fix/issue-<NUMBER>-<short-description>`
-2. **Research** — Search the codebase for files related to the issue
-3. **Root Cause** — Identify the root cause by reading the relevant source files
-4. **Implement Fix** — Apply the fix following existing code patterns and conventions
-5. **Test** — Build the project and run tests to verify the fix
-6. **Commit** — Commit with message format: `fix: <description> (#<issue_number>)`
+1. **Search the codebase** — `grep_search` for error strings, relevant function names, affected files
+2. **Search the web** — for upstream API changes, SDK updates, or breaking changes that explain the bug
+3. **Read the full source file** — don't rely on grep snippets; understand the surrounding logic
+4. **Verify the root cause** — confirm the bug is reproducible based on the code, not just a user misconfiguration
+5. **Formulate a proposed solution** — detail the exact files and lines you will change and how you will solve it.
+6. **Create an Implementation Plan file** — write your proposed solution to `_tasks/features-vX.Y.Z/<ISSUE_NUMBER>-<short-description>.plan.md` (e.g. `_tasks/features-v3.7.6/1810-auto-restore-probe-failed-db.plan.md`) where `vX.Y.Z` is the current branch version. The plan should contain an Overview, Pre-Implementation Checklist, and detailed Implementation Steps (Files, Changes).
+7. **DO NOT modify the codebase yet** — wait for user approval on your report and plan first.
 
-### 5. Generate Report & Wait for Validation
+#### 5e. For "RESPOND" Issues
 
-Present a summary report to the user via `notify_user` with `BlockedOnUser: true`:
+Post a substantive comment that:
 
-| Issue | Title | Status        | Action                        |
-| ----- | ----- | ------------- | ----------------------------- |
-| #N    | Title | ✅ Ready      | Files changed (not committed) |
-| #N    | Title | ❓ Needs Info | Triage comment posted         |
-| #N    | Title | ⏭️ Skipped    | Feature request / not a bug   |
+- Acknowledges the specific error they reported
+- Explains the likely root cause
+- Provides concrete steps to resolve (version upgrade, env var fix, model path correction)
+- Asks for follow-up info if needed
 
-> **⚠️ IMPORTANT**: Do NOT commit, close issues, or generate releases at this step.
-> Wait for the user to review the changes and respond with **OK** before proceeding.
+**Do NOT post generic template responses.** Every comment should reference the user's specific error messages and environment.
 
-- If the user says **OK** or approves → Proceed to step 6
-- If the user requests changes → Apply the requested adjustments first, then present the report again
-- If the user rejects → Revert the changes and stop
+### 6. Generate Report & Wait for Validation
 
-### 6. Commit & Push Fix Branch (only after user approval)
+Present a summary report to the user detailing your proposed actions. For any bugs that need fixing, explicitly explain your proposed solution (files to change and logic) and point out that it will be implemented on the release branch (`release/vX.Y.Z`) after approval.
 
-After the user validates:
+| Issue | Title | Status        | Proposed Action / Version                 |
+| ----- | ----- | ------------- | ----------------------------------------- |
+| #N    | Title | ✅ Close      | Already fixed / duplicate (explain why)   |
+| #N    | Title | 🔧 Propose    | Explanation of the code fix to be applied |
+| #N    | Title | 📝 Respond    | Guidance comment to be posted             |
+| #N    | Title | ❓ Needs Info | Triage comment to be posted               |
+| #N    | Title | ⏭️ Skip       | Feature request / not a bug               |
 
-- Commit each fix individually with message format: `fix: <description> (#<issue_number>)`
-- Push the fix branch: `git push origin fix/issue-<NUMBER>-<short-description>`
-- Create a PR: `gh pr create --title "fix: <description> (#<issue_number>)" --body "<details>" --base main`
+> **⚠️ IMPORTANT**: Do NOT implement code changes, commit, push, or close issues at this step.
+> Wait for the user to review the proposed fixes and respond with **OK** before proceeding.
 
-### 7. 🛑 WAIT — Notify User & Await PR Verification
+- If the user says **OK** or approves → Proceed to step 7
+- If the user requests changes → Adjust the proposed solution and present the report again
+- If the user rejects → Revert any accidental changes and stop
 
-**This is a mandatory stop point.** Use `notify_user` with `BlockedOnUser: true`:
+### 7. Implement Fixes, Run Tests & Commit (only after user approval)
 
-- Inform the user that the PR was created and is **awaiting their verification**
-- Include the PR number, URL, and a summary of what was changed
-- **DO NOT merge, close issues, generate releases, or deploy until the user confirms**
+After the user validates and gives the OK:
 
-Wait for the user to respond:
+1. **Implement the fixes** — modify the codebase according to the approved plan.
+2. **Run tests** — `npm run test:all` (or the specific test file) to ensure 100% pass.
+3. **Update CHANGELOG.md** with all new bug fix entries.
+4. **Commit** each fix individually on the release branch with message format: `fix: <description> (#<issue_number>)`.
+5. **Push** the release branch: `git push origin release/vX.Y.Z`.
+6. **Close resolved issues immediately**. For each issue that was marked as Fixed, run:
+   `gh issue close <NUMBER> --repo <owner>/<repo> --comment "Thank you for reporting! This issue has been fixed and will be included in the next release (vX.Y.Z)."`
+7. Likewise, close `Duplicate` issues referencing the original, close `Needs Info` if stale, and post the required comments.
+8. If the project runs automatic releases or needs a PR, proceed to run `/generate-release` workflow Phase 1 steps 7–10 (tests → commit → push → open PR to main → wait for user).
 
-- **User confirms** → Proceed to step 8
-- **User requests changes** → Apply changes, push to the same branch, notify again
-- **User rejects** → Close the PR and stop
-
-### 8. Merge, Close Issues & Release (only after user confirms PR)
-
-After the user confirms the PR:
-
-1. **Merge** the PR: `gh pr merge <NUMBER> --merge --repo <owner>/<repo>` or via local merge
-2. **Close** resolved issues with a comment: `gh issue close <NUMBER> --repo <owner>/<repo> --comment "Fixed in <commit_hash>. The fix will be included in the next release."`
-3. **Switch to main**: `git checkout main && git pull`
-4. Run the `/update-docs` workflow (at `~/.gemini/antigravity/global_workflows/update-docs.md`) to update CHANGELOG and README
-5. Run the `/generate-release` workflow (at `.agents/workflows/generate-release.md`) to bump version, tag, and publish
-6. Deploy to local VPS: `ssh root@192.168.0.15 "npm install -g omniroute@<VERSION> && pm2 restart omniroute"`
-
-If NO fixes were committed, skip this step and just present the report.
+If NO fixes were committed, skip closing and source control steps and just conclude the workflow.

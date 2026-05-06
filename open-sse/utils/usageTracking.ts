@@ -1,8 +1,15 @@
+// @ts-nocheck
 /**
  * Token Usage Tracking - Extract, normalize, estimate and log token usage
  */
 
-import { saveRequestUsage, appendRequestLog } from "@/lib/usageDb";
+import { appendRequestLog } from "@/lib/usageDb";
+import {
+  getLoggedInputTokens,
+  getLoggedOutputTokens,
+  getPromptCacheCreationTokens,
+  getPromptCacheReadTokens,
+} from "@/lib/usage/tokenAccounting";
 import { FORMATS } from "../translator/formats.ts";
 
 // ANSI color codes
@@ -17,10 +24,74 @@ export const COLORS = {
 
 /**
  * Safety buffer added to reported token usage to prevent clients from hitting
- * context window limits. 2000 tokens accounts for overhead from system prompts,
+ * context window limits. Accounts for overhead from system prompts,
  * tool definitions, and format translation that may not be reflected in raw usage.
+ *
+ * Configurable via:
+ *   - Settings API / Dashboard: `usageTokenBuffer` (persisted in DB)
+ *   - Environment variable: `USAGE_TOKEN_BUFFER`
+ *   - Defaults to 2000 if neither is set
+ *
+ * Set to 0 to disable the buffer entirely (raw provider token counts).
  */
-const BUFFER_TOKENS = 2000;
+const DEFAULT_BUFFER_TOKENS = 2000;
+
+let _cachedBuffer: number | null = null;
+let _cacheTimestamp = 0;
+const CACHE_TTL_MS = 30_000; // Re-read from DB/env every 30s
+
+function getBufferTokens(): number {
+  const now = Date.now();
+  const isExpired = _cachedBuffer !== null && now - _cacheTimestamp >= CACHE_TTL_MS;
+
+  if (_cachedBuffer !== null && !isExpired) {
+    return _cachedBuffer;
+  }
+
+  // Priority: env var > cached DB value > default
+  const envVal = process.env.USAGE_TOKEN_BUFFER;
+  if (envVal !== undefined) {
+    const parsed = parseInt(envVal, 10);
+    if (!isNaN(parsed) && parsed >= 0) {
+      _cachedBuffer = parsed;
+      _cacheTimestamp = now;
+      return parsed;
+    }
+  }
+
+  // Return cached value or default; kick off async DB read to update cache.
+  // On first call (_cachedBuffer is null), use the default.
+  // On TTL expiry (_cachedBuffer is stale), continue returning the stale value
+  // while refreshing asynchronously — prevents blocking the hot path.
+  if (_cachedBuffer === null || isExpired) {
+    if (_cachedBuffer === null) {
+      _cachedBuffer = DEFAULT_BUFFER_TOKENS;
+    }
+    _cacheTimestamp = now;
+    _loadBufferFromDb();
+  }
+  return _cachedBuffer;
+}
+
+async function _loadBufferFromDb(): Promise<void> {
+  try {
+    const { getSettings } = await import("@/lib/db/settings");
+    const settings = await getSettings();
+    const val = settings.usageTokenBuffer;
+    if (typeof val === "number" && val >= 0) {
+      _cachedBuffer = val;
+      _cacheTimestamp = Date.now();
+    }
+  } catch {
+    // DB not ready yet or settings unavailable — keep current value
+  }
+}
+
+/** Force-refresh the buffer from settings (e.g. after a settings update). */
+export function invalidateBufferTokensCache(): void {
+  _cachedBuffer = null;
+  _cacheTimestamp = 0;
+}
 
 // Get HH:MM:SS timestamp
 function getTimeString() {
@@ -40,21 +111,24 @@ function getTimeString() {
 export function addBufferToUsage(usage) {
   if (!usage || typeof usage !== "object") return usage;
 
+  const buffer = getBufferTokens();
+  if (buffer === 0) return usage;
+
   const result = { ...usage };
 
   // Claude format
   if (result.input_tokens !== undefined) {
-    result.input_tokens += BUFFER_TOKENS;
+    result.input_tokens += buffer;
   }
 
   // OpenAI format
   if (result.prompt_tokens !== undefined) {
-    result.prompt_tokens += BUFFER_TOKENS;
+    result.prompt_tokens += buffer;
   }
 
   // Calculate or update total_tokens
   if (result.total_tokens !== undefined) {
-    result.total_tokens += BUFFER_TOKENS;
+    result.total_tokens += buffer;
   } else if (result.prompt_tokens !== undefined && result.completion_tokens !== undefined) {
     // Calculate total_tokens if not exists
     result.total_tokens = result.prompt_tokens + result.completion_tokens;
@@ -66,12 +140,47 @@ export function addBufferToUsage(usage) {
 export function filterUsageForFormat(usage, targetFormat) {
   if (!usage || typeof usage !== "object") return usage;
 
+  // Cross-map between Claude-style and OpenAI-style field names before filtering.
+  // Some providers return input_tokens/output_tokens even when using OpenAI format.
+  const convertedUsage = { ...usage };
+  if (targetFormat === FORMATS.CLAUDE || targetFormat === FORMATS.OPENAI_RESPONSES) {
+    // OpenAI → Claude: prompt_tokens → input_tokens
+    if (convertedUsage.prompt_tokens !== undefined && convertedUsage.input_tokens === undefined) {
+      convertedUsage.input_tokens = convertedUsage.prompt_tokens;
+    }
+    if (
+      convertedUsage.completion_tokens !== undefined &&
+      convertedUsage.output_tokens === undefined
+    ) {
+      convertedUsage.output_tokens = convertedUsage.completion_tokens;
+    }
+  } else {
+    // Claude → OpenAI: input_tokens → prompt_tokens
+    if (convertedUsage.input_tokens !== undefined && convertedUsage.prompt_tokens === undefined) {
+      convertedUsage.prompt_tokens = convertedUsage.input_tokens;
+    }
+    if (
+      convertedUsage.output_tokens !== undefined &&
+      convertedUsage.completion_tokens === undefined
+    ) {
+      convertedUsage.completion_tokens = convertedUsage.output_tokens;
+    }
+    // Ensure total_tokens is set
+    if (
+      convertedUsage.total_tokens === undefined &&
+      convertedUsage.prompt_tokens !== undefined &&
+      convertedUsage.completion_tokens !== undefined
+    ) {
+      convertedUsage.total_tokens = convertedUsage.prompt_tokens + convertedUsage.completion_tokens;
+    }
+  }
+
   // Helper to pick only defined fields from usage
   const pickFields = (fields) => {
     const filtered = {};
     for (const field of fields) {
-      if (usage[field] !== undefined) {
-        filtered[field] = usage[field];
+      if (convertedUsage[field] !== undefined) {
+        filtered[field] = convertedUsage[field];
       }
     }
     return filtered;
@@ -191,12 +300,18 @@ export function extractUsage(chunk) {
   // Claude/Antigravity streaming: message_start event carries INPUT tokens
   // FIX #74: This event was not handled — input_tokens were being dropped
   // Structure: { type: "message_start", message: { usage: { input_tokens: N, output_tokens: 0 } } }
+  //
+  // Note: Claude's input_tokens is only the non-cached portion.
+  // Sum cache tokens into prompt_tokens for a correct total (consistent with
+  // extractUsageFromResponse in usageExtractor.ts for non-streaming).
   if (chunk.type === "message_start" && chunk.message?.usage) {
     const u = chunk.message.usage;
     const inputTokens = u.input_tokens || u.prompt_tokens || 0;
-    if (inputTokens > 0) {
+    const cacheRead = u.cache_read_input_tokens || 0;
+    const cacheCreation = u.cache_creation_input_tokens || 0;
+    if (inputTokens > 0 || cacheRead > 0 || cacheCreation > 0) {
       return normalizeUsage({
-        prompt_tokens: inputTokens,
+        prompt_tokens: inputTokens + cacheRead + cacheCreation,
         completion_tokens: u.output_tokens || u.completion_tokens || 0,
         cache_read_input_tokens: u.cache_read_input_tokens,
         cache_creation_input_tokens: u.cache_creation_input_tokens,
@@ -204,10 +319,13 @@ export function extractUsage(chunk) {
     }
   }
 
-  // Claude format (message_delta event) — carries OUTPUT tokens
+  // Claude format (message_delta event) — typically carries OUTPUT tokens
   if (chunk.type === "message_delta" && chunk.usage && typeof chunk.usage === "object") {
+    const deltaInput = chunk.usage.input_tokens || 0;
+    const deltaCacheRead = chunk.usage.cache_read_input_tokens || 0;
+    const deltaCacheCreation = chunk.usage.cache_creation_input_tokens || 0;
     return normalizeUsage({
-      prompt_tokens: chunk.usage.input_tokens || 0,
+      prompt_tokens: deltaInput + deltaCacheRead + deltaCacheCreation,
       completion_tokens: chunk.usage.output_tokens || 0,
       cache_read_input_tokens: chunk.usage.cache_read_input_tokens,
       cache_creation_input_tokens: chunk.usage.cache_creation_input_tokens,
@@ -224,18 +342,34 @@ export function extractUsage(chunk) {
     return normalizeUsage({
       prompt_tokens: usage.input_tokens || usage.prompt_tokens || 0,
       completion_tokens: usage.output_tokens || usage.completion_tokens || 0,
-      cached_tokens: usage.input_tokens_details?.cached_tokens,
-      reasoning_tokens: usage.output_tokens_details?.reasoning_tokens,
+      cached_tokens:
+        usage.input_tokens_details?.cached_tokens ??
+        usage.prompt_tokens_details?.cached_tokens ??
+        usage.cache_read_input_tokens,
+      cache_creation_input_tokens: usage.cache_creation_input_tokens,
+      reasoning_tokens:
+        usage.output_tokens_details?.reasoning_tokens ??
+        usage.completion_tokens_details?.reasoning_tokens ??
+        usage.reasoning_tokens,
     });
   }
 
   // OpenAI format
-  if (chunk.usage && typeof chunk.usage === "object" && chunk.usage.prompt_tokens !== undefined) {
+  if (
+    chunk.usage &&
+    typeof chunk.usage === "object" &&
+    (chunk.usage.prompt_tokens !== undefined || chunk.usage.input_tokens !== undefined)
+  ) {
     return normalizeUsage({
-      prompt_tokens: chunk.usage.prompt_tokens,
-      completion_tokens: chunk.usage.completion_tokens || 0,
-      cached_tokens: chunk.usage.prompt_tokens_details?.cached_tokens,
-      reasoning_tokens: chunk.usage.completion_tokens_details?.reasoning_tokens,
+      prompt_tokens: chunk.usage.prompt_tokens ?? chunk.usage.input_tokens ?? 0,
+      completion_tokens: chunk.usage.completion_tokens ?? chunk.usage.output_tokens ?? 0,
+      cached_tokens:
+        chunk.usage.prompt_tokens_details?.cached_tokens ??
+        chunk.usage.input_tokens_details?.cached_tokens ??
+        chunk.usage.prompt_cache_hit_tokens,
+      reasoning_tokens:
+        chunk.usage.completion_tokens_details?.reasoning_tokens ??
+        chunk.usage.output_tokens_details?.reasoning_tokens,
     });
   }
 
@@ -368,7 +502,13 @@ export function estimateUsage(body, contentLength, targetFormat = FORMATS.OPENAI
 /**
  * Log usage with cache info (green color)
  */
-export function logUsage(provider, usage, model = null, connectionId = null, apiKeyInfo = null) {
+export function logUsage(
+  provider,
+  usage,
+  model: string | null = null,
+  connectionId: string | null = null,
+  apiKeyInfo = null
+) {
   if (!usage || typeof usage !== "object") return;
 
   const p = provider?.toUpperCase() || "UNKNOWN";
@@ -376,9 +516,13 @@ export function logUsage(provider, usage, model = null, connectionId = null, api
   // Support both formats:
   // - OpenAI: prompt_tokens, completion_tokens
   // - Claude: input_tokens, output_tokens
-  const inTokens = usage?.prompt_tokens || usage?.input_tokens || 0;
-  const outTokens = usage?.completion_tokens || usage?.output_tokens || 0;
-  const accountPrefix = connectionId ? connectionId.slice(0, 8) + "..." : "unknown";
+  const inTokens = getLoggedInputTokens(usage);
+  const outTokens = getLoggedOutputTokens(usage);
+  void apiKeyInfo;
+  const normalizedConnectionId = typeof connectionId === "string" ? connectionId : undefined;
+  const accountPrefix = normalizedConnectionId
+    ? normalizedConnectionId.slice(0, 8) + "..."
+    : "unknown";
 
   let msg = `[${getTimeString()}] 📊 ${COLORS.green}[USAGE] ${p} | in=${inTokens} | out=${outTokens} | account=${accountPrefix}${COLORS.reset}`;
 
@@ -388,10 +532,10 @@ export function logUsage(provider, usage, model = null, connectionId = null, api
   }
 
   // Add cache info if present (unified from different formats)
-  const cacheRead = usage.cache_read_input_tokens || usage.cached_tokens;
+  const cacheRead = getPromptCacheReadTokens(usage);
   if (cacheRead) msg += ` | cache_read=${cacheRead}`;
 
-  const cacheCreation = usage.cache_creation_input_tokens;
+  const cacheCreation = getPromptCacheCreationTokens(usage);
   if (cacheCreation) msg += ` | cache_create=${cacheCreation}`;
 
   const reasoning = usage.reasoning_tokens;
@@ -399,23 +543,20 @@ export function logUsage(provider, usage, model = null, connectionId = null, api
 
   console.log(msg);
 
-  // Save to usage DB
-  // input = total input tokens (non-cached + cache_read + cache_creation)
-  // This ensures analytics show correct totals for heavily-cached requests
+  // Streaming requests persist usage once in chatCore's completion callback.
+  // Keep this helper side-effect free apart from console visibility.
   const tokens = {
-    input: inTokens + (cacheRead || 0) + (cacheCreation || 0),
+    input: inTokens,
     output: outTokens,
     cacheRead: cacheRead || 0,
     cacheCreation: cacheCreation || 0,
     reasoning: reasoning || 0,
   };
-  saveRequestUsage({
-    model,
-    provider,
-    connectionId,
-    apiKeyId: apiKeyInfo?.id || undefined,
-    apiKeyName: apiKeyInfo?.name || undefined,
+  appendRequestLog({
+    model: typeof model === "string" ? model : undefined,
+    provider: typeof provider === "string" ? provider : undefined,
+    connectionId: normalizedConnectionId,
     tokens,
+    status: "200 OK",
   }).catch(() => {});
-  appendRequestLog({ model, provider, connectionId, tokens, status: "200 OK" }).catch(() => {});
 }

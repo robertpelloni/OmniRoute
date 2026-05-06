@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
-import PropTypes from "prop-types";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { useTranslations } from "next-intl";
 import Modal from "./Modal";
 import Button from "./Button";
 import Input from "./Input";
@@ -12,10 +12,11 @@ const GOOGLE_OAUTH_PROVIDERS = new Set(["antigravity", "gemini-cli"]);
 type OAuthModalProps = {
   isOpen: boolean;
   provider?: string;
-  providerInfo?: { name: string } | null;
+  providerInfo?: { name?: string } | null;
   onSuccess?: () => void;
   onClose: () => void;
   idcConfig?: unknown;
+  reauthConnection?: null | { id?: string };
 };
 
 /**
@@ -30,7 +31,9 @@ export default function OAuthModal({
   onSuccess,
   onClose,
   idcConfig,
+  reauthConnection,
 }: OAuthModalProps) {
+  const t = useTranslations("oauthModal");
   const [step, setStep] = useState("waiting"); // waiting | input | success | error
   const [authData, setAuthData] = useState(null);
   const [callbackUrl, setCallbackUrl] = useState("");
@@ -40,33 +43,38 @@ export default function OAuthModal({
   const [polling, setPolling] = useState(false);
   const popupRef = useRef(null);
   const { copied, copy } = useCopyToClipboard();
+  const deviceVerificationUrl =
+    deviceData?.verification_uri_complete || deviceData?.verification_uri || "";
 
-  // State for client-only values to avoid hydration mismatch
-  const [isLocalhost, setIsLocalhost] = useState(false);
-  const [placeholderUrl, setPlaceholderUrl] = useState("/callback?code=...");
+  // Client-only runtime values
+  const runtimeLocation = useMemo(() => {
+    if (typeof window === "undefined") {
+      return {
+        isLocalhost: false,
+        isTrueLocalhost: false,
+        placeholderUrl: "/callback?code=...",
+      };
+    }
+
+    const hostname = window.location.hostname;
+    const isLocal =
+      hostname === "localhost" ||
+      hostname === "127.0.0.1" ||
+      hostname.startsWith("192.168.") ||
+      hostname.startsWith("10.") ||
+      /^172\.(1[6-9]|2\d|3[01])\./.test(hostname);
+    const isTrulyLocal = hostname === "localhost" || hostname === "127.0.0.1";
+
+    return {
+      isLocalhost: isLocal,
+      isTrueLocalhost: isTrulyLocal,
+      placeholderUrl: `${window.location.origin}/callback?code=...`,
+    };
+  }, []);
+
+  const { isLocalhost, isTrueLocalhost, placeholderUrl } = runtimeLocation;
   const callbackProcessedRef = useRef(false);
   const flowStartedRef = useRef(false);
-
-  // Detect if running on true localhost vs LAN IP (client-side only)
-  // - True localhost (127.0.0.1/localhost): popup auto-callback works
-  // - LAN IPs (192.168.x, 10.x, 172.x): redirect URI uses localhost but callback
-  //   won't resolve back to the VPS, so use manual paste mode
-  const [isTrueLocalhost, setIsTrueLocalhost] = useState(false);
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const hostname = window.location.hostname;
-      const isLocal =
-        hostname === "localhost" ||
-        hostname === "127.0.0.1" ||
-        hostname.startsWith("192.168.") ||
-        hostname.startsWith("10.") ||
-        /^172\.(1[6-9]|2\d|3[01])\./.test(hostname);
-      const isTrulyLocal = hostname === "localhost" || hostname === "127.0.0.1";
-      setIsLocalhost(isLocal);
-      setIsTrueLocalhost(isTrulyLocal);
-      setPlaceholderUrl(`${window.location.origin}/callback?code=...`);
-    }
-  }, []);
 
   // Define all useCallback hooks BEFORE the useEffects that reference them
 
@@ -75,25 +83,45 @@ export default function OAuthModal({
     async (code, state) => {
       if (!authData) return;
       try {
+        if (!authData.redirectUri || !authData.codeVerifier) {
+          throw new Error(
+            "OAuth session is incomplete (missing redirect URI or code verifier). Restart the connection and try again."
+          );
+        }
+
+        const normalizedState = typeof state === "string" && state.length > 0 ? state : undefined;
+
         const res = await fetch(`/api/oauth/${provider}/exchange`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             code,
             redirectUri: authData.redirectUri,
+            connectionId: reauthConnection?.id,
             codeVerifier: authData.codeVerifier,
-            state,
+            ...(normalizedState ? { state: normalizedState } : {}),
           }),
         });
 
         const data = await res.json();
         if (!res.ok) {
-          const errMsg =
+          const errorObject =
             typeof data.error === "object" && data.error !== null
-              ? ((data.error as Record<string, unknown>).message as string) ||
-                JSON.stringify(data.error)
-              : data.error || "Exchange failed";
-          throw new Error(errMsg);
+              ? (data.error as Record<string, unknown>)
+              : null;
+          const errMsg = errorObject
+            ? (errorObject.message as string) || JSON.stringify(errorObject)
+            : data.error || "Exchange failed";
+          const details = Array.isArray(errorObject?.details)
+            ? (errorObject.details as Array<{ field?: string; message?: string }>)
+                .map((detail) => {
+                  if (!detail?.message) return null;
+                  return detail.field ? `${detail.field}: ${detail.message}` : detail.message;
+                })
+                .filter(Boolean)
+                .join("; ")
+            : "";
+          throw new Error(details ? `${errMsg} (${details})` : errMsg);
         }
 
         setStep("success");
@@ -109,7 +137,7 @@ export default function OAuthModal({
               "For remote use, configure your own OAuth credentials via environment variables: " +
               (provider === "antigravity"
                 ? "ANTIGRAVITY_OAUTH_CLIENT_ID and ANTIGRAVITY_OAUTH_CLIENT_SECRET"
-                : "GEMINI_OAUTH_CLIENT_ID and GEMINI_OAUTH_CLIENT_SECRET") +
+                : "GEMINI_CLI_OAUTH_CLIENT_ID and GEMINI_CLI_OAUTH_CLIENT_SECRET") +
               ". See the README section 'OAuth on a Remote Server'."
           );
         } else {
@@ -118,7 +146,7 @@ export default function OAuthModal({
         setStep("error");
       }
     },
-    [authData, provider, onSuccess]
+    [authData, provider, onSuccess, reauthConnection]
   );
 
   // Poll for device code token
@@ -134,7 +162,12 @@ export default function OAuthModal({
           const res = await fetch(`/api/oauth/${provider}/poll`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ deviceCode, codeVerifier, extraData }),
+            body: JSON.stringify({
+              deviceCode,
+              connectionId: reauthConnection?.id,
+              codeVerifier,
+              extraData,
+            }),
           });
 
           const data = await res.json();
@@ -165,7 +198,7 @@ export default function OAuthModal({
       setStep("error");
       setPolling(false);
     },
-    [provider, onSuccess]
+    [provider, onSuccess, reauthConnection]
   );
 
   // Start OAuth flow
@@ -179,13 +212,29 @@ export default function OAuthModal({
         provider === "github" ||
         provider === "qwen" ||
         provider === "kiro" ||
+        provider === "amazon-q" ||
         provider === "kimi-coding" ||
         provider === "kilocode"
       ) {
         setIsDeviceCode(true);
         setStep("waiting");
 
-        const res = await fetch(`/api/oauth/${provider}/device-code`);
+        const deviceCodeUrl = new URL(`/api/oauth/${provider}/device-code`, window.location.origin);
+        if (
+          (provider === "kiro" || provider === "amazon-q") &&
+          idcConfig &&
+          typeof idcConfig === "object"
+        ) {
+          const idc = idcConfig as { startUrl?: string; region?: string };
+          if (typeof idc.startUrl === "string" && idc.startUrl.trim()) {
+            deviceCodeUrl.searchParams.set("startUrl", idc.startUrl.trim());
+          }
+          if (typeof idc.region === "string" && idc.region.trim()) {
+            deviceCodeUrl.searchParams.set("region", idc.region.trim());
+          }
+        }
+
+        const res = await fetch(deviceCodeUrl.toString());
         const data = await res.json();
         if (!res.ok) {
           const errMsg =
@@ -204,11 +253,24 @@ export default function OAuthModal({
 
         // Start polling - pass extraData for Kiro (contains _clientId, _clientSecret)
         const extraData =
-          provider === "kiro"
-            ? { _clientId: data._clientId, _clientSecret: data._clientSecret }
+          provider === "kiro" || provider === "amazon-q"
+            ? {
+                _clientId: data._clientId,
+                _clientSecret: data._clientSecret,
+                _region: data._region,
+              }
             : null;
         startPolling(data.device_code, data.codeVerifier, data.interval || 5, extraData);
         return;
+      }
+
+      let forceManual = false;
+
+      // Claude Code and Cline OAuth flows can finish on provider-hosted pages that
+      // show an auth code instead of redirecting back to OmniRoute.
+      // Start directly in manual mode so users always have an input to paste code/url.
+      if (provider === "claude" || provider === "cline") {
+        forceManual = true;
       }
 
       // Codex: on localhost use callback server on port 1455,
@@ -223,7 +285,12 @@ export default function OAuthModal({
 
             setAuthData({ ...serverData, redirectUri: serverData.redirectUri });
             setStep("waiting");
-            window.open(serverData.authUrl, "oauth_auth");
+            popupRef.current = window.open(serverData.authUrl, "oauth_auth");
+
+            // If browser blocked the popup, switch to manual input step immediately
+            if (!popupRef.current) {
+              setStep("input");
+            }
 
             setPolling(true);
             const maxAttempts = 150;
@@ -233,7 +300,7 @@ export default function OAuthModal({
               const pollRes = await fetch(`/api/oauth/codex/poll-callback`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({}),
+                body: JSON.stringify({ connectionId: reauthConnection?.id }),
               });
               const pollData = await pollRes.json();
 
@@ -252,11 +319,13 @@ export default function OAuthModal({
             setPolling(false);
             throw new Error("Authorization timeout");
           } catch (codexErr) {
+            console.warn(
+              "Codex callback server failed, falling back to standard manual flow",
+              codexErr
+            );
             setPolling(false);
-            setStep("input");
-            setError(codexErr.message + " — You can paste the callback URL manually below.");
+            forceManual = true;
           }
-          return;
         }
         // Remote: fall through to standard auth code flow below
       }
@@ -304,10 +373,17 @@ export default function OAuthModal({
         throw new Error(errMsg);
       }
 
+      if (!data.authUrl) {
+        throw new Error(
+          data.error ||
+            "Browser OAuth is unavailable for this provider in the current environment. Use the supported auth method instead."
+        );
+      }
+
       setAuthData({ ...data, redirectUri });
 
-      // For non-true-localhost (LAN IPs, remote): use manual input mode (user pastes callback URL)
-      if (!isTrueLocalhost) {
+      // For non-true-localhost (LAN IPs, remote) or manual fallback: use manual input mode (user pastes callback URL)
+      if (!isTrueLocalhost || forceManual) {
         setStep("input");
         window.open(data.authUrl, "oauth_auth");
       } else {
@@ -324,7 +400,15 @@ export default function OAuthModal({
       setError(err.message);
       setStep("error");
     }
-  }, [provider, isLocalhost, isTrueLocalhost, startPolling, onSuccess]);
+  }, [
+    provider,
+    isLocalhost,
+    isTrueLocalhost,
+    startPolling,
+    onSuccess,
+    reauthConnection,
+    idcConfig,
+  ]);
 
   // Reset guard when modal closes
   useEffect(() => {
@@ -434,7 +518,7 @@ export default function OAuthModal({
   }, [authData, exchangeTokens]);
 
   // Fix #344: Detect when OAuth popup is closed without completing authorization
-  // Some providers (like iFlow) redirect to their own chat UI instead of sending a callback,
+  // Some providers (like Qoder) redirect to their own chat UI instead of sending a callback,
   // leaving the modal stuck at "Waiting for Authorization" forever.
   useEffect(() => {
     if (step !== "waiting" || isDeviceCode || !popupRef.current) return;
@@ -475,24 +559,46 @@ export default function OAuthModal({
       clearInterval(popupClosedInterval);
       clearTimeout(safetyTimeout);
     };
-     
   }, [step, isDeviceCode]);
 
   // Handle manual URL input
   const handleManualSubmit = async () => {
     try {
       setError(null);
-      const url = new URL(callbackUrl);
-      const code = url.searchParams.get("code");
-      const state = url.searchParams.get("state");
-      const errorParam = url.searchParams.get("error");
+
+      if (!authData) {
+        throw new Error(
+          "OAuth session not initialized. Restart the connection flow and try again."
+        );
+      }
+
+      const input = callbackUrl.trim();
+      let code = null;
+      let state = authData?.state || null;
+      let errorParam = null;
+      let errorDescription = null;
+
+      try {
+        const url = new URL(input);
+        code = url.searchParams.get("code");
+        state = url.searchParams.get("state") || url.hash.replace(/^#/, "") || state;
+        errorParam = url.searchParams.get("error");
+        errorDescription = url.searchParams.get("error_description");
+      } catch {
+        // Claude Code remote auth may provide a raw "Authentication Code" like code#state.
+        const [rawCode, rawState] = input.split("#", 2);
+        code = rawCode || null;
+        state = rawState || state;
+      }
 
       if (errorParam) {
-        throw new Error(url.searchParams.get("error_description") || errorParam);
+        throw new Error(errorDescription || errorParam);
       }
 
       if (!code) {
-        throw new Error("No authorization code found in URL");
+        throw new Error(
+          "No authorization code found. Paste the callback URL or the Authentication Code."
+        );
       }
 
       await exchangeTokens(code, state);
@@ -505,7 +611,12 @@ export default function OAuthModal({
   if (!provider || !providerInfo) return null;
 
   return (
-    <Modal isOpen={isOpen} title={`Connect ${providerInfo.name}`} onClose={onClose} size="lg">
+    <Modal
+      isOpen={isOpen}
+      title={t("title", { providerName: providerInfo.name })}
+      onClose={onClose}
+      size="lg"
+    >
       <div className="flex flex-col gap-4">
         {/* Waiting Step (Localhost - popup mode) */}
         {step === "waiting" && !isDeviceCode && (
@@ -515,16 +626,11 @@ export default function OAuthModal({
                 progress_activity
               </span>
             </div>
-            <h3 className="text-lg font-semibold mb-2">Waiting for Authorization</h3>
-            <p className="text-sm text-text-muted mb-2">
-              Complete the authorization in the popup window.
-            </p>
-            <p className="text-xs text-text-muted mb-4 opacity-70">
-              If the popup closes without redirecting back (e.g. iFlow), this dialog will
-              automatically switch to manual URL input mode.
-            </p>
+            <h3 className="text-lg font-semibold mb-2">{t("waiting")}</h3>
+            <p className="text-sm text-text-muted mb-2">{t("completeAuthInPopup")}</p>
+            <p className="text-xs text-text-muted mb-4 opacity-70">{t("popupClosedHint")}</p>
             <Button variant="ghost" onClick={() => setStep("input")}>
-              Popup blocked? Enter URL manually
+              {t("popupBlocked")}
             </Button>
           </div>
         )}
@@ -533,23 +639,21 @@ export default function OAuthModal({
         {step === "waiting" && isDeviceCode && deviceData && (
           <>
             <div className="text-center py-4">
-              <p className="text-sm text-text-muted mb-4">
-                Visit the URL below and enter the code:
-              </p>
+              <p className="text-sm text-text-muted mb-4">{t("deviceCodeVisitUrl")}</p>
               <div className="bg-sidebar p-4 rounded-lg mb-4">
-                <p className="text-xs text-text-muted mb-1">Verification URL</p>
+                <p className="text-xs text-text-muted mb-1">{t("deviceCodeVerificationUrl")}</p>
                 <div className="flex items-center gap-2">
-                  <code className="flex-1 text-sm break-all">{deviceData.verification_uri}</code>
+                  <code className="flex-1 text-sm break-all">{deviceVerificationUrl}</code>
                   <Button
                     size="sm"
                     variant="ghost"
                     icon={copied === "verify_url" ? "check" : "content_copy"}
-                    onClick={() => copy(deviceData.verification_uri, "verify_url")}
+                    onClick={() => copy(deviceVerificationUrl, "verify_url")}
                   />
                 </div>
               </div>
               <div className="bg-primary/10 p-4 rounded-lg">
-                <p className="text-xs text-text-muted mb-1">Your Code</p>
+                <p className="text-xs text-text-muted mb-1">{t("deviceCodeYourCode")}</p>
                 <div className="flex items-center justify-center gap-2">
                   <p className="text-2xl font-mono font-bold text-primary">
                     {deviceData.user_code}
@@ -566,7 +670,7 @@ export default function OAuthModal({
             {polling && (
               <div className="flex items-center justify-center gap-2 text-sm text-text-muted">
                 <span className="material-symbols-outlined animate-spin">progress_activity</span>
-                Waiting for authorization...
+                {t("deviceCodeWaiting")}
               </div>
             )}
           </>
@@ -582,33 +686,32 @@ export default function OAuthModal({
                   <span className="material-symbols-outlined text-sm align-middle mr-1">
                     warning
                   </span>
-                  <strong>Remote access + Google OAuth:</strong> The default credentials only accept
-                  redirects to <code>localhost</code>. After authorizing, your browser will try to
-                  open <code>localhost</code> — copy that full URL and paste it below. For fully
-                  remote use without this manual step,{" "}
-                  <a
-                    href="https://github.com/diegosouzapw/OmniRoute#oauth-on-a-remote-server"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="underline"
-                  >
-                    configure your own OAuth credentials
-                  </a>
-                  .
+                  <strong>
+                    {t.rich("googleOAuthWarning", {
+                      code: (c) => <code className="font-mono">{c}</code>,
+                      a: (c) => (
+                        <a
+                          href="https://github.com/diegosouzapw/OmniRoute#oauth-on-a-remote-server"
+                          target="_blank"
+                          rel="noreferrer"
+                          className="underline"
+                        >
+                          {c}
+                        </a>
+                      ),
+                    })}
+                  </strong>
                 </div>
               )}
               {/* Generic remote info for other providers */}
               {!isTrueLocalhost && !GOOGLE_OAUTH_PROVIDERS.has(provider) && (
                 <div className="rounded-lg border border-blue-500/30 bg-blue-500/10 p-3 text-xs text-blue-200">
                   <span className="material-symbols-outlined text-sm align-middle mr-1">info</span>
-                  <strong>Remote access:</strong> Since you&apos;re accessing OmniRoute remotely,
-                  after authorizing you&apos;ll see an error page (localhost not found). That&apos;s
-                  expected — just copy the full URL from your browser&apos;s address bar and paste
-                  it below.
+                  {t("remoteAccessInfo")}
                 </div>
               )}
               <div>
-                <p className="text-sm font-medium mb-2">Step 1: Open this URL in your browser</p>
+                <p className="text-sm font-medium mb-2">{t("step1OpenUrl")}</p>
                 <div className="flex gap-2">
                   <Input
                     value={authData?.authUrl || ""}
@@ -620,31 +723,37 @@ export default function OAuthModal({
                     icon={copied === "auth_url" ? "check" : "content_copy"}
                     onClick={() => copy(authData?.authUrl, "auth_url")}
                   >
-                    Copy
+                    {t("copy")}
                   </Button>
                 </div>
               </div>
 
               <div>
-                <p className="text-sm font-medium mb-2">Step 2: Paste the callback URL here</p>
+                <p className="text-sm font-medium mb-2">{t("step2PasteCallback")}</p>
                 <p className="text-xs text-text-muted mb-2">
-                  After authorization, copy the full URL from your browser.
+                  {t.rich("step2Hint", {
+                    code: (c) => <code className="font-mono">{c}</code>,
+                  })}
                 </p>
                 <Input
                   value={callbackUrl}
                   onChange={(e) => setCallbackUrl(e.target.value)}
-                  placeholder={placeholderUrl}
+                  placeholder={
+                    provider === "claude" || provider === "cline"
+                      ? "code#state or /callback?code=..."
+                      : placeholderUrl
+                  }
                   className="font-mono text-xs"
                 />
               </div>
             </div>
 
             <div className="flex gap-2">
-              <Button onClick={handleManualSubmit} fullWidth disabled={!callbackUrl}>
-                Connect
+              <Button onClick={handleManualSubmit} fullWidth disabled={!callbackUrl || !authData}>
+                {t("connect")}
               </Button>
               <Button onClick={onClose} variant="ghost" fullWidth>
-                Cancel
+                {t("cancel")}
               </Button>
             </div>
           </>
@@ -658,12 +767,12 @@ export default function OAuthModal({
                 check_circle
               </span>
             </div>
-            <h3 className="text-lg font-semibold mb-2">Connected Successfully!</h3>
+            <h3 className="text-lg font-semibold mb-2">{t("success")}</h3>
             <p className="text-sm text-text-muted mb-4">
-              Your {providerInfo.name} account has been connected.
+              {t("successMessage", { providerName: providerInfo.name })}
             </p>
             <Button onClick={onClose} fullWidth>
-              Done
+              {t("done")}
             </Button>
           </div>
         )}
@@ -674,14 +783,14 @@ export default function OAuthModal({
             <div className="size-16 mx-auto mb-4 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
               <span className="material-symbols-outlined text-3xl text-red-600">error</span>
             </div>
-            <h3 className="text-lg font-semibold mb-2">Connection Failed</h3>
+            <h3 className="text-lg font-semibold mb-2">{t("error")}</h3>
             <p className="text-sm text-red-600 mb-4">{error}</p>
             <div className="flex gap-2">
               <Button onClick={startOAuthFlow} variant="secondary" fullWidth>
-                Try Again
+                {t("tryAgain")}
               </Button>
               <Button onClick={onClose} variant="ghost" fullWidth>
-                Cancel
+                {t("cancel")}
               </Button>
             </div>
           </div>
@@ -690,13 +799,3 @@ export default function OAuthModal({
     </Modal>
   );
 }
-
-OAuthModal.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  provider: PropTypes.string,
-  providerInfo: PropTypes.shape({
-    name: PropTypes.string,
-  }),
-  onSuccess: PropTypes.func,
-  onClose: PropTypes.func.isRequired,
-};

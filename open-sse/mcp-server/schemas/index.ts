@@ -60,6 +60,15 @@ export {
   getSessionSnapshotInput,
   getSessionSnapshotOutput,
   getSessionSnapshotTool,
+  dbHealthCheckInput,
+  dbHealthCheckOutput,
+  dbHealthCheckTool,
+  cacheStatsInput,
+  cacheStatsOutput,
+  cacheStatsTool,
+  cacheFlushInput,
+  cacheFlushOutput,
+  cacheFlushTool,
 } from "./tools.ts";
 
 // A2A schemas

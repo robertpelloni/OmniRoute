@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { useDisplayBaseUrl } from "@/shared/hooks";
 
 const STEP_IDS = ["welcome", "security", "provider", "test", "done"];
 const STEP_ICONS = ["waving_hand", "lock", "dns", "play_circle", "check_circle"];
@@ -20,9 +21,10 @@ export default function OnboardingWizard() {
   const router = useRouter();
   const t = useTranslations("onboarding");
   const tc = useTranslations("common");
+  const baseUrl = useDisplayBaseUrl();
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [apiEndpoint, setApiEndpoint] = useState("http://localhost:20128/api/v1");
+  const [apiEndpoint, setApiEndpoint] = useState(`${baseUrl}/api/v1`);
 
   // Security step state
   const [password, setPassword] = useState("");
@@ -89,6 +91,14 @@ export default function OnboardingWizard() {
 
   const handleSetPassword = async () => {
     if (skipSecurity) {
+      // (#574) Explicitly disable requireLogin when skipping password setup
+      try {
+        await fetch("/api/settings/require-login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ requireLogin: false }),
+        });
+      } catch {}
       handleNext();
       return;
     }
@@ -103,6 +113,16 @@ export default function OnboardingWizard() {
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         setErrorMessage(data.error || t("failedSetPassword"));
+        return;
+      }
+      const loginRes = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+      if (!loginRes.ok) {
+        const data = await loginRes.json().catch(() => ({}));
+        setErrorMessage(data.error || t("connectionError"));
         return;
       }
       handleNext();
@@ -176,6 +196,19 @@ export default function OnboardingWizard() {
 
   const handleFinish = async () => {
     try {
+      // (#574) If no password was set during wizard, disable requireLogin
+      // to prevent the user from being locked out on the login page
+      const settings = await fetch("/api/settings/require-login")
+        .then((r) => r.json())
+        .catch(() => ({}));
+      if (!settings.hasPassword) {
+        await fetch("/api/settings/require-login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ requireLogin: false }),
+        }).catch(() => {});
+      }
+
       await fetch("/api/settings", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },

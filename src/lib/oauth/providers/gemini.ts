@@ -1,4 +1,5 @@
 import { GEMINI_CONFIG } from "../constants/oauth";
+import { getGeminiCliLoadCodeAssistMetadata } from "@omniroute/open-sse/services/geminiCliHeaders.ts";
 
 export const gemini = {
   config: GEMINI_CONFIG,
@@ -25,6 +26,18 @@ export const gemini = {
 
     if (config.clientSecret) {
       bodyParams.client_secret = config.clientSecret;
+    } else {
+      // (#537) Google's OAuth2 token endpoint always requires client_secret for
+      // non-PKCE flows. Without it we get a cryptic "client_secret is missing" error.
+      const envName = "GEMINI_CLI_OAUTH_CLIENT_SECRET or GEMINI_OAUTH_CLIENT_SECRET";
+
+      throw new Error(
+        `Gemini OAuth requires ${envName} to be set.\n` +
+          `In Docker: add '${envName}=<your-secret>' to your docker-compose.yml env.\n` +
+          "In npm: add it to ~/.omniroute/.env\n" +
+          "Obtain the client secret from https://console.cloud.google.com/apis/credentials\n" +
+          "for the same OAuth 2.0 Client ID configured as GEMINI_CLI_OAUTH_CLIENT_ID or GEMINI_OAUTH_CLIENT_ID."
+      );
     }
 
     const response = await fetch(config.tokenUrl, {
@@ -60,11 +73,7 @@ export const gemini = {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            metadata: {
-              ideType: "IDE_UNSPECIFIED",
-              platform: "PLATFORM_UNSPECIFIED",
-              pluginType: "GEMINI",
-            },
+            metadata: getGeminiCliLoadCodeAssistMetadata(),
           }),
         }
       );

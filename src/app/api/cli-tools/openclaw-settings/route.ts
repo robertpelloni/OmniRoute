@@ -3,6 +3,7 @@
 import { NextResponse } from "next/server";
 import fs from "fs/promises";
 import path from "path";
+import { requireCliToolsAuth } from "@/lib/api/requireCliToolsAuth";
 import {
   ensureCliConfigWriteAllowed,
   getCliPrimaryConfigPath,
@@ -12,7 +13,7 @@ import { createBackup } from "@/shared/services/backupService";
 import { saveCliToolLastConfigured, deleteCliToolLastConfigured } from "@/lib/db/cliToolState";
 import { cliModelConfigSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
-import { getApiKeyById } from "@/lib/localDb";
+import { resolveApiKey } from "@/shared/services/apiKeyResolver";
 
 const getOpenClawSettingsPath = () => getCliPrimaryConfigPath("openclaw");
 const getOpenClawDir = () => path.dirname(getOpenClawSettingsPath());
@@ -36,7 +37,10 @@ const hasOmniRouteConfig = (settings: any) => {
 };
 
 // GET - Check openclaw CLI and read current settings
-export async function GET() {
+export async function GET(request: Request) {
+  const authError = await requireCliToolsAuth(request);
+  if (authError) return authError;
+
   try {
     const runtime = await getCliRuntimeStatus("openclaw");
 
@@ -77,6 +81,9 @@ export async function GET() {
 
 // POST - Update OmniRoute settings (merge with existing settings)
 export async function POST(request: Request) {
+  const authError = await requireCliToolsAuth(request);
+  if (authError) return authError;
+
   let rawBody;
   try {
     rawBody = await request.json();
@@ -98,22 +105,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: writeGuard }, { status: 403 });
     }
 
+    // (#526) Extract keyId BEFORE validation — Zod strips unknown fields!
+    const keyId = typeof rawBody?.keyId === "string" ? rawBody.keyId.trim() : null;
+
     const validation = validateBody(cliModelConfigSchema, rawBody);
     if (isValidationFailure(validation)) {
       return NextResponse.json({ error: validation.error }, { status: 400 });
     }
-    let { baseUrl, apiKey, model } = validation.data;
-
-    // (#526) Resolve real key from DB if keyId was provided
-    const keyId = typeof rawBody?.keyId === "string" ? rawBody.keyId.trim() : null;
-    if (keyId) {
-      try {
-        const keyRecord = await getApiKeyById(keyId);
-        if (keyRecord?.key) apiKey = keyRecord.key as string;
-      } catch {
-        /* non-critical */
-      }
-    }
+    let { baseUrl, model } = validation.data;
+    let apiKey = await resolveApiKey(keyId, validation.data.apiKey);
 
     const openclawDir = getOpenClawDir();
     const settingsPath = getOpenClawSettingsPath();
@@ -181,7 +181,10 @@ export async function POST(request: Request) {
 }
 
 // DELETE - Remove OmniRoute settings only (keep other settings)
-export async function DELETE() {
+export async function DELETE(request: Request) {
+  const authError = await requireCliToolsAuth(request);
+  if (authError) return authError;
+
   try {
     const writeGuard = ensureCliConfigWriteAllowed();
     if (writeGuard) {

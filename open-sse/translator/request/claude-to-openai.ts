@@ -5,6 +5,28 @@ import { adjustMaxTokens } from "../helpers/maxTokensHelper.ts";
 type JsonRecord = Record<string, unknown>;
 const TOOL_CHOICE_ANY = ["a", "n", "y"].join("");
 
+/**
+ * Normalize tool input schema for OpenAI compatibility.
+ * OpenAI strict mode requires `properties: {}` on object-type schemas,
+ * even for zero-argument tools. Anthropic/MCP tools may omit it (#1898).
+ */
+function normalizeToolSchema(schema: unknown): Record<string, unknown> {
+  const fallback = { type: "object", properties: {} };
+  if (!schema || typeof schema !== "object" || Array.isArray(schema)) return fallback;
+  const s = schema as Record<string, unknown>;
+  if (s.type === "object" && !s.properties) {
+    return { ...s, properties: {} };
+  }
+  return s;
+}
+
+function normalizeOpenAIReasoningEffort(effort: unknown): string | undefined {
+  if (typeof effort !== "string") return undefined;
+  const normalized = effort.toLowerCase();
+  if (normalized === "max") return "xhigh";
+  return normalized || undefined;
+}
+
 // Convert Claude request to OpenAI format
 export function claudeToOpenAIRequest(model, body, stream) {
   const result: {
@@ -26,6 +48,12 @@ export function claudeToOpenAIRequest(model, body, stream) {
   // Temperature
   if (body.temperature !== undefined) {
     result.temperature = body.temperature;
+  }
+  if (body.top_p !== undefined) {
+    result.top_p = body.top_p;
+  }
+  if (body.stop_sequences !== undefined) {
+    result.stop = body.stop_sequences;
   }
 
   // System message
@@ -73,7 +101,7 @@ export function claudeToOpenAIRequest(model, body, stream) {
           function: {
             name,
             description: typeof tool.description === "string" ? tool.description : "", // fix: never null (#276)
-            parameters: tool.input_schema || { type: "object", properties: {} },
+            parameters: normalizeToolSchema(tool.input_schema),
           },
         };
       })
@@ -94,6 +122,27 @@ export function claudeToOpenAIRequest(model, body, stream) {
   // Tool choice
   if (body.tool_choice) {
     result.tool_choice = convertToolChoice(body.tool_choice);
+  }
+
+  // Reasoning effort: map Claude-side thinking controls to OpenAI reasoning_effort.
+  // Priority: output_config.effort (Claude Code) > thinking.budget_tokens (Claude native).
+  // Budget buckets match the reverse mapping in thinkingBudget.ts::setCustomBudget.
+  const outputEffort = normalizeOpenAIReasoningEffort(body.output_config?.effort) || "";
+  if (outputEffort) {
+    result.reasoning_effort = outputEffort;
+  } else if (body.thinking?.type === "enabled" && typeof body.thinking.budget_tokens === "number") {
+    const budget = body.thinking.budget_tokens;
+    if (budget <= 0) {
+      // disabled — leave reasoning_effort unset
+    } else if (budget <= 1024) {
+      result.reasoning_effort = "low";
+    } else if (budget <= 10240) {
+      result.reasoning_effort = "medium";
+    } else if (budget < 131072) {
+      result.reasoning_effort = "high";
+    } else {
+      result.reasoning_effort = "xhigh";
+    }
   }
 
   return result;
@@ -149,6 +198,7 @@ function convertClaudeMessage(msg) {
     const parts = [];
     const toolCalls = [];
     const toolResults = [];
+    let reasoningContent = null;
 
     for (const block of msg.content) {
       switch (block.type) {
@@ -164,6 +214,23 @@ function convertClaudeMessage(msg) {
                 url: `data:${block.source.media_type};base64,${block.source.data}`,
               },
             });
+          } else if (block.source?.type === "url" && typeof block.source.url === "string") {
+            parts.push({
+              type: "image_url",
+              image_url: {
+                url: block.source.url,
+              },
+            });
+          }
+          break;
+
+        case "thinking":
+          reasoningContent = block.thinking || block.text || "";
+          break;
+
+        case "redacted_thinking":
+          if (reasoningContent == null) {
+            reasoningContent = "";
           }
           break;
 
@@ -217,20 +284,35 @@ function convertClaudeMessage(msg) {
         result.content = parts.length === 1 && parts[0].type === "text" ? parts[0].text : parts;
       }
       result.tool_calls = toolCalls;
+      if (reasoningContent !== null) {
+        result.reasoning_content = reasoningContent;
+      }
       return result;
     }
 
     // Return content
     if (parts.length > 0) {
-      return {
+      const result: JsonRecord = {
         role,
         content: parts.length === 1 && parts[0].type === "text" ? parts[0].text : parts,
       };
+      if (reasoningContent !== null && role === "assistant") {
+        result.reasoning_content = reasoningContent;
+      }
+      return result;
     }
 
     // Empty content array
     if (msg.content.length === 0) {
-      return { role, content: "" };
+      const result: JsonRecord = { role, content: "" };
+      if (reasoningContent !== null && role === "assistant") {
+        result.reasoning_content = reasoningContent;
+      }
+      return result;
+    }
+
+    if (reasoningContent !== null && role === "assistant") {
+      return { role, content: "", reasoning_content: reasoningContent };
     }
   }
 

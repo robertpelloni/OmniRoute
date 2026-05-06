@@ -5,6 +5,10 @@
 import { register } from "../registry.ts";
 import { FORMATS } from "../formats.ts";
 
+function normalizeToolName(value) {
+  return typeof value === "string" ? value.trim() : "";
+}
+
 /**
  * Translate OpenAI chunk to Responses API events
  * @returns {Array} Array of events with { event, data } structure
@@ -14,7 +18,33 @@ export function openaiToOpenAIResponsesResponse(chunk, state) {
     return flushEvents(state);
   }
 
-  if (!chunk.choices?.length) return [];
+  // Capture usage from all chunks that carry it (usage-only chunks OR final chunks with finish_reason)
+  // Normalize Chat Completions format (prompt_tokens/completion_tokens) to Responses API format
+  // (input_tokens/output_tokens) so response.completed always has the fields Codex expects.
+  if (chunk.usage) {
+    const u = chunk.usage;
+    const input_tokens = u.input_tokens ?? u.prompt_tokens ?? 0;
+    const output_tokens = u.output_tokens ?? u.completion_tokens ?? 0;
+    state.usage = {
+      input_tokens,
+      output_tokens,
+      total_tokens: u.total_tokens ?? input_tokens + output_tokens,
+    };
+    const cachedTokens =
+      u.input_tokens_details?.cached_tokens ?? u.prompt_tokens_details?.cached_tokens;
+    if (cachedTokens) {
+      state.usage.input_tokens_details = { cached_tokens: cachedTokens };
+    }
+    const reasoningTokens =
+      u.output_tokens_details?.reasoning_tokens ?? u.completion_tokens_details?.reasoning_tokens;
+    if (reasoningTokens) {
+      state.usage.output_tokens_details = { reasoning_tokens: reasoningTokens };
+    }
+  }
+
+  if (!chunk.choices?.length) {
+    return [];
+  }
 
   const events = [];
   const nextSeq = () => ++state.seq;
@@ -69,7 +99,7 @@ export function openaiToOpenAIResponsesResponse(chunk, state) {
 
     if (content.includes("<think>")) {
       state.inThinking = true;
-      content = content.replace("<think>", "");
+      content = content.replaceAll("<think>", "");
       startReasoning(state, emit, idx);
     }
 
@@ -257,6 +287,17 @@ function emitToolCall(state, emit, tc) {
   const newCallId = tc.id;
   const funcName = tc.function?.name;
 
+  // T37: If we already have a tool call at this index but the ID changed,
+  // we must close the current one and start a new one to prevent merging.
+  if (state.funcCallIds[tcIdx] && newCallId && state.funcCallIds[tcIdx] !== newCallId) {
+    closeToolCall(state, emit, tcIdx);
+    delete state.funcCallIds[tcIdx];
+    delete state.funcNames[tcIdx];
+    delete state.funcArgsBuf[tcIdx];
+    delete state.funcArgsDone[tcIdx];
+    delete state.funcItemDone[tcIdx];
+  }
+
   if (funcName) state.funcNames[tcIdx] = funcName;
 
   if (!state.funcCallIds[tcIdx] && newCallId) {
@@ -323,16 +364,52 @@ function closeToolCall(state, emit, idx) {
 function sendCompleted(state, emit) {
   if (!state.completedSent) {
     state.completedSent = true;
+
+    // Build output from accumulated state
+    const output = [];
+    if (state.reasoningId) {
+      output.push({
+        id: state.reasoningId,
+        type: "reasoning",
+        summary: [{ type: "summary_text", text: state.reasoningBuf }],
+      });
+    }
+    for (const idx in state.msgItemAdded) {
+      output.push({
+        id: `msg_${state.responseId}_${idx}`,
+        type: "message",
+        role: "assistant",
+        content: [{ type: "output_text", annotations: [], text: state.msgTextBuf[idx] || "" }],
+      });
+    }
+    for (const idx in state.funcCallIds) {
+      const callId = state.funcCallIds[idx];
+      output.push({
+        id: `fc_${callId}`,
+        type: "function_call",
+        call_id: callId,
+        name: state.funcNames[idx] || "",
+        arguments: state.funcArgsBuf[idx] || "{}",
+      });
+    }
+
+    const response: Record<string, unknown> = {
+      id: state.responseId,
+      object: "response",
+      created_at: state.created,
+      status: "completed",
+      background: false,
+      error: null,
+      output,
+    };
+
+    if (state.usage) {
+      response.usage = state.usage;
+    }
+
     emit("response.completed", {
       type: "response.completed",
-      response: {
-        id: state.responseId,
-        object: "response",
-        created_at: state.created,
-        status: "completed",
-        background: false,
-        error: null,
-      },
+      response,
     });
   }
 }
@@ -353,6 +430,31 @@ function flushEvents(state) {
   sendCompleted(state, emit);
 
   return events;
+}
+
+function normalizeUpstreamFailure(data, fallbackType = "server_error") {
+  const response = data?.response && typeof data.response === "object" ? data.response : null;
+  const error =
+    response?.error && typeof response.error === "object"
+      ? response.error
+      : data?.error && typeof data.error === "object"
+        ? data.error
+        : null;
+
+  const code = typeof error?.code === "string" ? error.code : "";
+  const message =
+    typeof error?.message === "string"
+      ? error.message
+      : typeof data?.message === "string"
+        ? data.message
+        : "Upstream failure";
+
+  return {
+    status: code === "rate_limit_exceeded" ? 429 : 502,
+    type: code === "rate_limit_exceeded" ? "rate_limit_error" : fallbackType,
+    code: code || (fallbackType === "rate_limit_error" ? "rate_limit_exceeded" : "bad_gateway"),
+    message,
+  };
 }
 
 /**
@@ -385,6 +487,19 @@ export function openaiResponsesToOpenAIResponse(chunk, state) {
   // Handle different event types from Responses API
   const eventType = chunk.type || chunk.event;
   const data = chunk.data || chunk;
+
+  if (!state.model) {
+    const upstreamModel =
+      (data?.response && typeof data.response === "object" && data.response.model) ||
+      data?.model ||
+      data?.modelVersion ||
+      data?.model_version ||
+      null;
+
+    if (typeof upstreamModel === "string" && upstreamModel.trim().length > 0) {
+      state.model = upstreamModel.trim();
+    }
+  }
 
   // Initialize state
   if (!state.started) {
@@ -424,6 +539,16 @@ export function openaiResponsesToOpenAIResponse(chunk, state) {
   if (eventType === "response.output_item.added" && data.item?.type === "function_call") {
     const item = data.item;
     state.currentToolCallId = item.call_id || `call_${Date.now()}`;
+    state.currentToolCallArgsBuffer = ""; // reset per-call arg buffer
+    state.currentToolCallDeferred = false;
+
+    const toolName = normalizeToolName(item.name);
+    if (!toolName) {
+      // Some Responses providers briefly emit placeholder/empty tool names.
+      // Defer emission until output_item.done in case the final name is populated there.
+      state.currentToolCallDeferred = true;
+      return null;
+    }
 
     return {
       id: state.chatId,
@@ -440,7 +565,7 @@ export function openaiResponsesToOpenAIResponse(chunk, state) {
                 id: state.currentToolCallId,
                 type: "function",
                 function: {
-                  name: item.name || "",
+                  name: toolName,
                   arguments: "",
                 },
               },
@@ -453,9 +578,15 @@ export function openaiResponsesToOpenAIResponse(chunk, state) {
   }
 
   // Function call arguments delta
+  // NOTE: Do NOT include `id` or `type` here - only first chunk (response.output_item.added)
+  // should have them. Including `id` on every chunk causes openai-to-claude.ts to emit
+  // a new content_block_start for each delta, breaking Claude Code ACP sessions.
   if (eventType === "response.function_call_arguments.delta") {
     const argsDelta = data.delta || "";
     if (!argsDelta) return null;
+
+    state.currentToolCallArgsBuffer = (state.currentToolCallArgsBuffer || "") + argsDelta;
+    if (state.currentToolCallDeferred) return null;
 
     return {
       id: state.chatId,
@@ -469,8 +600,6 @@ export function openaiResponsesToOpenAIResponse(chunk, state) {
             tool_calls: [
               {
                 index: state.toolCallIndex,
-                id: state.currentToolCallId,
-                type: "function",
                 function: { arguments: argsDelta },
               },
             ],
@@ -481,9 +610,111 @@ export function openaiResponsesToOpenAIResponse(chunk, state) {
     };
   }
 
-  // Function call done
+  // Function call done — emit args chunk from item.arguments when no deltas were received,
+  // then advance the tool-call index. This handles Codex Responses API payloads that
+  // carry the complete arguments only in output_item.done (no preceding delta events).
   if (eventType === "response.output_item.done" && data.item?.type === "function_call") {
+    const item = data.item;
+    const buffered = state.currentToolCallArgsBuffer || "";
+    const currentIndex = state.toolCallIndex; // capture before increment
+    const callId = item.call_id || state.currentToolCallId || `call_${Date.now()}`;
+    const toolName = normalizeToolName(item.name);
+
+    if (state.currentToolCallDeferred) {
+      state.currentToolCallDeferred = false;
+      state.currentToolCallArgsBuffer = "";
+      state.currentToolCallId = null;
+
+      if (!toolName) {
+        return null;
+      }
+
+      state.toolCallIndex++;
+
+      let argsToEmit = item.arguments;
+      if (argsToEmit != null && typeof argsToEmit === "object" && !Array.isArray(argsToEmit)) {
+        // Fix #1674 & #1852: Strip empty string and array placeholders emitted by GPT-5.5 for optional fields
+        const cleaned = { ...argsToEmit };
+        for (const [k, v] of Object.entries(cleaned)) {
+          if (v === "" || (Array.isArray(v) && v.length === 0)) delete cleaned[k];
+        }
+        argsToEmit = cleaned;
+      }
+
+      const argsStr =
+        argsToEmit != null
+          ? typeof argsToEmit === "string"
+            ? argsToEmit
+            : JSON.stringify(argsToEmit)
+          : buffered;
+
+      return {
+        id: state.chatId,
+        object: "chat.completion.chunk",
+        created: state.created,
+        model: state.model || "gpt-4",
+        choices: [
+          {
+            index: 0,
+            delta: {
+              tool_calls: [
+                {
+                  index: currentIndex,
+                  id: callId,
+                  type: "function",
+                  function: {
+                    name: toolName,
+                    arguments: argsStr || "",
+                  },
+                },
+              ],
+            },
+            finish_reason: null,
+          },
+        ],
+      };
+    }
+
     state.toolCallIndex++;
+    state.currentToolCallArgsBuffer = ""; // reset for next tool call
+    state.currentToolCallId = null;
+
+    // Only emit if arguments exist in the done event AND they weren't already streamed via deltas
+    if (item.arguments != null && !buffered) {
+      let argsToEmit = item.arguments;
+      if (argsToEmit != null && typeof argsToEmit === "object" && !Array.isArray(argsToEmit)) {
+        const cleaned = { ...argsToEmit };
+        for (const [k, v] of Object.entries(cleaned)) {
+          if (v === "" || (Array.isArray(v) && v.length === 0)) delete cleaned[k];
+        }
+        argsToEmit = cleaned;
+      }
+
+      const argsStr = typeof argsToEmit === "string" ? argsToEmit : JSON.stringify(argsToEmit);
+      if (argsStr) {
+        return {
+          id: state.chatId,
+          object: "chat.completion.chunk",
+          created: state.created,
+          model: state.model || "gpt-4",
+          choices: [
+            {
+              index: 0,
+              delta: {
+                tool_calls: [
+                  {
+                    index: currentIndex,
+                    function: { arguments: argsStr },
+                  },
+                ],
+              },
+              finish_reason: null,
+            },
+          ],
+        };
+      }
+    }
+
     return null;
   }
 
@@ -494,8 +725,17 @@ export function openaiResponsesToOpenAIResponse(chunk, state) {
     if (responseUsage && typeof responseUsage === "object") {
       const inputTokens = responseUsage.input_tokens || responseUsage.prompt_tokens || 0;
       const outputTokens = responseUsage.output_tokens || responseUsage.completion_tokens || 0;
-      const cacheReadTokens = responseUsage.cache_read_input_tokens || 0;
+      const cacheReadTokens =
+        responseUsage.cache_read_input_tokens ||
+        responseUsage.input_tokens_details?.cached_tokens ||
+        responseUsage.prompt_tokens_details?.cached_tokens ||
+        0;
       const cacheCreationTokens = responseUsage.cache_creation_input_tokens || 0;
+      const reasoningTokens =
+        responseUsage.output_tokens_details?.reasoning_tokens ||
+        responseUsage.completion_tokens_details?.reasoning_tokens ||
+        responseUsage.reasoning_tokens ||
+        0;
 
       // prompt_tokens = input_tokens + cache_read + cache_creation (all prompt-side tokens)
       const promptTokens = inputTokens + cacheReadTokens + cacheCreationTokens;
@@ -515,6 +755,13 @@ export function openaiResponsesToOpenAIResponse(chunk, state) {
         if (cacheCreationTokens > 0) {
           state.usage.prompt_tokens_details.cache_creation_tokens = cacheCreationTokens;
         }
+      }
+
+      // Add completion_tokens_details if reasoning tokens exist
+      if (reasoningTokens > 0) {
+        state.usage.completion_tokens_details = {
+          reasoning_tokens: reasoningTokens,
+        };
       }
     }
 
@@ -548,10 +795,54 @@ export function openaiResponsesToOpenAIResponse(chunk, state) {
     return null;
   }
 
-  // Reasoning events (convert to content or skip)
-  if (eventType === "response.reasoning_summary_text.delta") {
-    // Optionally include reasoning as content, or skip
+  if (eventType === "response.failed" || eventType === "error") {
+    state.upstreamError = normalizeUpstreamFailure(data);
+    state.finishReasonSent = true;
     return null;
+  }
+
+  // Reasoning events — emit as reasoning_content in Chat format
+  if (
+    eventType === "response.reasoning_content_text.delta" ||
+    eventType === "response.reasoning_text.delta"
+  ) {
+    const reasoningDelta = data.delta || "";
+    if (!reasoningDelta) return null;
+    return {
+      id: state.chatId,
+      object: "chat.completion.chunk",
+      created: state.created,
+      model: state.model || "gpt-4",
+      choices: [
+        {
+          index: 0,
+          delta: { reasoning_content: reasoningDelta },
+          finish_reason: null,
+        },
+      ],
+    };
+  }
+
+  // Handle true reasoning summary ("Thought for 15s")
+  if (eventType === "response.reasoning_summary_text.delta") {
+    const reasoningDelta = data.delta || "";
+    if (!reasoningDelta) return null;
+    const reasoningDeltaShape = state.copilotCompatibleReasoning
+      ? { reasoning_text: reasoningDelta }
+      : { reasoning: { summary: reasoningDelta } };
+    return {
+      id: state.chatId,
+      object: "chat.completion.chunk",
+      created: state.created,
+      model: state.model || "gpt-4",
+      choices: [
+        {
+          index: 0,
+          delta: reasoningDeltaShape,
+          finish_reason: null,
+        },
+      ],
+    };
   }
 
   // Ignore other events

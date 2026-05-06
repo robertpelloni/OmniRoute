@@ -6,7 +6,7 @@ import { useCopyToClipboard } from "@/shared/hooks/useCopyToClipboard";
 import { useTranslations } from "next-intl";
 
 // Constants for validation
-const MAX_KEY_NAME_LENGTH = 100;
+const MAX_KEY_NAME_LENGTH = 200;
 const MAX_SELECTED_MODELS = 500;
 
 // Debounce hook for search optimization
@@ -69,6 +69,7 @@ interface ApiKey {
   noLog?: boolean;
   autoResolve?: boolean;
   isActive?: boolean;
+  maxSessions?: number;
   accessSchedule?: AccessSchedule | null;
   createdAt: string;
 }
@@ -106,9 +107,13 @@ export default function ApiManagerPageClient() {
   const [editingKey, setEditingKey] = useState<ApiKey | null>(null);
   const [showPermissionsModal, setShowPermissionsModal] = useState(false);
   const [searchModel, setSearchModel] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [pageError, setPageError] = useState<string | null>(null);
+  const [nameError, setNameError] = useState<string | null>(null);
+  const [createError, setCreateError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [usageStats, setUsageStats] = useState<Record<string, KeyUsageStats>>({});
+  const [sessionCounts, setSessionCounts] = useState<Record<string, number>>({});
+  const [allowKeyReveal, setAllowKeyReveal] = useState(false);
 
   const { copied, copy } = useCopyToClipboard();
 
@@ -148,8 +153,10 @@ export default function ApiManagerPageClient() {
       if (res.ok) {
         const data = await res.json();
         setKeys(data.keys || []);
+        setAllowKeyReveal(data.allowKeyReveal === true);
         // Fetch usage stats after keys are loaded
         fetchUsageStats(data.keys || []);
+        fetchSessionCounts(data.keys || []);
       }
     } catch (error) {
       console.log("Error fetching keys:", error);
@@ -161,24 +168,33 @@ export default function ApiManagerPageClient() {
   const fetchUsageStats = async (apiKeys: ApiKey[]) => {
     if (apiKeys.length === 0) return;
     try {
-      const res = await fetch("/api/usage/call-logs?limit=1000");
-      if (!res.ok) return;
-      const logs = await res.json();
+      // Fetch analytics (accurate aggregated counts) and recent call-logs
+      // (for lastUsed timestamps) in parallel.
+      // The previous approach matched call-logs by key.id === log.apiKeyId,
+      // but these use different ID schemes and never matched, yielding 0.
+      const [analyticsRes, logsRes] = await Promise.all([
+        fetch("/api/usage/analytics?range=all"),
+        fetch("/api/usage/call-logs?limit=1000"),
+      ]);
+
+      const analytics = analyticsRes.ok ? await analyticsRes.json() : null;
+      const byApiKey: any[] = analytics?.byApiKey || [];
+      const logs = logsRes.ok ? await logsRes.json() : [];
+
       const stats: Record<string, KeyUsageStats> = {};
 
       for (const key of apiKeys) {
-        const keyLogs = (logs || []).filter(
-          (log: any) => log.apiKeyId === key.id || log.apiKeyName === key.name
-        );
+        // Match analytics entry by key name (reliable across both systems)
+        const analyticsMatch = byApiKey.find((entry: any) => entry.apiKeyName === key.name);
+
+        // The call-logs endpoint returns entries sorted by timestamp DESC,
+        // so the first match is the most recent one.
+        const lastUsed =
+          (logs || []).find((log: any) => log.apiKeyName === key.name)?.timestamp || null;
+
         stats[key.id] = {
-          totalRequests: keyLogs.length,
-          lastUsed:
-            keyLogs.length > 0
-              ? keyLogs.sort(
-                  (a: any, b: any) =>
-                    new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-                )[0]?.timestamp
-              : null,
+          totalRequests: analyticsMatch?.requests ?? 0,
+          lastUsed,
         };
       }
       setUsageStats(stats);
@@ -187,20 +203,45 @@ export default function ApiManagerPageClient() {
     }
   };
 
-  const clearError = useCallback(() => setError(null), []);
-
-  const handleCreateKey = async () => {
-    // Validate and sanitize input
-    const sanitizedName = sanitizeInput(newKeyName);
-    const validation = validateKeyName(sanitizedName, t);
-
-    if (!validation.valid) {
-      setError(validation.error || t("invalidKeyName"));
+  const fetchSessionCounts = async (apiKeys: ApiKey[]) => {
+    if (apiKeys.length === 0) {
+      setSessionCounts({});
       return;
     }
+    try {
+      const res = await fetch("/api/sessions");
+      if (!res.ok) return;
+      const data = await res.json();
+      const byApiKeyRaw =
+        data && typeof data.byApiKey === "object" && !Array.isArray(data.byApiKey)
+          ? data.byApiKey
+          : {};
+      const normalized: Record<string, number> = {};
+      for (const key of apiKeys) {
+        const value = byApiKeyRaw[key.id];
+        normalized[key.id] =
+          typeof value === "number" && Number.isFinite(value) && value > 0 ? value : 0;
+      }
+      setSessionCounts(normalized);
+    } catch (error) {
+      console.log("Error fetching session counts:", error);
+    }
+  };
+
+  const clearPageError = useCallback(() => setPageError(null), []);
+
+  const handleCreateKey = async () => {
+    // Validate raw input first, then sanitize
+    const validation = validateKeyName(newKeyName, t);
+    if (!validation.valid) {
+      setNameError(validation.error || t("invalidKeyName"));
+      return;
+    }
+    const sanitizedName = sanitizeInput(newKeyName);
 
     setIsSubmitting(true);
-    clearError();
+    setNameError(null);
+    setCreateError(null);
 
     try {
       const res = await fetch("/api/keys", {
@@ -216,11 +257,11 @@ export default function ApiManagerPageClient() {
         setNewKeyName("");
         setShowAddModal(false);
       } else {
-        setError(data.error || t("failedCreateKey"));
+        setCreateError(data.error || t("failedCreateKey"));
       }
     } catch (error) {
       console.error("Error creating key:", error);
-      setError(t("failedCreateKeyRetry"));
+      setCreateError(t("failedCreateKeyRetry"));
     } finally {
       setIsSubmitting(false);
     }
@@ -229,14 +270,14 @@ export default function ApiManagerPageClient() {
   const handleDeleteKey = async (id: string) => {
     // Validate ID format to prevent injection
     if (!id || typeof id !== "string" || !/^[a-zA-Z0-9_-]+$/.test(id)) {
-      setError(t("invalidKeyId"));
+      setPageError(t("invalidKeyId"));
       return;
     }
 
     if (!confirm(t("deleteConfirm"))) return;
 
     setIsSubmitting(true);
-    clearError();
+    clearPageError();
 
     try {
       const res = await fetch(`/api/keys/${encodeURIComponent(id)}`, { method: "DELETE" });
@@ -244,11 +285,11 @@ export default function ApiManagerPageClient() {
         setKeys((prev) => prev.filter((k) => k.id !== id));
       } else {
         const data = await res.json();
-        setError(data.error || t("failedDeleteKey"));
+        setPageError(data.error || t("failedDeleteKey"));
       }
     } catch (error) {
       console.error("Error deleting key:", error);
-      setError(t("failedDeleteKeyRetry"));
+      setPageError(t("failedDeleteKeyRetry"));
     } finally {
       setIsSubmitting(false);
     }
@@ -260,25 +301,46 @@ export default function ApiManagerPageClient() {
     setShowPermissionsModal(true);
   };
 
+  const handleCopyExistingKey = async (keyId: string) => {
+    if (!keyId) return;
+
+    try {
+      const res = await fetch(`/api/keys/${encodeURIComponent(keyId)}/reveal`);
+      if (!res.ok) {
+        console.log("Error revealing key:", await res.text());
+        return;
+      }
+
+      const data = await res.json();
+      if (typeof data?.key === "string") {
+        await copy(data.key, `existing_key_${keyId}`);
+      }
+    } catch (error) {
+      console.log("Error copying existing key:", error);
+    }
+  };
+
   const handleUpdatePermissions = async (
+    name: string,
     allowedModels: string[],
     noLog: boolean,
     allowedConnections: string[],
     autoResolve: boolean,
     isActive: boolean,
+    maxSessions: number,
     accessSchedule: AccessSchedule | null
   ) => {
     if (!editingKey || !editingKey.id) return;
 
+    const sanitizedName = sanitizeInput(name);
+
     // Validate models array
     if (!Array.isArray(allowedModels)) {
-      setError(t("invalidModelsSelection"));
       return;
     }
 
     // Limit number of selected models to prevent abuse
     if (allowedModels.length > MAX_SELECTED_MODELS) {
-      setError(t("cannotSelectMoreThanModels", { max: MAX_SELECTED_MODELS }));
       return;
     }
 
@@ -291,20 +353,26 @@ export default function ApiManagerPageClient() {
     const validConnections = allowedConnections.filter(
       (id) => typeof id === "string" && /^[0-9a-f-]{36}$/i.test(id)
     );
+    const normalizedMaxSessions =
+      typeof maxSessions === "number" && Number.isFinite(maxSessions)
+        ? Math.max(0, Math.floor(maxSessions))
+        : 0;
 
     setIsSubmitting(true);
-    clearError();
+    clearPageError();
 
     try {
       const res = await fetch(`/api/keys/${encodeURIComponent(editingKey.id)}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          name: sanitizedName,
           allowedModels: validModels,
           allowedConnections: validConnections,
           noLog,
           autoResolve,
           isActive,
+          maxSessions: normalizedMaxSessions,
           accessSchedule,
         }),
       });
@@ -315,11 +383,11 @@ export default function ApiManagerPageClient() {
         setEditingKey(null);
       } else {
         const data = await res.json();
-        setError(data.error || t("failedUpdatePermissions"));
+        setPageError(data.error || t("failedUpdatePermissions"));
       }
     } catch (error) {
       console.error("Error updating permissions:", error);
-      setError(t("failedUpdatePermissionsRetry"));
+      setPageError(t("failedUpdatePermissionsRetry"));
     } finally {
       setIsSubmitting(false);
     }
@@ -368,12 +436,12 @@ export default function ApiManagerPageClient() {
   return (
     <div className="flex flex-col gap-8">
       {/* Error Banner */}
-      {error && (
+      {pageError && (
         <div className="flex items-center gap-3 p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
           <span className="material-symbols-outlined text-red-500">error</span>
-          <p className="text-sm text-red-700 dark:text-red-300 flex-1">{error}</p>
+          <p className="text-sm text-red-700 dark:text-red-300 flex-1">{pageError}</p>
           <button
-            onClick={clearError}
+            onClick={clearPageError}
             className="text-red-500 hover:text-red-700 transition-colors"
           >
             <span className="material-symbols-outlined">close</span>
@@ -447,7 +515,15 @@ export default function ApiManagerPageClient() {
             <h2 className="text-lg font-semibold">{t("keyManagement")}</h2>
             <p className="text-sm text-text-muted">{t("keyManagementDesc")}</p>
           </div>
-          <Button icon="add" onClick={() => setShowAddModal(true)}>
+          <Button
+            icon="add"
+            onClick={() => {
+              setNameError(null);
+              setCreateError(null);
+              clearPageError();
+              setShowAddModal(true);
+            }}
+          >
             {t("createKey")}
           </Button>
         </div>
@@ -481,7 +557,14 @@ export default function ApiManagerPageClient() {
             </div>
             <p className="text-text-main font-medium mb-2">{t("noKeys")}</p>
             <p className="text-sm text-text-muted mb-4">{t("noKeysDesc")}</p>
-            <Button icon="add" onClick={() => setShowAddModal(true)}>
+            <Button
+              icon="add"
+              onClick={() => {
+                setNameError(null);
+                setCreateError(null);
+                setShowAddModal(true);
+              }}
+            >
               {t("createFirstKey")}
             </Button>
           </div>
@@ -505,6 +588,9 @@ export default function ApiManagerPageClient() {
                 Array.isArray(key.allowedConnections) && key.allowedConnections.length > 0;
               const noLogEnabled = key.noLog === true;
               const keyIsActive = key.isActive !== false; // default true
+              const maxSessions = typeof key.maxSessions === "number" ? key.maxSessions : 0;
+              const hasSessionLimit = maxSessions > 0;
+              const activeSessions = sessionCounts[key.id] || 0;
               const hasSchedule = key.accessSchedule?.enabled === true;
               return (
                 <div
@@ -523,15 +609,25 @@ export default function ApiManagerPageClient() {
                   </div>
                   <div className="col-span-3 flex items-center gap-1.5">
                     <code className="text-sm text-text-muted font-mono truncate">{key.key}</code>
-                    <button
-                      onClick={() => copy(key.key, key.id)}
-                      className="p-1 hover:bg-black/5 dark:hover:bg-white/5 rounded text-text-muted hover:text-primary opacity-0 group-hover:opacity-100 transition-all shrink-0"
-                      title={t("copyMaskedKey")}
-                    >
-                      <span className="material-symbols-outlined text-[14px]">
-                        {copied === key.id ? "check" : "content_copy"}
+                    {allowKeyReveal ? (
+                      <button
+                        onClick={() => handleCopyExistingKey(key.id)}
+                        className="p-1 text-text-muted/60 hover:text-primary transition-colors shrink-0"
+                        title={tc("copy")}
+                        aria-label={tc("copy")}
+                      >
+                        <span className="material-symbols-outlined text-[14px]">
+                          {copied === `existing_key_${key.id}` ? "check" : "content_copy"}
+                        </span>
+                      </button>
+                    ) : (
+                      <span
+                        className="p-1 text-text-muted/40 opacity-0 group-hover:opacity-100 transition-all shrink-0 cursor-help"
+                        title={t("keyOnlyAvailableAtCreation")}
+                      >
+                        <span className="material-symbols-outlined text-[14px]">lock</span>
                       </span>
-                    </button>
+                    )}
                   </div>
                   <div className="col-span-2 flex items-center">
                     <div className="flex flex-col items-start gap-1">
@@ -575,6 +671,12 @@ export default function ApiManagerPageClient() {
                             auto_fix_high
                           </span>
                           Auto-Resolve
+                        </span>
+                      )}
+                      {hasSessionLimit && (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-[11px] font-medium">
+                          <span className="material-symbols-outlined text-[12px]">group</span>
+                          Sessions: {activeSessions}/{maxSessions}
                         </span>
                       )}
                       {!keyIsActive && (
@@ -667,6 +769,8 @@ export default function ApiManagerPageClient() {
         onClose={() => {
           setShowAddModal(false);
           setNewKeyName("");
+          setNameError(null);
+          setCreateError(null);
         }}
       >
         <div className="flex flex-col gap-4">
@@ -676,24 +780,42 @@ export default function ApiManagerPageClient() {
             </label>
             <Input
               value={newKeyName}
-              onChange={(e) => setNewKeyName(e.target.value)}
+              onChange={(e) => {
+                setNewKeyName(e.target.value);
+                setNameError(null);
+              }}
               placeholder={t("keyNamePlaceholder")}
+              maxLength={MAX_KEY_NAME_LENGTH}
+              error={nameError}
               autoFocus
             />
             <p className="text-xs text-text-muted mt-1.5">{t("keyNameDesc")}</p>
           </div>
+          {createError && (
+            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/30">
+              <span className="material-symbols-outlined text-red-500 text-sm">error</span>
+              <p className="text-sm text-red-700 dark:text-red-300 flex-1">{createError}</p>
+            </div>
+          )}
           <div className="flex gap-2">
             <Button
               onClick={() => {
                 setShowAddModal(false);
                 setNewKeyName("");
+                setNameError(null);
+                setCreateError(null);
               }}
               variant="ghost"
               fullWidth
             >
               {tc("cancel")}
             </Button>
-            <Button onClick={handleCreateKey} fullWidth disabled={!newKeyName.trim()}>
+            <Button
+              onClick={handleCreateKey}
+              fullWidth
+              disabled={!newKeyName.trim()}
+              loading={isSubmitting}
+            >
               {t("createKey")}
             </Button>
           </div>
@@ -776,11 +898,13 @@ const PermissionsModal = memo(function PermissionsModal({
   searchModel: string;
   onSearchChange: (v: string) => void;
   onSave: (
+    name: string,
     models: string[],
     noLog: boolean,
     connections: string[],
     autoResolve: boolean,
     isActive: boolean,
+    maxSessions: number,
     accessSchedule: AccessSchedule | null
   ) => void;
 }) {
@@ -792,11 +916,15 @@ const PermissionsModal = memo(function PermissionsModal({
   const initialConnections = Array.isArray(apiKey?.allowedConnections)
     ? apiKey.allowedConnections
     : [];
+  const [keyName, setKeyName] = useState(apiKey?.name ?? "");
   const [selectedModels, setSelectedModels] = useState<string[]>(initialModels);
   const [allowAll, setAllowAll] = useState(initialModels.length === 0);
   const [noLogEnabled, setNoLogEnabled] = useState(apiKey?.noLog === true);
   const [autoResolveEnabled, setAutoResolveEnabled] = useState(apiKey?.autoResolve === true);
   const [keyIsActive, setKeyIsActive] = useState(apiKey?.isActive !== false);
+  const [maxSessions, setMaxSessions] = useState(
+    typeof apiKey?.maxSessions === "number" && apiKey.maxSessions > 0 ? apiKey.maxSessions : 0
+  );
   const [scheduleEnabled, setScheduleEnabled] = useState(apiKey?.accessSchedule?.enabled === true);
   const [scheduleFrom, setScheduleFrom] = useState(apiKey?.accessSchedule?.from ?? "08:00");
   const [scheduleUntil, setScheduleUntil] = useState(apiKey?.accessSchedule?.until ?? "18:00");
@@ -806,6 +934,8 @@ const PermissionsModal = memo(function PermissionsModal({
   const [scheduleTz, setScheduleTz] = useState(
     apiKey?.accessSchedule?.tz ?? Intl.DateTimeFormat().resolvedOptions().timeZone
   );
+  const [nameError, setNameError] = useState<string | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
   const [selectedConnections, setSelectedConnections] = useState<string[]>(initialConnections);
   const [allowAllConnections, setAllowAllConnections] = useState(initialConnections.length === 0);
   const [expandedProviders, setExpandedProviders] = useState<Set<string>>(() => {
@@ -893,6 +1023,29 @@ const PermissionsModal = memo(function PermissionsModal({
   );
 
   const handleSave = useCallback(() => {
+    // Clear previous inline errors
+    setNameError(null);
+    setSaveError(null);
+
+    // Validate name inline before calling onSave
+    const validation = validateKeyName(keyName, t);
+    if (!validation.valid) {
+      setNameError(validation.error || t("invalidKeyName"));
+      return;
+    }
+
+    // Validate models selection
+    if (!allowAll && !Array.isArray(selectedModels)) {
+      setSaveError(t("invalidModelsSelection"));
+      return;
+    }
+
+    // Limit number of selected models to prevent abuse
+    if (!allowAll && selectedModels.length > MAX_SELECTED_MODELS) {
+      setSaveError(t("cannotSelectMoreThanModels", { max: MAX_SELECTED_MODELS }));
+      return;
+    }
+
     const schedule: AccessSchedule | null = scheduleEnabled
       ? {
           enabled: true,
@@ -903,15 +1056,18 @@ const PermissionsModal = memo(function PermissionsModal({
         }
       : null;
     onSave(
+      keyName,
       allowAll ? [] : selectedModels,
       noLogEnabled,
       allowAllConnections ? [] : selectedConnections,
       autoResolveEnabled,
       keyIsActive,
+      maxSessions,
       schedule
     );
   }, [
     onSave,
+    keyName,
     allowAll,
     selectedModels,
     noLogEnabled,
@@ -919,11 +1075,13 @@ const PermissionsModal = memo(function PermissionsModal({
     selectedConnections,
     autoResolveEnabled,
     keyIsActive,
+    maxSessions,
     scheduleEnabled,
     scheduleFrom,
     scheduleUntil,
     scheduleDays,
     scheduleTz,
+    t,
   ]);
 
   const selectedCount = selectedModels.length;
@@ -936,6 +1094,34 @@ const PermissionsModal = memo(function PermissionsModal({
       onClose={onClose}
     >
       <div className="flex flex-col gap-4">
+        {/* Key Name */}
+        <div className="flex items-start justify-between gap-3 p-3 rounded-lg border border-border bg-surface/40">
+          <div className="flex flex-col gap-1">
+            <p className="text-sm font-medium text-text-main">{t("keyName")}</p>
+            <p className="text-xs text-text-muted">{t("keyNameDesc")}</p>
+          </div>
+          <div className="w-48 shrink-0">
+            <Input
+              value={keyName}
+              onChange={(e) => {
+                setKeyName(e.target.value);
+                setNameError(null);
+              }}
+              placeholder={t("keyNamePlaceholder")}
+              maxLength={MAX_KEY_NAME_LENGTH}
+              error={nameError}
+            />
+          </div>
+        </div>
+
+        {/* Inline save error */}
+        {saveError && (
+          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/30">
+            <span className="material-symbols-outlined text-red-500 text-sm">error</span>
+            <p className="text-sm text-red-700 dark:text-red-300 flex-1">{saveError}</p>
+          </div>
+        )}
+
         {/* Access Mode Toggle */}
         <div className="flex gap-2 p-1 bg-surface rounded-lg">
           <button
@@ -1008,6 +1194,28 @@ const PermissionsModal = memo(function PermissionsModal({
             </span>
             {keyIsActive ? tc("enabled") : tc("disabled")}
           </button>
+        </div>
+
+        {/* Max Sessions Limit (T08) */}
+        <div className="flex items-start justify-between gap-3 p-3 rounded-lg border border-border bg-surface/40">
+          <div className="flex flex-col gap-1">
+            <p className="text-sm font-medium text-text-main">Max Active Sessions</p>
+            <p className="text-xs text-text-muted">
+              0 = unlimited. Return 429 when this key exceeds concurrent sticky sessions.
+            </p>
+          </div>
+          <div className="w-32">
+            <Input
+              type="number"
+              min={0}
+              step={1}
+              value={String(maxSessions)}
+              onChange={(e) => {
+                const parsed = Number.parseInt(e.target.value || "0", 10);
+                setMaxSessions(Number.isFinite(parsed) && parsed > 0 ? parsed : 0);
+              }}
+            />
+          </div>
         </div>
 
         {/* Access Schedule */}

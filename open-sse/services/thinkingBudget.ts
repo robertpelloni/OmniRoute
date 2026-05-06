@@ -13,21 +13,32 @@ export const ThinkingMode = {
   ADAPTIVE: "adaptive", // Scale based on request complexity
 };
 
+import {
+  capThinkingBudget,
+  getDefaultThinkingBudget,
+  getResolvedModelCapabilities,
+  supportsReasoning,
+} from "@/lib/modelCapabilities";
+
 // Effort → budget token mapping
 export const EFFORT_BUDGETS = {
   none: 0,
   low: 1024,
   medium: 10240,
-  high: 131072,
+  high: 131072, // Handled globally by capThinkingBudget later
+  max: 131072, // T11: Claude "max" / "xhigh" — full budget
+  xhigh: 131072, // T11: explicit alias used internally
 };
 
 // thinkingLevel string → budget token mapping
 // Used when clients send string-based thinking levels (e.g., VS Code Copilot)
 export const THINKING_LEVEL_MAP = {
   none: 0,
-  low: 1024,
-  medium: 10240,
-  high: 131072,
+  low: 4096,
+  medium: 8192,
+  high: 24576,
+  max: 131072, // T11: max = full Claude budget (sub2api: xhigh)
+  xhigh: 131072, // T11: explicit xhigh alias
 };
 
 // Default config (passthrough = backward compatible)
@@ -68,8 +79,9 @@ export function normalizeThinkingLevel(body) {
 
   // Handle top-level thinkingLevel or thinking_level string fields
   const levelStr = result.thinkingLevel || result.thinking_level;
-  if (typeof levelStr === "string" && THINKING_LEVEL_MAP[levelStr] !== undefined) {
-    const budget = THINKING_LEVEL_MAP[levelStr];
+  if (typeof levelStr === "string" && THINKING_LEVEL_MAP[levelStr.toLowerCase()] !== undefined) {
+    const rawBudget = THINKING_LEVEL_MAP[levelStr.toLowerCase()];
+    const budget = capThinkingBudget(result.model || "", rawBudget);
     // Convert to Claude thinking format as canonical representation
     result.thinking = {
       type: budget > 0 ? "enabled" : "disabled",
@@ -83,15 +95,22 @@ export function normalizeThinkingLevel(body) {
   const geminiLevel =
     result.generationConfig?.thinkingConfig?.thinkingLevel ||
     result.generationConfig?.thinking_config?.thinkingLevel;
-  if (typeof geminiLevel === "string" && THINKING_LEVEL_MAP[geminiLevel] !== undefined) {
-    const budget = THINKING_LEVEL_MAP[geminiLevel];
+  if (
+    typeof geminiLevel === "string" &&
+    THINKING_LEVEL_MAP[geminiLevel.toLowerCase()] !== undefined
+  ) {
+    const rawBudget = THINKING_LEVEL_MAP[geminiLevel.toLowerCase()];
+    const budget = capThinkingBudget(result.model || "", rawBudget);
     result.generationConfig = {
       ...result.generationConfig,
-      thinking_config: { thinking_budget: budget },
+      thinkingConfig: { ...result.generationConfig.thinkingConfig, thinkingBudget: budget },
     };
-    // Clean up camelCase variant if it was the source
+    // Clean up string variants
     if (result.generationConfig.thinkingConfig) {
-      delete result.generationConfig.thinkingConfig;
+      delete result.generationConfig.thinkingConfig.thinkingLevel;
+    }
+    if (result.generationConfig.thinking_config) {
+      delete result.generationConfig.thinking_config;
     }
   }
 
@@ -118,7 +137,7 @@ export function ensureThinkingConfig(body) {
   const result = { ...body };
   result.thinking = {
     type: "enabled",
-    budget_tokens: EFFORT_BUDGETS.medium, // 10240 default
+    budget_tokens: getDefaultThinkingBudget(model) || EFFORT_BUDGETS.medium,
   };
   return result;
 }
@@ -136,6 +155,13 @@ export function ensureThinkingConfig(body) {
 export function applyThinkingBudget(body, config = null) {
   const cfg = config || _config;
   if (!body || typeof body !== "object") return body;
+
+  // Early exit: strip ALL reasoning/thinking params for models that don't support them.
+  // Provider-specific Cloud Code restrictions should be handled at the executor boundary.
+  const modelStr = typeof body.model === "string" ? body.model : "";
+  if (modelStr && !supportsReasoning(modelStr)) {
+    return stripThinkingConfig(body);
+  }
 
   // Pre-processing: convert string thinkingLevel to numeric budget
   let processed = normalizeThinkingLevel(body);
@@ -198,7 +224,8 @@ function setCustomBudget(body, budget) {
     };
   }
 
-  // OpenAI reasoning_effort mapping
+  // OpenAI reasoning_effort mapping.
+  // GPT-5/Codex accepts xhigh for the top tier; keep full budget aligned.
   if (result.reasoning_effort !== undefined || result.reasoning !== undefined) {
     if (budget <= 0) {
       delete result.reasoning_effort;
@@ -207,8 +234,10 @@ function setCustomBudget(body, budget) {
       result.reasoning_effort = "low";
     } else if (budget <= 10240) {
       result.reasoning_effort = "medium";
-    } else {
+    } else if (budget < 131072) {
       result.reasoning_effort = "high";
+    } else {
+      result.reasoning_effort = "xhigh";
     }
   }
 
@@ -251,8 +280,11 @@ function applyAdaptiveBudget(body, cfg) {
   if (toolCount > 3) multiplier += 0.5;
   if (lastMsgLength > 2000) multiplier += 0.3;
 
-  const baseBudget = EFFORT_BUDGETS[cfg.effortLevel] || EFFORT_BUDGETS.medium;
-  const budget = Math.min(Math.ceil(baseBudget * multiplier), 131072);
+  const baseBudget =
+    EFFORT_BUDGETS[cfg.effortLevel] ||
+    getDefaultThinkingBudget(body.model || "") ||
+    EFFORT_BUDGETS.medium;
+  const budget = capThinkingBudget(body.model || "", Math.ceil(baseBudget * multiplier));
 
   return setCustomBudget(body, budget);
 }
@@ -262,6 +294,9 @@ function applyAdaptiveBudget(body, cfg) {
  */
 export function hasThinkingCapableModel(body) {
   const model = body.model || "";
+  const resolved = getResolvedModelCapabilities(model);
+  if (resolved.supportsThinking === true) return true;
+  if (resolved.supportsThinking === false) return false;
   return (
     model.includes("claude") ||
     model.includes("o1") ||

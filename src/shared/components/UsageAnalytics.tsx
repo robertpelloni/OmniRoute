@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import Card from "./Card";
 import { CardSkeleton } from "./Loading";
 import { fmtCompact as fmt, fmtFull, fmtCost } from "@/shared/utils/formatting";
 import {
   StatCard,
+  CompactStatGrid,
   ActivityHeatmap,
   DailyTrendChart,
   AccountDonut,
@@ -17,6 +18,8 @@ import {
   ProviderCostDonut,
   ModelOverTimeChart,
   ProviderTable,
+  ApiKeyFilterDropdown,
+  CustomRangePicker,
 } from "./analytics";
 
 // ============================================================================
@@ -29,24 +32,89 @@ export default function UsageAnalytics() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Custom date range state
+  const [customStart, setCustomStart] = useState("");
+  const [customEnd, setCustomEnd] = useState("");
+  const [showCustomPicker, setShowCustomPicker] = useState(false);
+  const customPickerAnchorRef = useRef<HTMLDivElement>(null);
+
+  // API key filter state
+  const [selectedApiKeys, setSelectedApiKeys] = useState<string[]>([]);
+  const [availableApiKeys, setAvailableApiKeys] = useState<{ id: string; name: string }[]>([]);
+
   const fetchAnalytics = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await fetch(`/api/usage/analytics?range=${range}`);
+      const params = new URLSearchParams();
+      params.set("range", range);
+      if (range === "custom" && customStart && customEnd) {
+        params.set("startDate", customStart);
+        params.set("endDate", customEnd);
+      }
+      if (selectedApiKeys.length > 0) {
+        params.set("apiKeyIds", selectedApiKeys.join(","));
+      }
+      const res = await fetch(`/api/usage/analytics?${params.toString()}`);
       if (!res.ok) throw new Error("Failed to fetch");
       const data = await res.json();
       setAnalytics(data);
       setError(null);
+
+      // Update available keys from unfiltered data (only when no filter is active).
+      // Use apiKeyName as the stable identifier — it is always populated
+      // for every OmniRoute API key regardless of the downstream provider.
+      if (selectedApiKeys.length === 0 && data.byApiKey?.length > 0) {
+        const seen = new Set<string>();
+        const keys: { id: string; name: string }[] = [];
+        for (const k of data.byApiKey) {
+          const name = k.apiKeyName || k.apiKeyId || "unknown";
+          if (seen.has(name)) continue;
+          seen.add(name);
+          keys.push({ id: name, name });
+        }
+        setAvailableApiKeys(keys);
+      }
     } catch (err) {
       setError((err as any).message);
     } finally {
       setLoading(false);
     }
-  }, [range]);
+  }, [range, customStart, customEnd, selectedApiKeys]);
 
   useEffect(() => {
     fetchAnalytics();
   }, [fetchAnalytics]);
+
+  const handleRangeSelect = useCallback((value: string) => {
+    if (value === "custom") {
+      setShowCustomPicker(true);
+    } else {
+      setRange(value);
+      setShowCustomPicker(false);
+    }
+  }, []);
+
+  const handleCustomApply = useCallback((start: string, end: string) => {
+    setCustomStart(start);
+    setCustomEnd(end);
+    setRange("custom");
+    setShowCustomPicker(false);
+  }, []);
+
+  // Format custom range label for display
+  const customRangeLabel = useMemo(() => {
+    if (range !== "custom" || !customStart || !customEnd) return null;
+    const fmt = (iso: string) => {
+      const d = new Date(iso);
+      return d.toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    };
+    return `${fmt(customStart)} — ${fmt(customEnd)}`;
+  }, [range, customStart, customEnd]);
 
   const ranges = [
     { value: "1d", label: "1D" },
@@ -78,6 +146,26 @@ export default function UsageAnalytics() {
     return (analytics?.byProvider || []).length;
   }, [analytics]);
 
+  const providerDiversity = useMemo(() => {
+    const providers = analytics?.byProvider || [];
+    if (providers.length <= 1) return 0;
+
+    let totalCalls = 0;
+    for (const p of providers) {
+      totalCalls += p.totalRequests || p.apiCalls || 0;
+    }
+    if (totalCalls === 0) return 0;
+
+    let h = 0;
+    for (const p of providers) {
+      const p_i = (p.totalRequests || p.apiCalls || 0) / totalCalls;
+      if (p_i > 0) h -= p_i * Math.log2(p_i);
+    }
+
+    const maxH = Math.log2(providers.length);
+    return maxH > 0 ? (h / maxH) * 100 : 0;
+  }, [analytics]);
+
   if (loading && !analytics) return <CardSkeleton />;
   if (error) return <Card className="p-6 text-center text-red-500">Error: {error}</Card>;
 
@@ -89,32 +177,80 @@ export default function UsageAnalytics() {
   const ioRatio = s.completionTokens > 0 ? (s.promptTokens / s.completionTokens).toFixed(1) : "—";
 
   return (
-    <div className="flex flex-col gap-5">
-      {/* Header + Time Range */}
-      <div className="flex items-center justify-between">
+    <div className="flex flex-col gap-5 min-w-0">
+      {/* Header + Filters */}
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <h2 className="text-xl font-semibold flex items-center gap-2">
           <span className="material-symbols-outlined text-primary text-[22px]">analytics</span>
           Usage Analytics
         </h2>
-        <div className="flex items-center gap-1 bg-black/[0.03] dark:bg-white/[0.03] rounded-lg p-1 border border-black/5 dark:border-white/5">
-          {ranges.map((r) => (
+        <div className="flex items-center gap-2.5">
+          {/* API Key Filter */}
+          <ApiKeyFilterDropdown
+            available={availableApiKeys}
+            selected={selectedApiKeys}
+            onChange={setSelectedApiKeys}
+          />
+
+          {/* Period Selector + Custom */}
+          <div
+            className="relative flex items-center gap-1 bg-black/[0.03] dark:bg-white/[0.03] rounded-lg p-1 border border-black/5 dark:border-white/5"
+            ref={customPickerAnchorRef}
+          >
+            {ranges.map((r) => (
+              <button
+                key={r.value}
+                onClick={() => handleRangeSelect(r.value)}
+                className={`px-3 py-1 rounded-md text-xs font-semibold transition-all ${
+                  range === r.value
+                    ? "bg-primary text-white shadow-sm"
+                    : "text-text-muted hover:text-text-main hover:bg-black/5 dark:hover:bg-white/5"
+                }`}
+              >
+                {r.label}
+              </button>
+            ))}
             <button
-              key={r.value}
-              onClick={() => setRange(r.value)}
-              className={`px-3 py-1 rounded-md text-xs font-semibold transition-all ${
-                range === r.value
+              onClick={() => handleRangeSelect("custom")}
+              className={`px-3 py-1 rounded-md text-xs font-semibold transition-all flex items-center gap-1 ${
+                range === "custom"
                   ? "bg-primary text-white shadow-sm"
                   : "text-text-muted hover:text-text-main hover:bg-black/5 dark:hover:bg-white/5"
               }`}
             >
-              {r.label}
+              <span className="material-symbols-outlined text-[13px]">date_range</span>
+              {customRangeLabel || "Custom"}
+              {range === "custom" && customRangeLabel && (
+                <span
+                  role="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setRange("30d");
+                    setCustomStart("");
+                    setCustomEnd("");
+                  }}
+                  className="ml-0.5 opacity-70 hover:opacity-100"
+                >
+                  <span className="material-symbols-outlined text-[11px]">close</span>
+                </span>
+              )}
             </button>
-          ))}
+
+            {/* Custom Range Picker Popover */}
+            {showCustomPicker && (
+              <CustomRangePicker
+                start={customStart}
+                end={customEnd}
+                onApply={handleCustomApply}
+                onClose={() => setShowCustomPicker(false)}
+              />
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Summary Cards — Row 1: Core metrics */}
-      <div className="grid grid-cols-2 md:grid-cols-7 gap-3">
+      {/* Primary KPI Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <StatCard
           icon="generating_tokens"
           label="Total Tokens"
@@ -139,43 +275,71 @@ export default function UsageAnalytics() {
           value={fmtCost(s.totalCost)}
           color="text-amber-500"
         />
-        <StatCard icon="group" label="Accounts" value={s.uniqueAccounts || 0} />
-        <StatCard icon="vpn_key" label="API Keys" value={s.uniqueApiKeys || 0} />
-        <StatCard icon="model_training" label="Models" value={s.uniqueModels || 0} />
       </div>
 
-      {/* Summary Cards — Row 2: Derived insights */}
-      <div className="grid grid-cols-2 md:grid-cols-7 gap-3">
-        <StatCard
-          icon="speed"
-          label="Avg Tokens/Req"
-          value={fmt(avgTokensPerReq)}
-          color="text-cyan-500"
-        />
-        <StatCard
-          icon="request_quote"
-          label="Cost/Request"
-          value={fmtCost(costPerReq)}
-          color="text-orange-500"
-        />
-        <StatCard
-          icon="compare_arrows"
-          label="I/O Ratio"
-          value={`${ioRatio}x`}
-          color="text-violet-500"
-        />
-        <StatCard icon="star" label="Top Model" value={topModel} color="text-pink-500" />
-        <StatCard icon="cloud" label="Top Provider" value={topProvider} color="text-teal-500" />
-        <StatCard icon="today" label="Busiest Day" value={busiestDay} color="text-rose-500" />
-        <StatCard icon="dns" label="Providers" value={providerCount} color="text-indigo-500" />
-      </div>
+      {/* Secondary Metrics — compact grid with sections */}
+      <CompactStatGrid
+        sections={[
+          {
+            title: "Infrastructure",
+            items: [
+              { icon: "group", label: "Accounts", value: s.uniqueAccounts || 0 },
+              { icon: "dns", label: "Providers", value: providerCount, color: "text-indigo-500" },
+              { icon: "vpn_key", label: "API Keys", value: s.uniqueApiKeys || 0 },
+              { icon: "model_training", label: "Models", value: s.uniqueModels || 0 },
+            ],
+          },
+          {
+            title: "Performance",
+            items: [
+              {
+                icon: "speed",
+                label: "Avg Tokens/Req",
+                value: fmt(avgTokensPerReq),
+                color: "text-cyan-500",
+              },
+              {
+                icon: "request_quote",
+                label: "Cost/Req",
+                value: fmtCost(costPerReq),
+                color: "text-orange-500",
+              },
+              {
+                icon: "compare_arrows",
+                label: "I/O Ratio",
+                value: `${ioRatio}x`,
+                color: "text-violet-500",
+              },
+              {
+                icon: "swap_horiz",
+                label: "Fallback Rate",
+                value: `${Number(s.fallbackRatePct || 0).toFixed(1)}%`,
+                color: "text-amber-500",
+              },
+            ],
+          },
+          {
+            title: "Highlights",
+            wideValues: true,
+            items: [
+              { icon: "star", label: "Top Model", value: topModel, color: "text-pink-500" },
+              { icon: "cloud", label: "Top Provider", value: topProvider, color: "text-teal-500" },
+              { icon: "today", label: "Busiest Day", value: busiestDay, color: "text-rose-500" },
+              {
+                icon: "network_node",
+                label: "Diversity",
+                value: `${providerDiversity.toFixed(1)}%`,
+                color: "text-sky-500",
+              },
+            ],
+          },
+        ]}
+      />
 
       {/* Activity Heatmap + Weekly Widgets */}
-      <div
-        style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 16, alignItems: "stretch" }}
-      >
+      <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4 items-stretch">
         <ActivityHeatmap activityMap={analytics?.activityMap} />
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <div className="flex flex-col gap-4">
           <MostActiveDay7d activityMap={analytics?.activityMap} />
           <WeeklySquares7d activityMap={analytics?.activityMap} />
         </div>

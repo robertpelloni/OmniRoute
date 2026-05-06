@@ -7,10 +7,14 @@ import { backupDbFile } from "./backup";
 import { PROVIDER_ID_TO_ALIAS } from "@omniroute/open-sse/config/providerModels.ts";
 import { invalidateDbCache } from "./readCache";
 import { resolveProxyForConnectionFromRegistry } from "./proxies";
+import { getComboModelProvider as getComboEntryProvider } from "@/lib/combos/steps";
+import { requestBodyLimitMbFromEnv } from "@/shared/constants/bodySize";
 
 type JsonRecord = Record<string, unknown>;
 type PricingModels = Record<string, JsonRecord>;
 type PricingByProvider = Record<string, PricingModels>;
+export type PricingSource = "default" | "litellm" | "modelsDev" | "user";
+export type PricingSourceMap = Record<string, Record<string, PricingSource>>;
 type ProxyValue = JsonRecord | string | null;
 type ProxyMap = Record<string, ProxyValue>;
 
@@ -43,8 +47,24 @@ export async function getSettings() {
   const rows = db.prepare("SELECT key, value FROM key_value WHERE namespace = 'settings'").all();
   const settings: Record<string, unknown> = {
     cloudEnabled: false,
+    tailscaleEnabled: false,
+    tailscaleUrl: "",
     stickyRoundRobinLimit: 3,
+    requestRetry: 3,
+    maxRetryIntervalSec: 30,
+    antigravitySignatureCacheMode: "enabled",
     requireLogin: true,
+    mcpEnabled: false,
+    a2aEnabled: false,
+    hiddenSidebarItems: [],
+    hideEndpointCloudflaredTunnel: false,
+    hideEndpointTailscaleFunnel: false,
+    hideEndpointNgrokTunnel: false,
+    comboConfigMode: "guided",
+    alwaysPreserveClientCache: "auto",
+    idempotencyWindowMs: 5000,
+    wsAuth: false,
+    maxBodySizeMb: requestBodyLimitMbFromEnv(process.env.MAX_BODY_SIZE_BYTES),
   };
   for (const row of rows) {
     const record = toRecord(row);
@@ -83,7 +103,19 @@ export async function updateSettings(updates: Record<string, unknown>) {
   tx();
   backupDbFile("pre-write");
   invalidateDbCache("settings"); // Bust the read cache immediately
-  return getSettings();
+  const nextSettings = await getSettings();
+
+  try {
+    const { applyRuntimeSettings } = await import("@/lib/config/runtimeSettings");
+    await applyRuntimeSettings(nextSettings, { source: "settings:update" });
+  } catch (error) {
+    console.warn(
+      "[HOT_RELOAD] Failed to apply runtime settings after update:",
+      error instanceof Error ? error.message : error
+    );
+  }
+
+  return nextSettings;
 }
 
 export async function isCloudEnabled() {
@@ -93,56 +125,43 @@ export async function isCloudEnabled() {
 
 // ──────────────── Pricing ────────────────
 
-export async function getPricing() {
-  const db = getDbInstance();
+function readPricingNamespace(
+  db: ReturnType<typeof getDbInstance>,
+  namespace: string
+): PricingByProvider {
+  const rows = db.prepare("SELECT key, value FROM key_value WHERE namespace = ?").all(namespace);
+  const pricing: PricingByProvider = {};
 
-  // Layer 1: Hardcoded defaults (lowest priority)
-  const { getDefaultPricing } = await import("@/shared/constants/pricing");
-  const defaultPricing = getDefaultPricing();
-
-  // Layer 2: Synced external pricing (middle priority)
-  const syncedRows = db
-    .prepare("SELECT key, value FROM key_value WHERE namespace = 'pricing_synced'")
-    .all();
-  const syncedPricing: PricingByProvider = {};
-  for (const row of syncedRows) {
-    const record = toRecord(row);
-    const key = typeof record.key === "string" ? record.key : null;
-    const rawValue = typeof record.value === "string" ? record.value : null;
-    if (!key || rawValue === null) continue;
-    syncedPricing[key] = toRecord(JSON.parse(rawValue)) as PricingModels;
-  }
-
-  // Layer 3: User overrides (highest priority)
-  const rows = db.prepare("SELECT key, value FROM key_value WHERE namespace = 'pricing'").all();
-  const userPricing: PricingByProvider = {};
   for (const row of rows) {
     const record = toRecord(row);
     const key = typeof record.key === "string" ? record.key : null;
     const rawValue = typeof record.value === "string" ? record.value : null;
     if (!key || rawValue === null) continue;
-    userPricing[key] = toRecord(JSON.parse(rawValue)) as PricingModels;
+
+    try {
+      pricing[key] = toRecord(JSON.parse(rawValue)) as PricingModels;
+    } catch {
+      // Corrupted data — skip silently, fallback to lower layers
+    }
   }
 
-  // Merge: defaults → synced → user (each layer overrides the previous)
+  return pricing;
+}
+
+function mergePricingLayers(layers: PricingByProvider[]): PricingByProvider {
   const mergedPricing: PricingByProvider = {};
 
-  // Start with defaults
-  for (const [provider, models] of Object.entries(defaultPricing) as Array<[string, unknown]>) {
-    mergedPricing[provider] = { ...(toRecord(models) as PricingModels) };
-  }
-
-  // Layer synced then user on top (each higher-priority layer overrides)
-  for (const layer of [syncedPricing, userPricing]) {
+  for (const layer of layers) {
     for (const [provider, models] of Object.entries(layer)) {
       if (!mergedPricing[provider]) {
         mergedPricing[provider] = { ...models };
-      } else {
-        for (const [model, pricing] of Object.entries(models)) {
-          mergedPricing[provider][model] = mergedPricing[provider][model]
-            ? { ...(mergedPricing[provider][model] || {}), ...toRecord(pricing) }
-            : pricing;
-        }
+        continue;
+      }
+
+      for (const [model, pricing] of Object.entries(models)) {
+        mergedPricing[provider][model] = mergedPricing[provider][model]
+          ? { ...(mergedPricing[provider][model] || {}), ...toRecord(pricing) }
+          : pricing;
       }
     }
   }
@@ -150,13 +169,84 @@ export async function getPricing() {
   return mergedPricing;
 }
 
+function buildPricingSourceMap(layers: {
+  defaults: PricingByProvider;
+  litellm: PricingByProvider;
+  modelsDev: PricingByProvider;
+  user: PricingByProvider;
+}): PricingSourceMap {
+  const sourceMap: PricingSourceMap = {};
+  const mergedPricing = mergePricingLayers([
+    layers.defaults,
+    layers.litellm,
+    layers.modelsDev,
+    layers.user,
+  ]);
+
+  for (const [provider, models] of Object.entries(mergedPricing)) {
+    sourceMap[provider] = {};
+
+    for (const model of Object.keys(models)) {
+      if (layers.user[provider]?.[model]) {
+        sourceMap[provider][model] = "user";
+      } else if (layers.modelsDev[provider]?.[model]) {
+        sourceMap[provider][model] = "modelsDev";
+      } else if (layers.litellm[provider]?.[model]) {
+        sourceMap[provider][model] = "litellm";
+      } else {
+        sourceMap[provider][model] = "default";
+      }
+    }
+  }
+
+  return sourceMap;
+}
+
+async function getPricingLayers() {
+  const db = getDbInstance();
+
+  // Layer 1: Hardcoded defaults (lowest priority)
+  const { getDefaultPricing } = await import("@/shared/constants/pricing");
+  return {
+    defaults: getDefaultPricing(),
+    litellm: readPricingNamespace(db, "pricing_synced"),
+    modelsDev: readPricingNamespace(db, "models_dev_pricing"),
+    user: readPricingNamespace(db, "pricing"),
+  };
+}
+
+export async function getPricing() {
+  const layers = await getPricingLayers();
+  // Merge: defaults → LiteLLM → models.dev → user (each layer overrides the previous)
+  return mergePricingLayers([layers.defaults, layers.litellm, layers.modelsDev, layers.user]);
+}
+
+export async function getPricingWithSources(): Promise<{
+  pricing: PricingByProvider;
+  sourceMap: PricingSourceMap;
+}> {
+  const layers = await getPricingLayers();
+  return {
+    pricing: mergePricingLayers([layers.defaults, layers.litellm, layers.modelsDev, layers.user]),
+    sourceMap: buildPricingSourceMap(layers),
+  };
+}
+
 export async function getPricingForModel(provider: string, model: string) {
   const pricing = await getPricing();
   if (pricing[provider]?.[model]) return pricing[provider][model];
 
   const { PROVIDER_ID_TO_ALIAS } = await import("@omniroute/open-sse/config/providerModels");
+  // Check if provider is an ID -> map to ALIAS
   const alias = PROVIDER_ID_TO_ALIAS[provider];
   if (alias && pricing[alias]) return pricing[alias][model] || null;
+
+  // Check if provider is an ALIAS -> map to ID (search values)
+  for (const [id, mappedAlias] of Object.entries(PROVIDER_ID_TO_ALIAS)) {
+    if (mappedAlias === provider && pricing[id]?.[model]) {
+      return pricing[id][model];
+    }
+  }
 
   const np = provider?.replace(/-cn$/, "");
   if (np && np !== provider && pricing[np]) return pricing[np][model] || null;
@@ -245,6 +335,36 @@ export async function resetAllPricing() {
   return {};
 }
 
+// ──────────────── LKGP (Last Known Good Provider) ────────────────
+
+export async function getLKGP(comboName: string, modelId: string): Promise<string | null> {
+  const db = getDbInstance();
+  const key = `${comboName}:${modelId}`;
+  const row = db
+    .prepare("SELECT value FROM key_value WHERE namespace = 'lkgp' AND key = ?")
+    .get(key) as { value?: string } | undefined;
+  if (!row?.value) return null;
+  try {
+    return JSON.parse(row.value);
+  } catch {
+    return row.value;
+  }
+}
+
+export async function setLKGP(comboName: string, modelId: string, providerId: string) {
+  const db = getDbInstance();
+  const key = `${comboName}:${modelId}`;
+  db.prepare("INSERT OR REPLACE INTO key_value (namespace, key, value) VALUES ('lkgp', ?, ?)").run(
+    key,
+    JSON.stringify(providerId)
+  );
+}
+
+export function clearAllLKGP(): void {
+  const db = getDbInstance();
+  db.prepare("DELETE FROM key_value WHERE namespace = 'lkgp'").run();
+}
+
 // ──────────────── Proxy Config ────────────────
 
 const DEFAULT_PROXY_CONFIG: ProxyConfig = { global: null, providers: {}, combos: {}, keys: {} };
@@ -263,23 +383,8 @@ function resolveProviderAliasOrId(providerOrAlias: string): string {
 }
 
 function getComboModelProvider(modelEntry: unknown): string | null {
-  const record = toRecord(modelEntry);
-  if (typeof record.provider === "string") {
-    return resolveProviderAliasOrId(record.provider);
-  }
-
-  const modelValue =
-    typeof modelEntry === "string"
-      ? modelEntry
-      : typeof record.model === "string"
-        ? record.model
-        : null;
-
-  if (!modelValue) return null;
-
-  const [providerOrAlias] = modelValue.split("/", 1);
-  if (!providerOrAlias) return null;
-  return resolveProviderAliasOrId(providerOrAlias);
+  const providerOrAlias = getComboEntryProvider(modelEntry);
+  return providerOrAlias ? resolveProviderAliasOrId(providerOrAlias) : null;
 }
 
 function migrateProxyEntry(value: unknown): JsonRecord | null {
@@ -484,4 +589,241 @@ export async function setProxyConfig(config: Record<string, unknown>) {
 
   backupDbFile("pre-write");
   return current;
+}
+
+// ──────────────── Cache Control Metrics ────────────────
+// Cache metrics are now computed from usage_history table on-the-fly
+// This avoids race conditions and keeps a single source of truth for token data
+
+export async function getCacheMetrics() {
+  const db = getDbInstance();
+
+  try {
+    // Aggregate totals from usage_history
+    const totalsRow = db
+      .prepare(
+        `
+      SELECT
+        COUNT(*) as totalRequests,
+        SUM(tokens_input) as totalInputTokens,
+        SUM(tokens_cache_read) as totalCachedTokens,
+        SUM(tokens_cache_creation) as totalCacheCreationTokens
+      FROM usage_history
+      WHERE tokens_cache_read > 0 OR tokens_cache_creation > 0
+    `
+      )
+      .get() as
+      | {
+          totalRequests: number;
+          totalInputTokens: number | null;
+          totalCachedTokens: number | null;
+          totalCacheCreationTokens: number | null;
+        }
+      | undefined;
+
+    // Get all requests count (including those without cache activity)
+    const allRequestsRow = db
+      .prepare(
+        `
+      SELECT COUNT(*) as totalRequests
+      FROM usage_history
+    `
+      )
+      .get() as { totalRequests: number } | undefined;
+
+    // Aggregate by provider
+    const byProviderRows = db
+      .prepare(
+        `
+      SELECT
+        provider,
+        COUNT(*) as totalRequests,
+        SUM(CASE WHEN tokens_cache_read > 0 OR tokens_cache_creation > 0 THEN 1 ELSE 0 END) as cachedRequests,
+        SUM(CASE WHEN tokens_cache_read > 0 OR tokens_cache_creation > 0 THEN tokens_input ELSE 0 END) as inputTokens,
+        SUM(tokens_cache_read) as cachedTokens,
+        SUM(tokens_cache_creation) as cacheCreationTokens
+      FROM usage_history
+      WHERE provider IS NOT NULL
+      GROUP BY provider
+      HAVING cachedRequests > 0
+    `
+      )
+      .all() as Array<{
+      provider: string;
+      totalRequests: number;
+      cachedRequests: number;
+      inputTokens: number | null;
+      cachedTokens: number | null;
+      cacheCreationTokens: number | null;
+    }>;
+
+    // Aggregate by strategy
+    // Since combo_strategy isn't tracked in usage_history yet, we use 'direct' for all requests
+    // TODO: Add combo_strategy column to usage_history for proper strategy tracking
+    const byStrategyRows = db
+      .prepare(
+        `
+      SELECT
+        'direct' as strategy,
+        COUNT(*) as requests,
+        SUM(tokens_input) as inputTokens,
+        SUM(tokens_cache_read) as cachedTokens,
+        SUM(tokens_cache_creation) as cacheCreationTokens
+      FROM usage_history
+      WHERE (tokens_cache_read > 0 OR tokens_cache_creation > 0)
+      GROUP BY 'direct'
+    `
+      )
+      .all() as Array<{
+      strategy: string;
+      requests: number;
+      inputTokens: number | null;
+      cachedTokens: number | null;
+      cacheCreationTokens: number | null;
+    }>;
+
+    const tokensSaved = totalsRow?.totalCachedTokens || 0;
+
+    const AVG_INPUT_PRICE_PER_MILLION = 3;
+    const CACHE_DISCOUNT = 0.9;
+    const estimatedCostSaved =
+      Math.round((tokensSaved / 1_000_000) * AVG_INPUT_PRICE_PER_MILLION * CACHE_DISCOUNT * 100) /
+      100;
+
+    // Build byProvider object
+    const byProvider: Record<
+      string,
+      {
+        requests: number;
+        totalRequests: number;
+        cachedRequests: number;
+        inputTokens: number;
+        cachedTokens: number;
+        cacheCreationTokens: number;
+      }
+    > = {};
+    for (const row of byProviderRows) {
+      byProvider[row.provider] = {
+        requests: row.cachedRequests,
+        totalRequests: row.totalRequests,
+        cachedRequests: row.cachedRequests,
+        inputTokens: row.inputTokens || 0,
+        cachedTokens: row.cachedTokens || 0,
+        cacheCreationTokens: row.cacheCreationTokens || 0,
+      };
+    }
+
+    // Build byStrategy object
+    const byStrategy: Record<
+      string,
+      {
+        requests: number;
+        inputTokens: number;
+        cachedTokens: number;
+        cacheCreationTokens: number;
+      }
+    > = {};
+    for (const row of byStrategyRows) {
+      byStrategy[row.strategy] = {
+        requests: row.requests,
+        inputTokens: row.inputTokens || 0,
+        cachedTokens: row.cachedTokens || 0,
+        cacheCreationTokens: row.cacheCreationTokens || 0,
+      };
+    }
+
+    return {
+      totalRequests: allRequestsRow?.totalRequests || totalsRow?.totalRequests || 0,
+      requestsWithCacheControl: totalsRow?.totalRequests || 0,
+      totalInputTokens: totalsRow?.totalInputTokens || 0,
+      totalCachedTokens: totalsRow?.totalCachedTokens || 0,
+      totalCacheCreationTokens: totalsRow?.totalCacheCreationTokens || 0,
+      tokensSaved,
+      estimatedCostSaved,
+      byProvider,
+      byStrategy,
+      lastUpdated: new Date().toISOString(),
+    };
+  } catch (error) {
+    console.error("Failed to fetch cache metrics from usage_history:", error);
+    return {
+      totalRequests: 0,
+      requestsWithCacheControl: 0,
+      totalInputTokens: 0,
+      totalCachedTokens: 0,
+      totalCacheCreationTokens: 0,
+      tokensSaved: 0,
+      estimatedCostSaved: 0,
+      byProvider: {},
+      byStrategy: {},
+      lastUpdated: new Date().toISOString(),
+    };
+  }
+}
+
+export async function updateCacheMetrics(_metrics: Record<string, unknown>) {
+  // No-op: metrics are now computed from usage_history on-the-fly
+  // The usage_history table is the single source of truth
+  return getCacheMetrics();
+}
+
+export interface CacheTrendPoint {
+  timestamp: string;
+  requests: number;
+  cachedRequests: number;
+  inputTokens: number;
+  cachedTokens: number;
+  cacheCreationTokens: number;
+}
+
+export async function getCacheTrend(hours = 24): Promise<CacheTrendPoint[]> {
+  const db = getDbInstance();
+
+  try {
+    const rows = db
+      .prepare(
+        `
+        SELECT
+          strftime('%Y-%m-%dT%H:00:00Z', timestamp) as hour,
+          COUNT(*) as requests,
+          SUM(CASE WHEN tokens_cache_read > 0 OR tokens_cache_creation > 0 THEN 1 ELSE 0 END) as cachedRequests,
+          SUM(tokens_input) as inputTokens,
+          SUM(tokens_cache_read) as cachedTokens,
+          SUM(tokens_cache_creation) as cacheCreationTokens
+        FROM usage_history
+        WHERE timestamp >= datetime('now', ?)
+        GROUP BY hour
+        ORDER BY hour ASC
+      `
+      )
+      .all(`-${hours} hours`) as Array<{
+      hour: string;
+      requests: number;
+      cachedRequests: number;
+      inputTokens: number | null;
+      cachedTokens: number | null;
+      cacheCreationTokens: number | null;
+    }>;
+
+    return rows.map((r) => ({
+      timestamp: r.hour,
+      requests: r.requests,
+      cachedRequests: r.cachedRequests,
+      inputTokens: r.inputTokens || 0,
+      cachedTokens: r.cachedTokens || 0,
+      cacheCreationTokens: r.cacheCreationTokens || 0,
+    }));
+  } catch (error) {
+    console.error("Failed to fetch cache trend:", error);
+    return [];
+  }
+}
+
+export async function resetCacheMetrics() {
+  // No-op: cannot delete historical usage data
+  // Cache metrics are computed from usage_history, so they reflect actual request history
+  console.warn(
+    "resetCacheMetrics is deprecated - cache metrics are now computed from usage_history"
+  );
+  return getCacheMetrics();
 }

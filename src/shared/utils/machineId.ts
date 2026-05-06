@@ -1,23 +1,24 @@
-import { execSync, execFileSync } from "child_process";
+import { execFileSync, execSync } from "child_process";
 import { existsSync, readFileSync } from "fs";
 
 /**
  * Get raw machine ID using OS-specific methods.
  *
- * IMPORTANT: We do NOT use `if (process.platform === ...)` branching here.
- * Next.js SWC bundler evaluates `process.platform` at BUILD time, so when the
- * project is built on Linux, the win32/darwin branches get dead-code-eliminated
- * and the Linux fallback (which uses `head`) runs on Windows at runtime.
+ * We use try/catch waterfall: try each OS method and fall through
+ * to the next on failure. Platform checks are INSIDE try blocks so they
+ * run at RUNTIME (not build time), avoiding Next.js SWC dead-code elimination.
  *
- * Instead, we use a try/catch waterfall: try each OS method and fall through
- * to the next on failure. The correct method always succeeds on the target OS.
+ * On Linux: skips Windows (REG.exe) and macOS (ioreg) strategies entirely.
  */
 function getMachineIdRaw(): string {
   // Strategy 1: Windows — REG.exe query for MachineGuid
   try {
+    if (process.platform !== "win32") {
+      throw new Error("Not Windows");
+    }
     const sysRoot = process.env.SystemRoot || process.env.windir || "C:\\Windows";
     const regPath = `${sysRoot}\\System32\\REG.exe`;
-    if (existsSync(regPath)) {
+    if (existsSync(/* turbopackIgnore: true */ regPath)) {
       const output = execFileSync(
         regPath,
         ["QUERY", "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Cryptography", "/v", "MachineGuid"],
@@ -35,6 +36,9 @@ function getMachineIdRaw(): string {
 
   // Strategy 2: macOS — ioreg IOPlatformUUID
   try {
+    if (process.platform !== "darwin") {
+      throw new Error("Not macOS");
+    }
     const output = execSync("ioreg -rd1 -c IOPlatformExpertDevice", {
       encoding: "utf8",
       timeout: 5000,
@@ -54,9 +58,13 @@ function getMachineIdRaw(): string {
   // Strategy 3: Linux — read machine-id files directly (no `head` or pipe)
   try {
     for (const filePath of ["/etc/machine-id", "/var/lib/dbus/machine-id"]) {
-      if (existsSync(filePath)) {
-        const content = readFileSync(filePath, "utf8").trim().toLowerCase();
+      try {
+        const content = readFileSync(/* turbopackIgnore: true */ filePath, "utf8")
+          .trim()
+          .toLowerCase();
         if (content.length > 8) return content;
+      } catch {
+        // Try the next candidate file
       }
     }
   } catch {
@@ -109,9 +117,23 @@ export async function getConsistentMachineId(salt = null) {
       const cryptoFallback = await import("crypto");
       return cryptoFallback.randomUUID();
     } catch {
+      if (typeof globalThis !== "undefined" && globalThis.crypto && globalThis.crypto.randomUUID) {
+        return globalThis.crypto.randomUUID();
+      }
       return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-        const r = (Math.random() * 16) | 0;
-        const v = c == "x" ? r : (r & 0x3) | 0x8;
+        let r = 0;
+        if (
+          typeof globalThis !== "undefined" &&
+          globalThis.crypto &&
+          globalThis.crypto.getRandomValues
+        ) {
+          const arr = new Uint8Array(1);
+          globalThis.crypto.getRandomValues(arr);
+          r = arr[0] % 16;
+        } else {
+          r = (Date.now() % 16) | 0;
+        }
+        const v = c === "x" ? r : (r & 0x3) | 0x8;
         return v.toString(16);
       });
     }
@@ -132,9 +154,23 @@ export async function getRawMachineId() {
       const cryptoFallback = await import("crypto");
       return cryptoFallback.randomUUID();
     } catch {
+      if (typeof globalThis !== "undefined" && globalThis.crypto && globalThis.crypto.randomUUID) {
+        return globalThis.crypto.randomUUID();
+      }
       return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-        const r = (Math.random() * 16) | 0;
-        const v = c == "x" ? r : (r & 0x3) | 0x8;
+        let r = 0;
+        if (
+          typeof globalThis !== "undefined" &&
+          globalThis.crypto &&
+          globalThis.crypto.getRandomValues
+        ) {
+          const arr = new Uint8Array(1);
+          globalThis.crypto.getRandomValues(arr);
+          r = arr[0] % 16;
+        } else {
+          r = (Date.now() % 16) | 0;
+        }
+        const v = c === "x" ? r : (r & 0x3) | 0x8;
         return v.toString(16);
       });
     }

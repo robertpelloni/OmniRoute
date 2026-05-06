@@ -30,7 +30,8 @@ const PROVIDERS_WITHOUT_SYSTEM_ROLE = new Set([
  * Uses prefix matching (e.g., "glm-" matches "glm-4.7", "glm-4.5", etc.)
  */
 const MODELS_WITHOUT_SYSTEM_ROLE = [
-  "glm-", // ZhipuAI GLM models
+  "glm-", // ZhipuAI GLM models (prefix: glm-5.1, glm-4.7, etc.)
+  "glm", // Exact match for model id "glm" (e.g., Pollinations)
   "ernie-", // Baidu ERNIE models
 ];
 
@@ -106,6 +107,21 @@ export function normalizeDeveloperRole(
     const role = typeof msg.role === "string" ? msg.role : "";
     if (role.toLowerCase() === "developer") {
       return { ...msg, role: "system" };
+    }
+    return msg;
+  });
+}
+
+export function normalizeModelRole(
+  messages: NormalizedMessage[] | unknown
+): NormalizedMessage[] | unknown {
+  if (!Array.isArray(messages)) return messages;
+
+  return messages.map((msg: NormalizedMessage) => {
+    if (!msg || typeof msg !== "object") return msg;
+    const role = typeof msg.role === "string" ? msg.role : "";
+    if (role.toLowerCase() === "model") {
+      return { ...msg, role: "assistant" };
     }
     return msg;
   });
@@ -196,7 +212,8 @@ export function normalizeRoles(
 ): NormalizedMessage[] | unknown {
   if (!Array.isArray(messages)) return messages;
 
-  let result = normalizeDeveloperRole(messages, targetFormat, preserveDeveloperRole);
+  let result = normalizeModelRole(messages);
+  result = normalizeDeveloperRole(result, targetFormat, preserveDeveloperRole);
   result = normalizeSystemRole(result, provider, model);
 
   return result;

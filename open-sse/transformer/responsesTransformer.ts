@@ -1,5 +1,5 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from "fs";
+import * as path from "path";
 /**
  * Responses API Transformer
  * Converts OpenAI Chat Completions SSE to Codex Responses API SSE format
@@ -40,6 +40,7 @@ export function createResponsesLogger(model, logsDir = null) {
   const timestamp = new Date().toISOString().replace(/[:.]/g, "").slice(0, 15);
   const uniqueId = Math.random().toString(36).slice(2, 8);
   const baseDir = logsDir || (typeof process !== "undefined" ? process.cwd() : ".");
+  // previous: const baseDir = logsDir || resolveDataDir(); — reverted in #555 for Workers compat
   const logDir = path.join(baseDir, "logs", `responses_${model}_${timestamp}_${uniqueId}`);
 
   try {
@@ -97,6 +98,7 @@ export function createResponsesApiTransformStream(logger = null) {
     funcItemDone: {},
     buffer: "",
     completedSent: false,
+    usage: null,
   };
 
   const encoder = new TextEncoder();
@@ -219,7 +221,27 @@ export function createResponsesApiTransformStream(logger = null) {
   const closeToolCall = (controller, idx) => {
     const callId = state.funcCallIds[idx];
     if (callId && !state.funcItemDone[idx]) {
-      const args = state.funcArgsBuf[idx] || "{}";
+      let args = state.funcArgsBuf[idx] || "{}";
+
+      // Fix #1674 & #1852: Final cleanup of empty string and empty array placeholders
+      try {
+        const parsed = JSON.parse(args);
+        if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+          let modified = false;
+          for (const [k, v] of Object.entries(parsed)) {
+            if (v === "" || (Array.isArray(v) && v.length === 0)) {
+              delete parsed[k];
+              modified = true;
+            }
+          }
+          if (modified) {
+            args = JSON.stringify(parsed);
+            state.funcArgsBuf[idx] = args;
+          }
+        }
+      } catch (e) {
+        // Ignore malformed JSON
+      }
 
       emit(controller, "response.function_call_arguments.done", {
         type: "response.function_call_arguments.done",
@@ -248,16 +270,52 @@ export function createResponsesApiTransformStream(logger = null) {
   const sendCompleted = (controller) => {
     if (!state.completedSent) {
       state.completedSent = true;
+
+      // Build output from accumulated state
+      const output = [];
+      if (state.reasoningId) {
+        output.push({
+          id: state.reasoningId,
+          type: "reasoning",
+          summary: [{ type: "summary_text", text: state.reasoningBuf }],
+        });
+      }
+      for (const idx in state.msgItemAdded) {
+        output.push({
+          id: `msg_${state.responseId}_${idx}`,
+          type: "message",
+          role: "assistant",
+          content: [{ type: "output_text", annotations: [], text: state.msgTextBuf[idx] || "" }],
+        });
+      }
+      for (const idx in state.funcCallIds) {
+        const callId = state.funcCallIds[idx];
+        output.push({
+          id: `fc_${callId}`,
+          type: "function_call",
+          call_id: callId,
+          name: state.funcNames[idx] || "",
+          arguments: state.funcArgsBuf[idx] || "{}",
+        });
+      }
+
+      const response: Record<string, unknown> = {
+        id: state.responseId,
+        object: "response",
+        created_at: state.created,
+        status: "completed",
+        background: false,
+        error: null,
+        output,
+      };
+
+      if (state.usage) {
+        response.usage = state.usage;
+      }
+
       emit(controller, "response.completed", {
         type: "response.completed",
-        response: {
-          id: state.responseId,
-          object: "response",
-          created_at: state.created,
-          status: "completed",
-          background: false,
-          error: null,
-        },
+        response,
       });
     }
   };
@@ -287,7 +345,12 @@ export function createResponsesApiTransformStream(logger = null) {
           continue;
         }
 
-        if (!parsed.choices?.length) continue;
+        if (!parsed.choices?.length) {
+          if (parsed.usage) {
+            state.usage = parsed.usage;
+          }
+          continue;
+        }
 
         const choice = parsed.choices[0];
         const idx = choice.index || 0;
@@ -334,7 +397,7 @@ export function createResponsesApiTransformStream(logger = null) {
 
           if (content.includes("<think>")) {
             state.inThinking = true;
-            content = content.replace("<think>", "");
+            content = content.replaceAll("<think>", "");
             startReasoning(controller, idx);
           }
 
@@ -356,6 +419,13 @@ export function createResponsesApiTransformStream(logger = null) {
 
           // Regular text content
           if (content) {
+            // Fix for #1211: Strip leading double-newlines / blank spaces from the very first text chunk
+            if (!state.msgTextBuf[idx]) {
+              content = content.trimStart();
+            }
+
+            if (!content) continue;
+
             if (!state.msgItemAdded[idx]) {
               state.msgItemAdded[idx] = true;
               const msgId = `msg_${state.responseId}_${idx}`;
@@ -402,6 +472,16 @@ export function createResponsesApiTransformStream(logger = null) {
             const newCallId = tc.id;
             const funcName = tc.function?.name;
 
+            // T37: Prevent merging if a new tool_call uses the same index
+            if (state.funcCallIds[tcIdx] && newCallId && state.funcCallIds[tcIdx] !== newCallId) {
+              closeToolCall(controller, tcIdx);
+              delete state.funcCallIds[tcIdx];
+              delete state.funcNames[tcIdx];
+              delete state.funcArgsBuf[tcIdx];
+              delete state.funcArgsDone[tcIdx];
+              delete state.funcItemDone[tcIdx];
+            }
+
             if (funcName) state.funcNames[tcIdx] = funcName;
 
             if (!state.funcCallIds[tcIdx] && newCallId) {
@@ -424,15 +504,26 @@ export function createResponsesApiTransformStream(logger = null) {
 
             if (tc.function?.arguments) {
               const refCallId = state.funcCallIds[tcIdx] || newCallId;
+              let deltaStr = tc.function.arguments;
+
+              // Fix #1674 & #1852: Strip empty strings and empty arrays from streaming deltas
+              if (deltaStr.includes('""') || deltaStr.includes("[]") || deltaStr.includes("[ ]")) {
+                deltaStr = deltaStr
+                  .replace(/,"[a-zA-Z0-9_]+":""/g, "")
+                  .replace(/"[a-zA-Z0-9_]+":"",/g, "")
+                  .replace(/,"[a-zA-Z0-9_]+":\s*\[\s*\]/g, "")
+                  .replace(/"[a-zA-Z0-9_]+":\s*\[\s*\],?/g, "");
+              }
+
               if (refCallId) {
                 emit(controller, "response.function_call_arguments.delta", {
                   type: "response.function_call_arguments.delta",
                   item_id: `fc_${refCallId}`,
                   output_index: tcIdx,
-                  delta: tc.function.arguments,
+                  delta: deltaStr,
                 });
               }
-              state.funcArgsBuf[tcIdx] += tc.function.arguments;
+              state.funcArgsBuf[tcIdx] += deltaStr;
             }
           }
         }

@@ -1,4 +1,5 @@
 import { createRequire } from "module";
+import { getTlsClientTimeoutConfig } from "@/shared/utils/runtimeTimeouts";
 
 const require = createRequire(import.meta.url);
 
@@ -79,6 +80,8 @@ class TlsClient {
   async getSession() {
     if (!this.available) return null;
     if (this.session) return this.session;
+    const createSessionFn = createSession;
+    if (!createSessionFn) return null;
 
     const proxy = getProxyFromEnv();
     const sessionOpts: Record<string, unknown> = {
@@ -90,7 +93,7 @@ class TlsClient {
       console.log(`[TlsClient] Using proxy: ${proxy}`);
     }
 
-    this.session = await createSession(sessionOpts);
+    this.session = await createSessionFn(sessionOpts);
     console.log("[TlsClient] Session created (Chrome 124 TLS fingerprint)");
     return this.session;
   }
@@ -102,6 +105,9 @@ class TlsClient {
   async fetch(url: string, options: FetchOptions = {}) {
     const session = await this.getSession();
     if (!session) throw new Error("wreq-js not available");
+    const { timeoutMs } = getTlsClientTimeoutConfig(process.env, (message) => {
+      console.warn(`[TlsClient] ${message}`);
+    });
 
     const method = (options.method || "GET").toUpperCase();
 
@@ -110,6 +116,7 @@ class TlsClient {
       headers: normalizeHeaders(options.headers),
       body: options.body,
       redirect: options.redirect === "manual" ? "manual" : "follow",
+      timeout: timeoutMs,
     };
 
     // Pass signal through if available
@@ -129,4 +136,6 @@ class TlsClient {
   }
 }
 
-export default new TlsClient();
+const tlsClient = new TlsClient();
+
+export default tlsClient;

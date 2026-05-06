@@ -2,6 +2,7 @@
 
 import { NextResponse } from "next/server";
 import fs from "fs/promises";
+import { requireCliToolsAuth } from "@/lib/api/requireCliToolsAuth";
 import {
   getCliRuntimeStatus,
   CLI_TOOL_IDS,
@@ -20,14 +21,46 @@ async function checkToolConfigStatus(toolId: string): Promise<string> {
     if (!configPath) return "unknown";
 
     const content = await fs.readFile(configPath, "utf-8");
+
+    // Codex uses TOML config — parse as raw text, not JSON
+    if (toolId === "codex") {
+      const lower = content.toLowerCase();
+      const hasOmniRoute =
+        lower.includes("omniroute") ||
+        lower.includes(`localhost:${apiPort}`) ||
+        lower.includes(`127.0.0.1:${apiPort}`);
+      if (!hasOmniRoute) return "not_configured";
+
+      // Also verify auth.json has an API key (not masked/empty)
+      try {
+        const authPath = configPath.replace(/config\.toml$/, "auth.json");
+        const authContent = await fs.readFile(authPath, "utf-8");
+        const auth = JSON.parse(authContent);
+        const apiKey = auth?.OPENAI_API_KEY || "";
+        if (!apiKey || apiKey.includes("****") || apiKey.length < 20) {
+          return "not_configured";
+        }
+      } catch {
+        return "not_configured";
+      }
+
+      return "configured";
+    }
+
     const config = JSON.parse(content);
 
     // Each tool stores OmniRoute config differently
     switch (toolId) {
       case "claude":
         return config?.env?.ANTHROPIC_BASE_URL ? "configured" : "not_configured";
-      case "codex":
-        return config?.providers?.omniroute || config?.providers?.["openai-compatible"]
+      case "qwen":
+        // Check modelProviders for OmniRoute entries
+        const mp = config?.modelProviders;
+        if (!mp) return "not_configured";
+        const qwenConfigStr = JSON.stringify(mp).toLowerCase();
+        return qwenConfigStr.includes("omniroute") ||
+          qwenConfigStr.includes(`localhost:${apiPort}`) ||
+          qwenConfigStr.includes(`127.0.0.1:${apiPort}`)
           ? "configured"
           : "not_configured";
       case "droid":
@@ -36,12 +69,24 @@ async function checkToolConfigStatus(toolId: string): Promise<string> {
       case "kilo":
         // Generic check: look for OmniRoute-specific markers in the config
         const configStr = JSON.stringify(config).toLowerCase();
-        return configStr.includes("omniroute") ||
+        if (
+          configStr.includes("omniroute") ||
           configStr.includes("sk_omniroute") ||
           configStr.includes(`localhost:${apiPort}`) ||
           configStr.includes(`127.0.0.1:${apiPort}`)
-          ? "configured"
-          : "not_configured";
+        ) {
+          return "configured";
+        }
+        // Also accept openai-compatible provider with any non-empty baseUrl
+        // (user may configure an external domain instead of localhost)
+        if (
+          toolId === "cline" &&
+          (config.actModeApiProvider === "openai" || config.planModeApiProvider === "openai") &&
+          (config.openAiBaseUrl || "").trim().length > 0
+        ) {
+          return "configured";
+        }
+        return "not_configured";
       default:
         return "unknown";
     }
@@ -55,7 +100,10 @@ async function checkToolConfigStatus(toolId: string): Promise<string> {
  * Returns runtime + config status for all CLI tools in one batch call.
  * Used by the CLI Tools page to show status badges in collapsed state.
  */
-export async function GET() {
+export async function GET(request: Request) {
+  const authError = await requireCliToolsAuth(request);
+  if (authError) return authError;
+
   try {
     const statuses = {};
 
@@ -94,11 +142,14 @@ export async function GET() {
     );
 
     // Check config status for installed+runnable tools via direct file reads
-    const settingsTools = ["claude", "codex", "droid", "openclaw", "cline", "kilo"];
+    const settingsTools = ["claude", "codex", "droid", "openclaw", "cline", "kilo", "qwen"];
 
     await Promise.all(
       settingsTools.map(async (toolId) => {
-        if (!statuses[toolId]?.installed || !statuses[toolId]?.runnable) {
+        if (!statuses[toolId]) {
+          return;
+        }
+        if (!statuses[toolId].installed || !statuses[toolId].runnable) {
           statuses[toolId].configStatus = "not_installed";
           return;
         }

@@ -8,7 +8,7 @@ Thank you for your interest in contributing! This guide covers everything you ne
 
 ### Prerequisites
 
-- **Node.js** 20+ (recommended: 22 LTS)
+- **Node.js** `>=20.20.2 <21`, `>=22.22.2 <23`, or `>=24.0.0 <25` (recommended: 24 LTS)
 - **npm** 10+
 - **Git**
 
@@ -33,13 +33,24 @@ echo "API_KEY_SECRET=$(openssl rand -hex 32)" >> .env
 
 Key variables for development:
 
-| Variable               | Development Default     | Description               |
-| ---------------------- | ----------------------- | ------------------------- |
-| `PORT`                 | `3000`                  | Server port               |
-| `NEXT_PUBLIC_BASE_URL` | `http://localhost:3000` | Base URL for frontend     |
-| `JWT_SECRET`           | (generate above)        | JWT signing secret        |
-| `INITIAL_PASSWORD`     | `123456`                | First login password      |
-| `ENABLE_REQUEST_LOGS`  | `false`                 | Enable debug request logs |
+| Variable               | Development Default      | Description           |
+| ---------------------- | ------------------------ | --------------------- |
+| `PORT`                 | `20128`                  | Server port           |
+| `NEXT_PUBLIC_BASE_URL` | `http://localhost:20128` | Base URL for frontend |
+| `JWT_SECRET`           | (generate above)         | JWT signing secret    |
+| `INITIAL_PASSWORD`     | `CHANGEME`               | First login password  |
+| `APP_LOG_LEVEL`        | `info`                   | Log verbosity level   |
+
+### Dashboard Settings
+
+The dashboard provides UI toggles for features that can also be configured via environment variables:
+
+| Setting Location    | Toggle             | Description                    |
+| ------------------- | ------------------ | ------------------------------ |
+| Settings → Advanced | Debug Mode         | Enable debug request logs (UI) |
+| Settings → General  | Sidebar Visibility | Show/hide sidebar sections     |
+
+These settings are stored in the database and persist across restarts, overriding env var defaults when set.
 
 ### Running Locally
 
@@ -57,8 +68,8 @@ PORT=20128 NEXT_PUBLIC_BASE_URL=http://localhost:20128 npm run dev
 
 Default URLs:
 
-- **Dashboard**: `http://localhost:3000/dashboard`
-- **API**: `http://localhost:3000/v1`
+- **Dashboard**: `http://localhost:20128/dashboard`
+- **API**: `http://localhost:20128/v1`
 
 ---
 
@@ -97,50 +108,80 @@ test: add observability unit tests
 refactor(db): consolidate rate limit tables
 ```
 
-Scopes: `db`, `sse`, `oauth`, `dashboard`, `api`, `cli`, `docker`, `ci`.
+Scopes: `db`, `sse`, `oauth`, `dashboard`, `api`, `cli`, `docker`, `ci`, `mcp`, `a2a`, `memory`, `skills`.
 
 ---
 
 ## Running Tests
 
 ```bash
-# All unit tests
-npm test
-npm run test:unit
+# All tests (unit + vitest + ecosystem + e2e)
+npm run test:all
 
-# Specific test suites
-npm run test:security     # Security tests
-npm run test:fixes        # Fix verification tests
+# Single test file (Node.js native test runner — most tests use this)
+node --import tsx/esm --test tests/unit/your-file.test.ts
 
-# With coverage
-npm run test:coverage
+# Vitest (MCP server, autoCombo, cache)
+npm run test:vitest
 
 # E2E tests (requires Playwright)
 npm run test:e2e
+
+# Protocol clients E2E (MCP transports, A2A)
+npm run test:protocols:e2e
+
+# Ecosystem compatibility tests
+npm run test:ecosystem
+
+# Coverage (60% min statements/lines/functions/branches)
+npm run test:coverage
+npm run coverage:report
 
 # Lint + format check
 npm run lint
 npm run check
 ```
 
-Current test status: **368+ unit tests** covering:
+Coverage notes:
+
+- `npm run test:coverage` measures source coverage for the main unit test suite, excludes `tests/**`, and includes `open-sse/**`
+- Pull requests must keep the overall coverage gate at **60% or higher** for statements, lines, functions, and branches
+- If a PR changes production code in `src/`, `open-sse/`, `electron/`, or `bin/`, it must add or update automated tests in the same PR
+- `npm run coverage:report` prints the detailed file-by-file report from the latest coverage run
+- `npm run test:coverage:legacy` preserves the older metric for historical comparison
+- See `docs/COVERAGE_PLAN.md` for the phased coverage improvement roadmap
+
+### Pull Request Requirements
+
+Before opening or merging a PR:
+
+- Run `npm run test:unit`
+- Run `npm run test:coverage`
+- Ensure the coverage gate stays at **60%+** for all metrics
+- Include the changed or added test files in the PR description when production code changed
+- Check the SonarQube result on the PR when the project secrets are configured in CI
+
+Current test status: **122 unit test files** covering:
 
 - Provider translators and format conversion
 - Rate limiting, circuit breaker, and resilience
 - Semantic cache, idempotency, progress tracking
-- Database operations and schema
+- Database operations and schema (21 DB modules)
 - OAuth flows and authentication
-- API endpoint validation
+- API endpoint validation (Zod v4)
+- MCP server tools and scope enforcement
+- Memory and Skills systems
 
 ---
 
 ## Code Style
 
 - **ESLint** — Run `npm run lint` before committing
-- **Prettier** — Auto-formatted via `lint-staged` on commit
-- **TypeScript** — All `src/` code uses `.ts`/`.tsx`; document with TSDoc (`@param`, `@returns`, `@throws`)
+- **Prettier** — Auto-formatted via `lint-staged` on commit (2 spaces, semicolons, double quotes, 100 char width, es5 trailing commas)
+- **TypeScript** — All `src/` code uses `.ts`/`.tsx`; `open-sse/` uses `.ts`/`.js`; document with TSDoc (`@param`, `@returns`, `@throws`)
 - **No `eval()`** — ESLint enforces `no-eval`, `no-implied-eval`, `no-new-func`
-- **Zod validation** — Use Zod schemas for API input validation
+- **Zod validation** — Use Zod v4 schemas for all API input validation
+- **Naming**: Files = camelCase/kebab-case, components = PascalCase, constants = UPPER_SNAKE
 
 ---
 
@@ -148,40 +189,60 @@ Current test status: **368+ unit tests** covering:
 
 ```
 src/                        # TypeScript (.ts / .tsx)
-├── app/                    # Next.js App Router
-│   ├── (dashboard)/        # Dashboard pages (.tsx)
-│   ├── api/                # API routes (.ts)
+├── app/                    # Next.js 16 App Router
+│   ├── (dashboard)/        # Dashboard pages (23 sections)
+│   ├── api/                # API routes (51 directories)
 │   └── login/              # Auth pages (.tsx)
-├── domain/                 # Domain types and response helpers (.ts)
+├── domain/                 # Policy engine (policyEngine, comboResolver, costRules, etc.)
 ├── lib/                    # Core business logic (.ts)
-│   ├── db/                 # SQLite database layer
-│   ├── oauth/              # OAuth services per provider
-│   ├── cacheLayer.ts       # LRU cache
-│   ├── semanticCache.ts    # Semantic response cache
-│   ├── idempotencyLayer.ts # Request deduplication
-│   └── localDb.ts          # Settings facade (LowDB for config, SQLite for domain data)
+│   ├── a2a/                # Agent-to-Agent v0.3 protocol server
+│   ├── acp/                # Agent Communication Protocol registry
+│   ├── compliance/         # Compliance policy engine
+│   ├── db/                 # SQLite database layer (21 modules + 16 migrations)
+│   ├── memory/             # Persistent conversational memory
+│   ├── oauth/              # OAuth providers, services, and utilities
+│   ├── skills/             # Extensible skill framework
+│   ├── usage/              # Usage tracking and cost calculation
+│   └── localDb.ts          # Re-export layer only — never add logic here
+├── middleware/              # Request middleware (promptInjectionGuard)
+├── mitm/                   # MITM proxy (cert, DNS, target routing)
 ├── shared/
 │   ├── components/         # React components (.tsx)
-│   ├── middleware/          # Correlation IDs, etc.
-│   ├── utils/              # Circuit breaker, sanitizer, etc.
-│   └── validation/         # Zod schemas
-└── sse/                    # SSE chat handlers (.ts)
+│   ├── constants/          # Provider definitions (60+), MCP scopes, routing strategies
+│   ├── utils/              # Circuit breaker, sanitizer, auth helpers
+│   └── validation/         # Zod v4 schemas
+└── sse/                    # SSE proxy pipeline
 
-open-sse/                   # @omniroute/open-sse workspace (JavaScript)
-├── handlers/               # chatCore.js — main request handler
-├── services/               # Rate limit, fallback
-├── translators/            # Format converters (OpenAI ↔ Claude ↔ Gemini)
-└── utils/                  # Progress tracker, stream helpers
+open-sse/                   # @omniroute/open-sse workspace
+├── executors/              # 14 provider-specific request executors
+├── handlers/               # 11 request handlers (chat, responses, embeddings, images, etc.)
+├── mcp-server/             # MCP server (25 tools, 3 transports, 10 scopes)
+├── services/               # 36+ services (combo, autoCombo, rateLimitManager, etc.)
+├── translator/             # Format translators (OpenAI ↔ Claude ↔ Gemini ↔ Responses ↔ Ollama)
+├── transformer/            # Responses API transformer
+└── utils/                  # 22 utility modules (stream, TLS, proxy, logging)
+
+electron/                   # Electron desktop app (cross-platform)
 
 tests/
-├── unit/                   # Node.js test runner (.test.mjs)
-└── e2e/                    # Playwright tests
+├── unit/                   # Node.js test runner (122 test files)
+├── integration/            # Integration tests
+├── e2e/                    # Playwright tests
+├── security/               # Security tests
+├── translator/             # Translator-specific tests
+└── load/                   # Load tests
 
 docs/                       # Documentation
-├── USER_GUIDE.md           # Provider setup, CLI integration
-├── API_REFERENCE.md        # All endpoints
-├── TROUBLESHOOTING.md      # Common issues
 ├── ARCHITECTURE.md         # System architecture
+├── API_REFERENCE.md        # All endpoints
+├── USER_GUIDE.md           # Provider setup, CLI integration
+├── TROUBLESHOOTING.md      # Common issues
+├── MCP-SERVER.md           # MCP server (25 tools)
+├── A2A-SERVER.md           # A2A agent protocol
+├── AUTO-COMBO.md           # Auto-combo engine
+├── CLI-TOOLS.md            # CLI tools integration
+├── COVERAGE_PLAN.md        # Test coverage improvement plan
+├── openapi.yaml            # OpenAPI specification
 └── adr/                    # Architecture Decision Records
 ```
 
@@ -189,50 +250,25 @@ docs/                       # Documentation
 
 ## Adding a New Provider
 
-### Step 1: OAuth Service (if using OAuth)
+### Step 1: Register Provider Constants
 
-Create `src/lib/oauth/services/your-provider.ts` extending `OAuthService`:
+Add to `src/shared/constants/providers.ts` — Zod-validated at module load.
 
-```typescript
-import { OAuthService } from "../OAuthService";
+### Step 2: Add Executor (if custom logic needed)
 
-export class YourProviderService extends OAuthService {
-  constructor() {
-    super({
-      name: "your-provider",
-      authUrl: "https://provider.com/oauth/authorize",
-      tokenUrl: "https://provider.com/oauth/token",
-      clientId: "...",
-      scopes: ["..."],
-    });
-  }
-}
-```
+Create executor in `open-sse/executors/your-provider.ts` extending the base executor.
 
-### Step 2: Register Provider
+### Step 3: Add Translator (if non-OpenAI format)
 
-Add to `src/lib/oauth/providers.ts`:
+Create request/response translators in `open-sse/translator/`.
 
-```typescript
-import { YourProviderService } from "./services/your-provider";
-// Add to the providers map
-```
+### Step 4: Add OAuth Config (if OAuth-based)
 
-### Step 3: Add Constants
+Add OAuth credentials in `src/lib/oauth/constants/oauth.ts` and service in `src/lib/oauth/services/`.
 
-Add provider constants in `src/lib/providerConstants.ts`:
+### Step 5: Register Models
 
-- Provider prefix (e.g., `yp/`)
-- Default models
-- Pricing info
-
-### Step 4: Add Translator (if non-OpenAI format)
-
-Create translator in `open-sse/translators/` if the provider uses a custom API format.
-
-### Step 5: Add Timeout
-
-Add request timeout configuration in `src/shared/utils/requestTimeout.ts`.
+Add model definitions in `open-sse/config/providerRegistry.ts`.
 
 ### Step 6: Add Tests
 
@@ -251,6 +287,7 @@ Write unit tests in `tests/unit/` covering at minimum:
 - [ ] Build succeeds (`npm run build`)
 - [ ] TypeScript types added for new public functions and interfaces
 - [ ] No hardcoded secrets or fallback values
+- [ ] All inputs validated with Zod schemas
 - [ ] CHANGELOG updated (if user-facing change)
 - [ ] Documentation updated (if applicable)
 
@@ -258,16 +295,13 @@ Write unit tests in `tests/unit/` covering at minimum:
 
 ## Releasing
 
-When a new GitHub Release is created (e.g. `v0.4.0`), the package is **automatically published to npm** via GitHub Actions:
-
-```bash
-gh release create v0.4.0 --title "v0.4.0" --generate-notes
-```
+Releases are managed via the `/generate-release` workflow. When a new GitHub Release is created, the package is **automatically published to npm** via GitHub Actions.
 
 ---
 
 ## Getting Help
 
 - **Architecture**: See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
+- **API Reference**: See [`docs/API_REFERENCE.md`](docs/API_REFERENCE.md)
 - **Issues**: [github.com/diegosouzapw/OmniRoute/issues](https://github.com/diegosouzapw/OmniRoute/issues)
 - **ADRs**: See `docs/adr/` for architectural decision records

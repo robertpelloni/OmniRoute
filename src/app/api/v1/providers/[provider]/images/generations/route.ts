@@ -1,6 +1,5 @@
-import { CORS_ORIGIN } from "@/shared/utils/cors";
 import { handleImageGeneration } from "@omniroute/open-sse/handlers/imageGeneration.ts";
-import { errorResponse } from "@omniroute/open-sse/utils/error.ts";
+import { errorResponse, unavailableResponse } from "@omniroute/open-sse/utils/error.ts";
 import { HTTP_STATUS } from "@omniroute/open-sse/config/constants.ts";
 import {
   getProviderCredentials,
@@ -21,7 +20,6 @@ import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
 export async function OPTIONS() {
   return new Response(null, {
     headers: {
-      "Access-Control-Allow-Origin": CORS_ORIGIN,
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
       "Access-Control-Allow-Headers": "*",
     },
@@ -52,14 +50,6 @@ export async function POST(request, { params }) {
   }
   const body = validation.data;
 
-  // Optional API key validation
-  if (process.env.REQUIRE_API_KEY === "true") {
-    const apiKey = extractApiKey(request);
-    if (!apiKey || !(await isValidApiKey(apiKey))) {
-      return errorResponse(HTTP_STATUS.UNAUTHORIZED, "Invalid API key");
-    }
-  }
-
   // Ensure model has provider prefix
   if (!body.model.includes("/")) {
     body.model = `${rawProvider}/${body.model}`;
@@ -83,6 +73,14 @@ export async function POST(request, { params }) {
     return errorResponse(
       HTTP_STATUS.BAD_REQUEST,
       `No credentials for image provider: ${rawProvider}`
+    );
+  }
+  if (credentials.allRateLimited) {
+    return unavailableResponse(
+      HTTP_STATUS.RATE_LIMITED,
+      `[${rawProvider}] All accounts rate limited`,
+      credentials.retryAfter,
+      credentials.retryAfterHuman
     );
   }
 

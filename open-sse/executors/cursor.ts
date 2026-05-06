@@ -20,7 +20,8 @@ declare const EdgeRuntime: string | undefined;
  * @see cursorProtobuf.js for Protobuf encoding/decoding utilities
  */
 
-import { BaseExecutor } from "./base.ts";
+import { BaseExecutor, mergeUpstreamExtraHeaders } from "./base.ts";
+import { getCursorUserAgent } from "../config/providerHeaderProfiles.ts";
 import { PROVIDERS, HTTP_STATUS } from "../config/constants.ts";
 import {
   generateCursorBody,
@@ -28,6 +29,7 @@ import {
   extractTextFromResponse,
 } from "../utils/cursorProtobuf.ts";
 import { estimateUsage } from "../utils/usageTracking.ts";
+import { getCursorVersion } from "../utils/cursorVersionDetector.ts";
 import { FORMATS } from "../translator/formats.ts";
 import crypto from "crypto";
 import { v5 as uuidv5 } from "uuid";
@@ -237,12 +239,13 @@ export class CursorExecutor extends BaseExecutor {
 
   buildHeaders(credentials) {
     const accessToken = credentials.accessToken;
-    const machineId = credentials.providerSpecificData?.machineId;
     const ghostMode = credentials.providerSpecificData?.ghostMode !== false;
 
-    if (!machineId) {
-      throw new Error("Machine ID is required for Cursor API");
-    }
+    // Use stored machineId, or derive a stable one from the access token
+    // (cursor-agent imports don't provide a machineId)
+    const machineId =
+      credentials.providerSpecificData?.machineId ||
+      crypto.createHash("sha256").update(accessToken).digest("hex");
 
     const cleanToken = accessToken.includes("::") ? accessToken.split("::")[1] : accessToken;
 
@@ -251,11 +254,11 @@ export class CursorExecutor extends BaseExecutor {
       "connect-accept-encoding": "gzip",
       "connect-protocol-version": "1",
       "content-type": "application/connect+proto",
-      "user-agent": "connect-es/1.6.1",
+      "user-agent": getCursorUserAgent(getCursorVersion()),
       "x-amzn-trace-id": `Root=${crypto.randomUUID()}`,
       "x-client-key": crypto.createHash("sha256").update(cleanToken).digest("hex"),
       "x-cursor-checksum": this.generateChecksum(machineId),
-      "x-cursor-client-version": "2.3.41",
+      "x-cursor-client-version": getCursorVersion(),
       "x-cursor-client-type": "ide",
       "x-cursor-client-os":
         process.platform === "win32"
@@ -265,6 +268,7 @@ export class CursorExecutor extends BaseExecutor {
             : "linux",
       "x-cursor-client-arch": process.arch === "arm64" ? "aarch64" : "x64",
       "x-cursor-client-device-type": "desktop",
+      "x-cursor-user-agent": getCursorUserAgent(getCursorVersion()),
       "x-cursor-config-version": crypto.randomUUID(),
       "x-cursor-timezone": Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC",
       "x-ghost-mode": ghostMode ? "true" : "false",
@@ -363,10 +367,11 @@ export class CursorExecutor extends BaseExecutor {
     });
   }
 
-  async execute({ model, body, stream, credentials, signal, log }) {
+  async execute({ model, body, stream, credentials, signal, log, upstreamExtraHeaders }) {
     const url = this.buildUrl();
     const headers = this.buildHeaders(credentials);
-    const transformedBody = this.transformRequest(model, body, stream, credentials);
+    mergeUpstreamExtraHeaders(headers, upstreamExtraHeaders);
+    const transformedBody = await this.transformRequest(model, body, stream, credentials);
 
     try {
       const response: CursorHttpResponse = http2

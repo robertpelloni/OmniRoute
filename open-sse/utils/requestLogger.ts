@@ -1,98 +1,204 @@
-// Check if running in Node.js environment (has fs module)
-const isNode =
-  typeof process !== "undefined" && process.versions?.node && typeof window === "undefined";
+type JsonRecord = Record<string, unknown>;
 
-// Check if logging is enabled via environment variable (default: false)
-const LOGGING_ENABLED =
-  typeof process !== "undefined" && process.env?.ENABLE_REQUEST_LOGS === "true";
+type HeaderInput =
+  | Headers
+  | Record<string, unknown>
+  | { entries?: () => IterableIterator<[string, string]> }
+  | null
+  | undefined;
 
-let fs = null;
-let path = null;
-let LOGS_DIR = null;
+export type RequestPipelinePayloads = {
+  clientRawRequest?: JsonRecord;
+  openaiRequest?: JsonRecord;
+  providerRequest?: JsonRecord;
+  providerResponse?: JsonRecord;
+  clientResponse?: JsonRecord;
+  error?: JsonRecord;
+  streamChunks?: {
+    provider?: string[];
+    openai?: string[];
+    client?: string[];
+  };
+};
 
-// Lazy load Node.js modules (avoid top-level await)
-async function ensureNodeModules() {
-  if (!isNode || !LOGGING_ENABLED || fs) return;
-  try {
-    fs = await import("fs");
-    path = await import("path");
-    LOGS_DIR = path.join(
-      typeof process !== "undefined" && process.cwd ? process.cwd() : ".",
-      "logs"
-    );
-  } catch {
-    // Running in non-Node environment (Worker, Browser, etc.)
-  }
-}
+type RequestLogger = {
+  sessionPath: null;
+  logClientRawRequest: (endpoint: unknown, body: unknown, headers?: HeaderInput) => void;
+  logOpenAIRequest: (body: unknown) => void;
+  logTargetRequest: (url: unknown, headers: HeaderInput, body: unknown) => void;
+  logProviderResponse: (
+    status: unknown,
+    statusText: unknown,
+    headers: HeaderInput,
+    body: unknown
+  ) => void;
+  appendProviderChunk: (chunk: string) => void;
+  appendOpenAIChunk: (chunk: string) => void;
+  logConvertedResponse: (body: unknown) => void;
+  appendConvertedChunk: (chunk: string) => void;
+  logError: (error: unknown, requestBody?: unknown) => void;
+  getPipelinePayloads: () => RequestPipelinePayloads | null;
+};
 
-// Format timestamp for folder name: 20251228_143045
-function formatTimestamp(date = new Date()) {
-  const pad = (n) => String(n).padStart(2, "0");
-  const y = date.getFullYear();
-  const m = pad(date.getMonth() + 1);
-  const d = pad(date.getDate());
-  const h = pad(date.getHours());
-  const min = pad(date.getMinutes());
-  const s = pad(date.getSeconds());
-  return `${y}${m}${d}_${h}${min}${s}`;
-}
+type RequestLoggerOptions = {
+  enabled?: boolean;
+  captureStreamChunks?: boolean;
+  maxStreamChunkBytes?: number;
+  maxStreamChunkItems?: number;
+};
 
-// Create log session folder: {sourceFormat}_{targetFormat}_{model}_{timestamp}
-async function createLogSession(sourceFormat, targetFormat, model) {
-  await ensureNodeModules();
-  if (!fs || !LOGS_DIR) return null;
+const DEFAULT_MAX_STREAM_CHUNK_BYTES = 128 * 1024;
+const DEFAULT_MAX_STREAM_CHUNK_ITEMS = 512;
+const MAX_LOG_STRING_LENGTH = 64 * 1024;
+const MAX_LOG_ARRAY_ITEMS = 24;
+const MAX_LOG_OBJECT_KEYS = 80;
 
-  try {
-    await fs.promises.mkdir(LOGS_DIR, { recursive: true });
-
-    const timestamp = formatTimestamp();
-    const safeModel = (model || "unknown").replace(/[/:]/g, "-");
-    const folderName = `${sourceFormat}_${targetFormat}_${safeModel}_${timestamp}`;
-    const sessionPath = path.join(LOGS_DIR, folderName);
-
-    await fs.promises.mkdir(sessionPath, { recursive: true });
-
-    return sessionPath;
-  } catch (err) {
-    console.log("[LOG] Failed to create log session:", err.message);
-    return null;
-  }
-}
-
-// Write JSON file (async, fire-and-forget)
-function writeJsonFile(sessionPath, filename, data) {
-  if (!fs || !sessionPath) return;
-
-  const filePath = path.join(sessionPath, filename);
-  fs.promises
-    .writeFile(filePath, JSON.stringify(data, null, 2))
-    .catch((err) => console.log(`[LOG] Failed to write ${filename}:`, err.message));
-}
-
-// Mask sensitive data in headers before writing to log files
-function maskSensitiveHeaders(headers) {
+function maskSensitiveHeaders(headers: HeaderInput): Record<string, unknown> {
   if (!headers) return {};
-  const masked = { ...headers };
+
+  const headerEntries =
+    typeof (headers as Headers).entries === "function"
+      ? Object.fromEntries((headers as Headers).entries())
+      : { ...(headers as Record<string, unknown>) };
+
+  const masked = { ...headerEntries };
   const sensitiveKeys = ["authorization", "x-api-key", "cookie", "token"];
 
   for (const key of Object.keys(masked)) {
     const lowerKey = key.toLowerCase();
-    if (sensitiveKeys.some((sk) => lowerKey.includes(sk))) {
-      const value = masked[key];
-      if (value && value.length > 20) {
-        masked[key] = value.slice(0, 10) + "..." + value.slice(-5);
-      }
+    if (!sensitiveKeys.some((candidate) => lowerKey.includes(candidate))) {
+      continue;
+    }
+
+    const value = masked[key];
+    if (typeof value === "string" && value.length > 20) {
+      masked[key] = `${value.slice(0, 10)}...${value.slice(-5)}`;
+    } else if (value) {
+      masked[key] = "[REDACTED]";
     }
   }
+
   return masked;
 }
 
-// No-op logger when logging is disabled
-function createNoOpLogger() {
+function createEmptyStreamChunks() {
+  return {
+    provider: [] as string[],
+    openai: [] as string[],
+    client: [] as string[],
+  };
+}
+
+function truncateLogString(value: string, maxLength = MAX_LOG_STRING_LENGTH): string {
+  if (value.length <= maxLength) return value;
+  return `${value.slice(0, Math.floor(maxLength / 2))}\n[...truncated ${value.length - maxLength} chars...]\n${value.slice(-Math.ceil(maxLength / 2))}`;
+}
+
+function cloneBoundedForLog(value: unknown, depth = 0): unknown {
+  if (value === null || value === undefined) return value;
+  if (typeof value === "string") return truncateLogString(value);
+  if (typeof value !== "object") return value;
+  if (depth >= 6) return "[MaxDepth]";
+
+  if (Array.isArray(value)) {
+    const source = value.length > MAX_LOG_ARRAY_ITEMS ? value.slice(-MAX_LOG_ARRAY_ITEMS) : value;
+    const mapped = source.map((item) => cloneBoundedForLog(item, depth + 1));
+    if (value.length > MAX_LOG_ARRAY_ITEMS) {
+      return [
+        {
+          _omniroute_truncated_array: true,
+          originalLength: value.length,
+          retainedTailItems: MAX_LOG_ARRAY_ITEMS,
+        },
+        ...mapped,
+      ];
+    }
+    return mapped;
+  }
+
+  const result: JsonRecord = {};
+  const entries = Object.entries(value as JsonRecord);
+  for (const [key, item] of entries.slice(0, MAX_LOG_OBJECT_KEYS)) {
+    result[key] = cloneBoundedForLog(item, depth + 1);
+  }
+  if (entries.length > MAX_LOG_OBJECT_KEYS) {
+    result._omniroute_truncated_keys = entries.length - MAX_LOG_OBJECT_KEYS;
+  }
+  return result;
+}
+
+function appendBoundedChunk(
+  chunks: string[],
+  bytes: { value: number; truncated: boolean },
+  chunk: string,
+  maxBytes: number,
+  maxItems = DEFAULT_MAX_STREAM_CHUNK_ITEMS
+) {
+  if (typeof chunk !== "string" || chunk.length === 0) {
+    return;
+  }
+  if (chunks.length >= maxItems) {
+    bytes.truncated = true;
+    chunks[maxItems - 1] = `[stream chunk log truncated after ${maxItems} chunks]`;
+    return;
+  }
+  if (bytes.value >= maxBytes) {
+    bytes.truncated = true;
+    return;
+  }
+
+  const remaining = maxBytes - bytes.value;
+  if (chunk.length <= remaining) {
+    chunks.push(chunk);
+    bytes.value += chunk.length;
+    return;
+  }
+
+  chunks.push(chunk.slice(0, remaining));
+  if (chunks.length < maxItems) {
+    chunks.push(`[stream chunk log truncated after ${maxBytes} bytes]`);
+  }
+  bytes.value = maxBytes;
+  bytes.truncated = true;
+}
+
+function hasOwnValues(value: unknown): boolean {
+  return Boolean(value && typeof value === "object" && Object.keys(value as JsonRecord).length > 0);
+}
+
+function compactPipelinePayloads(
+  payloads: RequestPipelinePayloads
+): RequestPipelinePayloads | null {
+  const result: RequestPipelinePayloads = {};
+
+  for (const [key, value] of Object.entries(payloads)) {
+    if (value === null || value === undefined) {
+      continue;
+    }
+
+    if (key === "streamChunks" && value && typeof value === "object") {
+      const chunkRecord = value as Record<string, unknown>;
+      const compactedChunks = Object.fromEntries(
+        Object.entries(chunkRecord).filter(
+          ([, chunkValue]) => Array.isArray(chunkValue) && chunkValue.length > 0
+        )
+      );
+      if (Object.keys(compactedChunks).length > 0) {
+        result.streamChunks = compactedChunks as RequestPipelinePayloads["streamChunks"];
+      }
+      continue;
+    }
+
+    result[key as keyof RequestPipelinePayloads] = value as never;
+  }
+
+  return hasOwnValues(result) ? result : null;
+}
+
+function createNoOpLogger(): RequestLogger {
   return {
     sessionPath: null,
     logClientRawRequest() {},
-    logRawRequest() {},
     logOpenAIRequest() {},
     logTargetRequest() {},
     logProviderResponse() {},
@@ -101,151 +207,132 @@ function createNoOpLogger() {
     logConvertedResponse() {},
     appendConvertedChunk() {},
     logError() {},
+    getPipelinePayloads() {
+      return null;
+    },
   };
 }
 
-/**
- * Create a new log session and return logger functions
- * @param {string} sourceFormat - Source format from client (claude, openai, etc.)
- * @param {string} targetFormat - Target format to provider (antigravity, gemini-cli, etc.)
- * @param {string} model - Model name
- * @returns {Promise<object>} Promise that resolves to logger object with methods to log each stage
- */
-export async function createRequestLogger(sourceFormat, targetFormat, model) {
-  // Return no-op logger if logging is disabled
-  if (!LOGGING_ENABLED) {
+export async function createRequestLogger(
+  _sourceFormat?: string,
+  _targetFormat?: string,
+  _model?: string,
+  options: RequestLoggerOptions = {}
+): Promise<RequestLogger> {
+  if (options.enabled === false) {
     return createNoOpLogger();
   }
 
-  // Wait for session to be created before returning logger
-  const sessionPath = await createLogSession(sourceFormat, targetFormat, model);
+  const captureStreamChunks = options.captureStreamChunks !== false;
+  const maxStreamChunkBytes =
+    Number.isInteger(options.maxStreamChunkBytes) && Number(options.maxStreamChunkBytes) > 0
+      ? Number(options.maxStreamChunkBytes)
+      : DEFAULT_MAX_STREAM_CHUNK_BYTES;
+  const maxStreamChunkItems =
+    Number.isInteger(options.maxStreamChunkItems) && Number(options.maxStreamChunkItems) > 0
+      ? Number(options.maxStreamChunkItems)
+      : DEFAULT_MAX_STREAM_CHUNK_ITEMS;
+  const streamChunks = createEmptyStreamChunks();
+  const streamChunkBytes = {
+    provider: { value: 0, truncated: false },
+    openai: { value: 0, truncated: false },
+    client: { value: 0, truncated: false },
+  };
+  const payloads: RequestPipelinePayloads = {
+    ...(captureStreamChunks ? { streamChunks } : {}),
+  };
 
   return {
-    get sessionPath() {
-      return sessionPath;
-    },
+    sessionPath: null,
 
-    // 1. Log client raw request (before all conversion steps)
     logClientRawRequest(endpoint, body, headers = {}) {
-      writeJsonFile(sessionPath, "1_req_client.json", {
+      payloads.clientRawRequest = {
         timestamp: new Date().toISOString(),
         endpoint,
         headers: maskSensitiveHeaders(headers),
-        body,
-      });
+        body: cloneBoundedForLog(body),
+      };
     },
 
-    // 2. Log raw request from client (after initial conversion like responsesApi)
-    logRawRequest(body, headers = {}) {
-      writeJsonFile(sessionPath, "2_req_source.json", {
-        timestamp: new Date().toISOString(),
-        headers: maskSensitiveHeaders(headers),
-        body,
-      });
-    },
-
-    // 3. Log OpenAI intermediate format (source → openai)
     logOpenAIRequest(body) {
-      writeJsonFile(sessionPath, "3_req_openai.json", {
+      payloads.openaiRequest = {
         timestamp: new Date().toISOString(),
-        body,
-      });
+        body: cloneBoundedForLog(body),
+      };
     },
 
-    // 4. Log target format request (openai → target)
     logTargetRequest(url, headers, body) {
-      writeJsonFile(sessionPath, "4_req_target.json", {
+      payloads.providerRequest = {
         timestamp: new Date().toISOString(),
         url,
         headers: maskSensitiveHeaders(headers),
-        body,
-      });
+        body: cloneBoundedForLog(body),
+      };
     },
 
-    // 5. Log provider response (for non-streaming or error)
     logProviderResponse(status, statusText, headers, body) {
-      const filename = "5_res_provider.json";
-      writeJsonFile(sessionPath, filename, {
+      payloads.providerResponse = {
         timestamp: new Date().toISOString(),
         status,
         statusText,
-        headers: headers
-          ? typeof headers.entries === "function"
-            ? Object.fromEntries(headers.entries())
-            : headers
-          : {},
-        body,
-      });
-    },
-
-    // 5. Append streaming chunk to provider response (async)
-    appendProviderChunk(chunk) {
-      if (!fs || !sessionPath) return;
-      const filePath = path.join(sessionPath, "5_res_provider.txt");
-      fs.promises.appendFile(filePath, chunk).catch(() => {});
-    },
-
-    // 6. Append OpenAI intermediate chunks (async)
-    appendOpenAIChunk(chunk) {
-      if (!fs || !sessionPath) return;
-      const filePath = path.join(sessionPath, "6_res_openai.txt");
-      fs.promises.appendFile(filePath, chunk).catch(() => {});
-    },
-
-    // 7. Log converted response to client (for non-streaming)
-    logConvertedResponse(body) {
-      writeJsonFile(sessionPath, "7_res_client.json", {
-        timestamp: new Date().toISOString(),
-        body,
-      });
-    },
-
-    // 7b. Append streaming chunk to converted response (async)
-    appendConvertedChunk(chunk) {
-      if (!fs || !sessionPath) return;
-      const filePath = path.join(sessionPath, "7_res_client.txt");
-      fs.promises.appendFile(filePath, chunk).catch(() => {});
-    },
-
-    // 8. Log error
-    logError(error, requestBody = null) {
-      writeJsonFile(sessionPath, "6_error.json", {
-        timestamp: new Date().toISOString(),
-        error: error?.message || String(error),
-        stack: error?.stack,
-        requestBody,
-      });
-    },
-  };
-}
-
-// Legacy logError (kept for backward compatibility, converted to async)
-export function logError(provider, { error, url, model, requestBody }) {
-  if (!fs || !LOGS_DIR) return;
-
-  const writeLog = async () => {
-    try {
-      await fs.promises.mkdir(LOGS_DIR, { recursive: true });
-
-      const date = new Date().toISOString().split("T")[0];
-      const logPath = path.join(LOGS_DIR, `${provider}-${date}.log`);
-
-      const logEntry = {
-        timestamp: new Date().toISOString(),
-        type: "error",
-        provider,
-        model,
-        url,
-        error: error?.message || String(error),
-        stack: error?.stack,
-        requestBody,
+        headers: maskSensitiveHeaders(headers),
+        body: cloneBoundedForLog(body),
       };
+    },
 
-      await fs.promises.appendFile(logPath, JSON.stringify(logEntry) + "\n");
-    } catch (err) {
-      console.log("[LOG] Failed to write error log:", err.message);
-    }
+    appendProviderChunk(chunk) {
+      if (!captureStreamChunks) return;
+      appendBoundedChunk(
+        streamChunks.provider,
+        streamChunkBytes.provider,
+        chunk,
+        maxStreamChunkBytes,
+        maxStreamChunkItems
+      );
+    },
+
+    appendOpenAIChunk(chunk) {
+      if (!captureStreamChunks) return;
+      appendBoundedChunk(
+        streamChunks.openai,
+        streamChunkBytes.openai,
+        chunk,
+        maxStreamChunkBytes,
+        maxStreamChunkItems
+      );
+    },
+
+    logConvertedResponse(body) {
+      payloads.clientResponse = {
+        timestamp: new Date().toISOString(),
+        body: cloneBoundedForLog(body),
+      };
+    },
+
+    appendConvertedChunk(chunk) {
+      if (!captureStreamChunks) return;
+      appendBoundedChunk(
+        streamChunks.client,
+        streamChunkBytes.client,
+        chunk,
+        maxStreamChunkBytes,
+        maxStreamChunkItems
+      );
+    },
+
+    logError(error, requestBody = null) {
+      payloads.error = {
+        timestamp: new Date().toISOString(),
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+        requestBody: cloneBoundedForLog(requestBody),
+      };
+    },
+
+    getPipelinePayloads() {
+      return compactPipelinePayloads(payloads);
+    },
   };
-
-  writeLog();
 }
+
+export function logError(_provider: string, _entry: unknown) {}

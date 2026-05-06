@@ -25,8 +25,21 @@ export default function CodexToolCard({
   const [message, setMessage] = useState(null);
   const [showInstallGuide, setShowInstallGuide] = useState(false);
   const [selectedApiKey, setSelectedApiKey] = useState("");
-  const [selectedModel, setSelectedModel] = useState("");
+  const [selectedModel, setSelectedModel] = useState("gpt-5.5");
+  const CODEX_DEFAULT_MODELS = [
+    "gpt-5.5",
+    "gpt-5.3-codex",
+    "gpt-5.4",
+    "gpt-5.2-codex",
+    "gpt-5.1-codex-max",
+    "gpt-5.2",
+    "gpt-5.1-codex-mini",
+  ];
+  const [modelMappings, setModelMappings] = useState<Record<string, string>>({});
+  const [reasoningEffort, setReasoningEffort] = useState("xhigh");
+  const [wireApi, setWireApi] = useState("chat");
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalTarget, setModalTarget] = useState<string | null>(null); // null = default model, string = mapping key
   const [modelAliases, setModelAliases] = useState({});
   const [showManualConfigModal, setShowManualConfigModal] = useState(false);
   const [customBaseUrl, setCustomBaseUrl] = useState("");
@@ -43,8 +56,9 @@ export default function CodexToolCard({
   const cliReady = !!(codexStatus?.installed && codexStatus?.runnable);
 
   useEffect(() => {
+    // Store the key *id* so the backend can resolve the real secret from DB
     if (apiKeys?.length > 0 && !selectedApiKey) {
-      setSelectedApiKey(apiKeys[0].key);
+      setSelectedApiKey(apiKeys[0].id);
     }
   }, [apiKeys, selectedApiKey]);
 
@@ -67,11 +81,31 @@ export default function CodexToolCard({
     }
   };
 
-  // Parse model from config content (don't sync URL - always use baseUrl from props)
+  // Parse config content
   useEffect(() => {
     if (codexStatus?.config) {
-      const modelMatch = codexStatus.config.match(/^model\s*=\s*"([^"]+)"/m);
+      const modelMatch = codexStatus.config.match(/^model\s*=\s*"([^"]+)"/im);
       if (modelMatch) setSelectedModel(modelMatch[1]);
+
+      const effortMatch = codexStatus.config.match(/^model_reasoning_effort\s*=\s*"([^"]+)"/im);
+      if (effortMatch) setReasoningEffort(effortMatch[1]);
+
+      const wireMatch = codexStatus.config.match(/^wire_api\s*=\s*"([^"]+)"/im);
+      if (wireMatch) setWireApi(wireMatch[1]);
+
+      const newMappings: Record<string, string> = {};
+      const migrationsBlock = codexStatus.config.split("[notice.model_migrations]")[1];
+      if (migrationsBlock) {
+        const nextSectionIdx = migrationsBlock.indexOf("[");
+        const chunk =
+          nextSectionIdx === -1 ? migrationsBlock : migrationsBlock.substring(0, nextSectionIdx);
+        const lines = chunk.split("\n");
+        for (const line of lines) {
+          const match = line.match(/^"([^"]+)"\s*=\s*"([^"]+)"/);
+          if (match) newMappings[match[1]] = match[2];
+        }
+      }
+      setModelMappings(newMappings);
     }
   }, [codexStatus]);
 
@@ -91,12 +125,14 @@ export default function CodexToolCard({
   const effectiveConfigStatus = configStatus || batchStatus?.configStatus || null;
 
   const getEffectiveBaseUrl = () => {
-    const url = customBaseUrl || `${baseUrl}/v1`;
-    // Ensure URL ends with /v1
-    return url.endsWith("/v1") ? url : `${url}/v1`;
+    const url = customBaseUrl || baseUrl;
+    return url.replace(/\/v1\/?$/, "").replace(/\/api\/?$/, "") + "/api/v1";
   };
 
-  const getDisplayUrl = () => customBaseUrl || `${baseUrl}/v1`;
+  const getDisplayUrl = () => {
+    const url = customBaseUrl || baseUrl;
+    return url.replace(/\/v1\/?$/, "").replace(/\/api\/?$/, "") + "/api/v1";
+  };
 
   const checkCodexStatus = async () => {
     setCheckingCodex(true);
@@ -123,13 +159,18 @@ export default function CodexToolCard({
             ? "sk_omniroute"
             : selectedApiKey;
 
+      // Send both apiKey (as fallback) and keyId to look up the unmasked string natively
       const res = await fetch("/api/cli-tools/codex-settings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           baseUrl: getEffectiveBaseUrl(),
           apiKey: keyToUse,
-          model: selectedModel,
+          keyId: selectedApiKey,
+          model: selectedModel || CODEX_DEFAULT_MODELS[0],
+          reasoningEffort,
+          wireApi,
+          modelMappings,
         }),
       });
       const data = await res.json();
@@ -137,7 +178,12 @@ export default function CodexToolCard({
         setMessage({ type: "success", text: t("settingsApplied") });
         checkCodexStatus();
       } else {
-        setMessage({ type: "error", text: data.error || t("failedApplySettings") });
+        setMessage({
+          type: "error",
+          text:
+            (typeof data.error === "string" ? data.error : data.error?.message) ||
+            t("failedApplySettings"),
+        });
       }
     } catch (error) {
       setMessage({ type: "error", text: error.message });
@@ -157,7 +203,12 @@ export default function CodexToolCard({
         setSelectedModel("");
         checkCodexStatus();
       } else {
-        setMessage({ type: "error", text: data.error || t("failedResetSettings") });
+        setMessage({
+          type: "error",
+          text:
+            (typeof data.error === "string" ? data.error : data.error?.message) ||
+            t("failedResetSettings"),
+        });
       }
     } catch (error) {
       setMessage({ type: "error", text: error.message });
@@ -167,8 +218,15 @@ export default function CodexToolCard({
   };
 
   const handleModelSelect = (model) => {
-    setSelectedModel(model.value);
+    if (modalTarget) {
+      // Writing to a model mapping alias
+      setModelMappings({ ...modelMappings, [modalTarget]: model.value });
+    } else {
+      // Writing to the default model
+      setSelectedModel(model.value);
+    }
     setModalOpen(false);
+    setModalTarget(null);
   };
 
   // ── Profiles ──
@@ -198,7 +256,12 @@ export default function CodexToolCard({
         setNewProfileName("");
         fetchProfiles();
       } else {
-        setMessage({ type: "error", text: data.error || t("failedSaveProfile") });
+        setMessage({
+          type: "error",
+          text:
+            (typeof data.error === "string" ? data.error : data.error?.message) ||
+            t("failedSaveProfile"),
+        });
       }
     } catch (error) {
       setMessage({ type: "error", text: error.message });
@@ -222,7 +285,12 @@ export default function CodexToolCard({
         checkCodexStatus();
         fetchBackups();
       } else {
-        setMessage({ type: "error", text: data.error || t("failedActivateProfile") });
+        setMessage({
+          type: "error",
+          text:
+            (typeof data.error === "string" ? data.error : data.error?.message) ||
+            t("failedActivateProfile"),
+        });
       }
     } catch (error) {
       setMessage({ type: "error", text: error.message });
@@ -270,7 +338,12 @@ export default function CodexToolCard({
         checkCodexStatus();
         fetchBackups();
       } else {
-        setMessage({ type: "error", text: data.error || t("failedRestore") });
+        setMessage({
+          type: "error",
+          text:
+            (typeof data.error === "string" ? data.error : data.error?.message) ||
+            t("failedRestore"),
+        });
       }
     } catch (error) {
       setMessage({ type: "error", text: error.message });
@@ -280,30 +353,43 @@ export default function CodexToolCard({
   };
 
   const getManualConfigs = () => {
-    const keyToUse =
-      selectedApiKey && selectedApiKey.trim()
-        ? selectedApiKey
-        : !cloudEnabled
-          ? "sk_omniroute"
-          : "<API_KEY_FROM_DASHBOARD>";
+    const keyToUse = !cloudEnabled ? "sk_omniroute" : "<YOUR_OMNIROUTE_API_KEY>";
 
-    const configContent = `# OmniRoute Configuration for Codex CLI
-model = "${selectedModel}"
+    let configContent = `# OmniRoute Configuration for Codex CLI
+model = "${selectedModel || CODEX_DEFAULT_MODELS[0]}"`;
+
+    if (reasoningEffort && reasoningEffort !== "none") {
+      configContent += `\nmodel_reasoning_effort = "${reasoningEffort}"`;
+    }
+
+    if (wireApi === "responses") {
+      configContent += `
 model_provider = "omniroute"
 
 [model_providers.omniroute]
 name = "OmniRoute"
 base_url = "${getEffectiveBaseUrl()}"
 wire_api = "responses"
+env_key = "OPENAI_API_KEY"
 `;
+    } else {
+      configContent += `
 
-    const authContent = JSON.stringify(
-      {
-        OPENAI_API_KEY: keyToUse,
-      },
-      null,
-      2
-    );
+# Utilize the built-in OpenAI provider pointed to OmniRoute
+openai_base_url = "${getEffectiveBaseUrl()}"
+`;
+    }
+
+    if (Object.keys(modelMappings).length > 0) {
+      configContent += "\n[notice.model_migrations]\n";
+      for (const [from, to] of Object.entries(modelMappings)) {
+        if (to) {
+          configContent += `"${from}" = "${to}"\n`;
+        }
+      }
+    }
+
+    const authContent = JSON.stringify({ OPENAI_API_KEY: keyToUse }, null, 2);
 
     return [
       {
@@ -490,7 +576,7 @@ wire_api = "responses"
                       className="flex-1 px-2 py-1.5 bg-surface rounded text-xs border border-border focus:outline-none focus:ring-1 focus:ring-primary/50"
                     >
                       {apiKeys.map((key) => (
-                        <option key={key.id} value={key.key}>
+                        <option key={key.id} value={key.id}>
                           {key.key}
                         </option>
                       ))}
@@ -502,7 +588,7 @@ wire_api = "responses"
                   )}
                 </div>
 
-                {/* Model */}
+                {/* Default Model */}
                 <div className="flex items-center gap-2">
                   <span className="w-32 shrink-0 text-sm font-semibold text-text-main text-right">
                     {t("model")}
@@ -510,20 +596,23 @@ wire_api = "responses"
                   <span className="material-symbols-outlined text-text-muted text-[14px]">
                     arrow_forward
                   </span>
-                  <input
-                    type="text"
-                    value={selectedModel}
-                    onChange={(e) => setSelectedModel(e.target.value)}
-                    placeholder={t("providerModelPlaceholder")}
-                    className="flex-1 px-2 py-1.5 bg-surface rounded border border-border text-xs focus:outline-none focus:ring-1 focus:ring-primary/50"
-                  />
                   <button
-                    onClick={() => setModalOpen(true)}
+                    onClick={() => {
+                      setModalTarget(null);
+                      setModalOpen(true);
+                    }}
                     disabled={!activeProviders?.length}
                     className={`px-2 py-1.5 rounded border text-xs transition-colors shrink-0 whitespace-nowrap ${activeProviders?.length ? "bg-surface border-border text-text-main hover:border-primary cursor-pointer" : "opacity-50 cursor-not-allowed border-border"}`}
                   >
                     {t("selectModel")}
                   </button>
+                  <input
+                    type="text"
+                    value={selectedModel}
+                    onChange={(e) => setSelectedModel(e.target.value)}
+                    placeholder="gpt-5.5"
+                    className="flex-1 px-2 py-1.5 bg-surface rounded border border-border text-xs focus:outline-none focus:ring-1 focus:ring-primary/50"
+                  />
                   {selectedModel && (
                     <button
                       onClick={() => setSelectedModel("")}
@@ -534,6 +623,93 @@ wire_api = "responses"
                     </button>
                   )}
                 </div>
+
+                {/* Reasoning Effort */}
+                <div className="flex items-center gap-2">
+                  <span className="w-32 shrink-0 text-sm font-semibold text-text-main text-right">
+                    Reasoning Effort
+                  </span>
+                  <span className="material-symbols-outlined text-text-muted text-[14px]">
+                    arrow_forward
+                  </span>
+                  <select
+                    value={reasoningEffort}
+                    onChange={(e) => setReasoningEffort(e.target.value)}
+                    className="flex-1 px-2 py-1.5 bg-surface rounded text-xs border border-border focus:outline-none focus:ring-1 focus:ring-primary/50"
+                  >
+                    <option value="none">None</option>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                    <option value="xhigh">XHigh</option>
+                  </select>
+                </div>
+
+                {/* Wire API */}
+                <div className="flex items-center gap-2">
+                  <span className="w-32 shrink-0 text-sm font-semibold text-text-main text-right">
+                    Wire API
+                  </span>
+                  <span className="material-symbols-outlined text-text-muted text-[14px]">
+                    arrow_forward
+                  </span>
+                  <select
+                    value={wireApi}
+                    onChange={(e) => setWireApi(e.target.value)}
+                    className="flex-1 px-2 py-1.5 bg-surface rounded text-xs border border-border focus:outline-none focus:ring-1 focus:ring-primary/50"
+                  >
+                    <option value="chat">Chat Completions (/chat/completions)</option>
+                    <option value="responses">Responses API (/responses)</option>
+                  </select>
+                </div>
+
+                <div className="h-px bg-border/50 my-2"></div>
+
+                <div className="text-[11px] text-text-muted mb-2 font-medium uppercase tracking-wider text-right">
+                  Model Aliases ([notice.model_migrations])
+                </div>
+                {CODEX_DEFAULT_MODELS.map((defaultModel) => (
+                  <div key={defaultModel} className="flex items-center gap-2 group">
+                    <span className="w-32 shrink-0 text-[11px] font-mono text-text-main text-right truncate opacity-70 group-hover:opacity-100 transition-opacity">
+                      {defaultModel}
+                    </span>
+                    <span className="material-symbols-outlined text-border group-hover:text-primary transition-colors text-[14px]">
+                      arrow_forward
+                    </span>
+                    <button
+                      onClick={() => {
+                        setModalTarget(defaultModel);
+                        setModalOpen(true);
+                      }}
+                      disabled={!activeProviders?.length}
+                      className={`px-2 py-1.5 rounded border text-xs transition-colors shrink-0 whitespace-nowrap ${activeProviders?.length ? "bg-surface border-border text-text-main hover:border-primary cursor-pointer" : "opacity-50 cursor-not-allowed border-border"}`}
+                    >
+                      {t("selectModel")}
+                    </button>
+                    <input
+                      type="text"
+                      value={modelMappings[defaultModel] || ""}
+                      onChange={(e) =>
+                        setModelMappings({ ...modelMappings, [defaultModel]: e.target.value })
+                      }
+                      placeholder={`Route ${defaultModel} to...`}
+                      className="flex-1 px-2 py-1.5 bg-surface rounded border border-border text-xs focus:outline-none focus:ring-1 focus:ring-primary/50"
+                    />
+                    {modelMappings[defaultModel] && (
+                      <button
+                        onClick={() => {
+                          const next = { ...modelMappings };
+                          delete next[defaultModel];
+                          setModelMappings(next);
+                        }}
+                        className="p-1 text-text-muted hover:text-red-500 rounded transition-colors"
+                        title={t("clear")}
+                      >
+                        <span className="material-symbols-outlined text-[14px]">close</span>
+                      </button>
+                    )}
+                  </div>
+                ))}
               </div>
 
               {message && (

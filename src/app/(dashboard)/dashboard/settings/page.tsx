@@ -1,27 +1,31 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { cn } from "@/shared/utils/cn";
-import { APP_CONFIG } from "@/shared/constants/config";
+import { APP_CONFIG } from "@/shared/constants/appConfig";
 import { useTranslations } from "next-intl";
 import SystemStorageTab from "./components/SystemStorageTab";
 import SecurityTab from "./components/SecurityTab";
 import RoutingTab from "./components/RoutingTab";
 import ComboDefaultsTab from "./components/ComboDefaultsTab";
-import ProxyTab from "./components/ProxyTab";
 import AppearanceTab from "./components/AppearanceTab";
 import ThinkingBudgetTab from "./components/ThinkingBudgetTab";
-import CodexServiceTierTab from "./components/CodexServiceTierTab";
 import SystemPromptTab from "./components/SystemPromptTab";
-import ModelAliasesTab from "./components/ModelAliasesTab";
+import ModelAliasesUnified from "./components/ModelAliasesUnified";
 import BackgroundDegradationTab from "./components/BackgroundDegradationTab";
-
-import CacheStatsCard from "./components/CacheStatsCard";
+import MemorySkillsTab from "./components/MemorySkillsTab";
+import ModelsDevSyncTab from "./components/ModelsDevSyncTab";
 import ResilienceTab from "./components/ResilienceTab";
+import CliproxyapiSettingsTab from "./components/CliproxyapiSettingsTab";
+import PayloadRulesTab from "./components/PayloadRulesTab";
+import VisionBridgeSettingsTab from "./components/VisionBridgeSettingsTab";
+import ModelRoutingSection from "@/shared/components/ModelRoutingSection";
 
 const tabs = [
   { id: "general", labelKey: "general", icon: "settings" },
+  { id: "appearance", labelKey: "appearance", icon: "palette" },
   { id: "ai", labelKey: "ai", icon: "smart_toy" },
   { id: "security", labelKey: "security", icon: "shield" },
   { id: "routing", labelKey: "routing", icon: "route" },
@@ -37,7 +41,7 @@ export default function SettingsPage() {
   const activeTab = userSelectedTab || tabs.find((t) => t.id === tabParam)?.id || "general";
 
   return (
-    <div className="max-w-2xl mx-auto min-w-0">
+    <div className="max-w-6xl mx-auto min-w-0">
       <div className="flex flex-col gap-6">
         {/* Tab navigation */}
         <div className="w-full overflow-x-auto pb-1">
@@ -75,20 +79,43 @@ export default function SettingsPage() {
           aria-label={t(tabs.find((t2) => t2.id === activeTab)?.labelKey || "general")}
         >
           {activeTab === "general" && (
-            <>
-              <div className="flex flex-col gap-6">
-                <SystemStorageTab />
-                <AppearanceTab />
-              </div>
-            </>
+            <div className="flex flex-col gap-6">
+              <SystemStorageTab />
+            </div>
+          )}
+
+          {activeTab === "appearance" && (
+            <div className="flex flex-col gap-6">
+              <AppearanceTab />
+            </div>
           )}
 
           {activeTab === "ai" && (
             <div className="flex flex-col gap-6">
               <ThinkingBudgetTab />
-              <CodexServiceTierTab />
+              <Link
+                href="/dashboard/context/caveman"
+                className="flex items-center justify-between rounded-lg border border-border bg-surface p-4 transition-colors hover:bg-sidebar/50"
+              >
+                <span className="flex min-w-0 items-center gap-3">
+                  <span className="material-symbols-outlined text-[20px] text-primary">
+                    compress
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-sm font-medium text-text-main">
+                      {t("compressionTitle")}
+                    </span>
+                    <span className="block text-xs text-text-muted">{t("compressionDesc")}</span>
+                  </span>
+                </span>
+                <span className="material-symbols-outlined text-[18px] text-text-muted">
+                  chevron_right
+                </span>
+              </Link>
+              <VisionBridgeSettingsTab />
               <SystemPromptTab />
-              <CacheStatsCard />
+              <MemorySkillsTab />
+              <ModelsDevSyncTab />
             </div>
           )}
 
@@ -97,15 +124,21 @@ export default function SettingsPage() {
           {activeTab === "routing" && (
             <div className="flex flex-col gap-6">
               <RoutingTab />
+              <ModelRoutingSection />
               <ComboDefaultsTab />
-              <ModelAliasesTab />
+              <ModelAliasesUnified />
               <BackgroundDegradationTab />
             </div>
           )}
 
           {activeTab === "resilience" && <ResilienceTab />}
 
-          {activeTab === "advanced" && <ProxyTab />}
+          {activeTab === "advanced" && (
+            <div className="flex flex-col gap-6">
+              <PayloadRulesTab />
+              <CliproxyapiSettingsTab />
+            </div>
+          )}
         </div>
 
         {/* App Info */}

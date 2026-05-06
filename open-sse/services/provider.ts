@@ -1,5 +1,11 @@
+// @ts-nocheck
 import { PROVIDERS } from "../config/constants.ts";
 import { getRegistryEntry } from "../config/providerRegistry.ts";
+import {
+  buildClaudeCodeCompatibleHeaders,
+  CLAUDE_CODE_COMPATIBLE_DEFAULT_CHAT_PATH,
+  joinClaudeCodeCompatibleUrl,
+} from "./claudeCodeCompatible.ts";
 
 const OPENAI_COMPATIBLE_PREFIX = "openai-compatible-";
 const OPENAI_COMPATIBLE_DEFAULTS = {
@@ -7,6 +13,7 @@ const OPENAI_COMPATIBLE_DEFAULTS = {
 };
 
 const ANTHROPIC_COMPATIBLE_PREFIX = "anthropic-compatible-";
+const CLAUDE_CODE_COMPATIBLE_PREFIX = "anthropic-compatible-cc-";
 const ANTHROPIC_COMPATIBLE_DEFAULTS = {
   baseUrl: "https://api.anthropic.com/v1",
 };
@@ -19,20 +26,83 @@ function isAnthropicCompatible(provider) {
   return typeof provider === "string" && provider.startsWith(ANTHROPIC_COMPATIBLE_PREFIX);
 }
 
-function getOpenAICompatibleType(provider) {
+export function isClaudeCodeCompatible(provider) {
+  return typeof provider === "string" && provider.startsWith(CLAUDE_CODE_COMPATIBLE_PREFIX);
+}
+
+export function getOpenAICompatibleType(
+  provider,
+  providerSpecificData: Record<string, unknown> | null = null
+) {
   if (!isOpenAICompatible(provider)) return "chat";
-  return provider.includes("responses") ? "responses" : "chat";
+  const configuredType =
+    providerSpecificData &&
+    typeof providerSpecificData === "object" &&
+    typeof providerSpecificData.apiType === "string"
+      ? providerSpecificData.apiType
+      : null;
+  if (
+    configuredType === "responses" ||
+    configuredType === "chat" ||
+    configuredType === "embeddings" ||
+    configuredType === "audio-transcriptions" ||
+    configuredType === "audio-speech" ||
+    configuredType === "images-generations"
+  ) {
+    return configuredType;
+  }
+  if (provider.includes("responses")) return "responses";
+  if (provider.includes("embeddings")) return "embeddings";
+  if (provider.includes("audio-transcriptions")) return "audio-transcriptions";
+  if (provider.includes("audio-speech")) return "audio-speech";
+  if (provider.includes("images-generations")) return "images-generations";
+  return "chat";
 }
 
 function buildOpenAICompatibleUrl(baseUrl, apiType) {
   const normalized = baseUrl.replace(/\/$/, "");
-  const path = apiType === "responses" ? "/responses" : "/chat/completions";
+  let path = "/chat/completions";
+  if (apiType === "responses") {
+    path = "/responses";
+  } else if (apiType === "embeddings") {
+    path = "/embeddings";
+  } else if (apiType === "audio-transcriptions") {
+    path = "/audio/transcriptions";
+  } else if (apiType === "audio-speech") {
+    path = "/audio/speech";
+  } else if (apiType === "images-generations") {
+    path = "/images/generations";
+  }
   return `${normalized}${path}`;
 }
 
 function buildAnthropicCompatibleUrl(baseUrl) {
   const normalized = baseUrl.replace(/\/$/, "");
   return `${normalized}/messages`;
+}
+
+// Detect request format from endpoint first when the route is known.
+// This avoids ambiguous bodies like OpenAI /chat/completions requests that also
+// contain max_tokens or Claude model names.
+export function detectFormatFromEndpoint(body, endpointPath = "") {
+  const path = String(endpointPath || "");
+
+  if (/\/responses(?=\/|$)/i.test(path) || /^responses(?=\/|$)/i.test(path)) {
+    return "openai-responses";
+  }
+
+  if (/\/messages(?=\/|$)/i.test(path) || /^messages(?=\/|$)/i.test(path)) {
+    return "claude";
+  }
+
+  if (
+    /\/(?:chat\/completions|completions)(?=\/|$)/i.test(path) ||
+    /^(?:chat\/completions|completions)(?=\/|$)/i.test(path)
+  ) {
+    return "openai";
+  }
+
+  return detectFormat(body);
 }
 
 // Detect request format from body structure
@@ -130,9 +200,9 @@ export function detectFormat(body) {
 }
 
 // Get provider config
-export function getProviderConfig(provider) {
+export function getProviderConfig(provider, providerSpecificData = null) {
   if (isOpenAICompatible(provider)) {
-    const apiType = getOpenAICompatibleType(provider);
+    const apiType = getOpenAICompatibleType(provider, providerSpecificData);
     return {
       ...PROVIDERS.openai,
       format: apiType === "responses" ? "openai-responses" : "openai",
@@ -160,15 +230,26 @@ export function buildProviderUrl(
   provider,
   model,
   stream = true,
-  options: { baseUrl?: string; baseUrlIndex?: number } = {}
+  options: {
+    baseUrl?: string;
+    baseUrlIndex?: number;
+    providerSpecificData?: Record<string, unknown> | null;
+  } = {}
 ) {
   if (isOpenAICompatible(provider)) {
-    const apiType = getOpenAICompatibleType(provider);
-    const baseUrl = options?.baseUrl || OPENAI_COMPATIBLE_DEFAULTS.baseUrl;
+    const providerSpecificData = options?.providerSpecificData || null;
+    const apiType = getOpenAICompatibleType(provider, providerSpecificData);
+    const baseUrl =
+      options?.baseUrl ||
+      (typeof providerSpecificData?.baseUrl === "string" ? providerSpecificData.baseUrl : null) ||
+      OPENAI_COMPATIBLE_DEFAULTS.baseUrl;
     return buildOpenAICompatibleUrl(baseUrl, apiType);
   }
   if (isAnthropicCompatible(provider)) {
     const baseUrl = options?.baseUrl || ANTHROPIC_COMPATIBLE_DEFAULTS.baseUrl;
+    if (isClaudeCodeCompatible(provider)) {
+      return joinClaudeCodeCompatibleUrl(baseUrl, CLAUDE_CODE_COMPATIBLE_DEFAULT_CHAT_PATH);
+    }
     return buildAnthropicCompatibleUrl(baseUrl);
   }
 
@@ -186,7 +267,10 @@ export function buildProviderUrl(
     }
     // Custom URL builder (e.g. gemini, gemini-cli)
     if (entry.urlBuilder) {
-      return entry.urlBuilder(entry.baseUrl, model, stream);
+      const baseUrl = entry.baseUrl || config.baseUrl;
+      if (baseUrl) {
+        return entry.urlBuilder(baseUrl, model, stream);
+      }
     }
     // URL suffix (e.g. claude: ?beta=true)
     if (entry.urlSuffix) {
@@ -199,6 +283,7 @@ export function buildProviderUrl(
 
 // Build provider headers
 export function buildProviderHeaders(provider, credentials, stream = true, body = null) {
+  void body;
   const config = getProviderConfig(provider);
   const entry = getRegistryEntry(provider);
   const headers = {
@@ -208,6 +293,14 @@ export function buildProviderHeaders(provider, credentials, stream = true, body 
 
   // Add auth header
   // Specific override for Anthropic Compatible
+  if (isClaudeCodeCompatible(provider)) {
+    const token = credentials.apiKey || credentials.accessToken || "";
+    return buildClaudeCodeCompatibleHeaders(
+      token,
+      stream,
+      credentials?.providerSpecificData?.ccSessionId
+    );
+  }
   if (isAnthropicCompatible(provider)) {
     if (credentials.apiKey) {
       headers["x-api-key"] = credentials.apiKey;
@@ -239,6 +332,11 @@ export function buildProviderHeaders(provider, credentials, stream = true, body 
       if (token) {
         headers["x-api-key"] = token;
       }
+    } else if (authHeader === "key") {
+      const token = credentials.apiKey || credentials.accessToken;
+      if (token) {
+        headers["Authorization"] = `Key ${token}`;
+      }
     } else if (authHeader === "x-goog-api-key") {
       if (credentials.apiKey) {
         headers["x-goog-api-key"] = credentials.apiKey;
@@ -263,9 +361,11 @@ export function buildProviderHeaders(provider, credentials, stream = true, body 
 }
 
 // Get target format for provider
-export function getTargetFormat(provider) {
+export function getTargetFormat(provider, providerSpecificData = null) {
   if (isOpenAICompatible(provider)) {
-    return getOpenAICompatibleType(provider) === "responses" ? "openai-responses" : "openai";
+    return getOpenAICompatibleType(provider, providerSpecificData) === "responses"
+      ? "openai-responses"
+      : "openai";
   }
   if (isAnthropicCompatible(provider)) {
     return "claude";
@@ -291,11 +391,10 @@ export function hasThinkingConfig(body) {
 }
 
 // Normalize thinking config based on last message role
-// - If lastMessage is not user → remove thinking config
-// - If lastMessage is user AND has thinking config → keep it (force enable)
+// - If lastMessage is not user → remove Claude/Gemini-style thinking config
+// - Keep OpenAI Chat Completions reasoning_effort as a request-level option.
 export function normalizeThinkingConfig(body) {
   if (!isLastMessageFromUser(body)) {
-    delete body.reasoning_effort;
     delete body.thinking;
   }
   return body;

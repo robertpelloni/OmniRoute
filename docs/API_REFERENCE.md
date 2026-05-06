@@ -38,15 +38,20 @@ Content-Type: application/json
 
 ### Custom Headers
 
-| Header                   | Direction | Description                       |
-| ------------------------ | --------- | --------------------------------- |
-| `X-OmniRoute-No-Cache`   | Request   | Set to `true` to bypass cache     |
-| `X-OmniRoute-Progress`   | Request   | Set to `true` for progress events |
-| `Idempotency-Key`        | Request   | Dedup key (5s window)             |
-| `X-Request-Id`           | Request   | Alternative dedup key             |
-| `X-OmniRoute-Cache`      | Response  | `HIT` or `MISS` (non-streaming)   |
-| `X-OmniRoute-Idempotent` | Response  | `true` if deduplicated            |
-| `X-OmniRoute-Progress`   | Response  | `enabled` if progress tracking on |
+| Header                   | Direction | Description                                      |
+| ------------------------ | --------- | ------------------------------------------------ |
+| `X-OmniRoute-No-Cache`   | Request   | Set to `true` to bypass cache                    |
+| `X-OmniRoute-Progress`   | Request   | Set to `true` for progress events                |
+| `X-Session-Id`           | Request   | Sticky session key for external session affinity |
+| `x_session_id`           | Request   | Underscore variant also accepted (direct HTTP)   |
+| `Idempotency-Key`        | Request   | Dedup key (5s window)                            |
+| `X-Request-Id`           | Request   | Alternative dedup key                            |
+| `X-OmniRoute-Cache`      | Response  | `HIT` or `MISS` (non-streaming)                  |
+| `X-OmniRoute-Idempotent` | Response  | `true` if deduplicated                           |
+| `X-OmniRoute-Progress`   | Response  | `enabled` if progress tracking on                |
+| `X-OmniRoute-Session-Id` | Response  | Effective session ID used by OmniRoute           |
+
+> Nginx note: if you rely on underscore headers (for example `x_session_id`), enable `underscores_in_headers on;`.
 
 ---
 
@@ -63,7 +68,7 @@ Content-Type: application/json
 }
 ```
 
-Available providers: Nebius, OpenAI, Mistral, Together AI, Fireworks, NVIDIA.
+Available providers: Nebius, OpenAI, Mistral, Together AI, Fireworks, NVIDIA, **OpenRouter**, **GitHub Models**.
 
 ```bash
 # List all embedding models
@@ -86,7 +91,7 @@ Content-Type: application/json
 }
 ```
 
-Available providers: OpenAI (DALL-E), xAI (Grok Image), Together AI (FLUX), Fireworks AI.
+Available providers: OpenAI (DALL-E, GPT Image 1), xAI (Grok Image), Together AI (FLUX), Fireworks AI, Nebius (FLUX), Hyperbolic, NanoBanana, **OpenRouter**, SD WebUI (local), ComfyUI (local).
 
 ```bash
 # List all image models
@@ -137,10 +142,10 @@ The provider prefix is auto-added if missing. Mismatched models return `400`.
 
 ```bash
 # Get cache stats
-GET /api/cache
+GET /api/cache/stats
 
 # Clear all caches
-DELETE /api/cache
+DELETE /api/cache/stats
 ```
 
 Response example:
@@ -174,15 +179,15 @@ Response example:
 
 ### Provider Management
 
-| Endpoint                     | Method          | Description              |
-| ---------------------------- | --------------- | ------------------------ |
-| `/api/providers`             | GET/POST        | List / create providers  |
-| `/api/providers/[id]`        | GET/PUT/DELETE  | Manage a provider        |
-| `/api/providers/[id]/test`   | POST            | Test provider connection |
-| `/api/providers/[id]/models` | GET             | List provider models     |
-| `/api/providers/validate`    | POST            | Validate provider config |
-| `/api/provider-nodes*`       | Various         | Provider node management |
-| `/api/provider-models`       | GET/POST/DELETE | Custom models            |
+| Endpoint                     | Method                | Description                                    |
+| ---------------------------- | --------------------- | ---------------------------------------------- |
+| `/api/providers`             | GET/POST              | List / create providers                        |
+| `/api/providers/[id]`        | GET/PUT/DELETE        | Manage a provider                              |
+| `/api/providers/[id]/test`   | POST                  | Test provider connection                       |
+| `/api/providers/[id]/models` | GET                   | List provider models                           |
+| `/api/providers/validate`    | POST                  | Validate provider config                       |
+| `/api/provider-nodes*`       | Various               | Provider node management                       |
+| `/api/provider-models`       | GET/POST/PATCH/DELETE | Custom models (add, update, hide/show, delete) |
 
 ### OAuth Flows
 
@@ -211,23 +216,41 @@ Response example:
 
 ### Settings
 
-| Endpoint                        | Method  | Description            |
-| ------------------------------- | ------- | ---------------------- |
-| `/api/settings`                 | GET/PUT | General settings       |
-| `/api/settings/proxy`           | GET/PUT | Network proxy config   |
-| `/api/settings/proxy/test`      | POST    | Test proxy connection  |
-| `/api/settings/ip-filter`       | GET/PUT | IP allowlist/blocklist |
-| `/api/settings/thinking-budget` | GET/PUT | Reasoning token budget |
-| `/api/settings/system-prompt`   | GET/PUT | Global system prompt   |
+| Endpoint                        | Method        | Description               |
+| ------------------------------- | ------------- | ------------------------- |
+| `/api/settings`                 | GET/PUT/PATCH | General settings          |
+| `/api/settings/proxy`           | GET/PUT       | Network proxy config      |
+| `/api/settings/proxy/test`      | POST          | Test proxy connection     |
+| `/api/settings/ip-filter`       | GET/PUT       | IP allowlist/blocklist    |
+| `/api/settings/thinking-budget` | GET/PUT       | Reasoning token budget    |
+| `/api/settings/system-prompt`   | GET/PUT       | Global system prompt      |
+| `/api/settings/compression`     | GET/PUT       | Global compression config |
+
+### Context & Compression
+
+| Endpoint                               | Method         | Description                                                              |
+| -------------------------------------- | -------------- | ------------------------------------------------------------------------ |
+| `/api/compression/preview`             | POST           | Preview off/lite/standard/aggressive/ultra/RTK/stacked compression       |
+| `/api/compression/language-packs`      | GET            | List available Caveman language packs                                    |
+| `/api/compression/rules`               | GET            | List Caveman rule metadata                                               |
+| `/api/context/caveman/config`          | GET/PUT        | Caveman-specific settings alias                                          |
+| `/api/context/rtk/config`              | GET/PUT        | RTK-specific settings, including custom filters and raw-output retention |
+| `/api/context/rtk/filters`             | GET            | RTK filter catalog and custom-filter diagnostics                         |
+| `/api/context/rtk/test`                | POST           | Run RTK preview/test against a text payload                              |
+| `/api/context/rtk/raw-output/[id]`     | GET            | Read retained redacted raw output by pointer id                          |
+| `/api/context/combos`                  | GET/POST       | Compression combo list/create                                            |
+| `/api/context/combos/[id]`             | GET/PUT/DELETE | Compression combo detail/update/delete                                   |
+| `/api/context/combos/[id]/assignments` | GET/PUT        | Assign compression combos to routing combos                              |
+| `/api/context/analytics`               | GET            | Compression analytics alias                                              |
 
 ### Monitoring
 
-| Endpoint                 | Method     | Description             |
-| ------------------------ | ---------- | ----------------------- |
-| `/api/sessions`          | GET        | Active session tracking |
-| `/api/rate-limits`       | GET        | Per-account rate limits |
-| `/api/monitoring/health` | GET        | Health check            |
-| `/api/cache`             | GET/DELETE | Cache stats / clear     |
+| Endpoint                 | Method     | Description                                                                                          |
+| ------------------------ | ---------- | ---------------------------------------------------------------------------------------------------- |
+| `/api/sessions`          | GET        | Active session tracking                                                                              |
+| `/api/rate-limits`       | GET        | Per-account rate limits                                                                              |
+| `/api/monitoring/health` | GET        | Health check + provider summary (`catalogCount`, `configuredCount`, `activeCount`, `monitoredCount`) |
+| `/api/cache/stats`       | GET/DELETE | Cache stats / clear                                                                                  |
 
 ### Backup & Export/Import
 
@@ -247,6 +270,15 @@ Response example:
 | `/api/sync/cloud`      | Various | Cloud sync operations |
 | `/api/sync/initialize` | POST    | Initialize sync       |
 | `/api/cloud/*`         | Various | Cloud management      |
+
+### Tunnels
+
+| Endpoint                   | Method | Description                                                             |
+| -------------------------- | ------ | ----------------------------------------------------------------------- |
+| `/api/tunnels/cloudflared` | GET    | Read Cloudflare Quick Tunnel install/runtime status for the dashboard   |
+| `/api/tunnels/cloudflared` | POST   | Enable or disable the Cloudflare Quick Tunnel (`action=enable/disable`) |
+| `/api/tunnels/ngrok`       | GET    | Read ngrok Tunnel runtime status for the dashboard                      |
+| `/api/tunnels/ngrok`       | POST   | Enable or disable the ngrok Tunnel (`action=enable/disable`)            |
 
 ### CLI Tools
 
@@ -272,12 +304,12 @@ GET response includes `agents[]` (id, name, binary, version, installed, protocol
 
 ### Resilience & Rate Limits
 
-| Endpoint                | Method  | Description                     |
-| ----------------------- | ------- | ------------------------------- |
-| `/api/resilience`       | GET/PUT | Get/update resilience profiles  |
-| `/api/resilience/reset` | POST    | Reset circuit breakers          |
-| `/api/rate-limits`      | GET     | Per-account rate limit status   |
-| `/api/rate-limit`       | GET     | Global rate limit configuration |
+| Endpoint                | Method    | Description                                                                        |
+| ----------------------- | --------- | ---------------------------------------------------------------------------------- |
+| `/api/resilience`       | GET/PATCH | Get/update request queue, connection cooldown, provider breaker, and wait settings |
+| `/api/resilience/reset` | POST      | Reset provider circuit breakers                                                    |
+| `/api/rate-limits`      | GET       | Per-account rate limit status                                                      |
+| `/api/rate-limit`       | GET       | Global rate limit configuration                                                    |
 
 ### Evals
 
@@ -308,14 +340,37 @@ These endpoints mirror Gemini's API format for clients that expect native Gemini
 
 ### Internal / System APIs
 
-| Endpoint        | Method | Description                                          |
-| --------------- | ------ | ---------------------------------------------------- |
-| `/api/init`     | GET    | Application initialization check (used on first run) |
-| `/api/tags`     | GET    | Ollama-compatible model tags (for Ollama clients)    |
-| `/api/restart`  | POST   | Trigger graceful server restart                      |
-| `/api/shutdown` | POST   | Trigger graceful server shutdown                     |
+| Endpoint                 | Method | Description                                          |
+| ------------------------ | ------ | ---------------------------------------------------- |
+| `/api/init`              | GET    | Application initialization check (used on first run) |
+| `/api/tags`              | GET    | Ollama-compatible model tags (for Ollama clients)    |
+| `/api/restart`           | POST   | Trigger graceful server restart                      |
+| `/api/shutdown`          | POST   | Trigger graceful server shutdown                     |
+| `/api/system/env/repair` | POST   | Repair OAuth provider environment variables          |
+| `/api/system-info`       | GET    | Generate system diagnostics report                   |
 
 > **Note:** These endpoints are used internally by the system or for Ollama client compatibility. They are not typically called by end users.
+
+### OAuth Environment Repair _(v3.6.1+)_
+
+```bash
+POST /api/system/env/repair
+Content-Type: application/json
+
+{
+  "provider": "claude-code"
+}
+```
+
+Repairs missing or corrupted OAuth environment variables for a specific provider. Returns:
+
+```json
+{
+  "success": true,
+  "repaired": ["CLAUDE_CODE_OAUTH_CLIENT_ID", "CLAUDE_CODE_OAUTH_CLIENT_SECRET"],
+  "backupPath": "/home/user/.omniroute/backups/env-repair-2026-04-11.bak"
+}
+```
 
 ---
 
@@ -408,36 +463,18 @@ Content-Type: application/json
 }
 ```
 
----
-
-## Model Availability
-
-```bash
-# Get real-time model availability across all providers
-GET /api/models/availability
-
-# Check availability for a specific model
-POST /api/models/availability
-Content-Type: application/json
-
-{
-  "model": "claude-sonnet-4-5-20250929"
-}
-```
-
----
-
 ## Request Processing
 
 1. Client sends request to `/v1/*`
 2. Route handler calls `handleChat`, `handleEmbedding`, `handleAudioTranscription`, or `handleImageGeneration`
 3. Model is resolved (direct provider/model or alias/combo)
 4. Credentials selected from local DB with account availability filtering
-5. For chat: `handleChatCore` — format detection, translation, cache check, idempotency check
-6. Provider executor sends upstream request
-7. Response translated back to client format (chat) or returned as-is (embeddings/images/audio)
-8. Usage/logging recorded
-9. Fallback applies on errors according to combo rules
+5. For chat: `handleChatCore` checks semantic/signature cache and resolves combo compression settings
+6. Proactive compression runs before provider translation when enabled (`lite`, Caveman, RTK, or stacked)
+7. Provider executor sends upstream request
+8. Response translated back to client format (chat) or returned as-is (embeddings/images/audio)
+9. Usage, compression analytics, and request logs are recorded
+10. Fallback applies on errors according to combo rules
 
 Full architecture reference: [`ARCHITECTURE.md`](ARCHITECTURE.md)
 

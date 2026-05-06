@@ -3,6 +3,7 @@ import {
   getAllCustomModels,
   addCustomModel,
   removeCustomModel,
+  replaceCustomModels,
   updateCustomModel,
   getModelCompatOverrides,
   mergeModelCompatOverride,
@@ -16,6 +17,21 @@ import {
 import { isAuthenticated } from "@/shared/utils/apiAuth";
 import { providerModelMutationSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
+
+function normalizeRequestedModelIds(
+  searchParams: URLSearchParams,
+  body: Record<string, unknown>
+): string[] {
+  const bodyModelIds = Array.isArray(body.modelIds)
+    ? body.modelIds
+        .filter((value): value is string => typeof value === "string")
+        .map((value) => value.trim())
+        .filter(Boolean)
+    : [];
+  const singleModelId = searchParams.get("modelId") || searchParams.get("model");
+  const allModelIds = [...bodyModelIds, ...(singleModelId ? [singleModelId.trim()] : [])];
+  return Array.from(new Set(allModelIds)).filter(Boolean);
+}
 
 /**
  * GET /api/provider-models?provider=<id>
@@ -130,6 +146,7 @@ export async function PUT(request) {
       supportedEndpoints,
       normalizeToolCallId,
       preserveOpenAIDeveloperRole,
+      upstreamHeaders,
       compatByProtocol,
     } = validation.data;
 
@@ -141,6 +158,7 @@ export async function PUT(request) {
     if ("normalizeToolCallId" in raw) updates.normalizeToolCallId = normalizeToolCallId;
     if ("preserveOpenAIDeveloperRole" in raw)
       updates.preserveOpenAIDeveloperRole = preserveOpenAIDeveloperRole;
+    if ("upstreamHeaders" in raw) updates.upstreamHeaders = upstreamHeaders;
     if ("compatByProtocol" in raw && compatByProtocol !== undefined) {
       updates.compatByProtocol = compatByProtocol;
     }
@@ -157,11 +175,13 @@ export async function PUT(request) {
             "modelId",
             "normalizeToolCallId",
             "preserveOpenAIDeveloperRole",
+            "upstreamHeaders",
             "compatByProtocol",
           ].includes(k)
         ) &&
         ("normalizeToolCallId" in raw ||
           "preserveOpenAIDeveloperRole" in raw ||
+          "upstreamHeaders" in raw ||
           "compatByProtocol" in raw);
       if (compatOnly) {
         const knownProvider =
@@ -191,6 +211,12 @@ export async function PUT(request) {
         if ("compatByProtocol" in raw && compatByProtocol && typeof compatByProtocol === "object") {
           patch.compatByProtocol = compatByProtocol;
         }
+        if ("upstreamHeaders" in raw) {
+          patch.upstreamHeaders =
+            upstreamHeaders === null || typeof upstreamHeaders === "object"
+              ? upstreamHeaders
+              : undefined;
+        }
         if (Object.keys(patch).length > 0) {
           mergeModelCompatOverride(provider, modelId, patch);
         }
@@ -216,6 +242,85 @@ export async function PUT(request) {
 }
 
 /**
+ * PATCH /api/provider-models?provider=<id>&modelId=<modelId>
+ * Body: { isHidden: boolean, modelIds?: string[] }
+ */
+export async function PATCH(request) {
+  let rawBody;
+  try {
+    rawBody = await request.json();
+  } catch {
+    return Response.json(
+      { error: { message: "Invalid JSON body", type: "validation_error" } },
+      { status: 400 }
+    );
+  }
+
+  try {
+    if (!(await isAuthenticated(request))) {
+      return Response.json(
+        { error: { message: "Authentication required", type: "invalid_api_key" } },
+        { status: 401 }
+      );
+    }
+
+    const { searchParams } = new URL(request.url);
+    const provider = searchParams.get("provider");
+    const body =
+      rawBody && typeof rawBody === "object" && !Array.isArray(rawBody)
+        ? (rawBody as Record<string, unknown>)
+        : {};
+
+    if (!provider) {
+      return Response.json(
+        { error: { message: "provider query param is required", type: "validation_error" } },
+        { status: 400 }
+      );
+    }
+
+    if (typeof body.isHidden !== "boolean") {
+      return Response.json(
+        { error: { message: "isHidden boolean is required", type: "validation_error" } },
+        { status: 400 }
+      );
+    }
+
+    const modelIds = normalizeRequestedModelIds(searchParams, body);
+    if (modelIds.length === 0) {
+      return Response.json(
+        {
+          error: {
+            message: "modelId query param or body.modelIds is required",
+            type: "validation_error",
+          },
+        },
+        { status: 400 }
+      );
+    }
+
+    for (const modelId of modelIds) {
+      const updatedModel = await updateCustomModel(provider, modelId, { isHidden: body.isHidden });
+      if (!updatedModel) {
+        mergeModelCompatOverride(provider, modelId, { isHidden: body.isHidden });
+      }
+    }
+
+    return Response.json({
+      ok: true,
+      updated: modelIds.length,
+      models: await getCustomModels(provider),
+      modelCompatOverrides: getModelCompatOverrides(provider),
+    });
+  } catch (error) {
+    console.error("Error patching provider models:", error);
+    return Response.json(
+      { error: { message: "Failed to update provider models", type: "server_error" } },
+      { status: 500 }
+    );
+  }
+}
+
+/**
  * DELETE /api/provider-models?provider=<id>&model=<modelId>
  */
 export async function DELETE(request) {
@@ -232,11 +337,30 @@ export async function DELETE(request) {
     const provider = searchParams.get("provider");
     const modelId = searchParams.get("model");
 
-    if (!provider || !modelId) {
+    if (!provider) {
       return Response.json(
         {
           error: {
-            message: "provider and model query params are required",
+            message: "provider query param is required",
+            type: "validation_error",
+          },
+        },
+        { status: 400 }
+      );
+    }
+
+    // DELETE /api/provider-models?provider=<id>&all=true — clear all models
+    const all = searchParams.get("all");
+    if (all === "true") {
+      await replaceCustomModels(provider, [], { allowEmpty: true });
+      return Response.json({ cleared: true });
+    }
+
+    if (!modelId) {
+      return Response.json(
+        {
+          error: {
+            message: "model query param is required (or use all=true)",
             type: "validation_error",
           },
         },

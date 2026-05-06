@@ -38,7 +38,7 @@ interface Message {
 // by combo.ts streaming around the <omniModel> tag (#531). Non-global so that
 // .exec() and .test() stay stateless; callers that need full replacement use
 // String.prototype.replace() which replaces all non-overlapping matches.
-const CACHE_TAG_PATTERN = /(?:\\n|\n)?<omniModel>([^<]+)<\/omniModel>(?:\\n|\n)?/;
+const CACHE_TAG_PATTERN = /(?:\\n|\n|\r)*<omniModel>([^<]+)<\/omniModel>(?:\\n|\n|\r)*/;
 
 /**
  * Inject the model tag into the last assistant message (or append a new one).
@@ -60,19 +60,23 @@ export function injectModelTag(messages: Message[], providerModel: string): Mess
   // #474: If no assistant message exists yet (first turn), append a synthetic one
   // so the tag is present when the client sends the next request with the response.
   if (lastAssistantIdx === -1) {
-    return [
-      ...cleaned,
-      { role: "assistant", content: `\n<omniModel>${providerModel}</omniModel>` },
-    ];
+    return [...cleaned, { role: "assistant", content: `<omniModel>${providerModel}</omniModel>` }];
   }
 
   const msg = cleaned[lastAssistantIdx];
-  if (typeof msg.content !== "string") return cleaned;
+  // Fix #721: Handle messages where content is not a string (tool_calls responses).
+  // In this case, append a synthetic assistant message with the tag so the pin
+  // roundtrips through the conversation history.
+  if (typeof msg.content !== "string") {
+    // If the message has tool_calls but no string content, append a new assistant
+    // message with the tag rather than silently failing.
+    return [...cleaned, { role: "assistant", content: `<omniModel>${providerModel}</omniModel>` }];
+  }
 
   const tagged = [...cleaned];
   tagged[lastAssistantIdx] = {
     ...msg,
-    content: `${msg.content}\n<omniModel>${providerModel}</omniModel>`,
+    content: `${msg.content}<omniModel>${providerModel}</omniModel>`,
   };
   return tagged;
 }
@@ -169,7 +173,11 @@ export function applyComboAgentMiddleware(
   if (comboConfig.context_cache_protection) {
     pinnedModel = extractPinnedModel(messages);
     if (pinnedModel) {
-      // Model is pinned — caller should override model selection
+      // (#535) Model is pinned via <omniModel> tag — override body.model so the combo
+      // router uses exactly this model instead of picking a different one. Without this,
+      // the extracted pinnedModel is returned but body.model is unchanged, breaking
+      // context cache sessions by sending subsequent turns to a different model.
+      body = { ...body, model: pinnedModel };
     }
   }
 

@@ -17,6 +17,7 @@ import { getUsageForProvider } from "@omniroute/open-sse/services/usage.ts";
 import { getProviderConnectionById, resolveProxyForConnection } from "@/lib/localDb";
 import { runWithProxyContext } from "@omniroute/open-sse/utils/proxyFetch.ts";
 import { safePercentage } from "@/shared/utils/formatting";
+import { saveQuotaSnapshot, cleanupOldSnapshots } from "@/lib/db/quotaSnapshots";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -48,6 +49,7 @@ const ACTIVE_TTL_MS = 5 * 60 * 1000; // 5 minutes for active accounts
 const EXHAUSTED_TTL_MS = 5 * 60 * 1000; // 5 minutes for 429-sourced entries (no resetAt)
 const EXHAUSTED_REFRESH_MS = 5 * 60 * 1000; // 5 minutes: recheck exhausted accounts (aligned with TTL)
 const REFRESH_INTERVAL_MS = 60 * 1000; // Background tick every 1 minute
+export const DEFAULT_QUOTA_THRESHOLD_PERCENT = 99;
 
 // ─── State ──────────────────────────────────────────────────────────────────
 
@@ -181,14 +183,40 @@ export function setQuotaCache(
 ) {
   const quotas = normalizeQuotas(rawQuotas);
   const exhausted = isExhausted(quotas);
-  cache.set(connectionId, {
+  const entry: QuotaCacheEntry = {
     connectionId,
     provider,
     quotas,
     fetchedAt: Date.now(),
     exhausted,
     nextResetAt: exhausted ? earliestResetAt(quotas) : null,
-  });
+  };
+  cache.set(connectionId, entry);
+
+  if (entry && rawQuotas) {
+    for (const [windowKey, quotaInfo] of Object.entries(rawQuotas)) {
+      if (!quotaInfo || typeof quotaInfo !== "object") continue;
+      const remainingPercentage =
+        safePercentage(quotaInfo.remainingPercentage) ??
+        (quotaInfo.total > 0
+          ? Math.round(((quotaInfo.total - (quotaInfo.used || 0)) / quotaInfo.total) * 100)
+          : 0);
+      try {
+        saveQuotaSnapshot({
+          provider,
+          connection_id: connectionId,
+          window_key: windowKey,
+          remaining_percentage: remainingPercentage,
+          is_exhausted: entry.exhausted ? 1 : 0,
+          next_reset_at: quotaInfo.resetAt ?? null,
+          window_duration_ms: entry.windowDurationMs ?? null,
+          raw_data: null,
+        });
+      } catch (error) {
+        console.error("[quotaCache] Failed to save snapshot:", error);
+      }
+    }
+  }
 }
 
 /**
@@ -233,7 +261,7 @@ export function isAccountQuotaExhausted(connectionId: string): boolean {
 export function getQuotaWindowStatus(
   connectionId: string,
   windowName: string,
-  thresholdPercent = 90
+  thresholdPercent = DEFAULT_QUOTA_THRESHOLD_PERCENT
 ): QuotaWindowStatus | null {
   const entry = cache.get(connectionId);
   if (!entry) return null;
@@ -330,6 +358,7 @@ async function backgroundRefreshTick() {
   tickRunning = true;
 
   try {
+    cleanupOldSnapshots();
     const now = Date.now();
     const pending = [...cache.values()].filter((e) => needsRefresh(e, now));
 

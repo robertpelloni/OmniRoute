@@ -8,6 +8,8 @@ import {
 import { testProxySchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
 import { createErrorResponse, createErrorResponseFromUnknown } from "@/lib/api/errorResponse";
+import { getProxyById } from "@/lib/localDb";
+import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
 
 const BASE_SUPPORTED_PROXY_TYPES = new Set(["http", "https"]);
 
@@ -35,6 +37,9 @@ function supportedTypesMessage() {
  * Returns: { success, publicIp?, latencyMs?, error? }
  */
 export async function POST(request: Request) {
+  const authError = await requireManagementAuth(request);
+  if (authError) return authError;
+
   let rawBody: unknown;
   try {
     rawBody = await request.json();
@@ -56,7 +61,26 @@ export async function POST(request: Request) {
         type: "invalid_request",
       });
     }
-    const { proxy } = validation.data;
+    let { proxy } = validation.data;
+
+    // If a proxyId is provided, look up the real (non-redacted) credentials from DB.
+    // The frontend sends redacted credentials (***) from listProxies(), so we need
+    // the actual secrets for testing.
+    const body = rawBody as Record<string, unknown>;
+    const proxyId = typeof body.proxyId === "string" ? body.proxyId.trim() : null;
+    if (proxyId) {
+      const dbProxy = await getProxyById(proxyId, { includeSecrets: true });
+      if (dbProxy) {
+        proxy = {
+          ...proxy,
+          host: proxy.host || dbProxy.host,
+          port: proxy.port || String(dbProxy.port),
+          type: proxy.type || dbProxy.type,
+          username: dbProxy.username,
+          password: dbProxy.password,
+        };
+      }
+    }
 
     const proxyType = String(proxy.type || "http").toLowerCase();
     if (proxyType === "socks5" && !isSocks5ProxyEnabled()) {
@@ -117,7 +141,7 @@ export async function POST(request: Request) {
     const dispatcher = createProxyDispatcher(proxyUrl);
 
     try {
-      const result = await undiciRequest("https://api.ipify.org?format=json", {
+      const result = await undiciRequest("https://api64.ipify.org?format=json", {
         method: "GET",
         dispatcher,
         signal: controller.signal,

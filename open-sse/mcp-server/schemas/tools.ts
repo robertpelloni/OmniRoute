@@ -1,8 +1,8 @@
 /**
- * MCP Tool Schemas — Contracts for all 16 OmniRoute MCP tools.
+ * MCP Tool Schemas — Contracts for all 22 core and advanced OmniRoute MCP tools.
  *
  * Defines input/output Zod schemas, descriptions, scopes, and audit levels
- * for both essential (Phase 1) and advanced (Phase 3) MCP tools.
+ * for both essential (Phase 1) and advanced (Phase 2) MCP tools.
  *
  * Each tool wraps existing OmniRoute API endpoints and exposes them through
  * the Model Context Protocol, enabling AI agents in IDEs (VS Code, Cursor,
@@ -10,6 +10,10 @@
  */
 
 import { z } from "zod";
+import {
+  AUTO_ROUTING_STRATEGY_VALUES,
+  ROUTING_STRATEGY_VALUES,
+} from "../../../src/shared/constants/routingStrategies.ts";
 
 // ============ Shared Types ============
 
@@ -69,6 +73,12 @@ export const getHealthOutput = z.object({
       hitRate: z.number(),
     })
     .optional(),
+  cryptography: z
+    .object({
+      status: z.enum(["healthy", "missing_or_invalid"]),
+      provider: z.string(),
+    })
+    .optional(),
 });
 
 export const getHealthTool: McpToolDefinition<typeof getHealthInput, typeof getHealthOutput> = {
@@ -103,16 +113,7 @@ export const listCombosOutput = z.object({
           priority: z.number(),
         })
       ),
-      strategy: z.enum([
-        "priority",
-        "weighted",
-        "round-robin",
-        "strict-random",
-        "random",
-        "least-used",
-        "cost-optimized",
-        "auto",
-      ]),
+      strategy: z.enum(ROUTING_STRATEGY_VALUES),
       enabled: z.boolean(),
       metrics: z
         .object({
@@ -394,6 +395,69 @@ export const listModelsCatalogTool: McpToolDefinition<
   sourceEndpoints: ["/api/models/catalog", "/v1/models"],
 };
 
+// --- Tool 9: omniroute_web_search ---
+export const webSearchInput = z.object({
+  query: z
+    .string()
+    .min(1, "Query is required")
+    .max(500, "Query must be 500 characters or fewer")
+    .describe("The search query string"),
+  max_results: z
+    .number()
+    .int()
+    .min(1)
+    .max(20)
+    .default(5)
+    .describe("Maximum number of search results to return"),
+  search_type: z.enum(["web", "news"]).default("web").describe("Type of search to perform"),
+  provider: z
+    .enum([
+      "serper-search",
+      "brave-search",
+      "perplexity-search",
+      "exa-search",
+      "tavily-search",
+      "google-pse-search",
+      "linkup-search",
+      "searchapi-search",
+      "searxng-search",
+    ])
+    .optional()
+    .describe("Specific search provider to use"),
+});
+
+export const webSearchOutput = z.object({
+  id: z.string(),
+  provider: z.string(),
+  query: z.string(),
+  results: z.array(
+    z.object({
+      title: z.string(),
+      url: z.string(),
+      display_url: z.string().optional(),
+      snippet: z.string(),
+      position: z.number().int().positive(),
+    })
+  ),
+  cached: z.boolean(),
+  usage: z.object({
+    queries_used: z.number().int().min(0),
+    search_cost_usd: z.number().min(0),
+  }),
+});
+
+export const webSearchTool: McpToolDefinition<typeof webSearchInput, typeof webSearchOutput> = {
+  name: "omniroute_web_search",
+  description:
+    "Performs a web search using OmniRoute's search gateway. Supports multiple providers (Serper, Brave, Perplexity, Exa, Tavily, Google PSE, Linkup, SearchAPI, SearXNG) with automatic failover. Returns search results with titles, URLs, snippets, and position data.",
+  inputSchema: webSearchInput,
+  outputSchema: webSearchOutput,
+  scopes: ["execute:search"],
+  auditLevel: "basic",
+  phase: 1,
+  sourceEndpoints: ["/v1/search"],
+};
+
 // ============ Phase 2: Advanced Tools (8) ============
 
 // --- Tool 9: omniroute_simulate_route ---
@@ -474,20 +538,9 @@ export const setBudgetGuardTool: McpToolDefinition<
 // --- Tool 11: omniroute_set_routing_strategy ---
 export const setRoutingStrategyInput = z.object({
   comboId: z.string().describe("Combo ID or name to update"),
-  strategy: z
-    .enum([
-      "priority",
-      "weighted",
-      "round-robin",
-      "strict-random",
-      "random",
-      "least-used",
-      "cost-optimized",
-      "auto",
-    ])
-    .describe("Routing strategy to apply"),
+  strategy: z.enum(ROUTING_STRATEGY_VALUES).describe("Routing strategy to apply"),
   autoRoutingStrategy: z
-    .enum(["rules", "cost", "eco", "latency", "fast"])
+    .enum(AUTO_ROUTING_STRATEGY_VALUES)
     .optional()
     .describe("Optional strategy used by auto mode (only used when strategy='auto')"),
 });
@@ -770,7 +823,51 @@ export const getSessionSnapshotTool: McpToolDefinition<
   sourceEndpoints: ["/api/usage/analytics", "/api/telemetry/summary"],
 };
 
-// --- Tool 18: omniroute_sync_pricing ---
+// --- Tool 18: omniroute_db_health_check ---
+export const dbHealthCheckInput = z.object({
+  autoRepair: z
+    .boolean()
+    .optional()
+    .describe("When true, runs the database auto-repair flow before returning the result"),
+});
+
+export const dbHealthCheckOutput = z.object({
+  isHealthy: z.boolean(),
+  issues: z.array(
+    z.object({
+      type: z.enum([
+        "integrity_check_failed",
+        "broken_reference",
+        "stale_snapshot",
+        "invalid_state",
+      ]),
+      table: z.string(),
+      description: z.string(),
+      count: z.number(),
+    })
+  ),
+  repairedCount: z.number(),
+  backupCreated: z.boolean(),
+  autoRepair: z.boolean(),
+  checkedAt: z.string(),
+});
+
+export const dbHealthCheckTool: McpToolDefinition<
+  typeof dbHealthCheckInput,
+  typeof dbHealthCheckOutput
+> = {
+  name: "omniroute_db_health_check",
+  description:
+    "Diagnoses OmniRoute database drift such as orphan quota/domain rows, invalid JSON state, and broken combo references. Set autoRepair=true to repair those rows before returning the report.",
+  inputSchema: dbHealthCheckInput,
+  outputSchema: dbHealthCheckOutput,
+  scopes: ["read:health", "write:resilience"],
+  auditLevel: "full",
+  phase: 2,
+  sourceEndpoints: ["/api/db/health"],
+};
+
+// --- Tool 19: omniroute_sync_pricing ---
 export const syncPricingInput = z.object({
   sources: z
     .array(z.string())
@@ -806,11 +903,374 @@ export const syncPricingTool: McpToolDefinition<typeof syncPricingInput, typeof 
     sourceEndpoints: ["/api/pricing/sync"],
   };
 
+// ============ Cache Tools ============
+
+export const cacheStatsInput = z.object({}).describe("No parameters required");
+
+export const cacheStatsOutput = z.object({
+  semanticCache: z.object({
+    memoryEntries: z.number(),
+    dbEntries: z.number(),
+    hits: z.number(),
+    misses: z.number(),
+    hitRate: z.string(),
+    tokensSaved: z.number(),
+  }),
+  promptCache: z
+    .object({
+      totalRequests: z.number(),
+      requestsWithCacheControl: z.number(),
+      totalInputTokens: z.number(),
+      totalCachedTokens: z.number(),
+      totalCacheCreationTokens: z.number(),
+      tokensSaved: z.number(),
+      estimatedCostSaved: z.number(),
+    })
+    .nullable(),
+  idempotency: z.object({
+    activeKeys: z.number(),
+    windowMs: z.number(),
+  }),
+  config: z
+    .object({
+      semanticCacheEnabled: z.boolean(),
+    })
+    .optional(),
+});
+
+export const cacheStatsTool: McpToolDefinition<typeof cacheStatsInput, typeof cacheStatsOutput> = {
+  name: "omniroute_cache_stats",
+  description:
+    "Returns cache statistics including semantic cache hit rate, prompt cache metrics by provider, and idempotency layer stats.",
+  inputSchema: cacheStatsInput,
+  outputSchema: cacheStatsOutput,
+  scopes: ["read:cache"],
+  auditLevel: "basic",
+  phase: 2,
+  sourceEndpoints: ["/api/cache"],
+};
+
+export const cacheFlushInput = z.object({
+  signature: z.string().optional().describe("Specific cache signature to invalidate"),
+  model: z.string().optional().describe("Invalidate all entries for a specific model"),
+});
+
+export const cacheFlushOutput = z.object({
+  ok: z.boolean(),
+  invalidated: z.number().optional(),
+  scope: z.string().optional(),
+});
+
+export const cacheFlushTool: McpToolDefinition<typeof cacheFlushInput, typeof cacheFlushOutput> = {
+  name: "omniroute_cache_flush",
+  description:
+    "Flush cache entries. Provide signature to invalidate a single entry, model to invalidate all entries for a model, or omit both to clear all.",
+  inputSchema: cacheFlushInput,
+  outputSchema: cacheFlushOutput,
+  scopes: ["write:cache"],
+  auditLevel: "full",
+  phase: 2,
+  sourceEndpoints: ["/api/cache"],
+};
+
+// ============ Compression Tools ============
+
+export const compressionStatusInput = z.object({}).describe("No parameters required");
+
+export const compressionStatusOutput = z.object({
+  enabled: z.boolean(),
+  strategy: z.string(),
+  settings: z.object({
+    maxTokens: z.number(),
+    autoTriggerMode: z.string(),
+    targetRatio: z.number(),
+    preserveSystemPrompt: z.boolean(),
+    mcpDescriptionCompressionEnabled: z.boolean(),
+  }),
+  analytics: z.object({
+    totalRequests: z.number(),
+    compressedRequests: z.number(),
+    tokensSaved: z.number(),
+    avgCompressionRatio: z.number(),
+    byMode: z.record(
+      z.string(),
+      z.object({
+        count: z.number(),
+        tokensSaved: z.number(),
+        avgSavingsPct: z.number(),
+      })
+    ),
+    validationFallbacks: z.number(),
+    requestsWithReceipts: z.number(),
+    realUsage: z.object({
+      requestsWithReceipts: z.number(),
+      promptTokens: z.number(),
+      completionTokens: z.number(),
+      totalTokens: z.number(),
+      cacheReadTokens: z.number(),
+      cacheWriteTokens: z.number(),
+      estimatedUsdSaved: z.number(),
+      bySource: z.record(z.string(), z.number()),
+    }),
+    mcpDescriptionCompression: z.object({
+      descriptionsCompressed: z.number(),
+      charsSaved: z.number(),
+      estimatedTokensSaved: z.number(),
+    }),
+  }),
+  cacheStats: z
+    .object({
+      hits: z.number(),
+      misses: z.number(),
+      hitRate: z.string(),
+      tokensSaved: z.number(),
+    })
+    .nullable(),
+});
+
+export const compressionStatusTool: McpToolDefinition<
+  typeof compressionStatusInput,
+  typeof compressionStatusOutput
+> = {
+  name: "omniroute_compression_status",
+  description:
+    "Returns current compression configuration, strategy, analytics summary (requests compressed, tokens saved, avg ratio), and provider-aware cache statistics.",
+  inputSchema: compressionStatusInput,
+  outputSchema: compressionStatusOutput,
+  scopes: ["read:compression"],
+  auditLevel: "basic",
+  phase: 2,
+  sourceEndpoints: ["/api/compression/status"],
+};
+
+export const compressionConfigureInput = z.object({
+  enabled: z.boolean().optional(),
+  strategy: z
+    .enum(["off", "lite", "standard", "aggressive", "ultra", "rtk", "stacked"])
+    .optional()
+    .describe("Compression mode"),
+  autoTriggerMode: z
+    .enum(["off", "lite", "standard", "aggressive", "ultra", "rtk", "stacked"])
+    .optional(),
+  maxTokens: z
+    .number()
+    .int()
+    .min(0)
+    .optional()
+    .describe("Maximum tokens before compression triggers"),
+  targetRatio: z.number().optional().describe("Target compression ratio (0.0–1.0)"),
+  preserveSystemPrompt: z.boolean().optional(),
+  mcpDescriptionCompressionEnabled: z.boolean().optional(),
+});
+
+export const compressionConfigureOutput = z.object({
+  success: z.boolean(),
+  updated: z.record(z.string(), z.unknown()),
+  settings: z.object({
+    enabled: z.boolean(),
+    strategy: z.string(),
+    autoTriggerMode: z.string(),
+    maxTokens: z.number(),
+    targetRatio: z.number(),
+    preserveSystemPrompt: z.boolean(),
+    mcpDescriptionCompressionEnabled: z.boolean(),
+  }),
+});
+
+export const compressionConfigureTool: McpToolDefinition<
+  typeof compressionConfigureInput,
+  typeof compressionConfigureOutput
+> = {
+  name: "omniroute_compression_configure",
+  description:
+    "Configure compression settings at runtime. Supports enabling/disabling compression, changing strategy (off/lite/standard/aggressive/ultra/rtk/stacked), adjusting maxTokens threshold, targetRatio, auto-trigger mode, system prompt preservation, and MCP description compression.",
+  inputSchema: compressionConfigureInput,
+  outputSchema: compressionConfigureOutput,
+  scopes: ["write:compression"],
+  auditLevel: "full",
+  phase: 2,
+  sourceEndpoints: ["/api/compression/configure"],
+};
+
+export const setCompressionEngineInput = z.object({
+  engine: z.enum(["off", "caveman", "rtk", "stacked"]).optional(),
+  cavemanIntensity: z.enum(["lite", "full", "ultra"]).optional(),
+  rtkIntensity: z.enum(["minimal", "standard", "aggressive"]).optional(),
+  outputMode: z.boolean().optional(),
+});
+
+export const setCompressionEngineOutput = z.object({
+  success: z.boolean(),
+  settings: z.record(z.string(), z.unknown()),
+});
+
+export const setCompressionEngineTool: McpToolDefinition<
+  typeof setCompressionEngineInput,
+  typeof setCompressionEngineOutput
+> = {
+  name: "omniroute_set_compression_engine",
+  description: "Set the active compression engine and Caveman/RTK runtime options.",
+  inputSchema: setCompressionEngineInput,
+  outputSchema: setCompressionEngineOutput,
+  scopes: ["write:compression"],
+  auditLevel: "full",
+  phase: 2,
+  sourceEndpoints: ["/api/settings/compression", "/api/context/rtk/config"],
+};
+
+export const listCompressionCombosInput = z.object({});
+export const listCompressionCombosOutput = z.object({
+  combos: z.array(z.record(z.string(), z.unknown())),
+});
+
+export const listCompressionCombosTool: McpToolDefinition<
+  typeof listCompressionCombosInput,
+  typeof listCompressionCombosOutput
+> = {
+  name: "omniroute_list_compression_combos",
+  description: "List compression combos and their engine pipelines.",
+  inputSchema: listCompressionCombosInput,
+  outputSchema: listCompressionCombosOutput,
+  scopes: ["read:compression"],
+  auditLevel: "basic",
+  phase: 2,
+  sourceEndpoints: ["/api/context/combos"],
+};
+
+export const compressionComboStatsInput = z.object({
+  comboId: z.string().optional(),
+  since: z.enum(["24h", "7d", "30d", "all"]).optional(),
+});
+
+export const compressionComboStatsOutput = z.record(z.string(), z.unknown());
+
+export const compressionComboStatsTool: McpToolDefinition<
+  typeof compressionComboStatsInput,
+  typeof compressionComboStatsOutput
+> = {
+  name: "omniroute_compression_combo_stats",
+  description: "Get compression analytics grouped by engine and compression combo.",
+  inputSchema: compressionComboStatsInput,
+  outputSchema: compressionComboStatsOutput,
+  scopes: ["read:compression"],
+  auditLevel: "basic",
+  phase: 2,
+  sourceEndpoints: ["/api/context/analytics"],
+};
+
+// ============ 1proxy Tools ============
+
+export const oneproxyFetchInput = z.object({
+  protocol: z.string().optional().describe("Filter by protocol: http, https, socks4, socks5"),
+  countryCode: z.string().optional().describe("Filter by country code (e.g. US, DE)"),
+  minQuality: z.number().optional().describe("Minimum quality score (0-100)"),
+  limit: z.number().optional().describe("Maximum number of proxies to return"),
+});
+
+export const oneproxyFetchOutput = z.object({
+  items: z.array(
+    z.object({
+      id: z.string(),
+      host: z.string(),
+      port: z.number(),
+      type: z.string(),
+      countryCode: z.string().nullable(),
+      qualityScore: z.number().nullable(),
+      latencyMs: z.number().nullable(),
+      anonymity: z.string().nullable(),
+      googleAccess: z.boolean(),
+      status: z.string(),
+    })
+  ),
+  total: z.number(),
+});
+
+export const oneproxyFetchTool: McpToolDefinition<
+  typeof oneproxyFetchInput,
+  typeof oneproxyFetchOutput
+> = {
+  name: "omniroute_oneproxy_fetch",
+  description:
+    "Fetch free proxies from the 1proxy marketplace with optional filters for protocol, country, and quality. Returns validated proxies with quality scores.",
+  inputSchema: oneproxyFetchInput,
+  outputSchema: oneproxyFetchOutput,
+  scopes: ["read:proxies"],
+  auditLevel: "basic",
+  phase: 2,
+  sourceEndpoints: ["/api/settings/oneproxy"],
+};
+
+export const oneproxyRotateInput = z.object({
+  strategy: z
+    .enum(["random", "quality", "sequential"])
+    .optional()
+    .describe("Rotation strategy: quality (best first), random, or sequential"),
+});
+
+export const oneproxyRotateOutput = z.object({
+  id: z.string(),
+  host: z.string(),
+  port: z.number(),
+  type: z.string(),
+  countryCode: z.string().nullable(),
+  qualityScore: z.number().nullable(),
+  latencyMs: z.number().nullable(),
+});
+
+export const oneproxyRotateTool: McpToolDefinition<
+  typeof oneproxyRotateInput,
+  typeof oneproxyRotateOutput
+> = {
+  name: "omniroute_oneproxy_rotate",
+  description:
+    "Get the next available free proxy from the 1proxy pool using the specified rotation strategy.",
+  inputSchema: oneproxyRotateInput,
+  outputSchema: oneproxyRotateOutput,
+  scopes: ["read:proxies"],
+  auditLevel: "basic",
+  phase: 2,
+  sourceEndpoints: ["/api/settings/oneproxy/rotate"],
+};
+
+export const oneproxyStatsInput = z.object({}).describe("No parameters required");
+
+export const oneproxyStatsOutput = z.object({
+  stats: z.object({
+    total: z.number(),
+    active: z.number(),
+    avgQuality: z.number().nullable(),
+    lastValidated: z.string().nullable(),
+    byProtocol: z.array(z.object({ protocol: z.string(), count: z.number() })),
+    byCountry: z.array(z.object({ countryCode: z.string(), count: z.number() })),
+  }),
+  status: z.object({
+    lastSyncSuccess: z.boolean(),
+    lastSyncError: z.string().nullable(),
+    lastSyncAt: z.string().nullable(),
+    lastSyncCount: z.number(),
+    consecutiveFailures: z.number(),
+  }),
+});
+
+export const oneproxyStatsTool: McpToolDefinition<
+  typeof oneproxyStatsInput,
+  typeof oneproxyStatsOutput
+> = {
+  name: "omniroute_oneproxy_stats",
+  description:
+    "Returns 1proxy sync status and statistics: total proxies, average quality, sync history, and distribution by protocol and country.",
+  inputSchema: oneproxyStatsInput,
+  outputSchema: oneproxyStatsOutput,
+  scopes: ["read:proxies"],
+  auditLevel: "basic",
+  phase: 2,
+  sourceEndpoints: ["/api/settings/oneproxy"],
+};
+
 // ============ Tool Registry ============
 
 /** All MCP tool definitions, ordered by phase then name */
 export const MCP_TOOLS = [
-  // Phase 1: Essential
   getHealthTool,
   listCombosTool,
   getComboMetricsTool,
@@ -819,7 +1279,7 @@ export const MCP_TOOLS = [
   routeRequestTool,
   costReportTool,
   listModelsCatalogTool,
-  // Phase 2: Advanced
+  webSearchTool,
   simulateRouteTool,
   setBudgetGuardTool,
   setRoutingStrategyTool,
@@ -829,7 +1289,18 @@ export const MCP_TOOLS = [
   bestComboForTaskTool,
   explainRouteTool,
   getSessionSnapshotTool,
+  dbHealthCheckTool,
   syncPricingTool,
+  cacheStatsTool,
+  cacheFlushTool,
+  compressionStatusTool,
+  compressionConfigureTool,
+  setCompressionEngineTool,
+  listCompressionCombosTool,
+  compressionComboStatsTool,
+  oneproxyFetchTool,
+  oneproxyRotateTool,
+  oneproxyStatsTool,
 ] as const;
 
 /** Essential tools only (Phase 1) */

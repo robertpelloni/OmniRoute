@@ -1,7 +1,9 @@
 import { register } from "../registry.ts";
 import { FORMATS } from "../formats.ts";
 import { CLAUDE_SYSTEM_PROMPT } from "../../config/constants.ts";
+import { supportsXHighEffort } from "../../config/providerModels.ts";
 import { adjustMaxTokens } from "../helpers/maxTokensHelper.ts";
+import { sanitizeToolId } from "../helpers/schemaCoercion.ts";
 import { DEFAULT_THINKING_CLAUDE_SIGNATURE } from "../../config/defaultThinkingSignature.ts";
 
 // Prefix for Claude OAuth tool names to avoid conflicts
@@ -27,6 +29,60 @@ type ClaudeTool = {
   defer_loading?: boolean;
 };
 
+/**
+ * T02: Recursively strips empty text blocks from content arrays.
+ * Anthropic returns 400 "text content blocks must be non-empty" when a
+ * text block has text: "". Must also recurse into nested tool_result.content.
+ * Ref: sub2api PR #1212
+ */
+export function stripEmptyTextBlocks(content: unknown[] | undefined): unknown[] {
+  if (!Array.isArray(content)) return content ?? [];
+  return content
+    .filter((block: unknown) => {
+      if (
+        block &&
+        typeof block === "object" &&
+        (block as Record<string, unknown>).type === "text"
+      ) {
+        const text = (block as Record<string, unknown>).text;
+        if (text === "" || text == null) return false;
+      }
+      return true;
+    })
+    .map((block: unknown) => {
+      if (
+        block &&
+        typeof block === "object" &&
+        (block as Record<string, unknown>).type === "tool_result" &&
+        Array.isArray((block as Record<string, unknown>).content)
+      ) {
+        // Recurse into nested tool_result.content
+        return {
+          ...(block as Record<string, unknown>),
+          content: stripEmptyTextBlocks((block as Record<string, unknown>).content as unknown[]),
+        };
+      }
+      return block;
+    });
+}
+
+/**
+ * T15: Normalize content to string form.
+ * Handles both string and array-of-blocks forms (Cursor, Codex 2.x, etc.).
+ * Ref: sub2api PR #1197
+ */
+export function normalizeContentToString(content: string | unknown[] | null | undefined): string {
+  if (!content) return "";
+  if (typeof content === "string") return content;
+  if (Array.isArray(content)) {
+    return (content as Array<Record<string, unknown>>)
+      .filter((b) => b.type === "text")
+      .map((b) => String(b.text ?? ""))
+      .join("\n");
+  }
+  return "";
+}
+
 // Convert OpenAI request to Claude format
 export function openaiToClaudeRequest(model, body, stream) {
   // Check if tool prefix should be disabled (configured per-provider or global)
@@ -44,6 +100,7 @@ export function openaiToClaudeRequest(model, body, stream) {
     tools?: ClaudeTool[];
     tool_choice?: Record<string, unknown> | string;
     thinking?: Record<string, unknown>;
+    output_config?: Record<string, unknown>;
     _toolNameMap?: Map<string, string>;
   } = {
     model: model,
@@ -56,16 +113,22 @@ export function openaiToClaudeRequest(model, body, stream) {
   if (body.temperature !== undefined) {
     result.temperature = body.temperature;
   }
+  if (body.top_p !== undefined) {
+    result.top_p = body.top_p;
+  }
+  if (body.stop !== undefined) {
+    result.stop_sequences = Array.isArray(body.stop) ? body.stop : [body.stop];
+  }
 
   // Messages
   const systemParts = [];
 
   if (body.messages && Array.isArray(body.messages)) {
-    // Extract system messages
+    // Extract system messages (T15: handle both string and array content)
     for (const msg of body.messages) {
       if (msg.role === "system") {
         systemParts.push(
-          typeof msg.content === "string" ? msg.content : extractTextContent(msg.content)
+          typeof msg.content === "string" ? msg.content : normalizeContentToString(msg.content)
         );
       }
     }
@@ -177,41 +240,42 @@ export function openaiToClaudeRequest(model, body, stream) {
     }
   }
 
-  // System with Claude Code prompt and cache_control
-  const claudeCodePrompt = { type: "text", text: CLAUDE_SYSTEM_PROMPT };
-
-  if (systemParts.length > 0) {
-    const systemText = systemParts.join("\n");
-    result.system = [
-      claudeCodePrompt,
-      { type: "text", text: systemText, cache_control: { type: "ephemeral", ttl: "1h" } },
-    ];
-  } else {
-    result.system = [claudeCodePrompt];
-  }
-
   // Tools - convert from OpenAI format to Claude format with prefix for OAuth
   if (body.tools && Array.isArray(body.tools)) {
-    result.tools = body.tools.map((tool) => {
-      const toolData = tool.type === "function" && tool.function ? tool.function : tool;
-      const originalName = toolData.name;
+    result.tools = body.tools
+      .map((tool) => {
+        const toolData = tool.type === "function" && tool.function ? tool.function : tool;
+        const originalName = typeof toolData.name === "string" ? toolData.name.trim() : "";
 
-      // Claude OAuth requires prefixed tool names to avoid conflicts
-      // When prefix is disabled (non-Claude backends), use original name
-      const toolName = disableToolPrefix ? originalName : CLAUDE_OAUTH_TOOL_PREFIX + originalName;
+        if (!originalName) {
+          return null;
+        }
 
-      // Store mapping for response translation (prefixed → original)
-      if (!disableToolPrefix) {
-        toolNameMap.set(toolName, originalName);
-      }
+        // Claude OAuth requires prefixed tool names to avoid conflicts
+        // When prefix is disabled (non-Claude backends), use original name
+        const toolName = disableToolPrefix ? originalName : CLAUDE_OAUTH_TOOL_PREFIX + originalName;
 
-      return {
-        name: toolName,
-        description: toolData.description || "",
-        input_schema: toolData.parameters ||
-          toolData.input_schema || { type: "object", properties: {}, required: [] },
-      };
-    });
+        // Store mapping for response translation (prefixed → original)
+        if (!disableToolPrefix) {
+          toolNameMap.set(toolName, originalName);
+        }
+
+        // Normalize input_schema: Anthropic requires `properties` when type is "object" (#595).
+        // MCP tools (e.g. pencil, computer_use) may omit properties on object-type schemas.
+        const rawSchema: Record<string, unknown> = toolData.parameters ||
+          toolData.input_schema || { type: "object", properties: {}, required: [] };
+        const normalizedSchema =
+          rawSchema.type === "object" && !rawSchema.properties
+            ? { ...rawSchema, properties: {} }
+            : rawSchema;
+
+        return {
+          name: toolName,
+          description: toolData.description || "",
+          input_schema: normalizedSchema,
+        };
+      })
+      .filter((tool): tool is ClaudeTool => Boolean(tool));
 
     // Filter out tools with empty names (would cause Claude 400 error)
     result.tools = result.tools.filter((tool) => tool.name && tool.name?.trim());
@@ -248,6 +312,14 @@ export function openaiToClaudeRequest(model, body, stream) {
     }
   }
 
+  // System messages and cache_control
+  if (systemParts.length > 0) {
+    const systemText = systemParts.join("\n");
+    result.system = [
+      { type: "text", text: systemText, cache_control: { type: "ephemeral", ttl: "1h" } },
+    ];
+  }
+
   // Thinking configuration
   if (body.thinking) {
     result.thinking = {
@@ -255,6 +327,47 @@ export function openaiToClaudeRequest(model, body, stream) {
       ...(body.thinking.budget_tokens && { budget_tokens: body.thinking.budget_tokens }),
       ...(body.thinking.max_tokens && { max_tokens: body.thinking.max_tokens }),
     };
+  } else if (body.reasoning_effort) {
+    // Convert OpenAI reasoning_effort to Claude thinking format (#627)
+    // Clients like OpenCode send reasoning_effort via @ai-sdk/openai-compatible
+    const requestedEffort = String(body.reasoning_effort).toLowerCase();
+    const normalizedEffort =
+      requestedEffort === "xhigh" && !supportsXHighEffort("claude", model)
+        ? "high"
+        : requestedEffort;
+    if (normalizedEffort === "xhigh") {
+      result.thinking = {
+        type: "adaptive",
+      };
+      result.output_config = {
+        ...(result.output_config || {}),
+        effort: "xhigh",
+      };
+    } else {
+      const effortBudgetMap: Record<string, number> = {
+        low: 1024,
+        medium: 10240,
+        high: 131072,
+        max: 131072,
+      };
+      const budget = effortBudgetMap[normalizedEffort];
+      if (budget !== undefined && budget > 0) {
+        result.thinking = {
+          type: "enabled",
+          budget_tokens: budget,
+        };
+        // Claude requires max_tokens > budget_tokens
+        if (result.max_tokens <= budget) {
+          result.max_tokens = budget + 8192;
+        }
+      }
+    }
+  }
+
+  // Ensure max_tokens > budget_tokens for all thinking configurations (#627)
+  const budgetTokens = Number(result.thinking?.budget_tokens) || 0;
+  if (budgetTokens > 0 && result.max_tokens <= budgetTokens) {
+    result.max_tokens = budgetTokens + 8192;
   }
 
   // Attach toolNameMap to result for response translation
@@ -270,10 +383,14 @@ function getContentBlocksFromMessage(msg, toolNameMap = new Map(), disableToolPr
   const blocks = [];
 
   if (msg.role === "tool") {
+    // T02: Strip empty text blocks from nested tool_result content to avoid Anthropic 400
+    const toolContent = Array.isArray(msg.content)
+      ? stripEmptyTextBlocks(msg.content)
+      : msg.content;
     blocks.push({
       type: "tool_result",
       tool_use_id: msg.tool_call_id,
-      content: msg.content,
+      content: toolContent,
     });
   } else if (msg.role === "user") {
     if (typeof msg.content === "string") {
@@ -287,10 +404,14 @@ function getContentBlocksFromMessage(msg, toolNameMap = new Map(), disableToolPr
         } else if (part.type === "tool_result") {
           // Skip tool_result with no tool_use_id (would be useless and may cause errors)
           if (!part.tool_use_id) continue;
+          // T02: strip empty text blocks from nested content before passing to Anthropic
+          const resultContent = Array.isArray(part.content)
+            ? stripEmptyTextBlocks(part.content)
+            : part.content;
           blocks.push({
             type: "tool_result",
             tool_use_id: part.tool_use_id,
-            content: part.content,
+            content: resultContent,
             ...(part.is_error && { is_error: part.is_error }),
           });
         } else if (part.type === "image_url") {
@@ -300,6 +421,11 @@ function getContentBlocksFromMessage(msg, toolNameMap = new Map(), disableToolPr
             blocks.push({
               type: "image",
               source: { type: "base64", media_type: match[1], data: match[2] },
+            });
+          } else if (typeof url === "string" && url.trim()) {
+            blocks.push({
+              type: "image",
+              source: { type: "url", url },
             });
           }
         } else if (part.type === "image" && part.source) {
@@ -331,7 +457,12 @@ function getContentBlocksFromMessage(msg, toolNameMap = new Map(), disableToolPr
           // Tool name already has prefix from tool declarations, keep as-is
           // CRITICAL: Skip tool_use blocks with empty name (causes Claude 400 error)
           if (part.name && part.name.trim()) {
-            blocks.push({ type: "tool_use", id: part.id, name: part.name, input: part.input });
+            blocks.push({
+              type: "tool_use",
+              id: sanitizeToolId(part.id),
+              name: part.name,
+              input: part.input,
+            });
           }
         }
       }
@@ -353,7 +484,7 @@ function getContentBlocksFromMessage(msg, toolNameMap = new Map(), disableToolPr
           const toolName = disableToolPrefix ? fnName : CLAUDE_OAUTH_TOOL_PREFIX + fnName;
           blocks.push({
             type: "tool_use",
-            id: tc.id,
+            id: sanitizeToolId(tc.id),
             name: toolName,
             input: tryParseJSON(tc.function.arguments),
           });
@@ -368,7 +499,20 @@ function getContentBlocksFromMessage(msg, toolNameMap = new Map(), disableToolPr
 // Convert OpenAI tool choice to Claude format
 function convertOpenAIToolChoice(choice) {
   if (!choice) return { type: "auto" };
-  if (typeof choice === "object" && choice.type) return choice;
+  if (typeof choice === "object" && choice.type) {
+    // OpenAI sends {type: "function", function: {name}} — convert to Claude {type: "tool", name}
+    if (choice.type === "function" && choice.function?.name) {
+      return { type: "tool", name: choice.function.name };
+    }
+    // Map OpenAI string types to Claude equivalents
+    if (choice.type === "auto" || choice.type === "none") return { type: "auto" };
+    if (choice.type === "required" || choice.type === "any")
+      return { type: CLAUDE_TOOL_CHOICE_REQUIRED };
+    // If type is "tool" already (Claude-native), pass through
+    if (choice.type === "tool" && choice.name) return choice;
+    // Fallback: unknown object type — default to auto to avoid 400 errors
+    return { type: "auto" };
+  }
   if (choice === "auto" || choice === "none") return { type: "auto" };
   if (choice === "required") return { type: CLAUDE_TOOL_CHOICE_REQUIRED };
   if (typeof choice === "object" && choice.function) {
@@ -402,16 +546,6 @@ function tryParseJSON(str) {
 // OpenAI -> Claude format for Antigravity (without system prompt modifications)
 function openaiToClaudeRequestForAntigravity(model, body, stream) {
   const result = openaiToClaudeRequest(model, body, stream);
-
-  // Remove Claude Code system prompt, keep only user's system messages
-  if (result.system && Array.isArray(result.system)) {
-    result.system = result.system.filter(
-      (block) => !block.text || !block.text.includes("You are Claude Code")
-    );
-    if (result.system.length === 0) {
-      delete result.system;
-    }
-  }
 
   // Strip prefix from tool names for Antigravity (doesn't use Claude OAuth)
   if (result.tools && Array.isArray(result.tools)) {
