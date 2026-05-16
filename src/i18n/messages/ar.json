@@ -655,6 +655,7 @@
     "dashboard": "لوحة القيادة",
     "providers": "المزوّدون",
     "combos": "المجموعات",
+    "autoCombo": "Auto Combo",
     "usage": "الاستخدام",
     "analytics": "التحليلات",
     "costs": "التكاليف",
@@ -1883,6 +1884,18 @@
     "tailscaleInstallPasswordHint": "On macOS and Linux, sudo may be required for the package install and daemon start.",
     "tailscaleSudoPlaceholder": "Optional sudo password",
     "tailscaleInstalling": "Installing"
+  },
+  "endpoints": {
+    "tabProxy": "Endpoint Proxy",
+    "tabApiEndpoints": "نقاط نهاية API",
+    "apiEndpointsTitle": "نقاط نهاية API",
+    "apiEndpointsDescription": "نقاط نهاية API الخلفية التي يمكن أن تستهلكها التطبيقات والخدمات الأخرى.",
+    "comingSoon": "قريباً",
+    "plannedFeatures": "الميزات المخطط لها",
+    "featureRestApi": "كتالوج REST API مع التوثيق التفاعلي",
+    "featureWebhooks": "تكوين Webhooks واشتراكات الأحداث",
+    "featureSwagger": "إنشاء مواصفات OpenAPI / Swagger تلقائياً",
+    "featureAuth": "إدارة مفاتيح API ونطاقات OAuth لكل نقطة نهاية"
   },
   "endpoints": {
     "tabProxy": "Endpoint Proxy",

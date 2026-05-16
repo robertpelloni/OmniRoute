@@ -338,6 +338,10 @@ export async function getUnifiedModelsResponse(
         continue;
       }
 
+      // Get default context length from registry (provider-level default)
+      const registryEntry = REGISTRY[alias] || REGISTRY[canonicalProviderId];
+      const defaultContextLength = registryEntry?.defaultContextLength;
+
       for (const model of providerModels) {
         if (!providerSupportsModel(canonicalProviderId, model.id)) continue;
         const aliasId = `${alias}/${model.id}`;

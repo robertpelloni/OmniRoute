@@ -1176,6 +1176,11 @@ export function createSSEStream(options: StreamOptions = {}) {
 `;
                     injectedUsage = true;
                   }
+                  if (restoredToolName) {
+                    output = `data: ${JSON.stringify(parsed)}
+`;
+                    injectedUsage = true;
+                  }
                 } else {
                   // Chat Completions: full sanitization pipeline
 
@@ -1436,6 +1441,19 @@ export function createSSEStream(options: StreamOptions = {}) {
               totalContentLength += r.length;
               if (state?.accumulatedContent !== undefined)
                 state.accumulatedContent = appendBoundedText(state.accumulatedContent, r);
+            }
+          }
+          // Normalize `reasoning` alias → `reasoning_content` (NVIDIA kimi-k2.5 etc.)
+          if (
+            parsed.choices?.[0]?.delta?.reasoning &&
+            !parsed.choices?.[0]?.delta?.reasoning_content
+          ) {
+            const r = parsed.choices[0].delta.reasoning;
+            if (typeof r === "string") {
+              parsed.choices[0].delta.reasoning_content = r;
+              delete parsed.choices[0].delta.reasoning;
+              totalContentLength += r.length;
+              if (state?.accumulatedContent !== undefined) state.accumulatedContent += r;
             }
           }
 

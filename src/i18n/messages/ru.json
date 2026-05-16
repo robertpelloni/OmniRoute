@@ -655,6 +655,7 @@
     "dashboard": "Панель управления",
     "providers": "Провайдеры",
     "combos": "Комбо",
+    "autoCombo": "Auto Combo",
     "usage": "Использование",
     "analytics": "Аналитика",
     "costs": "Затраты",
@@ -1026,6 +1027,57 @@
     "positionDelta": "Изменение позиции",
     "emptyState": "Отправьте поисковый запрос, чтобы увидеть результаты"
   },
+  "search": {
+    "searchQuery": "Search Query",
+    "searchResults": "Search Results",
+    "cachedResult": "Cached",
+    "searchCost": "Cost",
+    "searchTools": "Search Tools",
+    "searchToolsDesc": "Advanced search testing with provider comparison",
+    "compareProviders": "Compare Providers",
+    "rerankResults": "Rerank Results",
+    "searchHistory": "Search History",
+    "urlOverlap": "URL Overlap",
+    "noSearchProviders": "No search providers configured. Add providers in Settings.",
+    "noRerankModels": "No rerank model available",
+    "webSearch": "Web Search",
+    "provider": "Provider",
+    "searchType": "Search Type",
+    "maxResults": "Max Results",
+    "filters": "Filters",
+    "country": "Country",
+    "language": "Language",
+    "timeRange": "Time Range",
+    "includeDomains": "Include Domains",
+    "excludeDomains": "Exclude Domains",
+    "safeSearch": "Safe Search",
+    "safeSearchOff": "Off",
+    "safeSearchModerate": "Moderate",
+    "safeSearchStrict": "Strict",
+    "queryPlaceholder": "Enter search query...",
+    "providerAuto": "auto (cheapest)",
+    "searchTypeWeb": "web",
+    "searchTypeNews": "news",
+    "optionAny": "any",
+    "timeRangeDay": "Past day",
+    "timeRangeWeek": "Past week",
+    "timeRangeMonth": "Past month",
+    "timeRangeYear": "Past year",
+    "domainPlaceholder": "example.com",
+    "requestTimedOut": "Request timed out ({seconds}s)",
+    "networkError": "Network error",
+    "formatted": "Formatted",
+    "rawJson": "JSON",
+    "cacheMiss": "cache miss",
+    "cacheHit": "cache hit",
+    "latency": "Latency",
+    "cost": "Cost",
+    "results": "Results",
+    "rerank": "Rerank",
+    "rerankModel": "Rerank Model",
+    "positionDelta": "Position Change",
+    "emptyState": "Send a search query to see results"
+  },
   "cliTools": {
     "title": "Инструменты интерфейса командной строки",
     "noActiveProviders": "Нет активных провайдеров",
@@ -1330,6 +1382,33 @@
           "5": {
             "title": "Выберите модель",
             "desc": "Выберите модель из выпадающего списка"
+          }
+        },
+        "notes": {
+          "0": "Kiro требует аккаунт Amazon."
+        }
+      },
+      "windsurf": {
+        "steps": {
+          "1": {
+            "title": "Open AI Settings",
+            "desc": "Click the AI Settings icon in Windsurf or go to Settings"
+          },
+          "2": {
+            "title": "Add Custom Provider",
+            "desc": "Select \"Add custom provider\" (OpenAI-compatible)"
+          },
+          "3": {
+            "title": "Base URL",
+            "desc": "http://127.0.0.1:20128/v1"
+          },
+          "4": {
+            "title": "API Key",
+            "desc": "Select your OmniRoute API key"
+          },
+          "5": {
+            "title": "Select Model",
+            "desc": "Choose a model from the dropdown"
           }
         }
       }
@@ -1910,6 +1989,18 @@
   },
   "endpoints": {
     "tabProxy": "Прокси конечных точек",
+    "tabApiEndpoints": "API-эндпоинты",
+    "apiEndpointsTitle": "API-эндпоинты",
+    "apiEndpointsDescription": "Бэкенд API-эндпоинты, доступные для использования другими приложениями и сервисами.",
+    "comingSoon": "Скоро",
+    "plannedFeatures": "Планируемые функции",
+    "featureRestApi": "Каталог REST API с интерактивной документацией",
+    "featureWebhooks": "Настройка вебхуков и подписки на события",
+    "featureSwagger": "Автоматическая генерация спецификаций OpenAPI / Swagger",
+    "featureAuth": "Управление API-ключами и OAuth-областями для каждого эндпоинта"
+  },
+  "endpoints": {
+    "tabProxy": "Endpoint Proxy",
     "tabApiEndpoints": "API-эндпоинты",
     "apiEndpointsTitle": "API-эндпоинты",
     "apiEndpointsDescription": "Бэкенд API-эндпоинты, доступные для использования другими приложениями и сервисами.",

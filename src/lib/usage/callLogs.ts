@@ -229,6 +229,17 @@ async function resolveAccountName(connectionId: string | null | undefined) {
         [toStringOrNull(conn.name), toStringOrNull(conn.email)],
         account
       );
+      const artifactRelPath = writeCallArtifact(artifact);
+
+      if (artifactRelPath) {
+        db.prepare(
+          `
+          UPDATE call_logs
+          SET artifact_relpath = ?, has_pipeline_details = ?
+          WHERE id = ?
+        `
+        ).run(artifactRelPath, protectedPipelinePayloads ? 1 : 0, logEntry.id);
+      }
     }
   } catch {
     // Best-effort lookup only.

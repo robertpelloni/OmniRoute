@@ -106,6 +106,12 @@ export async function PATCH(request: Request) {
       });
     }
 
+    // Sync cache control settings to runtime cache
+    if ("alwaysPreserveClientCache" in body) {
+      const { invalidateCacheControlSettingsCache } = await import("@/lib/cacheControlSettings");
+      invalidateCacheControlSettingsCache();
+    }
+
     const { password, ...safeSettings } = settings;
     return NextResponse.json(safeSettings);
   } catch (error) {

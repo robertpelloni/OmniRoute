@@ -141,6 +141,79 @@ describe("MCP Essential Tools", () => {
       expect(data).toHaveProperty("requestCount");
     });
   });
+
+  describe("web_search handler", () => {
+    it("should return search results when API is available", async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          id: "search-123",
+          provider: "serper",
+          query: "typescript best practices",
+          results: [
+            {
+              title: "TypeScript Best Practices 2024",
+              url: "https://example.com/ts-best",
+              display_url: "https://example.com/ts-best",
+              snippet: "Best practices for TypeScript development...",
+              position: 1,
+            },
+            {
+              title: "Advanced TypeScript Patterns",
+              url: "https://example.com/ts-advanced",
+              snippet: "Advanced patterns and techniques...",
+              position: 2,
+            },
+          ],
+          cached: false,
+          usage: { queries_used: 1, search_cost_usd: 0.002 },
+        }),
+      });
+
+      const response = await mockFetch(
+        "http://localhost:20128/v1/search?query=typescript%20best%20practices&max_results=5"
+      );
+      const data = await response.json();
+      expect(data.results).toHaveLength(2);
+      expect(data.results[0].title).toBe("TypeScript Best Practices 2024");
+      expect(data.provider).toBe("serper");
+    });
+
+    it("should handle API failure gracefully", async () => {
+      mockFetch.mockRejectedValueOnce(new Error("Search service unavailable"));
+
+      await expect(mockFetch("http://localhost:20128/v1/search?query=test")).rejects.toThrow(
+        "Search service unavailable"
+      );
+    });
+
+    it("should pass correct parameters to /v1/search", async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          id: "search-456",
+          provider: "brave",
+          query: "react hooks tutorial",
+          results: [],
+          cached: false,
+          usage: { queries_used: 1, search_cost_usd: 0.003 },
+        }),
+      });
+
+      const query = "react hooks tutorial";
+      const response = await mockFetch(
+        `http://localhost:20128/v1/search?query=${encodeURIComponent(query)}&max_results=10&search_type=news&provider=brave`
+      );
+      const data = await response.json();
+
+      expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining("/v1/search"));
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.stringContaining("query=react%20hooks%20tutorial")
+      );
+      expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining("max_results=10"));
+      expect(data.provider).toBe("brave");
+    });
+  });
 });
 
 // ── omniroute_web_search: handler dispatch tests ──────────────────────────────

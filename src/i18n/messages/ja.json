@@ -655,6 +655,7 @@
     "dashboard": "ダッシュボード",
     "providers": "プロバイダー",
     "combos": "コンボ",
+    "autoCombo": "Auto Combo",
     "usage": "使用法",
     "analytics": "分析",
     "costs": "コスト",
@@ -1883,6 +1884,18 @@
     "tailscaleInstallPasswordHint": "On macOS and Linux, sudo may be required for the package install and daemon start.",
     "tailscaleSudoPlaceholder": "Optional sudo password",
     "tailscaleInstalling": "Installing"
+  },
+  "endpoints": {
+    "tabProxy": "エンドポイント プロキシ",
+    "tabApiEndpoints": "APIエンドポイント",
+    "apiEndpointsTitle": "APIエンドポイント",
+    "apiEndpointsDescription": "他のアプリケーションやサービスから利用可能なバックエンドAPIエンドポイント。",
+    "comingSoon": "近日公開",
+    "plannedFeatures": "予定されている機能",
+    "featureRestApi": "REST APIカタログとインタラクティブなドキュメント",
+    "featureWebhooks": "Webhook設定とイベントサブスクリプション",
+    "featureSwagger": "OpenAPI / Swagger仕様の自動生成",
+    "featureAuth": "エンドポイントごとのAPIキーとOAuthスコープ管理"
   },
   "endpoints": {
     "tabProxy": "エンドポイント プロキシ",

@@ -1837,7 +1837,7 @@
     "modelsAcrossEndpoints": "{endpoints} 个端点共提供 {models} 个模型",
     "loadingModels": "正在加载可用模型...",
     "chatDesc": "支持所有提供商的流式与非流式聊天",
-    "embeddings": "Embeddings",
+    "embeddings": "嵌入向量",
     "embeddingsDesc": "用于搜索和 RAG 流程的文本向量",
     "imageGeneration": "图像生成",
     "imageDesc": "根据文本提示生成图像",

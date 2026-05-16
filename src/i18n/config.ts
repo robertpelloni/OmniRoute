@@ -15,7 +15,7 @@ export const LOCALES = [
   "hi",
   "hu",
   "id",
-  "in",
+  "hi",
   "it",
   "ja",
   "ko",

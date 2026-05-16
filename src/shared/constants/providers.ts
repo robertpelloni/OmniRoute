@@ -1714,6 +1714,46 @@ export const AUDIO_ONLY_PROVIDERS = {
     authHint:
       "Use AWS Secret Access Key as API key; set providerSpecificData.accessKeyId and optional region.",
   },
+  novita: {
+    id: "novita",
+    alias: "novita",
+    name: "Novita AI",
+    icon: "auto_awesome",
+    color: "#FF4081",
+    textIcon: "NV",
+    website: "https://novita.ai",
+    passthroughModels: true,
+  },
+  piapi: {
+    id: "piapi",
+    alias: "pi",
+    name: "PiAPI",
+    icon: "api",
+    color: "#7C4DFF",
+    textIcon: "PI",
+    website: "https://piapi.ai",
+    passthroughModels: true,
+  },
+  getgoapi: {
+    id: "getgoapi",
+    alias: "ggo",
+    name: "GoAPI",
+    icon: "rocket_launch",
+    color: "#FF6D00",
+    textIcon: "GO",
+    website: "https://api.getgoapi.com",
+    passthroughModels: true,
+  },
+  laozhang: {
+    id: "laozhang",
+    alias: "lz",
+    name: "LaoZhang AI",
+    icon: "hub",
+    color: "#FF1744",
+    textIcon: "LZ",
+    website: "https://api.laozhang.ai",
+    passthroughModels: true,
+  },
 };
 
 export const OPENAI_COMPATIBLE_PREFIX = "openai-compatible-";

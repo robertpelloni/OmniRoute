@@ -135,6 +135,11 @@ import {
   getBackgroundDegradationConfig,
 } from "../services/backgroundTaskDetector.ts";
 import {
+  getBackgroundTaskReason,
+  getDegradedModel,
+  getBackgroundDegradationConfig,
+} from "../services/backgroundTaskDetector.ts";
+import {
   shouldUseFallback,
   isFallbackDecision,
   EMERGENCY_FALLBACK_CONFIG,
@@ -3686,6 +3691,11 @@ export async function handleChatCore({
       }).catch((err) => {
         console.error("Failed to save usage stats:", err.message);
       });
+    }
+
+    if (apiKeyInfo?.id && usage) {
+      const estimatedCost = await calculateCost(provider, model, usage);
+      if (estimatedCost > 0) recordCost(apiKeyInfo.id, estimatedCost);
     }
 
     // Translate response to client's expected format (usually OpenAI)

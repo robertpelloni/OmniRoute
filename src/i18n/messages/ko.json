@@ -655,6 +655,7 @@
     "dashboard": "대시보드",
     "providers": "공급자",
     "combos": "콤보",
+    "autoCombo": "Auto Combo",
     "usage": "사용법",
     "analytics": "분석",
     "costs": "비용",
@@ -1883,6 +1884,18 @@
     "tailscaleInstallPasswordHint": "On macOS and Linux, sudo may be required for the package install and daemon start.",
     "tailscaleSudoPlaceholder": "Optional sudo password",
     "tailscaleInstalling": "Installing"
+  },
+  "endpoints": {
+    "tabProxy": "엔드포인트 프록시",
+    "tabApiEndpoints": "API 엔드포인트",
+    "apiEndpointsTitle": "API 엔드포인트",
+    "apiEndpointsDescription": "다른 애플리케이션 및 서비스에서 사용할 수 있는 백엔드 API 엔드포인트.",
+    "comingSoon": "곧 출시",
+    "plannedFeatures": "예정된 기능",
+    "featureRestApi": "대화형 문서가 포함된 REST API 카탈로그",
+    "featureWebhooks": "웹훅 구성 및 이벤트 구독",
+    "featureSwagger": "OpenAPI / Swagger 사양 자동 생성",
+    "featureAuth": "엔드포인트별 API 키 및 OAuth 범위 관리"
   },
   "endpoints": {
     "tabProxy": "엔드포인트 프록시",

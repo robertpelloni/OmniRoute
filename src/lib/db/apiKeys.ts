@@ -224,6 +224,11 @@ function ensureApiKeysColumns(db: ApiKeysDbLike) {
     for (const column of API_KEY_COLUMN_FALLBACKS) {
       ensureApiKeyColumn(db, columnNames, column);
     }
+    // T08: max concurrent sticky sessions per key (0 = unlimited)
+    if (!columnNames.has("max_sessions")) {
+      db.exec("ALTER TABLE api_keys ADD COLUMN max_sessions INTEGER NOT NULL DEFAULT 0");
+      console.log("[DB] Added api_keys.max_sessions column");
+    }
     _schemaChecked = true;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);

@@ -16,6 +16,7 @@
 
 import { readFileSync, existsSync } from "fs";
 import { join } from "path";
+import { resolveDataDir } from "../../src/lib/dataPaths";
 
 // Fields that can be overridden per provider
 const CREDENTIAL_FIELDS = [

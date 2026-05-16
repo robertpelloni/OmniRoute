@@ -655,6 +655,7 @@
     "dashboard": "Dashboard",
     "providers": "Anbieter",
     "combos": "Kombinationen",
+    "autoCombo": "Auto Combo",
     "usage": "Nutzung",
     "analytics": "Analytik",
     "costs": "Kosten",
@@ -1883,6 +1884,18 @@
     "tailscaleInstallPasswordHint": "On macOS and Linux, sudo may be required for the package install and daemon start.",
     "tailscaleSudoPlaceholder": "Optional sudo password",
     "tailscaleInstalling": "Installing"
+  },
+  "endpoints": {
+    "tabProxy": "Endpoint Proxy",
+    "tabApiEndpoints": "API-Endpunkte",
+    "apiEndpointsTitle": "API-Endpunkte",
+    "apiEndpointsDescription": "Backend-API-Endpunkte, die von anderen Anwendungen und Diensten genutzt werden können.",
+    "comingSoon": "Demnächst",
+    "plannedFeatures": "Geplante Funktionen",
+    "featureRestApi": "REST-API-Katalog mit interaktiver Dokumentation",
+    "featureWebhooks": "Webhook-Konfiguration und Event-Abonnements",
+    "featureSwagger": "Automatische OpenAPI / Swagger-Spezifikation",
+    "featureAuth": "API-Schlüssel- und OAuth-Scope-Verwaltung pro Endpunkt"
   },
   "endpoints": {
     "tabProxy": "Endpoint Proxy",

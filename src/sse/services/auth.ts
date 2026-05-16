@@ -29,7 +29,7 @@ import {
   getRuntimeProviderProfile,
   recordModelLockoutFailure,
 } from "@omniroute/open-sse/services/accountFallback.ts";
-import { isLocalProvider } from "@omniroute/open-sse/config/providerRegistry.ts";
+import { isLocalProvider, getPassthroughProviders } from "@omniroute/open-sse/config/providerRegistry.ts";
 import { COOLDOWN_MS } from "@omniroute/open-sse/config/constants.ts";
 import { preflightQuota } from "@omniroute/open-sse/services/quotaPreflight.ts";
 import {

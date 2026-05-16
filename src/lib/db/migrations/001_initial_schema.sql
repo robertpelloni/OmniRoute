@@ -109,8 +109,8 @@ CREATE INDEX IF NOT EXISTS idx_uh_provider ON usage_history(provider);
 CREATE INDEX IF NOT EXISTS idx_uh_model ON usage_history(model);
 
 CREATE TABLE IF NOT EXISTS call_logs (
-  id TEXT PRIMARY KEY,
-  timestamp TEXT NOT NULL,
+    id TEXT PRIMARY KEY,
+    timestamp TEXT NOT NULL,
   method TEXT,
   path TEXT,
   status INTEGER,

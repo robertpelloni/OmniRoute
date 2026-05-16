@@ -374,6 +374,26 @@ export default function RequestLoggerV2() {
               : t("pipelineLogsOff")}
         </button>
 
+        <button
+          onClick={toggleDetailLogging}
+          disabled={detailLoggingLoading}
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium border transition-colors disabled:opacity-60 ${
+            detailLoggingEnabled
+              ? "bg-amber-500/10 border-amber-500/30 text-amber-700 dark:text-amber-300"
+              : "bg-bg-subtle border-border text-text-muted"
+          }`}
+          title="Capture pipeline payloads for new requests"
+        >
+          <span
+            className={`w-2 h-2 rounded-full ${detailLoggingEnabled ? "bg-amber-500" : "bg-text-muted"}`}
+          />
+          {detailLoggingLoading
+            ? "Updating pipeline logs..."
+            : detailLoggingEnabled
+              ? "Pipeline Logs On"
+              : "Pipeline Logs Off"}
+        </button>
+
         {/* Search */}
         <div className="flex-1 min-w-[200px] relative">
           <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-[18px]">
@@ -628,6 +648,11 @@ export default function RequestLoggerV2() {
                   {visibleColumns.requestedModel && (
                     <th className="px-3 py-2.5 font-semibold text-text-muted uppercase tracking-wider text-[10px]">
                       {t("columns.requested")}
+                    </th>
+                  )}
+                  {visibleColumns.requestedModel && (
+                    <th className="px-3 py-2.5 font-semibold text-text-muted uppercase tracking-wider text-[10px]">
+                      Requested
                     </th>
                   )}
                   {visibleColumns.provider && (

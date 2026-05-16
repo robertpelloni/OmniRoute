@@ -229,6 +229,13 @@ export default function ComboDefaultsTab() {
         <p className="text-xs text-text-muted mt-1">{t("comboDefaultsGuideHint1")}</p>
         <p className="text-xs text-text-muted">{t("comboDefaultsGuideHint2")}</p>
       </div>
+      <div className="mb-4 rounded-lg border border-amber-500/20 bg-amber-500/5 p-3">
+        <p className="text-xs font-medium text-amber-700 dark:text-amber-300">
+          {t("comboDefaultsGuideTitle")}
+        </p>
+        <p className="text-xs text-text-muted mt-1">{t("comboDefaultsGuideHint1")}</p>
+        <p className="text-xs text-text-muted">{t("comboDefaultsGuideHint2")}</p>
+      </div>
       <div className="flex flex-col gap-4">
         {/* Default Strategy */}
         <div className="flex items-center justify-between">

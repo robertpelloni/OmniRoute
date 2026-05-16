@@ -5152,10 +5152,9 @@ function ConnectionRow({
             {connection.lastError && connection.isActive !== false && (
               <span
                 className={`text-xs truncate max-w-[300px] ${statusPresentation.errorTextClass}`}
-                title={connection.lastError}
-              >
-                {connection.lastError}
-              </span>
+                title={connection.lastError.replace(/<[^>]*>?/gm, "")}
+                dangerouslySetInnerHTML={{ __html: connection.lastError }}
+              />
             )}
             <span className="text-xs text-text-muted">#{connection.priority}</span>
             {connection.globalPriority && (
@@ -5311,6 +5310,34 @@ function ConnectionRow({
             title={t("refreshOauthTokenTitle")}
           >
             {t("tokenShort")}
+          </Button>
+        )}
+        {isCodex && onApplyCodexAuthLocal && (
+          <Button
+            size="sm"
+            variant="ghost"
+            icon="download_done"
+            loading={isApplyingCodexAuthLocal}
+            disabled={isApplyingCodexAuthLocal}
+            onClick={onApplyCodexAuthLocal}
+            className="!h-7 !px-2 text-xs text-emerald-500 hover:text-emerald-400"
+            title={applyCodexAuthLabel}
+          >
+            {applyCodexAuthLabel}
+          </Button>
+        )}
+        {isCodex && onExportCodexAuthFile && (
+          <Button
+            size="sm"
+            variant="ghost"
+            icon="download"
+            loading={isExportingCodexAuthFile}
+            disabled={isExportingCodexAuthFile}
+            onClick={onExportCodexAuthFile}
+            className="!h-7 !px-2 text-xs text-sky-500 hover:text-sky-400"
+            title={exportCodexAuthLabel}
+          >
+            {exportCodexAuthLabel}
           </Button>
         )}
         {isCodex && onApplyCodexAuthLocal && (
@@ -5825,13 +5852,15 @@ function AddApiKeyModal({
         )}
         {isCompatible && !isCcCompatible && (
           <p className="text-xs text-text-muted">
-            {isAnthropic
-              ? t("validationChecksAnthropicCompatible", {
-                  provider: providerName || t("anthropicCompatibleName"),
-                })
-              : t("validationChecksOpenAiCompatible", {
-                  provider: providerName || t("openaiCompatibleName"),
-                })}
+            {isCcCompatible
+              ? "Validation uses the strict Claude Code-compatible bridge request for this provider."
+              : isAnthropic
+                ? t("validationChecksAnthropicCompatible", {
+                    provider: providerName || t("anthropicCompatibleName"),
+                  })
+                : t("validationChecksOpenAiCompatible", {
+                    provider: providerName || t("openaiCompatibleName"),
+                  })}
           </p>
         )}
         <button
@@ -5900,6 +5929,13 @@ function AddApiKeyModal({
           value={formData.validationModelId}
           onChange={(e) => setFormData({ ...formData, validationModelId: e.target.value })}
           hint={t("validationModelIdHint")}
+        />
+        <Input
+          label="Model ID (opcional)"
+          placeholder="ex: grok-3 ou meta-llama/Llama-3.1-8B-Instruct"
+          value={formData.validationModelId}
+          onChange={(e) => setFormData({ ...formData, validationModelId: e.target.value })}
+          hint="Usado como fallback se a listagem de models não estiver disponível"
         />
         <Input
           label={t("priorityLabel")}
@@ -6326,6 +6362,12 @@ function EditConnectionModal({ isOpen, connection, onSave, onClose }: EditConnec
           updates.providerSpecificData.openaiStoreEnabled =
             formData.codexOpenaiStoreEnabled === true;
         }
+      } else {
+        // Also persist tag for OAuth accounts
+        updates.providerSpecificData = {
+          ...(connection.providerSpecificData || {}),
+          tag: formData.tag.trim() || undefined,
+        };
       }
       const error = (await onSave(updates)) as void | unknown;
       if (error) {
@@ -6876,7 +6918,7 @@ function EditCompatibleNodeModal({
           </div>
         )}
         <Input
-          label={t("nameLabel")}
+          label={isCcCompatible ? "Name" : t("nameLabel")}
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           placeholder={
@@ -6889,7 +6931,7 @@ function EditCompatibleNodeModal({
           hint={isCcCompatible ? t("ccCompatibleNameHint") : t("nameHint")}
         />
         <Input
-          label={t("prefixLabel")}
+          label={isCcCompatible ? "Prefix" : t("prefixLabel")}
           value={formData.prefix}
           onChange={(e) => setFormData({ ...formData, prefix: e.target.value })}
           placeholder={
@@ -6910,7 +6952,7 @@ function EditCompatibleNodeModal({
           />
         )}
         <Input
-          label={t("baseUrlLabel")}
+          label={isCcCompatible ? "Base URL" : t("baseUrlLabel")}
           value={formData.baseUrl}
           onChange={(e) => setFormData({ ...formData, baseUrl: e.target.value })}
           placeholder={
@@ -6946,7 +6988,7 @@ function EditCompatibleNodeModal({
         {showAdvanced && (
           <div id="advanced-settings" className="flex flex-col gap-3 pl-2 border-l-2 border-border">
             <Input
-              label={t("chatPathLabel")}
+              label={isCcCompatible ? "Chat Path" : t("chatPathLabel")}
               value={formData.chatPath}
               onChange={(e) => setFormData({ ...formData, chatPath: e.target.value })}
               placeholder={

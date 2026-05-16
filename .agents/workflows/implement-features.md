@@ -655,7 +655,6 @@ Hi @<author>! Great news — your feature request has been implemented! 🎉
 git fetch origin && git checkout release/vX.Y.Z
 npm install && npm run dev
 ```
-````
 
 This will be included in the upcoming **vX.Y.Z** release. Feel free to reopen if you spot any issues! 🚀
 

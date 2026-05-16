@@ -434,6 +434,13 @@ export async function checkConnection(conn) {
       };
     }
 
+    if (result.providerSpecificData) {
+      updateData.providerSpecificData = {
+        ...(conn.providerSpecificData || {}),
+        ...result.providerSpecificData,
+      };
+    }
+
     await updateProviderConnection(conn.id, updateData);
     log(`${LOG_PREFIX} ✓ ${conn.provider}/${getConnectionLogLabel(conn)} refreshed`);
   } else {

@@ -735,6 +735,12 @@ function extractPromptForIntent(body) {
   return "";
 }
 
+export function shouldFallbackComboBadRequest(status, errorText) {
+  if (status !== 400 || !errorText) return false;
+  const message = String(errorText);
+  return COMBO_BAD_REQUEST_FALLBACK_PATTERNS.some((pattern) => pattern.test(message));
+}
+
 function mapIntentToTaskType(intent) {
   switch (intent) {
     case "code":
@@ -1588,6 +1594,7 @@ export async function handleComboChat({
           "COMBO",
           `Model ${modelStr} succeeded (${latencyMs}ms, ${fallbackCount} fallbacks)`
         );
+        breaker._onSuccess();
         recordComboRequest(combo.name, modelStr, {
           success: true,
           latencyMs,
@@ -1724,10 +1731,18 @@ export async function handleComboChat({
         result.headers,
         profile
       );
+      const comboBadRequestFallback = shouldFallbackComboBadRequest(result.status, errorText);
 
       // Trigger shared provider circuit breaker for 5xx errors and connection failures
       if (isProviderFailureCode(result.status)) {
         recordProviderFailure(provider, log, target.connectionId, profile);
+      }
+
+      if (comboBadRequestFallback) {
+        log.info(
+          "COMBO",
+          `Treating provider-scoped 400 from ${modelStr} as model-local failure; trying next combo target`
+        );
       }
 
       // Check if this is a transient error worth retrying on same model
@@ -1956,6 +1971,7 @@ async function handleRoundRobinCombo({
             "COMBO-RR",
             `${modelStr} succeeded (${latencyMs}ms, ${fallbackCount} fallbacks)`
           );
+          breaker._onSuccess();
           recordComboRequest(combo.name, modelStr, {
             success: true,
             latencyMs,
@@ -2057,6 +2073,7 @@ async function handleRoundRobinCombo({
           result.headers,
           profile
         );
+        const comboBadRequestFallback = shouldFallbackComboBadRequest(result.status, errorText);
 
         const isAllAccountsRateLimited = isAllAccountsRateLimitedResponse(
           result.status,

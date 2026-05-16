@@ -77,6 +77,8 @@ export async function GET(req: NextRequest) {
   ]);
 
   const updateAvailable = isNewer(latest, current);
+  const config = getAutoUpdateConfig();
+  const validation = await validateAutoUpdateRuntime(config);
 
   return NextResponse.json({
     current,

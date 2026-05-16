@@ -80,6 +80,9 @@ export async function registerNodejs(): Promise<void> {
   // Trigger request-log layout migration during startup, before any request hits usageDb.
   await import("@/lib/usage/migrations");
 
+  // Trigger request-log layout migration during startup, before any request hits usageDb.
+  await import("@/lib/usage/migrations");
+
   const { initConsoleInterceptor } = await import("@/lib/consoleInterceptor");
   initConsoleInterceptor();
 

@@ -185,6 +185,7 @@
     "lint-staged": "^16.2.7",
     "node-loader": "^2.1.0",
     "prettier": "^3.8.1",
+    "prop-types": "^15.8.1",
     "tailwindcss": "^4",
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.59.2",

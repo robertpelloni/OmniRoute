@@ -411,6 +411,21 @@ const COMBO_TEMPLATES = [
       retryDelayMs: 1000,
     },
   },
+  {
+    id: "paid-premium",
+    icon: "workspace_premium",
+    titleKey: "templatePaidPremium",
+    descKey: "templatePaidPremiumDesc",
+    fallbackTitle: COMBO_TEMPLATE_FALLBACK.paidPremiumTitle,
+    fallbackDesc: COMBO_TEMPLATE_FALLBACK.paidPremiumDesc,
+    strategy: "round-robin",
+    suggestedName: "paid-premium",
+    config: {
+      maxRetries: 2,
+      retryDelayMs: 1000,
+      healthCheckEnabled: true,
+    },
+  },
 ];
 
 function getStrategyMeta(strategy) {
@@ -1077,6 +1092,9 @@ export default function CombosPage() {
           onComboUpdated={handleIntelligentComboUpdated}
         />
       )}
+
+      {/* Model Routing Rules (#563) */}
+      <ModelRoutingSection combos={combos} />
 
       {/* Combos List */}
       {combos.length === 0 ? (
