@@ -56,6 +56,17 @@ const TRANSIENT_FOR_SEMAPHORE = [429, 502, 503, 504];
 // Used to detect 503 responses from handleNoCredentials so combo can fallback.
 const ALL_ACCOUNTS_RATE_LIMITED_PATTERNS = [/unavailable/i, /service temporarily unavailable/i];
 
+// Patterns that signal a 400 Bad Request should trigger a fallback to the next model
+// (e.g. content filtering, safety blocks, or unsupported parameters).
+const COMBO_BAD_REQUEST_FALLBACK_PATTERNS = [
+  /content_filter/i,
+  /safety/i,
+  /filtered/i,
+  /blocked/i,
+  /unsupported parameter/i,
+  /invalid_request_error/i,
+];
+
 function isAllAccountsRateLimitedResponse(
   status: number,
   contentType: string | null,
@@ -1510,6 +1521,7 @@ export async function handleComboChat({
     const modelStr = target.modelStr;
     const provider = target.provider;
     const profile = await getRuntimeProviderProfile(provider);
+    const breaker = getCircuitBreaker(provider);
 
     // Pre-check: skip models where all accounts are in cooldown
     if (isModelAvailable) {
@@ -1885,6 +1897,7 @@ async function handleRoundRobinCombo({
     const modelStr = target.modelStr;
     const provider = target.provider;
     const profile = await getRuntimeProviderProfile(provider);
+    const breaker = getCircuitBreaker(provider);
     const semaphoreKey = `combo:${combo.name}:${target.executionKey}`;
 
     // Pre-check availability
