@@ -691,7 +691,6 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
 
   log?.debug?.("FORMAT", `${sourceFormat} → ${targetFormat} | stream=${stream}`);
 
-<<<<<<< Updated upstream
   // ── Phase 9.1: Semantic cache check (temp=0, any streaming mode) ──
   // Streaming responses are cached after assembly; cache hits return JSON regardless of stream flag.
   if (semanticCacheEnabled && isCacheableForRead(body, clientRawRequest?.headers)) {
@@ -2425,11 +2424,6 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
             const errMessage = fbErr instanceof Error ? fbErr.message : String(fbErr);
             log?.warn?.("EMERGENCY_FALLBACK", `Emergency fallback error: ${errMessage}`);
           }
-=======
-        } catch (fbErr) {
-          const errMessage = fbErr instanceof Error ? fbErr.message : String(fbErr);
-          log?.warn?.("EMERGENCY_FALLBACK", `Emergency fallback error: ${errMessage}`);
->>>>>>> Stashed changes
         }
       }
 
@@ -2445,7 +2439,6 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
     trackPendingRequest(model, provider, connectionId, false);
     const contentType = (providerResponse.headers.get("content-type") || "").toLowerCase();
     let responseBody;
-<<<<<<< Updated upstream
     let responsePayloadFormat = targetFormat;
     const rawBody = await withBodyTimeout<string>(providerResponse.text());
     const normalizedProviderPayload = normalizePayloadForLog(rawBody);
@@ -2590,9 +2583,6 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
       const msg = `[${new Date().toLocaleTimeString("en-US", { hour12: false, hour: "2-digit", minute: "2-digit" })}] 📊 [USAGE] ${provider.toUpperCase()} | ${formatUsageLog(usage)}${connectionId ? ` | account=${connectionId.slice(0, 8)}...` : ""}`;
       console.log(`${COLORS.green}${msg}${COLORS.reset}`);
 
-=======
-      // Track cache token metrics
->>>>>>> Stashed changes
       const inputTokens = usage.prompt_tokens || 0;
       const cachedTokens = toPositiveNumber(
         usage.cache_read_input_tokens ??

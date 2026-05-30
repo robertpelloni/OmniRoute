@@ -870,10 +870,6 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({ project: projectId }),
-<<<<<<< Updated upstream
-=======
-            signal: AbortSignal.timeout(10000),
->>>>>>> Stashed changes
           }
         );
 

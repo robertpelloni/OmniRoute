@@ -24,11 +24,7 @@ with **MCP Server** (25 tools), **A2A v0.3 Protocol**, and **Electron desktop ap
 - **Database**: better-sqlite3 (SQLite) — `DATA_DIR` configurable, default `~/.omniroute/`
 - **Streaming**: SSE via `open-sse` internal workspace package
 - **Styling**: Tailwind CSS v4
-<<<<<<< Updated upstream
 - **i18n**: next-intl with 40+ languages
-=======
-- **i18n**: next-intl with 30 languages
->>>>>>> Stashed changes
 - **Desktop**: Electron (cross-platform: Windows, macOS, Linux)
 - **Schemas**: Zod v4 for all API / MCP input validation
 
@@ -57,7 +53,6 @@ with **MCP Server** (25 tools), **A2A v0.3 Protocol**, and **Electron desktop ap
 npm run test:all
 
 # Single test file (Node.js native test runner — most tests use this)
-<<<<<<< Updated upstream
 node --import tsx/esm --test tests/unit/your-file.test.ts
 node --import tsx/esm --test tests/unit/plan3-p0.test.ts
 node --import tsx/esm --test tests/unit/fixes-p1.test.ts
@@ -65,167 +60,6 @@ node --import tsx/esm --test tests/unit/security-fase01.test.ts
 
 # Integration tests
 node --import tsx/esm --test tests/integration/*.test.ts
-=======
-
-# Vitest (MCP server, autoCombo)
-npm run test:vitest
-
-# E2E with Playwright
-npm run test:e2e
-
-# Protocol clients E2E (MCP transports, A2A)
-npm run test:protocols:e2e
-
-# Ecosystem compatibility tests
-npm run test:ecosystem
-
-# Coverage (see CONTRIBUTING.md)
-npm run test:coverage
-```
-
-**For authoritative coverage requirements, test execution, and PR gates, see [`CONTRIBUTING.md`](CONTRIBUTING.md#running-tests).**
-
-=======
----
-
-## Code Style Guidelines
-
-### Formatting (Prettier — enforced via lint-staged)
-
-2 spaces · semicolons required · double quotes (`"`) · 100 char width · es5 trailing commas.
-Always run `prettier --write` on changed files.
-
-### TypeScript
-
-- **Target**: ES2022 · **Module**: `esnext` · **Resolution**: `bundler`
-- `strict: false` — prefer explicit types, don't rely on inference
-- Path aliases: `@/*` → `src/`, `@omniroute/open-sse` → `open-sse/`, `@omniroute/open-sse/*` → `open-sse/*`
-
-### ESLint Rules
-
-- **Security (error, everywhere)**: `no-eval`, `no-implied-eval`, `no-new-func`
-- **Relaxed in `open-sse/` and `tests/`**: `@typescript-eslint/no-explicit-any` = warn
-- React hooks rules and `@next/next/no-assign-module-variable` disabled in `open-sse/` and `tests/`
-
-### Naming
-
-| Element             | Convention                       | Example                              |
-| ------------------- | -------------------------------- | ------------------------------------ |
-| Files               | camelCase / kebab-case           | `chatCore.ts`, `tokenHealthCheck.ts` |
-| React components    | PascalCase                       | `Dashboard.tsx`, `ProviderCard.tsx`  |
-| Functions/variables | camelCase                        | `getHealth()`, `switchCombo()`       |
-| Constants           | UPPER_SNAKE                      | `MAX_RETRIES`, `DEFAULT_TIMEOUT`     |
-| Interfaces          | PascalCase (`I` prefix optional) | `ProviderConfig`                     |
-| Enums               | PascalCase (members too)         | `LogLevel.Error`                     |
-
-### Imports
-
-- **Order**: external → internal (`@/`, `@omniroute/open-sse`) → relative (`./`, `../`)
-- **No barrel imports** from `localDb.ts` — import from the specific `db/` module instead
-
-### Error Handling
-
-- try/catch with specific error types; always log with context (pino logger)
-- Never silently swallow errors in SSE streams — use abort signals for cleanup
-- Return proper HTTP status codes (4xx client, 5xx server)
-
-### Security
-
-- **NEVER** commit API keys, secrets, or credentials
-- Validate all user inputs with Zod schemas
-- Auth middleware required on all API routes
-- Never log SQLite encryption keys
-- Sanitize user content (dompurify for HTML)
-
----
-
-## Architecture
-
-### Data Layer (`src/lib/db/`)
-
-All persistence uses SQLite through domain-specific modules:
-`core.ts`, `providers.ts`, `models.ts`, `combos.ts`, `apiKeys.ts`, `settings.ts`,
-`backup.ts`, `proxies.ts`, `prompts.ts`, `webhooks.ts`, `detailedLogs.ts`,
-`domainState.ts`, `registeredKeys.ts`, `quotaSnapshots.ts`, `modelComboMappings.ts`,
-`cliToolState.ts`, `encryption.ts`, `readCache.ts`, `secrets.ts`, `stateReset.ts`,
-`contextHandoffs.ts`, `compression.ts`.
-Schema migrations live in `db/migrations/` and run via `migrationRunner.ts`.
-`src/lib/localDb.ts` is a **re-export layer only** — never add logic there.
-
-#### DB Internals
-
-- **`core.ts`**: `getDbInstance()` returns a singleton `better-sqlite3` instance with WAL
-  journaling. `SCHEMA_SQL` defines 15 base tables. Helpers: `rowToCamel`, `encryptConnectionFields`.
-- **`migrationRunner.ts`**: Applies versioned SQL files from `db/migrations/` inside transactions.
-  Tracks applied migrations in `_omniroute_migrations` table.
-- **Migrations**: 22 files (`001_initial_schema.sql` → `022_compression_settings.sql`).
-  Each migration is idempotent and runs in a transaction.
-- **Domain modules** import `getDbInstance()` from `core.ts` for all CRUD operations.
-  Each module owns a specific table/set of tables (e.g., `providers.ts` → `provider_connections`,
-  `combos.ts` → `combos`). Encryption helpers protect sensitive fields at rest.
-- **`localDb.ts`** re-exports all domain modules — consumers import from here for convenience.
-
-### API Route Layer (`src/app/api/v1/`)
-
-Next.js App Router routes — each follows a consistent pattern:
-
-```
-Route → CORS preflight → Body validation (Zod) → Optional auth (extractApiKey/isValidApiKey)
-  → API key policy enforcement (enforceApiKeyPolicy) → Handler delegation (open-sse)
-```
-
-| Route                           | Handler                   | Notes                                     |
-| ------------------------------- | ------------------------- | ----------------------------------------- |
-| `chat/completions/route.ts`     | `handleChat()`            | + prompt injection guard (clones request) |
-| `responses/route.ts`            | `handleChat()` (unified)  | Responses API format                      |
-| `embeddings/route.ts`           | `handleEmbedding()`       | Model listing + creation                  |
-| `images/generations/route.ts`   | `handleImageGeneration()` | Model listing + creation                  |
-| `audio/transcriptions/route.ts` | audio handler             | Multipart form data                       |
-| `audio/speech/route.ts`         | TTS handler               | Binary audio response                     |
-| `videos/generations/route.ts`   | video handler             | ComfyUI/SD WebUI                          |
-| `music/generations/route.ts`    | music handler             | ComfyUI workflows                         |
-| `moderations/route.ts`          | moderation handler        | Content safety                            |
-| `rerank/route.ts`               | rerank handler            | Document relevance                        |
-| `search/route.ts`               | search handler            | Web search (5 providers)                  |
-
-**No global Next.js middleware file** — interception is route-specific. Auth is optional
-(controlled by `REQUIRE_API_KEY` env). Prompt injection guard is unique to chat completions.
-
-### Request Pipeline (`open-sse/`)
-
-The `open-sse/` workspace is the core streaming engine. Full request flow:
-
-```
-Client Request
-  → src/app/api/v1/.../route.ts (Next.js route)
-    → open-sse/handlers/chatCore.ts::handleChatCore()
-      → Semantic/signature cache check
-      → Rate limit check (rateLimitManager)
-      → Combo routing? → open-sse/services/combo.ts::handleComboChat()
-        → resolveComboTargets() → ordered ResolvedComboTarget[]
-        → For each target: handleSingleModel() (wraps chatCore)
-      → translateRequest() (open-sse/translator/)
-        → Convert source format (e.g., OpenAI) → target format (e.g., Claude)
-      → getExecutor() → provider-specific executor instance
-        → executor.execute() (BaseExecutor → DefaultExecutor or provider-specific)
-          → buildUrl() + buildHeaders() + transformRequest()
-          → fetch() to upstream provider
-          → Retry logic with exponential backoff
-      → Response translation back to client format
-      → If Responses API: responsesTransformer.ts TransformStream
-  → SSE stream or JSON response to client
-```
-
-=======
-`cliToolState.ts`, `encryption.ts`, `readCache.ts`, `secrets.ts`, `stateReset.ts`.
-Schema migrations live in `db/migrations/` and run via `migrationRunner.ts`.
-`src/lib/localDb.ts` is a **re-export layer only** — never add logic there.
-
-### Request Pipeline (`open-sse/`)
-
-`chatCore.ts` → executor → upstream provider. Translations in `open-sse/translator/`.
-
->>>>>>> Stashed changes
 **Handlers** (`open-sse/handlers/`): `chatCore.ts`, `responsesHandler.ts`, `embeddings.ts`,
 `imageGeneration.ts`, `videoGeneration.ts`, `musicGeneration.ts`, `audioSpeech.ts`,
 `audioTranscription.ts`, `moderations.ts`, `rerank.ts`, `search.ts`.
@@ -239,17 +73,12 @@ Zod schemas, and unit tests aligned when editing.
 
 - **Free** (4): Qoder AI, Qwen Code, Gemini CLI (deprecated), Kiro AI
 - **OAuth** (8): Claude Code, Antigravity, Codex, GitHub Copilot, Cursor, Kimi Coding, Kilo Code, Cline
-<<<<<<< Updated upstream
 - **API Key** (120+): OpenAI, Anthropic, Gemini, DeepSeek, Groq, xAI, Mistral, Perplexity,
-=======
-- **API Key** (48+): OpenAI, Anthropic, Gemini, DeepSeek, Groq, xAI, Mistral, Perplexity,
->>>>>>> Stashed changes
   Together, Fireworks, Cerebras, Cohere, NVIDIA, Nebius, SiliconFlow, Hyperbolic,
   HuggingFace, OpenRouter, Vertex AI, Cloudflare AI, Scaleway, AI/ML API, Pollinations,
   Puter, Longcat, Alibaba, Kimi, Minimax, Blackbox, Synthetic, Kilo Gateway,
   Z.AI, GLM, Deepgram, AssemblyAI, ElevenLabs, Cartesia, PlayHT, Inworld,
   NanoBanana, SD WebUI, ComfyUI, Ollama Cloud, Perplexity Search, Serper, Brave, Exa,
-<<<<<<< Updated upstream
   Tavily, OpenCode Zen/Go, Bailian Coding Plan, DeepInfra, Vercel AI Gateway,
   Lambda AI, SambaNova, nScale, OVHcloud AI, Baseten, PublicAI, Moonshot AI,
   Meta Llama API, v0 (Vercel), Morph, Featherless AI, FriendliAI, LlamaGate,
@@ -259,9 +88,6 @@ Zod schemas, and unit tests aligned when editing.
   AgentRouter, ChatGPT Web, Baidu Qianfan, AWS Polly, RunwayML, GitLab Duo,
   Amazon Q, Empower, Poe, and many more.
 - **Self-Hosted** (8+): LM Studio, vLLM, Lemonade, Llamafile, Triton, Docker Model Runner, Xinference, Oobabooga
-=======
-  Tavily, OpenCode Zen/Go, Bailian Coding Plan, and more.
->>>>>>> Stashed changes
 - **Custom**: OpenAI-compatible (`openai-compatible-*`) and Anthropic-compatible (`anthropic-compatible-*`) prefixes
 
 Providers are registered in `src/shared/constants/providers.ts` with Zod validation at module load.
@@ -272,7 +98,6 @@ Provider-specific request executors: `base.ts`, `default.ts`, `cursor.ts`, `code
 `antigravity.ts`, `github.ts`, `gemini-cli.ts`, `kiro.ts`, `qoder.ts`, `vertex.ts`,
 `cloudflare-ai.ts`, `opencode.ts`, `pollinations.ts`, `puter.ts`.
 
-<<<<<<< Updated upstream
 #### Executor Internals
 
 - **`base.ts`** (`BaseExecutor`): Abstract base with `buildUrl()`, `buildHeaders()`,
@@ -360,9 +185,6 @@ Modular prompt compression that runs proactively before the existing reactive co
   cost-optimized, strict-random, auto, lkgp, context-optimized, context-relay.
 - Each target calls **`handleSingleModel()`** which wraps `handleChatCore()` with
   per-target error handling and circuit breaker checks.
-=======
-`signatureCache.ts`, `volumeDetector.ts`, and more.
->>>>>>> Stashed changes
 
 ### Domain Layer (`src/domain/`)
 
@@ -372,7 +194,6 @@ Policy engine modules: `policyEngine.ts`, `comboResolver.ts`, `costRules.ts`,
 
 ### MCP Server (`open-sse/mcp-server/`)
 
-<<<<<<< Updated upstream
 37 tools, 3 transports (stdio / SSE / Streamable HTTP). Scoped auth (10 scopes), Zod schemas.
 
 **Core tools** (20): get_health, list_combos, get_combo_metrics, switch_combo, check_quota,
@@ -453,43 +274,6 @@ custom skill support, interception, and injection.
 
 Policy index for compliance enforcement.
 
-=======
-25 tools, 3 transports (stdio / SSE / Streamable HTTP). Scoped auth (10 scopes), Zod schemas.
-
-**Core tools** (18): get_health, list_combos, get_combo_metrics, switch_combo, check_quota,
-route_request, cost_report, list_models_catalog, simulate_route, set_budget_guard,
-set_routing_strategy, set_resilience_profile, test_combo, get_provider_metrics,
-best_combo_for_task, explain_route, get_session_snapshot, sync_pricing.
-
-**Memory tools** (3): memory_search, memory_add, memory_clear.
-
-**Skill tools** (4): skills_list, skills_enable, skills_execute, skills_executions.
-
-### A2A Server (`src/lib/a2a/`)
-
-JSON-RPC 2.0, SSE streaming, Task Manager with TTL cleanup(
-Agent Card at `/.well-known/agent.json`.
-Skills: `quotaManagement.ts`, `smartRouting.ts`.
-
-### ACP Module (`src/lib/acp/`)
-
-Agent Communication Protocol registry and manager.
-
-### Memory System (`src/lib/memory/`)
-
-Extraction, injection, retrieval, summarization, and store modules for persistent
-conversational memory across sessions.
-
-### Skills System (`src/lib/skills/`)
-
-Extensible skill framework: registry, executor, sandbox, built-in skills,
-custom skill support, interception, and injection.
-
-### Compliance (`src/lib/compliance/`)
-
-Policy index for compliance enforcement.
-
->>>>>>> Stashed changes
 ### MITM Proxy (`src/mitm/`)
 
 MITM proxy capability with certificate management, DNS handling, and target routing.

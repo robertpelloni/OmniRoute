@@ -366,57 +366,6 @@ type NgrokTunnelStatus = {
   const handleCloudflaredAction = async (action: "enable" | "disable") => {
     setCloudflaredBusy(true);
     setCloudflaredNotice(null);
-<<<<<<< Updated upstream
-=======
-
-    try {
-      const res = await fetch("/api/tunnels/cloudflared", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action }),
-      });
-      const data = await res.json().catch(() => ({}));
-
-      if (!res.ok) {
-        throw new Error(
-          data?.error ||
-            translateOrFallback("cloudflaredRequestFailed", "Failed to update Cloudflare tunnel")
-        );
-      }
-
-      if (data?.status) {
-        setCloudflaredStatus(data.status);
-      }
-
-      setCloudflaredNotice({
-        type: "success",
-        message:
-          action === "enable"
-            ? translateOrFallback("cloudflaredStarted", "Cloudflare tunnel started")
-            : translateOrFallback("cloudflaredStopped", "Cloudflare tunnel stopped"),
-      });
-    } catch (error) {
-      setCloudflaredNotice({
-        type: "error",
-        message:
-          error instanceof Error
-            ? error.message
-            : translateOrFallback("cloudflaredRequestFailed", "Failed to update Cloudflare tunnel"),
-      });
-    } finally {
-      setCloudflaredBusy(false);
-      await fetchCloudflaredStatus(true);
-    }
-  };
-
-  const [baseUrl, setBaseUrl] = useState("/v1");
-  const normalizedCloudBaseUrl = cloudBaseUrl
-    ? resolvedMachineId && !cloudBaseUrl.endsWith(`/${resolvedMachineId}`)
-      ? `${cloudBaseUrl}/${resolvedMachineId}`
-      : cloudBaseUrl
-    : null;
-  const cloudEndpointNew = normalizedCloudBaseUrl ? `${normalizedCloudBaseUrl}/v1` : null;
->>>>>>> Stashed changes
 
     try {
       const res = await fetch("/api/tunnels/cloudflared", {

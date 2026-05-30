@@ -526,30 +526,6 @@ export function cleanupExpiredLogs() {
   try {
     const r3 = db.prepare("DELETE FROM proxy_logs WHERE timestamp < ?").run(callCutoff);
     deletedProxyLogs = r3.changes;
-<<<<<<< Updated upstream
-=======
-  } catch {
-    /* table may not exist */
-  }
-
-  try {
-    const r4 = db.prepare("DELETE FROM request_detail_logs WHERE timestamp < ?").run(callCutoff);
-    deletedRequestDetailLogs = r4.changes;
-  } catch {
-    /* legacy table may not exist */
-  }
-
-  try {
-    const r5 = db.prepare("DELETE FROM audit_log WHERE timestamp < ?").run(appCutoff);
-    deletedAuditLogs = r5.changes;
-  } catch {
-    /* table may not exist */
-  }
-
-  try {
-    const r6 = db.prepare("DELETE FROM mcp_tool_audit WHERE created_at < ?").run(appCutoff);
-    deletedMcpAuditLogs = r6.changes;
->>>>>>> Stashed changes
   } catch {
     /* table may not exist */
   }
