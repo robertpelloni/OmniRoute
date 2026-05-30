@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 import crypto, { randomUUID } from "crypto";
 import { BaseExecutor, mergeUpstreamExtraHeaders, type ExecuteInput } from "./base.ts";
 import { applyFingerprint, isCliCompatEnabled } from "../config/cliFingerprints.ts";
@@ -29,7 +28,6 @@ import {
 
 const MAX_RETRY_AFTER_MS = 60_000;
 const LONG_RETRY_THRESHOLD_MS = 60_000;
-<<<<<<< Updated upstream
 const CREDITS_EXHAUSTED_TTL_MS = 5 * 60 * 60 * 1000; // 5 hours
 
 const BARE_PRO_IDS = new Set(["gemini-3.1-pro"]);
@@ -204,10 +202,6 @@ function flushAntigravitySSEText(
   if (!trimmed.startsWith("data:")) return;
   processAntigravitySSEPayload(trimmed.slice(5).trim(), collected, log);
 }
-=======
-
-const BARE_PRO_IDS = new Set(["gemini-3.1-pro"]);
->>>>>>> Stashed changes
 
 /**
  * Strip provider prefixes (e.g. "antigravity/model" → "model").
@@ -216,78 +210,13 @@ const BARE_PRO_IDS = new Set(["gemini-3.1-pro"]);
 function cleanModelName(model: string): string {
   if (!model) return model;
   let clean = model.includes("/") ? model.split("/").pop()! : model;
-<<<<<<< Updated upstream
   clean = resolveAntigravityModelId(clean);
-=======
->>>>>>> Stashed changes
-  // Normalize bare Pro IDs to the Low tier (matching OpenClaw convention).
-  // The upstream API requires an explicit tier suffix; bare IDs cause errors.
-  if (BARE_PRO_IDS.has(clean)) {
-    clean = `${clean}-low`;
-  }
-  return clean;
-<<<<<<< Updated upstream
-}
-
-function attachToolNameMap<T>(payload: T, toolNameMap: Map<string, string> | null): T {
-  if (!toolNameMap?.size || !payload || typeof payload !== "object") {
-    return payload;
-  }
-
-  const copy = Array.isArray(payload) ? ([...payload] as T) : ({ ...(payload as object) } as T);
-  Object.defineProperty(copy, "_toolNameMap", {
-    value: toolNameMap,
-    enumerable: false,
-    configurable: true,
-    writable: true,
-  });
-  return copy;
-}
-
-function getRequestTargetModel(body: Record<string, unknown>): string {
-  const target = body.model;
-  return typeof target === "string" && target.length > 0 ? target : "unknown";
-=======
->>>>>>> Stashed changes
-}
-
-export class AntigravityExecutor extends BaseExecutor {
-  constructor() {
-    super("antigravity", PROVIDERS.antigravity);
-  }
-
-  buildUrl(model, stream, urlIndex = 0) {
-    const baseUrls = this.getBaseUrls();
-    const baseUrl = baseUrls[urlIndex] || baseUrls[0];
-    // Always use streaming endpoint — the non-streaming `generateContent` causes
-    // upstream 400 errors for some models (e.g. gpt-oss-120b-medium) because the
-    // Cloud Code API internally converts to OpenAI format and injects
-    // stream_options without setting stream=true.  chatCore already handles
-    // SSE→JSON conversion for non-streaming client requests.
-    return `${baseUrl}/v1internal:streamGenerateContent?alt=sse`;
-  }
-
-  buildHeaders(credentials, stream = true) {
-    const raw = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${credentials.accessToken}`,
-      "User-Agent": antigravityUserAgent(),
-      Accept: "text/event-stream",
-      "X-OmniRoute-Source": "omniroute",
-<<<<<<< Updated upstream
-=======
-      Accept: "text/event-stream",
->>>>>>> Stashed changes
     };
     // Scrub proxy/fingerprint headers that reveal non-native traffic
     return scrubProxyAndFingerprintHeaders(raw);
   }
 
-<<<<<<< Updated upstream
   transformRequest(model, body, stream, credentials): AntigravityRequestEnvelope | Response {
-=======
-  transformRequest(model, body, stream, credentials) {
->>>>>>> Stashed changes
     // TODO: Consider removing project override like gemini-cli.ts — stored projectId
     // can become stale for Cloud Code accounts, causing 403 "has not been used in project X".
     // Antigravity accounts may have more stable project IDs, but the risk exists.
@@ -520,7 +449,6 @@ export class AntigravityExecutor extends BaseExecutor {
     const SSE_COLLECT_TIMEOUT_MS = 120_000;
 
     const collect = async () => {
-<<<<<<< Updated upstream
       const collected: AntigravityCollectedStream = {
         textContent: "",
         finishReason: "stop",
@@ -531,13 +459,6 @@ export class AntigravityExecutor extends BaseExecutor {
       let timedOut = false;
       const timeout = AbortSignal.timeout(SSE_COLLECT_TIMEOUT_MS);
       try {
-=======
-      const chunks: string[] = [];
-      let timedOut = false;
-      const timeout = AbortSignal.timeout(SSE_COLLECT_TIMEOUT_MS);
-      try {
-         
->>>>>>> Stashed changes
         while (true) {
           if (signal?.aborted) throw new Error("Request aborted during SSE collection");
           const { done, value } = await Promise.race([
@@ -551,16 +472,12 @@ export class AntigravityExecutor extends BaseExecutor {
             ),
           ]);
           if (done) break;
-<<<<<<< Updated upstream
           processAntigravitySSEText(
             decoder.decode(value, { stream: true }),
             partialLine,
             collected,
             log
           );
-=======
-          chunks.push(decoder.decode(value, { stream: true }));
->>>>>>> Stashed changes
         }
       } catch (err) {
         const msg = err?.message || String(err);
@@ -568,51 +485,8 @@ export class AntigravityExecutor extends BaseExecutor {
         log?.warn?.("SSE_COLLECT", `Error collecting SSE stream: ${msg}`);
         // Fall through — return whatever was collected so far
       }
-<<<<<<< Updated upstream
       processAntigravitySSEText(decoder.decode(), partialLine, collected, log);
       flushAntigravitySSEText(partialLine, collected, log);
-=======
-      const rawSSE = chunks.join("");
-
-      // Parse Gemini SSE: each line is "data: {json}"
-      let textContent = "";
-      let finishReason = "stop";
-      let usage: Record<string, unknown> | null = null;
-      const lines = rawSSE.split("\n");
-      for (const line of lines) {
-        const trimmed = line.trim();
-        if (!trimmed.startsWith("data:")) continue;
-        const payload = trimmed.slice(5).trim();
-        if (!payload || payload === "[DONE]") continue;
-        try {
-          const parsed = JSON.parse(payload);
-          const candidate = parsed?.response?.candidates?.[0];
-          if (candidate?.content?.parts) {
-            for (const part of candidate.content.parts) {
-              if (typeof part.text === "string" && !part.thought && !part.thoughtSignature) {
-                textContent += part.text;
-              }
-            }
-          }
-          if (candidate?.finishReason) {
-            finishReason =
-              candidate.finishReason.toLowerCase() === "stop"
-                ? "stop"
-                : candidate.finishReason.toLowerCase();
-          }
-          if (parsed?.response?.usageMetadata) {
-            const um = parsed.response.usageMetadata;
-            usage = {
-              prompt_tokens: um.promptTokenCount || 0,
-              completion_tokens: um.candidatesTokenCount || 0,
-              total_tokens: um.totalTokenCount || 0,
-            };
-          }
-        } catch (e) {
-          log?.debug?.("SSE_PARSE", `Skipping malformed SSE line: ${payload.slice(0, 80)}`);
-        }
-      }
->>>>>>> Stashed changes
 
       const result = {
         id: `chatcmpl-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`,
@@ -622,7 +496,6 @@ export class AntigravityExecutor extends BaseExecutor {
         choices: [
           {
             index: 0,
-<<<<<<< Updated upstream
             message: { role: "assistant", content: collected.textContent },
             finish_reason: timedOut ? "length" : collected.finishReason,
           },
@@ -630,13 +503,6 @@ export class AntigravityExecutor extends BaseExecutor {
         ...(collected.usage && { usage: collected.usage }),
         // Expose credit balance for upstream consumers (usage service, dashboard)
         ...(collected.remainingCredits && { _remainingCredits: collected.remainingCredits }),
-=======
-            message: { role: "assistant", content: textContent },
-            finish_reason: timedOut ? "length" : finishReason,
-          },
-        ],
-        ...(usage && { usage }),
->>>>>>> Stashed changes
       };
 
       const syntheticStatus = timedOut ? 504 : response.status;
@@ -652,7 +518,6 @@ export class AntigravityExecutor extends BaseExecutor {
     return collect();
   }
 
-<<<<<<< Updated upstream
   async execute({
     model,
     body,
@@ -663,9 +528,6 @@ export class AntigravityExecutor extends BaseExecutor {
     upstreamExtraHeaders,
   }: ExecuteInput) {
     await resolveAntigravityVersion();
-=======
-  async execute({ model, body, stream, credentials, signal, log, upstreamExtraHeaders }) {
->>>>>>> Stashed changes
     const fallbackCount = this.getFallbackCount();
     let lastError = null;
     let lastStatus = 0;
@@ -677,7 +539,6 @@ export class AntigravityExecutor extends BaseExecutor {
     // non-streaming Response so chatCore's non-streaming path stays unchanged.
     const upstreamStream = true;
 
-<<<<<<< Updated upstream
     // Account ID for credits tracking.
     // Use connectionId as the stable cache key — it's available in both the executor
     // (via credentials.connectionId) and the usage fetcher (via connection.id).
@@ -690,38 +551,6 @@ export class AntigravityExecutor extends BaseExecutor {
     const creditsMode = getCreditsMode();
     const useCreditsFirst = shouldUseCreditsFirst(credentials?.accessToken || "", creditsMode);
 
-=======
->>>>>>> Stashed changes
-    for (let urlIndex = 0; urlIndex < fallbackCount; urlIndex++) {
-      const url = this.buildUrl(model, upstreamStream, urlIndex);
-      const headers = this.buildHeaders(credentials, upstreamStream);
-      mergeUpstreamExtraHeaders(headers, upstreamExtraHeaders);
-<<<<<<< Updated upstream
-      const transformed = await this.transformRequest(model, body, upstreamStream, credentials);
-      let requestToolNameMap: Map<string, string> | null = null;
-
-      if (transformed instanceof Response) {
-        return { response: transformed, url, headers, transformedBody: body };
-      }
-
-      let transformedBody: Record<string, unknown> = transformed;
-
-      if (transformedBody && typeof transformedBody === "object") {
-        const cloaked = cloakAntigravityToolPayload(transformedBody);
-        transformedBody = cloaked.body;
-        requestToolNameMap = cloaked.toolNameMap;
-      }
-
-      // Credits-first: inject GOOGLE_ONE_AI upfront so we never try the normal
-      // quota path. If credits are exhausted / disabled shouldUseCreditsFirst()
-      // returns false and we fall back to the legacy retry-on-429 flow.
-      if (useCreditsFirst) {
-        transformedBody = injectCreditsField(transformedBody);
-        log?.debug?.("AG_CREDITS", "Credits-first enabled (ANTIGRAVITY_CREDITS=always)");
-      }
-=======
-      const transformedBody = await this.transformRequest(model, body, upstreamStream, credentials);
->>>>>>> Stashed changes
 
       // Initialize retry counter for this URL
       if (!retryAttemptsByUrl[urlIndex]) {
@@ -757,7 +586,6 @@ export class AntigravityExecutor extends BaseExecutor {
         }
 
 =======
->>>>>>> Stashed changes
         // Parse retry time for 429/503 responses
         let retryMs = null;
 
@@ -774,135 +602,6 @@ export class AntigravityExecutor extends BaseExecutor {
               const errorBody = await response.clone().text();
               const errorJson = JSON.parse(errorBody);
               const errorMessage = errorJson?.error?.message || errorJson?.message || "";
-<<<<<<< Updated upstream
-
-              // 1. Try to parse explicit retry time from message
-              const parsedRetryMs = this.parseRetryFromErrorMessage(errorMessage);
-
-              // 2. Classify 429 (pass header-parsed retry hint as fallback
-              //    signal — multi-hour Retry-After upgrades rate_limited to
-              //    quota_exhausted so the GOOGLE_ONE_AI credits retry fires).
-              const effectiveRetryHintMs = retryMs ?? parsedRetryMs ?? null;
-              const category = classify429(errorMessage);
-
-              // 3. For quota_exhausted, attempt Google One AI credits retry FIRST!
-              //    Skip if credits were already injected on the first call
-              //    (creditsMode === "always") — no point re-running with the
-              //    same body. Record the failure so the 5h breaker kicks in.
-              const creditsAlreadyInjected =
-                (transformedBody as { enabledCreditTypes?: unknown }).enabledCreditTypes != null;
-
-              if (category === "quota_exhausted" && creditsAlreadyInjected) {
-                handleCreditsFailure(credentials?.accessToken || "");
-                log?.warn?.("AG_CREDITS", "Credits-first request 429'd — credits likely exhausted");
-                markCreditsExhausted(accountId);
-              }
-
-              if (
-                category === "quota_exhausted" &&
-                !creditsAlreadyInjected &&
-                shouldRetryWithCredits(credentials?.accessToken || "", creditsMode !== "off")
-              ) {
-                log?.info?.("AG_CREDITS", "Retrying with Google One AI credits");
-                const creditsBody = injectCreditsField(transformedBody);
-                const serializedCreditsRequest = serializeAntigravityRequest(
-                  this.provider,
-                  headers,
-                  creditsBody
-                );
-                const finalCreditsHeaders = serializedCreditsRequest.headers;
-                try {
-                  const creditsResp = await fetch(url, {
-                    method: "POST",
-                    headers: finalCreditsHeaders,
-                    body: serializedCreditsRequest.bodyString,
-                    signal,
-                  });
-                  if (creditsResp.ok || creditsResp.status !== HTTP_STATUS.RATE_LIMITED) {
-                    log?.info?.("AG_CREDITS", `Credits retry succeeded: ${creditsResp.status}`);
-                    if (!stream) {
-                      const collected = await this.collectStreamToResponse(
-                        creditsResp,
-                        model,
-                        url,
-                        finalCreditsHeaders,
-                        creditsBody,
-                        log,
-                        signal
-                      );
-                      // Parse _remainingCredits from the synthetic response and cache
-                      try {
-                        const syntheticJson = await collected.response.clone().json();
-                        const rc = syntheticJson?._remainingCredits;
-                        if (Array.isArray(rc)) {
-                          const googleCredit = rc.find((c) => c.creditType === "GOOGLE_ONE_AI");
-                          if (googleCredit) {
-                            const balance = parseInt(googleCredit.creditAmount, 10);
-                            if (!isNaN(balance))
-                              updateAntigravityRemainingCredits(accountId, balance);
-                          }
-                        }
-                      } catch {
-                        /**/
-                      }
-                      return {
-                        ...collected,
-                        transformedBody: attachToolNameMap(creditsBody, requestToolNameMap),
-                      };
-                    }
-                    return {
-                      response: creditsResp,
-                      url,
-                      headers: finalCreditsHeaders,
-                      transformedBody: attachToolNameMap(creditsBody, requestToolNameMap),
-                    };
-                  }
-
-                  // Credit retry also 429'd
-                  handleCreditsFailure(credentials?.accessToken || "");
-                  log?.warn?.("AG_CREDITS", "Credits retry also 429'd");
-
-                  // Also mark in our legacy exhaustion map to avoid retrying other routes
-                  markCreditsExhausted(accountId);
-                } catch (creditsErr) {
-                  handleCreditsFailure(credentials?.accessToken || "");
-                  log?.warn?.("AG_CREDITS", `Credits retry failed: ${creditsErr}`);
-                }
-              }
-
-              // 4. Decide final retry time (apply 4-tier engine)
-              const decision: Decision = decide429(category, parsedRetryMs);
-              retryMs = decision.retryAfterMs;
-              log?.debug?.(
-                "AG_429",
-                `Category: ${category}, Decision: ${decision.kind} — ${decision.reason}`
-              );
-=======
-              retryMs = this.parseRetryFromErrorMessage(errorMessage);
-
-              if (!retryMs) {
-                // Dynamic quota interpretation logic for Free vs Pro accounts
-                const lowerMsg = errorMessage.toLowerCase();
-
-                if (
-                  lowerMsg.includes("free tier") ||
-                  lowerMsg.includes("exhausted your capacity") ||
-                  lowerMsg.includes("daily limit") ||
-                  lowerMsg.includes("quota exceeded")
-                ) {
-                  // Hard limit hit for Free accounts (or exhausting general capacity), fallback immediately.
-                  // Setting a massive retryMs forces an instant fallback.
-                  retryMs = 24 * 60 * 60 * 1000; // 24 hours
-                } else if (
-                  lowerMsg.includes("pro") ||
-                  lowerMsg.includes("per minute") ||
-                  lowerMsg.includes("rpm")
-                ) {
-                  // RPM limit for Pro counts, backoff up to 1 minute, then fallback
-                  retryMs = 60 * 1000; // 60s
-                }
-              }
->>>>>>> Stashed changes
             } catch (e) {
               // Ignore parse errors, will fall back to exponential backoff
             }
@@ -977,16 +676,6 @@ export class AntigravityExecutor extends BaseExecutor {
               status: response.status,
               headers: response.headers,
             });
-<<<<<<< Updated upstream
-            return {
-              response: modifiedResponse,
-              url,
-              headers: finalHeaders,
-              transformedBody: attachToolNameMap(transformedBody, requestToolNameMap),
-            };
-=======
-            return { response: modifiedResponse, url, headers, transformedBody };
->>>>>>> Stashed changes
           } catch (err) {
             log?.warn?.("RETRY", `Failed to embed retryAfterMs: ${err}`);
             // Fall back to original response
@@ -996,148 +685,10 @@ export class AntigravityExecutor extends BaseExecutor {
         // For non-streaming clients, collect the SSE stream and return a synthetic
         // non-streaming Response so chatCore doesn't need to handle SSE conversion.
         if (!stream) {
-<<<<<<< Updated upstream
-          const collected = await this.collectStreamToResponse(
-            response,
-            model,
-            url,
-            finalHeaders,
-=======
-          return this.collectStreamToResponse(
-            response,
-            model,
-            url,
-            headers,
->>>>>>> Stashed changes
             transformedBody,
             log,
             signal
           );
-<<<<<<< Updated upstream
-          // When credits were injected (credits-first or credits-retry), the
-          // synthetic body contains _remainingCredits — mirror it into the
-          // balance cache so the dashboard stays fresh.
-          try {
-            const syntheticJson = await collected.response.clone().json();
-            const rc = syntheticJson?._remainingCredits;
-            if (Array.isArray(rc)) {
-              const googleCredit = rc.find(
-                (c: { creditType?: string }) => c?.creditType === "GOOGLE_ONE_AI"
-              );
-              if (googleCredit) {
-                const balance = parseInt(googleCredit.creditAmount, 10);
-                if (!isNaN(balance)) updateAntigravityRemainingCredits(accountId, balance);
-              }
-            }
-          } catch {
-            /* balance cache is best-effort */
-          }
-          return {
-            ...collected,
-            transformedBody: attachToolNameMap(transformedBody, requestToolNameMap),
-          };
-        }
-
-        // Streaming path: wrap the response body in a pass-through TransformStream
-        // that extracts remainingCredits from the final SSE chunk(s) without
-        // consuming the stream. The client receives the unmodified SSE data.
-        if (response.body) {
-          let sseBuffer = "";
-          const decoder = new TextDecoder(); // Singleton for correct streaming decode
-          const MAX_BUFFER_SIZE = 16 * 1024; // Limit to prevent OOM on large streams
-
-          const passThrough = new TransformStream({
-            transform(chunk, controller) {
-              controller.enqueue(chunk);
-              // Accumulate text to scan for remainingCredits
-              try {
-                const text = decoder.decode(chunk, { stream: true });
-                sseBuffer += text;
-                // Limit buffer size to prevent unbounded growth
-                // Truncate only after a complete newline to avoid splitting SSE lines mid-payload
-                if (sseBuffer.length > MAX_BUFFER_SIZE) {
-                  const lastNewline = sseBuffer.lastIndexOf(
-                    "\n",
-                    sseBuffer.length - MAX_BUFFER_SIZE
-                  );
-                  if (lastNewline !== -1) {
-                    sseBuffer = sseBuffer.slice(lastNewline + 1);
-                  } else {
-                    // No newline found in discard region — buffer contains an incomplete SSE line.
-                    // Discard it entirely to avoid returning malformed data; the remainingCredits
-                    // parser won't find valid data in a truncated line anyway.
-                    sseBuffer = "";
-                  }
-                }
-              } catch {
-                /* decoding best-effort */
-              }
-            },
-            flush() {
-              // Final decode for any remaining bytes
-              try {
-                const text = decoder.decode(); // Flush pending bytes
-                sseBuffer += text;
-              } catch {
-                /* decoding best-effort */
-              }
-
-              // Parse the accumulated SSE data for remainingCredits
-              try {
-                const lines = sseBuffer.split("\n");
-                for (const line of lines) {
-                  const trimmed = line.trim();
-                  if (!trimmed.startsWith("data:")) continue;
-                  const payload = trimmed.slice(5).trim();
-                  if (!payload || payload === "[DONE]") continue;
-                  try {
-                    const parsed = JSON.parse(payload);
-                    if (Array.isArray(parsed?.remainingCredits)) {
-                      const googleCredit = parsed.remainingCredits.find(
-                        (c) => c?.creditType === "GOOGLE_ONE_AI"
-                      );
-                      if (googleCredit) {
-                        const balance = parseInt(googleCredit.creditAmount, 10);
-                        if (!isNaN(balance)) {
-                          updateAntigravityRemainingCredits(accountId, balance);
-                        }
-                      }
-                    }
-                  } catch {
-                    /* skip malformed lines */
-                  }
-                }
-              } catch {
-                /* credits extraction is best-effort */
-              }
-              sseBuffer = "";
-            },
-          });
-          const tappedBody = response.body.pipeThrough(passThrough);
-          const tappedResponse = new Response(tappedBody, {
-            status: response.status,
-            statusText: response.statusText,
-            headers: response.headers,
-          });
-          return {
-            response: tappedResponse,
-            url,
-            headers: finalHeaders,
-            transformedBody: attachToolNameMap(transformedBody, requestToolNameMap),
-          };
-        }
-
-        return {
-          response,
-          url,
-          headers: finalHeaders,
-          transformedBody: attachToolNameMap(transformedBody, requestToolNameMap),
-        };
-=======
-        }
-
-        return { response, url, headers, transformedBody };
->>>>>>> Stashed changes
       } catch (error) {
         lastError = error;
         log?.error?.(

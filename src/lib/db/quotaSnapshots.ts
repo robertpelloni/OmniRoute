@@ -19,7 +19,6 @@ export function saveQuotaSnapshot(snapshot: Omit<QuotaSnapshotRow, "id" | "creat
   const db = getDbInstance() as unknown as DbLike;
   const now = new Date().toISOString();
 
-<<<<<<< Updated upstream
   try {
     db.prepare(
       `INSERT INTO quota_snapshots
@@ -91,7 +90,6 @@ export function getQuotaSnapshots(opts: {
     params.push(opts.until);
   }
 
-<<<<<<< Updated upstream
   try {
     const sql = `SELECT * FROM quota_snapshots WHERE ${conditions.join(" AND ")} ORDER BY created_at ASC`;
     const rows = db.prepare(sql).all(...params);
@@ -102,11 +100,6 @@ export function getQuotaSnapshots(opts: {
     }
     throw err;
   }
-=======
-  const sql = `SELECT * FROM quota_snapshots WHERE ${conditions.join(" AND ")} ORDER BY created_at ASC`;
-  const rows = db.prepare(sql).all(...params);
-  return rows.map((r) => rowToCamel(r) as unknown as QuotaSnapshotRow);
->>>>>>> Stashed changes
 }
 
 export function getAggregatedSnapshots(opts: {
@@ -117,7 +110,6 @@ export function getAggregatedSnapshots(opts: {
 <<<<<<< Updated upstream
   aggregateBy?: "provider" | "connection";
 =======
->>>>>>> Stashed changes
 }): ProviderUtilizationPoint[] {
   const db = getDbInstance() as unknown as DbLike;
   const conditions: string[] = ["created_at >= ?"];
@@ -138,79 +130,6 @@ export function getAggregatedSnapshots(opts: {
     throw new Error("Invalid bucket size");
   }
 
-<<<<<<< Updated upstream
-  const groupFields =
-    opts.aggregateBy === "connection"
-      ? "bucket, provider, connection_id, window_key"
-      : "bucket, provider, window_key";
-  const selectKey =
-    opts.aggregateBy === "connection" ? "provider || ':' || connection_id as provider" : "provider";
-
-  try {
-    const sql = `
-      SELECT
-        datetime((strftime('%s', created_at) / ${bucketSeconds}) * ${bucketSeconds}, 'unixepoch') as bucket,
-        ${selectKey},
-        AVG(remaining_percentage) as remainingPct,
-        MAX(is_exhausted) as isExhausted,
-        window_key
-      FROM quota_snapshots
-      WHERE ${conditions.join(" AND ")}
-      GROUP BY ${groupFields}
-      ORDER BY bucket ASC
-    `;
-
-    const rows = db.prepare(sql).all(...params) as Array<{
-      bucket: string;
-      provider: string;
-      remainingPct: number | null;
-      isExhausted: number;
-      windowKey: string;
-    }>;
-
-    return rows.map((r) => ({
-      timestamp: r.bucket,
-      provider: r.provider,
-      remainingPct: r.remainingPct ?? 0,
-      isExhausted: r.isExhausted === 1,
-      windowKey: r.windowKey,
-    }));
-  } catch (err: any) {
-    if (err?.message?.includes("no such table")) {
-      return [];
-    }
-    throw err;
-  }
-=======
-  const sql = `
-    SELECT 
-      datetime((strftime('%s', created_at) / ${bucketSeconds}) * ${bucketSeconds}, 'unixepoch') as bucket,
-      provider,
-      AVG(remaining_percentage) as remainingPct,
-      MAX(is_exhausted) as isExhausted,
-      window_key
-    FROM quota_snapshots 
-    WHERE ${conditions.join(" AND ")}
-    GROUP BY bucket, provider, window_key
-    ORDER BY bucket ASC
-  `;
-
-  const rows = db.prepare(sql).all(...params) as Array<{
-    bucket: string;
-    provider: string;
-    remainingPct: number | null;
-    isExhausted: number;
-    windowKey: string;
-  }>;
-
-  return rows.map((r) => ({
-    timestamp: r.bucket,
-    provider: r.provider,
-    remainingPct: r.remainingPct ?? 0,
-    isExhausted: r.isExhausted === 1,
-    windowKey: r.windowKey,
-  }));
->>>>>>> Stashed changes
 }
 
 export function cleanupOldSnapshots(retentionDays = 90): number {
@@ -224,21 +143,4 @@ export function cleanupOldSnapshots(retentionDays = 90): number {
   const db = getDbInstance() as unknown as DbLike;
   const cutoffDate = new Date(Date.now() - retentionDays * 24 * 60 * 60 * 1000).toISOString();
 
-<<<<<<< Updated upstream
-  try {
-    const result = db.prepare("DELETE FROM quota_snapshots WHERE created_at < ?").run(cutoffDate);
-    lastCleanupAt = now;
-    return result.changes;
-  } catch (err: any) {
-    if (err?.message?.includes("no such table")) {
-      return 0;
-    }
-    throw err;
-  }
-=======
-  const result = db.prepare("DELETE FROM quota_snapshots WHERE created_at < ?").run(cutoffDate);
-  lastCleanupAt = now;
-
-  return result.changes;
->>>>>>> Stashed changes
 }

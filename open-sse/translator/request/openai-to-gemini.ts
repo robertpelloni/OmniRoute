@@ -8,13 +8,6 @@ import {
   capMaxOutputTokens,
   capThinkingBudget,
   getDefaultThinkingBudget,
-<<<<<<< Updated upstream
-} from "../../../src/lib/modelCapabilities.ts";
-
-import * as crypto from "crypto";
-=======
-} from "../../../src/shared/constants/modelSpecs.ts";
->>>>>>> Stashed changes
 
 function generateUUID() {
   return crypto.randomUUID();
@@ -66,17 +59,6 @@ type GeminiRequest = {
   generationConfig: GeminiGenerationConfig;
   safetySettings: unknown;
   systemInstruction?: GeminiContent;
-<<<<<<< Updated upstream
-  tools?: Array<{
-    functionDeclarations?: GeminiFunctionDeclaration[];
-    googleSearch?: Record<string, unknown>;
-  }>;
-  cachedContent?: string;
-  _toolNameMap?: Map<string, string>;
-=======
-  tools?: Array<{ functionDeclarations: GeminiFunctionDeclaration[] }>;
-  cachedContent?: string;
->>>>>>> Stashed changes
 };
 
 type CloudCodeEnvelope = {
@@ -179,17 +161,6 @@ function openaiToGeminiBase(model, body, stream, toolNameOptions: GeminiToolName
   if (body.top_k !== undefined) {
     result.generationConfig.topK = body.top_k;
   }
-<<<<<<< Updated upstream
-  if (body.stop !== undefined) {
-    result.generationConfig.stopSequences = Array.isArray(body.stop) ? body.stop : [body.stop];
-  }
-  const requestedMaxOutputTokens = body.max_tokens ?? body.max_completion_tokens;
-  if (requestedMaxOutputTokens !== undefined) {
-    result.generationConfig.maxOutputTokens = capMaxOutputTokens(model, requestedMaxOutputTokens);
-=======
-  if (body.max_tokens !== undefined) {
-    result.generationConfig.maxOutputTokens = capMaxOutputTokens(model, body.max_tokens);
->>>>>>> Stashed changes
   } else {
     result.generationConfig.maxOutputTokens = capMaxOutputTokens(model);
   }
@@ -283,28 +254,6 @@ function openaiToGeminiBase(model, body, stream, toolNameOptions: GeminiToolName
             if (tc.type !== "function") continue;
 
             const args = tryParseJSON(tc.function?.arguments || "{}");
-<<<<<<< Updated upstream
-            const signatureForToolCall = resolveGeminiThoughtSignature(
-              tc.id,
-              extractClientThoughtSignature(tc)
-            );
-            const embeddedThoughtSignature = shouldUseEmbeddedSignature
-              ? firstPersistedSignature || signatureForToolCall
-              : undefined;
-
-            if (embeddedThoughtSignature) {
-              shouldUseEmbeddedSignature = false;
-            }
-
-            // Gemini expects the signature on the functionCall part itself.
-            parts.push({
-              ...(embeddedThoughtSignature ? { thoughtSignature: embeddedThoughtSignature } : {}),
-=======
-            // Do NOT include thoughtSignature on functionCall parts — it is only valid
-            // on thinking/reasoning parts and causes HTTP 400 "invalid argument" from the
-            // Gemini API when present on a functionCall part (#725).
-            parts.push({
->>>>>>> Stashed changes
               functionCall: {
                 id: tc.id,
                 name: sanitizeToolName(tc.function.name),
@@ -566,99 +515,6 @@ function wrapInCloudCodeEnvelopeForClaude(
     },
   };
 
-<<<<<<< Updated upstream
-=======
-  // Convert Claude messages to Gemini contents
-  if (claudeRequest.messages && Array.isArray(claudeRequest.messages)) {
-    for (const msg of claudeRequest.messages) {
-      const parts = [];
-
-      if (Array.isArray(msg.content)) {
-        for (const block of msg.content) {
-          if (block.type === "text") {
-            parts.push({ text: block.text });
-          } else if (block.type === "image" && block.source) {
-            parts.push({
-              inlineData: {
-                mime_type: block.source.media_type,
-                data: block.source.data,
-              },
-            });
-          } else if (block.type === "tool_use") {
-            parts.push({
-              functionCall: {
-                id: block.id,
-                name: block.name,
-                args: block.input || {},
-              },
-            });
-          } else if (block.type === "tool_result") {
-            let content = block.content;
-            if (Array.isArray(content)) {
-              content = content
-                .map((c) => (c.type === "text" ? c.text : JSON.stringify(c)))
-                .join("\n");
-            }
-            parts.push({
-              functionResponse: {
-                id: block.tool_use_id,
-                name: "unknown",
-                response: { result: tryParseJSON(content) || content },
-              },
-            });
-          }
-        }
-      } else if (typeof msg.content === "string") {
-        parts.push({ text: msg.content });
-      }
-
-      if (parts.length > 0) {
-        envelope.request.contents.push({
-          role: msg.role === "assistant" ? "model" : "user",
-          parts,
-        });
-      }
-    }
-  }
-
-  // Convert Claude tools to Gemini functionDeclarations
-  if (claudeRequest.tools && Array.isArray(claudeRequest.tools)) {
-    const functionDeclarations = [];
-    for (const tool of claudeRequest.tools) {
-      if (tool.name && tool.input_schema) {
-        const cleanedSchema = cleanJSONSchemaForAntigravity(tool.input_schema);
-        functionDeclarations.push({
-          name: tool.name,
-          description: tool.description || "",
-          parameters: cleanedSchema,
-        });
-      }
-    }
-    if (functionDeclarations.length > 0) {
-      envelope.request.tools = [{ functionDeclarations }];
-      envelope.request.toolConfig = {
-        functionCallingConfig: { mode: "VALIDATED" },
-      };
-    }
-  }
-
-  // Add system instruction (Antigravity default)
-  const defaultPart = { text: ANTIGRAVITY_DEFAULT_SYSTEM };
-  const systemParts = [defaultPart];
-
-  if (claudeRequest.system) {
-    if (Array.isArray(claudeRequest.system)) {
-      for (const block of claudeRequest.system) {
-        if (block.text) systemParts.push({ text: block.text });
-      }
-    } else if (typeof claudeRequest.system === "string") {
-      systemParts.push({ text: claudeRequest.system });
-    }
-  }
-
-  envelope.request.systemInstruction = { role: "user", parts: systemParts };
-
->>>>>>> Stashed changes
   return envelope;
 }
 

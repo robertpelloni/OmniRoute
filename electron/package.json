@@ -1,10 +1,5 @@
 {
   "name": "omniroute-desktop",
-<<<<<<< Updated upstream
-  "version": "3.7.9",
-=======
-  "version": "3.4.3",
->>>>>>> Stashed changes
   "description": "OmniRoute Desktop Application",
   "main": "main.js",
   "author": {

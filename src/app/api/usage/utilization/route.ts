@@ -43,20 +43,16 @@ export async function GET(request: Request) {
     const range = rangeParam as UtilizationTimeRange;
     const since = getRangeStartIso(range);
     const bucketMinutes = BUCKET_SIZES[range];
-<<<<<<< Updated upstream
     const aggregateByParam = searchParams.get("aggregateBy");
     const aggregateBy = aggregateByParam === "connection" ? "connection" : "provider";
 =======
->>>>>>> Stashed changes
 
     const data = getAggregatedSnapshots({
       provider: providerParam || undefined,
       since,
       bucketMinutes,
-<<<<<<< Updated upstream
       aggregateBy,
 =======
->>>>>>> Stashed changes
     });
 
     const providers = Array.from(new Set(data.map((d) => d.provider)));

@@ -40,7 +40,6 @@ function toNumber(value: unknown): number | undefined {
   return typeof value === "number" && Number.isFinite(value) ? value : undefined;
 }
 
-<<<<<<< Updated upstream
 function hasVisibleMessageContent(content: unknown): boolean {
   if (typeof content === "string") {
     return content.trim().length > 0;
@@ -59,7 +58,6 @@ function hasVisibleMessageContent(content: unknown): boolean {
 }
 
 =======
->>>>>>> Stashed changes
 // Matches <think>...</think> blocks and <thinking>...</thinking> (greedy, dotAll)
 const THINK_TAG_REGEX = /<(?:think|thinking)>([\s\S]*?)<\/(?:think|thinking)>/gi;
 
@@ -285,7 +283,6 @@ function sanitizeMessage(msg: unknown): unknown {
     }
   }
 
-<<<<<<< Updated upstream
   // Non-streaming responses should not expose both visible content and reasoning_content.
   // Some clients drop the visible assistant text or render duplicated panels when both fields
   // are present in the final payload. Keep reasoning_content only for reasoning-only messages.
@@ -294,7 +291,6 @@ function sanitizeMessage(msg: unknown): unknown {
   }
 
 =======
->>>>>>> Stashed changes
   // Preserve tool_calls
   if (msgRecord.tool_calls) {
     sanitized.tool_calls = msgRecord.tool_calls;
@@ -717,7 +713,6 @@ export function sanitizeStreamingChunk(parsed: unknown): unknown {
             if (parts.length > 0) {
               delta.reasoning_content = parts.join("");
             }
-<<<<<<< Updated upstream
           }
           if (deltaRecord.reasoning_text !== undefined) {
             delta.reasoning_text = deltaRecord.reasoning_text;
@@ -742,7 +737,6 @@ export function sanitizeStreamingChunk(parsed: unknown): unknown {
               delta.reasoning_content = parts.join("");
             }
 =======
->>>>>>> Stashed changes
           }
           if (deltaRecord.tool_calls !== undefined) delta.tool_calls = deltaRecord.tool_calls;
           if (deltaRecord.function_call !== undefined)

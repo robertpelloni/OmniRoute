@@ -115,7 +115,6 @@ export async function getComboByName(name: string) {
 export async function createCombo(data: JsonRecord) {
   const db = getDbInstance();
   const now = new Date().toISOString();
-<<<<<<< Updated upstream
   const sortOrder = typeof data.sortOrder === "number" ? data.sortOrder : getNextSortOrder();
   const comboId = typeof data.id === "string" && data.id.trim().length > 0 ? data.id : uuidv4();
   const combo = normalizeStoredCombo(
@@ -263,7 +262,6 @@ export async function reorderCombos(comboIds: string[]) {
 }
 
 =======
->>>>>>> Stashed changes
 export async function deleteCombo(id: string) {
   const db = getDbInstance();
   const result = db.prepare("DELETE FROM combos WHERE id = ?").run(id);

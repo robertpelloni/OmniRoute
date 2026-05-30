@@ -356,7 +356,6 @@ export function clearCache(): number {
   let removed = 0;
   try {
     const db = getDbInstance();
-<<<<<<< Updated upstream
     const result = db.prepare("DELETE FROM semantic_cache").run();
     removed = result.changes || 0;
 =======
@@ -369,7 +368,6 @@ export function clearCache(): number {
 <<<<<<< Updated upstream
   return removed;
 =======
->>>>>>> Stashed changes
 }
 
 export function getCacheStats() {

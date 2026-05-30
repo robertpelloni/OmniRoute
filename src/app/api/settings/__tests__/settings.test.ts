@@ -29,10 +29,8 @@ describe("PATCH /api/settings", () => {
     (getSettings as any).mockResolvedValue({
       debugMode: false,
       hiddenSidebarItems: [],
-<<<<<<< Updated upstream
       comboConfigMode: "guided",
 =======
->>>>>>> Stashed changes
     });
     // Mock updateSettings to merge updates into the original
     (updateSettings as any).mockImplementation(async (updates: Record<string, unknown>) => {
@@ -65,7 +63,6 @@ describe("PATCH /api/settings", () => {
     const calledWith = (updateSettings as any).mock.calls[0][0];
     expect(calledWith.hiddenSidebarItems).toEqual([]);
   });
-<<<<<<< Updated upstream
 
   it("updates comboConfigMode via PATCH", async () => {
     const req = createPatchRequest({ comboConfigMode: "expert" });
@@ -78,5 +75,4 @@ describe("PATCH /api/settings", () => {
     expect(calledWith.comboConfigMode).toBe("expert");
   });
 =======
->>>>>>> Stashed changes
 });

@@ -52,14 +52,12 @@ export function coerceSchemaNumericFields(schema: unknown): unknown {
 
   const result: JsonRecord = { ...schema };
 
-<<<<<<< Updated upstream
   // Fix #1782: Strip 'default' property to prevent upstream models from eagerly injecting optional fields
   if ("default" in result) {
     delete result.default;
   }
 
 =======
->>>>>>> Stashed changes
   for (const field of NUMERIC_SCHEMA_FIELDS) {
     if (field in result) {
       result[field] = coerceNumericString(result[field]);
@@ -191,7 +189,6 @@ export function sanitizeToolDescriptions(tools: unknown): unknown {
   return tools.map((tool) => sanitizeToolDescription(tool));
 }
 
-<<<<<<< Updated upstream
 export function sanitizeToolId(id: string | undefined): string {
   if (!id) return `tool_${crypto.randomUUID().replace(/-/g, "_")}`;
   const sanitized = id.replace(/[^a-zA-Z0-9_-]/g, "_");
@@ -199,7 +196,6 @@ export function sanitizeToolId(id: string | undefined): string {
 }
 
 =======
->>>>>>> Stashed changes
 export function injectEmptyReasoningContentForToolCalls(
   messages: unknown,
   provider: unknown

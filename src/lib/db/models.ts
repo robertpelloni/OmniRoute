@@ -383,7 +383,6 @@ export async function addCustomModel(
 }
 
 /**
-<<<<<<< Updated upstream
  * Replace the entire custom models list for a provider.
 =======
  * Replace the entire custom models list for a provider (used by auto-sync).
@@ -398,22 +397,10 @@ export async function replaceCustomModels(
     source?: string;
     apiFormat?: string;
     supportedEndpoints?: string[];
-<<<<<<< Updated upstream
     inputTokenLimit?: number;
     outputTokenLimit?: number;
     description?: string;
     supportsThinking?: boolean;
-=======
->>>>>>> Stashed changes
-  }>,
-  { allowEmpty = false }: { allowEmpty?: boolean } = {}
-) {
-  // Guard: skip destructive clear when the caller hasn't explicitly opted in.
-<<<<<<< Updated upstream
-  // This prevents callers from wiping manually added models when the
-=======
-  // This prevents auto-sync from wiping manually-imported models when the
->>>>>>> Stashed changes
   // upstream /models endpoint fails, times out, or returns an empty list.
   if (models.length === 0 && !allowEmpty) {
     const existing = await getCustomModels(providerId);
@@ -461,7 +448,6 @@ export async function replaceCustomModels(
           ? { supportsThinking: (prev as any).supportsThinking }
           : {}),
 =======
->>>>>>> Stashed changes
       // Preserve existing compat flags
       ...(prev && (prev as any).normalizeToolCallId !== undefined
         ? { normalizeToolCallId: (prev as any).normalizeToolCallId }

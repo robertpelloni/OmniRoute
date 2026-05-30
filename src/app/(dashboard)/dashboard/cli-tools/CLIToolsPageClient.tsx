@@ -56,7 +56,6 @@ export default function CLIToolsPageClient({ machineId: _machineId }) {
   const [toolStatuses, setToolStatuses] = useState({});
   const [statusesLoaded, setStatusesLoaded] = useState(false);
   const [dynamicModels, setDynamicModels] = useState([]);
-<<<<<<< Updated upstream
   const [activeCategory, setActiveCategory] = useState("auto");
   const translateOrFallback = useCallback(
     (key, fallback, values = undefined) => {
@@ -456,7 +455,6 @@ export default function CLIToolsPageClient({ machineId: _machineId }) {
       </Card>
 
 =======
->>>>>>> Stashed changes
       {!hasActiveProviders && (
         <Card className="border-yellow-500/50 bg-yellow-500/5">
           <div className="flex items-center gap-3">
@@ -472,11 +470,6 @@ export default function CLIToolsPageClient({ machineId: _machineId }) {
       )}
 
       <div className="flex flex-col gap-4">
-<<<<<<< Updated upstream
-        {toolEntries.map(([toolId, tool]) => {
-=======
-        {Object.entries(CLI_TOOLS).map(([toolId, tool]) => {
->>>>>>> Stashed changes
           const docsHref = getToolDocsHref(toolId, tool);
           const isExternalDocs = /^https?:\/\//i.test(docsHref);
           return (

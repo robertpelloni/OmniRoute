@@ -70,14 +70,6 @@ export function injectModelTag(messages: Message[], providerModel: string): Mess
   if (typeof msg.content !== "string") {
     // If the message has tool_calls but no string content, append a new assistant
     // message with the tag rather than silently failing.
-<<<<<<< Updated upstream
-    return [...cleaned, { role: "assistant", content: `<omniModel>${providerModel}</omniModel>` }];
-=======
-    return [
-      ...cleaned,
-      { role: "assistant", content: `\n<omniModel>${providerModel}</omniModel>` },
-    ];
->>>>>>> Stashed changes
   }
 
   const tagged = [...cleaned];

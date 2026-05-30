@@ -1,13 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { buildComboTestRequestBody, extractComboTestResponseText } from "@/lib/combos/testHealth";
-<<<<<<< Updated upstream
-import { getApiKeys, getComboByName, getCombos } from "@/lib/localDb";
-import { getRuntimePorts } from "@/lib/runtime/ports";
-import { resolveNestedComboTargets } from "@omniroute/open-sse/services/combo.ts";
-=======
-import { getComboByName } from "@/lib/localDb";
->>>>>>> Stashed changes
 import { testComboSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
@@ -322,21 +315,6 @@ export async function POST(request) {
       return NextResponse.json({ error: "Combo has no models" }, { status: 400 });
     }
 
-<<<<<<< Updated upstream
-    const baseInternalUrl = getInternalBaseUrl();
-    const internalApiKey = await getInternalApiKey();
-    const results = await Promise.all(
-      targets.map((target) => testComboTarget(target, baseInternalUrl, internalApiKey))
-    );
-    const resolvedResult = results.find((result) => result.status === "ok") || null;
-    const resolvedBy = resolvedResult?.model || null;
-=======
-    const internalUrl = `${getBaseUrl(request)}/v1/chat/completions`;
-    const results = await Promise.all(
-      models.map((modelStr) => testComboModel(modelStr, internalUrl))
-    );
-    const resolvedBy = results.find((result) => result.status === "ok")?.model || null;
->>>>>>> Stashed changes
 
     return NextResponse.json({
       comboName,

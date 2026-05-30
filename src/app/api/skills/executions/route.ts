@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { skillExecutor } from "@/lib/skills/executor";
-<<<<<<< Updated upstream
 import { parsePaginationParams, buildPaginatedResponse } from "@/shared/types/pagination";
 import { z } from "zod";
 import { validateBody, isValidationFailure } from "@/shared/validation/helpers";
@@ -68,4 +67,3 @@ export async function POST(request: Request) {
   }
 }
 =======
->>>>>>> Stashed changes

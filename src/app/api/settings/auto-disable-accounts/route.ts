@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { getSettings, updateSettings } from "@/lib/localDb";
 import { updateAutoDisableAccountsSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
-<<<<<<< Updated upstream
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
 
 export async function GET(request: Request) {
@@ -32,7 +31,6 @@ export async function PUT(request: Request) {
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
 =======
->>>>>>> Stashed changes
   let rawBody: unknown;
   try {
     rawBody = await request.json();

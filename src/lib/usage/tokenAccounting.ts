@@ -49,7 +49,6 @@ export function getLoggedInputTokens(tokens: unknown): number {
   }
 
   if (tokenRecord.input_tokens !== undefined && tokenRecord.input_tokens !== null) {
-<<<<<<< Updated upstream
     // Anthropic / anthropic-compatible-cc streaming: input_tokens is only the
     // non-cached portion.  The cache counters sit as separate top-level fields
     // (cache_read_input_tokens, cache_creation_input_tokens).  We need to add
@@ -158,22 +157,18 @@ export function getReasoningTokensOrNull(tokens: unknown): number | null {
 }
 
 =======
->>>>>>> Stashed changes
 export function formatUsageLog(tokens: unknown): string {
   const input = getLoggedInputTokens(tokens);
   const output = getLoggedOutputTokens(tokens);
   const cacheRead = getPromptCacheReadTokens(tokens);
-<<<<<<< Updated upstream
   const cacheWrite = getPromptCacheCreationTokens(tokens);
   const reasoning = getReasoningTokens(tokens);
 =======
->>>>>>> Stashed changes
 
   let msg = `in=${input} | out=${output}`;
   if (cacheRead > 0) {
     msg += ` | CR=${cacheRead}`;
   }
-<<<<<<< Updated upstream
   if (cacheWrite > 0) {
     msg += ` | CW=${cacheWrite}`;
   }
@@ -181,6 +176,5 @@ export function formatUsageLog(tokens: unknown): string {
     msg += ` | R=${reasoning}`;
   }
 =======
->>>>>>> Stashed changes
   return msg;
 }

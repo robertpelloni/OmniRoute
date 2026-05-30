@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { retrieveMemories } from "../../memory/retrieval";
 import { createMemory } from "../../memory/store";
@@ -38,35 +37,9 @@ describe("Memory + Skills Integration", () => {
       type: "factual" as any,
       key: "test-key",
       content: "Test memory content",
-<<<<<<< Updated upstream
       sessionId: "",
       metadata: {},
       expiresAt: null,
-=======
->>>>>>> Stashed changes
-    });
-
-    const config = {
-      enabled: true,
-      maxTokens: 2000,
-      retrievalStrategy: "exact" as const,
-      autoSummarize: false,
-      persistAcrossModels: false,
-      retentionDays: 30,
-      scope: "apiKey" as const,
-    };
-
-    const memories = await retrieveMemories(apiKeyId, config);
-    expect(memories).toBeDefined();
-    expect(Array.isArray(memories)).toBe(true);
-  });
-
-  it("should register and list skills", async () => {
-<<<<<<< Updated upstream
-    const _skill = await skillRegistry.register({
-=======
-    const skill = await skillRegistry.register({
->>>>>>> Stashed changes
       name: "test-skill",
       version: "1.0.0",
       description: "Test skill",
@@ -158,5 +131,4 @@ describe("SkillsMP Marketplace Integration", () => {
     await skillRegistry.unregisterById(skill.id);
   });
 =======
->>>>>>> Stashed changes
 });

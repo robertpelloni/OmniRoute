@@ -21,10 +21,8 @@ declare const EdgeRuntime: string | undefined;
  */
 
 import { BaseExecutor, mergeUpstreamExtraHeaders } from "./base.ts";
-<<<<<<< Updated upstream
 import { getCursorUserAgent } from "../config/providerHeaderProfiles.ts";
 =======
->>>>>>> Stashed changes
 import { PROVIDERS, HTTP_STATUS } from "../config/constants.ts";
 import {
   generateCursorBody,

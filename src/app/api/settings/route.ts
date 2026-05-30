@@ -3,49 +3,17 @@ import { getSettings, updateSettings } from "@/lib/localDb";
 import { getRuntimePorts } from "@/lib/runtime/ports";
 import { updateSettingsSchema } from "@/shared/validation/settingsSchemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
-<<<<<<< Updated upstream
-import { getConsistentMachineId } from "@/shared/utils/machineId";
-import { validateProxyUrl, upsertUpstreamProxyConfig } from "@/lib/db/upstreamProxy";
-import {
-  ensurePersistentManagementPasswordHash,
-  getStoredManagementPassword,
-  hasManagementPasswordConfigured,
-  hashManagementPassword,
-  verifyManagementPassword,
-} from "@/lib/auth/managementPassword";
-import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
-
-export async function GET(request: Request) {
-  const authError = await requireManagementAuth(request);
-  if (authError) return authError;
-=======
-import { setCliCompatProviders } from "../../../../open-sse/config/cliFingerprints";
-import { getConsistentMachineId } from "@/shared/utils/machineId";
->>>>>>> Stashed changes
 
   try {
     const settings = await getSettings();
     const { password, ...safeSettings } = settings;
 
-<<<<<<< Updated upstream
-=======
-    // Sync CLI fingerprint providers to runtime cache on load
-    if (settings.cliCompatProviders) {
-      setCliCompatProviders(settings.cliCompatProviders as string[]);
-    }
-
->>>>>>> Stashed changes
     const runtimePorts = getRuntimePorts();
     const cloudUrl = process.env.CLOUD_URL || process.env.NEXT_PUBLIC_CLOUD_URL || null;
     const machineId = await getConsistentMachineId();
 
     return NextResponse.json({
       ...safeSettings,
-<<<<<<< Updated upstream
-      hasPassword: hasManagementPasswordConfigured(settings),
-=======
-      hasPassword: !!password || !!process.env.INITIAL_PASSWORD,
->>>>>>> Stashed changes
       runtimePorts,
       apiPort: runtimePorts.apiPort,
       dashboardPort: runtimePorts.dashboardPort,

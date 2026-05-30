@@ -1,5 +1,4 @@
 import initializeCloudSync from "@/shared/services/initializeCloudSync";
-<<<<<<< Updated upstream
 import { startBudgetResetJob } from "@/lib/jobs/budgetResetJob";
 import { startModelSyncScheduler } from "@/shared/services/modelSyncScheduler";
 
@@ -50,7 +49,6 @@ export async function ensureCloudSyncInitialized() {
 <<<<<<< Updated upstream
       startBudgetResetJob();
 =======
->>>>>>> Stashed changes
       initialized = true;
     } catch (error) {
       console.error("[ServerInit] Error initializing background sync services:", error);

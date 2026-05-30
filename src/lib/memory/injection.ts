@@ -11,12 +11,10 @@
  */
 
 import { Memory } from "./types";
-<<<<<<< Updated upstream
 import { logger } from "../../../open-sse/utils/logger.ts";
 
 const log = logger("MEMORY_INJECTION");
 =======
->>>>>>> Stashed changes
 
 export interface ChatMessage {
   role: "system" | "user" | "assistant";
@@ -38,7 +36,6 @@ export interface ChatRequest {
  * Providers known NOT to support a top-level system-role message.
  * These receive memories injected as the first user message instead.
  */
-<<<<<<< Updated upstream
 const PROVIDERS_WITHOUT_SYSTEM_MESSAGE = new Set([
   "o1",
   "o1-mini",
@@ -92,22 +89,7 @@ export function injectMemory(
   provider: string | null | undefined
 ): ChatRequest {
   if (!memories || memories.length === 0) {
-<<<<<<< Updated upstream
     log.info("memory.injection.skipped", { reason: "no_memories", model: request.model });
-=======
->>>>>>> Stashed changes
-    return request;
-  }
-
-  const memoryText = formatMemoryContext(memories);
-<<<<<<< Updated upstream
-  if (!memoryText) {
-    log.info("memory.injection.skipped", { reason: "empty_context", model: request.model });
-    return request;
-  }
-=======
-  if (!memoryText) return request;
->>>>>>> Stashed changes
 
   const messages: ChatMessage[] = Array.isArray(request.messages) ? [...request.messages] : [];
 
@@ -123,20 +105,17 @@ export function injectMemory(
       model: request.model,
     });
 =======
->>>>>>> Stashed changes
     return { ...request, messages: [memorySystemMessage, ...messages] };
   } else {
     // Strategy 2 (fallback): inject as the first user message.
     // Used for providers like o1-mini that reject the system role.
     const memoryUserMessage: ChatMessage = { role: "user", content: memoryText };
-<<<<<<< Updated upstream
     log.info("memory.injection.injected", {
       count: memories.length,
       strategy: "user",
       model: request.model,
     });
 =======
->>>>>>> Stashed changes
     return { ...request, messages: [memoryUserMessage, ...messages] };
   }
 }

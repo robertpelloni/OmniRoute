@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 import { CORS_HEADERS } from "./cors.ts";
 import { getDefaultErrorMessage, getErrorInfo } from "../config/errorConfig.ts";
 import { normalizePayloadForLog } from "@/lib/logPayloads";
@@ -174,29 +173,24 @@ export async function parseUpstreamError(response, provider = null) {
   }
 
 =======
->>>>>>> Stashed changes
   // Cap maximum retry time at 24 hours to prevent infinite wait
   const MAX_RETRY_MS = 24 * 60 * 60 * 1000;
   if (retryAfterMs && retryAfterMs > MAX_RETRY_MS) {
     retryAfterMs = MAX_RETRY_MS;
   }
 
-<<<<<<< Updated upstream
   const responseHeaders: Record<string, string> | null = response.headers
     ? Object.fromEntries(response.headers.entries())
     : null;
 
 =======
->>>>>>> Stashed changes
   return {
     statusCode: response.status,
     message: messageStr,
     retryAfterMs,
     responseBody,
-<<<<<<< Updated upstream
     responseHeaders,
 =======
->>>>>>> Stashed changes
   };
 }
 

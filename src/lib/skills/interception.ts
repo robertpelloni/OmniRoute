@@ -1,5 +1,4 @@
 import { skillExecutor } from "./executor";
-<<<<<<< Updated upstream
 import { builtinSkills } from "./builtins";
 import { detectProvider } from "./injection";
 import { OMNIROUTE_WEB_SEARCH_FALLBACK_TOOL_NAME } from "@omniroute/open-sse/services/webSearchFallback.ts";
@@ -20,7 +19,6 @@ interface ExecutionContext {
   apiKeyId: string;
   sessionId: string;
   requestId: string;
-<<<<<<< Updated upstream
   builtinToolNames?: string[];
   customSkillExecutionEnabled?: boolean;
 }
@@ -75,92 +73,6 @@ function getResponsesOutputContainer(response: Record<string, unknown> | null | 
   }
 
   return null;
-=======
->>>>>>> Stashed changes
-}
-
-export async function interceptToolCalls(
-  toolCalls: ToolCall[],
-  context: ExecutionContext
-): Promise<{ id: string; result: unknown }[]> {
-  const results = await Promise.all(
-    toolCalls.map(async (call) => {
-      try {
-<<<<<<< Updated upstream
-        const builtinHandlerName = resolveBuiltinHandlerName(call.name, context);
-        if (builtinHandlerName) {
-          log.info("skills.interception.builtin_tool_detected", {
-            toolName: call.name,
-            builtinHandler: builtinHandlerName,
-            callId: call.id,
-          });
-
-          const result = await builtinSkills[builtinHandlerName](call.arguments, {
-            apiKeyId: context.apiKeyId,
-            sessionId: context.sessionId,
-          });
-
-          log.info("skills.interception.execution_complete", {
-            toolName: call.name,
-            callId: call.id,
-          });
-
-          return {
-            id: call.id,
-            result,
-          };
-        }
-
-=======
->>>>>>> Stashed changes
-        const [name, version] = call.name.includes("@")
-          ? call.name.split("@")
-          : [call.name, "latest"];
-
-        const skillName = version === "latest" ? name : `${name}@${version}`;
-
-<<<<<<< Updated upstream
-        log.info("skills.interception.tool_call_detected", {
-          toolName: call.name,
-          callId: call.id,
-        });
-
-=======
->>>>>>> Stashed changes
-        const execution = await skillExecutor.execute(skillName, call.arguments, {
-          apiKeyId: context.apiKeyId,
-          sessionId: context.sessionId,
-        });
-
-<<<<<<< Updated upstream
-        const result =
-          execution.output ??
-          (execution.errorMessage
-            ? { error: execution.errorMessage }
-            : { error: "Skill execution returned no output" });
-
-        log.info("skills.interception.execution_complete", {
-          toolName: call.name,
-          callId: call.id,
-        });
-
-        return {
-          id: call.id,
-          result,
-        };
-      } catch (err) {
-        log.error("skills.interception.execution_failed", {
-          toolName: call.name,
-          callId: call.id,
-          err: err instanceof Error ? err.message : String(err),
-        });
-=======
-        return {
-          id: call.id,
-          result: execution.output,
-        };
-      } catch (err) {
->>>>>>> Stashed changes
         return {
           id: call.id,
           result: { error: err instanceof Error ? err.message : String(err) },
@@ -176,7 +88,6 @@ export function extractToolCalls(response: any, modelId: string): ToolCall[] {
   const provider = detectProvider(modelId);
 
   switch (provider) {
-<<<<<<< Updated upstream
     case "openai": {
       const rootToolCalls = Array.isArray(response?.tool_calls) ? response.tool_calls : [];
       const choiceToolCalls = Array.isArray(response?.choices)
@@ -203,14 +114,6 @@ export function extractToolCalls(response: any, modelId: string): ToolCall[] {
         arguments: parseArguments(tc.function?.arguments || tc.arguments || "{}"),
       }));
     }
-=======
-    case "openai":
-      return (response.tool_calls || []).map((tc: any) => ({
-        id: tc.id || `call_${Date.now()}`,
-        name: tc.function?.name || "",
-        arguments: parseArguments(tc.function?.arguments || "{}"),
-      }));
->>>>>>> Stashed changes
 
     case "anthropic":
       return (response.content || [])
@@ -250,7 +153,6 @@ export async function handleToolCallExecution(
   modelId: string,
   context: ExecutionContext
 ): Promise<any> {
-<<<<<<< Updated upstream
   const toolCalls = extractToolCalls(response, modelId).filter((call) => {
     const builtinHandlerName = resolveBuiltinHandlerName(call.name, context);
     if (builtinHandlerName) {
@@ -258,9 +160,6 @@ export async function handleToolCallExecution(
     }
     return context.customSkillExecutionEnabled !== false;
   });
-=======
-  const toolCalls = extractToolCalls(response, modelId);
->>>>>>> Stashed changes
 
   if (toolCalls.length === 0) {
     return response;
@@ -271,7 +170,6 @@ export async function handleToolCallExecution(
   const provider = detectProvider(modelId);
 
   switch (provider) {
-<<<<<<< Updated upstream
     case "openai": {
       const responsesOutput = getResponsesOutputContainer(response);
       if (responsesOutput) {
@@ -297,9 +195,6 @@ export async function handleToolCallExecution(
         };
       }
 
-=======
-    case "openai":
->>>>>>> Stashed changes
       return {
         ...response,
         tool_results: results.map((r) => ({
@@ -310,7 +205,6 @@ export async function handleToolCallExecution(
 <<<<<<< Updated upstream
     }
 =======
->>>>>>> Stashed changes
 
     case "anthropic":
       return {

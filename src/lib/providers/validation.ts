@@ -81,7 +81,6 @@ function normalizeBaseUrl(baseUrl: string) {
   return (baseUrl || "").trim().replace(/\/$/, "");
 }
 
-<<<<<<< Updated upstream
 function normalizeAzureOpenAIBaseUrl(baseUrl: string) {
   return normalizeBaseUrl(baseUrl)
     .replace(/\/openai$/i, "")
@@ -89,7 +88,6 @@ function normalizeAzureOpenAIBaseUrl(baseUrl: string) {
 }
 
 =======
->>>>>>> Stashed changes
 function normalizeAnthropicBaseUrl(baseUrl: string) {
   return stripAnthropicMessagesSuffix(baseUrl || "");
 }
@@ -368,7 +366,6 @@ async function validateOpenAILikeProvider({
   return { valid: true, error: null };
 }
 
-<<<<<<< Updated upstream
 async function validateDirectChatProvider({ url, headers, body, providerSpecificData = {} }: any) {
   try {
     const response = await validationWrite(url, {
@@ -538,7 +535,6 @@ async function validateRerankApiProvider({ apiKey, providerSpecificData = {}, ur
 }
 
 =======
->>>>>>> Stashed changes
 async function validateAnthropicLikeProvider({
   apiKey,
   baseUrl,
@@ -569,11 +565,6 @@ async function validateAnthropicLikeProvider({
   const testModelId =
     providerSpecificData?.validationModelId || modelId || "claude-3-5-sonnet-20241022";
 
-<<<<<<< Updated upstream
-  const response = await validationWrite(baseUrl, {
-=======
-  const response = await fetch(baseUrl, {
->>>>>>> Stashed changes
     method: "POST",
     headers: requestHeaders,
     body: JSON.stringify({
@@ -2001,32 +1992,6 @@ async function validateAnthropicCompatibleProvider({ apiKey, providerSpecificDat
     return { valid: false, error: "No base URL configured for Anthropic compatible provider" };
   }
 
-<<<<<<< Updated upstream
-  const headers = applyCustomUserAgent(
-    {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
-      Authorization: `Bearer ${apiKey}`,
-    },
-    providerSpecificData
-  );
-
-  // Step 1: Try GET /models
-  try {
-    const modelsRes = await validationRead(
-=======
-  const headers = {
-    "Content-Type": "application/json",
-    "x-api-key": apiKey,
-    "anthropic-version": "2023-06-01",
-    Authorization: `Bearer ${apiKey}`,
-  };
-
-  // Step 1: Try GET /models
-  try {
-    const modelsRes = await fetch(
->>>>>>> Stashed changes
       joinBaseUrlAndPath(baseUrl, providerSpecificData?.modelsPath || "/models"),
       {
         method: "GET",
@@ -2048,11 +2013,6 @@ async function validateAnthropicCompatibleProvider({ apiKey, providerSpecificDat
   // Step 2: Fallback — try a minimal messages request
   const testModelId = providerSpecificData?.validationModelId || "claude-3-5-sonnet-20241022";
   try {
-<<<<<<< Updated upstream
-    const messagesRes = await validationWrite(
-=======
-    const messagesRes = await fetch(
->>>>>>> Stashed changes
       joinBaseUrlAndPath(baseUrl, providerSpecificData?.chatPath || "/messages"),
       {
         method: "POST",
@@ -3023,126 +2983,6 @@ export async function validateProviderApiKey({ provider, apiKey, providerSpecifi
     inworld: validateInworldProvider,
     "aws-polly": validateAwsPollyProvider,
     "bailian-coding-plan": validateBailianCodingPlanProvider,
-<<<<<<< Updated upstream
-    heroku: validateHerokuProvider,
-    databricks: validateDatabricksProvider,
-    datarobot: validateDataRobotProvider,
-    watsonx: validateWatsonxProvider,
-    oci: validateOciProvider,
-    sap: validateSapProvider,
-    bedrock: ({ apiKey, providerSpecificData }: any) => {
-      const baseUrl = normalizeBedrockBaseUrl(
-        providerSpecificData?.baseUrl || BEDROCK_DEFAULT_BASE_URL
-      );
-      return validateOpenAILikeProvider({
-        provider: "bedrock",
-        apiKey,
-        providerSpecificData,
-        baseUrl,
-        modelId: getBedrockValidationModelId(baseUrl),
-        modelsUrl: buildBedrockModelsUrl(baseUrl),
-      });
-    },
-    modal: ({ apiKey, providerSpecificData }: any) =>
-      validateOpenAILikeProvider({
-        provider: "modal",
-        apiKey,
-        providerSpecificData,
-        baseUrl: normalizeBaseUrl(providerSpecificData?.baseUrl || ""),
-        modelId: "Qwen/Qwen3-4B-Thinking-2507-FP8",
-      }),
-    "nous-research": validateNousResearchProvider,
-    petals: validatePetalsProvider,
-    poe: validatePoeProvider,
-    clarifai: validateClarifaiProvider,
-    reka: validateRekaProvider,
-    maritalk: validateMaritalkProvider,
-    nlpcloud: validateNlpCloudProvider,
-    runwayml: validateRunwayProvider,
-    snowflake: validateSnowflakeProvider,
-    gigachat: validateGigachatProvider,
-    "grok-web": validateGrokWebProvider,
-    "chatgpt-web": validateChatGptWebProvider,
-    "perplexity-web": validatePerplexityWebProvider,
-    "blackbox-web": validateBlackboxWebProvider,
-    "muse-spark-web": validateMuseSparkWebProvider,
-    "azure-openai": validateAzureOpenAIProvider,
-    "azure-ai": validateAzureAiProvider,
-    "voyage-ai": ({ apiKey, providerSpecificData }: any) => {
-      const embeddingProvider = getEmbeddingProvider("voyage-ai");
-      return validateEmbeddingApiProvider({
-        apiKey,
-        providerSpecificData,
-        url: embeddingProvider?.baseUrl,
-        modelId: embeddingProvider?.models?.[0]?.id || "voyage-4-lite",
-      });
-    },
-    "jina-ai": ({ apiKey, providerSpecificData }: any) => {
-      const rerankProvider = getRerankProvider("jina-ai");
-      return validateRerankApiProvider({
-        apiKey,
-        providerSpecificData,
-        url: rerankProvider?.baseUrl,
-        modelId: rerankProvider?.models?.[0]?.id || "jina-reranker-v3",
-      });
-    },
-    gitlab: async ({ apiKey, providerSpecificData }: any) => {
-      try {
-        const configuredBaseUrl =
-          typeof providerSpecificData?.baseUrl === "string"
-            ? providerSpecificData.baseUrl.trim()
-            : "";
-        const root = (configuredBaseUrl || "https://gitlab.com").replace(/\/$/, "");
-        const res = await validationWrite(`${root}/api/v4/code_suggestions/direct_access`, {
-          method: "POST",
-          headers: buildBearerHeaders(apiKey, providerSpecificData),
-          body: "{}",
-        });
-        if (res.status === 401) {
-          return { valid: false, error: "Invalid API key" };
-        }
-        return { valid: true, error: null };
-      } catch (error: any) {
-        return toValidationErrorResult(error);
-      }
-    },
-    vertex: async ({ apiKey }: any) => {
-      try {
-        const { parseSAFromApiKey, getAccessToken } =
-          await import("@omniroute/open-sse/executors/vertex.ts");
-        const sa = parseSAFromApiKey(apiKey);
-        // Validates credentials by successfully exchanging them for a JWT from Google Identity
-        await getAccessToken(sa);
-        return { valid: true, error: null };
-      } catch (error: any) {
-        return { valid: false, error: "Invalid Service Account JSON: " + error.message };
-      }
-    },
-    "vertex-partner": async ({ apiKey }: any) => {
-      try {
-        const { parseSAFromApiKey, getAccessToken } =
-          await import("@omniroute/open-sse/executors/vertex.ts");
-        const sa = parseSAFromApiKey(apiKey);
-        await getAccessToken(sa);
-        return { valid: true, error: null };
-      } catch (error: any) {
-        return { valid: false, error: "Invalid Service Account JSON: " + error.message };
-      }
-    },
-    // LongCat AI — does not expose /v1/models; validate via chat completions directly (#592)
-    longcat: async ({ apiKey, providerSpecificData }: any) => {
-      try {
-        const res = await validationWrite("https://api.longcat.chat/openai/v1/chat/completions", {
-          method: "POST",
-          headers: buildBearerHeaders(apiKey, providerSpecificData),
-=======
-    // LongCat AI — does not expose /v1/models; validate via chat completions directly (#592)
-    longcat: async ({ apiKey }: any) => {
-      try {
-        const res = await fetch("https://api.longcat.chat/openai/v1/chat/completions", {
-          method: "POST",
-          headers: buildBearerHeaders(apiKey),
->>>>>>> Stashed changes
           body: JSON.stringify({
             model: "longcat",
             messages: [{ role: "user", content: "test" }],
@@ -3155,38 +2995,6 @@ export async function validateProviderApiKey({ provider, apiKey, providerSpecifi
         // Any non-auth response (200, 400, 422) means auth passed
         return { valid: true, error: null };
       } catch (error: any) {
-<<<<<<< Updated upstream
-        return toValidationErrorResult(error);
-      }
-    },
-    // Xiaomi MiMo — Token Plan keys (tp-*) only work on regional endpoints
-    // (e.g. token-plan-sgp, token-plan-ams), not api.xiaomimimo.com.
-    // /v1/models works but validate via chat/completions for stronger auth check.
-    "xiaomi-mimo": async ({ apiKey, providerSpecificData }: any) => {
-      try {
-        const baseUrl = normalizeBaseUrl(
-          providerSpecificData?.baseUrl || "https://api.xiaomimimo.com/v1"
-        );
-        const chatUrl = `${baseUrl.replace(/\/chat\/completions$/, "")}/chat/completions`;
-        const res = await validationWrite(chatUrl, {
-          method: "POST",
-          headers: buildBearerHeaders(apiKey, providerSpecificData),
-          body: JSON.stringify({
-            model: "mimo-v2.5-pro",
-            messages: [{ role: "user", content: "test" }],
-            max_tokens: 1,
-          }),
-        });
-        if (res.status === 401 || res.status === 403) {
-          return { valid: false, error: "Invalid API key" };
-        }
-        // Any non-auth response (200, 400, 422, 429) means auth passed
-        return { valid: true, error: null };
-      } catch (error: any) {
-        return toValidationErrorResult(error);
-=======
-        return { valid: false, error: error.message || "Connection failed" };
->>>>>>> Stashed changes
       }
     },
     // Search providers — use factored validator

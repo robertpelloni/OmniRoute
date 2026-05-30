@@ -1,14 +1,5 @@
 import { NextResponse } from "next/server";
 import { getProviderConnections, getSettings } from "@/lib/localDb";
-<<<<<<< Updated upstream
-import { buildHealthPayload } from "@/lib/monitoring/observability";
-import { APP_CONFIG } from "@/shared/constants/config";
-import { AI_PROVIDERS } from "@/shared/constants/providers";
-import { isAuthenticated } from "@/shared/utils/apiAuth";
-=======
-import { APP_CONFIG } from "@/shared/constants/config";
-import { AI_PROVIDERS } from "@/shared/constants/providers";
->>>>>>> Stashed changes
 
 /**
  * GET /api/monitoring/health — System health overview
@@ -39,55 +30,6 @@ export async function GET() {
     const activeSessions = getActiveSessions();
     const activeSessionsByKey = getAllActiveSessionCountsByKey();
     const { getAllHealthStatuses } = await import("@/lib/localHealthCheck");
-<<<<<<< Updated upstream
-    const payload = buildHealthPayload({
-      appVersion: APP_CONFIG.version,
-      catalogCount: Object.keys(AI_PROVIDERS).length,
-      settings,
-      connections,
-      circuitBreakers,
-=======
-
-    // System info
-    const system = {
-      version: APP_CONFIG.version,
-      nodeVersion: process.version,
-      uptime: process.uptime(),
-      memoryUsage: process.memoryUsage(),
-      pid: process.pid,
-      platform: process.platform,
-    };
-
-    // Provider health summary (circuitBreakers is an Array of { name, state, ... })
-    const providerHealth = {};
-    for (const cb of circuitBreakers) {
-      // Skip test circuit breakers (leftover from unit tests)
-      if (cb.name.startsWith("test-") || cb.name.startsWith("test_")) continue;
-      providerHealth[cb.name] = {
-        state: cb.state,
-        failures: cb.failureCount || 0,
-        lastFailure: cb.lastFailureTime,
-      };
-    }
-
-    const configuredProviders = new Set(connections.map((c: any) => c.provider));
-    const activeProviders = new Set(
-      connections.filter((c: any) => c.isActive !== false).map((c: any) => c.provider)
-    );
-
-    return NextResponse.json({
-      status: "healthy",
-      timestamp: new Date().toISOString(),
-      system,
-      providerHealth,
-      providerSummary: {
-        catalogCount: Object.keys(AI_PROVIDERS).length,
-        configuredCount: configuredProviders.size,
-        activeCount: activeProviders.size,
-        monitoredCount: Object.keys(providerHealth).length,
-      },
-      localProviders: getAllHealthStatuses(),
->>>>>>> Stashed changes
       rateLimitStatus,
       learnedLimits,
       lockouts,

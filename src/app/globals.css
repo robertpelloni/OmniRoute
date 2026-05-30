@@ -361,7 +361,6 @@ button .material-symbols-outlined,
     min-width: 600px; /* Prevent columns from crushing together */
   }
 }
-<<<<<<< Updated upstream
 
 /* Fix for native dropdown options visibility in dark mode */
 select option {
@@ -369,4 +368,3 @@ select option {
   color: var(--color-text-main);
 }
 =======
->>>>>>> Stashed changes

@@ -1,12 +1,10 @@
 type JsonRecord = Record<string, unknown>;
 
-<<<<<<< Updated upstream
 const COMBO_TEST_MAX_TOKENS = 2048;
 const COMBO_TEST_OPERAND_MIN = 10000;
 const COMBO_TEST_OPERAND_RANGE = 90000;
 
 =======
->>>>>>> Stashed changes
 function asRecord(value: unknown): JsonRecord {
   return value && typeof value === "object" && !Array.isArray(value) ? (value as JsonRecord) : {};
 }
@@ -110,7 +108,6 @@ function hasReasoningOnlyCompletion(body: JsonRecord): boolean {
   });
 }
 
-<<<<<<< Updated upstream
 function getRandomFiveDigitNumber() {
   return COMBO_TEST_OPERAND_MIN + Math.floor(Math.random() * COMBO_TEST_OPERAND_RANGE);
 }
@@ -165,7 +162,6 @@ export function extractComboTestResponseText(responseBody: unknown): string {
   }
 
 =======
->>>>>>> Stashed changes
   if (Array.isArray(body.choices)) {
     for (const choice of body.choices) {
       const choiceRecord = asRecord(choice);

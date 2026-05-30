@@ -255,45 +255,6 @@ export function openaiToClaudeRequest(model, body, stream) {
         // When prefix is disabled (non-Claude backends), use original name
         const toolName = disableToolPrefix ? originalName : CLAUDE_OAUTH_TOOL_PREFIX + originalName;
 
-<<<<<<< Updated upstream
-        // Store mapping for response translation (prefixed → original)
-        if (!disableToolPrefix) {
-          toolNameMap.set(toolName, originalName);
-        }
-
-        // Normalize input_schema: Anthropic requires `properties` when type is "object" (#595).
-        // MCP tools (e.g. pencil, computer_use) may omit properties on object-type schemas.
-        const rawSchema: Record<string, unknown> = toolData.parameters ||
-          toolData.input_schema || { type: "object", properties: {}, required: [] };
-        const normalizedSchema =
-          rawSchema.type === "object" && !rawSchema.properties
-            ? { ...rawSchema, properties: {} }
-            : rawSchema;
-
-        return {
-          name: toolName,
-          description: toolData.description || "",
-          input_schema: normalizedSchema,
-        };
-      })
-      .filter((tool): tool is ClaudeTool => Boolean(tool));
-=======
-      // Normalize input_schema: Anthropic requires `properties` when type is "object" (#595).
-      // MCP tools (e.g. pencil, computer_use) may omit properties on object-type schemas.
-      const rawSchema: Record<string, unknown> = toolData.parameters ||
-        toolData.input_schema || { type: "object", properties: {}, required: [] };
-      const normalizedSchema =
-        rawSchema.type === "object" && !rawSchema.properties
-          ? { ...rawSchema, properties: {} }
-          : rawSchema;
-
-      return {
-        name: toolName,
-        description: toolData.description || "",
-        input_schema: normalizedSchema,
-      };
-    });
->>>>>>> Stashed changes
 
     // Filter out tools with empty names (would cause Claude 400 error)
     result.tools = result.tools.filter((tool) => tool.name && tool.name?.trim());
@@ -348,55 +309,6 @@ export function openaiToClaudeRequest(model, body, stream) {
   } else if (body.reasoning_effort) {
     // Convert OpenAI reasoning_effort to Claude thinking format (#627)
     // Clients like OpenCode send reasoning_effort via @ai-sdk/openai-compatible
-<<<<<<< Updated upstream
-    const requestedEffort = String(body.reasoning_effort).toLowerCase();
-    const normalizedEffort =
-      requestedEffort === "xhigh" && !supportsXHighEffort("claude", model)
-        ? "high"
-        : requestedEffort;
-    if (normalizedEffort === "xhigh") {
-      result.thinking = {
-        type: "adaptive",
-      };
-      result.output_config = {
-        ...(result.output_config || {}),
-        effort: "xhigh",
-      };
-    } else {
-      const effortBudgetMap: Record<string, number> = {
-        low: 1024,
-        medium: 10240,
-        high: 131072,
-        max: 131072,
-      };
-      const budget = effortBudgetMap[normalizedEffort];
-      if (budget !== undefined && budget > 0) {
-        result.thinking = {
-          type: "enabled",
-          budget_tokens: budget,
-        };
-        // Claude requires max_tokens > budget_tokens
-        if (result.max_tokens <= budget) {
-          result.max_tokens = budget + 8192;
-        }
-=======
-    const effortBudgetMap: Record<string, number> = {
-      low: 1024,
-      medium: 10240,
-      high: 131072,
-      max: 131072,
-    };
-    const effort = String(body.reasoning_effort).toLowerCase();
-    const budget = effortBudgetMap[effort];
-    if (budget !== undefined && budget > 0) {
-      result.thinking = {
-        type: "enabled",
-        budget_tokens: budget,
-      };
-      // Claude requires max_tokens > budget_tokens
-      if (result.max_tokens <= budget) {
-        result.max_tokens = budget + 8192;
->>>>>>> Stashed changes
       }
     }
   }

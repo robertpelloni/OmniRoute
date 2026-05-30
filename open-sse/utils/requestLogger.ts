@@ -40,7 +40,6 @@ type RequestLogger = {
   getPipelinePayloads: () => RequestPipelinePayloads | null;
 };
 
-<<<<<<< Updated upstream
 type RequestLoggerOptions = {
   enabled?: boolean;
   captureStreamChunks?: boolean;
@@ -55,7 +54,6 @@ const MAX_LOG_ARRAY_ITEMS = 24;
 const MAX_LOG_OBJECT_KEYS = 80;
 
 =======
->>>>>>> Stashed changes
 function maskSensitiveHeaders(headers: HeaderInput): Record<string, unknown> {
   if (!headers) return {};
 
@@ -92,7 +90,6 @@ function createEmptyStreamChunks() {
   };
 }
 
-<<<<<<< Updated upstream
 function truncateLogString(value: string, maxLength = MAX_LOG_STRING_LENGTH): string {
   if (value.length <= maxLength) return value;
   return `${value.slice(0, Math.floor(maxLength / 2))}\n[...truncated ${value.length - maxLength} chars...]\n${value.slice(-Math.ceil(maxLength / 2))}`;
@@ -167,7 +164,6 @@ function appendBoundedChunk(
 }
 
 =======
->>>>>>> Stashed changes
 function hasOwnValues(value: unknown): boolean {
   return Boolean(value && typeof value === "object" && Object.keys(value as JsonRecord).length > 0);
 }
@@ -222,38 +218,6 @@ function createNoOpLogger(): RequestLogger {
 export async function createRequestLogger(
   _sourceFormat?: string,
   _targetFormat?: string,
-<<<<<<< Updated upstream
-  _model?: string,
-  options: RequestLoggerOptions = {}
-): Promise<RequestLogger> {
-  if (options.enabled === false) {
-    return createNoOpLogger();
-  }
-
-  const captureStreamChunks = options.captureStreamChunks !== false;
-  const maxStreamChunkBytes =
-    Number.isInteger(options.maxStreamChunkBytes) && Number(options.maxStreamChunkBytes) > 0
-      ? Number(options.maxStreamChunkBytes)
-      : DEFAULT_MAX_STREAM_CHUNK_BYTES;
-  const maxStreamChunkItems =
-    Number.isInteger(options.maxStreamChunkItems) && Number(options.maxStreamChunkItems) > 0
-      ? Number(options.maxStreamChunkItems)
-      : DEFAULT_MAX_STREAM_CHUNK_ITEMS;
-  const streamChunks = createEmptyStreamChunks();
-  const streamChunkBytes = {
-    provider: { value: 0, truncated: false },
-    openai: { value: 0, truncated: false },
-    client: { value: 0, truncated: false },
-  };
-  const payloads: RequestPipelinePayloads = {
-    ...(captureStreamChunks ? { streamChunks } : {}),
-=======
-  _model?: string
-): Promise<RequestLogger> {
-  const streamChunks = createEmptyStreamChunks();
-  const payloads: RequestPipelinePayloads = {
-    streamChunks,
->>>>>>> Stashed changes
   };
 
   return {
@@ -264,22 +228,12 @@ export async function createRequestLogger(
         timestamp: new Date().toISOString(),
         endpoint,
         headers: maskSensitiveHeaders(headers),
-<<<<<<< Updated upstream
-        body: cloneBoundedForLog(body),
-=======
-        body,
->>>>>>> Stashed changes
       };
     },
 
     logOpenAIRequest(body) {
       payloads.openaiRequest = {
         timestamp: new Date().toISOString(),
-<<<<<<< Updated upstream
-        body: cloneBoundedForLog(body),
-=======
-        body,
->>>>>>> Stashed changes
       };
     },
 
@@ -288,11 +242,6 @@ export async function createRequestLogger(
         timestamp: new Date().toISOString(),
         url,
         headers: maskSensitiveHeaders(headers),
-<<<<<<< Updated upstream
-        body: cloneBoundedForLog(body),
-=======
-        body,
->>>>>>> Stashed changes
       };
     },
 
@@ -302,100 +251,6 @@ export async function createRequestLogger(
         status,
         statusText,
         headers: maskSensitiveHeaders(headers),
-<<<<<<< Updated upstream
-        body: cloneBoundedForLog(body),
-      };
-    },
-
-    appendProviderChunk(chunk) {
-      if (!captureStreamChunks) return;
-      appendBoundedChunk(
-        streamChunks.provider,
-        streamChunkBytes.provider,
-        chunk,
-        maxStreamChunkBytes,
-        maxStreamChunkItems
-      );
-    },
-
-    appendOpenAIChunk(chunk) {
-      if (!captureStreamChunks) return;
-      appendBoundedChunk(
-        streamChunks.openai,
-        streamChunkBytes.openai,
-        chunk,
-        maxStreamChunkBytes,
-        maxStreamChunkItems
-      );
-    },
-
-    logConvertedResponse(body) {
-      payloads.clientResponse = {
-        timestamp: new Date().toISOString(),
-        body: cloneBoundedForLog(body),
-      };
-    },
-
-    appendConvertedChunk(chunk) {
-      if (!captureStreamChunks) return;
-      appendBoundedChunk(
-        streamChunks.client,
-        streamChunkBytes.client,
-        chunk,
-        maxStreamChunkBytes,
-        maxStreamChunkItems
-      );
-    },
-
-    logError(error, requestBody = null) {
-      payloads.error = {
-        timestamp: new Date().toISOString(),
-        error: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-        requestBody: cloneBoundedForLog(requestBody),
-      };
-    },
-
-=======
-        body,
-      };
-    },
-
-    appendProviderChunk(chunk) {
-      if (typeof chunk === "string" && chunk.length > 0) {
-        streamChunks.provider.push(chunk);
-      }
-    },
-
-    appendOpenAIChunk(chunk) {
-      if (typeof chunk === "string" && chunk.length > 0) {
-        streamChunks.openai.push(chunk);
-      }
-    },
-
-    logConvertedResponse(body) {
-      payloads.clientResponse = {
-        timestamp: new Date().toISOString(),
-        body,
-      };
-    },
-
-    appendConvertedChunk(chunk) {
-      if (typeof chunk === "string" && chunk.length > 0) {
-        streamChunks.client.push(chunk);
-      }
-    },
-
-    logError(error, requestBody = null) {
-      payloads.error = {
-        timestamp: new Date().toISOString(),
-        error: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-        requestBody,
-      };
-    },
-
->>>>>>> Stashed changes
     getPipelinePayloads() {
       return compactPipelinePayloads(payloads);
     },

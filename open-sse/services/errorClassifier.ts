@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 import {
   isAccountDeactivated,
   isCreditsExhausted,
@@ -107,7 +106,6 @@ function responseBodyToString(responseBody: unknown): string {
   return "";
 }
 
-<<<<<<< Updated upstream
 function shouldPreserveQuotaSignalsFor429(provider?: string | null): boolean {
   if (!provider) return true;
   return getProviderCategory(provider) === "oauth";
@@ -146,27 +144,6 @@ export function classifyProviderError(
     if (oauthInvalid) {
       return PROVIDER_ERROR_TYPES.OAUTH_INVALID_TOKEN;
     }
-=======
-export function classifyProviderError(statusCode: number, responseBody: unknown): string | null {
-  const bodyStr = responseBodyToString(responseBody);
-  const creditsExhausted = isCreditsExhausted(bodyStr);
-  const accountDeactivated = isAccountDeactivated(bodyStr);
-
-  // T10: credits exhausted is terminal and can appear as 400/402/429 depending on provider.
-  if (
-    creditsExhausted &&
-    (statusCode === 400 || statusCode === 402 || statusCode === 429 || statusCode === 403)
-  ) {
-    return PROVIDER_ERROR_TYPES.QUOTA_EXHAUSTED;
-  }
-
-  if (statusCode === 429) {
-    return PROVIDER_ERROR_TYPES.RATE_LIMITED;
-  }
-
-  // T06: only deactivation-like 401s should be treated as permanent account expiry.
-  if (statusCode === 401) {
->>>>>>> Stashed changes
     return accountDeactivated
       ? PROVIDER_ERROR_TYPES.ACCOUNT_DEACTIVATED
       : PROVIDER_ERROR_TYPES.UNAUTHORIZED;
@@ -177,21 +154,12 @@ export function classifyProviderError(statusCode: number, responseBody: unknown)
     return PROVIDER_ERROR_TYPES.ACCOUNT_DEACTIVATED;
   }
   if (statusCode === 403) {
-<<<<<<< Updated upstream
     if (bodyStr.includes("has not been used in project")) {
       return PROVIDER_ERROR_TYPES.PROJECT_ROUTE_ERROR;
     }
     if (provider && getProviderCategory(provider) === "apikey") {
       return null;
     }
-=======
-    // Cloud Code API returns 403 with "has not been used in project X" when the project
-    // field is wrong or stale. This is a routing/config error, not an account ban.
-    // Classify as project_route_error so the account stays active but the error is tracked.
-    if (bodyStr.includes("has not been used in project")) {
-      return PROVIDER_ERROR_TYPES.PROJECT_ROUTE_ERROR;
-    }
->>>>>>> Stashed changes
     return PROVIDER_ERROR_TYPES.FORBIDDEN;
   }
   if (statusCode >= 500) return PROVIDER_ERROR_TYPES.SERVER_ERROR;
@@ -202,6 +170,5 @@ export function classifyProviderError(statusCode: number, responseBody: unknown)
   }
 
 =======
->>>>>>> Stashed changes
   return null;
 }

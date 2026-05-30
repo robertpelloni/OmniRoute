@@ -4,7 +4,6 @@
  * Stores extracted facts asynchronously (non-blocking).
  */
 
-<<<<<<< Updated upstream
 import { logger } from "../../../open-sse/utils/logger.ts";
 import { createMemory } from "./store";
 import { MemoryType } from "./types";
@@ -20,7 +19,6 @@ import { MemoryType } from "./types";
 
 /** Patterns indicating user preferences */
 const PREFERENCE_PATTERNS: RegExp[] = [
-<<<<<<< Updated upstream
   /\bI\s+(?:really\s+)?prefer\s+([^.,\n]+)/gi,
   /\bI\s+(?:really\s+)?like\s+([^.,\n]+)/gi,
   /\bmy\s+(?:favorite|favourite)\s+(?:is|are)\s+([^.,\n]+)/gi,
@@ -28,20 +26,10 @@ const PREFERENCE_PATTERNS: RegExp[] = [
   /\bI\s+(?:hate|dislike|avoid)\s+([^.,\n]+)/gi,
   /\bI\s+enjoy\s+([^.,\n]+)/gi,
   /\bI\s+love\s+([^.,\n]+)/gi,
-=======
-  /\bI\s+(?:really\s+)?prefer\s+(.+?)(?:\.|,|$)/gi,
-  /\bI\s+(?:really\s+)?like\s+(.+?)(?:\.|,|$)/gi,
-  /\bmy\s+(?:favorite|favourite)\s+(?:is|are)\s+(.+?)(?:\.|,|$)/gi,
-  /\bI\s+(?:don'?t|do\s+not)\s+like\s+(.+?)(?:\.|,|$)/gi,
-  /\bI\s+(?:hate|dislike|avoid)\s+(.+?)(?:\.|,|$)/gi,
-  /\bI\s+enjoy\s+(.+?)(?:\.|,|$)/gi,
-  /\bI\s+love\s+(.+?)(?:\.|,|$)/gi,
->>>>>>> Stashed changes
 ];
 
 /** Patterns indicating user decisions */
 const DECISION_PATTERNS: RegExp[] = [
-<<<<<<< Updated upstream
   /\bI'?(?:ll|will)\s+use\s+([^.,\n]+)/gi,
   /\bI\s+chose\s+([^.,\n]+)/gi,
   /\bI\s+(?:have\s+)?decided\s+(?:to\s+)?([^.,\n]+)/gi,
@@ -49,34 +37,16 @@ const DECISION_PATTERNS: RegExp[] = [
   /\bI\s+selected\s+([^.,\n]+)/gi,
   /\bI\s+picked\s+([^.,\n]+)/gi,
   /\bI\s+went\s+with\s+([^.,\n]+)/gi,
-=======
-  /\bI'?(?:ll|will)\s+use\s+(.+?)(?:\.|,|$)/gi,
-  /\bI\s+chose\s+(.+?)(?:\.|,|$)/gi,
-  /\bI\s+(?:have\s+)?decided\s+(?:to\s+)?(.+?)(?:\.|,|$)/gi,
-  /\bI'?m\s+going\s+(?:to\s+)?(?:use|with|adopt)\s+(.+?)(?:\.|,|$)/gi,
-  /\bI\s+selected\s+(.+?)(?:\.|,|$)/gi,
-  /\bI\s+picked\s+(.+?)(?:\.|,|$)/gi,
-  /\bI\s+went\s+with\s+(.+?)(?:\.|,|$)/gi,
->>>>>>> Stashed changes
 ];
 
 /** Patterns indicating user behavioral patterns */
 const PATTERN_PATTERNS: RegExp[] = [
-<<<<<<< Updated upstream
   /\bI\s+usually\s+([^.,\n]+)/gi,
   /\bI\s+always\s+([^.,\n]+)/gi,
   /\bI\s+never\s+([^.,\n]+)/gi,
   /\bI\s+typically\s+([^.,\n]+)/gi,
   /\bI\s+tend\s+to\s+([^.,\n]+)/gi,
   /\bI\s+(?:often|frequently|regularly)\s+([^.,\n]+)/gi,
-=======
-  /\bI\s+usually\s+(.+?)(?:\.|,|$)/gi,
-  /\bI\s+always\s+(.+?)(?:\.|,|$)/gi,
-  /\bI\s+never\s+(.+?)(?:\.|,|$)/gi,
-  /\bI\s+typically\s+(.+?)(?:\.|,|$)/gi,
-  /\bI\s+tend\s+to\s+(.+?)(?:\.|,|$)/gi,
-  /\bI\s+(?:often|frequently|regularly)\s+(.+?)(?:\.|,|$)/gi,
->>>>>>> Stashed changes
 ];
 
 // Maximum length for extracted content
@@ -86,7 +56,6 @@ const MIN_FACT_LENGTH = 3;
 <<<<<<< Updated upstream
 const MAX_EXTRACTION_TEXT_LENGTH = 64 * 1024;
 =======
->>>>>>> Stashed changes
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -106,14 +75,12 @@ function sanitizeMatch(raw: string): string {
   return raw.trim().replace(/\s+/g, " ").slice(0, MAX_FACT_LENGTH);
 }
 
-<<<<<<< Updated upstream
 function capExtractionText(text: string): string {
   if (text.length <= MAX_EXTRACTION_TEXT_LENGTH) return text;
   return text.slice(-MAX_EXTRACTION_TEXT_LENGTH);
 }
 
 =======
->>>>>>> Stashed changes
 /**
  * Generate a stable key for a fact (category + first 40 chars of content)
  */
@@ -173,11 +140,9 @@ function runPatterns(
 export function extractFactsFromText(text: string): ExtractedFact[] {
   if (!text || typeof text !== "string") return [];
 
-<<<<<<< Updated upstream
   text = capExtractionText(text);
 
 =======
->>>>>>> Stashed changes
   const seen = new Set<string>();
   const facts: ExtractedFact[] = [];
 
@@ -205,28 +170,6 @@ export function extractFactsFromText(text: string): ExtractedFact[] {
 export function extractFacts(response: string, apiKeyId: string, sessionId: string): void {
   if (!response || !apiKeyId || !sessionId) return;
 
-<<<<<<< Updated upstream
-  const cappedResponse = capExtractionText(response);
-
-  log.info("memory.extraction.start", { apiKeyId });
-
-  // Non-blocking: schedule after current event loop tick
-  setImmediate(() => {
-    const facts = extractFactsFromText(cappedResponse);
-    if (facts.length === 0) return;
-
-    for (const fact of facts) {
-      log.debug("memory.extraction.fact_found", { key: fact.key, category: fact.category });
-
-=======
-  // Non-blocking: schedule after current event loop tick
-  setImmediate(() => {
-    const facts = extractFactsFromText(response);
-    if (facts.length === 0) return;
-
-    // Store each fact, swallow errors to never block the response pipeline
-    for (const fact of facts) {
->>>>>>> Stashed changes
       createMemory({
         apiKeyId,
         sessionId,
@@ -240,19 +183,5 @@ export function extractFacts(response: string, apiKeyId: string, sessionId: stri
         },
         expiresAt: null,
       }).catch((err) => {
-<<<<<<< Updated upstream
-        log.error("memory.extraction.background.failed", { err: err?.message, apiKeyId });
-      });
-    }
-
-    log.info("memory.extraction.complete", { apiKeyId, factCount: facts.length });
-=======
-        // Silent: extraction must never affect response delivery
-        if (process.env.NODE_ENV !== "test") {
-          console.warn("[memory:extraction] Failed to store fact:", err?.message);
-        }
-      });
-    }
->>>>>>> Stashed changes
   });
 }

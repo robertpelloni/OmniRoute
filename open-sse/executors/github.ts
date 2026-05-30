@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 import { BaseExecutor, ExecuteInput, type ProviderCredentials } from "./base.ts";
 =======
 import { BaseExecutor, ExecuteInput } from "./base.ts";
@@ -39,11 +38,7 @@ export class GithubExecutor extends BaseExecutor {
     return this.config.baseUrl;
   }
 
-<<<<<<< Updated upstream
   injectResponseFormat(messages: Array<Record<string, any>>, responseFormat: any) {
-=======
-  injectResponseFormat(messages: any[], responseFormat: any) {
->>>>>>> Stashed changes
     if (!responseFormat) return messages;
 
     let formatInstruction = "";
@@ -60,15 +55,9 @@ export class GithubExecutor extends BaseExecutor {
 
     if (!formatInstruction) return messages;
 
-<<<<<<< Updated upstream
     const systemIdx = messages.findIndex((m) => m.role === "system");
     if (systemIdx >= 0) {
       return messages.map((m, i: number) =>
-=======
-    const systemIdx = messages.findIndex((m: any) => m.role === "system");
-    if (systemIdx >= 0) {
-      return messages.map((m: any, i: number) =>
->>>>>>> Stashed changes
         i === systemIdx ? { ...m, content: `${m.content}\n\n${formatInstruction}` } : m
       );
     }
@@ -77,7 +66,6 @@ export class GithubExecutor extends BaseExecutor {
   }
 
   transformRequest(model: string, body: any, stream: boolean, credentials: any): any {
-<<<<<<< Updated upstream
     void stream;
     void credentials;
 
@@ -100,12 +88,6 @@ export class GithubExecutor extends BaseExecutor {
     if (modifiedBody.response_format && model.toLowerCase().includes("claude")) {
       modifiedBody.messages = this.injectResponseFormat(
         Array.isArray(modifiedBody.messages) ? modifiedBody.messages : [],
-=======
-    const modifiedBody = JSON.parse(JSON.stringify(body));
-    if (modifiedBody.response_format && model.toLowerCase().includes("claude")) {
-      modifiedBody.messages = this.injectResponseFormat(
-        modifiedBody.messages,
->>>>>>> Stashed changes
         modifiedBody.response_format
       );
       delete modifiedBody.response_format;
@@ -117,97 +99,19 @@ export class GithubExecutor extends BaseExecutor {
     }
 
 =======
->>>>>>> Stashed changes
     return modifiedBody;
   }
 
   async execute(input: ExecuteInput) {
     const result = await super.execute(input);
-<<<<<<< Updated upstream
-    if (!result || !result.response) return result;
-
-    if (!input.stream) {
-      // wreq-js clone/text semantics consume the original response body. Materialize
-      // non-streaming responses immediately so downstream code always sees a native
-      // fetch Response with a readable body.
-      const status = result.response.status;
-      const statusText = result.response.statusText;
-      const headers = new Headers(result.response.headers);
-      const payload = await result.response.text();
-      result.response = new Response(payload, { status, statusText, headers });
-      return result;
-=======
-    if (!result || !result.response?.body) return result;
-
-    const isStreaming = input.stream === true;
-    if (isStreaming) {
-      const decoder = new TextDecoder();
-      const transformStream = new TransformStream({
-        transform(chunk, controller) {
-          const text = decoder.decode(chunk, { stream: true });
-          if (text.includes("data: [DONE]")) {
-            return;
-          }
-          controller.enqueue(chunk);
-        },
-      });
-
-      const newResponse = new Response(result.response.body.pipeThrough(transformStream), {
-        status: result.response.status,
-        statusText: result.response.statusText,
-        headers: result.response.headers, // Headers class carries over correctly
-      });
-      result.response = newResponse;
->>>>>>> Stashed changes
     }
 
     return result;
   }
 
-<<<<<<< Updated upstream
-  buildHeaders(
-    credentials: ProviderCredentials,
-    stream = true,
-    clientHeaders?: Record<string, string> | null
-  ): Record<string, string> {
-    const token = this.getCopilotToken(credentials) || credentials.accessToken;
-
-    // Forward the client's x-initiator header when present. OpenCode and other
-    // Copilot-aware clients use this to distinguish user-initiated turns
-    // (x-initiator: user) from autonomous tool-call continuations
-    // (x-initiator: agent). GitHub Copilot's billing treats "agent" turns as
-    // free, so forwarding the value avoids burning a premium request on every
-    // tool-call round-trip.  Fall back to "user" when the header is absent to
-    // preserve the existing default behaviour.
-    let clientInitiator = clientHeaders?.["x-initiator"] || clientHeaders?.["X-Initiator"];
-    if (!clientInitiator && clientHeaders) {
-      for (const key in clientHeaders) {
-        if (key.toLowerCase() === "x-initiator") {
-          clientInitiator = clientHeaders[key];
-          break;
-        }
-      }
-    }
-    const initiator =
-      clientInitiator === "agent" || clientInitiator === "user" ? clientInitiator : "user";
-
-=======
-  buildHeaders(credentials, stream = true) {
-    const token = credentials.copilotToken || credentials.accessToken;
->>>>>>> Stashed changes
     return {
       ...getGitHubCopilotChatHeaders(stream ? "text/event-stream" : "application/json", initiator),
       Authorization: `Bearer ${token}`,
-<<<<<<< Updated upstream
-=======
-      "Content-Type": "application/json",
-      "copilot-integration-id": "vscode-chat",
-      "editor-version": "vscode/1.110.0",
-      "editor-plugin-version": "copilot-chat/0.38.0",
-      "user-agent": "GitHubCopilotChat/0.38.0",
-      "openai-intent": "conversation-panel",
-      "x-github-api-version": "2025-04-01",
->>>>>>> Stashed changes
       "x-request-id":
         crypto.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`,
     };
@@ -216,17 +120,6 @@ export class GithubExecutor extends BaseExecutor {
   async refreshCopilotToken(githubAccessToken, log) {
     try {
       const response = await fetch("https://api.github.com/copilot_internal/v2/token", {
-<<<<<<< Updated upstream
-        headers: getGitHubCopilotRefreshHeaders(`token ${githubAccessToken}`),
-=======
-        headers: {
-          Authorization: `token ${githubAccessToken}`,
-          "User-Agent": "GithubCopilot/1.0",
-          "Editor-Version": "vscode/1.110.0",
-          "Editor-Plugin-Version": "copilot/1.300.0",
-          Accept: "application/json",
-        },
->>>>>>> Stashed changes
       });
       if (!response.ok) return null;
       const data = await response.json();

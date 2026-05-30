@@ -20,7 +20,6 @@ function toNumber(value: unknown, fallback = 0): number {
   return Number.isFinite(parsed) ? parsed : fallback;
 }
 
-<<<<<<< Updated upstream
 function firstPositiveNumber(...values: unknown[]): number {
   for (const value of values) {
     const parsed = toNumber(value, 0);
@@ -32,7 +31,6 @@ function firstPositiveNumber(...values: unknown[]): number {
 }
 
 =======
->>>>>>> Stashed changes
 function extractMessageOutputText(item: JsonRecord): string {
   if (!Array.isArray(item.content)) return "";
   let text = "";
@@ -146,13 +144,6 @@ export function translateNonStreamingResponse(
         }
 
         const fnArgs =
-<<<<<<< Updated upstream
-          typeof argsToEmit === "string" ? argsToEmit : JSON.stringify(argsToEmit || {});
-=======
-          typeof itemObj.arguments === "string"
-            ? itemObj.arguments
-            : JSON.stringify(itemObj.arguments || {});
->>>>>>> Stashed changes
         const rawName = toString(itemObj.name);
         // Strip Claude OAuth proxy_ prefix using toolNameMap
         const resolvedName = toolNameMap?.get(rawName) ?? rawName;
@@ -269,256 +260,10 @@ export function translateNonStreamingResponse(
     const root = toRecord(responseBody);
     const response = toRecord(root.response ?? root);
     const candidates = Array.isArray(response.candidates) ? response.candidates : [];
-<<<<<<< Updated upstream
-    const usage = toRecord(response.usageMetadata ?? root.usageMetadata);
-    const promptFeedback = toRecord(response.promptFeedback ?? root.promptFeedback);
-    if (candidates.length > 0 || Object.keys(promptFeedback).length > 0) {
-=======
-    if (candidates[0]) {
-      const candidate = toRecord(candidates[0]);
-      const content = toRecord(candidate.content);
-      const usage = toRecord(response.usageMetadata ?? root.usageMetadata);
-
-      let textContent = "";
-      const toolCalls: JsonRecord[] = [];
-      let reasoningContent = "";
-
-      if (Array.isArray(content.parts)) {
-        for (const part of content.parts) {
-          const partObj = toRecord(part);
-          if (partObj.thought === true && typeof partObj.text === "string") {
-            reasoningContent += partObj.text;
-          } else if (typeof partObj.text === "string") {
-            textContent += partObj.text;
-          }
-          if (partObj.functionCall) {
-            const fn = toRecord(partObj.functionCall);
-            toolCalls.push({
-              id: `call_${toString(fn.name, "unknown")}_${Date.now()}_${toolCalls.length}`,
-              type: "function",
-              function: {
-                name: toString(fn.name),
-                arguments: JSON.stringify(fn.args || {}),
-              },
-            });
-          }
-        }
-      }
-
-      const message: JsonRecord = { role: "assistant" };
-      if (textContent) {
-        message.content = textContent;
-      }
-      if (reasoningContent) {
-        message.reasoning_content = reasoningContent;
-      }
-      if (toolCalls.length > 0) {
-        message.tool_calls = toolCalls;
-      }
-      if (!message.content && !message.tool_calls) {
-        message.content = "";
-      }
-
-      let finishReason = toString(candidate.finishReason, "stop").toLowerCase();
-      if (finishReason === "stop" && toolCalls.length > 0) {
-        finishReason = "tool_calls";
-      }
-
->>>>>>> Stashed changes
       const createdMs = Date.parse(toString(response.createTime));
       const created = Number.isFinite(createdMs)
         ? Math.floor(createdMs / 1000)
         : Math.floor(Date.now() / 1000);
-<<<<<<< Updated upstream
-
-      const choices =
-        candidates.length > 0
-          ? candidates.map((candidateValue, index) => {
-              const candidate = toRecord(candidateValue);
-              const content = toRecord(candidate.content);
-
-              let textContent = "";
-              const contentParts: JsonRecord[] = [];
-              const toolCalls: JsonRecord[] = [];
-              let reasoningContent = "";
-
-              if (Array.isArray(content.parts)) {
-                for (const part of content.parts) {
-                  const partObj = toRecord(part);
-                  if (partObj.thought === true && typeof partObj.text === "string") {
-                    reasoningContent += partObj.text;
-                    continue;
-                  }
-
-                  if (typeof partObj.text === "string") {
-                    textContent += partObj.text;
-                    contentParts.push({ type: "text", text: partObj.text });
-                  }
-
-                  const inlineData = toRecord(partObj.inlineData ?? partObj.inline_data);
-                  if (typeof inlineData.data === "string" && inlineData.data.length > 0) {
-                    const mimeType = toString(
-                      inlineData.mimeType ?? inlineData.mime_type,
-                      "image/png"
-                    );
-                    contentParts.push({
-                      type: "image_url",
-                      image_url: { url: `data:${mimeType};base64,${inlineData.data}` },
-                    });
-                  }
-
-                  if (partObj.functionCall) {
-                    const fn = toRecord(partObj.functionCall);
-                    const rawName = toString(fn.name);
-                    const restoredName = toolNameMap?.get(rawName) ?? rawName;
-                    const nativeId = toString(fn.id);
-                    toolCalls.push({
-                      id:
-                        nativeId.length > 0
-                          ? nativeId
-                          : `call_${toString(restoredName, "unknown")}_${Date.now()}_${toolCalls.length}`,
-                      type: "function",
-                      function: {
-                        name: restoredName,
-                        arguments: JSON.stringify(fn.args || {}),
-                      },
-                    });
-                  }
-                }
-              }
-
-              const message: JsonRecord = { role: "assistant" };
-              if (contentParts.length === 1 && contentParts[0].type === "text") {
-                message.content = contentParts[0].text;
-              } else if (contentParts.length > 0) {
-                message.content = contentParts;
-              } else if (textContent) {
-                message.content = textContent;
-              }
-              if (reasoningContent) {
-                message.reasoning_content = reasoningContent;
-              }
-              if (toolCalls.length > 0) {
-                message.tool_calls = toolCalls;
-              }
-              if (!message.content && !message.tool_calls) {
-                message.content = "";
-              }
-
-              let finishReason = toString(candidate.finishReason, "stop").toLowerCase();
-              if (finishReason === "max_tokens") {
-                finishReason = "length";
-              } else if (
-                finishReason === "safety" ||
-                finishReason === "recitation" ||
-                finishReason === "blocklist"
-              ) {
-                finishReason = "content_filter";
-              } else if (finishReason === "stop" && toolCalls.length > 0) {
-                finishReason = "tool_calls";
-              }
-
-              return {
-                index,
-                message,
-                finish_reason: finishReason,
-              };
-            })
-          : [
-              {
-                index: 0,
-                message: { role: "assistant", content: "" },
-                finish_reason: "content_filter",
-              },
-            ];
-
-      const result: JsonRecord = {
-        id: `chatcmpl-${toString(response.responseId, String(Date.now()))}`,
-        object: "chat.completion",
-        created,
-        model: toString(response.modelVersion, "gemini"),
-        choices,
-      };
-
-      if (Object.keys(usage).length > 0) {
-        const promptTokens = toNumber(usage.promptTokenCount, 0);
-        const reasoningTokens = toNumber(usage.thoughtsTokenCount, 0);
-        const completionTokens = toNumber(usage.candidatesTokenCount, 0) + reasoningTokens;
-
-        result.usage = {
-          prompt_tokens: promptTokens,
-          completion_tokens: completionTokens,
-          total_tokens: toNumber(usage.totalTokenCount, 0),
-        };
-        if (reasoningTokens > 0) {
-          (result.usage as JsonRecord).completion_tokens_details = {
-            reasoning_tokens: reasoningTokens,
-          };
-        }
-        if (toNumber(usage.cachedContentTokenCount, 0) > 0) {
-          (result.usage as JsonRecord).prompt_tokens_details = {
-            cached_tokens: toNumber(usage.cachedContentTokenCount, 0),
-          };
-        }
-      }
-
-      intermediateOpenAI = result;
-    }
-  }
-
-  // Handle Claude format
-  else if (targetFormat === FORMATS.CLAUDE) {
-    const root = toRecord(responseBody);
-    const contentBlocks = Array.isArray(root.content) ? root.content : [];
-    if (contentBlocks.length > 0) {
-      let textContent = "";
-      let thinkingContent = "";
-      const toolCalls: JsonRecord[] = [];
-
-=======
-
-      const result: JsonRecord = {
-        id: `chatcmpl-${toString(response.responseId, String(Date.now()))}`,
-        object: "chat.completion",
-        created,
-        model: toString(response.modelVersion, "gemini"),
-        choices: [
-          {
-            index: 0,
-            message,
-            finish_reason: finishReason,
-          },
-        ],
-      };
-
-      if (Object.keys(usage).length > 0) {
-        result.usage = {
-          prompt_tokens:
-            toNumber(usage.promptTokenCount, 0) + toNumber(usage.thoughtsTokenCount, 0),
-          completion_tokens: toNumber(usage.candidatesTokenCount, 0),
-          total_tokens: toNumber(usage.totalTokenCount, 0),
-        };
-        if (toNumber(usage.thoughtsTokenCount, 0) > 0) {
-          (result.usage as JsonRecord).completion_tokens_details = {
-            reasoning_tokens: toNumber(usage.thoughtsTokenCount, 0),
-          };
-        }
-      }
-
-      intermediateOpenAI = result;
-    }
-  }
-
-  // Handle Claude format
-  else if (targetFormat === FORMATS.CLAUDE) {
-    const root = toRecord(responseBody);
-    const contentBlocks = Array.isArray(root.content) ? root.content : [];
-    if (contentBlocks.length > 0) {
-      let textContent = "";
-      let thinkingContent = "";
-      const toolCalls: JsonRecord[] = [];
-
->>>>>>> Stashed changes
       for (const block of contentBlocks) {
         const blockObj = toRecord(block);
         if (blockObj.type === "text") {

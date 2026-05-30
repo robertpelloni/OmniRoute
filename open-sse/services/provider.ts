@@ -30,14 +30,6 @@ export function isClaudeCodeCompatible(provider) {
   return typeof provider === "string" && provider.startsWith(CLAUDE_CODE_COMPATIBLE_PREFIX);
 }
 
-<<<<<<< Updated upstream
-export function getOpenAICompatibleType(
-  provider,
-  providerSpecificData: Record<string, unknown> | null = null
-) {
-=======
-function getOpenAICompatibleType(provider) {
->>>>>>> Stashed changes
   if (!isOpenAICompatible(provider)) return "chat";
   const configuredType =
     providerSpecificData &&

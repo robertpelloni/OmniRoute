@@ -10,7 +10,6 @@
  */
 
 import { getDbInstance } from "../db/core";
-<<<<<<< Updated upstream
 import { getClientIpFromRequest } from "../ipUtils";
 import {
   getAppLogRetentionDays,
@@ -33,7 +32,6 @@ function getDb() {
   }
 }
 
-<<<<<<< Updated upstream
 type AuditLogWriteEntry = {
   action: string;
   actor?: string;
@@ -59,14 +57,6 @@ type AuditLogFilter = {
   limit?: number;
   offset?: number;
 };
-=======
-/**
- * Initialize the audit_log table.
- */
-export function initAuditLog() {
-  const db = getDb();
-  if (!db) return;
->>>>>>> Stashed changes
 
 type AuditLogRow = Record<string, unknown> & {
   details?: string | null;
@@ -501,48 +491,20 @@ export function getRetentionDays() {
  *   deletedRequestDetailLogs: number,
  *   deletedAuditLogs: number,
  *   deletedMcpAuditLogs: number,
-<<<<<<< Updated upstream
  *   trimmedCallLogs: number,
  *   trimmedProxyLogs: number,
  *   appRetentionDays: number,
  *   callRetentionDays: number,
  *   callLogsMaxRows: number,
  *   proxyLogsMaxRows: number
-=======
- *   appRetentionDays: number,
- *   callRetentionDays: number
->>>>>>> Stashed changes
  * }}
  */
 export function cleanupExpiredLogs() {
   const db = getDb();
   const appRetentionDays = getAppLogRetentionDays();
   const callRetentionDays = getCallLogRetentionDays();
-<<<<<<< Updated upstream
   const callLogsMaxRows = getCallLogsTableMaxRows();
   const proxyLogsMaxRows = getProxyLogsTableMaxRows();
-=======
->>>>>>> Stashed changes
-
-  if (!db) {
-    return {
-      deletedUsage: 0,
-      deletedCallLogs: 0,
-      deletedProxyLogs: 0,
-      deletedRequestDetailLogs: 0,
-      deletedAuditLogs: 0,
-      deletedMcpAuditLogs: 0,
-<<<<<<< Updated upstream
-      trimmedCallLogs: 0,
-      trimmedProxyLogs: 0,
-      appRetentionDays,
-      callRetentionDays,
-      callLogsMaxRows,
-      proxyLogsMaxRows,
-=======
-      appRetentionDays,
-      callRetentionDays,
->>>>>>> Stashed changes
     };
   }
 
@@ -555,27 +517,8 @@ export function cleanupExpiredLogs() {
   let deletedRequestDetailLogs = 0;
   let deletedAuditLogs = 0;
   let deletedMcpAuditLogs = 0;
-<<<<<<< Updated upstream
   let trimmedCallLogs = 0;
   let trimmedProxyLogs = 0;
-=======
->>>>>>> Stashed changes
-
-  try {
-    const r1 = db.prepare("DELETE FROM usage_history WHERE timestamp < ?").run(callCutoff);
-    deletedUsage = r1.changes;
-  } catch {
-    /* table may not exist */
-  }
-
-  try {
-<<<<<<< Updated upstream
-    const r2 = deleteCallLogsBefore(callCutoff);
-    deletedCallLogs = r2.deletedRows;
-=======
-    const r2 = db.prepare("DELETE FROM call_logs WHERE timestamp < ?").run(callCutoff);
-    deletedCallLogs = r2.changes;
->>>>>>> Stashed changes
   } catch {
     /* table may not exist */
   }
@@ -674,7 +617,6 @@ export function cleanupExpiredLogs() {
     resourceType: "maintenance",
     status: "success",
 =======
->>>>>>> Stashed changes
     details: {
       deletedUsage,
       deletedCallLogs,
@@ -682,17 +624,6 @@ export function cleanupExpiredLogs() {
       deletedRequestDetailLogs,
       deletedAuditLogs,
       deletedMcpAuditLogs,
-<<<<<<< Updated upstream
-      trimmedCallLogs,
-      trimmedProxyLogs,
-      appRetentionDays,
-      callRetentionDays,
-      callLogsMaxRows,
-      proxyLogsMaxRows,
-=======
-      appRetentionDays,
-      callRetentionDays,
->>>>>>> Stashed changes
     },
   });
 
@@ -703,16 +634,5 @@ export function cleanupExpiredLogs() {
     deletedRequestDetailLogs,
     deletedAuditLogs,
     deletedMcpAuditLogs,
-<<<<<<< Updated upstream
-    trimmedCallLogs,
-    trimmedProxyLogs,
-    appRetentionDays,
-    callRetentionDays,
-    callLogsMaxRows,
-    proxyLogsMaxRows,
-=======
-    appRetentionDays,
-    callRetentionDays,
->>>>>>> Stashed changes
   };
 }

@@ -1,7 +1,3 @@
-<<<<<<< Updated upstream
-=======
-import { CORS_ORIGIN } from "@/shared/utils/cors";
->>>>>>> Stashed changes
 import { errorResponse, unavailableResponse } from "@omniroute/open-sse/utils/error.ts";
 import { HTTP_STATUS } from "@omniroute/open-sse/config/constants.ts";
 import { getRegistryEntry } from "@omniroute/open-sse/config/providerRegistry.ts";

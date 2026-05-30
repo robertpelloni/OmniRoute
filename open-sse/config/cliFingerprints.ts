@@ -10,7 +10,6 @@
  * Header order and body field order were captured via mitmproxy traffic analysis.
  */
 import { isClaudeCodeCompatible } from "../services/provider.ts";
-<<<<<<< Updated upstream
 import {
   getAntigravityUserAgent,
   GITHUB_COPILOT_CHAT_USER_AGENT,
@@ -18,7 +17,6 @@ import {
 } from "./providerHeaderProfiles.ts";
 import { normalizeCliCompatProviderId } from "@/shared/utils/cliCompat";
 =======
->>>>>>> Stashed changes
 
 export interface CliFingerprint {
   /** Ordered list of header names (case-sensitive). Unlisted headers are appended. */
@@ -390,16 +388,6 @@ export function applyFingerprint(
   headers: Record<string, string>,
   body: unknown
 ): { headers: Record<string, string>; bodyString: string } {
-<<<<<<< Updated upstream
-  const normalizedProvider = normalizeCliCompatProviderId(provider || "");
-  const fingerprintKey = isClaudeCodeCompatible(provider)
-    ? "claude-code-compatible"
-    : normalizedProvider;
-=======
-  const fingerprintKey = isClaudeCodeCompatible(provider)
-    ? "claude-code-compatible"
-    : provider?.toLowerCase();
->>>>>>> Stashed changes
   const fingerprint = CLI_FINGERPRINTS[fingerprintKey];
 
   if (!fingerprint) {

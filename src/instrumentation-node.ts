@@ -93,10 +93,8 @@ export async function registerNodejs(): Promise<void> {
     { initGracefulShutdown },
     { initApiBridgeServer },
     { startBackgroundRefresh },
-<<<<<<< Updated upstream
     { ensureCloudSyncInitialized },
 =======
->>>>>>> Stashed changes
     { startProviderLimitsSyncScheduler },
     { getSettings },
     { applyRuntimeSettings },
@@ -110,10 +108,8 @@ export async function registerNodejs(): Promise<void> {
     import("@/lib/gracefulShutdown"),
     import("@/lib/apiBridgeServer"),
     import("@/domain/quotaCache"),
-<<<<<<< Updated upstream
     import("@/lib/initCloudSync"),
 =======
->>>>>>> Stashed changes
     import("@/shared/services/providerLimitsSyncScheduler"),
     import("@/lib/db/settings"),
     import("@/lib/config/runtimeSettings"),
@@ -127,32 +123,6 @@ export async function registerNodejs(): Promise<void> {
 
   initGracefulShutdown();
   initApiBridgeServer();
-<<<<<<< Updated upstream
-  startSpendBatchWriter();
-  registerDefaultGuardrails();
-  registerBuiltinSkills(skillExecutor);
-  console.log("[STARTUP] Spend batch writer started");
-  console.log("[STARTUP] Guardrail registry initialized");
-  console.log("[STARTUP] Builtin skill handlers registered");
-  if (!isBackgroundServicesDisabled()) {
-    startBackgroundRefresh();
-    console.log("[STARTUP] Quota cache background refresh started");
-    startProviderLimitsSyncScheduler();
-    console.log("[STARTUP] Provider limits sync scheduler started");
-    const cloudSyncInitialized = await ensureCloudSyncInitialized();
-    console.log(
-      `[STARTUP] Cloud/model sync background bootstrap ${cloudSyncInitialized ? "initialized" : "skipped"}`
-    );
-    const { initBatchProcessor } = await import("@omniroute/open-sse/services/batchProcessor");
-    initBatchProcessor();
-    console.log("[STARTUP] Batch processor started");
-  }
-=======
-  startBackgroundRefresh();
-  console.log("[STARTUP] Quota cache background refresh started");
-  startProviderLimitsSyncScheduler();
-  console.log("[STARTUP] Provider limits sync scheduler started");
->>>>>>> Stashed changes
 
   try {
     const [{ migrateCodexConnectionDefaultsFromLegacySettings }, { seedDefaultModelAliases }] =

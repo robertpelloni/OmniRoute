@@ -4,11 +4,4 @@
  */
 import { openaiResponsesToOpenAIRequest } from "../request/openai-responses.ts";
 
-<<<<<<< Updated upstream
-export function convertResponsesApiFormat(body, credentials = null) {
-  return openaiResponsesToOpenAIRequest(null, body, null, credentials);
-=======
-export function convertResponsesApiFormat(body) {
-  return openaiResponsesToOpenAIRequest(null, body, null, null);
->>>>>>> Stashed changes
 }

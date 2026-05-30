@@ -146,7 +146,6 @@ function shouldDisplayGitHubQuota(quota: UsageQuota | null): quota is UsageQuota
   return quota.total > 0 || quota.remainingPercentage !== undefined;
 }
 
-<<<<<<< Updated upstream
 function createQuotaFromUsage(
   usedValue: unknown,
   totalValue: unknown,
@@ -693,19 +692,11 @@ async function getNanoGptUsage(apiKey: string) {
 }
 
 =======
->>>>>>> Stashed changes
 /**
  * Get usage data for a provider connection
  * @param {Object} connection - Provider connection with accessToken
  * @returns {Promise<unknown>} Usage data with quotas
  */
-<<<<<<< Updated upstream
-export async function getUsageForProvider(connection, options: { forceRefresh?: boolean } = {}) {
-  const { id, provider, accessToken, apiKey, providerSpecificData, projectId, email } = connection;
-=======
-export async function getUsageForProvider(connection) {
-  const { provider, accessToken, apiKey, providerSpecificData, projectId } = connection;
->>>>>>> Stashed changes
 
   switch (provider) {
     case "github":
@@ -726,27 +717,6 @@ export async function getUsageForProvider(connection) {
     case "qwen":
       return await getQwenUsage(accessToken, providerSpecificData);
     case "qoder":
-<<<<<<< Updated upstream
-      return await getQoderUsage(accessToken);
-    case "glm":
-    case "glmt":
-      return await getGlmUsage(apiKey, providerSpecificData);
-    case "minimax":
-    case "minimax-cn":
-      return await getMiniMaxUsage(apiKey, provider);
-    case "crof":
-      return await getCrofUsage(apiKey);
-    case "cursor":
-      return await getCursorUsage(accessToken);
-    case "bailian-coding-plan":
-      return await getBailianCodingPlanUsage(id, apiKey, providerSpecificData);
-    case "nanogpt":
-      return await getNanoGptUsage(apiKey);
-=======
-      return await getIflowUsage(accessToken);
-    case "glm":
-      return await getGlmUsage(apiKey, providerSpecificData);
->>>>>>> Stashed changes
     default:
       return { message: `Usage API not implemented for ${provider}` };
   }
@@ -764,11 +734,6 @@ function parseResetTime(resetValue) {
     if (resetValue instanceof Date) {
       date = resetValue;
     } else if (typeof resetValue === "number") {
-<<<<<<< Updated upstream
-      date = new Date(resetValue < 1e12 ? resetValue * 1000 : resetValue);
-=======
-      date = new Date(resetValue);
->>>>>>> Stashed changes
     } else if (typeof resetValue === "string") {
       date = new Date(resetValue);
     } else {
@@ -977,209 +942,6 @@ function inferGitHubPlanName(data: JsonRecord, premiumQuota: UsageQuota | null):
   return "GitHub Copilot";
 }
 
-<<<<<<< Updated upstream
-function buildCursorUsageHeaders(accessToken: string): Record<string, string> {
-  return getCursorUsageHeaders(accessToken, CURSOR_USAGE_CONFIG.clientVersion);
-}
-
-function getFirstPositiveNumber(...values: unknown[]): number {
-  for (const value of values) {
-    const parsed = toNumber(value, Number.NaN);
-    if (Number.isFinite(parsed) && parsed > 0) {
-      return parsed;
-    }
-  }
-  return 0;
-}
-
-function getCursorMonthlyRequestLimit(usageData: JsonRecord, subscriptionData: JsonRecord): number {
-  return getFirstPositiveNumber(
-    getFieldValue(subscriptionData, "team_max_monthly_requests", "teamMaxMonthlyRequests"),
-    getFieldValue(usageData, "team_max_request_usage", "teamMaxRequestUsage"),
-    getFieldValue(subscriptionData, "team_max_request_usage", "teamMaxRequestUsage"),
-    getFieldValue(usageData, "hard_limit", "hardLimit"),
-    getFieldValue(subscriptionData, "max_monthly_requests", "maxMonthlyRequests")
-  );
-}
-
-function getCursorOnDemandLimit(usageData: JsonRecord, subscriptionData: JsonRecord): number {
-  const onDemand = toRecord(getFieldValue(usageData, "on_demand", "onDemand"));
-  return getFirstPositiveNumber(
-    getFieldValue(onDemand, "max_requests", "maxRequests"),
-    getCursorMonthlyRequestLimit(usageData, subscriptionData)
-  );
-}
-
-function formatCursorQuota(
-  usedValue: unknown,
-  totalValue: unknown,
-  resetValue: unknown
-): UsageQuota {
-  const total = Math.max(0, toNumber(totalValue, 0));
-  const rawUsed = Math.max(0, toNumber(usedValue, 0));
-  const used = total > 0 ? Math.min(rawUsed, total) : rawUsed;
-  const remaining = total > 0 ? Math.max(total - used, 0) : 0;
-
-  return {
-    used,
-    total,
-    remaining,
-    remainingPercentage: total > 0 ? clampPercentage((remaining / total) * 100) : 0,
-    resetAt: parseResetTime(resetValue),
-    unlimited: false,
-  };
-}
-
-function inferCursorPlanName(userMeta: JsonRecord, subscriptionData: JsonRecord): string {
-  const teamInfo = toRecord(getFieldValue(userMeta, "team_info", "teamInfo"));
-  const candidates = [
-    getFieldValue(userMeta, "plan", "plan"),
-    getFieldValue(userMeta, "subscription_type", "subscriptionType"),
-    getFieldValue(subscriptionData, "subscription_type", "subscriptionType"),
-    getFieldValue(subscriptionData, "plan", "plan"),
-  ];
-  const planText = candidates.find((value) => typeof value === "string" && value.trim().length > 0);
-  const normalized = typeof planText === "string" ? planText.trim().toLowerCase() : "";
-
-  if (Object.keys(teamInfo).length > 0 || normalized.includes("team")) return "Cursor Team";
-  if (normalized.includes("enterprise")) return "Cursor Enterprise";
-  if (normalized.includes("pro")) return "Cursor Pro";
-  if (normalized.includes("free")) return "Cursor Free";
-  return "Cursor";
-}
-
-async function fetchCursorUsageDocument(url: string, accessToken: string) {
-  const response = await fetch(url, {
-    method: "GET",
-    headers: buildCursorUsageHeaders(accessToken),
-  });
-
-  const text = await response.text();
-  if (!response.ok) {
-    return {
-      ok: false,
-      status: response.status,
-      data: {} as JsonRecord,
-      text,
-    };
-  }
-
-  try {
-    const parsed = text ? JSON.parse(text) : {};
-    return {
-      ok: true,
-      status: response.status,
-      data: toRecord(parsed),
-      text,
-    };
-  } catch {
-    return {
-      ok: false,
-      status: response.status,
-      data: {} as JsonRecord,
-      text,
-    };
-  }
-}
-
-async function getCursorUsage(accessToken: string) {
-  try {
-    if (!accessToken) {
-      return {
-        message: "Cursor token expired or unavailable. Please re-authenticate the connection.",
-      };
-    }
-
-    const [usageSummary, userMeta, subscription] = await Promise.all([
-      fetchCursorUsageDocument(CURSOR_USAGE_CONFIG.usageUrl, accessToken),
-      fetchCursorUsageDocument(CURSOR_USAGE_CONFIG.userMetaUrl, accessToken),
-      fetchCursorUsageDocument(CURSOR_USAGE_CONFIG.subscriptionUrl, accessToken),
-    ]);
-
-    const authDenied = [usageSummary, userMeta, subscription].some(
-      (result) => result.status === 401 || result.status === 403
-    );
-    if (authDenied) {
-      return {
-        message:
-          "Cursor token expired or permission denied. Please re-authenticate the connection.",
-      };
-    }
-
-    const usageData = usageSummary.data;
-    const userMetaData = userMeta.data;
-    const subscriptionData = subscription.data;
-    const plan = inferCursorPlanName(userMetaData, subscriptionData);
-
-    const quotas: Record<string, UsageQuota> = {};
-    const totalUsed = getFieldValue(usageData, "num_requests_total", "numRequestsTotal");
-    const totalLimit = getCursorMonthlyRequestLimit(usageData, subscriptionData);
-    const totalReset =
-      getFieldValue(usageData, "reset_date", "resetDate") ||
-      getFieldValue(subscriptionData, "reset_date", "resetDate");
-
-    if (toNumber(totalUsed, 0) > 0 || totalLimit > 0) {
-      quotas.requests = formatCursorQuota(totalUsed, totalLimit, totalReset);
-    }
-
-    const onDemand = toRecord(getFieldValue(usageData, "on_demand", "onDemand"));
-    const onDemandUsed = getFieldValue(onDemand, "num_requests", "numRequests");
-    const onDemandLimit = getCursorOnDemandLimit(usageData, subscriptionData);
-    const onDemandReset =
-      getFieldValue(onDemand, "reset_date", "resetDate") ||
-      getFieldValue(usageData, "reset_date", "resetDate") ||
-      getFieldValue(subscriptionData, "reset_date", "resetDate");
-
-    if (toNumber(onDemandUsed, 0) > 0 || onDemandLimit > 0) {
-      quotas.on_demand = formatCursorQuota(onDemandUsed, onDemandLimit, onDemandReset);
-    }
-
-    if (Object.keys(quotas).length > 0) {
-      return { plan, quotas };
-    }
-
-    return { plan, message: "Cursor connected. Unable to parse quota data." };
-  } catch (error) {
-    return { message: `Unable to fetch Cursor usage: ${(error as Error).message}` };
-  }
-}
-
-// ── Gemini CLI subscription info cache ──────────────────────────────────────
-// Prevents duplicate loadCodeAssist calls within the same quota cycle.
-// Key: accessToken → { data, fetchedAt }
-const _geminiCliSubCache = new Map();
-const GEMINI_CLI_CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
-
-/**
- * Gemini CLI Usage — fetch per-model quota from Cloud Code Assist API.
- * Gemini CLI and Antigravity share the same upstream (cloudcode-pa.googleapis.com),
- * so this follows the same pattern as getAntigravityUsage().
- */
-async function getGeminiUsage(accessToken, providerSpecificData?, connectionProjectId?) {
-  if (!accessToken) {
-    return { plan: "Free", message: "Gemini CLI access token not available." };
-  }
-
-  try {
-=======
-// ── Gemini CLI subscription info cache ──────────────────────────────────────
-// Prevents duplicate loadCodeAssist calls within the same quota cycle.
-// Key: accessToken → { data, fetchedAt }
-const _geminiCliSubCache = new Map();
-const GEMINI_CLI_CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
-
-/**
- * Gemini CLI Usage — fetch per-model quota from Cloud Code Assist API.
- * Gemini CLI and Antigravity share the same upstream (cloudcode-pa.googleapis.com),
- * so this follows the same pattern as getAntigravityUsage().
- */
-async function getGeminiUsage(accessToken, providerSpecificData?, connectionProjectId?) {
-  if (!accessToken) {
-    return { plan: "Free", message: "Gemini CLI access token not available." };
-  }
-
-  try {
->>>>>>> Stashed changes
     const subscriptionInfo = await getGeminiCliSubscriptionInfoCached(accessToken);
     const projectId =
       connectionProjectId ||
@@ -1482,72 +1244,6 @@ function getAntigravityPlanLabel(subscriptionInfo) {
 }
 
 /**
-<<<<<<< Updated upstream
- * Proactive credit balance probe for Antigravity.
- *
- * Fires a minimal streamGenerateContent request with GOOGLE_ONE_AI credits enabled
- * and maxOutputTokens=1 to extract the `remainingCredits` field from the SSE stream.
- * This uses ~1 credit but lets us show the balance on the dashboard without waiting
- * for a real user request.
- *
- * Returns the credit balance, or null if the probe failed.
- */
-async function probeAntigravityCreditBalance(
-  accessToken: string,
-  accountId: string,
-  projectId?: string | null,
-  options: AntigravityUsageOptions = {}
-): Promise<number | null> {
-  if (!accessToken) return null;
-
-  const cacheKey = buildAntigravityUsageCacheKey(accessToken, projectId || accountId);
-  const cached = _antigravityCreditProbeCache.get(cacheKey);
-  if (
-    !options.forceRefresh &&
-    cached &&
-    Date.now() - cached.fetchedAt < ANTIGRAVITY_CREDIT_PROBE_TTL_MS
-  ) {
-    return cached.data;
-  }
-
-  const inflight = _antigravityCreditProbeInflight.get(cacheKey);
-  if (inflight) return inflight;
-
-  const promise = probeAntigravityCreditBalanceUncached(accessToken, accountId, projectId)
-    .then(
-      (data) => {
-        _antigravityCreditProbeCache.set(cacheKey, { data, fetchedAt: Date.now() });
-        return data;
-      },
-      (error) => {
-        _antigravityCreditProbeCache.set(cacheKey, { data: null, fetchedAt: Date.now() });
-        throw error;
-      }
-    )
-    .finally(() => {
-      _antigravityCreditProbeInflight.delete(cacheKey);
-=======
- * Antigravity Usage - Fetch quota from Google Cloud Code API
- * Uses fetchAvailableModels API which returns ALL models (including Claude)
- * with per-model quotaInfo (remainingFraction, resetTime).
- * retrieveUserQuota only returns Gemini models — not suitable for Antigravity.
- */
-async function getAntigravityUsage(accessToken, providerSpecificData) {
-  try {
-    const subscriptionInfo = await getAntigravitySubscriptionInfoCached(accessToken);
-    const projectId = subscriptionInfo?.cloudaicompanionProject || null;
-
-    // Fetch model list with quota info from fetchAvailableModels
-    const response = await fetch(ANTIGRAVITY_CONFIG.quotaApiUrl, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "User-Agent": ANTIGRAVITY_CONFIG.userAgent,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(projectId ? { project: projectId } : {}),
-      signal: AbortSignal.timeout(10000),
->>>>>>> Stashed changes
     });
 
   _antigravityCreditProbeInflight.set(cacheKey, promise);
@@ -1686,47 +1382,6 @@ async function getAntigravityUsage(
     const modelEntries = toRecord(dataObj.models);
     const quotas: Record<string, UsageQuota> = {};
 
-<<<<<<< Updated upstream
-    // Parse per-model quota info from fetchAvailableModels response.
-    for (const [modelKey, infoValue] of Object.entries(modelEntries)) {
-      const info = toRecord(infoValue);
-      const quotaInfo = toRecord(info.quotaInfo);
-
-      // Skip internal, excluded, and models without quota info
-      if (
-        info.isInternal === true ||
-        !isUserCallableAntigravityModelId(modelKey) ||
-=======
-    // Models excluded from quota display — internal/special-purpose models that
-    // the Antigravity API returns quota for but are not user-callable via
-    // generateContent.  Matches CLIProxyAPI's hardcoded exclusion list.
-    const ANTIGRAVITY_EXCLUDED_MODELS = new Set([
-      "chat_20706",
-      "chat_23310",
-      "tab_flash_lite_preview",
-      "tab_jump_flash_lite_preview",
-      "gemini-2.5-flash-thinking",
-      "gemini-2.5-pro", // browser subagent model — not user-callable
-      "gemini-2.5-flash", // internal — quota always exhausted on free tier
-      "gemini-2.5-flash-lite", // internal — quota always exhausted on free tier
-      "gemini-2.5-flash-preview-image-generation", // image-gen only, not usable for chat
-      "gemini-3.1-flash-image-preview", // image-gen preview, not usable for chat
-      "gemini-3-flash-agent", // internal agent model — not user-callable
-      "gemini-3.1-flash-lite", // not usable for chat
-      "gemini-3-pro-low", // not usable for chat
-      "gemini-3-pro-high", // not usable for chat
-    ]);
-
-    // Parse per-model quota info from fetchAvailableModels response.
-    for (const [modelKey, infoValue] of Object.entries(modelEntries)) {
-      const info = toRecord(infoValue);
-      const quotaInfo = toRecord(info.quotaInfo);
-
-      // Skip internal, excluded, and models without quota info
-      if (
-        info.isInternal === true ||
-        ANTIGRAVITY_EXCLUDED_MODELS.has(modelKey) ||
->>>>>>> Stashed changes
         Object.keys(quotaInfo).length === 0
       ) {
         continue;

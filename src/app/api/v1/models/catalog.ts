@@ -16,7 +16,6 @@ import { getAllModerationModels } from "@omniroute/open-sse/config/moderationReg
 import { getAllVideoModels } from "@omniroute/open-sse/config/videoRegistry.ts";
 import { getAllMusicModels } from "@omniroute/open-sse/config/musicRegistry.ts";
 import { REGISTRY } from "@omniroute/open-sse/config/providerRegistry.ts";
-<<<<<<< Updated upstream
 import { getAllSyncedAvailableModels } from "@/lib/db/models";
 import { getCompatibleFallbackModels } from "@/lib/providers/managedAvailableModels";
 import { hasEligibleConnectionForModel } from "@/domain/connectionModelRules";
@@ -27,7 +26,6 @@ import {
 } from "@/lib/modelMetadataRegistry";
 import { isAuthRequired, isDashboardSessionAuthenticated } from "@/shared/utils/apiAuth";
 =======
->>>>>>> Stashed changes
 
 const FALLBACK_ALIAS_TO_PROVIDER = {
   ag: "antigravity",
@@ -84,7 +82,6 @@ function getVisionCapabilityFields(modelId: string) {
   };
 }
 
-<<<<<<< Updated upstream
 function extractBearer(headers: Headers): string | null {
   const authHeader = headers.get("authorization") || headers.get("Authorization");
   if (!authHeader?.trim().toLowerCase().startsWith("bearer ")) return null;
@@ -139,7 +136,6 @@ async function getModelCatalogAuthRejection(
 }
 
 =======
->>>>>>> Stashed changes
 function buildAliasMaps() {
   const aliasToProviderId: Record<string, string> = {};
   const providerIdToAlias: Record<string, string> = {};
@@ -355,7 +351,6 @@ export async function getUnifiedModelsResponse(
 
         const visionFields =
           getVisionCapabilityFields(aliasId) || getVisionCapabilityFields(model.id);
-<<<<<<< Updated upstream
 =======
         // Model-level context length overrides provider default
         const contextLength = model.contextLength || defaultContextLength;
@@ -369,7 +364,6 @@ export async function getUnifiedModelsResponse(
           permission: [],
           root: model.id,
           parent: null,
-<<<<<<< Updated upstream
 =======
           ...(contextLength ? { context_length: contextLength } : {}),
 >>>>>>> Stashed changes
@@ -391,9 +385,6 @@ export async function getUnifiedModelsResponse(
             root: model.id,
             parent: aliasId,
 <<<<<<< Updated upstream
-=======
-            ...(contextLength ? { context_length: contextLength } : {}),
->>>>>>> Stashed changes
             ...(providerVisionFields || {}),
           });
         }
@@ -626,7 +617,6 @@ export async function getUnifiedModelsResponse(
       const rawModelId = videoModel.id.split("/").pop() || videoModel.id;
       if (!providerSupportsModel(videoModel.provider, rawModelId)) continue;
 =======
->>>>>>> Stashed changes
       models.push({
         id: videoModel.id,
         object: "model",
@@ -639,11 +629,9 @@ export async function getUnifiedModelsResponse(
     // Add music models (filtered by active providers)
     for (const musicModel of getAllMusicModels()) {
       if (!isProviderActive(musicModel.provider)) continue;
-<<<<<<< Updated upstream
       const rawModelId = musicModel.id.split("/").pop() || musicModel.id;
       if (!providerSupportsModel(musicModel.provider, rawModelId)) continue;
 =======
->>>>>>> Stashed changes
       models.push({
         id: musicModel.id,
         object: "model",
@@ -686,7 +674,6 @@ export async function getUnifiedModelsResponse(
           const modelId = typeof model.id === "string" ? model.id : null;
           if (!modelId) continue;
           if (model.isHidden === true) continue;
-<<<<<<< Updated upstream
           if (
             !hasEligibleConnectionForModel(
               getConnectionsForProvider(alias, canonicalProviderId, providerId, parentProviderType),
@@ -696,7 +683,6 @@ export async function getUnifiedModelsResponse(
             continue;
           }
 =======
->>>>>>> Stashed changes
 
           // Skip if already added as built-in
           const aliasId = `${alias}/${modelId}`;
@@ -713,7 +699,6 @@ export async function getUnifiedModelsResponse(
           else if (endpoints.includes("rerank")) modelType = "rerank";
           else if (endpoints.includes("images")) modelType = "image";
           else if (endpoints.includes("audio")) modelType = "audio";
-<<<<<<< Updated upstream
           if (
             modelType &&
             hasEquivalentSpecialtyModel(canonicalProviderId, modelId, modelType, aliasId)
@@ -721,7 +706,6 @@ export async function getUnifiedModelsResponse(
             continue;
           }
 =======
->>>>>>> Stashed changes
           const visionFields =
             modelType === "chat"
               ? getVisionCapabilityFields(aliasId) || getVisionCapabilityFields(modelId)
@@ -741,12 +725,10 @@ export async function getUnifiedModelsResponse(
             ...(endpoints.length > 1 || !endpoints.includes("chat")
               ? { supported_endpoints: endpoints }
               : {}),
-<<<<<<< Updated upstream
             ...(typeof (model as any).inputTokenLimit === "number"
               ? { context_length: (model as any).inputTokenLimit }
               : {}),
 =======
->>>>>>> Stashed changes
             ...(visionFields || {}),
           });
 
@@ -769,12 +751,10 @@ export async function getUnifiedModelsResponse(
               parent: aliasId,
               custom: true,
               ...(modelType ? { type: modelType } : {}),
-<<<<<<< Updated upstream
               ...(typeof (model as any).inputTokenLimit === "number"
                 ? { context_length: (model as any).inputTokenLimit }
                 : {}),
 =======
->>>>>>> Stashed changes
               ...(providerVisionFields || {}),
             });
           }
@@ -784,60 +764,6 @@ export async function getUnifiedModelsResponse(
       console.log("Could not fetch custom models");
     }
 
-<<<<<<< Updated upstream
-    // Add managed fallback models for compatible providers that don't import a model list.
-    for (const conn of connections) {
-      const providerId = typeof conn.provider === "string" ? conn.provider : null;
-      if (!providerId) continue;
-      if (blockedProviders.has(providerId)) continue;
-
-      const fallbackModels = getCompatibleFallbackModels(providerId);
-      if (!Array.isArray(fallbackModels) || fallbackModels.length === 0) continue;
-
-      const prefix = providerIdToPrefix[providerId];
-      const alias = prefix || providerIdToAlias[providerId] || providerId;
-
-      for (const model of fallbackModels) {
-        const modelId = typeof model.id === "string" ? model.id : null;
-        if (!modelId) continue;
-        if (getModelIsHidden(providerId, modelId)) continue;
-        if (!hasEligibleConnectionForModel([conn], modelId)) continue;
-
-        const aliasId = `${alias}/${modelId}`;
-        if (models.some((m) => m.id === aliasId)) continue;
-
-        const visionFields =
-          getVisionCapabilityFields(aliasId) || getVisionCapabilityFields(modelId);
-        const contextLength =
-          typeof (model as any).contextLength === "number"
-            ? (model as any).contextLength
-            : undefined;
-
-        models.push({
-          id: aliasId,
-          object: "model",
-          created: timestamp,
-          owned_by: providerId,
-          permission: [],
-          root: modelId,
-          parent: null,
-          ...(contextLength ? { context_length: contextLength } : {}),
-          ...(visionFields || {}),
-        });
-      }
-    }
-
-    // Filter by API key permissions if requested
-    const apiKey = extractBearer(request.headers);
-    let finalModels = models;
-    if (apiKey) {
-=======
-    // Filter by API key permissions if requested
-    const authHeader = request.headers.get("authorization");
-    let finalModels = models;
-    if (authHeader && authHeader.startsWith("Bearer ")) {
-      const apiKey = authHeader.slice(7);
->>>>>>> Stashed changes
       const { isModelAllowedForKey } = await import("@/lib/db/apiKeys");
 
       const filtered = [];
@@ -854,36 +780,6 @@ export async function getUnifiedModelsResponse(
       finalModels = filtered;
     }
 
-<<<<<<< Updated upstream
-    const getDefaultContextFallback = (model: any): number | undefined => {
-      if (typeof model.context_length === "number") return undefined;
-      if (model.owned_by === "combo") return undefined;
-      if (model.type && model.type !== "chat") return undefined;
-
-      const provider = typeof model.owned_by === "string" ? model.owned_by : null;
-      if (!provider) return undefined;
-      const canonicalId = aliasToProviderId[provider] || provider;
-      return REGISTRY[canonicalId]?.defaultContextLength;
-    };
-
-    const enrichedModels = finalModels.map((model) => {
-      const enriched = enrichCatalogModelEntry(model);
-      const fallbackContextLength = getDefaultContextFallback(enriched);
-      return fallbackContextLength
-        ? { ...enriched, context_length: fallbackContextLength }
-        : enriched;
-    });
-
-    return Response.json(
-      {
-        object: "list",
-        data: enrichedModels,
-=======
-    return Response.json(
-      {
-        object: "list",
-        data: finalModels,
->>>>>>> Stashed changes
       },
       {
         headers: {

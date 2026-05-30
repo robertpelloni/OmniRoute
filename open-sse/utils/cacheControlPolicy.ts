@@ -83,11 +83,9 @@ export function isClaudeCodeClient(userAgent: string | null | undefined): boolea
 
   // Claude Code user agents
   if (ua.includes("claude-code") || ua.includes("claude_code")) return true;
-<<<<<<< Updated upstream
   if (ua.includes("claude-cli/")) return true;
   if (ua.includes("sdk-cli")) return true;
 =======
->>>>>>> Stashed changes
   if (ua.includes("anthropic") && ua.includes("cli")) return true;
 
   return false;

@@ -11,7 +11,6 @@ import Input from "@/shared/components/Input";
 import Modal from "@/shared/components/Modal";
 import Toggle from "@/shared/components/Toggle";
 import Tooltip from "@/shared/components/Tooltip";
-<<<<<<< Updated upstream
 import EmailPrivacyToggle from "@/shared/components/EmailPrivacyToggle";
 =======
 import ModelRoutingSection from "@/shared/components/ModelRoutingSection";
@@ -49,7 +48,6 @@ import {
   normalizeIntelligentRoutingConfig,
 } from "@/lib/combos/intelligentRouting";
 =======
->>>>>>> Stashed changes
 import { useTranslations } from "next-intl";
 
 const ModelSelectModal = dynamic(() => import("@/shared/components/ModelSelectModal"), {
@@ -68,7 +66,6 @@ const STRATEGY_OPTIONS = ROUTING_STRATEGIES.map((strategy) => ({
   descKey: strategy.combosDescKey,
   icon: strategy.icon,
 }));
-<<<<<<< Updated upstream
 
 const STRATEGY_LABEL_FALLBACK = {
   "context-relay": "Context Relay",
@@ -79,7 +76,6 @@ const STRATEGY_DESC_FALLBACK = {
     "Priority-style routing with automatic context handoffs when account rotation happens.",
 };
 =======
->>>>>>> Stashed changes
 
 const STRATEGY_GUIDANCE_FALLBACK = {
   priority: {
@@ -343,11 +339,6 @@ const COMBO_TEMPLATE_FALLBACK = {
   balancedDesc: "Least-used routing to spread demand over time.",
   freeStackTitle: "Free Stack ($0)",
   freeStackDesc:
-<<<<<<< Updated upstream
-    "Round-robin across all free providers: Kiro, Qoder, Qwen, Gemini CLI. Zero cost, never stops.",
-=======
-    "Round-robin across all free providers: Kiro, iFlow, Qwen, Gemini CLI. Zero cost, never stops.",
->>>>>>> Stashed changes
   paidPremiumTitle: "Paid Premium",
   paidPremiumDesc:
     "Round-robin across paid subscriptions: Cursor, Antigravity. Top-tier models, distributed load.",

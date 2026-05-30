@@ -6,10 +6,8 @@
  */
 
 import { REGISTRY } from "../config/providerRegistry.ts";
-<<<<<<< Updated upstream
 import { getModelContextLimit } from "../../src/lib/modelCapabilities.ts";
 =======
->>>>>>> Stashed changes
 
 // Default token limits per provider (fallbacks when not in registry)
 const DEFAULT_LIMITS: Record<string, number> = {
@@ -37,7 +35,6 @@ function getEnvOverride(provider: string): number | null {
   return null;
 }
 
-<<<<<<< Updated upstream
 // Reserve tokens override from environment variable
 function getReserveTokensOverride(): number | null {
   const envValue = process.env.CONTEXT_RESERVE_TOKENS;
@@ -49,7 +46,6 @@ function getReserveTokensOverride(): number | null {
 }
 
 =======
->>>>>>> Stashed changes
 // Rough chars-per-token ratio for quick estimation
 const CHARS_PER_TOKEN = 4;
 
@@ -64,40 +60,15 @@ export function estimateTokens(text: string | object | null | undefined): number
 
 /**
  * Get token limit for a provider/model combination
-<<<<<<< Updated upstream
- * Priority: Env override > models.dev DB > Registry defaultContextLength > DEFAULT_LIMITS
- */
-export function getTokenLimit(provider: string, model: string | null = null): number {
-=======
- * Priority: Env override > Registry defaultContextLength > DEFAULT_LIMITS
- */
-export function getTokenLimit(provider, model = null) {
->>>>>>> Stashed changes
   // 1. Check environment variable override first
   const envOverride = getEnvOverride(provider);
   if (envOverride) return envOverride;
 
-<<<<<<< Updated upstream
-  // 2. Check models.dev synced DB for per-model context limit
-  if (model) {
-    const dbLimit = getModelContextLimit(provider, model);
-    if (dbLimit && dbLimit > 0) return dbLimit;
-  }
-
-  // 3. Check registry for provider default
-=======
-  // 2. Check registry for provider default
->>>>>>> Stashed changes
   const registryEntry = REGISTRY[provider];
   if (registryEntry?.defaultContextLength) {
     return registryEntry.defaultContextLength;
   }
 
-<<<<<<< Updated upstream
-  // 4. Check if model name hints at a known limit
-=======
-  // 3. Check if model name hints at a known limit
->>>>>>> Stashed changes
   if (model) {
     const lower = model.toLowerCase();
     if (lower.includes("claude")) return DEFAULT_LIMITS.claude;
@@ -112,11 +83,6 @@ export function getTokenLimit(provider, model = null) {
       return DEFAULT_LIMITS.codex;
   }
 
-<<<<<<< Updated upstream
-  // 5. Fallback to DEFAULT_LIMITS or default
-=======
-  // 4. Fallback to DEFAULT_LIMITS or default
->>>>>>> Stashed changes
   return DEFAULT_LIMITS[provider] || DEFAULT_LIMITS.default;
 }
 

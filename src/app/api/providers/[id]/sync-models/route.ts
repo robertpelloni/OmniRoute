@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { getProviderConnectionById } from "@/models";
-<<<<<<< Updated upstream
 import { getSyncedAvailableModelsForConnection } from "@/lib/db/models";
 import {
   importManagedModels,
@@ -19,11 +18,7 @@ import {
   buildModelSyncInternalHeaders,
   isModelSyncInternalRequest,
 } from "@/shared/services/modelSyncScheduler";
-<<<<<<< Updated upstream
 import { GET as getProviderModels } from "../models/route";
-=======
-import { getModelsByProviderId } from "@/shared/constants/models";
->>>>>>> Stashed changes
 
 type JsonRecord = Record<string, unknown>;
 
@@ -39,15 +34,11 @@ function normalizeModelForComparison(model: unknown) {
   const record = asRecord(model);
   const id = toNonEmptyString(record.id) || "";
   const name = toNonEmptyString(record.name) || id;
-<<<<<<< Updated upstream
   const rawSource = toNonEmptyString(record.source)?.toLowerCase();
   const source =
     rawSource === "api-sync" || rawSource === "auto-sync" || rawSource === "imported"
       ? "imported"
       : rawSource || "manual";
-=======
-  const source = toNonEmptyString(record.source) || "auto-sync";
->>>>>>> Stashed changes
   const apiFormat = toNonEmptyString(record.apiFormat) || "chat-completions";
   const supportedEndpoints = Array.isArray(record.supportedEndpoints)
     ? Array.from(
@@ -68,7 +59,6 @@ function normalizeModelForComparison(model: unknown) {
   };
 }
 
-<<<<<<< Updated upstream
 function isManagedSyncedModel(model: unknown) {
   const record = asRecord(model);
   const source = toNonEmptyString(record.source)?.toLowerCase();
@@ -110,126 +100,6 @@ async function readJsonResponse(response: Response): Promise<{
   }
 }
 
-=======
->>>>>>> Stashed changes
-function summarizeModelChanges(previousModels: unknown, nextModels: unknown) {
-  const previousList = Array.isArray(previousModels) ? previousModels : [];
-  const nextList = Array.isArray(nextModels) ? nextModels : [];
-
-  const previousMap = new Map(
-    previousList
-      .map((model) => normalizeModelForComparison(model))
-      .filter((model) => model.id)
-      .map((model) => [model.id, JSON.stringify(model)])
-  );
-  const nextMap = new Map(
-    nextList
-      .map((model) => normalizeModelForComparison(model))
-      .filter((model) => model.id)
-      .map((model) => [model.id, JSON.stringify(model)])
-  );
-
-  let added = 0;
-  let removed = 0;
-  let updated = 0;
-
-  for (const [id, nextValue] of nextMap.entries()) {
-    const previousValue = previousMap.get(id);
-    if (!previousValue) {
-      added += 1;
-      continue;
-    }
-    if (previousValue !== nextValue) {
-      updated += 1;
-    }
-  }
-
-  for (const id of previousMap.keys()) {
-    if (!nextMap.has(id)) {
-      removed += 1;
-    }
-  }
-
-  return {
-    added,
-    removed,
-    updated,
-    total: added + removed + updated,
-  };
-}
-
-function getModelSyncChannelLabel(connection: unknown) {
-  const record = asRecord(connection);
-  const providerSpecificData = asRecord(record.providerSpecificData);
-
-  return (
-    toNonEmptyString(record.displayName) ||
-    toNonEmptyString(record.email) ||
-    toNonEmptyString(providerSpecificData.tag) ||
-    toNonEmptyString(record.name) ||
-    toNonEmptyString(record.provider) ||
-    (toNonEmptyString(record.id) ? `connection:${String(record.id).slice(0, 8)}` : null) ||
-    "unknown"
-  );
-}
-
-<<<<<<< Updated upstream
-async function fetchProviderModelsForSync(request: Request, connectionId: string) {
-  // Construct a safe localhost URL from the incoming request's origin.
-  // The route only accepts authenticated or internal-scheduler requests,
-  // and the path is hardcoded — no user-controlled URL components reach fetch.
-  const SAFE_HOSTS = new Set(["localhost", "127.0.0.1", "0.0.0.0", "::1"]);
-  const incomingUrl = new URL(request.url);
-  const safeOrigin = SAFE_HOSTS.has(incomingUrl.hostname)
-    ? incomingUrl.origin
-    : `http://127.0.0.1:${process.env.PORT || "20128"}`;
-  const modelsPath = `/api/providers/${encodeURIComponent(connectionId)}/models?refresh=true`;
-  const headers = {
-    cookie: request.headers.get("cookie") || "",
-    ...buildModelSyncInternalHeaders(),
-  };
-
-  try {
-    return await fetch(new URL(modelsPath, safeOrigin).href, {
-      method: "GET",
-      cache: "no-store",
-      headers,
-    });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    console.warn(
-      `[ModelSync] Internal /models self-fetch failed for ${connectionId.slice(
-        0,
-        8
-      )}; falling back to in-process route: ${message}`
-    );
-
-    return getProviderModels(
-      new Request(new URL(modelsPath, "http://localhost").href, {
-        method: "GET",
-        headers,
-      }),
-      { params: { id: connectionId } }
-    );
-  }
-}
-
-/**
- * POST /api/providers/[id]/sync-models
- *
- * Fetches the model list from a provider's /models endpoint, stores discovered
- * models in the per-connection available-model cache, and removes matching
- * upstream-discovered rows from the provider's custom model list. Successful
- * syncs only write a call log when the fetched channel or custom model cleanup
- * changes stored model state.
-=======
-/**
- * POST /api/providers/[id]/sync-models
- *
- * Fetches the model list from a provider's /models endpoint and replaces the
- * full custom models list for that provider. Successful syncs only write a
- * call log when the fetched channel actually changes the stored model list.
->>>>>>> Stashed changes
  *
  * Used by:
  * - modelSyncScheduler (auto-sync on interval)
@@ -238,64 +108,9 @@ async function fetchProviderModelsForSync(request: Request, connectionId: string
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const start = Date.now();
   const { id } = await params;
-<<<<<<< Updated upstream
   const mode = (
     new URL(request.url).searchParams.get("mode") === "import" ? "merge" : "sync"
   ) as ManagedModelImportMode;
-=======
->>>>>>> Stashed changes
-  let logProvider = "unknown";
-  let channelLabel: string | null = null;
-
-  try {
-    if (!(await isAuthenticated(request)) && !isModelSyncInternalRequest(request)) {
-      return NextResponse.json(
-        { error: { message: "Authentication required", type: "invalid_api_key" } },
-        { status: 401 }
-      );
-    }
-
-    const connection = await getProviderConnectionById(id);
-    if (!connection) {
-      return NextResponse.json({ error: "Connection not found" }, { status: 404 });
-    }
-
-    logProvider = toNonEmptyString(connection.provider) || "unknown";
-    channelLabel = getModelSyncChannelLabel(connection);
-<<<<<<< Updated upstream
-    const previousSyncedAvailableModelsForConnection = await getSyncedAvailableModelsForConnection(
-      logProvider,
-      id
-    );
-
-    const modelsRes = await fetchProviderModelsForSync(request, id);
-
-    const duration = Date.now() - start;
-    const { data: modelsData, parseError } = await readJsonResponse(modelsRes);
-    const payloadError = getErrorMessageFromPayload(modelsData);
-
-    if (!modelsRes.ok || parseError) {
-      const responseStatus = modelsRes.ok ? 502 : modelsRes.status;
-      const logError = payloadError || parseError || `HTTP ${modelsRes.status}`;
-      const responseError = payloadError || parseError || "Failed to fetch models";
-=======
-
-    // Fetch models from the existing /api/providers/[id]/models endpoint
-    const origin = new URL(request.url).origin;
-    const modelsUrl = `${origin}/api/providers/${id}/models`;
-    const modelsRes = await fetch(modelsUrl, {
-      method: "GET",
-      headers: {
-        cookie: request.headers.get("cookie") || "",
-        ...buildModelSyncInternalHeaders(),
-      },
-    });
-
-    const duration = Date.now() - start;
-    const modelsData = await modelsRes.json();
-
-    if (!modelsRes.ok) {
->>>>>>> Stashed changes
       // Log the failed attempt
       await saveCallLog({
         method: "GET",
@@ -306,7 +121,6 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
         sourceFormat: "-",
         connectionId: id,
         duration,
-<<<<<<< Updated upstream
         error: logError,
         requestType: "model-sync",
         ...(parseError
@@ -325,20 +139,10 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
           ...(parseError ? { upstreamStatus: modelsRes.status } : {}),
         },
         { status: responseStatus }
-=======
-        error: modelsData.error || `HTTP ${modelsRes.status}`,
-        requestType: "model-sync",
-      });
-
-      return NextResponse.json(
-        { error: modelsData.error || "Failed to fetch models" },
-        { status: modelsRes.status }
->>>>>>> Stashed changes
       );
     }
 
     const fetchedModels = modelsData.models || [];
-<<<<<<< Updated upstream
     const {
       previousModels,
       previousSyncedAvailableModels,
@@ -377,35 +181,6 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     const shouldLog = modelChanges.total > 0 || customModelChanges.total > 0;
 
     if (shouldLog) {
-=======
-
-    // Filter out models already in the built-in registry
-    const registryIds = new Set(getModelsByProviderId(logProvider).map((m: any) => m.id));
-
-    // Replace the full model list
-    const models = fetchedModels
-      .map((m: any) => ({
-        id: m.id || m.name || m.model,
-        name: m.name || m.displayName || m.id || m.model,
-        source: "auto-sync",
-      }))
-      .filter((m: any) => m.id && !registryIds.has(m.id));
-
-    const previousModels = await getCustomModels(logProvider);
-    const replaced = await replaceCustomModels(logProvider, models);
-    const modelChanges = summarizeModelChanges(previousModels, replaced);
-
-    let syncedAliases = 0;
-    if (usesManagedAvailableModels(logProvider)) {
-      const aliasSync = await syncManagedAvailableModelAliases(
-        logProvider,
-        models.map((model: any) => model.id)
-      );
-      syncedAliases = aliasSync.assignedAliases.length;
-    }
-
-    if (modelChanges.total > 0) {
->>>>>>> Stashed changes
       await saveCallLog({
         method: "GET",
         path: `/api/providers/${id}/models`,
@@ -417,12 +192,8 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
         duration: Date.now() - start,
         requestType: "model-sync",
         responseBody: {
-<<<<<<< Updated upstream
           syncedModels: syncedModelsCount,
           availableModelsCount,
-=======
-          syncedModels: models.length,
->>>>>>> Stashed changes
           syncedAliases,
           provider: logProvider,
           channel: channelLabel,
@@ -433,7 +204,6 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
           updatedCount,
           mode,
 =======
->>>>>>> Stashed changes
         },
       });
     }
@@ -441,26 +211,6 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     return NextResponse.json({
       ok: true,
       provider: logProvider,
-<<<<<<< Updated upstream
-      mode,
-      syncedModels: syncedModelsCount,
-      availableModelsCount,
-      syncedAliases,
-      modelChanges,
-      customModelChanges,
-      importedCount,
-      updatedCount,
-      importedChanges,
-      logged: shouldLog,
-      models: persistedModels,
-      importedModels,
-=======
-      syncedModels: replaced.length,
-      syncedAliases,
-      modelChanges,
-      logged: modelChanges.total > 0,
-      models: replaced,
->>>>>>> Stashed changes
     });
   } catch (error: any) {
     // Log error

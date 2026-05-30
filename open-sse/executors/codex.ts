@@ -1328,7 +1328,6 @@ export class CodexExecutor extends BaseExecutor {
       body.service_tier = requestDefaults.serviceTier;
     }
 
-<<<<<<< Updated upstream
     // Issue #1832 & #1853: Map messages to input for clients like Cursor 5.5 that use responses/compact but send messages instead of input.
     // This MUST run before convertSystemToDeveloperRole and stripStoredItemReferences.
     if (!body.input && Array.isArray(body.messages)) {
@@ -1530,42 +1529,10 @@ export class CodexExecutor extends BaseExecutor {
     delete body.conversation_id;
 
 =======
->>>>>>> Stashed changes
     if (nativeCodexPassthrough) {
       return body;
     }
 
-<<<<<<< Updated upstream
-=======
-    // Extract thinking level from model name suffix
-    // e.g., gpt-5.3-codex-high → high, gpt-5.3-codex → medium (default)
-    const effortLevels = ["none", "low", "medium", "high", "xhigh"];
-    let modelEffort: string | null = null;
-    // Track the clean model name (suffix stripped) for clamp lookup
-    let cleanModel = model;
-    for (const level of effortLevels) {
-      if (model.endsWith(`-${level}`)) {
-        modelEffort = level;
-        // Strip suffix from model name for actual API call
-        body.model = body.model.replace(`-${level}`, "");
-        cleanModel = body.model;
-        break;
-      }
-    }
-
-    // Priority: explicit reasoning.effort > reasoning_effort param > model suffix > default (medium)
-    if (!body.reasoning) {
-      const rawEffort = body.reasoning_effort || modelEffort || "medium";
-      // Clamp effort to the model's maximum allowed level (feature-07)
-      const effort = clampEffort(cleanModel, rawEffort);
-      body.reasoning = { effort };
-    } else if (body.reasoning.effort) {
-      // Also clamp if reasoning object was provided directly
-      body.reasoning.effort = clampEffort(cleanModel, body.reasoning.effort);
-    }
-    delete body.reasoning_effort;
-
->>>>>>> Stashed changes
     // Remove unsupported parameters for Codex API
     delete body.temperature;
     delete body.top_p;

@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import path from "path";
 import fs from "fs";
 import { resolveDataDir } from "@/lib/dataPaths";
-<<<<<<< Updated upstream
 import {
   getAppLogRetentionDays,
   getCallLogRetentionDays,
@@ -81,7 +80,6 @@ export async function GET() {
         days: getDbBackupRetentionDays(),
       },
 =======
->>>>>>> Stashed changes
       dataDir: dataDir.startsWith(homeDir) ? "~" + dataDir.slice(homeDir.length) : dataDir,
     });
   } catch (error) {

@@ -25,36 +25,6 @@ import { getAppLogFormat, getAppLogLevel } from "../../src/lib/logEnv";
 
 const LEVELS = { debug: 0, info: 1, warn: 2, error: 3 } as const;
 
-<<<<<<< Updated upstream
-type LogLevel = keyof typeof LEVELS;
-type LogMetadata = Record<string, unknown>;
-type ConsoleFn = (...data: unknown[]) => void;
-
-type TaggedLogger = {
-  debug: (message: string, meta?: LogMetadata | null) => void;
-  info: (message: string, meta?: LogMetadata | null) => void;
-  warn: (message: string, meta?: LogMetadata | null) => void;
-  error: (message: string, meta?: LogMetadata | null) => void;
-};
-
-type RequestScopedLogger = {
-  debug: (tag: string, msg: string, data?: LogMetadata | null) => void;
-  info: (tag: string, msg: string, data?: LogMetadata | null) => void;
-  warn: (tag: string, msg: string, data?: LogMetadata | null) => void;
-  error: (tag: string, msg: string, data?: LogMetadata | null) => void;
-};
-
-function isLogLevel(value: string): value is LogLevel {
-  return Object.prototype.hasOwnProperty.call(LEVELS, value);
-}
-
-const configuredLevel = getAppLogLevel("info").toLowerCase();
-const currentLevel = isLogLevel(configuredLevel) ? LEVELS[configuredLevel] : LEVELS.info;
-
-=======
-const currentLevel = LEVELS[getAppLogLevel("info").toLowerCase()] ?? LEVELS.info;
-
->>>>>>> Stashed changes
 const jsonFormat = getAppLogFormat("text") === "json";
 
 let requestCounter = 0;

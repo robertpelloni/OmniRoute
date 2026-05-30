@@ -5,7 +5,6 @@ import { syncToCloud } from "@/lib/cloudSync";
 import { createKeySchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
 import { isApiKeyRevealEnabled, maskStoredApiKey } from "@/lib/apiKeyExposure";
-<<<<<<< Updated upstream
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
 import * as log from "@/sse/utils/logger";
 
@@ -24,7 +23,6 @@ function parsePagination(request: Request) {
   return { limit, offset };
 }
 =======
->>>>>>> Stashed changes
 
 // GET /api/keys - List API keys
 export async function GET(request: Request) {
@@ -37,19 +35,6 @@ export async function GET(request: Request) {
       ...k,
       key: maskStoredApiKey(k.key),
     }));
-<<<<<<< Updated upstream
-    const { limit, offset } = parsePagination(request);
-    const pagedKeys =
-      limit === null ? maskedKeys.slice(offset) : maskedKeys.slice(offset, offset + limit);
-
-    return NextResponse.json({
-      keys: pagedKeys,
-      total: maskedKeys.length,
-      allowKeyReveal: isApiKeyRevealEnabled(),
-    });
-=======
-    return NextResponse.json({ keys: maskedKeys, allowKeyReveal: isApiKeyRevealEnabled() });
->>>>>>> Stashed changes
   } catch (error) {
     log.error("keys", "Error fetching keys", error);
     return NextResponse.json({ error: "Failed to fetch keys" }, { status: 500 });

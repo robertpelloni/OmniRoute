@@ -3,14 +3,6 @@
 import { useState, useEffect } from "react";
 import { Card, Button, Input, Toggle } from "@/shared/components";
 import { cn } from "@/shared/utils/cn";
-<<<<<<< Updated upstream
-import {
-  ROUTING_STRATEGIES,
-  SETTINGS_FALLBACK_STRATEGY_VALUES,
-} from "@/shared/constants/routingStrategies";
-=======
-import { ROUTING_STRATEGIES } from "@/shared/constants/routingStrategies";
->>>>>>> Stashed changes
 import { useTranslations } from "next-intl";
 
 const STRATEGY_LABEL_FALLBACKS: Record<string, string> = {
@@ -86,15 +78,6 @@ export default function ComboDefaultsTab() {
   const tc = useTranslations("common");
   const strategyOptions = ROUTING_STRATEGIES.map((strategy) => ({
     value: strategy.value,
-<<<<<<< Updated upstream
-    label: translateOrFallback(
-      t,
-      strategy.labelKey,
-      STRATEGY_LABEL_FALLBACKS[strategy.value] || strategy.value
-    ),
-=======
-    label: t(strategy.labelKey),
->>>>>>> Stashed changes
     icon: strategy.icon,
   }));
   const numericSettings = [

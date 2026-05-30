@@ -1,7 +1,3 @@
-<<<<<<< Updated upstream
-=======
-import { CORS_ORIGIN } from "@/shared/utils/cors";
->>>>>>> Stashed changes
 import { buildClientRawRequest, handleChat } from "@/sse/handlers/chat";
 import { initTranslators } from "@omniroute/open-sse/translator/index.ts";
 import { errorResponse } from "@omniroute/open-sse/utils/error.ts";

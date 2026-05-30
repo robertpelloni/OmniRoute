@@ -2,23 +2,19 @@ import { Skill, SkillSchema } from "./types";
 import { SkillCreateInputSchema } from "./schemas";
 import { getDbInstance } from "../db/core";
 import { randomUUID } from "crypto";
-<<<<<<< Updated upstream
 import { logger } from "../../../open-sse/utils/logger.ts";
 
 const log = logger("SKILLS");
 =======
->>>>>>> Stashed changes
 
 class SkillRegistry {
   private static instance: SkillRegistry;
   private registeredSkills: Map<string, Skill> = new Map();
   private versionCache: Map<string, Map<string, Skill>> = new Map();
-<<<<<<< Updated upstream
   private lastLoaded: number = 0;
   private readonly cacheTTL: number = 60_000; // 60 seconds
   private pendingLoad: Promise<void> | null = null; // dedupes concurrent cache fills
 =======
->>>>>>> Stashed changes
 
   private constructor() {}
 
@@ -29,7 +25,6 @@ class SkillRegistry {
     return SkillRegistry.instance;
   }
 
-<<<<<<< Updated upstream
   private isCacheStale(): boolean {
     return Date.now() - this.lastLoaded > this.cacheTTL;
   }
@@ -39,7 +34,6 @@ class SkillRegistry {
   }
 
 =======
->>>>>>> Stashed changes
   async register(skillData: {
     name: string;
     version?: string;
@@ -48,7 +42,6 @@ class SkillRegistry {
     handler: string;
     enabled?: boolean;
     apiKeyId: string;
-<<<<<<< Updated upstream
     mode?: "on" | "off" | "auto";
     sourceProvider?: "skillsmp" | "skillssh" | "local";
     tags?: string[];
@@ -72,13 +65,8 @@ class SkillRegistry {
     const now = new Date();
 
     db.prepare(
-<<<<<<< Updated upstream
       `INSERT INTO skills (id, api_key_id, name, version, description, schema, handler, enabled, mode, source_provider, tags, install_count, created_at, updated_at)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-=======
-      `INSERT INTO skills (id, api_key_id, name, version, description, schema, handler, enabled, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
->>>>>>> Stashed changes
     ).run(
       id,
       skillData.apiKeyId,
@@ -94,7 +82,6 @@ class SkillRegistry {
       JSON.stringify(skillData.tags || []),
       typeof skillData.installCount === "number" ? Math.max(0, skillData.installCount) : 0,
 =======
->>>>>>> Stashed changes
       now.toISOString(),
       now.toISOString()
     );
@@ -108,24 +95,20 @@ class SkillRegistry {
       schema: parsed.schema,
       handler: parsed.handler,
       enabled: parsed.enabled,
-<<<<<<< Updated upstream
       mode: skillData.mode || (parsed.enabled ? "on" : "off"),
       sourceProvider: skillData.sourceProvider,
       tags: skillData.tags || [],
       installCount:
         typeof skillData.installCount === "number" ? Math.max(0, skillData.installCount) : 0,
 =======
->>>>>>> Stashed changes
       createdAt: now,
       updatedAt: now,
     };
 
     this.registeredSkills.set(`${parsed.name}@${parsed.version}`, skill);
     this.updateVersionCache(skill);
-<<<<<<< Updated upstream
     this.invalidateCache();
 =======
->>>>>>> Stashed changes
 
     return skill;
   }
@@ -139,12 +122,6 @@ class SkillRegistry {
       if (skill && (!apiKeyId || skill.apiKeyId === apiKeyId)) {
         db.prepare("DELETE FROM skills WHERE id = ?").run(skill.id);
         this.registeredSkills.delete(key);
-<<<<<<< Updated upstream
-        this.rebuildVersionCache(name);
-        this.invalidateCache();
-=======
-        this.clearVersionCache(name);
->>>>>>> Stashed changes
         return true;
       }
     } else {
@@ -153,20 +130,6 @@ class SkillRegistry {
         .run(name, apiKeyId || null, apiKeyId || null);
 
       if (deleted.changes > 0) {
-<<<<<<< Updated upstream
-        const keysToDelete = Array.from(this.registeredSkills.entries())
-          .filter(([, skill]) => skill.name === name && (!apiKeyId || skill.apiKeyId === apiKeyId))
-          .map(([key]) => key);
-        keysToDelete.forEach((k) => this.registeredSkills.delete(k));
-        this.rebuildVersionCache(name);
-        this.invalidateCache();
-=======
-        const keysToDelete = Array.from(this.registeredSkills.keys()).filter((k) =>
-          k.startsWith(`${name}@`)
-        );
-        keysToDelete.forEach((k) => this.registeredSkills.delete(k));
-        this.clearVersionCache(name);
->>>>>>> Stashed changes
         return true;
       }
     }
@@ -174,42 +137,12 @@ class SkillRegistry {
     return false;
   }
 
-<<<<<<< Updated upstream
-  async unregisterById(id: string): Promise<boolean> {
-    const db = getDbInstance();
-    const deleted = db.prepare("DELETE FROM skills WHERE id = ?").run(id);
-    if (deleted.changes > 0) {
-      const affectedNames = new Set<string>();
-      const keysToDelete = Array.from(this.registeredSkills.entries())
-        .filter(([, skill]) => skill.id === id)
-        .map(([key, skill]) => {
-          affectedNames.add(skill.name);
-          return key;
-        });
-      keysToDelete.forEach((k) => this.registeredSkills.delete(k));
-      affectedNames.forEach((name) => this.rebuildVersionCache(name));
-      this.invalidateCache();
-      return true;
-    }
-    return false;
-  }
-
-  list(apiKeyId?: string): Skill[] {
-    log.debug("skills.registry.list", { apiKeyId, cached: !this.isCacheStale() });
-=======
-  list(apiKeyId?: string): Skill[] {
->>>>>>> Stashed changes
     if (apiKeyId) {
       return Array.from(this.registeredSkills.values()).filter((s) => s.apiKeyId === apiKeyId);
     }
     return Array.from(this.registeredSkills.values());
   }
 
-<<<<<<< Updated upstream
-  getSkill(name: string, _apiKeyId?: string): Skill | undefined {
-=======
-  getSkill(name: string, apiKeyId?: string): Skill | undefined {
->>>>>>> Stashed changes
     return this.registeredSkills.get(name);
   }
 
@@ -219,11 +152,6 @@ class SkillRegistry {
     return Array.from(cached.values()).sort((a, b) => this.compareVersions(b.version, a.version));
   }
 
-<<<<<<< Updated upstream
-  resolveVersion(name: string, constraint: string, _apiKeyId?: string): Skill | undefined {
-=======
-  resolveVersion(name: string, constraint: string, apiKeyId?: string): Skill | undefined {
->>>>>>> Stashed changes
     const versions = this.getSkillVersions(name);
     if (versions.length === 0) return undefined;
 
@@ -293,101 +221,6 @@ class SkillRegistry {
     this.versionCache.delete(name);
   }
 
-<<<<<<< Updated upstream
-  private rebuildVersionCache(name: string): void {
-    this.clearVersionCache(name);
-    for (const skill of this.registeredSkills.values()) {
-      if (skill.name === name) {
-        this.updateVersionCache(skill);
-      }
-    }
-  }
-
-  async loadFromDatabase(apiKeyId?: string): Promise<void> {
-    if (this.pendingLoad) {
-      await this.pendingLoad;
-      return;
-    }
-    if (!this.isCacheStale()) return;
-
-    this.pendingLoad = (async () => {
-      try {
-        log.debug("skills.registry.loadFromDatabase", { cached: false });
-        const db = getDbInstance();
-        const rows = apiKeyId
-          ? db.prepare("SELECT * FROM skills WHERE api_key_id = ?").all(apiKeyId)
-          : db.prepare("SELECT * FROM skills").all();
-
-        for (const row of rows as any[]) {
-          const tags = (() => {
-            try {
-              if (typeof row.tags !== "string") return [];
-              const parsed = JSON.parse(row.tags);
-              return Array.isArray(parsed) ? parsed.filter((item) => typeof item === "string") : [];
-            } catch {
-              return [];
-            }
-          })();
-
-          const skill: Skill = {
-            id: row.id,
-            apiKeyId: row.api_key_id,
-            name: row.name,
-            version: row.version,
-            description: row.description || "",
-            schema: JSON.parse(row.schema),
-            handler: row.handler,
-            enabled: row.enabled === 1,
-            mode: row.mode === "off" || row.mode === "auto" ? row.mode : "on",
-            sourceProvider:
-              row.source_provider === "skillsmp" || row.source_provider === "skillssh"
-                ? row.source_provider
-                : row.source_provider
-                  ? "local"
-                  : undefined,
-            tags,
-            installCount: typeof row.install_count === "number" ? row.install_count : 0,
-            createdAt: new Date(row.created_at),
-            updatedAt: new Date(row.updated_at),
-          };
-          this.registeredSkills.set(`${skill.name}@${skill.version}`, skill);
-          this.updateVersionCache(skill);
-        }
-        this.lastLoaded = Date.now();
-      } catch (err: any) {
-        log.error("loadFromDatabase error:", err);
-        throw err;
-      } finally {
-        this.pendingLoad = null;
-      }
-    })();
-    try {
-      await this.pendingLoad;
-    } finally {
-      this.pendingLoad = null;
-=======
-  async loadFromDatabase(apiKeyId?: string): Promise<void> {
-    const db = getDbInstance();
-    const rows = apiKeyId
-      ? db.prepare("SELECT * FROM skills WHERE api_key_id = ?").all(apiKeyId)
-      : db.prepare("SELECT * FROM skills").all();
-
-    for (const row of rows as any[]) {
-      const skill: Skill = {
-        id: row.id,
-        apiKeyId: row.api_key_id,
-        name: row.name,
-        version: row.version,
-        description: row.description || "",
-        schema: JSON.parse(row.schema),
-        handler: row.handler,
-        enabled: row.enabled === 1,
-        createdAt: new Date(row.created_at),
-        updatedAt: new Date(row.updated_at),
-      };
-      this.registeredSkills.set(`${skill.name}@${skill.version}`, skill);
-      this.updateVersionCache(skill);
->>>>>>> Stashed changes
     }
   }
 }

@@ -118,11 +118,6 @@ export function fixToolUseOrdering(messages: ClaudeMessage[]): ClaudeMessage[] {
   return merged;
 }
 
-<<<<<<< Updated upstream
-function ensureMessageContentArray(msg: ClaudeMessage): ClaudeContentBlock[] {
-=======
-function ensureMessageContentArray(msg) {
->>>>>>> Stashed changes
   if (Array.isArray(msg?.content)) return msg.content;
   if (typeof msg?.content === "string" && msg.content.trim()) {
     msg.content = [{ type: "text", text: msg.content }];
@@ -131,11 +126,6 @@ function ensureMessageContentArray(msg) {
   return [];
 }
 
-<<<<<<< Updated upstream
-function markMessageCacheControl(msg: ClaudeMessage, ttl?: string): boolean {
-=======
-function markMessageCacheControl(msg, ttl) {
->>>>>>> Stashed changes
   const content = ensureMessageContentArray(msg);
   if (content.length === 0) return false;
   const lastIndex = content.length - 1;
@@ -149,27 +139,6 @@ function markMessageCacheControl(msg, ttl) {
 // - Filter empty messages
 // - Add thinking block for Anthropic endpoint (provider === "claude")
 // - Fix tool_use/tool_result ordering
-<<<<<<< Updated upstream
-export function prepareClaudeRequest(
-  body: ClaudeRequestBody,
-  provider: string | null = null,
-  preserveCacheControl = false
-): ClaudeRequestBody {
-  // 1. System: remove all cache_control, add only to last block with ttl 1h
-  // In passthrough mode, preserve existing cache_control markers
-  const supportsPromptCaching =
-    provider === "claude" || provider?.startsWith?.("anthropic-compatible-");
-
-  const systemBlocks = body.system;
-  if (systemBlocks && Array.isArray(systemBlocks) && !preserveCacheControl) {
-    body.system = systemBlocks.map((block, i) => {
-=======
-export function prepareClaudeRequest(body, provider = null, preserveCacheControl = false) {
-  // 1. System: remove all cache_control, add only to last block with ttl 1h
-  // In passthrough mode, preserve existing cache_control markers
-  if (body.system && Array.isArray(body.system) && !preserveCacheControl) {
-    body.system = body.system.map((block, i) => {
->>>>>>> Stashed changes
       const { cache_control, ...rest } = block;
       if (i === systemBlocks.length - 1 && supportsPromptCaching) {
         return { ...rest, cache_control: { type: "ephemeral", ttl: "1h" } };
@@ -236,13 +205,6 @@ export function prepareClaudeRequest(body, provider = null, preserveCacheControl
     // - cache the second-to-last user turn for conversation reuse
     // - cache the last assistant turn so the next user turn can reuse it
     // Skip in passthrough mode to preserve client's cache_control markers
-<<<<<<< Updated upstream
-    if (!preserveCacheControl && supportsPromptCaching) {
-      const userMessageIndexes = filtered.reduce<number[]>((indexes, msg, index) => {
-=======
-    if (!preserveCacheControl) {
-      const userMessageIndexes = filtered.reduce((indexes, msg, index) => {
->>>>>>> Stashed changes
         if (msg?.role === "user") indexes.push(index);
         return indexes;
       }, []);
@@ -259,22 +221,6 @@ export function prepareClaudeRequest(body, provider = null, preserveCacheControl
       const msg = filtered[i];
       const content = ensureMessageContentArray(msg);
 
-<<<<<<< Updated upstream
-      if (msg.role === "assistant" && content.length > 0) {
-        // Add cache_control to last block of first (from end) assistant with content
-        // Skip in passthrough mode to preserve client's cache_control markers
-        if (
-          !preserveCacheControl &&
-          supportsPromptCaching &&
-          !lastAssistantProcessed &&
-          markMessageCacheControl(msg)
-        ) {
-=======
-      if (msg.role === "assistant" && Array.isArray(ensureMessageContentArray(msg))) {
-        // Add cache_control to last block of first (from end) assistant with content
-        // Skip in passthrough mode to preserve client's cache_control markers
-        if (!preserveCacheControl && !lastAssistantProcessed && markMessageCacheControl(msg)) {
->>>>>>> Stashed changes
           lastAssistantProcessed = true;
         }
 

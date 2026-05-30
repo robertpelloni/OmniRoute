@@ -42,14 +42,12 @@ interface ApiKeyMetadata {
   maxRequestsPerMinute: number | null;
   // T08: Per-key max concurrent sticky sessions (0 = unlimited)
   maxSessions: number;
-<<<<<<< Updated upstream
   // Phase 3 lifecycle/policy fields
   revokedAt: string | null;
   expiresAt: string | null;
   ipAllowlist: string[];
   scopes: string[];
 =======
->>>>>>> Stashed changes
 }
 
 interface ApiKeyRow extends JsonRecord {
@@ -264,7 +262,6 @@ function getPreparedStatements(db: ApiKeysDbLike): ApiKeysStatements {
       "SELECT id, expires_at, revoked_at, is_active FROM api_keys WHERE key = ?"
     );
     _stmtGetKeyMetadata = db.prepare<ApiKeyRow>(
-<<<<<<< Updated upstream
       "SELECT id, name, machine_id, allowed_models, allowed_connections, no_log, auto_resolve, is_active, access_schedule, max_requests_per_day, max_requests_per_minute, max_sessions, revoked_at, expires_at, ip_allowlist, scopes FROM api_keys WHERE key = ?"
 =======
       "SELECT id, name, machine_id, allowed_models, allowed_connections, no_log, auto_resolve, is_active, access_schedule, max_requests_per_day, max_requests_per_minute, max_sessions FROM api_keys WHERE key = ?"
@@ -791,7 +788,6 @@ export async function getApiKeyMetadata(
     ipAllowlist: parseStringList(record.ip_allowlist ?? (record as JsonRecord).ipAllowlist),
     scopes: parseStringList((record as JsonRecord).scopes),
 =======
->>>>>>> Stashed changes
   };
 
   if (!metadata.id) {

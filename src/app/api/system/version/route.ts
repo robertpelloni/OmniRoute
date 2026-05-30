@@ -10,18 +10,14 @@ import { execFile } from "child_process";
 import { promisify } from "util";
 import { isAuthenticated } from "@/shared/utils/apiAuth";
 import {
-<<<<<<< Updated upstream
   ensureGitTagExists,
 =======
->>>>>>> Stashed changes
   getAutoUpdateConfig,
   launchAutoUpdate,
   validateAutoUpdateRuntime,
 } from "@/lib/system/autoUpdate";
-<<<<<<< Updated upstream
 import { NEWS_JSON_URL, parseActiveNewsPayload } from "@/shared/utils/releaseNotes";
 =======
->>>>>>> Stashed changes
 
 const execFileAsync = promisify(execFile);
 
@@ -93,10 +89,8 @@ export async function GET(req: NextRequest) {
     channel: config.mode,
     autoUpdateSupported: validation.supported,
     autoUpdateError: validation.reason,
-<<<<<<< Updated upstream
     news,
 =======
->>>>>>> Stashed changes
   });
 }
 
@@ -164,7 +158,6 @@ export async function POST(req: NextRequest) {
     });
   }
 
-<<<<<<< Updated upstream
   if (config.mode === "source") {
     const encoder = new TextEncoder();
     const stream = new ReadableStream({
@@ -308,7 +301,6 @@ export async function POST(req: NextRequest) {
   }
 
 =======
->>>>>>> Stashed changes
   // Stream progress events so the frontend can show real-time status for NPM/PM2 mode
   const encoder = new TextEncoder();
   const stream = new ReadableStream({

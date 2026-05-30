@@ -6,40 +6,6 @@
  * is auto-generated from this registry.
  */
 
-<<<<<<< Updated upstream
-import { ANTIGRAVITY_BASE_URLS } from "./antigravityUpstream.ts";
-import { ANTIGRAVITY_PUBLIC_MODELS } from "./antigravityModelAliases.ts";
-import {
-  ANTHROPIC_BETA_API_KEY,
-  ANTHROPIC_BETA_CLAUDE_OAUTH,
-  ANTHROPIC_VERSION_HEADER,
-  CLAUDE_CLI_STAINLESS_PACKAGE_VERSION,
-  CLAUDE_CLI_STAINLESS_RUNTIME_VERSION,
-  CLAUDE_CLI_USER_AGENT,
-} from "./anthropicHeaders.ts";
-import { getCodexDefaultHeaders } from "./codexClient.ts";
-import {
-  GLMT_REQUEST_DEFAULTS,
-  GLMT_TIMEOUT_MS,
-  GLM_SHARED_HEADERS,
-  GLM_SHARED_MODELS,
-} from "./glmProvider.ts";
-import { MARITALK_DEFAULT_BASE_URL } from "./maritalk.ts";
-import {
-  CURSOR_REGISTRY_VERSION,
-  getAntigravityProviderHeaders,
-  getCursorRegistryHeaders,
-  getGitHubCopilotChatHeaders,
-  getKiroServiceHeaders,
-  getQoderDefaultHeaders,
-  getQwenOauthHeaders,
-  getRuntimePlatform,
-  getRuntimeArch,
-} from "./providerHeaderProfiles.ts";
-import type { ProviderRequestDefaults } from "../services/providerRequestDefaults.ts";
-=======
-import { platform, arch } from "os";
->>>>>>> Stashed changes
 
 // ── Types ─────────────────────────────────────────────────────────────────
 
@@ -142,119 +108,6 @@ const KIMI_CODING_SHARED = {
   ] as RegistryModel[],
 } as const;
 
-<<<<<<< Updated upstream
-const buildModels = (ids: readonly string[]): RegistryModel[] =>
-  ids.map((id) => ({ id, name: id }));
-
-const GPT_5_5_CONTEXT_LENGTH = 1050000;
-const GPT_5_5_CODEX_CAPABILITIES = {
-  targetFormat: "openai-responses",
-  toolCalling: true,
-  supportsReasoning: true,
-  supportsVision: true,
-  supportsXHighEffort: true,
-  contextLength: GPT_5_5_CONTEXT_LENGTH,
-} as const;
-
-const CHAT_OPENAI_COMPAT_MODELS: Record<string, RegistryModel[]> = {
-  deepinfra: buildModels([
-    "Qwen/Qwen3-Coder-480B-A35B-Instruct",
-    "deepseek-ai/DeepSeek-R1",
-    "meta-llama/Llama-3.3-70B-Instruct",
-    "anthropic/claude-4-sonnet",
-  ]),
-  "vercel-ai-gateway": buildModels([
-    "openai/gpt-4.1",
-    "anthropic/claude-4-sonnet",
-    "google/gemini-2.5-pro",
-    "moonshotai/kimi-k2",
-    "vercel/v0-1.5-md",
-  ]),
-  "lambda-ai": buildModels([
-    "deepseek-r1-671b",
-    "llama3.3-70b-instruct-fp8",
-    "qwen25-coder-32b-instruct",
-  ]),
-  sambanova: buildModels([
-    "DeepSeek-V3.1",
-    "Llama-4-Maverick-17B-128E-Instruct",
-    "Qwen3-32B",
-    "gpt-oss-120b",
-  ]),
-  nscale: buildModels([
-    "Qwen/QwQ-32B",
-    "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
-    "meta-llama/Llama-3.3-70B-Instruct",
-  ]),
-  ovhcloud: buildModels([
-    "Meta-Llama-3_3-70B-Instruct",
-    "Qwen2.5-Coder-32B-Instruct",
-    "Mistral-Small-3.2-24B-Instruct-2506",
-  ]),
-  baseten: buildModels(["moonshotai/Kimi-K2.5", "zai-org/GLM-5", "deepseek-ai/DeepSeek-V3.1"]),
-  publicai: buildModels([
-    "swiss-ai/apertus-70b-instruct",
-    "aisingapore/Qwen-SEA-LION-v4-32B-IT",
-    "allenai/Olmo-3-32B-Think",
-  ]),
-  moonshot: buildModels(["kimi-k2.6", "kimi-k2.5"]),
-  "meta-llama": buildModels([
-    "Llama-3.3-70B-Instruct",
-    "Llama-4-Maverick-17B-128E-Instruct-FP8",
-    "Llama-4-Scout-17B-16E-Instruct-FP8",
-  ]),
-  "v0-vercel": buildModels(["v0-1.0-md", "v0-1.5-lg", "v0-1.5-md"]),
-  morph: buildModels(["morph-v3-fast", "morph-v3-large"]),
-  "featherless-ai": buildModels(["featherless-ai/Qwerky-72B", "featherless-ai/Qwerky-QwQ-32B"]),
-  friendliai: buildModels(["meta-llama-3.1-70b-instruct", "meta-llama-3.1-8b-instruct"]),
-  llamagate: buildModels(["qwen2.5-coder-7b", "deepseek-coder-6.7b", "qwen3-vl-8b"]),
-  heroku: buildModels(["claude-3-5-sonnet-latest", "claude-4-sonnet"]),
-  galadriel: buildModels(["galadriel-latest"]),
-  databricks: buildModels([
-    "databricks-gpt-5",
-    "databricks-meta-llama-3-3-70b-instruct",
-    "databricks-claude-sonnet-4",
-    "databricks-gemini-2-5-pro",
-  ]),
-  snowflake: buildModels(["llama3.1-70b", "llama3.3-70b", "deepseek-r1", "claude-3-5-sonnet"]),
-  wandb: buildModels([
-    "openai/gpt-oss-120b",
-    "Qwen/Qwen3-Coder-480B-A35B-Instruct",
-    "deepseek-ai/DeepSeek-V3.1",
-  ]),
-  volcengine: buildModels([
-    "deepseek-v3-2-251201",
-    "doubao-seed-2-0-code-preview-260215",
-    "kimi-k2-thinking-251104",
-    "glm-4-7-251222",
-  ]),
-  ai21: buildModels(["jamba-large-1.7", "jamba-mini-1.7", "jamba-1.5-large"]),
-  gigachat: buildModels(["GigaChat-2-Max", "GigaChat-2-Pro", "GigaChat-2-Lite"]),
-  venice: buildModels(["venice-latest"]),
-  codestral: buildModels(["codestral-2405", "codestral-latest"]),
-  upstage: buildModels(["solar-pro3", "solar-mini"]),
-  maritalk: buildModels(["sabia-4", "sabia-3.1", "sabiazinho-4", "sabiazinho-3"]),
-  "xiaomi-mimo": buildModels(["mimo-v2.5-pro", "mimo-v2.5", "mimo-v2-omni", "mimo-v2-flash"]),
-  "inference-net": buildModels([
-    "meta-llama/Llama-3.3-70B-Instruct",
-    "deepseek-ai/DeepSeek-R1",
-    "Qwen/Qwen2.5-72B-Instruct",
-  ]),
-  nanogpt: buildModels(["chatgpt-4o-latest", "claude-3.5-sonnet", "gpt-4o-mini"]),
-  predibase: buildModels(["llama-3.3-70b"]),
-  bytez: buildModels([
-    "meta-llama/Llama-3.3-70B-Instruct",
-    "mistralai/Mistral-7B-Instruct-v0.3",
-    "Qwen/Qwen2.5-72B-Instruct",
-  ]),
-};
-
-function mapStainlessOs() {
-  switch (getRuntimePlatform()) {
-=======
-function mapStainlessOs() {
-  switch (platform()) {
->>>>>>> Stashed changes
     case "darwin":
       return "MacOS";
     case "win32":
@@ -262,20 +115,10 @@ function mapStainlessOs() {
     case "linux":
       return "Linux";
     default:
-<<<<<<< Updated upstream
-      return `Other::${getRuntimePlatform()}`;
-=======
-      return `Other::${platform()}`;
->>>>>>> Stashed changes
   }
 }
 
 function mapStainlessArch() {
-<<<<<<< Updated upstream
-  switch (getRuntimeArch()) {
-=======
-  switch (arch()) {
->>>>>>> Stashed changes
     case "x64":
       return "x64";
     case "arm64":
@@ -283,11 +126,6 @@ function mapStainlessArch() {
     case "ia32":
       return "x86";
     default:
-<<<<<<< Updated upstream
-      return `other::${getRuntimeArch()}`;
-=======
-      return `other::${arch()}`;
->>>>>>> Stashed changes
   }
 }
 
@@ -306,28 +144,6 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     authHeader: "x-api-key",
     defaultContextLength: 200000,
     headers: {
-<<<<<<< Updated upstream
-      "Anthropic-Version": ANTHROPIC_VERSION_HEADER,
-      "Anthropic-Beta": ANTHROPIC_BETA_CLAUDE_OAUTH,
-      "Anthropic-Dangerous-Direct-Browser-Access": "true",
-      "User-Agent": CLAUDE_CLI_USER_AGENT,
-      "X-App": "cli",
-      "X-Stainless-Helper-Method": "stream",
-      "X-Stainless-Retry-Count": "0",
-      "X-Stainless-Runtime-Version": CLAUDE_CLI_STAINLESS_RUNTIME_VERSION,
-      "X-Stainless-Package-Version": CLAUDE_CLI_STAINLESS_PACKAGE_VERSION,
-=======
-      "Anthropic-Version": "2023-06-01",
-      "Anthropic-Beta":
-        "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,fine-grained-tool-streaming-2025-05-14,context-management-2025-06-27,prompt-caching-scope-2026-01-05",
-      "Anthropic-Dangerous-Direct-Browser-Access": "true",
-      "User-Agent": "claude-cli/2.1.63 (external, cli)",
-      "X-App": "cli",
-      "X-Stainless-Helper-Method": "stream",
-      "X-Stainless-Retry-Count": "0",
-      "X-Stainless-Runtime-Version": "v24.3.0",
-      "X-Stainless-Package-Version": "0.74.0",
->>>>>>> Stashed changes
       "X-Stainless-Runtime": "node",
       "X-Stainless-Lang": "js",
       "X-Stainless-Arch": mapStainlessArch(),
@@ -360,39 +176,12 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     },
     authType: "apikey",
     authHeader: "x-goog-api-key",
-<<<<<<< Updated upstream
-    defaultContextLength: 1048576,
-=======
-    defaultContextLength: 1000000,
->>>>>>> Stashed changes
     oauth: {
       clientIdEnv: "GEMINI_OAUTH_CLIENT_ID",
       clientIdDefault: "681255809395-oo8ft2oprdrnp9e3aqf6av3hmdib135j.apps.googleusercontent.com",
       clientSecretEnv: "GEMINI_OAUTH_CLIENT_SECRET",
       clientSecretDefault: "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",
     },
-<<<<<<< Updated upstream
-    models: [],
-    // Models are populated from Google's API via sync-models (per API key).
-    // No hardcoded fallback — show nothing until a key is added.
-=======
-    models: [
-      { id: "gemini-3.1-pro-high", name: "Gemini 3.1 Pro High" },
-      { id: "gemini-3.1-pro-low", name: "Gemini 3.1 Pro Low" },
-      { id: "gemini-3.1-pro", name: "Gemini 3.1 Pro" },
-      { id: "gemini-3-1-pro", name: "Gemini 3.1 Pro (Alt ID)" },
-      { id: "gemini-3.1-pro-preview", name: "Gemini 3.1 Pro Preview" },
-      { id: "gemini-3.1-flash-lite-preview", name: "Gemini 3.1 Flash Lite Preview" },
-      { id: "gemini-3-flash-preview", name: "Gemini 3 Flash Preview" },
-      { id: "gemini-2.5-pro", name: "Gemini 2.5 Pro" },
-      { id: "gemini-2.5-flash", name: "Gemini 2.5 Flash" },
-      { id: "gemini-2.5-flash-lite", name: "Gemini 2.5 Flash Lite" },
-      { id: "gemini-2.0-flash", name: "Gemini 2.0 Flash" },
-      { id: "gemini-2.0-flash-exp", name: "Gemini 2.0 Flash Exp" },
-      { id: "gemini-1.5-pro", name: "Gemini 1.5 Pro" },
-      { id: "gemini-1.5-flash", name: "Gemini 1.5 Flash" },
-    ],
->>>>>>> Stashed changes
   },
 
   "gemini-cli": {
@@ -407,36 +196,10 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     },
     authType: "oauth",
     authHeader: "bearer",
-<<<<<<< Updated upstream
-    defaultContextLength: 1048576,
-    oauth: {
-      clientIdEnv: "GEMINI_CLI_OAUTH_CLIENT_ID",
-      clientIdDefault: "681255809395-oo8ft2oprdrnp9e3aqf6av3hmdib135j.apps.googleusercontent.com",
-      clientSecretEnv: "GEMINI_CLI_OAUTH_CLIENT_SECRET",
-      clientSecretDefault: "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",
-    },
-    models: [
-=======
-    defaultContextLength: 1000000,
-    oauth: {
-      clientIdEnv: "GEMINI_CLI_OAUTH_CLIENT_ID",
-      clientIdDefault: "681255809395-oo8ft2oprdrnp9e3aqf6av3hmdib135j.apps.googleusercontent.com",
-      clientSecretEnv: "GEMINI_OAUTH_CLIENT_SECRET",
-      clientSecretDefault: "",
-    },
-    models: [
-      { id: "gemini-3-pro-preview", name: "Gemini 3 Pro Preview" },
->>>>>>> Stashed changes
       { id: "gemini-3.1-pro-preview", name: "Gemini 3.1 Pro Preview" },
       { id: "gemini-3.1-pro-preview-customtools", name: "Gemini 3.1 Pro Preview Custom Tools" },
       { id: "gemini-3-flash-preview", name: "Gemini 3 Flash Preview" },
       { id: "gemini-3.1-flash-lite-preview", name: "Gemini 3.1 Flash Lite Preview" },
-<<<<<<< Updated upstream
-=======
-      { id: "gemini-2.5-pro", name: "Gemini 2.5 Pro" },
-      { id: "gemini-2.5-flash", name: "Gemini 2.5 Flash" },
-      { id: "gemini-2.5-flash-lite", name: "Gemini 2.5 Flash Lite" },
->>>>>>> Stashed changes
     ],
   },
 
@@ -449,15 +212,6 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     authType: "oauth",
     authHeader: "bearer",
     defaultContextLength: 400000,
-<<<<<<< Updated upstream
-    headers: getCodexDefaultHeaders(),
-=======
-    headers: {
-      Version: "0.92.0",
-      "Openai-Beta": "responses=experimental",
-      "User-Agent": "codex-cli/0.92.0 (Windows 10.0.26100; x64)",
-    },
->>>>>>> Stashed changes
     oauth: {
       clientIdEnv: "CODEX_OAUTH_CLIENT_ID",
       clientIdDefault: "app_EMoamEEZ73f0CkXaXp7hrann",
@@ -466,18 +220,6 @@ export const REGISTRY: Record<string, RegistryEntry> = {
       tokenUrl: "https://auth.openai.com/oauth/token",
     },
     models: [
-<<<<<<< Updated upstream
-      { id: "gpt-5.5-xhigh", name: "GPT 5.5 (xHigh)", ...GPT_5_5_CODEX_CAPABILITIES },
-      { id: "gpt-5.5-high", name: "GPT 5.5 (High)", ...GPT_5_5_CODEX_CAPABILITIES },
-      { id: "gpt-5.5-medium", name: "GPT 5.5 (Medium)", ...GPT_5_5_CODEX_CAPABILITIES },
-      { id: "gpt-5.5-low", name: "GPT 5.5 (Low)", ...GPT_5_5_CODEX_CAPABILITIES },
-      { id: "gpt-5.4", name: "GPT 5.4", targetFormat: "openai-responses" },
-      { id: "gpt-5.4-mini", name: "GPT 5.4 Mini", targetFormat: "openai-responses" },
-      { id: "gpt-5.3-codex-spark", name: "GPT 5.3 Codex Spark" },
-=======
-      { id: "gpt-5.4", name: "GPT 5.4" },
-      { id: "gpt-5.4-mini", name: "GPT 5.4 Mini" },
->>>>>>> Stashed changes
       { id: "gpt-5.3-codex", name: "GPT 5.3 Codex" },
       { id: "gpt-5.2", name: "GPT 5.2" },
     ],
@@ -511,31 +253,6 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     alias: "if",
     format: "openai",
     executor: "qoder",
-<<<<<<< Updated upstream
-    baseUrl: "https://api.qoder.com/v1/chat/completions",
-    authType: "apikey",
-    authHeader: "bearer",
-    headers: getQoderDefaultHeaders(),
-    oauth: {
-      clientIdEnv: "QODER_OAUTH_CLIENT_ID",
-      clientSecretEnv: "QODER_OAUTH_CLIENT_SECRET",
-      tokenUrl: process.env.QODER_OAUTH_TOKEN_URL || "",
-      authUrl: process.env.QODER_OAUTH_AUTHORIZE_URL || "",
-=======
-    baseUrl: "https://apis.qoder.cn/v1/chat/completions",
-    authType: "oauth",
-    authHeader: "bearer",
-    headers: {
-      "User-Agent": "Qoder-Cli",
-    },
-    oauth: {
-      clientIdEnv: "QODER_OAUTH_CLIENT_ID",
-      clientIdDefault: "10009311001",
-      clientSecretEnv: "QODER_OAUTH_CLIENT_SECRET",
-      clientSecretDefault: "",
-      tokenUrl: "https://qoder.cn/oauth/token",
-      authUrl: "https://qoder.cn/oauth",
->>>>>>> Stashed changes
     },
     models: [
       { id: "qoder-rome-30ba3b", name: "Qoder ROME" },
@@ -560,15 +277,6 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     alias: undefined,
     format: "antigravity",
     executor: "antigravity",
-<<<<<<< Updated upstream
-    baseUrls: [...ANTIGRAVITY_BASE_URLS],
-=======
-    baseUrls: [
-      "https://daily-cloudcode-pa.googleapis.com",
-      "https://daily-cloudcode-pa.sandbox.googleapis.com",
-      "https://cloudcode-pa.googleapis.com",
-    ],
->>>>>>> Stashed changes
     urlBuilder: (base, model, stream) => {
       const path = stream
         ? "/v1internal:streamGenerateContent?alt=sse"
@@ -577,32 +285,12 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     },
     authType: "oauth",
     authHeader: "bearer",
-<<<<<<< Updated upstream
-    headers: getAntigravityProviderHeaders(),
-=======
-    headers: {
-      "User-Agent": `antigravity/1.107.0 ${platform()}/${arch()}`,
-    },
->>>>>>> Stashed changes
     oauth: {
       clientIdEnv: "ANTIGRAVITY_OAUTH_CLIENT_ID",
       clientIdDefault: "1071006060591-tmhssin2h21lcre235vtolojh4g403ep.apps.googleusercontent.com",
       clientSecretEnv: "ANTIGRAVITY_OAUTH_CLIENT_SECRET",
       clientSecretDefault: "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",
     },
-<<<<<<< Updated upstream
-    models: [...ANTIGRAVITY_PUBLIC_MODELS],
-=======
-    models: [
-      { id: "claude-opus-4-6-thinking", name: "Claude Opus 4.6 Thinking" },
-      { id: "claude-sonnet-4-6", name: "Claude Sonnet 4.6" },
-      { id: "gemini-3-flash", name: "Gemini 3 Flash" },
-      { id: "gemini-3.1-flash-image", name: "Gemini 3.1 Flash Image" },
-      { id: "gemini-3.1-pro-high", name: "Gemini 3.1 Pro (High)" },
-      { id: "gemini-3.1-pro-low", name: "Gemini 3.1 Pro (Low)" },
-      { id: "gpt-oss-120b-medium", name: "GPT OSS 120B Medium" },
-    ],
->>>>>>> Stashed changes
     passthroughModels: true,
   },
 
@@ -616,22 +304,6 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     authType: "oauth",
     authHeader: "bearer",
     defaultContextLength: 128000,
-<<<<<<< Updated upstream
-    headers: getGitHubCopilotChatHeaders(),
-=======
-    headers: {
-      "copilot-integration-id": "vscode-chat",
-      "editor-version": "vscode/1.110.0",
-      "editor-plugin-version": "copilot-chat/0.38.0",
-      "user-agent": "GitHubCopilotChat/0.38.0",
-      "openai-intent": "conversation-panel",
-      "x-github-api-version": "2025-04-01",
-      "x-vscode-user-agent-library-version": "electron-fetch",
-      "X-Initiator": "user",
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
->>>>>>> Stashed changes
     models: [
       { id: "gpt-4.1", name: "GPT-4.1" },
       { id: "gpt-5-mini", name: "GPT-5 Mini" },
@@ -662,17 +334,6 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     authType: "oauth",
     authHeader: "bearer",
     defaultContextLength: 200000,
-<<<<<<< Updated upstream
-    headers: getKiroServiceHeaders(),
-=======
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/vnd.amazon.eventstream",
-      "X-Amz-Target": "AmazonCodeWhispererStreamingService.GenerateAssistantResponse",
-      "User-Agent": "AWS-SDK-JS/3.0.0 kiro-ide/1.0.0",
-      "X-Amz-User-Agent": "aws-sdk-js/3.0.0 kiro-ide/1.0.0",
-    },
->>>>>>> Stashed changes
     oauth: {
       tokenUrl: "https://prod.us-east-1.auth.desktop.kiro.dev/refreshToken",
       authUrl: "https://prod.us-east-1.auth.desktop.kiro.dev",
@@ -699,18 +360,6 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     authType: "oauth",
     authHeader: "bearer",
     defaultContextLength: 200000,
-<<<<<<< Updated upstream
-    headers: getCursorRegistryHeaders(),
-    clientVersion: CURSOR_REGISTRY_VERSION,
-=======
-    headers: {
-      "connect-accept-encoding": "gzip",
-      "connect-protocol-version": "1",
-      "Content-Type": "application/connect+proto",
-      "User-Agent": "connect-es/1.6.1",
-    },
-    clientVersion: "1.1.3",
->>>>>>> Stashed changes
     models: [
       { id: "default", name: "Auto (Server Picks)" },
       { id: "claude-4.6-opus-high-thinking", name: "Claude 4.6 Opus High Thinking" },
@@ -814,27 +463,6 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     authPrefix: "Bearer",
     defaultContextLength: 200000,
     models: [
-<<<<<<< Updated upstream
-      { id: "big-pickle", name: "Big Pickle" },
-      { id: "gpt-5-nano", name: "GPT 5 Nano", contextLength: 400000 },
-      { id: "minimax-m2.5-free", name: "MiniMax M2.5 Free", contextLength: 204800 },
-      { id: "hy3-preview-free", name: "Hy3 Preview Free", contextLength: 256000 },
-      { id: "ling-2.6-flash-free", name: "Ling 2.6 Flash Free", contextLength: 262000 },
-      {
-        id: "trinity-large-preview-free",
-        name: "Trinity Large Preview Free",
-        contextLength: 131000,
-      },
-      { id: "nemotron-3-super-free", name: "Nemotron 3 Super Free", contextLength: 1000000 },
-=======
-      { id: "minimax-m2.5-free", name: "MiniMax M2.5 Free", contextLength: 204800 },
-      { id: "big-pickle", name: "Big Pickle", contextLength: 200000 },
-      { id: "gpt-5-nano", name: "GPT 5 Nano", contextLength: 400000 },
-      { id: "mimo-v2-omni-free", name: "MiMo V2 Omni Free", contextLength: 262144 },
-      { id: "mimo-v2-pro-free", name: "MiMo V2 Pro Free", contextLength: 1048576 },
-      { id: "nemotron-3-super-free", name: "Nemotron 3 Super Free", contextLength: 1000000 },
-      { id: "qwen3.6-plus-free", name: "Qwen 3.6 Plus Free", contextLength: 1048576 },
->>>>>>> Stashed changes
     ],
   },
 
@@ -923,56 +551,6 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     urlSuffix: "?beta=true",
     authType: "apikey",
     authHeader: "x-api-key",
-<<<<<<< Updated upstream
-    headers: GLM_SHARED_HEADERS,
-    models: [...GLM_SHARED_MODELS],
-  },
-
-  "glm-cn": {
-    id: "glm-cn",
-    alias: "glm-cn",
-    format: "openai",
-    executor: "default",
-    baseUrl: "https://open.bigmodel.cn/api/coding/paas/v4/chat/completions",
-    authType: "apikey",
-    authHeader: "bearer",
-    defaultContextLength: 128000,
-    models: [{ id: "glm-5.1", name: "GLM-5.1" }],
-    passthroughModels: true,
-  },
-
-  glmt: {
-    id: "glmt",
-    alias: "glmt",
-    format: "claude",
-    executor: "default",
-    baseUrl: "https://api.z.ai/api/anthropic/v1/messages",
-    defaultContextLength: 200000,
-    urlSuffix: "?beta=true",
-    authType: "apikey",
-    authHeader: "x-api-key",
-    headers: GLM_SHARED_HEADERS,
-    requestDefaults: GLMT_REQUEST_DEFAULTS,
-    timeoutMs: GLMT_TIMEOUT_MS,
-    models: [...GLM_SHARED_MODELS],
-=======
-    headers: {
-      "Anthropic-Version": "2023-06-01",
-      "Anthropic-Beta": "claude-code-20250219,interleaved-thinking-2025-05-14",
-    },
-    models: [
-      { id: "glm-5.1", name: "GLM 5.1", contextLength: 204800 },
-      { id: "glm-5", name: "GLM 5" },
-      { id: "glm-5-turbo", name: "GLM 5 Turbo" },
-      { id: "glm-4.7-flash", name: "GLM 4.7 Flash" },
-      { id: "glm-4.7", name: "GLM 4.7" },
-      { id: "glm-4.6v", name: "GLM 4.6V (Vision)", contextLength: 128000 },
-      { id: "glm-4.6", name: "GLM 4.6" },
-      { id: "glm-4.5v", name: "GLM 4.5V (Vision)", contextLength: 16000 },
-      { id: "glm-4.5", name: "GLM 4.5", contextLength: 128000 },
-      { id: "glm-4.5-air", name: "GLM 4.5 Air", contextLength: 128000 },
-    ],
->>>>>>> Stashed changes
   },
 
   "bailian-coding-plan": {
@@ -1137,19 +715,6 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     },
     models: [
       // T12/T28: MiniMax default upgraded from M2.5 to M2.7
-<<<<<<< Updated upstream
-      { id: "MiniMax-M2.7", name: "MiniMax M2.7" },
-      { id: "MiniMax-M2.7-highspeed", name: "MiniMax M2.7 Highspeed" },
-      { id: "MiniMax-M2.5", name: "MiniMax M2.5" },
-      { id: "MiniMax-M2.5-highspeed", name: "MiniMax M2.5 Highspeed" },
-=======
-      { id: "minimax-m2.7", name: "MiniMax M2.7" },
-      { id: "MiniMax-M2.7", name: "MiniMax M2.7 (Legacy Alias)" },
-      { id: "minimax-m2.7-highspeed", name: "MiniMax M2.7 Highspeed" },
-      { id: "minimax-m2.5", name: "MiniMax M2.5" },
-      { id: "MiniMax-M2.5", name: "MiniMax M2.5 (Legacy Alias)" },
-      { id: "MiniMax-M2.1", name: "MiniMax M2.1" },
->>>>>>> Stashed changes
     ],
   },
 
@@ -1168,42 +733,6 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     },
     models: [
       // Keep parity with minimax to ensure model discovery works for minimax-cn connections.
-<<<<<<< Updated upstream
-      { id: "MiniMax-M2.7", name: "MiniMax M2.7" },
-      { id: "MiniMax-M2.7-highspeed", name: "MiniMax M2.7 Highspeed" },
-      { id: "MiniMax-M2.5", name: "MiniMax M2.5" },
-      { id: "MiniMax-M2.5-highspeed", name: "MiniMax M2.5 Highspeed" },
-    ],
-  },
-
-  crof: {
-    id: "crof",
-    alias: "crof",
-    format: "openai",
-    executor: "default",
-    baseUrl: "https://crof.ai/v1/chat/completions",
-    authType: "apikey",
-    authHeader: "bearer",
-    // Seed list — runtime /v1/models discovery keeps this fresh.
-    // Source: GET https://crof.ai/v1/models (2026-04-25).
-    models: [
-      { id: "deepseek-v4-pro", name: "DeepSeek V4 Pro" },
-      { id: "deepseek-v3.2", name: "DeepSeek V3.2" },
-      { id: "kimi-k2.6", name: "Kimi K2.6" },
-      { id: "kimi-k2.6-precision", name: "Kimi K2.6 (Precision)" },
-      { id: "kimi-k2.5", name: "Kimi K2.5" },
-      { id: "kimi-k2.5-lightning", name: "Kimi K2.5 (Lightning)" },
-      { id: "glm-5.1", name: "GLM 5.1" },
-      { id: "glm-5.1-precision", name: "GLM 5.1 (Precision)" },
-      { id: "glm-5", name: "GLM 5" },
-      { id: "glm-4.7", name: "GLM 4.7" },
-      { id: "glm-4.7-flash", name: "GLM 4.7 Flash" },
-      { id: "gemma-4-31b-it", name: "Gemma 4 31B" },
-=======
-      { id: "minimax-m2.7", name: "MiniMax M2.7" },
-      { id: "MiniMax-M2.7", name: "MiniMax M2.7 (Legacy Alias)" },
-      { id: "minimax-m2.7-highspeed", name: "MiniMax M2.7 Highspeed" },
->>>>>>> Stashed changes
       { id: "minimax-m2.5", name: "MiniMax M2.5" },
       { id: "qwen3.6-27b", name: "Qwen3.6 27B" },
       { id: "qwen3.5-397b-a17b", name: "Qwen3.5 397B A17B" },
@@ -1819,85 +1348,20 @@ export const REGISTRY: Record<string, RegistryEntry> = {
       // OpenAI — use bare IDs
       { id: "gpt-4o-mini", name: "GPT-4o Mini (🆓 Puter)" },
       { id: "gpt-4o", name: "GPT-4o (Puter)" },
-<<<<<<< Updated upstream
-      { id: "gpt-5.4-nano", name: "GPT-5.4 Nano (Puter)" },
-      { id: "gpt-5.4-mini", name: "GPT-5.4 Mini (Puter)" },
-      { id: "gpt-5.4", name: "GPT-5.4 (Puter)" },
-=======
-      { id: "gpt-4.1", name: "GPT-4.1 (Puter)" },
-      { id: "gpt-4.1-mini", name: "GPT-4.1 Mini (Puter)" },
-      { id: "gpt-5-nano", name: "GPT-5 Nano (Puter)" },
-      { id: "gpt-5-mini", name: "GPT-5 Mini (Puter)" },
-      { id: "gpt-5", name: "GPT-5 (Puter)" },
-      { id: "o3-mini", name: "OpenAI o3-mini (Puter)" },
->>>>>>> Stashed changes
       { id: "o3", name: "OpenAI o3 (Puter)" },
       { id: "o4-mini", name: "OpenAI o4-mini (Puter)" },
       // Anthropic Claude — use bare IDs (confirmed working)
       { id: "claude-haiku-4-5", name: "Claude Haiku 4.5 (Puter)" },
-<<<<<<< Updated upstream
-      { id: "claude-sonnet-4-6", name: "Claude Sonnet 4.6 (Puter)" },
-      { id: "claude-opus-4-7", name: "Claude Opus 4.7 (Puter)" },
-      // Google Gemini — use google/ prefix (confirmed working)
-      { id: "google/gemini-3.1-flash-lite-preview", name: "Gemini 3 Flash Lite (Puter)" },
-      { id: "google/gemini-3-flash", name: "Gemini 3 Flash (Puter)" },
-      { id: "google/gemini-3.1-pro-preview", name: "Gemini 3.1 Pro (Puter)" },
-=======
-      { id: "claude-sonnet-4-5", name: "Claude Sonnet 4.5 (Puter)" },
-      { id: "claude-opus-4-5", name: "Claude Opus 4.5 (Puter)" },
-      { id: "claude-sonnet-4", name: "Claude Sonnet 4 (Puter)" },
-      { id: "claude-opus-4", name: "Claude Opus 4 (Puter)" },
-      // Google Gemini — use google/ prefix (confirmed working)
-      { id: "google/gemini-2.0-flash", name: "Gemini 2.0 Flash (Puter)" },
-      { id: "google/gemini-2.5-flash", name: "Gemini 2.5 Flash (Puter)" },
-      { id: "google/gemini-2.5-pro", name: "Gemini 2.5 Pro (Puter)" },
-      { id: "google/gemini-3-flash", name: "Gemini 3 Flash (Puter)" },
-      { id: "google/gemini-3-pro", name: "Gemini 3 Pro (Puter)" },
->>>>>>> Stashed changes
       // DeepSeek — use deepseek/ prefix (confirmed working)
       { id: "deepseek/deepseek-chat", name: "DeepSeek Chat (Puter)" },
       { id: "deepseek/deepseek-r1", name: "DeepSeek R1 (Puter)" },
       { id: "deepseek/deepseek-v3.2", name: "DeepSeek V3.2 (Puter)" },
       // xAI Grok — use x-ai/ prefix
-<<<<<<< Updated upstream
-      { id: "x-ai/grok-4", name: "Grok 4 (Puter)" },
-      { id: "x-ai/grok-4-1-fast", name: "Grok 4.1 Fast (Puter)" },
-=======
-      { id: "x-ai/grok-3", name: "Grok 3 (Puter)" },
-      { id: "x-ai/grok-3-mini", name: "Grok 3 Mini (Puter)" },
-      { id: "x-ai/grok-4", name: "Grok 4 (Puter)" },
-      { id: "x-ai/grok-4-fast", name: "Grok 4 Fast (Puter)" },
->>>>>>> Stashed changes
       // Meta Llama — bare IDs (confirmed ✅)
       { id: "llama-4-scout", name: "Llama 4 Scout (Puter)" },
       { id: "llama-4-maverick", name: "Llama 4 Maverick (Puter)" },
       { id: "llama-3.3-70b-instruct", name: "Llama 3.3 70B (Puter)" },
       // Mistral — bare IDs (confirmed ✅)
-<<<<<<< Updated upstream
-      { id: "mistral-small-2506", name: "Mistral Small (Puter)" },
-      { id: "mistral-medium-2508", name: "Mistral Medium (Puter)" },
-      { id: "mistral-large-2512", name: "Mistral Large (Puter)" },
-      { id: "devstral-medium-2507", name: "Devstral Medium (Puter)" },
-      { id: "codestral-2508", name: "Codestral (Puter)" },
-      { id: "open-mistral-nemo", name: "Mistral Nemo (Puter)" },
-      // Qwen — use qwen/ prefix (confirmed ✅)
-      { id: "qwen/qwen3.6-plus", name: "Qwen 3.6 Plus (Puter)" },
-      { id: "qwen/qwen3.5-397b-a17b", name: "Qwen 3.5 397B (Puter)" },
-      // Perplexity Sonar via OpenRouter aliases exposed by Puter
-      { id: "perplexity/sonar", name: "Perplexity Sonar (Puter)" },
-      { id: "perplexity/sonar-pro", name: "Perplexity Sonar Pro (Puter)" },
-      { id: "perplexity/sonar-pro-search", name: "Perplexity Sonar Pro Search (Puter)" },
-      { id: "perplexity/sonar-reasoning-pro", name: "Perplexity Sonar Reasoning Pro (Puter)" },
-      { id: "perplexity/sonar-deep-research", name: "Perplexity Sonar Deep Research (Puter)" },
-=======
-      { id: "mistral-small-latest", name: "Mistral Small (Puter)" },
-      { id: "mistral-medium-latest", name: "Mistral Medium (Puter)" },
-      { id: "open-mistral-nemo", name: "Mistral Nemo (Puter)" },
-      // Qwen — use qwen/ prefix (confirmed ✅)
-      { id: "qwen/qwen3-235b-a22b", name: "Qwen3 235B (Puter)" },
-      { id: "qwen/qwen3-32b", name: "Qwen3 32B (Puter)" },
-      { id: "qwen/qwen3-coder", name: "Qwen3 Coder 480B (Puter)" },
->>>>>>> Stashed changes
     ],
     passthroughModels: true, // 500+ models available — users can type arbitrary Puter model IDs
   },

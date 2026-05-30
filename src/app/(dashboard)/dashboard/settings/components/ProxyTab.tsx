@@ -14,12 +14,10 @@ export default function ProxyTab() {
   const t = useTranslations("settings");
   const tc = useTranslations("common");
   const [debugMode, setDebugMode] = useState(false);
-<<<<<<< Updated upstream
   const [usageTokenBuffer, setUsageTokenBuffer] = useState<number | null>(null);
   const [bufferInput, setBufferInput] = useState("");
   const [bufferSaving, setBufferSaving] = useState(false);
 =======
->>>>>>> Stashed changes
   const [loading, setLoading] = useState(true);
 
   const loadGlobalProxy = async () => {
@@ -33,18 +31,15 @@ export default function ProxyTab() {
   };
 
   const updateDebugMode = async (value: boolean) => {
-<<<<<<< Updated upstream
     const previousValue = debugMode;
     setDebugMode(value);
 =======
->>>>>>> Stashed changes
     try {
       const res = await fetch("/api/settings", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ debugMode: value }),
       });
-<<<<<<< Updated upstream
       if (!res.ok) {
         setDebugMode(previousValue);
       }
@@ -60,7 +55,6 @@ export default function ProxyTab() {
     }
   };
 
-<<<<<<< Updated upstream
   const updateUsageTokenBuffer = async () => {
     const val = parseInt(bufferInput, 10);
     if (isNaN(val) || val < 0 || val > 50000) return;
@@ -81,32 +75,6 @@ export default function ProxyTab() {
     }
   };
 
-=======
->>>>>>> Stashed changes
-  useEffect(() => {
-    mountedRef.current = true;
-    async function init() {
-      try {
-        const res = await fetch("/api/settings/proxy?level=global", { cache: "no-store" });
-        if (!mountedRef.current) return;
-        if (res.ok) {
-          const data = await res.json();
-          if (mountedRef.current) setGlobalProxy(data.proxy || null);
-        }
-      } catch {}
-    }
-    init();
-    return () => {
-      mountedRef.current = false;
-    };
-  }, []);
-
-  useEffect(() => {
-<<<<<<< Updated upstream
-    fetch("/api/settings", { cache: "no-store" })
-=======
-    fetch("/api/settings")
->>>>>>> Stashed changes
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP error ${res.status}`);
         return res.json();
@@ -118,7 +86,6 @@ export default function ProxyTab() {
         setUsageTokenBuffer(buf);
         setBufferInput(String(buf));
 =======
->>>>>>> Stashed changes
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -162,66 +129,13 @@ export default function ProxyTab() {
         </Card>
 
         <ProxyRegistryManager />
-<<<<<<< Updated upstream
         <OneproxyTab />
 =======
->>>>>>> Stashed changes
         <Card className="p-6 mt-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="font-medium">{t("debugToggle")}</p>
             </div>
-<<<<<<< Updated upstream
-            <Toggle checked={debugMode} onChange={updateDebugMode} disabled={loading} />
-          </div>
-        </Card>
-        <Card className="p-6 mt-4">
-          <div className="flex flex-col gap-3">
-            <div>
-              <p className="font-medium">Usage Token Buffer</p>
-              <p className="text-sm text-text-muted mt-1">
-                Extra tokens added to reported usage to account for system prompt overhead. Set to 0
-                to report raw provider token counts. Default: 2000. Changes take effect within 30
-                seconds.
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <input
-                type="number"
-                min={0}
-                max={50000}
-                value={bufferInput}
-                onChange={(e) => setBufferInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") updateUsageTokenBuffer();
-                }}
-                className="w-32 px-3 py-1.5 rounded bg-surface-2 border border-border text-sm text-text-primary"
-                disabled={loading}
-              />
-              <Button
-                size="sm"
-                variant="primary"
-                onClick={updateUsageTokenBuffer}
-                disabled={bufferSaving || loading || parseInt(bufferInput, 10) === usageTokenBuffer}
-              >
-                {bufferSaving ? tc("saving") : tc("save")}
-              </Button>
-              {usageTokenBuffer !== null && parseInt(bufferInput, 10) !== usageTokenBuffer && (
-                <span className="text-xs text-text-muted">Current: {usageTokenBuffer}</span>
-              )}
-            </div>
-          </div>
-        </Card>
-        <RequestLimitsTab />
-=======
-            <Toggle
-              checked={debugMode}
-              onChange={() => updateDebugMode(!debugMode)}
-              disabled={loading}
-            />
-          </div>
-        </Card>
->>>>>>> Stashed changes
       </div>
 
       <ProxyConfigModal

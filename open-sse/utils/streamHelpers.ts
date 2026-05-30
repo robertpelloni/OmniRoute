@@ -45,10 +45,8 @@ export function hasValuableContent(chunk, format) {
     if (typeof delta.content === "string" && delta.content.length > 0) return true;
     if (typeof delta.reasoning_content === "string" && delta.reasoning_content.length > 0)
       return true;
-<<<<<<< Updated upstream
     if (typeof delta.reasoning_text === "string" && delta.reasoning_text.length > 0) return true;
 =======
->>>>>>> Stashed changes
     if (Array.isArray(delta.tool_calls) && delta.tool_calls.length > 0) return true;
     if (chunk.choices[0].finish_reason) return true;
     if (typeof delta.role === "string" && delta.role.length > 0) return true;

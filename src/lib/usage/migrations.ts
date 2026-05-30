@@ -45,7 +45,6 @@ type ArchiveTarget = {
   deleteAfterArchive: boolean;
 };
 
-<<<<<<< Updated upstream
 function buildLegacyRequestSummary(requestType: unknown, requestBody: unknown) {
   if (requestType !== "search" || !requestBody || typeof requestBody !== "object") return null;
 
@@ -66,7 +65,6 @@ function buildLegacyRequestSummary(requestType: unknown, requestBody: unknown) {
 }
 
 =======
->>>>>>> Stashed changes
 function copyIfMissing(fromPath: string | null, toPath: string | null, label: string) {
   if (!fromPath || !toPath) return;
   if (!fs.existsSync(fromPath) || fs.existsSync(toPath)) return;
@@ -327,23 +325,6 @@ export function migrateUsageJsonToSqlite() {
         const insert = db.prepare(`
           INSERT OR IGNORE INTO call_logs (id, timestamp, method, path, status, model, requested_model, provider,
             account, connection_id, duration, tokens_in, tokens_out, source_format, target_format,
-<<<<<<< Updated upstream
-            api_key_id, api_key_name, combo_name, combo_step_id, combo_execution_key, error_summary,
-            detail_state, artifact_relpath, artifact_size_bytes, artifact_sha256,
-            has_request_body, has_response_body, has_pipeline_details, request_summary)
-          VALUES (@id, @timestamp, @method, @path, @status, @model, @requestedModel, @provider,
-            @account, @connectionId, @duration, @tokensIn, @tokensOut, @sourceFormat, @targetFormat,
-            @apiKeyId, @apiKeyName, @comboName, @comboStepId, @comboExecutionKey, @errorSummary,
-            @detailState, @artifactRelPath, @artifactSizeBytes, @artifactSha256,
-            @hasRequestBody, @hasResponseBody, @hasPipelineDetails, @requestSummary)
-=======
-            api_key_id, api_key_name, combo_name, request_body, response_body, error,
-            artifact_relpath, has_pipeline_details)
-          VALUES (@id, @timestamp, @method, @path, @status, @model, @provider,
-            @account, @connectionId, @duration, @tokensIn, @tokensOut, @sourceFormat, @targetFormat,
-            @apiKeyId, @apiKeyName, @comboName, @requestBody, @responseBody, @error,
-            NULL, 0)
->>>>>>> Stashed changes
         `);
 
         const tx = db.transaction(() => {

@@ -23,7 +23,6 @@ describe("GLM Coding provider registry surfaces", () => {
     expect(entry?.headers?.["Anthropic-Version"]).toBe("2023-06-01");
   });
 
-<<<<<<< Updated upstream
   it("registers GLMT as an explicit high-budget preset over the GLM transport", () => {
     const entry = getRegistryEntry("glmt");
 
@@ -43,7 +42,6 @@ describe("GLM Coding provider registry surfaces", () => {
   });
 
 =======
->>>>>>> Stashed changes
   it("exposes the same GLM model inventory through registry-derived model helpers", () => {
     const byProviderId = getModelsByProviderId("glm");
     const byAlias = getProviderModels("glm");

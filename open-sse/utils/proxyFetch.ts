@@ -174,11 +174,9 @@ export async function runWithProxyContext(proxyConfig, fn) {
   const currentContext = proxyContext.getStore();
   const effectiveProxyConfig = proxyConfig || currentContext || null;
 
-<<<<<<< Updated upstream
   const resolvedProxyUrl = effectiveProxyConfig ? proxyConfigToUrl(effectiveProxyConfig) : null;
 
 =======
->>>>>>> Stashed changes
   // T14: Proxy Fast-Fail
   // Perform a short TCP reachability check before issuing upstream requests.
   if (resolvedProxyUrl) {
@@ -195,13 +193,6 @@ export async function runWithProxyContext(proxyConfig, fn) {
     }
   }
 
-<<<<<<< Updated upstream
-  return proxyContext.run(effectiveProxyConfig, async () => {
-    if (resolvedProxyUrl && effectiveProxyConfig !== currentContext) {
-=======
-  return proxyContext.run(proxyConfig || null, async () => {
-    if (resolvedProxyUrl) {
->>>>>>> Stashed changes
       console.log(
         `[ProxyFetch] Applied request proxy context: ${proxyUrlForLogs(resolvedProxyUrl)}`
       );

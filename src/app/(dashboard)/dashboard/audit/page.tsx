@@ -1,6 +1,5 @@
 "use client";
 
-<<<<<<< Updated upstream
 import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Card, SegmentedControl } from "@/shared/components";
@@ -287,4 +286,3 @@ export default function AuditPage() {
   );
 }
 =======
->>>>>>> Stashed changes

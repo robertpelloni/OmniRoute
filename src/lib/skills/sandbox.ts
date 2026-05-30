@@ -1,16 +1,3 @@
-<<<<<<< Updated upstream
-import { createRequire } from "module";
-import type { ChildProcess } from "child_process";
-import { randomUUID } from "crypto";
-
-const require = createRequire(import.meta.url);
-const childProcess = require("child_process") as typeof import("child_process");
-
-=======
-import { spawn, ChildProcess } from "child_process";
-import { randomUUID } from "crypto";
-
->>>>>>> Stashed changes
 interface SandboxConfig {
   cpuLimit: number;
   memoryLimit: number;
@@ -59,19 +46,6 @@ class SandboxRunner {
   async run(
     image: string,
     command: string[],
-<<<<<<< Updated upstream
-    env: Record<string, string> = {},
-    configOverride: Partial<SandboxConfig> = {}
-  ): Promise<SandboxResult> {
-    const sandboxId = randomUUID();
-    const startTime = Date.now();
-    const config = { ...this.config, ...configOverride };
-=======
-    env: Record<string, string> = {}
-  ): Promise<SandboxResult> {
-    const sandboxId = randomUUID();
-    const startTime = Date.now();
->>>>>>> Stashed changes
 
     const dockerArgs = [
       "run",
@@ -79,53 +53,6 @@ class SandboxRunner {
       "--name",
       `omniroute-sandbox-${sandboxId}`,
       "--cpus",
-<<<<<<< Updated upstream
-      `${config.cpuLimit / 1000}`,
-      "--memory",
-      `${config.memoryLimit}m`,
-      "--network",
-      config.networkEnabled ? "bridge" : "none",
-      "--cap-drop",
-      "ALL",
-      "--security-opt",
-      "no-new-privileges",
-      "--pids-limit",
-      "100",
-      "--tmpfs",
-      "/tmp:rw,noexec,nosuid,size=64m",
-      "--tmpfs",
-      "/workspace:rw,noexec,nosuid,size=64m",
-      "--workdir",
-      "/workspace",
-    ];
-
-    if (config.readOnly) {
-      dockerArgs.push("--read-only");
-    }
-
-    dockerArgs.push(image, ...command);
-
-    return new Promise((resolve) => {
-      const proc = childProcess.spawn("docker", dockerArgs, {
-=======
-      `${this.config.cpuLimit / 1000}`,
-      "--memory",
-      `${this.config.memoryLimit}m`,
-      "--network",
-      this.config.networkEnabled ? "bridge" : "none",
-      "--read-only",
-      this.config.readOnly.toString(),
-      "--cap-add",
-      "SYS_TIME",
-      "--pids-limit",
-      "100",
-      image,
-      ...command,
-    ];
-
-    return new Promise((resolve) => {
-      const proc = spawn("docker", dockerArgs, {
->>>>>>> Stashed changes
         env: { ...process.env, ...env },
         stdio: ["ignore", "pipe", "pipe"],
       });
@@ -145,11 +72,6 @@ class SandboxRunner {
 
       const timeoutId = setTimeout(() => {
         this.kill(sandboxId);
-<<<<<<< Updated upstream
-      }, config.timeout);
-=======
-      }, this.config.timeout);
->>>>>>> Stashed changes
 
       proc.on("close", (code) => {
         clearTimeout(timeoutId);
@@ -186,13 +108,6 @@ class SandboxRunner {
     if (proc) {
       proc.kill("SIGTERM");
       this.runningContainers.delete(sandboxId);
-<<<<<<< Updated upstream
-      childProcess.spawn("docker", ["kill", `omniroute-sandbox-${sandboxId}`], {
-        stdio: "ignore",
-      });
-=======
-      spawn("docker", ["kill", `omniroute-sandbox-${sandboxId}`], { stdio: "ignore" });
->>>>>>> Stashed changes
       return true;
     }
     return false;
@@ -201,11 +116,6 @@ class SandboxRunner {
   killAll(): void {
     for (const [id, proc] of this.runningContainers) {
       proc.kill("SIGTERM");
-<<<<<<< Updated upstream
-      childProcess.spawn("docker", ["kill", `omniroute-sandbox-${id}`], { stdio: "ignore" });
-=======
-      spawn("docker", ["kill", `omniroute-sandbox-${id}`], { stdio: "ignore" });
->>>>>>> Stashed changes
     }
     this.runningContainers.clear();
   }

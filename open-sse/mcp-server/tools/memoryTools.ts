@@ -40,10 +40,8 @@ export const memoryTools = {
         persistAcrossModels: false,
         retentionDays: 30,
         scope: "apiKey" as const,
-<<<<<<< Updated upstream
         query: args.query,
 =======
->>>>>>> Stashed changes
       };
 
       const memories = await retrieveMemories(args.apiKeyId, config);
@@ -93,32 +91,6 @@ export const memoryTools = {
     description: "Clear memories for an API key, optionally filtered by type or age",
     inputSchema: MemoryClearSchema,
     handler: async (args: z.infer<typeof MemoryClearSchema>) => {
-<<<<<<< Updated upstream
-      const result = await listMemories({
-        apiKeyId: args.apiKeyId,
-        type: args.type as MemoryType | undefined,
-      });
-      const existingMemories = Array.isArray(result)
-        ? result
-        : Array.isArray(result?.data)
-          ? result.data
-          : [];
-
-      let toDelete = existingMemories;
-      if (args.olderThan) {
-        const cutoff = new Date(args.olderThan);
-        toDelete = existingMemories.filter((m) => new Date(m.createdAt) < cutoff);
-=======
-      const memories = await listMemories({
-        apiKeyId: args.apiKeyId,
-        type: args.type as MemoryType | undefined,
-      });
-
-      let toDelete = memories;
-      if (args.olderThan) {
-        const cutoff = new Date(args.olderThan);
-        toDelete = memories.filter((m) => new Date(m.createdAt) < cutoff);
->>>>>>> Stashed changes
       }
 
       let deletedCount = 0;

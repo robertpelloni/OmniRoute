@@ -50,7 +50,6 @@ import {
 } from "../../src/domain/tagRouter.ts";
 import { normalizeRoutingStrategy } from "../../src/shared/constants/routingStrategies.ts";
 
-<<<<<<< Updated upstream
 // Status codes that should mark round-robin target semaphores as cooling down.
 const TRANSIENT_FOR_SEMAPHORE = [429, 502, 503, 504];
 // Patterns that signal all accounts for a provider are rate-limited / exhausted.
@@ -146,7 +145,6 @@ function toTrimmedString(value): string | null {
 }
 
 =======
->>>>>>> Stashed changes
 /**
  * Validate that a successful (HTTP 200) non-streaming response actually contains
  * meaningful content. Returns { valid: true } or { valid: false, reason }.
@@ -158,11 +156,6 @@ function toTrimmedString(value): string | null {
  * 1. Body is valid JSON
  * 2. Has at least one choice with non-empty content or tool_calls
  */
-<<<<<<< Updated upstream
-export async function validateResponseQuality(
-=======
-async function validateResponseQuality(
->>>>>>> Stashed changes
   response: Response,
   isStreaming: boolean,
   log: { warn?: (...args: unknown[]) => void }
@@ -196,11 +189,6 @@ async function validateResponseQuality(
   try {
     json = JSON.parse(text);
   } catch {
-<<<<<<< Updated upstream
-    if (text.startsWith("data:") || text.startsWith("event:")) return { valid: true };
-=======
-    if (text.startsWith("data:")) return { valid: true };
->>>>>>> Stashed changes
     return { valid: false, reason: "response is not valid JSON" };
   }
 
@@ -232,18 +220,6 @@ async function validateResponseQuality(
     return { valid: false, reason: "empty content and no tool_calls in response" };
   }
 
-<<<<<<< Updated upstream
-  return {
-    valid: true,
-    clonedResponse: new Response(text, {
-      status: response.status,
-      statusText: response.statusText,
-      headers: response.headers,
-    }),
-  };
-=======
-  return { valid: true };
->>>>>>> Stashed changes
 }
 
 // In-memory atomic counter per combo for round-robin distribution
@@ -1262,14 +1238,6 @@ export async function handleComboChat({
             const text = sanitizeDecoder.decode(chunk, { stream: true });
             if (text) {
               if (text.includes("<omniModel>")) {
-<<<<<<< Updated upstream
-                const cleaned = text.replace(
-                  /(?:\\n|\n|\r)*<omniModel>[^<]+<\/omniModel>(?:\\n|\n|\r)*/g,
-                  ""
-                );
-=======
-                const cleaned = text.replace(/\n?<omniModel>[^<]+<\/omniModel>\n?/g, "");
->>>>>>> Stashed changes
                 if (cleaned) controller.enqueue(encoder.encode(cleaned));
               } else {
                 controller.enqueue(encoder.encode(text));
@@ -1280,14 +1248,6 @@ export async function handleComboChat({
             const tail = sanitizeDecoder.decode();
             if (tail) {
               if (tail.includes("<omniModel>")) {
-<<<<<<< Updated upstream
-                const cleaned = tail.replace(
-                  /(?:\\n|\n|\r)*<omniModel>[^<]+<\/omniModel>(?:\\n|\n|\r)*/g,
-                  ""
-                );
-=======
-                const cleaned = tail.replace(/\n?<omniModel>[^<]+<\/omniModel>\n?/g, "");
->>>>>>> Stashed changes
                 if (cleaned) controller.enqueue(encoder.encode(cleaned));
               } else {
                 controller.enqueue(encoder.encode(tail));
@@ -1616,45 +1576,15 @@ export async function handleComboChat({
 
       // Success — validate response quality before returning
       if (result.ok) {
-<<<<<<< Updated upstream
-        const quality = await validateResponseQuality(result, clientRequestedStream, log);
-        if (!quality.valid) {
-          const qualityFailureReason = `Upstream response failed quality validation: ${quality.reason}`;
-=======
-        const quality = await validateResponseQuality(result, !!body.stream, log);
-        if (!quality.valid) {
->>>>>>> Stashed changes
           log.warn(
             "COMBO",
             `Model ${modelStr} returned 200 but failed quality check: ${quality.reason}`
           );
-<<<<<<< Updated upstream
-=======
-          breaker._onFailure();
->>>>>>> Stashed changes
           recordComboRequest(combo.name, modelStr, {
             success: false,
             latencyMs: Date.now() - startTime,
             fallbackCount,
             strategy,
-<<<<<<< Updated upstream
-            target: toRecordedTarget(target),
-          });
-          recordedAttempts++;
-          // Fix #1707: Set terminal state so the fallback doesn't emit
-          // misleading ALL_ACCOUNTS_INACTIVE when the real issue is quality.
-          lastError = `Upstream response failed quality validation: ${quality.reason}`;
-          if (!lastStatus) lastStatus = 502;
-          if (i > 0) fallbackCount++;
-          break; // move to next model
-        }
-=======
-          });
-          if (i > 0) fallbackCount++;
-          break; // move to next model
-        }
-        resolvedByModel = modelStr;
->>>>>>> Stashed changes
         const latencyMs = Date.now() - startTime;
         log.info(
           "COMBO",
@@ -1794,12 +1724,6 @@ export async function handleComboChat({
         0,
         null,
         provider,
-<<<<<<< Updated upstream
-        result.headers,
-        profile
-=======
-        result.headers
->>>>>>> Stashed changes
       );
       const comboBadRequestFallback = shouldFallbackComboBadRequest(result.status, errorText);
 
@@ -1808,17 +1732,6 @@ export async function handleComboChat({
         recordProviderFailure(provider, log, target.connectionId, profile);
       }
 
-<<<<<<< Updated upstream
-      if (comboBadRequestFallback) {
-        log.info(
-          "COMBO",
-          `Treating provider-scoped 400 from ${modelStr} as model-local failure; trying next combo target`
-        );
-=======
-      if (!shouldFallback && !comboBadRequestFallback) {
-        log.warn("COMBO", `Model ${modelStr} failed (no fallback)`, { status: result.status });
-        return result;
->>>>>>> Stashed changes
       }
 
       if (comboBadRequestFallback) {
@@ -1849,33 +1762,6 @@ export async function handleComboChat({
       if (i > 0) fallbackCount++;
       log.warn("COMBO", `Model ${modelStr} failed, trying next`, { status: result.status });
 
-<<<<<<< Updated upstream
-      const fallbackWaitMs =
-        retryDelayMs > 0 && cooldownMs > 0 && cooldownMs <= MAX_FALLBACK_WAIT_MS
-          ? Math.min(cooldownMs, retryDelayMs)
-          : 0;
-      if ([502, 503, 504].includes(result.status) && fallbackWaitMs > 0) {
-        log.info("COMBO", `Waiting ${fallbackWaitMs}ms before fallback to next model`);
-        await new Promise((resolve) => {
-          const timer = setTimeout(resolve, fallbackWaitMs);
-          signal?.addEventListener(
-            "abort",
-            () => {
-              clearTimeout(timer);
-              resolve(undefined);
-            },
-            { once: true }
-          );
-        });
-        if (signal?.aborted) {
-          log.info("COMBO", `Client disconnected during fallback wait — aborting`);
-          return errorResponse(499, "Client disconnected");
-        }
-=======
-      if ([502, 503, 504].includes(result.status) && cooldownMs > 0 && cooldownMs <= 5000) {
-        log.info("COMBO", `Waiting ${cooldownMs}ms before fallback to next model`);
-        await new Promise((r) => setTimeout(r, cooldownMs));
->>>>>>> Stashed changes
       }
 
       break; // Move to next model
@@ -1901,22 +1787,6 @@ export async function handleComboChat({
     );
   }
 
-<<<<<<< Updated upstream
-=======
-  if (!lastStatus) {
-    return new Response(
-      JSON.stringify({
-        error: {
-          message: "Service temporarily unavailable: all upstream accounts are inactive",
-          type: "service_unavailable",
-          code: "ALL_ACCOUNTS_INACTIVE",
-        },
-      }),
-      { status: 503, headers: { "Content-Type": "application/json" } }
-    );
-  }
-
->>>>>>> Stashed changes
   const status = lastStatus;
   const msg = lastError || "All combo models unavailable";
 
@@ -1966,11 +1836,6 @@ async function handleRoundRobinCombo({
   const filteredTargets = await applyRequestTagRouting(orderedTargets, body, log);
   const modelCount = filteredTargets.length;
   if (modelCount === 0) {
-<<<<<<< Updated upstream
-    return comboModelNotFoundResponse("Round-robin combo has no executable targets");
-=======
-    return unavailableResponse(503, "Round-robin combo has no models");
->>>>>>> Stashed changes
   }
 
   // Get and increment atomic counter
@@ -2054,38 +1919,15 @@ async function handleRoundRobinCombo({
 
         // Success — validate response quality before returning
         if (result.ok) {
-<<<<<<< Updated upstream
-          const quality = await validateResponseQuality(result, clientRequestedStream, log);
-          if (!quality.valid) {
-            const qualityFailureReason = `Upstream response failed quality validation: ${quality.reason}`;
-=======
-          const quality = await validateResponseQuality(result, !!body.stream, log);
-          if (!quality.valid) {
->>>>>>> Stashed changes
             log.warn(
               "COMBO-RR",
               `${modelStr} returned 200 but failed quality check: ${quality.reason}`
             );
-<<<<<<< Updated upstream
-=======
-            breaker._onFailure();
->>>>>>> Stashed changes
             recordComboRequest(combo.name, modelStr, {
               success: false,
               latencyMs: Date.now() - startTime,
               fallbackCount,
               strategy: "round-robin",
-<<<<<<< Updated upstream
-              target: toRecordedTarget(target),
-            });
-            recordedAttempts++;
-            // Fix #1707: Set terminal state so the fallback doesn't emit
-            // misleading ALL_ACCOUNTS_INACTIVE when the real issue is quality.
-            lastError = `Upstream response failed quality validation: ${quality.reason}`;
-            if (!lastStatus) lastStatus = 502;
-=======
-            });
->>>>>>> Stashed changes
             if (offset > 0) fallbackCount++;
             break; // move to next model
           }
@@ -2193,19 +2035,6 @@ async function handleRoundRobinCombo({
           0,
           null,
           provider,
-<<<<<<< Updated upstream
-          result.headers,
-          profile
-        );
-        const comboBadRequestFallback = shouldFallbackComboBadRequest(result.status, errorText);
-
-        const isAllAccountsRateLimited = isAllAccountsRateLimitedResponse(
-          result.status,
-          result.headers?.get("content-type") ?? null,
-          errorText
-=======
-          result.headers
->>>>>>> Stashed changes
         );
         const comboBadRequestFallback = shouldFallbackComboBadRequest(result.status, errorText);
 
@@ -2222,21 +2051,6 @@ async function handleRoundRobinCombo({
           );
         }
 
-<<<<<<< Updated upstream
-=======
-        if (!shouldFallback && !comboBadRequestFallback) {
-          log.warn("COMBO-RR", `${modelStr} failed (no fallback)`, { status: result.status });
-          return result;
-        }
-
-        if (comboBadRequestFallback) {
-          log.info(
-            "COMBO-RR",
-            `Treating provider-scoped 400 from ${modelStr} as model-local failure; trying next model`
-          );
-        }
-
->>>>>>> Stashed changes
         // Transient error → retry same model
         const isTransient =
           !isStreamReadinessTimeout && [408, 429, 500, 502, 503, 504].includes(result.status);
@@ -2258,33 +2072,6 @@ async function handleRoundRobinCombo({
         if (offset > 0) fallbackCount++;
         log.warn("COMBO-RR", `${modelStr} failed, trying next model`, { status: result.status });
 
-<<<<<<< Updated upstream
-        const fallbackWaitMs =
-          retryDelayMs > 0 && cooldownMs > 0 && cooldownMs <= MAX_FALLBACK_WAIT_MS
-            ? Math.min(cooldownMs, retryDelayMs)
-            : 0;
-        if ([502, 503, 504].includes(result.status) && fallbackWaitMs > 0) {
-          log.info("COMBO-RR", `Waiting ${fallbackWaitMs}ms before fallback to next model`);
-          await new Promise((resolve) => {
-            const timer = setTimeout(resolve, fallbackWaitMs);
-            signal?.addEventListener(
-              "abort",
-              () => {
-                clearTimeout(timer);
-                resolve(undefined);
-              },
-              { once: true }
-            );
-          });
-          if (signal?.aborted) {
-            log.info("COMBO-RR", `Client disconnected during fallback wait — aborting`);
-            return errorResponse(499, "Client disconnected");
-          }
-=======
-        if ([502, 503, 504].includes(result.status) && cooldownMs > 0 && cooldownMs <= 5000) {
-          log.info("COMBO-RR", `Waiting ${cooldownMs}ms before fallback to next model`);
-          await new Promise((r) => setTimeout(r, cooldownMs));
->>>>>>> Stashed changes
         }
 
         break;
@@ -2319,22 +2106,6 @@ async function handleRoundRobinCombo({
     );
   }
 
-<<<<<<< Updated upstream
-=======
-  if (!lastStatus) {
-    return new Response(
-      JSON.stringify({
-        error: {
-          message: "Service temporarily unavailable: all upstream accounts are inactive",
-          type: "service_unavailable",
-          code: "ALL_ACCOUNTS_INACTIVE",
-        },
-      }),
-      { status: 503, headers: { "Content-Type": "application/json" } }
-    );
-  }
-
->>>>>>> Stashed changes
   const status = lastStatus;
   const msg = lastError || "All round-robin combo models unavailable";
 

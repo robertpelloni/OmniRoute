@@ -261,7 +261,6 @@ function buildResponsesSummary(
   let latestResponse: JsonRecord | null = null;
   let usage: JsonRecord | null = null;
   const textParts: string[] = [];
-<<<<<<< Updated upstream
   const buildOutputFromText = () =>
     textParts.length > 0
       ? [
@@ -273,7 +272,6 @@ function buildResponsesSummary(
         ]
       : [];
 =======
->>>>>>> Stashed changes
 
   for (const payload of payloads) {
     const eventType = toString(payload.type);
@@ -305,15 +303,12 @@ function buildResponsesSummary(
 
   const picked = completed || latestResponse;
   if (picked && Object.keys(picked).length > 0) {
-<<<<<<< Updated upstream
     const pickedOutput = Array.isArray(picked.output) ? picked.output : [];
 =======
->>>>>>> Stashed changes
     return {
       id: toString(picked.id, `resp_${Date.now()}`),
       object: "response",
       model: toString(picked.model, fallbackModel || "unknown"),
-<<<<<<< Updated upstream
       output: pickedOutput.length > 0 ? pickedOutput : buildOutputFromText(),
 =======
       output: Array.isArray(picked.output) ? picked.output : [],
@@ -329,20 +324,7 @@ function buildResponsesSummary(
     id: `resp_${Date.now()}`,
     object: "response",
     model: fallbackModel || "unknown",
-<<<<<<< Updated upstream
     output: buildOutputFromText(),
-=======
-    output:
-      textParts.length > 0
-        ? [
-            {
-              type: "message",
-              role: "assistant",
-              content: [{ type: "output_text", text: textParts.join("") }],
-            },
-          ]
-        : [],
->>>>>>> Stashed changes
     usage: usage ?? null,
     status: "completed",
     created_at: Math.floor(Date.now() / 1000),
@@ -373,7 +355,6 @@ function buildClaudeSummary(events: StructuredSSEEvent[], fallbackModel?: string
     | { type: "thinking"; thinking: string; signature?: string }
     | { type: "tool_use"; id: string; name: string; input: unknown };
 =======
->>>>>>> Stashed changes
 
   const blocks = new Map<number, ClaudeBlock>();
   const usage: JsonRecord = {};
@@ -486,11 +467,6 @@ function buildClaudeSummary(events: StructuredSSEEvent[], fallbackModel?: string
 
   const content = [...blocks.values()]
     .sort((a, b) => a.index - b.index)
-<<<<<<< Updated upstream
-    .flatMap<ClaudeContentBlock>((block) => {
-=======
-    .flatMap((block) => {
->>>>>>> Stashed changes
       if (block.type === "text") {
         return block.text
           ? [

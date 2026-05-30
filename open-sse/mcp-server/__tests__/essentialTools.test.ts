@@ -22,7 +22,6 @@ describe("MCP Essential Tools", () => {
   });
 
   describe("Tool schema validation", () => {
-<<<<<<< Updated upstream
     it("should have exactly 9 essential tools (includes web_search)", () => {
 =======
     it("should have exactly 9 essential tools", () => {
@@ -373,5 +372,4 @@ describe("omniroute_web_search handler (via MCP dispatch)", () => {
     expect(result.isError).toBe(true);
   });
 =======
->>>>>>> Stashed changes
 });

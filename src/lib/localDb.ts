@@ -58,7 +58,6 @@ export {
   getModelPreserveOpenAIDeveloperRole,
   getModelUpstreamExtraHeaders,
   getModelIsHidden,
-<<<<<<< Updated upstream
 
   // Synced Available Models
   getSyncedAvailableModels,
@@ -66,7 +65,6 @@ export {
   replaceSyncedAvailableModelsForConnection,
   deleteSyncedAvailableModelsForConnection,
 =======
->>>>>>> Stashed changes
 } from "./db/models";
 
 export type { ModelCompatPerProtocol, ModelCompatPatch, SyncedAvailableModel } from "./db/models";
@@ -241,7 +239,6 @@ export {
   resolveComboForModel,
 } from "./db/modelComboMappings";
 
-<<<<<<< Updated upstream
 export {
   // Files
   createFile,
@@ -267,7 +264,6 @@ export type { FileRecord } from "./db/files";
 export type { BatchRecord } from "./db/batches";
 
 =======
->>>>>>> Stashed changes
 export type { ModelComboMapping } from "./db/modelComboMappings";
 
 export {
@@ -291,7 +287,6 @@ export {
   cleanupOldSnapshots,
 } from "./db/quotaSnapshots";
 
-<<<<<<< Updated upstream
 export * from "./db/sessionAccountAffinity";
 
 export type { QuotaSnapshotRow, ProviderUtilizationPoint } from "@/shared/types/utilization";
@@ -383,4 +378,3 @@ export {
 
 export type { OneproxyProxyRecord, OneproxyStats } from "./db/oneproxy";
 =======
->>>>>>> Stashed changes

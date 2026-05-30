@@ -78,7 +78,6 @@ export type ExecuteInput = {
   extendedContext?: boolean;
   /** Merged after auth + CLI fingerprint headers (values override same-named defaults). */
   upstreamExtraHeaders?: Record<string, string> | null;
-<<<<<<< Updated upstream
   /** Original client request headers (read-only). Executors may forward select headers upstream. */
   clientHeaders?: Record<string, string> | null;
   /** Callback to persist tokens that are proactively refreshed during execution. */
@@ -105,48 +104,10 @@ export function mergeUpstreamExtraHeaders(
   if (!extra) return;
   for (const [k, v] of Object.entries(extra)) {
     if (typeof k === "string" && k.length > 0 && typeof v === "string") {
-<<<<<<< Updated upstream
       if (k.toLowerCase() === "user-agent") {
         setUserAgentHeader(headers, v);
         continue;
       }
-=======
->>>>>>> Stashed changes
-      headers[k] = v;
-    }
-  }
-}
-
-<<<<<<< Updated upstream
-export function getCustomUserAgent(providerSpecificData?: JsonRecord | null): string | null {
-  const customUserAgent =
-    typeof providerSpecificData?.customUserAgent === "string"
-      ? providerSpecificData.customUserAgent.trim()
-      : "";
-  return customUserAgent || null;
-}
-
-export function setUserAgentHeader(headers: Record<string, string>, userAgent: string): void {
-  headers["User-Agent"] = userAgent;
-  if ("user-agent" in headers) {
-    headers["user-agent"] = userAgent;
-  }
-}
-
-export function applyConfiguredUserAgent(
-  headers: Record<string, string>,
-  providerSpecificData?: JsonRecord | null
-): void {
-  const customUserAgent = getCustomUserAgent(providerSpecificData);
-  if (customUserAgent) {
-    setUserAgentHeader(headers, customUserAgent);
-  }
-}
-
-export function mergeAbortSignals(primary: AbortSignal, secondary: AbortSignal): AbortSignal {
-=======
-function mergeAbortSignals(primary: AbortSignal, secondary: AbortSignal): AbortSignal {
->>>>>>> Stashed changes
   const controller = new AbortController();
 
   const abortFrom = (source: AbortSignal) => {
@@ -347,7 +308,6 @@ export class BaseExecutor {
     return { status: response.status, message: bodyText || `HTTP ${response.status}` };
   }
 
-<<<<<<< Updated upstream
   buildCountTokensUrl(model: string, credentials: ProviderCredentials | null = null) {
     void model;
     void credentials;
@@ -418,104 +378,6 @@ export class BaseExecutor {
     }
   }
 
-=======
->>>>>>> Stashed changes
-  async execute({
-    model,
-    body,
-    stream,
-    credentials,
-    signal,
-    log,
-    extendedContext,
-    upstreamExtraHeaders,
-<<<<<<< Updated upstream
-    clientHeaders,
-=======
->>>>>>> Stashed changes
-  }: ExecuteInput) {
-    const fallbackCount = this.getFallbackCount();
-    let lastError: unknown = null;
-    let lastStatus = 0;
-    let activeCredentials = credentials;
-    // Track per-URL intra-retry attempts to avoid infinite loops
-    const retryAttemptsByUrl: Record<number, number> = {};
-
-    if (this.needsRefresh(credentials)) {
-      try {
-        const refreshed = await this.refreshCredentials(credentials, log || null);
-        if (refreshed) {
-          activeCredentials = {
-            ...credentials,
-            ...refreshed,
-          };
-          // Persist the proactively refreshed credentials to prevent consuming rotating tokens
-          // without updating the central database connection.
-          if (arguments[0].onCredentialsRefreshed) {
-            await arguments[0].onCredentialsRefreshed(refreshed);
-          }
-        }
-      } catch (error) {
-        log?.warn?.(
-          "TOKEN",
-          `Credential refresh failed for ${this.provider}: ${error instanceof Error ? error.message : String(error)}`
-        );
-      }
-    }
-
-    for (let urlIndex = 0; urlIndex < fallbackCount; urlIndex++) {
-      const url = this.buildUrl(model, stream, urlIndex, activeCredentials);
-      const headers = this.buildHeaders(activeCredentials, stream, clientHeaders, model);
-      applyConfiguredUserAgent(headers, activeCredentials?.providerSpecificData);
-
-      const ccRequestDefaults = isClaudeCodeCompatible(this.provider)
-        ? getClaudeCodeCompatibleRequestDefaults(activeCredentials?.providerSpecificData)
-        : {};
-      const shouldForwardExtendedContext =
-        extendedContext &&
-        modelSupportsContext1mBeta(model) &&
-        !isClaudeCodeCompatible(this.provider);
-      const shouldForwardCcCompatibleContext1m =
-        isClaudeCodeCompatible(this.provider) && ccRequestDefaults.context1m === true;
-      if (shouldForwardExtendedContext || shouldForwardCcCompatibleContext1m) {
-        appendAnthropicBetaHeader(headers, CONTEXT_1M_BETA_HEADER);
-      }
-
-<<<<<<< Updated upstream
-      const transformedBody = await this.transformRequest(model, body, stream, activeCredentials);
-
-      try {
-        // Only enforce the timeout while waiting for the initial fetch() response.
-        // Once headers arrive, active streams must not be cut off by total elapsed time;
-        // post-start stalls are handled separately by STREAM_IDLE_TIMEOUT_MS / bodyTimeout.
-        const fetchStartTimeoutMs = this.getTimeoutMs();
-        const timeoutController = fetchStartTimeoutMs > 0 ? new AbortController() : null;
-        let timeoutId: ReturnType<typeof setTimeout> | null = null;
-        if (timeoutController) {
-          timeoutId = setTimeout(() => {
-            const timeoutError = new Error(
-              `Fetch timeout after ${fetchStartTimeoutMs}ms on ${url}`
-            );
-            timeoutError.name = "TimeoutError";
-            timeoutController.abort(timeoutError);
-          }, fetchStartTimeoutMs);
-        }
-        const timeoutSignal = timeoutController?.signal ?? null;
-        const combinedSignal =
-          signal && timeoutSignal
-            ? mergeAbortSignals(signal, timeoutSignal)
-            : signal || timeoutSignal;
-=======
-      const transformedBody = await this.transformRequest(model, body, stream, credentials);
-
-      try {
-        // Apply timeout to all requests. Non-streaming requests need this to prevent
-        // stalled connections. Streaming requests also need it for the initial fetch() call
-        // to prevent hanging on unresponsive providers (e.g. 300s TCP default timeout — #769).
-        // Stream idle detection (STREAM_IDLE_TIMEOUT_MS) handles stalls after data starts flowing.
-        const timeoutSignal = AbortSignal.timeout(FETCH_TIMEOUT_MS);
-        const combinedSignal = signal ? mergeAbortSignals(signal, timeoutSignal) : timeoutSignal;
->>>>>>> Stashed changes
 
         const isClaudeCodeClient =
           clientHeaders?.["x-app"] === "cli" ||
@@ -678,7 +540,6 @@ export class BaseExecutor {
         }
 
 =======
->>>>>>> Stashed changes
         mergeUpstreamExtraHeaders(finalHeaders, upstreamExtraHeaders);
 
         const fetchOptions: RequestInit = {
