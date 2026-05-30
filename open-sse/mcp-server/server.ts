@@ -75,9 +75,12 @@ import {
 } from "./tools/advancedTools.ts";
 import { memoryTools } from "./tools/memoryTools.ts";
 import { skillTools } from "./tools/skillTools.ts";
+<<<<<<< Updated upstream
 import { compressionTools } from "./tools/compressionTools.ts";
 import { compressMcpRegistryMetadata } from "./descriptionCompressor.ts";
 import { getDbInstance } from "../../src/lib/db/core.ts";
+=======
+>>>>>>> Stashed changes
 import { normalizeQuotaResponse } from "../../src/shared/contracts/quota.ts";
 import { resolveOmniRouteBaseUrl } from "../../src/shared/utils/resolveOmniRouteBaseUrl.ts";
 
@@ -845,6 +848,7 @@ export function createMcpServer(): McpServer {
     )
   );
 
+<<<<<<< Updated upstream
   server.registerTool(
     "omniroute_web_search",
     {
@@ -917,20 +921,30 @@ export function createMcpServer(): McpServer {
     )
   );
 
+=======
+>>>>>>> Stashed changes
   // ── Memory Tools ──────────────────────────────
   Object.values(memoryTools).forEach((toolDef) => {
     server.registerTool(
       toolDef.name,
       {
         description: toolDef.description,
+<<<<<<< Updated upstream
         // @ts-ignore: dynamic zod access
         inputSchema: toolDef.inputSchema,
+=======
+        inputSchema: toolDef.inputSchema as any,
+>>>>>>> Stashed changes
       },
       withScopeEnforcement(toolDef.name, async (args) => {
         try {
           const parsedArgs = toolDef.inputSchema.parse(args ?? {});
+<<<<<<< Updated upstream
           // @ts-ignore: handler expected specific object
           const result = await toolDef.handler(parsedArgs);
+=======
+          const result = await toolDef.handler(parsedArgs as any);
+>>>>>>> Stashed changes
           return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
         } catch (err) {
           const msg = err instanceof Error ? err.message : String(err);
@@ -946,12 +960,17 @@ export function createMcpServer(): McpServer {
       toolDef.name,
       {
         description: toolDef.description,
+<<<<<<< Updated upstream
         // @ts-ignore: dynamic zod access
         inputSchema: toolDef.inputSchema,
+=======
+        inputSchema: toolDef.inputSchema as any,
+>>>>>>> Stashed changes
       },
       withScopeEnforcement(toolDef.name, async (args) => {
         try {
           const parsedArgs = toolDef.inputSchema.parse(args ?? {});
+<<<<<<< Updated upstream
           // @ts-ignore: handler expected specific object
           const result = await toolDef.handler(parsedArgs);
           return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
@@ -977,6 +996,9 @@ export function createMcpServer(): McpServer {
           const parsedArgs = toolDef.inputSchema.parse(args ?? {});
           // @ts-ignore: handler expected specific object
           const result = await toolDef.handler(parsedArgs);
+=======
+          const result = await toolDef.handler(parsedArgs as any);
+>>>>>>> Stashed changes
           return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
         } catch (err) {
           const msg = err instanceof Error ? err.message : String(err);

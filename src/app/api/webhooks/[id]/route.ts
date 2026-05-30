@@ -9,7 +9,10 @@ import { z } from "zod";
 import { NextResponse } from "next/server";
 import { getWebhook, updateWebhookRecord, deleteWebhook } from "@/lib/localDb";
 import { validateBody, isValidationFailure } from "@/shared/validation/helpers";
+<<<<<<< Updated upstream
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
+=======
+>>>>>>> Stashed changes
 
 const updateWebhookSchema = z
   .object({
@@ -22,9 +25,12 @@ const updateWebhookSchema = z
   .passthrough();
 
 export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
+<<<<<<< Updated upstream
   const authError = await requireManagementAuth(_);
   if (authError) return authError;
 
+=======
+>>>>>>> Stashed changes
   try {
     const { id } = await params;
     const webhook = getWebhook(id);
@@ -38,9 +44,12 @@ export async function GET(_: Request, { params }: { params: Promise<{ id: string
 }
 
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
+<<<<<<< Updated upstream
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
 
+=======
+>>>>>>> Stashed changes
   try {
     const { id } = await params;
     const rawBody = await request.json();
@@ -60,9 +69,12 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 }
 
 export async function DELETE(_: Request, { params }: { params: Promise<{ id: string }> }) {
+<<<<<<< Updated upstream
   const authError = await requireManagementAuth(_);
   if (authError) return authError;
 
+=======
+>>>>>>> Stashed changes
   try {
     const { id } = await params;
     const deleted = deleteWebhook(id);

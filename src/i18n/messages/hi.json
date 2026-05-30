@@ -57,6 +57,8 @@
     "note": "नोट",
     "free": "निःशुल्क",
     "skipToContent": "सामग्री पर जाएं",
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
     "maintenanceServerIssues": "Server is experiencing issues. Some features may be unavailable.",
     "maintenanceServerUnreachable": "Server is unreachable. Reconnecting...",
     "accept": "Accept",
@@ -649,28 +651,213 @@
     "learnedFromHeaders": "Learned From Headers",
     "totalRequests": "Total Requests",
     "cloudUnstableNote": "Cloud Unstable Note"
+========
+    "maintenanceServerIssues": "सर्वर में समस्या आ रही है. कुछ सुविधाएँ अनुपलब्ध हो सकती हैं.",
+    "maintenanceServerUnreachable": "सर्वर पहुंच योग्य नहीं है. पुनः कनेक्ट हो रहा है...",
+    "accept": "स्वीकार करो",
+    "accountId": "खाता आईडी",
+    "alias": "उपनाम",
+    "apiKeyId": "एपीआई कुंजी आईडी",
+    "apiKeyName": "एपीआई कुंजी नाम",
+    "apiKeySecret": "एपीआई कुंजी रहस्य",
+    "authorization": "प्राधिकरण",
+    "content-type": "सामग्री प्रकार",
+    "content-length": "सामग्री की लंबाई",
+    "cookie": "कुकी",
+    "file": "फ़ाइल",
+    "host": "मेज़बान",
+    "id": "आईडी",
+    "import": "आयात करें",
+    "limit": "सीमा",
+    "offset": "ऑफसेट",
+    "open": "खुला",
+    "origin": "उत्पत्ति",
+    "promptTokens": "शीघ्र टोकन",
+    "completionTokens": "समापन टोकन",
+    "totalTokens": "कुल टोकन",
+    "rawModel": "कच्चा मॉडल",
+    "scope": "दायरा",
+    "skill": "कौशल",
+    "sortBy": "क्रमबद्ध करें",
+    "sortOrder": "क्रमबद्ध करें",
+    "tab": "टैब",
+    "text": "पाठ",
+    "textarea": "पाठक्षेत्र",
+    "tool": "औज़ार",
+    "toolId": "टूल आईडी",
+    "web": "वेब",
+    "whereUsed": "कहाँ उपयोग किया जाता है",
+    "whitelist": "श्वेतसूची",
+    "blacklist": "काली सूची",
+    "resolve": "समाधान करें",
+    "force": "बल",
+    "base64url": "बेस64 यूआरएल",
+    "hex": "हेक्स",
+    "range": "रेंज",
+    "component": "घटक",
+    "redirect_uri": "यूआरआई को पुनर्निर्देशित करें",
+    "idempotency-key": "नपुंसकता कुंजी",
+    "error_description": "त्रुटि विवरण",
+    "code": "कोड",
+    "compatible": "संगत",
+    "chat-completions": "चैट समापन",
+    "oauth": "OAuth",
+    "auth_token": "प्रामाणिक टोकन",
+    "crypto": "क्रिप्टो",
+    "hours": "घंटे",
+    "selfsigned": "स्वयं हस्ताक्षरित",
+    "proxy_id": "प्रॉक्सी आईडी",
+    "proxyId": "प्रॉक्सी आईडी",
+    "connectionId": "कनेक्शन आईडी",
+    "resolveConnectionId": "कनेक्शन आईडी का समाधान करें",
+    "resolve_connection_id": "कनेक्शन आईडी का समाधान करें",
+    "scope_id": "दायरा आईडी",
+    "scopeId": "दायरा आईडी",
+    "jwtSecret": "जेडब्ल्यूटी रहस्य",
+    "keytar": "कीतर",
+    "better-sqlite3": "बेहतर-sqlite3",
+    "undici": "unci",
+    "builder-id": "बिल्डर आईडी",
+    "musicDesc": "संगीत विवरण",
+    "musicGeneration": "संगीत पीढ़ी",
+    "idc": "आईडीसी",
+    "cloud-status-changed": "बादल की स्थिति बदल गई",
+    "where_used": "कहाँ उपयोग किया जाता है",
+    "windowMs": "विंडो (एमएस)",
+    "social-github": "गिटहब",
+    "social-google": "गूगल",
+    "TOOL_ALLOWLIST": "उपकरण अनुमति सूची",
+    "TOOL_DENYLIST": "उपकरण अस्वीकृत सूची",
+    "Failed to save pricing": "मूल्य निर्धारण सहेजने में विफल",
+    "Failed to reset pricing": "मूल्य निर्धारण रीसेट करने में विफल",
+    "apikey": "एपीआई कुंजी",
+    "http": "HTTP"
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+=======
+    "maintenanceServerIssues": "Server is experiencing issues. Some features may be unavailable.",
+    "maintenanceServerUnreachable": "Server is unreachable. Reconnecting...",
+    "Failed to reset pricing": "Failed to reset pricing",
+    "hex": "Hex",
+    "tool": "Tool",
+    "musicGeneration": "Music Generation",
+    "Failed to save pricing": "Failed to save pricing",
+    "error_description": "Error Description",
+    "windowMs": "Window (ms)",
+    "content-type": "Content Type",
+    "http": "HTTP",
+    "text": "Text",
+    "sortOrder": "Sort Order",
+    "musicDesc": "Music Description",
+    "oauth": "OAuth",
+    "file": "File",
+    "textarea": "Textarea",
+    "host": "Host",
+    "chat-completions": "Chat Completions",
+    "better-sqlite3": "better-sqlite3",
+    "connectionId": "Connection ID",
+    "open": "Open",
+    "skill": "Skill",
+    "content-length": "Content Length",
+    "scope_id": "Scope ID",
+    "accept": "Accept",
+    "apiKeyName": "API Key Name",
+    "resolveConnectionId": "Resolve Connection ID",
+    "scope": "Scope",
+    "selfsigned": "Self-signed",
+    "builder-id": "Builder ID",
+    "toolId": "Tool ID",
+    "apiKeyId": "API Key ID",
+    "promptTokens": "Prompt Tokens",
+    "cloud-status-changed": "Cloud status changed",
+    "sortBy": "Sort By",
+    "code": "Code",
+    "redirect_uri": "Redirect URI",
+    "alias": "Alias",
+    "id": "ID",
+    "social-github": "GitHub",
+    "jwtSecret": "JWT Secret",
+    "TOOL_DENYLIST": "Tool Denylist",
+    "scopeId": "Scope ID",
+    "totalTokens": "Total Tokens",
+    "proxy_id": "Proxy ID",
+    "idempotency-key": "Idempotency Key",
+    "TOOL_ALLOWLIST": "Tool Allowlist",
+    "apiKeySecret": "API Key Secret",
+    "social-google": "Google",
+    "tab": "Tab",
+    "keytar": "Keytar",
+    "where_used": "Where Used",
+    "resolve_connection_id": "Resolve Connection ID",
+    "offset": "Offset",
+    "crypto": "Crypto",
+    "compatible": "Compatible",
+    "base64url": "Base64 URL",
+    "undici": "undici",
+    "import": "Import",
+    "blacklist": "Blacklist",
+    "apikey": "API Key",
+    "resolve": "Resolve",
+    "whitelist": "Whitelist",
+    "whereUsed": "Where Used",
+    "accountId": "Account ID",
+    "component": "Component",
+    "authorization": "Authorization",
+    "force": "Force",
+    "idc": "IDC",
+    "rawModel": "Raw Model",
+    "origin": "Origin",
+    "web": "Web",
+    "cookie": "Cookie",
+    "completionTokens": "Completion Tokens",
+    "range": "Range",
+    "proxyId": "Proxy ID",
+    "auth_token": "Auth Token",
+    "limit": "Limit",
+    "hours": "Hours"
+>>>>>>> Stashed changes
   },
   "sidebar": {
     "home": "घर",
     "dashboard": "डैशबोर्ड",
     "providers": "प्रदाता",
     "combos": "संयोजन",
+<<<<<<< Updated upstream
+    "autoCombo": "ऑटो कॉम्बो",
+=======
+>>>>>>> Stashed changes
     "usage": "उपयोग",
     "analytics": "विश्लेषिकी",
     "costs": "लागत",
     "health": "स्वास्थ्य",
+<<<<<<< Updated upstream
     "proxy": "प्रॉक्सी",
+=======
+>>>>>>> Stashed changes
     "limits": "सीमाएँ और कोटा",
     "cliTools": "सीएलआई उपकरण",
     "media": "मीडिया",
     "settings": "सेटिंग्स",
     "translator": "अनुवादक",
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
     "playground": "Playground",
     "searchTools": "Search Tools",
     "agents": "एजेंट",
     "docs": "दस्तावेज़",
     "issues": "मुद्दे",
     "endpoints": "Endpoint",
+========
+    "playground": "खेल का मैदान",
+    "searchTools": "खोज उपकरण",
+    "agents": "एजेंट",
+    "docs": "दस्तावेज़",
+    "issues": "मुद्दे",
+    "endpoints": "समापनबिंदु",
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+=======
+    "docs": "दस्तावेज़",
+    "issues": "मुद्दे",
+>>>>>>> Stashed changes
     "apiManager": "एपीआई प्रबंधक",
     "logs": "लॉग",
     "auditLog": "ऑडिट लॉग",
@@ -682,15 +869,22 @@
     "debug": "डीबग करें",
     "system": "सिस्टम",
     "help": "मदद",
+<<<<<<< Updated upstream
     "primarySection": "Main",
     "cliSection": "CLI",
     "debugSection": "Debug",
     "systemSection": "System",
     "helpSection": "Help",
+=======
+>>>>>>> Stashed changes
     "serverDisconnected": "सर्वर डिसकनेक्ट हो गया",
     "serverDisconnectedMsg": "प्रॉक्सी सर्वर बंद कर दिया गया है या पुनः प्रारंभ हो रहा है।",
     "expandSidebar": "साइडबार का विस्तार करें",
     "collapseSidebar": "साइडबार को संक्षिप्त करें",
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
+=======
+>>>>>>> Stashed changes
     "themes": "Themes",
     "presetColors": "Popular colors",
     "createTheme": "Create theme",
@@ -702,6 +896,7 @@
     "themeViolet": "Violet",
     "themeOrange": "Orange",
     "themeCyan": "Cyan",
+<<<<<<< Updated upstream
     "cliToolsShort": "उपकरण",
     "cache": "Cache",
     "cacheShort": "Cache",
@@ -741,6 +936,49 @@
     "contextCaveman": "Caveman",
     "contextRtk": "RTK",
     "contextCombos": "Compression Combos"
+========
+    "themes": "थीम्स",
+    "presetColors": "लोकप्रिय रंग",
+    "createTheme": "थीम बनाएं",
+    "chooseColor": "एक रंग चुनें",
+    "themeCoral": "मूंगा",
+    "themeBlue": "नीला",
+    "themeRed": "लाल",
+    "themeGreen": "हरा",
+    "themeViolet": "बैंगनी",
+    "themeOrange": "नारंगी",
+    "themeCyan": "सियान",
+    "cliToolsShort": "उपकरण",
+=======
+    "endpoints": "Endpoint",
+    "playground": "Playground",
+    "agents": "एजेंट",
+    "cliToolsShort": "उपकरण",
+    "autoCombo": "Auto Combo",
+    "searchTools": "Search Tools",
+>>>>>>> Stashed changes
+    "cache": "Cache",
+    "cacheShort": "Cache",
+    "cliSection": "CLI",
+    "debugSection": "Debug",
+    "helpSection": "Help",
+    "primarySection": "Main",
+    "systemSection": "System"
+<<<<<<< Updated upstream
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+  },
+  "themesPage": {
+    "title": "थीम्स",
+    "description": "एक पूर्व निर्धारित थीम चुनें या एक ही रंग से अपनी थीम बनाएं",
+    "presetColors": "लोकप्रिय रंग",
+    "customTheme": "कस्टम थीम",
+    "customThemeDesc": "थीम बनाएं पर क्लिक करें और एक रंग चुनें",
+    "createTheme": "थीम बनाएं",
+    "activePreset": "सक्रिय विषय"
+  },
+  "header": {
+    "logout": "Logout",
+=======
   },
   "themesPage": {
     "title": "Themes",
@@ -753,6 +991,7 @@
   },
   "header": {
     "logout": "लॉगआउट करें",
+>>>>>>> Stashed changes
     "language": "भाषा",
     "providers": "प्रदाता",
     "providerDescription": "अपने AI प्रदाता कनेक्शन प्रबंधित करें",
@@ -765,6 +1004,8 @@
     "cliTools": "सीएलआई उपकरण",
     "cliToolsDescription": "सीएलआई उपकरण कॉन्फ़िगर करें",
     "home": "घर",
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
     "homeDescription": "ओमनीरूट में आपका स्वागत है",
     "endpoint": "Endpoints",
     "endpointDescription": "Manage proxy endpoints, MCP, A2A, and API endpoints",
@@ -772,14 +1013,46 @@
     "mcpDescription": "Model Context Protocol server management and tools",
     "a2a": "A2A",
     "a2aDescription": "Agent-to-Agent protocol tasks and observability",
+========
+    "homeDescription": "ओम्निरूट में आपका स्वागत है",
+    "endpoint": "समापनबिंदु",
+    "endpointDescription": "प्रॉक्सी एंडपॉइंट, एमसीपी, ए2ए और एपीआई एंडपॉइंट प्रबंधित करें",
+    "mcp": "एम.सी.पी",
+    "mcpDescription": "मॉडल संदर्भ प्रोटोकॉल सर्वर प्रबंधन और उपकरण",
+    "a2a": "A2A",
+    "a2aDescription": "एजेंट-टू-एजेंट प्रोटोकॉल कार्य और अवलोकन",
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+=======
+    "homeDescription": "ओमनीरूट में आपका स्वागत है",
+    "endpoint": "Endpoints",
+    "endpointDescription": "Manage proxy endpoints, MCP, A2A, and API endpoints",
+>>>>>>> Stashed changes
     "settings": "सेटिंग्स",
     "settingsDescription": "अपनी प्राथमिकताएँ प्रबंधित करें",
     "openaiCompatible": "ओपनएआई संगत",
     "anthropicCompatible": "एंथ्रोपिक संगत",
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
     "media": "Media",
     "mediaDescription": "Generate images, videos, and music",
     "themes": "Themes",
     "themesDescription": "Choose a color theme for the whole dashboard panel"
+========
+    "media": "मीडिया",
+    "mediaDescription": "चित्र, वीडियो और संगीत उत्पन्न करें",
+    "themes": "थीम्स",
+    "themesDescription": "संपूर्ण डैशबोर्ड पैनल के लिए एक रंग थीम चुनें"
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+=======
+    "media": "Media",
+    "mediaDescription": "Generate images, videos, and music",
+    "themes": "Themes",
+    "themesDescription": "Choose a color theme for the whole dashboard panel",
+    "mcp": "MCP",
+    "mcpDescription": "Model Context Protocol server management and tools",
+    "a2a": "A2A",
+    "a2aDescription": "Agent-to-Agent protocol tasks and observability"
+>>>>>>> Stashed changes
   },
   "home": {
     "quickStart": "त्वरित शुरुआत",
@@ -813,10 +1086,24 @@
     "providerModelsTitle": "{provider} - मॉडल",
     "copiedModel": "कॉपी किया गया: {model}",
     "aliasLabel": "उपनाम",
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
     "updateNow": "Update Now",
     "updating": "Updating...",
     "updateAvailableDesc": "A new version is available. Click to update.",
     "updateStarted": "Update started..."
+========
+    "updateNow": "अभी अपडेट करें",
+    "updating": "अद्यतन किया जा रहा है...",
+    "updateAvailableDesc": "एक नया संस्करण उपलब्ध है. अपडेट करने के लिए क्लिक करें.",
+    "updateStarted": "अद्यतन प्रारंभ हुआ..."
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+=======
+    "updateStarted": "Update started...",
+    "updateNow": "Update Now",
+    "updateAvailableDesc": "A new version is available. Click to update.",
+    "updating": "Updating..."
+>>>>>>> Stashed changes
   },
   "analytics": {
     "title": "विश्लेषिकी",
@@ -827,9 +1114,17 @@
     "utilization": "उपयोग",
     "utilizationDescription": "प्रदाता कोटा उपयोग रुझान और दर सीमा ट्रैकिंग",
     "comboHealth": "कॉम्बो स्वास्थ्य",
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
     "comboHealthDescription": "कॉम्बो-स्तरीय कोटा, उपयोग वितरण और प्रदर्शन मेट्रिक्स",
     "compressionAnalyticsTitle": "Compression Analytics",
     "compressionAnalyticsDescription": "Compression analytics — token savings, mode breakdown, and provider stats."
+========
+    "comboHealthDescription": "कॉम्बो-स्तरीय कोटा, उपयोग वितरण और प्रदर्शन मेट्रिक्स"
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+=======
+    "comboHealthDescription": "कॉम्बो-स्तरीय कोटा, उपयोग वितरण और प्रदर्शन मेट्रिक्स"
+>>>>>>> Stashed changes
   },
   "apiManager": {
     "title": "एपीआई कुंजी",
@@ -882,6 +1177,8 @@
     "keyCreatedNote": "इस कुंजी को अभी कॉपी करें और संग्रहीत करें - इसे दोबारा नहीं दिखाया जाएगा।",
     "done": "हो गया",
     "savePermissions": "अनुमतियाँ सहेजें",
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
     "autoResolve": "Auto-Resolve",
     "autoResolveDesc": "Auto-resolve ambiguous model names to native provider for this API key.",
     "keyActive": "Key Active",
@@ -902,6 +1199,30 @@
     "dayThu": "Thu",
     "dayFri": "Fri",
     "daySat": "Sat",
+========
+    "autoResolve": "स्वतः समाधान",
+    "autoResolveDesc": "इस एपीआई कुंजी के लिए मूल प्रदाता के लिए अस्पष्ट मॉडल नामों का स्वतः समाधान करें।",
+    "keyActive": "कुंजी सक्रिय",
+    "keyActiveDesc": "इस एपीआई कुंजी को सक्षम या अक्षम करें। अक्षम कुंजियाँ तुरंत 403 के साथ अस्वीकार कर दी जाती हैं।",
+    "accessSchedule": "प्रवेश अनुसूची",
+    "accessScheduleDesc": "सप्ताह के विशिष्ट घंटों और दिनों तक पहुंच प्रतिबंधित करें।",
+    "scheduleFrom": "से",
+    "scheduleUntil": "तक",
+    "scheduleDays": "दिन",
+    "scheduleTimezone": "समयक्षेत्र",
+    "scheduleTimezoneHint": "IANA समयक्षेत्र नामों का उपयोग करें, उदा. अमेरिका/न्यूयॉर्क, यूरोप/बर्लिन",
+    "scheduleActive": "अनुसूची",
+    "disabled": "विकलांग",
+    "daySun": "रवि",
+    "dayMon": "सोम",
+    "dayTue": "मंगल",
+    "dayWed": "बुध",
+    "dayThu": "गुरु",
+    "dayFri": "शुक्र",
+    "daySat": "शनि",
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+=======
+>>>>>>> Stashed changes
     "allowAll": "सभी को अनुमति दें",
     "restrict": "प्रतिबंधित करें",
     "allowAllInfo": "यह कुंजी सभी उपलब्ध मॉडलों तक पहुंच सकती है.",
@@ -926,7 +1247,14 @@
     "failedUpdatePermissionsRetry": "अनुमतियाँ अद्यतन करने में विफल. कृपया पुन: प्रयास करें।",
     "unknownProvider": "अज्ञात",
     "copyMaskedKey": "नकाबपोश कुंजी की प्रतिलिपि बनाएँ",
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
     "keyOnlyAvailableAtCreation": "Full key available only at creation time — copy it when you first create the key",
+========
+    "keyOnlyAvailableAtCreation": "पूर्ण कुंजी केवल निर्माण के समय उपलब्ध होती है - जब आप पहली बार कुंजी बनाते हैं तो इसे कॉपी करें",
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+=======
+>>>>>>> Stashed changes
     "modelsCount": "{count, plural, one {# model} other {# models}}",
     "lastUsedOn": "अंतिम: {date}",
     "editPermissions": "अनुमतियाँ संपादित करें",
@@ -936,7 +1264,32 @@
     "permissionsTitle": "अनुमतियाँ: {name}",
     "allowAllDesc": "यह कुंजी सभी उपलब्ध मॉडलों तक पहुंच सकती है.",
     "restrictDesc": "यह कुंजी {totalModels} मॉडलों में से {selectedCount} तक पहुंच सकती है।",
+<<<<<<< Updated upstream
     "selectedCount": "{count} चयनित"
+=======
+    "selectedCount": "{count} चयनित",
+    "autoResolve": "Auto-Resolve",
+    "autoResolveDesc": "Auto-resolve ambiguous model names to native provider for this API key.",
+    "keyActive": "Key Active",
+    "keyActiveDesc": "Enable or disable this API key. Disabled keys are immediately rejected with 403.",
+    "accessSchedule": "Access Schedule",
+    "accessScheduleDesc": "Restrict access to specific hours and days of the week.",
+    "scheduleFrom": "From",
+    "scheduleUntil": "Until",
+    "scheduleDays": "Days",
+    "scheduleTimezone": "Timezone",
+    "scheduleTimezoneHint": "Use IANA timezone names, e.g. America/New_York, Europe/Berlin",
+    "scheduleActive": "Schedule",
+    "disabled": "Disabled",
+    "daySun": "Sun",
+    "dayMon": "Mon",
+    "dayTue": "Tue",
+    "dayWed": "Wed",
+    "dayThu": "Thu",
+    "dayFri": "Fri",
+    "daySat": "Sat",
+    "keyOnlyAvailableAtCreation": "Full key available only at creation time — copy it when you first create the key"
+>>>>>>> Stashed changes
   },
   "auditLog": {
     "title": "ऑडिट लॉग",
@@ -961,19 +1314,71 @@
     "previous": "पिछला"
   },
   "media": {
-    "title": "मीडिया प्लेग्राउंड",
-    "subtitle": "छवियाँ, वीडियो और संगीत उत्पन्न करें",
-    "model": "Model",
-    "prompt": "Prompt",
+<<<<<<< Updated upstream
+    "title": "मीडिया खेल का मैदान",
+    "subtitle": "चित्र, वीडियो और संगीत उत्पन्न करें",
+    "model": "मॉडल",
+    "prompt": "शीघ्र",
     "generate": "उत्पन्न करें",
-    "generating": "Generating...",
-    "loadingModels": "Loading available models...",
-    "noModels": "No models available. Configure providers with media capabilities first.",
-    "error": "Generation Failed",
-    "result": "Result",
-    "imageDescription": "Generate images from text prompts using OpenAI, xAI, Together, Hyperbolic, SD WebUI, ComfyUI and more.",
-    "videoDescription": "Create videos with AnimateDiff, Stable Video Diffusion via ComfyUI or SD WebUI.",
-    "musicDescription": "Compose music using Stable Audio Open or MusicGen via ComfyUI."
+    "generating": "उत्पन्न हो रहा है...",
+    "loadingModels": "उपलब्ध मॉडल लोड हो रहे हैं...",
+    "noModels": "कोई मॉडल उपलब्ध नहीं. पहले मीडिया क्षमताओं वाले प्रदाताओं को कॉन्फ़िगर करें।",
+    "error": "पीढ़ी विफल",
+    "result": "नतीजा",
+    "imageDescription": "OpenAI, xAI, टुगेदर, हाइपरबोलिक, SD WebUI, ComfyUI और अन्य का उपयोग करके टेक्स्ट प्रॉम्प्ट से छवियां बनाएं।",
+    "videoDescription": "ComfyUI या SD WebUI के माध्यम से AnimateDiff, स्थिर वीडियो डिफ्यूजन के साथ वीडियो बनाएं।",
+    "musicDescription": "ComfyUI के माध्यम से स्टेबल ऑडियो ओपन या म्यूजिकजेन का उपयोग करके संगीत लिखें।"
+  },
+  "search": {
+    "searchQuery": "खोज क्वेरी",
+    "searchResults": "खोज परिणाम",
+    "cachedResult": "कैश्ड",
+    "searchCost": "लागत",
+    "searchTools": "खोज उपकरण",
+    "searchToolsDesc": "प्रदाता तुलना के साथ उन्नत खोज परीक्षण",
+    "compareProviders": "प्रदाताओं की तुलना करें",
+    "rerankResults": "परिणाम पुनः रैंक करें",
+    "searchHistory": "खोज इतिहास",
+    "urlOverlap": "यूआरएल ओवरलैप",
+    "noSearchProviders": "कोई खोज प्रदाता कॉन्फ़िगर नहीं किया गया. सेटिंग्स में प्रदाता जोड़ें.",
+    "noRerankModels": "कोई रीरैंक मॉडल उपलब्ध नहीं है",
+    "webSearch": "वेब खोज",
+    "provider": "प्रदाता",
+    "searchType": "खोज प्रकार",
+    "maxResults": "अधिकतम परिणाम",
+    "filters": "फिल्टर",
+    "country": "देश",
+    "language": "भाषा",
+    "timeRange": "समय सीमा",
+    "includeDomains": "डोमेन शामिल करें",
+    "excludeDomains": "डोमेन छोड़ें",
+    "safeSearch": "सुरक्षित खोज",
+    "safeSearchOff": "बंद",
+    "safeSearchModerate": "मध्यम",
+    "safeSearchStrict": "सख्त",
+    "queryPlaceholder": "खोज क्वेरी दर्ज करें...",
+    "providerAuto": "ऑटो (सबसे सस्ता)",
+    "searchTypeWeb": "वेब",
+    "searchTypeNews": "समाचार",
+    "optionAny": "कोई भी",
+    "timeRangeDay": "बीता दिन",
+    "timeRangeWeek": "पिछला सप्ताह",
+    "timeRangeMonth": "पिछला महीना",
+    "timeRangeYear": "पिछला साल",
+    "domainPlaceholder": "example.com",
+    "requestTimedOut": "अनुरोध का समय समाप्त हो गया ({seconds}s)",
+    "networkError": "नेटवर्क त्रुटि",
+    "formatted": "स्वरूपित",
+    "rawJson": "JSON",
+    "cacheMiss": "कैश मिस",
+    "cacheHit": "कैश हिट",
+    "latency": "विलंबता",
+    "cost": "लागत",
+    "results": "परिणाम",
+    "rerank": "पुनः रैंक करें",
+    "rerankModel": "रीरैंक मॉडल",
+    "positionDelta": "स्थिति परिवर्तन",
+    "emptyState": "परिणाम देखने के लिए एक खोज क्वेरी भेजें"
   },
   "search": {
     "searchQuery": "Search Query",
@@ -1025,6 +1430,21 @@
     "rerankModel": "Rerank Model",
     "positionDelta": "Position Change",
     "emptyState": "Send a search query to see results"
+=======
+    "title": "मीडिया प्लेग्राउंड",
+    "subtitle": "छवियाँ, वीडियो और संगीत उत्पन्न करें",
+    "model": "Model",
+    "prompt": "Prompt",
+    "generate": "उत्पन्न करें",
+    "generating": "Generating...",
+    "loadingModels": "Loading available models...",
+    "noModels": "No models available. Configure providers with media capabilities first.",
+    "error": "Generation Failed",
+    "result": "Result",
+    "imageDescription": "Generate images from text prompts using OpenAI, xAI, Together, Hyperbolic, SD WebUI, ComfyUI and more.",
+    "videoDescription": "Create videos with AnimateDiff, Stable Video Diffusion via ComfyUI or SD WebUI.",
+    "musicDescription": "Compose music using Stable Audio Open or MusicGen via ComfyUI."
+>>>>>>> Stashed changes
   },
   "cliTools": {
     "title": "सीएलआई उपकरण",
@@ -1057,7 +1477,11 @@
     "configurationSaved": "कॉन्फ़िगरेशन सफलतापूर्वक सहेजा गया.",
     "failedToSave": "कॉन्फ़िगरेशन सहेजने में विफल.",
     "noApiKeysCreateOne": "कोई एपीआई कुंजी नहीं - कुंजी पृष्ठ में एक बनाएं",
+<<<<<<< Updated upstream
+    "defaultOmnirouteKey": "sk_omniroute (default)",
+=======
     "defaultOmnirouteKey": "sk_omniroute (डिफ़ॉल्ट)",
+>>>>>>> Stashed changes
     "selectModel": "मॉडल का चयन करें",
     "selectModelForAlias": "{alias} के लिए मॉडल चुनें",
     "selectModelForTool": "{tool} के लिए मॉडल चुनें",
@@ -1088,7 +1512,11 @@
     "mitmStarted": "एमआईटीएम सफलतापूर्वक शुरू हुआ!",
     "mitmStopped": "एमआईटीएम सफलतापूर्वक बंद हो गया!",
     "failedStart": "एमआईटीएम प्रारंभ करने में विफल",
+<<<<<<< Updated upstream
+    "failedStop": "Failed to stop MITM",
+=======
     "failedStop": "एमआईटीएम को रोकने में विफल",
+>>>>>>> Stashed changes
     "saveMappings": "मैपिंग सहेजें",
     "mappingsSaved": "मैपिंग सहेजी गई!",
     "failedSaveMappings": "मैपिंग सहेजने में विफल",
@@ -1098,11 +1526,22 @@
     "antigravityStep2Prefix": "2. जोड़ें",
     "antigravityStep2Suffix": "आपकी होस्ट फ़ाइल में 127.0.0.1 के रूप में।",
     "antigravityStep3": "3. एंटीग्रेविटी खोलें और अनुरोधों को प्रॉक्सी किया जाएगा।",
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
     "mitmHowWorksDesc": "{toolName} sends requests to its provider endpoint. MITM intercepts and redirects them to OmniRoute.",
     "mitmStep1": "1. Start MITM to route requests through OmniRoute.",
     "mitmStep2Prefix": "2. Add",
     "mitmStep2Suffix": "to your hosts file as 127.0.0.1.",
     "mitmStep3": "3. Open {toolName} and requests will be proxied.",
+========
+    "mitmHowWorksDesc": "{toolName} अपने प्रदाता समापन बिंदु को अनुरोध भेजता है। एमआईटीएम उन्हें रोकता है और ओमनीरूट पर पुनर्निर्देशित करता है।",
+    "mitmStep1": "1. ओमनीरूट के माध्यम से अनुरोधों को रूट करने के लिए एमआईटीएम प्रारंभ करें।",
+    "mitmStep2Prefix": "2. जोड़ें",
+    "mitmStep2Suffix": "आपकी होस्ट फ़ाइल में 127.0.0.1 के रूप में।",
+    "mitmStep3": "3. {toolName} खोलें और अनुरोधों को प्रॉक्सी किया जाएगा।",
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+=======
+>>>>>>> Stashed changes
     "sudoPasswordRequiredTitle": "सूडो पासवर्ड आवश्यक",
     "sudoPasswordHint": "होस्ट फ़ाइल और सिस्टम प्रॉक्सी सेटिंग्स को संशोधित करने के लिए प्रशासक पासवर्ड की आवश्यकता होती है।",
     "enterSudoPassword": "सूडो पासवर्ड डालें",
@@ -1175,6 +1614,7 @@
     "openClawManualConfiguration": "खुला पंजा - मैनुअल कॉन्फ़िगरेशन",
     "clineManualConfiguration": "क्लाइन मैनुअल कॉन्फ़िगरेशन",
     "kiloManualConfiguration": "किलो कोड मैनुअल कॉन्फ़िगरेशन",
+<<<<<<< Updated upstream
     "whenToUseLabel": "कब उपयोग करें",
     "openToolDocs": "टूल दस्तावेज़ खोलें",
     "toolUseCases": {
@@ -1189,11 +1629,17 @@
       "opencode": "जब आप ओपनकोड के माध्यम से टर्मिनल-नेटिव एजेंट रन और स्क्रिप्टेड ऑटोमेशन पसंद करते हैं तो इसका उपयोग करें।",
       "kiro": "किरो को एकीकृत करते समय और ओमनीरूट से केंद्रीय रूप से मॉडल रूटिंग को नियंत्रित करते समय उपयोग करें।",
       "antigravity": "इसका उपयोग तब करें जब एंटीग्रेविटी/किरो ट्रैफिक को एमआईटीएम के माध्यम से रोका जाना चाहिए और ओमनीरूट पर भेजा जाना चाहिए।",
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
       "copilot": "जब आप ओम्निरूट कुंजी और रूटिंग नियमों को लागू करते समय कोपायलट चैट शैली यूएक्स चाहते हैं तो इसका उपयोग करें।",
       "windsurf": "Use when you want an AI-first IDE with Codeium/Windsurf models routed through OmniRoute.",
       "amp": "Use when you want Amp CLI routed through OmniRoute with stable shorthand aliases and OpenAI-compatible setup.",
       "qwen": "Use when you want Qwen Code CLI with OmniRoute-managed provider settings and multi-provider model access."
+========
+      "copilot": "जब आप ओम्निरूट कुंजी और रूटिंग नियमों को लागू करते समय कोपायलट चैट शैली यूएक्स चाहते हैं तो इसका उपयोग करें।"
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
     },
+=======
+>>>>>>> Stashed changes
     "toolDescriptions": {
       "antigravity": "एमआईटीएम के साथ गूगल एंटीग्रेविटी आईडीई",
       "claude": "एंथ्रोपिक क्लाउड कोड सीएलआई",
@@ -1204,12 +1650,26 @@
       "kilo": "किलो कोड एआई असिस्टेंट सीएलआई",
       "cursor": "कर्सर एआई कोड संपादक",
       "continue": "एआई असिस्टेंट जारी रखें",
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
       "opencode": "OpenCode AI coding agent (Terminal)",
       "kiro": "Amazon Kiro — AI-powered IDE",
       "windsurf": "Windsurf AI Code Editor",
       "copilot": "GitHub Copilot AI Assistant",
       "qwen": "Alibaba Qwen Code CLI",
       "amp": "Sourcegraph Amp coding assistant CLI"
+========
+      "opencode": "ओपनकोड एआई कोडिंग एजेंट (टर्मिनल)",
+      "kiro": "अमेज़ॅन किरो - एआई-संचालित आईडीई",
+      "windsurf": "Windsurf AI Code Editor",
+      "copilot": "GitHub Copilot AI Assistant"
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+=======
+      "opencode": "OpenCode AI coding agent (Terminal)",
+      "kiro": "Amazon Kiro — AI-powered IDE",
+      "windsurf": "Windsurf AI Code Editor",
+      "copilot": "GitHub Copilot AI Assistant"
+>>>>>>> Stashed changes
     },
     "guides": {
       "cursor": {
@@ -1259,12 +1719,42 @@
           }
         },
         "notes": {
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
           "0": "Continue uses JSON config file."
+========
+          "0": "JSON कॉन्फ़िग फ़ाइल का उपयोग जारी रखें।"
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+=======
+          "0": "Continue uses JSON config file."
+>>>>>>> Stashed changes
         }
       },
       "opencode": {
         "steps": {
           "1": {
+<<<<<<< Updated upstream
+            "title": "ओपनकोड स्थापित करें",
+            "desc": "एनपीएम के माध्यम से इंस्टॉल करें: एनपीएम इंस्टॉल -जी ओपनकोड-एआई"
+          },
+          "2": {
+            "title": "एपीआई कुंजी"
+          },
+          "3": {
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
+            "title": "Set Base URL",
+            "desc": "opencode config set baseUrl {baseUrl}"
+          },
+          "4": {
+            "title": "Select Model"
+========
+            "title": "बेस यूआरएल सेट करें",
+            "desc": "ओपनकोड कॉन्फ़िगरेशन सेट बेसयूआरएल {{baseUrl}}"
+          },
+          "4": {
+            "title": "मॉडल का चयन करें"
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+=======
             "title": "Install OpenCode",
             "desc": "Install via npm: npm install -g opencode-ai"
           },
@@ -1273,10 +1763,11 @@
           },
           "3": {
             "title": "Set Base URL",
-            "desc": "opencode config set baseUrl {baseUrl}"
+            "desc": "opencode config set baseUrl {{baseUrl}}"
           },
           "4": {
             "title": "Select Model"
+>>>>>>> Stashed changes
           },
           "5": {
             "title": "Use Thinking Variant",
@@ -1284,13 +1775,64 @@
           }
         },
         "notes": {
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
           "0": "OpenCode uses TOML config.",
           "1": "Setup your API key via environment variable."
+========
+          "0": "ओपनकोड को एपीआई कुंजी कॉन्फ़िगरेशन की आवश्यकता है।",
+          "1": "बेस यूआरएल को अपने ओमनीरूट एंडपॉइंट पर सेट करें।"
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+=======
+          "0": "OpenCode uses TOML config.",
+          "1": "Setup your API key via environment variable."
+>>>>>>> Stashed changes
         }
       },
       "kiro": {
         "steps": {
           "1": {
+<<<<<<< Updated upstream
+            "title": "किरो सेटिंग्स खोलें",
+            "desc": "सेटिंग्स → एआई प्रदाता पर जाएं"
+          },
+          "2": {
+            "title": "आधार यूआरएल",
+            "desc": "अपना ओम्निरूट एंडपॉइंट यूआरएल चिपकाएँ"
+          },
+          "3": {
+            "title": "एपीआई कुंजी"
+          },
+          "4": {
+            "title": "मॉडल का चयन करें"
+          }
+        },
+        "notes": {
+          "0": "किरो को अमेज़न खाते की आवश्यकता है।"
+        }
+      },
+      "windsurf": {
+        "steps": {
+          "1": {
+            "title": "Open AI Settings",
+            "desc": "Click the AI Settings icon in Windsurf or go to Settings"
+          },
+          "2": {
+            "title": "Add Custom Provider",
+            "desc": "Select \"Add custom provider\" (OpenAI-compatible)"
+          },
+          "3": {
+            "title": "Base URL",
+            "desc": "http://127.0.0.1:20128/v1"
+          },
+          "4": {
+            "title": "API Key",
+            "desc": "Select your OmniRoute API key"
+          },
+          "5": {
+            "title": "Select Model",
+            "desc": "Choose a model from the dropdown"
+=======
             "title": "Open Kiro Settings",
             "desc": "Go to Settings → AI Provider"
           },
@@ -1303,6 +1845,7 @@
           },
           "4": {
             "title": "Select Model"
+>>>>>>> Stashed changes
           }
         },
         "notes": {
@@ -1332,6 +1875,7 @@
             "desc": "Choose a model from the dropdown"
           }
         }
+<<<<<<< Updated upstream
       }
     },
     "autoConfiguredTab": "Auto Configured Tab",
@@ -1341,6 +1885,55 @@
     "mitmClientsTab": "Mitm Clients Tab",
     "toolCategories": "Tool Categories",
     "visibleToolsCount": "Visible Tools Count"
+=======
+      },
+      "windsurf": {
+        "steps": {
+          "1": {
+            "title": "Open AI Settings",
+            "desc": "Click the AI Settings icon in Windsurf or go to Settings"
+          },
+          "2": {
+            "title": "Add Custom Provider",
+            "desc": "Select \"Add custom provider\" (OpenAI-compatible)"
+          },
+          "3": {
+            "title": "Base URL",
+            "desc": "http://127.0.0.1:20128/v1"
+          },
+          "4": {
+            "title": "API Key",
+            "desc": "Select your OmniRoute API key"
+          },
+          "5": {
+            "title": "Select Model",
+            "desc": "Choose a model from the dropdown"
+          }
+        }
+      }
+    },
+    "mitmHowWorksDesc": "{toolName} sends requests to its provider endpoint. MITM intercepts and redirects them to OmniRoute.",
+    "mitmStep1": "1. Start MITM to route requests through OmniRoute.",
+    "mitmStep2Prefix": "2. Add",
+    "mitmStep2Suffix": "to your hosts file as 127.0.0.1.",
+    "mitmStep3": "3. Open {toolName} and requests will be proxied.",
+    "whenToUseLabel": "कब उपयोग करें",
+    "openToolDocs": "टूल दस्तावेज़ खोलें",
+    "toolUseCases": {
+      "claude": "जब आप क्लाउड कोड के साथ मजबूत नियोजन वर्कफ़्लो और लंबे मल्टी-फ़ाइल रिफैक्टर चाहते हों तो इसका उपयोग करें।",
+      "codex": "जब आपकी टीम OpenAI कोडेक्स CLI प्रवाह और प्रोफ़ाइल-आधारित प्रमाणीकरण पर मानकीकृत हो तो इसका उपयोग करें।",
+      "droid": "जब आपको तेज़ कोडिंग और कमांड निष्पादन लूप पर केंद्रित हल्के टर्मिनल एजेंट की आवश्यकता हो तो इसका उपयोग करें।",
+      "openclaw": "जब आप ओपन क्लॉ स्टाइल कोडिंग एजेंट चाहते हैं लेकिन ओमनीरूट नीतियों के माध्यम से रूट किया जाता है तो इसका उपयोग करें।",
+      "cline": "जब आप संपादकों के अंदर कोडिंग एजेंटों को कॉन्फ़िगर करते हैं और ओमनीरूट मॉडल के साथ निर्देशित सेटअप चाहते हैं तो इसका उपयोग करें।",
+      "kilo": "इसका उपयोग तब करें जब आपका वर्कफ़्लो किलो कोड कमांड और तेज़ पुनरावृत्त संपादन पर निर्भर हो।",
+      "cursor": "कर्सर में कोडिंग करते समय उपयोग करें और आपको ओमनीरूट के माध्यम से कस्टम ओपनएआई-संगत मॉडल की आवश्यकता है।",
+      "continue": "IDE में जारी रखें चलाते समय उपयोग करें और आपको पोर्टेबल JSON-आधारित प्रदाता कॉन्फ़िगरेशन की आवश्यकता है।",
+      "opencode": "जब आप ओपनकोड के माध्यम से टर्मिनल-नेटिव एजेंट रन और स्क्रिप्टेड ऑटोमेशन पसंद करते हैं तो इसका उपयोग करें।",
+      "kiro": "किरो को एकीकृत करते समय और ओमनीरूट से केंद्रीय रूप से मॉडल रूटिंग को नियंत्रित करते समय उपयोग करें।",
+      "antigravity": "इसका उपयोग तब करें जब एंटीग्रेविटी/किरो ट्रैफिक को एमआईटीएम के माध्यम से रोका जाना चाहिए और ओमनीरूट पर भेजा जाना चाहिए।",
+      "copilot": "जब आप ओम्निरूट कुंजी और रूटिंग नियमों को लागू करते समय कोपायलट चैट शैली यूएक्स चाहते हैं तो इसका उपयोग करें।"
+    }
+>>>>>>> Stashed changes
   },
   "combos": {
     "title": "संयोजन",
@@ -1396,8 +1989,13 @@
     "randomDesc": "समान यादृच्छिक चयन, फिर शेष मॉडलों पर वापस लौटना",
     "leastUsedDesc": "समय के साथ लोड को संतुलित करते हुए, सबसे कम अनुरोधों वाला मॉडल चुनता है",
     "costOptimizedDesc": "मूल्य निर्धारण के आधार पर सबसे पहले सबसे सस्ते मॉडल पर रूट करें",
+<<<<<<< Updated upstream
+    "strictRandom": "सख्त यादृच्छिक",
+    "strictRandomDesc": "शफ़ल डेक - फेरबदल से पहले प्रत्येक मॉडल का एक बार उपयोग करता है",
+=======
     "strictRandom": "Strict Random",
     "strictRandomDesc": "Shuffle deck — uses each model once before reshuffling",
+>>>>>>> Stashed changes
     "models": "मॉडल",
     "autoBalance": "स्वत: संतुलन",
     "advancedSettings": "उन्नत सेटिंग्स",
@@ -1412,6 +2010,48 @@
     "weighted": "भारित",
     "leastUsed": "सबसे कम इस्तेमाल किया गया",
     "costOpt": "लागत-विकल्प",
+<<<<<<< Updated upstream
+    "strategyGuideTitle": "इस रणनीति का उपयोग कैसे करें",
+    "strategyGuideWhen": "कब उपयोग करें",
+    "strategyGuideAvoid": "कब बचें",
+    "strategyGuideExample": "उदाहरण",
+    "strategyGuide": {
+      "priority": {
+        "when": "आपके पास एक पसंदीदा मॉडल है और आप केवल विफलता पर वापसी चाहते हैं।",
+        "avoid": "आपको सभी मॉडलों में अनुरोध वितरण की आवश्यकता है।",
+        "example": "आउटेज के लिए सस्ते बैकअप के साथ प्राथमिक कोडिंग मॉडल।"
+      },
+      "weighted": {
+        "when": "आपको विभिन्न मॉडलों में नियंत्रित ट्रैफ़िक विभाजन की आवश्यकता है।",
+        "avoid": "आप समय के साथ सटीक वज़न बनाए नहीं रख सकते।",
+        "example": "80% स्थिर मॉडल + 20% कैनरी मॉडल रोलआउट।"
+      },
+      "round-robin": {
+        "when": "आप पूर्वानुमानित और समान वितरण चाहते हैं।",
+        "avoid": "मॉडल विलंबता या लागत में बहुत भिन्न होते हैं।",
+        "example": "थ्रूपुट फैलाने के लिए एकाधिक खातों पर एक ही मॉडल।"
+      },
+      "random": {
+        "when": "आप न्यूनतम सेटअप के साथ सरल वितरण चाहते हैं।",
+        "avoid": "आपको सख्त यातायात गारंटी की आवश्यकता है।",
+        "example": "समकक्ष मॉडलों के साथ त्वरित प्रोटोटाइप।"
+      },
+      "least-used": {
+        "when": "आप लाइव मांग के आधार पर अनुकूली संतुलन चाहते हैं।",
+        "avoid": "उपयोग संतुलन से लाभ पाने के लिए ट्रैफ़िक बहुत कम है।",
+        "example": "मिश्रित कार्यभार जहां एक मॉडल अक्सर अतिभारित हो जाता है।"
+      },
+      "cost-optimized": {
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
+        "when": "Cost reduction is your top priority.",
+        "avoid": "Pricing data is missing or outdated.",
+        "example": "Background or batch jobs where lower cost is preferred."
+========
+        "when": "लागत में कमी आपकी सर्वोच्च प्राथमिकता है.",
+        "avoid": "मूल्य निर्धारण डेटा गायब है या पुराना है।",
+        "example": "पृष्ठभूमि या बैच की नौकरियाँ जहाँ कम लागत को प्राथमिकता दी जाती है।"
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+=======
     "strategyGuideTitle": "How to use this strategy",
     "strategyGuideWhen": "When to use",
     "strategyGuideAvoid": "Avoid when",
@@ -1446,11 +2086,14 @@
         "when": "Cost reduction is your top priority.",
         "avoid": "Pricing data is missing or outdated.",
         "example": "Background or batch jobs where lower cost is preferred."
+>>>>>>> Stashed changes
       },
       "strict-random": {
         "when": "Use when you want perfectly even spread — each model used once before repeating.",
         "avoid": "Avoid when models have different quality or latency and order matters.",
         "example": "Example: Multiple accounts of the same model to distribute usage evenly."
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
       },
       "p2c": {
         "when": "Use when you want low-latency selection using Power-of-Two-Choices algorithm.",
@@ -1461,6 +2104,98 @@
         "when": "Use when long sessions must survive account rotation without losing the working context.",
         "avoid": "Avoid when account switching is rare or when you do not want extra summarization requests.",
         "example": "Example: Codex sessions that rotate across multiple accounts near quota exhaustion."
+========
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+      }
+    },
+    "advancedHelp": {
+      "maxRetries": "अनुरोध विफल होने से पहले कितने पुनः प्रयास किए गए।",
+      "retryDelay": "पुनः प्रयास के बीच आरंभिक प्रतीक्षा. उच्च मान विस्फोट दबाव को कम करते हैं।",
+      "timeout": "निरस्त करने से पहले अधिकतम अनुरोध अवधि.",
+      "healthcheck": "अस्वस्थ मॉडलों/प्रदाताओं को रूटिंग निर्णयों से हटा देता है।",
+      "concurrencyPerModel": "राउंड-रॉबिन में प्रति मॉडल अधिकतम एक साथ अनुरोध की अनुमति।",
+      "queueTimeout": "कोई अनुरोध समय समाप्त होने से पहले कितनी देर तक कतार में प्रतीक्षा कर सकता है।"
+    },
+    "templatesTitle": "त्वरित टेम्पलेट्स",
+    "templatesDescription": "एक प्रारंभिक प्रोफ़ाइल लागू करें, फिर मॉडल और कॉन्फ़िगरेशन समायोजित करें।",
+    "templateApply": "टेम्पलेट लागू करें",
+    "templateHighAvailability": "उच्च उपलब्धता",
+    "templateHighAvailabilityDesc": "स्वास्थ्य जांच और सुरक्षित पुनः प्रयास के साथ प्राथमिकता रूटिंग।",
+    "templateCostSaver": "लागत बचाने वाला",
+    "templateCostSaverDesc": "बजट-प्रथम कार्यभार के लिए लागत-अनुकूलित रूटिंग।",
+    "templateBalanced": "संतुलित भार",
+    "templateBalancedDesc": "समय के साथ मांग फैलाने के लिए कम से कम उपयोग की जाने वाली रूटिंग।",
+    "usageGuideHide": "छिपाओ",
+    "usageGuideDontShowAgain": "दोबारा मत दिखाना",
+    "usageGuideShow": "गाइड दिखाएँ",
+    "quickTestTitle": "कॉम्बो सत्यापन के लिए तैयार है",
+    "quickTestDescription": "फ़ॉलबैक और विलंबता व्यवहार की पुष्टि के लिए अभी एक परीक्षण चलाएँ।",
+    "testNow": "अभी परीक्षण करें",
+    "pricingCoverage": "मूल्य निर्धारण कवरेज",
+    "pricingCoverageHint": "लागत-अनुकूलित तब सबसे अच्छा काम करता है जब सभी कॉम्बो मॉडलों की कीमत तय हो।",
+    "pricingAvailable": "मूल्य उपलब्ध है",
+    "pricingMissing": "कोई कीमत नहीं",
+    "pricingAvailableShort": "कीमत",
+    "pricingMissingShort": "कोई कीमत नहीं",
+    "warningRoundRobinSingleModel": "राउंड-रॉबिन कम से कम 2 मॉडलों के साथ सबसे उपयोगी है।",
+    "warningCostOptimizedPartialPricing": "{total} मॉडलों में से केवल {priced} का मूल्य निर्धारित है। रूटिंग आंशिक रूप से लागत-जागरूक हो सकती है।",
+    "warningCostOptimizedNoPricing": "इस कॉम्बो के लिए कोई मूल्य निर्धारण डेटा नहीं मिला। लागत-अनुकूलित अप्रत्याशित रूप से मार्ग बदल सकता है।",
+    "readinessTitle": "बचाने के लिए तैयार हैं?",
+    "readinessDescription": "इस कॉम्बो को बनाने या अपडेट करने से पहले चेकलिस्ट की समीक्षा करें।",
+    "readinessCheckName": "कॉम्बो नाम मान्य है",
+    "readinessCheckModels": "कम से कम एक मॉडल चुना गया है",
+    "readinessCheckWeights": "भारित कुल 100% है",
+    "readinessCheckWeightsOptional": "वज़न नियम की आवश्यकता नहीं है",
+    "readinessCheckPricing": "मूल्य निर्धारण डेटा उपलब्ध है",
+    "readinessCheckPricingOptional": "मूल्य निर्धारण नियम की आवश्यकता नहीं है",
+    "saveBlockedTitle": "निम्नलिखित आइटम ठीक होने तक सेव अवरुद्ध है:",
+    "saveBlockName": "एक कॉम्बो नाम परिभाषित करें.",
+    "saveBlockModels": "कम से कम एक मॉडल जोड़ें.",
+    "saveBlockWeighted": "वज़न को 100% पर सेट करें (वर्तमान: {total}%)।",
+    "saveBlockPricing": "कम से कम एक मॉडल के लिए मूल्य निर्धारण जोड़ें या एक अलग रणनीति चुनें।",
+    "recommendationsLabel": "अनुशंसित सेटअप",
+    "applyRecommendations": "सिफ़ारिशें लागू करें",
+    "recommendationsUpdated": "{strategy} के लिए सिफ़ारिशें अपडेट की गईं।",
+    "recommendationsApplied": "सिफ़ारिशें इस कॉम्बो पर लागू होती हैं.",
+    "strategyRecommendations": {
+      "priority": {
+        "title": "असफल-सुरक्षित आधार रेखा",
+        "description": "एक प्राथमिक मॉडल का उपयोग करें और फ़ॉलबैक श्रृंखला को छोटा और विश्वसनीय रखें।",
+        "tip1": "अपना सबसे विश्वसनीय मॉडल पहले रखें।",
+        "tip2": "समान गुणवत्ता वाले 1-2 बैकअप मॉडल रखें।",
+        "tip3": "क्षणिक प्रदाता विफलताओं को अवशोषित करने के लिए सुरक्षित पुनः प्रयास का उपयोग करें।"
+      },
+      "weighted": {
+        "title": "नियंत्रित यातायात विभाजन",
+        "description": "कैनरी रोलआउट और मॉडलों के बीच क्रमिक माइग्रेशन के लिए बढ़िया।",
+        "tip1": "90/10 जैसे रूढ़िवादी विभाजन से शुरुआत करें।",
+        "tip2": "कुल को 100% पर रखें और परिवर्तन के बाद स्वतः-संतुलन रखें।",
+        "tip3": "कैनरी वजन बढ़ाने से पहले सफलता और विलंबता की निगरानी करें।"
+      },
+      "round-robin": {
+        "title": "पूर्वानुमानित लोड साझाकरण",
+        "description": "सबसे अच्छा तब होता है जब मॉडल समतुल्य हों और आपको सुचारू वितरण की आवश्यकता हो।",
+        "tip1": "कम से कम 2 मॉडल का उपयोग करें.",
+        "tip2": "बर्स्ट ओवरलोड से बचने के लिए समवर्ती सीमाएँ निर्धारित करें।",
+        "tip3": "संतृप्ति के तहत तेजी से विफल होने के लिए कतार टाइमआउट का उपयोग करें।"
+      },
+      "random": {
+        "title": "कम सेटअप के साथ त्वरित प्रसार",
+        "description": "जब आपको सख्त गारंटी के बिना सरल वितरण की आवश्यकता हो तो इसका उपयोग करें।",
+        "tip1": "समान विलंबता प्रोफ़ाइल वाले मॉडल का उपयोग करें.",
+        "tip2": "यादृच्छिक चूक को अवशोषित करने के लिए पुनः प्रयास सक्षम रखें।",
+        "tip3": "प्रयोग के लिए इसे प्राथमिकता दें, सख्त एसएलए को नहीं।"
+      },
+      "least-used": {
+        "title": "अनुकूली संतुलन",
+        "description": "समय के साथ हॉटस्पॉट को कम करने के लिए कम उपयोग किए जाने वाले मॉडलों का रूट।",
+        "tip1": "निरंतर यातायात के तहत बेहतर काम करता है।",
+        "tip2": "सुरक्षित संतुलन के लिए स्वास्थ्य जांच के साथ संयोजन करें।",
+        "tip3": "वितरण लाभ को मान्य करने के लिए प्रति-मॉडल उपयोग को ट्रैक करें।"
+      },
+      "cost-optimized": {
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
+=======
       }
     },
     "advancedHelp": {
@@ -1549,11 +2284,22 @@
         "tip3": "Track per-model usage to validate distribution gains."
       },
       "cost-optimized": {
+>>>>>>> Stashed changes
         "title": "Budget-first routing",
         "description": "Routes to lower-cost models when pricing metadata is available.",
         "tip1": "Ensure pricing coverage for all selected models.",
         "tip2": "Keep a quality fallback for hard prompts.",
         "tip3": "Use for batch/background jobs where cost is the main KPI."
+<<<<<<< Updated upstream
+========
+        "title": "बजट-प्रथम रूटिंग",
+        "description": "मूल्य निर्धारण मेटाडेटा उपलब्ध होने पर कम लागत वाले मॉडल के लिए रूट।",
+        "tip1": "सभी चयनित मॉडलों के लिए मूल्य निर्धारण कवरेज सुनिश्चित करें।",
+        "tip2": "कठिन संकेतों के लिए गुणवत्तापूर्ण फ़ॉलबैक रखें।",
+        "tip3": "बैच/पृष्ठभूमि नौकरियों के लिए उपयोग करें जहां लागत मुख्य KPI है।"
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+=======
+>>>>>>> Stashed changes
       },
       "strict-random": {
         "title": "Shuffle deck distribution",
@@ -1563,6 +2309,8 @@
         "tip3": "Ideal for load balancing across multiple API accounts."
       }
     },
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
     "templateFreeStack": "Free Stack ($0)",
     "templateFreeStackDesc": "Round-robin across all free providers: Kiro (Claude), Qoder (5 models), Qwen (4 models), Gemini CLI. Zero cost, never stops coding.",
     "auto": "Auto Combo",
@@ -1691,6 +2439,14 @@
     "incidentMode": "Incident Mode",
     "reviewSteps": "Steps",
     "excludedProviders": "Excluded Providers"
+========
+    "templateFreeStack": "मुफ़्त स्टैक ($0)",
+    "templateFreeStackDesc": "सभी निःशुल्क प्रदाताओं में राउंड-रॉबिन: किरो (क्लाउड), आईफ्लो (5 मॉडल), क्वेन (4 मॉडल), जेमिनी सीएलआई। शून्य लागत, कोडिंग कभी बंद नहीं होती।"
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+=======
+    "templateFreeStack": "Free Stack ($0)",
+    "templateFreeStackDesc": "Round-robin across all free providers: Kiro (Claude), Qoder (5 models), Qwen (4 models), Gemini CLI. Zero cost, never stops coding."
+>>>>>>> Stashed changes
   },
   "costs": {
     "title": "लागत",
@@ -1699,6 +2455,7 @@
     "breakdown": "लागत विच्छेदन",
     "noData": "कोई लागत डेटा नहीं",
     "byModel": "मॉडल द्वारा",
+<<<<<<< Updated upstream
     "byProvider": "प्रदाता द्वारा",
     "spend30d": "Spend30D",
     "activeModels": "Active Models",
@@ -1717,6 +2474,9 @@
     "noCostDataTitle": "No Cost Data Title",
     "topModels": "Top Models",
     "requestsInWindow": "Requests In Window"
+=======
+    "byProvider": "प्रदाता द्वारा"
+>>>>>>> Stashed changes
   },
   "endpoint": {
     "title": "एपीआई समापन बिंदु",
@@ -1735,7 +2495,10 @@
     "disableCloud": "बादल अक्षम करें",
     "enableCloud": "क्लाउड सक्षम करें",
     "modelsAcrossEndpoints": "{models} मॉडल {endpoints} समापन बिंदु पर",
+<<<<<<< Updated upstream
     "loadingModels": "Loading available models...",
+=======
+>>>>>>> Stashed changes
     "chatDesc": "सभी प्रदाताओं के साथ स्ट्रीमिंग और गैर-स्ट्रीमिंग चैट",
     "embeddings": "एंबेडिंग",
     "embeddingsDesc": "खोज और RAG पाइपलाइनों के लिए टेक्स्ट एम्बेडिंग",
@@ -1748,6 +2511,10 @@
     "textToSpeech": "पाठ से वाक्",
     "textToSpeechDesc": "पाठ को प्राकृतिक-ध्वनि वाले भाषण में बदलें",
     "moderations": "संयम",
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
+=======
+>>>>>>> Stashed changes
     "moderationsDesc": "सामग्री मॉडरेशन और सुरक्षा वर्गीकरण",
     "responsesDesc": "OpenAI Responses API for Codex and advanced agentic workflows",
     "listModelsDesc": "List all available models across all connected providers",
@@ -1755,12 +2522,31 @@
     "settingsApi": "Settings API",
     "categoryCore": "कोर API",
     "categoryMedia": "मीडिया और मल्टी-मोडल",
+<<<<<<< Updated upstream
     "categorySearch": "Search & Discovery",
     "categoryUtility": "उपयोगिता और प्रबंधन",
     "webSearch": "Web Search",
     "webSearchDesc": "Unified web search across multiple providers with automatic failover and caching",
     "searchProvider": "Search Provider",
     "searchProviderDesc": "This provider is used for web search via POST /v1/search. No model configuration needed — search providers are ready to use once an API key is connected.",
+========
+    "moderationsDesc": "Content moderation and safety classification",
+    "responsesDesc": "कोडेक्स और उन्नत एजेंटिक वर्कफ़्लो के लिए ओपनएआई रिस्पॉन्स एपीआई",
+    "listModelsDesc": "सभी कनेक्टेड प्रदाताओं में सभी उपलब्ध मॉडलों की सूची बनाएं",
+    "settingsApiDesc": "एपीआई के माध्यम से ओमनीरूट कॉन्फ़िगरेशन को पढ़ें और संशोधित करें",
+    "settingsApi": "सेटिंग्स एपीआई",
+    "categoryCore": "कोर एपीआई",
+    "categoryMedia": "मीडिया और मल्टी-मॉडल",
+    "categorySearch": "खोज एवं खोज",
+    "categoryUtility": "उपयोगिता एवं प्रबंधन",
+    "webSearch": "वेब खोज",
+    "webSearchDesc": "स्वचालित फ़ेलओवर और कैशिंग के साथ कई प्रदाताओं में एकीकृत वेब खोज",
+    "searchProvider": "प्रदाता खोजें",
+    "searchProviderDesc": "इस प्रदाता का उपयोग POST /v1/search के माध्यम से वेब खोज के लिए किया जाता है। किसी मॉडल कॉन्फ़िगरेशन की आवश्यकता नहीं है - एपीआई कुंजी कनेक्ट होने के बाद खोज प्रदाता उपयोग के लिए तैयार हैं।",
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+=======
+    "categoryUtility": "उपयोगिता और प्रबंधन",
+>>>>>>> Stashed changes
     "enableCloudTitle": "क्लाउड प्रॉक्सी सक्षम करें",
     "whatYouGet": "तुम्हें क्या मिलेगा",
     "cloudBenefitAccess": "दुनिया में कहीं से भी अपने एपीआई तक पहुंचें",
@@ -1793,6 +2579,7 @@
     "cloudWorkerUnreachable": "क्लाउड वर्कर तक नहीं पहुंच सका. सुनिश्चित करें कि क्लाउड सेवा चल रही है (npm run dev in /cloud)।",
     "connectionFailed": "कनेक्शन विफल",
     "syncFailed": "क्लाउड डेटा सिंक करने में विफल",
+<<<<<<< Updated upstream
     "cloudflaredTitle": "Cloudflare Quick Tunnel",
     "cloudflaredDescription": "Create a Cloudflare Quick Tunnel for this endpoint to make it accessible from the internet without configuring DNS.",
     "cloudflaredUrlNotice": "Creates a temporary Cloudflare Quick Tunnel. URLs change after restart.",
@@ -1812,6 +2599,8 @@
     "cloudflaredUnsupportedNote": "This platform is not supported for managed installation.",
     "cloudflaredIdleNote": "Create a temporary Cloudflare Quick Tunnel for this endpoint.",
     "cloudflaredLastError": "Last error: {error}",
+=======
+>>>>>>> Stashed changes
     "providerModelsTitle": "{provider} - मॉडल",
     "noModelsForProvider": "इस प्रदाता के लिए कोई मॉडल उपलब्ध नहीं है.",
     "chat": "बातचीत",
@@ -1819,6 +2608,10 @@
     "image": "छवि",
     "custom": "कस्टम",
     "modelsCount": "{count, plural, one {# model} other {# models}}",
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
+=======
+>>>>>>> Stashed changes
     "sectionTitle": "Integration Surface",
     "sectionDescription": "OpenAI-compatible APIs and operational protocol endpoints",
     "tabApis": "OpenAI-compatible APIs",
@@ -1847,6 +2640,7 @@
     "a2aQuickStartStep3": "Track and control tasks using `tasks/get` and `tasks/cancel`.",
     "completionsLegacy": "Completions (Legacy)",
     "completionsLegacyDesc": "Legacy OpenAI text completions — accepts both prompt string and messages array format",
+<<<<<<< Updated upstream
     "musicDesc": "Generate music and audio tracks via ComfyUI (Stable Audio, MusicGen)",
     "musicGeneration": "Music Generation",
     "videoGeneration": "Video Generation",
@@ -1895,7 +2689,136 @@
     "featureWebhooks": "Webhook configuration and event subscriptions",
     "featureSwagger": "OpenAPI / Swagger spec auto-generation",
     "featureAuth": "API key and OAuth scope management per endpoint"
+========
+    "sectionTitle": "एकीकरण सतह",
+    "sectionDescription": "ओपनएआई-संगत एपीआई और परिचालन प्रोटोकॉल एंडपॉइंट",
+    "tabApis": "OpenAI-संगत एपीआई",
+    "tabProtocols": "प्रोटोकॉल",
+    "tabsAria": "समापन बिंदु अनुभाग",
+    "protocolsTitle": "प्रोटोकॉल",
+    "protocolsDescription": "MCP और A2A समर्पित अवलोकन और नियंत्रण के साथ प्रथम श्रेणी के समापन बिंदु हैं।",
+    "mcpCardTitle": "MCP Server",
+    "mcpCardDescription": "stdio पर मॉडल संदर्भ प्रोटोकॉल",
+    "a2aCardTitle": "A2A सर्वर",
+    "a2aCardDescription": "Agent2Agent JSON-RPC समापन बिंदु",
+    "protocolToolsLabel": "उपकरण",
+    "protocolTasksLabel": "कार्य",
+    "protocolActiveStreamsLabel": "सक्रिय धाराएँ",
+    "protocolLastActivity": "अंतिम गतिविधि",
+    "quickStart": "त्वरित शुरुआत",
+    "openMcpDashboard": "एमसीपी प्रबंधन खोलें",
+    "openA2aDashboard": "A2A प्रबंधन खोलें",
+    "mcpQuickStartTitle": "एमसीपी त्वरित प्रारंभ",
+    "mcpQuickStartStep1": "MCP सर्वर को `omniroute --mcp` के माध्यम से चलाएँ।",
+    "mcpQuickStartStep2": "stdio ट्रांसपोर्ट से जुड़ने के लिए अपने MCP क्लाइंट को कॉन्फ़िगर करें।",
+    "mcpQuickStartStep3": "`omniroute_get_health` और `omniroute_list_combos` जैसे टूल लागू करें।",
+    "a2aQuickStartTitle": "A2A त्वरित प्रारंभ",
+    "a2aQuickStartStep1": "`/.well-known/agent.json` पर एजेंट कार्ड खोजें।",
+    "a2aQuickStartStep2": "`message/send` या `message/stream` का उपयोग करके JSON-RPC अनुरोधों को `POST /a2a` पर भेजें।",
+    "a2aQuickStartStep3": "`कार्य/प्राप्त करें` और `कार्य/रद्द करें` का उपयोग करके कार्यों को ट्रैक और नियंत्रित करें।",
+    "completionsLegacy": "पूर्णताएँ (विरासत)",
+    "completionsLegacyDesc": "लीगेसी ओपनएआई टेक्स्ट पूर्णताएँ - शीघ्र स्ट्रिंग और संदेश सरणी प्रारूप दोनों को स्वीकार करती हैं",
+=======
+    "categorySearch": "Search & Discovery",
+    "webSearch": "Web Search",
+    "webSearchDesc": "Unified web search across multiple providers with automatic failover and caching",
+    "searchProvider": "Search Provider",
+    "searchProviderDesc": "This provider is used for web search via POST /v1/search. No model configuration needed — search providers are ready to use once an API key is connected.",
+>>>>>>> Stashed changes
+    "cloudflaredDescription": "Create a Cloudflare Quick Tunnel for this endpoint to make it accessible from the internet without configuring DNS.",
+    "cloudflaredDisable": "Stop Tunnel",
+    "cloudflaredEnable": "Enable Tunnel",
+    "cloudflaredError": "Error",
+    "cloudflaredIdleNote": "Create a temporary Cloudflare Quick Tunnel for this endpoint.",
+    "cloudflaredInstallAndEnable": "Install & Enable",
+    "cloudflaredLastError": "Last error: {error}",
+    "cloudflaredNotInstalled": "Not installed",
+    "cloudflaredRequestFailed": "Failed to update Cloudflare tunnel",
+    "cloudflaredRunning": "Running",
+    "cloudflaredStarted": "Cloudflare tunnel started",
+    "cloudflaredStarting": "Starting",
+    "cloudflaredStopped": "Cloudflare tunnel stopped",
+    "cloudflaredStoppedState": "Stopped",
+    "cloudflaredTemporaryNote": "Quick Tunnel URLs are temporary and will change after restart.",
+    "cloudflaredTitle": "Cloudflare Quick Tunnel",
+    "cloudflaredUnsupported": "Unsupported",
+    "cloudflaredUnsupportedNote": "This platform is not supported for managed installation.",
+    "cloudflaredUrlNotice": "Creates a temporary Cloudflare Quick Tunnel. URLs change after restart."
   },
+<<<<<<< Updated upstream
+  "endpoints": {
+    "tabProxy": "समापन बिंदु प्रॉक्सी",
+    "tabApiEndpoints": "एपीआई समापन बिंदु",
+    "apiEndpointsTitle": "एपीआई समापन बिंदु",
+    "apiEndpointsDescription": "बैकएंड एपीआई एंडपॉइंट जिनका उपयोग अन्य एप्लिकेशन और सेवाओं द्वारा किया जा सकता है। यह अनुभाग दस्तावेज़ीकरण और परीक्षण क्षमताओं के साथ सभी उपलब्ध REST API को सूचीबद्ध करेगा।",
+    "comingSoon": "जल्द आ रहा है",
+    "plannedFeatures": "नियोजित विशेषताएँ",
+    "featureRestApi": "इंटरैक्टिव दस्तावेज़ीकरण के साथ REST API एंडपॉइंट कैटलॉग",
+    "featureWebhooks": "वेबहुक कॉन्फ़िगरेशन और ईवेंट सदस्यताएँ",
+    "featureSwagger": "ओपनएपीआई / स्वैगर स्पेक ऑटो-जेनरेशन",
+    "featureAuth": "एपीआई कुंजी और OAuth स्कोप प्रबंधन प्रति समापन बिंदु"
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+  },
+  "mcpDashboard": {
+    "loading": "एमसीपी डैशबोर्ड लोड हो रहा है...",
+    "activate": "सक्रिय करें",
+    "deactivate": "निष्क्रिय करें",
+    "confirmSwitchCombo": "{action} कॉम्बो \"{combo}\" की पुष्टि करें?",
+    "switchComboFailed": "कॉम्बो स्थिति स्विच करने में विफल.",
+    "switchComboSuccess": "कॉम्बो \"{combo}\" अपडेट किया गया।",
+    "confirmApplyProfile": "लचीलापन प्रोफ़ाइल \"{profile}\" लागू करें?",
+    "applyProfileFailed": "लचीलापन प्रोफ़ाइल लागू करने में विफल.",
+    "applyProfileSuccess": "प्रोफ़ाइल \"{profile}\" लागू की गई.",
+    "confirmResetBreakers": "सभी सर्किट ब्रेकर रीसेट करें?",
+    "resetBreakersFailed": "सर्किट ब्रेकरों को रीसेट करने में विफल।",
+    "resetBreakersSuccess": "सर्किट ब्रेकर रीसेट।",
+    "processStatus": "प्रक्रिया की स्थिति",
+    "online": "ऑनलाइन",
+    "offline": "ऑफ़लाइन",
+    "pid": "पीआईडी",
+    "sessionUptime": "सत्र अपटाइम",
+    "lastHeartbeat": "आखिरी दिल की धड़कन",
+    "activity24h": "गतिविधि (24 घंटे)",
+    "totalCalls": "कुल कॉल",
+    "successRate": "सफलता दर",
+    "avgLatency": "औसत विलंबता",
+    "topTools": "शीर्ष उपकरण",
+    "noToolCalls24h": "पिछले 24 घंटों में कोई टूल कॉल नहीं.",
+    "runtimeDetails": "रनटाइम विवरण",
+    "transport": "परिवहन",
+    "scopesEnforced": "दायरा लागू किया गया",
+    "yes": "हाँ",
+    "no": "नहीं",
+    "lastCall": "आखिरी कॉल",
+    "heartbeatPath": "दिल की धड़कन का रास्ता",
+    "operationalControls": "परिचालन नियंत्रण",
+    "switchCombo": "कॉम्बो स्विच करें",
+    "inactive": "निष्क्रिय",
+    "active": "सक्रिय",
+    "activateCombo": "कॉम्बो सक्रिय करें",
+    "deactivateCombo": "कॉम्बो निष्क्रिय करें",
+    "applyResilienceProfile": "लचीलापन प्रोफ़ाइल लागू करें",
+    "profileAggressive": "आक्रामक",
+    "profileBalanced": "संतुलित",
+    "profileConservative": "रूढ़िवादी",
+    "applyProfile": "प्रोफ़ाइल लागू करें",
+    "resetCircuitBreakers": "सर्किट ब्रेकर रीसेट करें",
+    "resetCircuitBreakersHelp": "प्रदाताओं के लिए वर्तमान ब्रेकर स्थिति और विफलता काउंटर साफ़ करता है।",
+    "resetAllBreakers": "सभी ब्रेकर रीसेट करें",
+    "toolsAndScopes": "उपकरण और कार्यक्षेत्र",
+    "tableTool": "औज़ार",
+    "tableScopes": "दायरा",
+    "tablePhase": "चरण",
+    "tableAudit": "लेखापरीक्षा",
+    "auditLog": "ऑडिट लॉग",
+    "auditSummary": "कॉल: {total} | {totalPages} में से पेज {page}",
+    "allTools": "सभी उपकरण",
+    "allResults": "सभी परिणाम",
+    "success": "सफलता",
+    "failure": "विफलता",
+    "apiKeyIdPlaceholder": "apiKeyId",
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
+=======
   "mcpDashboard": {
     "loading": "Loading MCP dashboard...",
     "activate": "activate",
@@ -1954,6 +2877,7 @@
     "success": "Success",
     "failure": "Failure",
     "apiKeyIdPlaceholder": "apiKeyId",
+>>>>>>> Stashed changes
     "loadingAuditEntries": "Loading audit entries...",
     "noAuditEntriesForFilters": "No audit entries found for current filters.",
     "tableTimestamp": "Timestamp",
@@ -1962,11 +2886,51 @@
     "tableApiKey": "API key",
     "failed": "failed",
     "previous": "Previous",
+<<<<<<< Updated upstream
     "next": "Next",
     "apiKeyId": "Api Key Id",
     "offset": "Offset",
     "limit": "Limit",
     "tool": "Tool"
+========
+    "loadingAuditEntries": "ऑडिट प्रविष्टियाँ लोड हो रही हैं...",
+    "noAuditEntriesForFilters": "वर्तमान फ़िल्टर के लिए कोई ऑडिट प्रविष्टियाँ नहीं मिलीं।",
+    "tableTimestamp": "टाइमस्टैम्प",
+    "tableDuration": "अवधि",
+    "tableResult": "नतीजा",
+    "tableApiKey": "एपीआई कुंजी",
+    "failed": "विफल",
+    "previous": "पिछला",
+    "next": "अगला"
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+  },
+  "a2aDashboard": {
+    "loading": "A2A डैशबोर्ड लोड हो रहा है...",
+    "confirmCancelTask": "कार्य रद्द करें {taskId}?",
+    "cancelTaskFailed": "कार्य रद्द करने में विफल.",
+    "cancelTaskSuccess": "कार्य {taskId} रद्द किया गया.",
+    "smokeSendFailed": "संदेश/धूम्रपान परीक्षण विफल रहा।",
+    "smokeSendSuccessWithTask": "संदेश/भेजना ठीक है (कार्य {taskId})।",
+    "smokeSendSuccess": "संदेश/भेजें ठीक है.",
+    "smokeStreamFailed": "संदेश/स्ट्रीम धुआं परीक्षण विफल रहा.",
+    "smokeStreamSuccessWithTask": "संदेश/स्ट्रीम ठीक है (कार्य {taskId}{stateSuffix})।",
+    "smokeStreamNoTaskId": "कार्य आईडी के बिना संदेश/स्ट्रीम समाप्त हो गया।",
+    "health": "स्वास्थ्य",
+    "ok": "ठीक है",
+    "totalTasks": "कुल कार्य",
+    "activeStreams": "सक्रिय धाराएँ",
+    "lastTask": "अंतिम कार्य",
+    "taskStateOverview": "कार्य स्थिति सिंहावलोकन",
+    "state": {
+      "submitted": "प्रस्तुत किया गया",
+      "working": "काम कर रहे हैं",
+      "completed": "पूरा हुआ",
+      "failed": "विफल",
+      "cancelled": "रद्द कर दिया गया"
+    },
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
+=======
+    "next": "Next"
   },
   "a2aDashboard": {
     "loading": "Loading A2A dashboard...",
@@ -1992,6 +2956,7 @@
       "failed": "failed",
       "cancelled": "cancelled"
     },
+>>>>>>> Stashed changes
     "agentCard": "Agent card",
     "version": "Version",
     "url": "URL",
@@ -2020,11 +2985,46 @@
     "close": "Close",
     "metadata": "Metadata",
     "events": "Events",
+<<<<<<< Updated upstream
     "artifacts": "Artifacts",
     "tablePhase": "Table Phase",
     "offset": "Offset",
     "limit": "Limit",
     "skill": "Skill"
+========
+    "agentCard": "एजेंट कार्ड",
+    "version": "संस्करण",
+    "url": "यूआरएल",
+    "capabilities": "क्षमताएं",
+    "agentCardNotAvailable": "एजेंट कार्ड उपलब्ध नहीं है.",
+    "quickValidation": "त्वरित सत्यापन",
+    "quickValidationDescription": "लाइव `/a2a` समापन बिंदु के माध्यम से धूम्रपान कॉल निष्पादित करता है।",
+    "runMessageSend": "संदेश चलाएँ/भेजें",
+    "runMessageStream": "संदेश/स्ट्रीम चलाएँ",
+    "taskManagement": "कार्य प्रबंधन",
+    "taskSummary": "{total} कार्य | {totalPages} में से पेज {page}",
+    "allStates": "सब",
+    "allSkills": "सभी कौशल",
+    "loadingTasks": "कार्य लोड हो रहे हैं...",
+    "noTasksForFilters": "वर्तमान फ़िल्टर के लिए कोई कार्य नहीं मिला.",
+    "tableTask": "कार्य",
+    "tableSkill": "कौशल",
+    "tableState": "राज्य",
+    "tableUpdated": "अद्यतन किया गया",
+    "tableActions": "क्रियाएँ",
+    "view": "देखें",
+    "cancel": "रद्द करें",
+    "previous": "पिछला",
+    "next": "अगला",
+    "taskDetail": "कार्य विवरण",
+    "close": "बंद करें",
+    "metadata": "मेटाडेटा",
+    "events": "घटनाएँ",
+    "artifacts": "कलाकृतियाँ"
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+=======
+    "artifacts": "Artifacts"
+>>>>>>> Stashed changes
   },
   "health": {
     "title": "सिस्टम स्वास्थ्य",
@@ -2074,12 +3074,21 @@
     "issuesLabel": "समस्याओं का पता लगाया गया",
     "operational": "संचालनात्मक",
     "providers": "प्रदाता",
+<<<<<<< Updated upstream
     "configuredProvidersLabel": "डैशबोर्ड में कॉन्फ़िगर किया गया",
     "configuredProvidersHint": "रनटाइम स्थिति की परवाह किए बिना, /डैशबोर्ड/प्रदाताओं में सहेजे गए क्रेडेंशियल वाले प्रदाता।",
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
     "activeProviders": "{count} active",
     "activeProvidersHint": "कॉन्फ़िगर किए गए प्रदाता वर्तमान में रूटिंग अनुरोधों के लिए सक्षम हैं।",
     "monitoredProviders": "{count} monitored",
+========
+    "activeProviders": "{count} सक्रिय",
+    "activeProvidersHint": "कॉन्फ़िगर किए गए प्रदाता वर्तमान में रूटिंग अनुरोधों के लिए सक्षम हैं।",
+    "monitoredProviders": "{count} की निगरानी की गई",
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
     "monitoredProvidersHint": "प्रदाताओं को वर्तमान में सर्किट-ब्रेकर स्वास्थ्य मॉनिटर द्वारा ट्रैक किया जाता है।",
+=======
+>>>>>>> Stashed changes
     "healthyCount": "{count} स्वस्थ",
     "nodeVersion": "नोड {version}",
     "failures": "{count} विफलता",
@@ -2099,11 +3108,20 @@
     "resetting": "रीसेट किया जा रहा है...",
     "resetAll": "सभी रीसेट करें",
     "until": "{time} तक",
+<<<<<<< Updated upstream
     "limitExhausted": "Exhausted",
     "learnedFromHeaders": "Learned from headers",
     "remainingOfLimit": "{remaining}/{limit} remaining",
     "throttleStatus": "Throttle: {value}",
     "lastHeaderUpdate": "Header update: {age}"
+=======
+    "activeProviders": "{count} active",
+    "monitoredProviders": "{count} monitored",
+    "configuredProvidersLabel": "डैशबोर्ड में कॉन्फ़िगर किया गया",
+    "configuredProvidersHint": "रनटाइम स्थिति की परवाह किए बिना, /डैशबोर्ड/प्रदाताओं में सहेजे गए क्रेडेंशियल वाले प्रदाता।",
+    "activeProvidersHint": "कॉन्फ़िगर किए गए प्रदाता वर्तमान में रूटिंग अनुरोधों के लिए सक्षम हैं।",
+    "monitoredProvidersHint": "प्रदाताओं को वर्तमान में सर्किट-ब्रेकर स्वास्थ्य मॉनिटर द्वारा ट्रैक किया जाता है।"
+>>>>>>> Stashed changes
   },
   "limits": {
     "title": "सीमाएँ और कोटा",
@@ -2141,6 +3159,7 @@
     "notAvailable": "—",
     "noEntries": "कोई ऑडिट लॉग प्रविष्टियाँ नहीं मिलीं",
     "previous": "पिछला",
+<<<<<<< Updated upstream
     "next": "अगला",
     "providerWarningTitle": "Provider Warning Title",
     "viewDetails": "View Details",
@@ -2182,6 +3201,9 @@
     "timeRange": "Time Range",
     "lastNHours": "Last {hours}",
     "defaultRange": "default"
+=======
+    "next": "अगला"
+>>>>>>> Stashed changes
   },
   "onboarding": {
     "welcome": "स्वागत है",
@@ -2295,8 +3317,11 @@
     "failedCreate": "प्रदाता बनाने में विफल",
     "errorOccurred": "एक त्रुटि हुई. कृपया पुन: प्रयास करें।",
     "modelStatus": "मॉडल स्थिति",
+<<<<<<< Updated upstream
     "showConfiguredOnly": "Configured only",
     "searchProviders": "प्रदाता खोजें...",
+=======
+>>>>>>> Stashed changes
     "allModelsOperational": "सभी मॉडल क्रियाशील",
     "modelsWithIssues": "मुद्दों के साथ {count} मॉडल",
     "allModelsNormal": "सभी मॉडल सामान्य रूप से प्रतिक्रिया दे रहे हैं।",
@@ -2307,7 +3332,14 @@
     "clearing": "समाशोधन...",
     "until": "{time} तक",
     "providerTestFailed": "प्रदाता परीक्षण विफल रहा",
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
     "providerTestTimeout": "Provider test timed out — too many connections to test at once",
+========
+    "providerTestTimeout": "प्रदाता परीक्षण का समय समाप्त हो गया - एक साथ परीक्षण करने के लिए बहुत सारे कनेक्शन",
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+=======
+>>>>>>> Stashed changes
     "modeTest": "{mode} परीक्षण",
     "passedCount": "{count} उत्तीर्ण",
     "failedCount": "{count} विफल",
@@ -2349,6 +3381,8 @@
     "chatCompletions": "चैट समापन",
     "importingModels": "आयात किया जा रहा है...",
     "importFromModels": "/मॉडल से आयात करें",
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
     "allModelsAlreadyImported": "सभी मॉडल पहले से ही आयातित हैं",
     "noNewModelsToImport": "आयात करने के लिए कोई नए मॉडल नहीं — सभी मॉडल पहले से ही रजिस्ट्री या कस्टम मॉडल सूची में हैं",
     "skippingExistingModels": "{count} मौजूदा मॉडल छोड़े जा रहे हैं",
@@ -2361,6 +3395,19 @@
     "clearAllModelsConfirm": "Are you sure you want to remove all models for this provider? This cannot be undone.",
     "clearAllModelsSuccess": "All models cleared",
     "clearAllModelsFailed": "Failed to clear models",
+========
+    "autoSync": "ऑटो-सिंक",
+    "autoSyncTooltip": "प्रत्येक 24 घंटे में स्वचालित रूप से मॉडल सूची ताज़ा करें (MODEL_SYNC_INTERVAL_HOURS के माध्यम से कॉन्फ़िगर करने योग्य)",
+    "autoSyncEnabled": "ऑटो-सिंक सक्षम - मॉडल समय-समय पर ताज़ा होते रहेंगे",
+    "autoSyncDisabled": "स्वतः समन्वयन अक्षम",
+    "autoSyncToggleFailed": "ऑटो-सिंक टॉगल करने में विफल",
+    "clearAllModels": "सभी मॉडल साफ़ करें",
+    "clearAllModelsConfirm": "क्या आप वाकई इस प्रदाता के सभी मॉडल हटाना चाहते हैं? इसे असंपादित नहीं किया जा सकता है।",
+    "clearAllModelsSuccess": "सभी मॉडल साफ़ हो गए",
+    "clearAllModelsFailed": "मॉडल साफ़ करने में विफल",
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+=======
+>>>>>>> Stashed changes
     "addConnectionToImport": "आयात सक्षम करने के लिए एक कनेक्शन जोड़ें.",
     "noModelsConfigured": "कोई मॉडल कॉन्फ़िगर नहीं किया गया",
     "connectionCount": "{count} कनेक्शन",
@@ -2372,10 +3419,13 @@
     "adding": "जोड़ा जा रहा है...",
     "importingModelsTitle": "मॉडल आयात करना",
     "copyModel": "मॉडल कॉपी करें",
+<<<<<<< Updated upstream
     "filterModels": "मॉडल फ़िल्टर करें…",
     "modelsActive": "सक्रिय",
     "showModel": "मॉडल दिखाएँ",
     "hideModel": "मॉडल छिपाएँ",
+=======
+>>>>>>> Stashed changes
     "removeModel": "मॉडल हटाएँ",
     "rateLimitProtected": "संरक्षित",
     "rateLimitUnprotected": "असुरक्षित",
@@ -2414,8 +3464,16 @@
     "addFirstConnectionHint": "आरंभ करने के लिए अपना पहला कनेक्शन जोड़ें",
     "addConnection": "कनेक्शन जोड़ें",
     "availableModels": "उपलब्ध मॉडल",
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
     "builtInModels": "Built-in models",
     "builtInModelsHint": "Registry models for this provider. Use the pencil to set compatibility options.",
+========
+    "builtInModels": "अंतर्निर्मित मॉडल",
+    "builtInModelsHint": "इस प्रदाता के लिए रजिस्ट्री मॉडल. संगतता विकल्प सेट करने के लिए पेंसिल का उपयोग करें।",
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+=======
+>>>>>>> Stashed changes
     "pageAutoRefresh": "पेज अपने आप रीफ़्रेश हो जाएगा...",
     "statusDisabled": "अक्षम",
     "statusConnected": "जुड़ा हुआ",
@@ -2456,6 +3514,8 @@
     "openRouterModelPlaceholder": "एंथ्रोपिक/क्लाउड-3-ओपस",
     "customModels": "कस्टम मॉडल",
     "customModelsHint": "मॉडल आईडी जोड़ें जो डिफ़ॉल्ट सूची में नहीं हैं। ये रूटिंग के लिए उपलब्ध होंगे.",
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
     "normalizeToolCallIdLabel": "Normalize tool call IDs to 9 characters (e.g. Mistral)",
     "preserveDeveloperRoleLabel": "Keep OpenAI Responses developer role (do not map to system)",
     "compatAdjustmentsTitle": "Compatibility",
@@ -2476,6 +3536,30 @@
     "compatUpstreamAddRow": "Add header",
     "compatUpstreamRemoveRow": "Remove row",
     "compatBadgeUpstreamHeaders": "Headers",
+========
+    "normalizeToolCallIdLabel": "टूल कॉल आईडी को 9 अक्षरों तक सामान्यीकृत करें (जैसे मिस्ट्रल)",
+    "preserveDeveloperRoleLabel": "OpenAI रिस्पॉन्स डेवलपर की भूमिका बनाए रखें (सिस्टम पर मैप न करें)",
+    "compatAdjustmentsTitle": "अनुकूलता",
+    "compatButtonLabel": "अनुकूलता",
+    "compatToolIdShort": "टूल आईडी 9",
+    "compatDeveloperShort": "डेवलपर की भूमिका",
+    "compatDoNotPreserveDeveloper": "डेवलपर भूमिका को सुरक्षित न रखें",
+    "compatBadgeNoPreserve": "कोई संरक्षण नहीं",
+    "compatProtocolLabel": "ग्राहक अनुरोध प्रोटोकॉल",
+    "compatProtocolHint": "ये विकल्प तब लागू होते हैं जब ओमनीरूट इस अनुरोध आकार (ओपनएआई चैट, रिस्पॉन्स एपीआई, या एंथ्रोपिक मैसेज) का पता लगाता है।",
+    "compatProtocolOpenAI": "OpenAI चैट पूर्णताएँ",
+    "compatProtocolOpenAIResponses": "ओपनएआई रिस्पॉन्स एपीआई",
+    "compatProtocolClaude": "मानवशास्त्रीय संदेश",
+    "compatUpstreamHeadersLabel": "अतिरिक्त अपस्ट्रीम हेडर",
+    "compatUpstreamHeadersHint": "उच्च-विशेषाधिकार सेटिंग - संपादन प्रदाता एपीआई क्रेडेंशियल के समान विश्वास स्तर; केवल विश्वसनीय व्यवस्थापकों को ही इसका उपयोग करना चाहिए। ओम्निरूट द्वारा प्रदाता एपीआई कुंजी से प्रमाणीकरण जोड़ने के बाद विलय किया गया। यदि कोई कस्टम हेडर मौजूदा हेडर (उदाहरण के लिए प्राधिकरण) के समान नाम का उपयोग करता है, तो आपका मान पूरी तरह से ऑटो-जेनरेट किए गए हेडर (बेयरर टोकन सहित) को बदल देता है - अपस्ट्रीम केवल वही देखता है जो आपने टाइप किया है, सेटिंग्स की कुंजी नहीं। गलत कॉन्फ़िगरेशन के कारण 401 या अपस्ट्रीम ऑथ टूट सकता है। प्रति हेडर एक पंक्ति (उदाहरण के लिए कुछ गेटवे के लिए अतिरिक्त प्रमाणीकरण)। पूर्वावलोकन के लिए मान पर होवर करें या फ़ोकस करें। धुंधला होने, बाहरी क्लिक करने या इस पैनल को बंद करने पर बचत होती है।",
+    "compatUpstreamHeaderName": "शीर्षलेख नाम",
+    "compatUpstreamHeaderValue": "मूल्य",
+    "compatUpstreamAddRow": "शीर्षलेख जोड़ें",
+    "compatUpstreamRemoveRow": "पंक्ति हटाएँ",
+    "compatBadgeUpstreamHeaders": "हेडर",
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+=======
+>>>>>>> Stashed changes
     "modelId": "मॉडल आईडी",
     "customModelPlaceholder": "जैसे जीपीटी-4.5-टर्बो",
     "loading": "लोड हो रहा है...",
@@ -2510,15 +3594,22 @@
     "email": "ईमेल",
     "healthCheckMinutes": "स्वास्थ्य जांच (न्यूनतम)",
     "healthCheckHint": "प्रोएक्टिव टोकन ताज़ा अंतराल। 0 = अक्षम.",
+<<<<<<< Updated upstream
+    "groupLabel": "पर्यावरण",
+    "groupPlaceholder": "जैसे eKaizen, व्यक्तिगत",
+=======
     "groupLabel": "Environment",
     "groupPlaceholder": "e.g. eKaizen, Personal",
+>>>>>>> Stashed changes
     "failedTestConnection": "कनेक्शन का परीक्षण करने में विफल",
     "failed": "असफल",
     "leaveBlankKeepCurrentApiKey": "वर्तमान एपीआई कुंजी रखने के लिए खाली छोड़ दें।",
     "editCompatibleTitle": "संपादित करें {type} संगत",
-    "compatibleBaseUrlHint": "Root URL of your {type}-compatible API. Use Advanced Settings for custom endpoint paths.",
+<<<<<<< Updated upstream
+    "compatibleBaseUrlHint": "आपके {type}-संगत एपीआई का रूट यूआरएल। कस्टम एंडपॉइंट पथों के लिए उन्नत सेटिंग्स का उपयोग करें।",
     "apiKeyForCheck": "एपीआई कुंजी (चेक के लिए)",
     "compatibleProdPlaceholder": "{type} संगत (उत्पाद)",
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
     "tokenRefreshed": "Token refreshed successfully",
     "tokenRefreshFailed": "Token refresh failed",
     "applyCodexAuthLocal": "Apply auth",
@@ -2527,6 +3618,12 @@
     "codexAuthApplyFailed": "Failed to apply Codex auth.json locally",
     "codexAuthExported": "Codex auth.json exported",
     "codexAuthExportFailed": "Failed to export Codex auth.json",
+=======
+    "compatibleBaseUrlHint": "Root URL of your {type}-compatible API. Use Advanced Settings for custom endpoint paths.",
+    "apiKeyForCheck": "एपीआई कुंजी (चेक के लिए)",
+    "compatibleProdPlaceholder": "{type} संगत (उत्पाद)",
+    "providerTestTimeout": "Provider test timed out — too many connections to test at once",
+>>>>>>> Stashed changes
     "advancedSettings": "Advanced Settings",
     "chatPathLabel": "Chat Endpoint Path",
     "chatPathPlaceholder": "/chat/completions",
@@ -2534,6 +3631,7 @@
     "modelsPathLabel": "Models Endpoint Path",
     "modelsPathPlaceholder": "/models",
     "modelsPathHint": "Custom models path for validation (e.g. /v4/models)",
+<<<<<<< Updated upstream
     "modelsImported": "{count} models imported",
     "close": "Close",
     "statusDeactivated": "Deactivated (Manual)",
@@ -2708,6 +3806,68 @@
     "perModelQuotaLabel": "Per Model Quota Label",
     "expiredBadge": "Expired",
     "expiringSoonBadge": "Expiring Soon"
+========
+    "tokenRefreshed": "टोकन सफलतापूर्वक ताज़ा किया गया",
+    "tokenRefreshFailed": "टोकन ताज़ा विफल रहा",
+    "advancedSettings": "उन्नत सेटिंग्स",
+    "chatPathLabel": "चैट समापन बिंदु पथ",
+    "chatPathPlaceholder": "/चैट/समापन",
+    "chatPathHint": "गैर-मानक एपीआई वाले प्रदाताओं के लिए कस्टम चैट पथ (जैसे /v4/चैट/पूर्णताएं)",
+    "modelsPathLabel": "मॉडल समापन बिंदु पथ",
+    "modelsPathPlaceholder": "/मॉडल",
+    "modelsPathHint": "सत्यापन के लिए कस्टम मॉडल पथ (जैसे /v4/मॉडल)",
+    "allModelsAlreadyImported": "Semua model sudah diimpor",
+    "noNewModelsToImport": "Tidak ada model baru untuk diimpor — semua model sudah ada di registri atau daftar model kustom",
+    "skippingExistingModels": "Melewatkan {count} model yang sudah ada",
+=======
+    "builtInModels": "Built-in models",
+    "builtInModelsHint": "Registry models for this provider. Use the pencil to set compatibility options.",
+    "normalizeToolCallIdLabel": "Normalize tool call IDs to 9 characters (e.g. Mistral)",
+    "preserveDeveloperRoleLabel": "Keep OpenAI Responses developer role (do not map to system)",
+    "compatAdjustmentsTitle": "Compatibility",
+    "compatButtonLabel": "Compatibility",
+    "compatToolIdShort": "Tool ID 9",
+    "compatDeveloperShort": "Developer role",
+    "compatDoNotPreserveDeveloper": "Do not preserve developer role",
+    "compatBadgeNoPreserve": "No preserve",
+    "compatProtocolLabel": "Client request protocol",
+    "compatProtocolHint": "These options apply when OmniRoute detects this request shape (OpenAI Chat, Responses API, or Anthropic Messages).",
+    "compatProtocolOpenAI": "OpenAI Chat Completions",
+    "compatProtocolOpenAIResponses": "OpenAI Responses API",
+    "compatProtocolClaude": "Anthropic Messages",
+    "tokenRefreshed": "Token refreshed successfully",
+    "tokenRefreshFailed": "Token refresh failed",
+    "compatBadgeUpstreamHeaders": "Headers",
+    "compatUpstreamAddRow": "Add header",
+    "compatUpstreamHeaderName": "Header name",
+    "compatUpstreamHeaderValue": "Value",
+    "compatUpstreamHeadersHint": "High-privilege setting — same trust level as editing provider API credentials; only trusted admins should use it. Merged after OmniRoute adds auth from the provider API key. If a custom header uses the same name as an existing one (e.g. Authorization), your value fully replaces the auto-generated header (including the Bearer token) — the upstream only sees what you typed, not the key from settings. Misconfiguration can cause 401 or broken upstream auth. One row per header (e.g. extra Authentication for some gateways). Hover or focus the value to preview. Saves on blur, outside click, or closing this panel.",
+    "compatUpstreamHeadersLabel": "Extra upstream headers",
+    "compatUpstreamRemoveRow": "Remove row",
+    "allModelsAlreadyImported": "सभी मॉडल पहले से ही आयातित हैं",
+    "noNewModelsToImport": "आयात करने के लिए कोई नए मॉडल नहीं — सभी मॉडल पहले से ही रजिस्ट्री या कस्टम मॉडल सूची में हैं",
+    "skippingExistingModels": "{count} मौजूदा मॉडल छोड़े जा रहे हैं",
+>>>>>>> Stashed changes
+    "applyCodexAuthLocal": "Apply auth",
+    "codexAuthAppliedLocal": "Codex auth.json applied locally",
+    "codexAuthApplyFailed": "Failed to apply Codex auth.json locally",
+    "codexAuthExportFailed": "Failed to export Codex auth.json",
+    "codexAuthExported": "Codex auth.json exported",
+<<<<<<< Updated upstream
+    "exportCodexAuthFile": "Export auth"
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+=======
+    "exportCodexAuthFile": "Export auth",
+    "autoSync": "Auto-Sync",
+    "clearAllModels": "Clear All Models",
+    "autoSyncTooltip": "Automatically refresh model list every 24h (configurable via MODEL_SYNC_INTERVAL_HOURS)",
+    "autoSyncEnabled": "Auto-sync enabled — models will refresh periodically",
+    "clearAllModelsConfirm": "Are you sure you want to remove all models for this provider? This cannot be undone.",
+    "clearAllModelsSuccess": "All models cleared",
+    "clearAllModelsFailed": "Failed to clear models",
+    "autoSyncToggleFailed": "Failed to toggle auto-sync",
+    "autoSyncDisabled": "Auto-sync disabled"
+>>>>>>> Stashed changes
   },
   "settings": {
     "title": "सेटिंग्स",
@@ -2720,6 +3880,7 @@
     "systemPrompt": "सिस्टम प्रॉम्प्ट",
     "thinkingBudget": "सोच बजट",
     "proxy": "प्रॉक्सी",
+<<<<<<< Updated upstream
     "httpProxy": "HTTP Proxy",
     "1proxy": "1proxy",
     "proxySubTabsAria": "Proxy sections",
@@ -2736,6 +3897,8 @@
     "requestBodyLimitSaving": "Saving...",
     "requestBodyLimitSave": "Save",
     "requestBodyLimitCurrent": "Current: {value}",
+=======
+>>>>>>> Stashed changes
     "pricing": "मूल्य निर्धारण",
     "storage": "भंडारण",
     "policies": "नीतियाँ",
@@ -2747,8 +3910,11 @@
     "darkMode": "डार्क मोड",
     "lightMode": "लाइट मोड",
     "systemTheme": "सिस्टम थीम",
+<<<<<<< Updated upstream
     "debugToggle": "Enable Debug Mode",
     "sidebarVisibilityToggle": "Show Sidebar Items",
+=======
+>>>>>>> Stashed changes
     "enableCache": "कैश सक्षम करें",
     "cacheTTL": "कैश टीटीएल",
     "maxCacheSize": "अधिकतम कैश आकार",
@@ -2757,6 +3923,7 @@
     "cacheMisses": "कैश छूट गया",
     "hitRate": "हिट दर",
     "cacheEntries": "कैश प्रविष्टियाँ",
+<<<<<<< Updated upstream
     "cacheSettings": "Cache Settings",
     "semanticCache": "Semantic Cache",
     "maxEntries": "Max Entries",
@@ -2768,6 +3935,8 @@
     "loading": "Loading...",
     "saving": "सहेजा जा रहा है...",
     "save": "Save",
+=======
+>>>>>>> Stashed changes
     "circuitBreaker": "सर्किट ब्रेकर",
     "retryPolicy": "पुनः प्रयास नीति",
     "maxRetries": "अधिकतम पुनर्प्रयास",
@@ -2775,10 +3944,13 @@
     "timeoutMs": "टाइमआउट (एमएस)",
     "enableSystemPrompt": "सिस्टम प्रॉम्प्ट सक्षम करें",
     "systemPromptText": "सिस्टम प्रॉम्प्ट टेक्स्ट",
+<<<<<<< Updated upstream
     "autoDisableBannedAccounts": "Auto-Disable Banned Accounts",
     "autoDisableDescription": "Permanently mark provider connections as deactivated if they return specific terminal ban signals (e.g. HTTP 403 'verify your account'). This removes them from the combo rotation.",
     "autoDisableThreshold": "Ban Threshold",
     "autoDisableThresholdDesc": "Consecutive ban signals required before permanent deactivation.",
+=======
+>>>>>>> Stashed changes
     "enableThinking": "सोचने को सक्षम करें",
     "maxThinkingTokens": "मैक्स थिंकिंग टोकन",
     "enableProxy": "प्रॉक्सी सक्षम करें",
@@ -2815,13 +3987,20 @@
     "themeLight": "रोशनी",
     "themeDark": "अंधेरा",
     "themeSystem": "सिस्टम",
+<<<<<<< Updated upstream
     "sidebarVisibility": "Hide sidebar items",
     "sidebarVisibilityDesc": "Hide any sidebar navigation entry to reduce visual clutter.",
     "sidebarVisibilityHint": "Any sidebar section is hidden automatically when a...",
     "hideHealthLogs": "स्वास्थ्य जांच लॉग छुपाएं",
     "hideHealthLogsDesc": "चालू होने पर, सर्वर कंसोल में [हेल्थचेक] संदेशों को दबाएँ",
+    "themeAccent": "थीम रंग",
+    "themeAccentDesc": "एक पूर्व निर्धारित रंग चुनें या एक रंग से अपनी खुद की थीम बनाएं",
+=======
+    "hideHealthLogs": "स्वास्थ्य जांच लॉग छुपाएं",
+    "hideHealthLogsDesc": "चालू होने पर, सर्वर कंसोल में [हेल्थचेक] संदेशों को दबाएँ",
     "themeAccent": "थीम का रंग",
     "themeAccentDesc": "एक प्रीसेट रंग चुनें या एक ही रंग से अपनी थीम बनाएं",
+>>>>>>> Stashed changes
     "themeCreate": "थीम बनाएं",
     "themeCustom": "कस्टम थीम",
     "themeBlue": "नीला",
@@ -2830,6 +4009,7 @@
     "themeViolet": "बैंगनी",
     "themeOrange": "नारंगी",
     "themeCyan": "सियान",
+<<<<<<< Updated upstream
     "whitelabeling": "Branding",
     "whitelabelingDesc": "Customize the application name and logo",
     "appName": "Application Name",
@@ -2844,6 +4024,9 @@
     "uploadFavicon": "Upload Favicon",
     "resetFavicon": "Reset Favicon",
     "faviconPreview": "Favicon Preview",
+=======
+    "promptCache": "शीघ्र कैश",
+>>>>>>> Stashed changes
     "flushCache": "कैश फ्लश करें",
     "flushing": "निस्तब्धता...",
     "size": "आकार",
@@ -2901,15 +4084,27 @@
     "providersBlocked": "{count} प्रदाता/प्रदाताओं को /मॉडल से अवरोधित किया गया",
     "blockProviderTitle": "ब्लॉक करें {provider}",
     "unblockProviderTitle": "अनब्लॉक करें {provider}",
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
     "cliFingerprint": "CLI Fingerprint Matching",
     "cliFingerprintDesc": "Match native CLI binary signatures when proxying requests. Reorders headers and body fields to look identical to the official CLI tools. Your proxy IP is preserved.",
     "cliFingerprintEnabled": "{count} provider(s) with CLI fingerprint active",
     "enableFingerprintTitle": "Enable fingerprint for {provider}",
     "disableFingerprintTitle": "Disable fingerprint for {provider}",
+========
+    "cliFingerprint": "सीएलआई फ़िंगरप्रिंट मिलान",
+    "cliFingerprintDesc": "अनुरोधों को प्रॉक्सी करते समय मूल सीएलआई बाइनरी हस्ताक्षरों का मिलान करें। आधिकारिक सीएलआई टूल के समान दिखने के लिए हेडर और बॉडी फ़ील्ड को पुन: व्यवस्थित करता है। आपका प्रॉक्सी आईपी संरक्षित है.",
+    "cliFingerprintEnabled": "{count} प्रदाता सीएलआई फिंगरप्रिंट सक्रिय के साथ",
+    "enableFingerprintTitle": "{provider} के लिए फ़िंगरप्रिंट सक्षम करें",
+    "disableFingerprintTitle": "{provider} के लिए फ़िंगरप्रिंट अक्षम करें",
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
     "routingStrategy": "रूटिंग रणनीति",
     "routingAdvancedGuideTitle": "उन्नत रूटिंग मार्गदर्शन",
     "routingAdvancedGuideHint1": "पूर्वानुमानित प्राथमिकता के लिए फ़िल फ़र्स्ट का उपयोग करें, निष्पक्षता के लिए राउंड रॉबिन और विलंबता लचीलेपन के लिए P2C का उपयोग करें।",
     "routingAdvancedGuideHint2": "यदि प्रदाता गुणवत्ता/लागत में भिन्न हैं, तो पृष्ठभूमि कार्य के लिए कॉस्ट ऑप्ट और संतुलित पहनावे के लिए कम से कम उपयोग से शुरुआत करें।",
+=======
+    "routingStrategy": "रूटिंग रणनीति",
+>>>>>>> Stashed changes
     "fillFirst": "पहले भरें",
     "fillFirstDesc": "प्राथमिकता क्रम में खातों का उपयोग करें",
     "roundRobin": "राउंड रोबिन",
@@ -2922,13 +4117,24 @@
     "leastUsedDesc": "कम से कम हाल ही में उपयोग किया गया खाता चुनें",
     "costOpt": "लागत विकल्प",
     "costOptDesc": "सबसे सस्ते उपलब्ध खाते को प्राथमिकता दें",
+<<<<<<< Updated upstream
+    "strictRandom": "सख्त यादृच्छिक",
+    "strictRandomDesc": "शफ़ल डेक - फेरबदल से पहले प्रत्येक खाते का एक बार उपयोग करता है",
+    "stickyLimit": "चिपचिपी सीमा",
+    "stickyLimitDesc": "स्विच करने से पहले प्रति खाता कॉल",
+    "modelAliases": "मॉडल उपनाम",
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
+    "modelAliasesTitle": "Model Alias",
+    "modelAliasesDesc": "Remap model names using exact matches or wildcard patterns.",
+=======
     "strictRandom": "Strict Random",
     "strictRandomDesc": "Shuffle deck — uses each account once before reshuffling",
     "stickyLimit": "चिपचिपी सीमा",
     "stickyLimitDesc": "स्विच करने से पहले प्रति खाता कॉल",
     "modelAliases": "मॉडल उपनाम",
     "modelAliasesTitle": "Model Alias",
-    "modelAliasesDesc": "Remap model names using exact matches or wildcard patterns.",
+    "modelAliasesDesc": "मॉडल नामों को रीमैप करने के लिए वाइल्डकार्ड पैटर्न • * और ? का उपयोग करें",
+>>>>>>> Stashed changes
     "addCustomAlias": "Kustom Alias Tambahkan",
     "deprecatedModelId": "ID model yang tidak digunakan lagi",
     "newModelId": "ID model baru",
@@ -2940,10 +4146,32 @@
     "enableDegradationHint": "जब सक्षम होता है, तो शीर्षक निर्माण और सारांश जैसे पृष्ठभूमि कार्य स्वचालित रूप से सस्ते मॉडल पर रूट किए जाते हैं",
     "tasksDetected": "पता लगाए गए कार्य",
     "degradationMap": "मॉडल अवनमन मानचित्र",
+<<<<<<< Updated upstream
+========
+    "modelAliasesTitle": "मॉडल उपनाम",
+    "modelAliasesDesc": "मॉडल नामों को रीमैप करने के लिए वाइल्डकार्ड पैटर्न • * और ? का उपयोग करें",
+    "addCustomAlias": "कस्टम उपनाम जोड़ें",
+    "deprecatedModelId": "अस्वीकृत मॉडल आईडी",
+    "newModelId": "नया मॉडल आईडी",
+    "customAliases": "कस्टम उपनाम",
+    "builtInAliases": "अंतर्निहित उपनाम",
+    "backgroundDegradationTitle": "पृष्ठभूमि कार्य ह्रास",
+    "backgroundDegradationDesc": "पृष्ठभूमि कार्यों (शीर्षक, सारांश) का स्वतः पता लगाएं और सस्ते मॉडल तक रूट करें",
+    "enableDegradation": "पृष्ठभूमि गिरावट सक्षम करें",
+    "enableDegradationHint": "सक्षम होने पर, शीर्षक निर्माण और सारांशीकरण जैसे पृष्ठभूमि कार्य स्वचालित रूप से सस्ते मॉडल में स्थानांतरित हो जाते हैं",
+    "tasksDetected": "कार्यों का पता चला",
+    "degradationMap": "मॉडल अवक्रमण मानचित्र",
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+    "premiumModel": "प्रीमियम मॉडल",
+    "cheapModel": "सस्ता मॉडल",
+    "detectionPatterns": "पता लगाने के पैटर्न",
+    "newPattern": "जैसे \"एक शीर्षक उत्पन्न करें\"",
+=======
     "premiumModel": "प्रीमियम मॉडल",
     "cheapModel": "सस्ता मॉडल",
     "detectionPatterns": "पता लगाने के पैटर्न",
     "newPattern": "उदा. \"एक शीर्षक बनाएं\"",
+>>>>>>> Stashed changes
     "aliasPatternPlaceholder": "क्लाउड-सॉनेट-*",
     "aliasTargetPlaceholder": "क्लाउड-सॉनेट-4-20250514",
     "pattern": "पैटर्न",
@@ -2958,7 +4186,11 @@
     "sessionAge": "सत्र आयु",
     "browser": "ब्राउज़र",
     "clearLocalData": "स्थानीय डेटा साफ़ करें",
+<<<<<<< Updated upstream
+    "logout": "Logout",
+=======
     "logout": "लॉगआउट करें",
+>>>>>>> Stashed changes
     "clearLocalDataConfirm": "सभी स्थानीय डेटा साफ़ करें? इससे आपकी प्राथमिकताएं रीसेट हो जाएंगी.",
     "unknown": "अज्ञात",
     "systemActor": "प्रणाली",
@@ -2994,22 +4226,43 @@
     "createChain": "शृंखला बनाएं",
     "noFallbackChains": "कोई फ़ॉलबैक चेन नहीं",
     "noFallbackChainsDesc": "किसी मॉडल के लिए प्रदाता फ़ॉलबैक ऑर्डर को परिभाषित करने के लिए एक श्रृंखला बनाएं।",
+<<<<<<< Updated upstream
+    "loadingFallbackChains": "Loading fallback chains...",
+    "deleteChainConfirm": "\"{model}\" के लिए फ़ॉलबैक श्रृंखला हटाएं?",
+    "chainCreated": "Chain created for {model}",
+=======
     "loadingFallbackChains": "फ़ॉलबैक चेन लोड हो रही हैं...",
     "deleteChainConfirm": "\"{model}\" के लिए फ़ॉलबैक श्रृंखला हटाएं?",
     "chainCreated": "{model} के लिए श्रृंखला बनाई गई",
+>>>>>>> Stashed changes
     "chainDeleted": "{model} के लिए श्रृंखला हटा दी गई",
     "failedCreateChain": "श्रृंखला बनाने में विफल",
     "failedDeleteChain": "श्रृंखला हटाने में विफल",
     "deleteChain": "शृंखला हटाएँ",
-    "fillModelAndProviders": "कृपया मॉडल का नाम और प्रदाता भरें",
+<<<<<<< Updated upstream
+    "fillModelAndProviders": "Please fill model name and providers",
     "addAtLeastOneProvider": "कम से कम एक प्रदाता जोड़ें",
     "comboDefaultsTitle": "कॉम्बो डिफ़ॉल्ट",
     "comboDefaultsGuideTitle": "कॉम्बो डिफॉल्ट्स को कैसे ट्यून करें",
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
     "comboDefaultsGuideHint1": "कम-विलंबता प्रवाह में पुनः प्रयास कम रखें; केवल लंबी पीढ़ी के कार्यों के लिए टाइमआउट बढ़ाएँ।",
     "comboDefaultsGuideHint2": "जब एक प्रदाता को वैश्विक डिफ़ॉल्ट की तुलना में अलग टाइमआउट/पुनः प्रयास व्यवहार की आवश्यकता होती है तो प्रदाता ओवरराइड का उपयोग करें।",
     "globalComboConfig": "वैश्विक कॉम्बो कॉन्फ़िगरेशन",
+========
+    "comboDefaultsGuideHint1": "Keep retries low in low-latency flows; increase timeout only for long generation tasks.",
+    "comboDefaultsGuideHint2": "जब एक प्रदाता को वैश्विक डिफ़ॉल्ट की तुलना में अलग टाइमआउट/पुनः प्रयास व्यवहार की आवश्यकता होती है तो प्रदाता ओवरराइड का उपयोग करें।",
+    "globalComboConfig": "Global combo configuration",
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+    "defaultStrategy": "डिफ़ॉल्ट रणनीति",
+    "defaultStrategyDesc": "Applied to new combos without explicit strategy",
+=======
+    "fillModelAndProviders": "कृपया मॉडल का नाम और प्रदाता भरें",
+    "addAtLeastOneProvider": "कम से कम एक प्रदाता जोड़ें",
+    "comboDefaultsTitle": "कॉम्बो डिफ़ॉल्ट",
+    "globalComboConfig": "वैश्विक कॉम्बो कॉन्फ़िगरेशन",
     "defaultStrategy": "डिफ़ॉल्ट रणनीति",
     "defaultStrategyDesc": "स्पष्ट रणनीति के बिना नए कॉम्बो पर लागू किया गया",
+>>>>>>> Stashed changes
     "comboStrategyAria": "कॉम्बो रणनीति",
     "priority": "प्राथमिकता",
     "weighted": "भारित",
@@ -3134,6 +4387,10 @@
     "unsaved": "सहेजा नहीं गया",
     "resetDefaults": "डिफ़ॉल्ट रीसेट करें",
     "saveProvider": "प्रदाता सहेजें",
+<<<<<<< Updated upstream
+=======
+    "saving": "सहेजा जा रहा है...",
+>>>>>>> Stashed changes
     "model": "मॉडल",
     "models": "मॉडल",
     "moreProviders": "{count} अधिक प्रदाता",
@@ -3164,6 +4421,8 @@
     "customPricingNote": "आप विशिष्ट मॉडलों के लिए डिफ़ॉल्ट मूल्य निर्धारण को ओवरराइड कर सकते हैं। कस्टम ओवरराइड्स को स्वतः-पता लगाए गए मूल्य-निर्धारण पर प्राथमिकता दी जाती है।",
     "editPricing": "मूल्य निर्धारण संपादित करें",
     "viewFullDetails": "पूर्ण विवरण देखें",
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
     "themeCoral": "कोरल",
     "modelsDevTitle": "Model Database",
     "modelsDevDesc": "Auto-sync pricing, capabilities & specs from models.dev",
@@ -3381,6 +4640,44 @@
       "full": "Respond terse and compact. Preserve all technical substance.",
       "ultra": "Respond ultra terse with common technical abbreviations. Preserve exact symbols."
     }
+========
+    "themeCoral": "मूंगा",
+=======
+    "themeCoral": "कोरल",
+    "cliFingerprint": "CLI Fingerprint Matching",
+    "cliFingerprintDesc": "Match native CLI binary signatures when proxying requests. Reorders headers and body fields to look identical to the official CLI tools. Your proxy IP is preserved.",
+    "cliFingerprintEnabled": "{count} provider(s) with CLI fingerprint active",
+    "enableFingerprintTitle": "Enable fingerprint for {provider}",
+    "disableFingerprintTitle": "Disable fingerprint for {provider}",
+    "routingAdvancedGuideTitle": "उन्नत रूटिंग मार्गदर्शन",
+    "routingAdvancedGuideHint1": "पूर्वानुमानित प्राथमिकता के लिए फ़िल फ़र्स्ट का उपयोग करें, निष्पक्षता के लिए राउंड रॉबिन और विलंबता लचीलेपन के लिए P2C का उपयोग करें।",
+    "routingAdvancedGuideHint2": "यदि प्रदाता गुणवत्ता/लागत में भिन्न हैं, तो पृष्ठभूमि कार्य के लिए कॉस्ट ऑप्ट और संतुलित पहनावे के लिए कम से कम उपयोग से शुरुआत करें।",
+    "comboDefaultsGuideTitle": "कॉम्बो डिफॉल्ट्स को कैसे ट्यून करें",
+    "comboDefaultsGuideHint1": "कम-विलंबता प्रवाह में पुनः प्रयास कम रखें; केवल लंबी पीढ़ी के कार्यों के लिए टाइमआउट बढ़ाएँ।",
+    "comboDefaultsGuideHint2": "जब एक प्रदाता को वैश्विक डिफ़ॉल्ट की तुलना में अलग टाइमआउट/पुनः प्रयास व्यवहार की आवश्यकता होती है तो प्रदाता ओवरराइड का उपयोग करें।",
+>>>>>>> Stashed changes
+    "sidebarVisibility": "Hide sidebar items",
+    "sidebarVisibilityDesc": "Hide any sidebar navigation entry to reduce visual clutter.",
+    "sidebarVisibilityHint": "Any sidebar section is hidden automatically when a...",
+    "semanticCache": "Semantic Cache",
+    "autoDisableDescription": "Permanently mark provider connections as deactivated if they return specific terminal ban signals (e.g. HTTP 403 'verify your account'). This removes them from the combo rotation.",
+    "preserveClientCache": "Preserve Client Cache",
+    "cacheSettings": "Cache Settings",
+    "autoDisableThreshold": "Ban Threshold",
+    "autoDisableBannedAccounts": "Auto-Disable Banned Accounts",
+    "ttlMinutes": "TTL (minutes)",
+    "maxEntries": "Max Entries",
+    "loading": "Loading...",
+    "save": "Save",
+    "autoDisableThresholdDesc": "Consecutive ban signals required before permanent deactivation.",
+    "debugToggle": "Enable Debug Mode",
+    "sidebarVisibilityToggle": "Show Sidebar Items",
+    "enabled": "Enabled",
+    "strategy": "Strategy"
+<<<<<<< Updated upstream
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+=======
+>>>>>>> Stashed changes
   },
   "translator": {
     "title": "अनुवादक",
@@ -3600,6 +4897,25 @@
     "statsModels": "मॉडल",
     "statsCoverage": "कवरेज",
     "statsStrategiesCount": "{count} रणनीतियाँ",
+<<<<<<< Updated upstream
+    "evaluationStrategies": "मूल्यांकन रणनीतियाँ",
+    "modelsUnderTest": "परीक्षणाधीन मॉडल",
+    "searchSuitesPlaceholder": "सुइट खोजें...",
+    "passSuffix": "पास",
+    "casesCount": "{count, plural, one {# case} other {# cases}}",
+    "runEval": "इवल चलाएँ",
+    "runningProgress": "चल रहा है {current}/{total}...",
+    "passRate": "पास दर",
+    "summaryBreakdown": "{passed} उत्तीर्ण · {failed} अनुत्तीर्ण · {total} कुल",
+    "passedIconLabel": "✅उत्तीर्ण",
+    "failedIconLabel": "❌असफल",
+    "detailsContains": "इसमें शामिल है: \"{term}\"",
+    "detailsRegex": "रेगेक्स: {pattern}",
+    "detailsExpected": "अपेक्षित: \"{expected}\"",
+    "noResultsYet": "अभी तक कोई परिणाम नहीं",
+    "testCasesCount": "परीक्षण मामले ({count})",
+    "noTestCasesDefined": "कोई परीक्षण केस परिभाषित नहीं",
+=======
     "evaluationStrategies": "Evaluation Strategies",
     "modelsUnderTest": "Models Under Test",
     "searchSuitesPlaceholder": "Search suites...",
@@ -3617,10 +4933,22 @@
     "noResultsYet": "No results yet",
     "testCasesCount": "परीक्षण मामले ({count})",
     "noTestCasesDefined": "No test cases defined",
+>>>>>>> Stashed changes
     "runEvalHint": "अपने एलएलएम समापन बिंदु के विरुद्ध सभी मामलों को निष्पादित करने के लिए \"रन इवल\" पर क्लिक करें। प्रत्येक परीक्षण ओम्निरूट के माध्यम से एक वास्तविक अनुरोध भेजता है।",
     "notifyNoTestCases": "इस सुइट के लिए कोई परीक्षण मामला परिभाषित नहीं है",
     "notifyAllCasesPassed": "सभी {total} मामले पारित ✅",
     "notifySomeCasesFailed": "{passed}/{total} उत्तीर्ण, {failed} अनुत्तीर्ण",
+<<<<<<< Updated upstream
+    "notifyEvalRunFailed": "इवल रन विफल",
+    "notifyEvalTitle": "इवल: {name}",
+    "modelEvals": "मॉडल मूल्यांकन",
+    "evalsHeroDescription": "पूर्वनिर्धारित मूल्यांकन सुइट्स चलाकर अपने एलएलएम समापन बिंदुओं का परीक्षण और सत्यापन करें। प्रत्येक सुइट में परीक्षण मामले होते हैं जो ओमनीरूट के माध्यम से वास्तविक संकेत भेजते हैं और अपेक्षित मानदंडों के विरुद्ध प्रतिक्रियाओं की तुलना करते हैं - आपको प्रतिगमन का पता लगाने, मॉडल की तुलना करने और प्रदाताओं के बीच प्रतिक्रिया की गुणवत्ता सुनिश्चित करने में मदद करते हैं।",
+    "qualityValidation": "गुणवत्ता सत्यापन",
+    "modelComparison": "मॉडल तुलना",
+    "regressionDetection": "प्रतिगमन का पता लगाना",
+    "latencyBenchmarks": "विलंबता बेंचमार्क",
+    "modelLockouts": "मॉडल तालाबंदी",
+=======
     "notifyEvalRunFailed": "Eval run failed",
     "notifyEvalTitle": "Eval: {name}",
     "modelEvals": "Model Evaluations",
@@ -3630,6 +4958,7 @@
     "regressionDetection": "Regression Detection",
     "latencyBenchmarks": "Latency Benchmarks",
     "modelLockouts": "Model Lockouts",
+>>>>>>> Stashed changes
     "noLockouts": "वर्तमान में कोई भी मॉडल लॉक नहीं है",
     "activeSessions": "सक्रिय सत्र",
     "noSessions": "कोई सक्रिय सत्र नहीं",
@@ -3664,11 +4993,19 @@
     "inDuration": "{duration} में",
     "notApplicable": "एन/ए",
     "rawPlanWithValue": "कच्ची योजना: {plan}",
+<<<<<<< Updated upstream
+    "noPlanFromProvider": "No plan from provider",
+    "noQuotaData": "कोई कोटा डेटा नहीं",
+    "ungrouped": "असमूहीकृत",
+    "viewFlat": "समतल",
+    "viewByEnvironment": "पर्यावरण द्वारा",
+=======
     "noPlanFromProvider": "प्रदाता की ओर से कोई योजना नहीं",
     "noQuotaData": "कोई कोटा डेटा नहीं",
     "ungrouped": "Ungrouped",
     "viewFlat": "Flat",
     "viewByEnvironment": "By Environment",
+>>>>>>> Stashed changes
     "noQuotaDataAvailable": "कोई कोटा डेटा उपलब्ध नहीं है",
     "noAccountsForTierFilter": "टियर फ़िल्टर के लिए कोई खाता नहीं मिला",
     "tierAll": "सब",
@@ -3679,6 +5016,7 @@
     "tierPro": "प्रो",
     "tierPlus": "प्लस",
     "tierFree": "निःशुल्क",
+<<<<<<< Updated upstream
     "tierUnknown": "अज्ञात",
     "suiteBuilderSaveFailed": "Failed to save suite",
     "scorecardTitle": "Scorecard",
@@ -3772,6 +5110,9 @@
     "suiteBuilderDescriptionLabel": "Description",
     "targetComparisonHint": "Side-by-side comparison of evaluation results between targets.",
     "compareCompletedWithScore": "Comparison completed — {score}% pass rate"
+=======
+    "tierUnknown": "अज्ञात"
+>>>>>>> Stashed changes
   },
   "modals": {
     "waitingAuth": "प्राधिकरण की प्रतीक्षा की जा रही है",
@@ -3810,7 +5151,11 @@
     "loadingLogs": "लॉग लोड हो रहे हैं...",
     "loadingProxyLogs": "प्रॉक्सी लॉग लोड हो रहा है...",
     "noLogEntries": "कोई लॉग प्रविष्टियाँ नहीं मिलीं",
+<<<<<<< Updated upstream
+    "noPayloadData": "No payload data available for this log entry.",
+=======
     "noPayloadData": "इस लॉग प्रविष्टि के लिए कोई पेलोड डेटा उपलब्ध नहीं है।",
+>>>>>>> Stashed changes
     "proxyEvent": "प्रॉक्सी इवेंट",
     "proxy": "प्रॉक्सी",
     "level": "स्तर",
@@ -3852,7 +5197,11 @@
     "invalidPassword": "अमान्य पासवर्ड",
     "errorOccurredRetry": "एक त्रुटि हुई. कृपया पुन: प्रयास करें।",
     "configureInstance": "आइए आपका ओम्निरूट इंस्टेंस कॉन्फ़िगर करें",
+<<<<<<< Updated upstream
+    "runOnboardingWizard": "Run the onboarding wizard to set up your password and connect your first AI provider.",
+=======
     "runOnboardingWizard": "अपना पासवर्ड सेट करने और अपने पहले AI प्रदाता को कनेक्ट करने के लिए ऑनबोर्डिंग विज़ार्ड चलाएँ।",
+>>>>>>> Stashed changes
     "startOnboarding": "ऑनबोर्डिंग प्रारंभ करें",
     "secureYourInstance": "अपना उदाहरण सुरक्षित करें",
     "setPasswordDescription": "अपने डैशबोर्ड की सुरक्षा और अपने एपीआई एंडपॉइंट को अनधिकृत पहुंच से सुरक्षित करने के लिए एक पासवर्ड सेट करें।",
@@ -3890,6 +5239,8 @@
     "restartServerWithNewPassword": "सर्वर को पुनरारंभ करें - यह नए पासवर्ड का उपयोग करेगा",
     "backToLogin": "लॉगइन पर वापस जाएँ",
     "forgotPassword": "पासवर्ड भूल गए?",
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
     "defaultPasswordHint": "Default password: CHANGEME (unless INITIAL_PASSWORD was set)",
     "Authorization": "Authorization",
     "Content-Disposition": "Content-Disposition",
@@ -3903,6 +5254,29 @@
     "nodeIncompatibleFixLabel": "Fix: install a patched Node.js 22 LTS release",
     "nodeIncompatibleDesc": "You are running Node.js {version}, which is outside OmniRoute's supported secure runtime policy. Use a patched Node.js 20.x or 22.x LTS release.",
     "nodeIncompatibleHint": "OmniRoute requires Node.js 20.20.2+ (20.x LTS), 22.22.2+ (22.x LTS) or 24.0.0+ (24.x LTS). Node 24 LTS is recommended."
+========
+    "defaultPasswordHint": "डिफ़ॉल्ट पासवर्ड: 123456 (जब तक कि INITIAL_PASSWORD सेट न किया गया हो)",
+    "Authorization": "प्राधिकरण",
+    "Content-Disposition": "सामग्री-स्वभाव",
+    "waitingForAuthorization": "प्राधिकरण की प्रतीक्षा है...",
+    "waitingForGoogleAuthorization": "Google प्राधिकरण की प्रतीक्षा की जा रही है...",
+    "waitingForOpenAIAuthorization": "OpenAI प्राधिकरण की प्रतीक्षा की जा रही है...",
+    "waitingForAntigravityAuthorization": "एंटीग्रेविटी प्राधिकरण की प्रतीक्षा की जा रही है...",
+    "waitingForQoderAuthorization": "Qoder प्राधिकरण की प्रतीक्षा की जा रही है...",
+    "exchangingCodeForTokens": "टोकन के लिए कोड का आदान-प्रदान..."
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+=======
+    "defaultPasswordHint": "Default password: 123456 (unless INITIAL_PASSWORD was set)",
+    "Content-Disposition": "Content-Disposition",
+    "waitingForAuthorization": "Waiting for authorization...",
+    "waitingForOpenAIAuthorization": "Waiting for OpenAI authorization...",
+    "waitingForGoogleAuthorization": "Waiting for Google authorization...",
+    "waitingForIFlowAuthorization": "Waiting for iFlow authorization...",
+    "waitingForAntigravityAuthorization": "Waiting for Antigravity authorization...",
+    "Authorization": "Authorization",
+    "exchangingCodeForTokens": "Exchanging code for tokens...",
+    "waitingForQoderAuthorization": "Waiting for Qoder authorization..."
+>>>>>>> Stashed changes
   },
   "landing": {
     "brandName": "ओम्निरूट",
@@ -3994,10 +5368,20 @@
     "supportedProvidersToc": "प्रदाता",
     "commonUseCases": "सामान्य उपयोग के मामले",
     "clientCompatibility": "ग्राहक अनुकूलता",
-    "protocolsToc": "Protocols",
+<<<<<<< Updated upstream
+    "protocolsToc": "प्रोटोकॉल",
     "apiReference": "एपीआई संदर्भ",
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
     "managementApiReference": "Management API Reference",
     "managementApiDescription": "Automation endpoints for proxy registry, scope assignments, and legacy proxy migration.",
+========
+    "managementApiReference": "प्रबंधन एपीआई संदर्भ",
+    "managementApiDescription": "प्रॉक्सी रजिस्ट्री, स्कोप असाइनमेंट और लीगेसी प्रॉक्सी माइग्रेशन के लिए स्वचालन समापन बिंदु।",
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+=======
+    "protocolsToc": "Protocols",
+    "apiReference": "एपीआई संदर्भ",
+>>>>>>> Stashed changes
     "method": "विधि",
     "path": "पथ",
     "notes": "टिप्पणियाँ",
@@ -4069,6 +5453,24 @@
     "clientClaudeBullet1Prefix": "उपयोग करें",
     "clientClaudeBullet1Middle": "(क्लाउड) या",
     "clientClaudeBullet1Suffix": "(एंटीग्रेविटी) उपसर्ग।",
+<<<<<<< Updated upstream
+    "protocolsTitle": "प्रोटोकॉल: एमसीपी और ए2ए",
+    "protocolsDescription": "ओमनीरूट ओपनएआई-संगत एपीआई के अलावा दो परिचालन प्रोटोकॉल को उजागर करता है: टूल निष्पादन के लिए एमसीपी और एजेंट-टू-एजेंट वर्कफ़्लो के लिए ए2ए।",
+    "protocolMcpTitle": "एमसीपी (मॉडल संदर्भ प्रोटोकॉल)",
+    "protocolMcpDesc": "ग्राहकों को ऑडिट दृश्यता के साथ ओम्निरूट टूल खोजने और कॉल करने देने के लिए stdio पर MCP का उपयोग करें।",
+    "protocolMcpStep1": "`omniroute --mcp` के साथ MCP ट्रांसपोर्ट प्रारंभ करें।",
+    "protocolMcpStep2": "अपने MCP क्लाइंट को stdio ट्रांसपोर्ट की ओर इंगित करें।",
+    "protocolMcpStep3": "कनेक्टिविटी सत्यापित करने के लिए `omniroute_get_health` और `omniroute_list_combos` पर कॉल करें।",
+    "protocolA2aTitle": "A2A (एजेंट2एजेंट)",
+    "protocolA2aDesc": "कार्यों को समकालिक रूप से या SSE स्ट्रीमिंग के माध्यम से सबमिट करने के लिए A2A JSON-RPC का उपयोग करें।",
+    "protocolA2aStep1": "एजेंट खोज के लिए `/.well-known/agent.json` पढ़ें।",
+    "protocolA2aStep2": "`संदेश/भेजें' या `संदेश/स्ट्रीम' अनुरोधों को `POST/a2a` पर भेजें।",
+    "protocolA2aStep3": "`कार्य/प्राप्त करें` और `कार्य/रद्द करें` के साथ कार्य जीवनचक्र को प्रबंधित करें।",
+    "protocolTroubleshootingTitle": "प्रोटोकॉल समस्या निवारण",
+    "protocolTroubleshooting1": "यदि एमसीपी स्थिति ऑफ़लाइन है, तो सत्यापित करें कि stdio प्रक्रिया चल रही है और दिल की धड़कन फ़ाइल अपडेट हो रही है।",
+    "protocolTroubleshooting2": "यदि A2A कार्य `कार्यशील` स्थिति में रहते हैं, तो `/api/a2a/tasks/:id` का निरीक्षण करें और टर्मिनल स्थिति के लिए ईवेंट स्ट्रीम करें।",
+    "protocolTroubleshooting3": "परिचालन नियंत्रण और ऑडिट दृश्यता के लिए `/dashboard/mcp` और `/dashboard/a2a` का उपयोग करें।",
+=======
     "protocolsTitle": "Protocols: MCP & A2A",
     "protocolsDescription": "OmniRoute exposes two operational protocols in addition to OpenAI-compatible APIs: MCP for tool execution and A2A for agent-to-agent workflows.",
     "protocolMcpTitle": "MCP (Model Context Protocol)",
@@ -4085,23 +5487,28 @@
     "protocolTroubleshooting1": "If MCP status is offline, verify the stdio process is running and heartbeat file is updating.",
     "protocolTroubleshooting2": "If A2A tasks stay in `working`, inspect `/api/a2a/tasks/:id` and stream events for terminal state.",
     "protocolTroubleshooting3": "Use `/dashboard/mcp` and `/dashboard/a2a` for operational controls and audit visibility.",
+>>>>>>> Stashed changes
     "endpointChatNote": "OpenAI-संगत चैट समापन बिंदु (डिफ़ॉल्ट)।",
     "endpointResponsesNote": "प्रतिक्रियाएँ एपीआई समापन बिंदु (कोडेक्स, ओ-श्रृंखला)।",
     "endpointModelsNote": "सभी जुड़े हुए प्रदाताओं के लिए मॉडल कैटलॉग।",
     "endpointAudioNote": "ऑडियो ट्रांसक्रिप्शन (डीपग्राम, असेंबलीएआई)।",
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
     "endpointSpeechNote": "Text-to-speech generation (ElevenLabs, OpenAI TTS).",
     "endpointEmbeddingsNote": "Text embedding generation (OpenAI, Cohere, Voyage).",
+========
+    "endpointSpeechNote": "टेक्स्ट-टू-स्पीच जेनरेशन (इलेवनलैब्स, ओपनएआई टीटीएस)।",
+    "endpointEmbeddingsNote": "टेक्स्ट एम्बेडिंग जेनरेशन (ओपनएआई, कोहेयर, वॉयेज)।",
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+=======
+>>>>>>> Stashed changes
     "endpointImagesNote": "छवि निर्माण (नैनोबनाना)।",
     "endpointRewriteChatNote": "/v1 के बिना ग्राहकों के लिए सहायक को फिर से लिखें।",
     "endpointRewriteResponsesNote": "/v1 के बिना प्रतिक्रियाओं के लिए सहायक को फिर से लिखें।",
     "endpointRewriteModelsNote": "/v1 के बिना मॉडल खोज के लिए सहायक को फिर से लिखें।",
-    "mgmtProxiesListNote": "List saved proxy registry items (supports pagination).",
-    "mgmtProxiesCreateNote": "Create a reusable proxy item in the registry.",
-    "mgmtProxiesHealthNote": "Get 24h/rolling health metrics per saved proxy from proxy logs.",
-    "mgmtProxiesBulkAssignNote": "Assign or clear one proxy across many scope IDs in one request.",
-    "mgmtAssignmentsListNote": "List proxy assignments by scope, scope_id, or proxy_id.",
-    "mgmtAssignmentsUpdateNote": "Assign or clear proxy for global/provider/account/combo scope.",
-    "mgmtLegacyMigrationNote": "Import legacy proxyConfig maps into registry assignments.",
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
+=======
     "modelPrefixesDescriptionStart": "किसी विशिष्ट प्रदाता तक रूट करने के लिए मॉडल नाम से पहले प्रदाता उपसर्ग का उपयोग करें। उदाहरण:",
     "modelPrefixesDescriptionEnd": "GitHub Copilot के लिए मार्ग।",
     "provider": "प्रदाता",
@@ -4112,8 +5519,42 @@
     "troubleshootingTestConnection": "आईडीई या बाहरी क्लाइंट से परीक्षण करने से पहले डैशबोर्ड > प्रदाता > परीक्षण कनेक्शन का उपयोग करें।",
     "troubleshootingCircuitBreaker": "यदि कोई प्रदाता सर्किट ब्रेकर खुला दिखाता है, तो कूलडाउन की प्रतीक्षा करें या विवरण के लिए स्वास्थ्य पृष्ठ देखें।",
     "troubleshootingOAuth": "OAuth प्रदाताओं के लिए, यदि टोकन समाप्त हो जाते हैं तो पुनः प्रमाणित करें। प्रदाता कार्ड स्थिति संकेतक की जाँच करें।",
+    "managementApiReference": "Management API Reference",
+    "managementApiDescription": "Automation endpoints for proxy registry, scope assignments, and legacy proxy migration.",
+>>>>>>> Stashed changes
+    "mgmtProxiesListNote": "List saved proxy registry items (supports pagination).",
+    "mgmtProxiesCreateNote": "Create a reusable proxy item in the registry.",
+    "mgmtProxiesHealthNote": "Get 24h/rolling health metrics per saved proxy from proxy logs.",
+    "mgmtProxiesBulkAssignNote": "Assign or clear one proxy across many scope IDs in one request.",
+    "mgmtAssignmentsListNote": "List proxy assignments by scope, scope_id, or proxy_id.",
+    "mgmtAssignmentsUpdateNote": "Assign or clear proxy for global/provider/account/combo scope.",
+    "mgmtLegacyMigrationNote": "Import legacy proxyConfig maps into registry assignments.",
+<<<<<<< Updated upstream
+========
+    "mgmtProxiesListNote": "सहेजे गए प्रॉक्सी रजिस्ट्री आइटम की सूची बनाएं (पेजिनेशन का समर्थन करता है)।",
+    "mgmtProxiesCreateNote": "रजिस्ट्री में एक पुन: प्रयोज्य प्रॉक्सी आइटम बनाएं।",
+    "mgmtProxiesHealthNote": "प्रॉक्सी लॉग से प्रति सहेजी गई प्रॉक्सी 24 घंटे/रोलिंग स्वास्थ्य मेट्रिक्स प्राप्त करें।",
+    "mgmtProxiesBulkAssignNote": "एक अनुरोध में कई स्कोप आईडी में एक प्रॉक्सी असाइन करें या साफ़ करें।",
+    "mgmtAssignmentsListNote": "प्रॉक्सी असाइनमेंट को स्कोप, स्कोप_आईडी, या प्रॉक्सी_आईडी के आधार पर सूचीबद्ध करें।",
+    "mgmtAssignmentsUpdateNote": "वैश्विक/प्रदाता/खाता/कॉम्बो दायरे के लिए प्रॉक्सी निर्दिष्ट करें या साफ़ करें।",
+    "mgmtLegacyMigrationNote": "रजिस्ट्री असाइनमेंट में लीगेसी प्रॉक्सी कॉन्फिग मानचित्र आयात करें।",
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+    "modelPrefixesDescriptionStart": "किसी विशिष्ट प्रदाता तक रूट करने के लिए मॉडल नाम से पहले प्रदाता उपसर्ग का उपयोग करें। उदाहरण:",
+    "modelPrefixesDescriptionEnd": "GitHub Copilot के लिए मार्ग।",
+    "provider": "प्रदाता",
+    "type": "प्रकार",
+    "troubleshootingModelRouting": "यदि क्लाइंट मॉडल रूटिंग में विफल रहता है, तो स्पष्ट प्रदाता/मॉडल का उपयोग करें (उदाहरण के लिए: gh/gpt-5.1-कोडेक्स)।",
+    "troubleshootingAmbiguousModels": "यदि आपको अस्पष्ट मॉडल त्रुटियाँ प्राप्त होती हैं, तो नंगे मॉडल आईडी के बजाय प्रदाता उपसर्ग चुनें।",
+    "troubleshootingCodexFamily": "GitHub कोडेक्स-फ़ैमिली मॉडल के लिए, मॉडल को gh/कोडेक्स-मॉडल के रूप में रखें; राउटर स्वचालित रूप से/प्रतिक्रियाओं का चयन करता है।",
+    "troubleshootingTestConnection": "आईडीई या बाहरी क्लाइंट से परीक्षण करने से पहले डैशबोर्ड > प्रदाता > परीक्षण कनेक्शन का उपयोग करें।",
+    "troubleshootingCircuitBreaker": "यदि कोई प्रदाता सर्किट ब्रेकर खुला दिखाता है, तो कूलडाउन की प्रतीक्षा करें या विवरण के लिए स्वास्थ्य पृष्ठ देखें।",
+    "troubleshootingOAuth": "OAuth प्रदाताओं के लिए, यदि टोकन समाप्त हो जाते हैं तो पुनः प्रमाणित करें। प्रदाता कार्ड स्थिति संकेतक की जाँच करें।",
     "deployTermuxTitle": "Termux (Android)",
     "deployTermuxText": "Run OmniRoute headless on Android via Termux. Access the dashboard from your mobile browser."
+=======
+    "endpointSpeechNote": "Text-to-speech generation (ElevenLabs, OpenAI TTS).",
+    "endpointEmbeddingsNote": "Text embedding generation (OpenAI, Cohere, Voyage)."
+>>>>>>> Stashed changes
   },
   "legal": {
     "privacyPolicy": "गोपनीयता नीति",
@@ -4171,11 +5612,32 @@
     "termsNoTransmission": "जब तक आप स्पष्ट रूप से क्लाउड सिंक सुविधाओं को सक्षम नहीं करते हैं, तब तक ओमनीरूट किसी भी डेटा को बाहरी सर्वर पर प्रसारित नहीं करता है।",
     "termsDataLocationText": "उपयोग लॉग, एपीआई कुंजियाँ और कॉन्फ़िगरेशन संग्रहीत हैं",
     "termsSection5Title": "5. अस्वीकरण",
-    "termsSection5Text": "ओम्निरूट को किसी भी प्रकार की वारंटी के बिना \"जैसा है\" प्रदान किया जाता है। हम एपीआई उपयोग, सेवा व्यवधान या डेटा हानि के कारण होने वाली किसी भी लागत के लिए ज़िम्मेदार नहीं हैं। हमेशा अपने कॉन्फ़िगरेशन का बैकअप बनाए रखें।",
+<<<<<<< Updated upstream
+    "termsSection5Text": "ओम्निरूट को किसी भी प्रकार की वारंटी के बिना \"जैसा है\" प्रदान किया जाता है। हम एपीआई उपयोग, सेवा व्यवधान या डेटा हानि के कारण होने वाली किसी भी लागत के लिए जिम्मेदार नहीं हैं। हमेशा अपने कॉन्फ़िगरेशन का बैकअप बनाए रखें।",
     "termsSection6Title": "6. खुला स्रोत",
     "termsSection6Text": "ओमनीरूट ओपन-सोर्स सॉफ्टवेयर है। आप इसके लाइसेंस की शर्तों के तहत इसका निरीक्षण, संशोधन और वितरण करने के लिए स्वतंत्र हैं।"
   },
   "agents": {
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
+=======
+    "termsSection5Text": "ओम्निरूट को किसी भी प्रकार की वारंटी के बिना \"जैसा है\" प्रदान किया जाता है। हम एपीआई उपयोग, सेवा व्यवधान या डेटा हानि के कारण होने वाली किसी भी लागत के लिए ज़िम्मेदार नहीं हैं। हमेशा अपने कॉन्फ़िगरेशन का बैकअप बनाए रखें।",
+    "termsSection6Title": "6. खुला स्रोत",
+    "termsSection6Text": "ओमनीरूट ओपन-सोर्स सॉफ्टवेयर है। आप इसके लाइसेंस की शर्तों के तहत इसका निरीक्षण, संशोधन और वितरण करने के लिए स्वतंत्र हैं।"
+  },
+  "endpoints": {
+    "tabProxy": "Endpoint Proxy",
+    "tabApiEndpoints": "API Endpoints",
+    "apiEndpointsTitle": "API Endpoints",
+    "apiEndpointsDescription": "Backend API endpoints that can be consumed by other applications and services. This section will list all available REST APIs with documentation and testing capabilities.",
+    "comingSoon": "Coming Soon",
+    "plannedFeatures": "Planned Features",
+    "featureRestApi": "REST API endpoint catalog with interactive documentation",
+    "featureWebhooks": "Webhook configuration and event subscriptions",
+    "featureSwagger": "OpenAPI / Swagger spec auto-generation",
+    "featureAuth": "API key and OAuth scope management per endpoint"
+  },
+  "agents": {
+>>>>>>> Stashed changes
     "title": "CLI Agents",
     "description": "Discover installed CLI agents on your system. Add custom agents for auto-detection.",
     "refresh": "Refresh",
@@ -4204,6 +5666,7 @@
     "setupGuideCustomAgentTitle": "Register custom binary",
     "setupGuideCustomAgentDesc": "Use Add Custom Agent when your CLI is not in the built-in list. Provide binary name and version command.",
     "setupGuideCommandMissingTitle": "Fix 'command not found'",
+<<<<<<< Updated upstream
     "setupGuideCommandMissingDesc": "Ensure the CLI command exists in PATH, open a new terminal session, and rerun Refresh.",
     "cliToolsRedirectTitle": "Cli Tools Redirect Title",
     "cliToolsRedirectDesc": "Cli Tools Redirect Desc",
@@ -4260,7 +5723,180 @@
       "assistantExample": "I'd be happy to help you with that.",
       "userInitial": "I need help with",
       "userFollowUp": "Can you elaborate on that?"
+========
+    "title": "सीएलआई एजेंट",
+    "description": "अपने सिस्टम पर स्थापित सीएलआई एजेंटों की खोज करें। स्वतः-पहचान के लिए कस्टम एजेंट जोड़ें।",
+    "refresh": "ताज़ा करें",
+    "installed": "स्थापित",
+    "notFound": "नहीं मिला",
+    "builtIn": "अंतर्निर्मित",
+    "custom": "कस्टम",
+    "remove": "हटाओ",
+    "addCustomAgent": "कस्टम एजेंट जोड़ें",
+    "addCustomAgentDesc": "पता लगाने के लिए कोई भी सीएलआई उपकरण पंजीकृत करें। रिफ्रेश होने पर यह अपने आप स्कैन हो जाएगा।",
+    "agentName": "एजेंट का नाम",
+    "binaryName": "बाइनरी नाम",
+    "versionCommand": "संस्करण आदेश",
+    "spawnArgs": "स्पॉन आर्ग्स",
+    "addAgent": "एजेंट जोड़ें",
+    "scanning": "सीएलआई एजेंटों के लिए स्कैनिंग प्रणाली...",
+    "opencodeIntegration": "ओपनकोड एकीकरण",
+    "opencodeDetected": "ओपनकोड {version} का पता चला",
+    "opencodeDesc": "अपने ओमनीरूट बेस यूआरएल और सभी उपलब्ध मॉडलों के साथ उपयोग के लिए तैयार {configFile} बनाएं - इसे अपने प्रोजेक्ट रूट में छोड़ें और {command} चलाएं।",
+    "downloadConfig": "डाउनलोड करें {file}",
+    "downloaded": "डाउनलोड किया गया!",
+    "setupGuideTitle": "सेटअप गाइड",
+    "openCliTools": "सीएलआई उपकरण खोलें",
+    "setupGuideDetectCliTitle": "स्थापित सीएलआई का पता लगाएं",
+    "setupGuideDetectCliDesc": "सीएलआई स्थापित करने या अपडेट करने के बाद रीफ्रेश पर क्लिक करें ताकि ओमनीरूट बायनेरिज़ और संस्करणों को फिर से स्कैन कर सके।",
+    "setupGuideCustomAgentTitle": "कस्टम बाइनरी पंजीकृत करें",
+    "setupGuideCustomAgentDesc": "जब आपकी सीएलआई अंतर्निहित सूची में न हो तो कस्टम एजेंट जोड़ें का उपयोग करें। बाइनरी नाम और संस्करण कमांड प्रदान करें।",
+    "setupGuideCommandMissingTitle": "'कमांड नहीं मिला' ठीक करें",
+    "setupGuideCommandMissingDesc": "सुनिश्चित करें कि PATH में CLI कमांड मौजूद है, एक नया टर्मिनल सत्र खोलें, और रिफ्रेश फिर से चलाएँ।"
+  },
+  "autoCombo": {
+    "title": "ऑटो-कॉम्बो इंजन",
+    "statusNormal": "सामान्य",
+    "statusIncident": "घटना मोड",
+    "modePack": "मोड पैक",
+    "providerScores": "प्रदाता स्कोर",
+    "noAutoCombo": "कोई ऑटो-कॉम्बो कॉन्फ़िगर नहीं किया गया.",
+    "excludedProviders": "बहिष्कृत प्रदाता",
+    "noExclusions": "वर्तमान में कोई भी प्रदाता बाहर नहीं रखा गया है।",
+    "factorQuota": "कोटा",
+    "factorHealth": "स्वास्थ्य",
+    "factorCost": "लागत",
+    "factorLatency": "विलंबता",
+    "factorTaskFit": "कार्य फ़िट",
+    "factorStability": "स्थिरता",
+    "factorTierPriority": "स्तरीय प्राथमिकता",
+    "factorTierPriorityDesc": "उच्च कोटा स्तर वाले खातों को प्राथमिकता देता है (फ्री की तुलना में अल्ट्रा/प्रो)",
+    "scoreFactorBreakdown": "स्कोरिंग कारक",
+    "modePackShipFast": "तेजी से भेजें",
+    "modePackCostSaver": "लागत बचाने वाला",
+    "modePackQualityFirst": "गुणवत्ता पहले",
+    "modePackOfflineFriendly": "ऑफ़लाइन मित्रतापूर्ण"
+  },
+  "templateNames": {
+    "simple-chat": "सरल चैट",
+    "streaming": "स्ट्रीमिंग",
+    "system-prompt": "सिस्टम प्रॉम्प्ट",
+    "thinking": "सोच रहा हूँ",
+    "tool-calling": "टूल कॉलिंग",
+    "multi-turn": "बहु-मोड़"
+  },
+  "templateDescriptions": {
+    "simple-chat": "सिस्टम संदेश के साथ बुनियादी चैट टेम्पलेट",
+    "streaming": "स्ट्रीमिंग प्रतिक्रियाओं के लिए टेम्पलेट",
+    "system-prompt": "कस्टम सिस्टम प्रॉम्प्ट के साथ टेम्पलेट",
+    "thinking": "तर्क/सोच बजट के साथ टेम्पलेट",
+    "tool-calling": "टूल/फ़ंक्शन कॉलिंग के लिए टेम्पलेट",
+    "multi-turn": "बहु-मोड़ वार्तालापों के लिए टेम्पलेट"
+  },
+  "templatePayloads": {
+    "simpleChat": {
+      "system": "आप एक सहायक AI सहायक हैं।",
+      "userGreeting": "नमस्कार! आज मैं आपकी मदद करने में कैसे सक्षम हूं?"
+    },
+    "streaming": {
+      "prompt": "के बारे में एक कहानी लिखें"
+    },
+    "systemPrompt": {
+      "question": "जीवन का अर्थ क्या है?",
+      "systemInstruction": "एक विचारशील, दार्शनिक उत्तर प्रदान करें."
+    },
+    "thinking": {
+      "question": "क्वांटम कंप्यूटिंग को समझाइये"
+    },
+    "toolCalling": {
+      "cityNameDescription": "मौसम जानने के लिए शहर का नाम",
+      "toolDescription": "किसी स्थान के लिए वर्तमान मौसम प्राप्त करें",
+      "userWeather": "टोक्यो में मौसम कैसा है?"
+    },
+    "multiTurn": {
+      "system": "आप एक सहायक सहायक हैं.",
+      "assistantExample": "मुझे इसमें आपकी मदद करने में खुशी होगी।",
+      "userInitial": "मुझे मदद चाहिए",
+      "userFollowUp": "क्या आप इसके बारे में विस्तार से बता सकते हैं?"
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
     }
+=======
+    "setupGuideCommandMissingDesc": "Ensure the CLI command exists in PATH, open a new terminal session, and rerun Refresh."
+  },
+  "autoCombo": {
+    "title": "Auto-Combo Engine",
+    "statusNormal": "Normal",
+    "statusIncident": "Incident Mode",
+    "modePack": "Mode Pack",
+    "providerScores": "Provider Scores",
+    "noAutoCombo": "No auto-combo configured.",
+    "excludedProviders": "Excluded Providers",
+    "noExclusions": "No providers currently excluded.",
+    "factorQuota": "Quota",
+    "factorHealth": "Health",
+    "factorCost": "Cost",
+    "factorLatency": "Latency",
+    "factorTaskFit": "Task Fit",
+    "factorStability": "Stability",
+    "factorTierPriority": "Tier Priority",
+    "factorTierPriorityDesc": "Prefers accounts with higher quota tiers (Ultra/Pro over Free)",
+    "scoreFactorBreakdown": "Scoring Factors",
+    "modePackShipFast": "Ship Fast",
+    "modePackCostSaver": "Cost Saver",
+    "modePackQualityFirst": "Quality First",
+    "modePackOfflineFriendly": "Offline Friendly"
+  },
+  "search": {
+    "searchQuery": "Search Query",
+    "searchResults": "Search Results",
+    "cachedResult": "Cached",
+    "searchCost": "Cost",
+    "searchTools": "Search Tools",
+    "searchToolsDesc": "Advanced search testing with provider comparison",
+    "compareProviders": "Compare Providers",
+    "rerankResults": "Rerank Results",
+    "searchHistory": "Search History",
+    "urlOverlap": "URL Overlap",
+    "noSearchProviders": "No search providers configured. Add providers in Settings.",
+    "noRerankModels": "No rerank model available",
+    "webSearch": "Web Search",
+    "provider": "Provider",
+    "searchType": "Search Type",
+    "maxResults": "Max Results",
+    "filters": "Filters",
+    "country": "Country",
+    "language": "Language",
+    "timeRange": "Time Range",
+    "includeDomains": "Include Domains",
+    "excludeDomains": "Exclude Domains",
+    "safeSearch": "Safe Search",
+    "formatted": "Formatted",
+    "rawJson": "JSON",
+    "cacheMiss": "cache miss",
+    "cacheHit": "cache hit",
+    "latency": "Latency",
+    "cost": "Cost",
+    "results": "Results",
+    "rerank": "Rerank",
+    "rerankModel": "Rerank Model",
+    "positionDelta": "Position Change",
+    "emptyState": "Send a search query to see results",
+    "safeSearchOff": "Off",
+    "safeSearchModerate": "Moderate",
+    "safeSearchStrict": "Strict",
+    "queryPlaceholder": "Enter search query...",
+    "providerAuto": "auto (cheapest)",
+    "searchTypeWeb": "web",
+    "searchTypeNews": "news",
+    "optionAny": "any",
+    "timeRangeDay": "Past day",
+    "timeRangeWeek": "Past week",
+    "timeRangeMonth": "Past month",
+    "timeRangeYear": "Past year",
+    "domainPlaceholder": "example.com",
+    "requestTimedOut": "Request timed out ({seconds}s)",
+    "networkError": "Network error"
+>>>>>>> Stashed changes
   },
   "cache": {
     "title": "Cache Management",
@@ -4268,6 +5904,8 @@
     "refresh": "Refresh",
     "clearAll": "Clear All",
     "memoryEntries": "Memory Entries",
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
     "memoryEntriesSub": "In-memory LRU",
     "dbEntries": "DB Entries",
     "dbEntriesSub": "Persisted (SQLite)",
@@ -4289,10 +5927,26 @@
     "idempotency": "Idempotency Layer",
     "activeDedupKeys": "Active Dedup Keys",
     "dedupWindow": "Dedup Window",
+========
+=======
+>>>>>>> Stashed changes
+    "dbEntries": "DB Entries",
+    "cacheHits": "Cache Hits",
+    "tokensSaved": "Tokens Saved",
+    "hitRate": "Hit Rate",
+    "performance": "Cache Performance",
+    "behavior": "Cache Behavior",
+    "idempotency": "Idempotency Layer",
+<<<<<<< Updated upstream
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+=======
+>>>>>>> Stashed changes
     "clearSuccess": "Cache cleared. {count} expired entries removed.",
     "clearError": "Failed to clear cache.",
     "unavailable": "Cache unavailable",
     "unavailableDesc": "Could not fetch cache statistics. Make sure the server is running.",
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:src/i18n/messages/hi.json
     "promptCache": "Prompt Cache (Provider-Side)",
     "cachedRequests": "Cached Requests",
     "cacheHitRate": "Cache Hit Rate",
@@ -4607,5 +6261,106 @@
     "noProxyLogs": "No proxy logs yet. Configure proxies and make API calls to see them here.",
     "noMatchingLogs": "No logs match the current filters.",
     "tlsFingerprint": "Chrome 124 TLS Fingerprint"
+========
+=======
+>>>>>>> Stashed changes
+    "memoryEntriesSub": "In-memory LRU",
+    "dbEntriesSub": "Persisted (SQLite)",
+    "cacheHitsSub": "of {total} total",
+    "tokensSavedSub": "Estimated from hits",
+    "autoRefresh": "Auto-refreshes every {seconds}s",
+    "hits": "Hits",
+    "misses": "Misses",
+    "total": "Total",
+    "behaviorDeterministic": "Only non-streaming requests with temperature=0 are cached.",
+    "behaviorBypass": "Bypass with header {header}.",
+    "behaviorTwoTier": "Two-tier storage: in-memory LRU (fast) + SQLite (persistent across restarts).",
+    "behaviorTtl": "Default TTL: 30 minutes. Configure via {envVar}.",
+    "activeDedupKeys": "Active Dedup Keys",
+    "dedupWindow": "Dedup Window",
+    "inputTokens": "Input Tokens",
+    "requestsShort": "reqs",
+    "inputShort": "In",
+    "resetting": "Resetting...",
+    "cachedTokensCol": "Cached",
+    "search": "Search",
+    "cacheReuseRatioDesc": "Cached tokens / Total input tokens",
+    "resetMetrics": "Reset Metrics",
+    "loading": "Loading...",
+    "cachedRequests": "Cached Requests",
+    "model": "Model",
+    "cached": "Cached",
+    "actions": "Actions",
+    "trend24h": "Cache Trend (24h)",
+    "cachedShort": "Cached",
+    "cacheCreation": "Creation",
+    "byProvider": "Breakdown by Provider",
+    "created": "Created",
+    "cacheCreationTokens": "Cache Creation Tokens",
+    "withCacheControl": "With Cache Control",
+    "searchEntries": "Search entries...",
+    "cacheReuseRatio": "Cache Reuse Ratio",
+    "estCostSaved": "Est. Cost Saved",
+    "cachedTokens": "Cached Tokens",
+    "requests": "Requests",
+    "signature": "Signature",
+    "cacheCreationWrite": "Cache Creation (Write)",
+    "expires": "Expires",
+    "writeShort": "Write",
+    "cacheHitRate": "Cache Hit Rate",
+    "cacheMetrics": "Prompt Cache Metrics",
+    "overview": "Overview",
+    "promptCache": "Prompt Cache (Provider-Side)",
+    "provider": "Provider",
+    "cachedTokensRead": "Cached Tokens (Read)",
+    "entries": "Entries",
+    "noEntries": "No cache entries found"
+<<<<<<< Updated upstream
+>>>>>>>> Stashed changes:src/i18n/messages/in.json
+=======
+  },
+  "templatePayloads": {
+    "toolCalling": {
+      "toolDescription": "Get current weather for a location",
+      "userWeather": "What's the weather in Tokyo?",
+      "cityNameDescription": "The name of the city to get weather for"
+    },
+    "multiTurn": {
+      "assistantExample": "I'd be happy to help you with that.",
+      "userFollowUp": "Can you elaborate on that?",
+      "userInitial": "I need help with",
+      "system": "You are a helpful assistant."
+    },
+    "systemPrompt": {
+      "question": "What is the meaning of life?",
+      "systemInstruction": "Provide a thoughtful, philosophical answer."
+    },
+    "simpleChat": {
+      "userGreeting": "Hello! How can I help you today?",
+      "system": "You are a helpful AI assistant."
+    },
+    "thinking": {
+      "question": "Explain quantum computing"
+    },
+    "streaming": {
+      "prompt": "Write a story about"
+    }
+  },
+  "templateNames": {
+    "tool-calling": "Tool Calling",
+    "thinking": "Thinking",
+    "simple-chat": "Simple Chat",
+    "system-prompt": "System Prompt",
+    "streaming": "Streaming",
+    "multi-turn": "Multi-turn"
+  },
+  "templateDescriptions": {
+    "simple-chat": "Basic chat template with system message",
+    "multi-turn": "Template for multi-turn conversations",
+    "thinking": "Template with reasoning/thinking budget",
+    "tool-calling": "Template for tool/function calling",
+    "system-prompt": "Template with custom system prompt",
+    "streaming": "Template for streaming responses"
+>>>>>>> Stashed changes
   }
 }

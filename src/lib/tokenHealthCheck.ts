@@ -280,7 +280,11 @@ export async function checkConnection(conn) {
     if (Date.now() - lastRetry < backoffMs) return;
 
     log(
+<<<<<<< Updated upstream
       `${LOG_PREFIX} Retrying expired ${conn.provider}/${getConnectionLogLabel(conn)} (attempt ${retryCount + 1}/${EXPIRED_RETRY_MAX})`
+=======
+      `${LOG_PREFIX} Retrying expired ${conn.provider}/${conn.name || conn.email || conn.id} (attempt ${retryCount + 1}/${EXPIRED_RETRY_MAX})`
+>>>>>>> Stashed changes
     );
   }
 
@@ -296,6 +300,7 @@ export async function checkConnection(conn) {
   const intervalMs = intervalMin * 60 * 1000;
   const lastCheck = conn.lastHealthCheckAt ? new Date(conn.lastHealthCheckAt).getTime() : 0;
 
+<<<<<<< Updated upstream
   // Prefer expiry-driven refresh when the provider returns a concrete expiry timestamp.
   // Rotating-token providers such as Codex should not be refreshed on a fixed hourly
   // cadence while the access token is still valid for days.
@@ -306,6 +311,21 @@ export async function checkConnection(conn) {
   const shouldRefreshByInterval = !hasKnownExpiry && Date.now() - lastCheck >= intervalMs;
 
   if (!isAboutToExpire && !shouldRefreshByInterval) return;
+=======
+  // Proactive pre-expiry check (#631): if token is about to expire, refresh immediately
+  // regardless of the health check interval — prevents request failures between checks
+  const TOKEN_EXPIRY_BUFFER = 5 * 60 * 1000; // 5 minutes
+  const tokenExpiresAt = conn.tokenExpiresAt ? new Date(conn.tokenExpiresAt).getTime() : 0;
+  const isAboutToExpire = tokenExpiresAt > 0 && tokenExpiresAt - Date.now() < TOKEN_EXPIRY_BUFFER;
+
+  // Not yet due: skip if (a) interval hasn't elapsed AND (b) token is not about to expire
+  if (Date.now() - lastCheck < intervalMs && !isAboutToExpire) return;
+
+  const reason = isAboutToExpire ? "token expiring soon" : `interval: ${intervalMin}min`;
+  log(
+    `${LOG_PREFIX} Refreshing ${conn.provider}/${conn.name || conn.email || conn.id} (${reason})`
+  );
+>>>>>>> Stashed changes
 
   const reason = isAboutToExpire ? "token expiring soon" : `interval: ${intervalMin}min`;
   log(`${LOG_PREFIX} Refreshing ${conn.provider}/${getConnectionLogLabel(conn)} (${reason})`);
@@ -444,6 +464,7 @@ export async function checkConnection(conn) {
     await updateProviderConnection(conn.id, updateData);
     log(`${LOG_PREFIX} ✓ ${conn.provider}/${getConnectionLogLabel(conn)} refreshed`);
   } else {
+<<<<<<< Updated upstream
     const updateData = buildRefreshFailureUpdate(conn, now);
     await updateProviderConnection(conn.id, updateData);
     logWarn(
@@ -451,6 +472,24 @@ export async function checkConnection(conn) {
         (conn.testStatus === "expired"
           ? ` (${updateData.expiredRetryCount}/${EXPIRED_RETRY_MAX} expired retries used)`
           : "")
+=======
+    const wasExpired = conn.testStatus === "expired";
+    const retryCount = (conn.expiredRetryCount ?? 0) + (wasExpired ? 1 : 0);
+
+    await updateProviderConnection(conn.id, {
+      lastHealthCheckAt: now,
+      testStatus: wasExpired ? "expired" : "error",
+      lastError: "Health check: token refresh failed",
+      lastErrorAt: now,
+      lastErrorType: "token_refresh_failed",
+      lastErrorSource: "oauth",
+      errorCode: "refresh_failed",
+      ...(wasExpired ? { expiredRetryCount: retryCount, expiredRetryAt: now } : {}),
+    });
+    logWarn(
+      `${LOG_PREFIX} ✗ ${conn.provider}/${conn.name || conn.email || conn.id} refresh failed` +
+        (wasExpired ? ` (expired retry ${retryCount}/${EXPIRED_RETRY_MAX})` : "")
+>>>>>>> Stashed changes
     );
   }
 }

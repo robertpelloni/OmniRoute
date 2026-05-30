@@ -1,9 +1,21 @@
+<<<<<<< Updated upstream
 # User Guide (한국어)
 
 <<<<<<< Updated upstream
 🌐 **Languages:** 🇺🇸 [English](../../../../docs/USER_GUIDE.md) · 🇸🇦 [ar](../../ar/docs/USER_GUIDE.md) · 🇧🇬 [bg](../../bg/docs/USER_GUIDE.md) · 🇧🇩 [bn](../../bn/docs/USER_GUIDE.md) · 🇨🇿 [cs](../../cs/docs/USER_GUIDE.md) · 🇩🇰 [da](../../da/docs/USER_GUIDE.md) · 🇩🇪 [de](../../de/docs/USER_GUIDE.md) · 🇪🇸 [es](../../es/docs/USER_GUIDE.md) · 🇮🇷 [fa](../../fa/docs/USER_GUIDE.md) · 🇫🇮 [fi](../../fi/docs/USER_GUIDE.md) · 🇫🇷 [fr](../../fr/docs/USER_GUIDE.md) · 🇮🇳 [gu](../../gu/docs/USER_GUIDE.md) · 🇮🇱 [he](../../he/docs/USER_GUIDE.md) · 🇮🇳 [hi](../../hi/docs/USER_GUIDE.md) · 🇭🇺 [hu](../../hu/docs/USER_GUIDE.md) · 🇮🇩 [id](../../id/docs/USER_GUIDE.md) · 🇮🇹 [it](../../it/docs/USER_GUIDE.md) · 🇯🇵 [ja](../../ja/docs/USER_GUIDE.md) · 🇰🇷 [ko](../../ko/docs/USER_GUIDE.md) · 🇮🇳 [mr](../../mr/docs/USER_GUIDE.md) · 🇲🇾 [ms](../../ms/docs/USER_GUIDE.md) · 🇳🇱 [nl](../../nl/docs/USER_GUIDE.md) · 🇳🇴 [no](../../no/docs/USER_GUIDE.md) · 🇵🇭 [phi](../../phi/docs/USER_GUIDE.md) · 🇵🇱 [pl](../../pl/docs/USER_GUIDE.md) · 🇵🇹 [pt](../../pt/docs/USER_GUIDE.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/USER_GUIDE.md) · 🇷🇴 [ro](../../ro/docs/USER_GUIDE.md) · 🇷🇺 [ru](../../ru/docs/USER_GUIDE.md) · 🇸🇰 [sk](../../sk/docs/USER_GUIDE.md) · 🇸🇪 [sv](../../sv/docs/USER_GUIDE.md) · 🇰🇪 [sw](../../sw/docs/USER_GUIDE.md) · 🇮🇳 [ta](../../ta/docs/USER_GUIDE.md) · 🇮🇳 [te](../../te/docs/USER_GUIDE.md) · 🇹🇭 [th](../../th/docs/USER_GUIDE.md) · 🇹🇷 [tr](../../tr/docs/USER_GUIDE.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/USER_GUIDE.md) · 🇵🇰 [ur](../../ur/docs/USER_GUIDE.md) · 🇻🇳 [vi](../../vi/docs/USER_GUIDE.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/USER_GUIDE.md)
 =======
 🌐 **Languages:** 🇺🇸 [English](../../../../docs/USER_GUIDE.md) · 🇪🇸 [es](../../es/docs/USER_GUIDE.md) · 🇫🇷 [fr](../../fr/docs/USER_GUIDE.md) · 🇩🇪 [de](../../de/docs/USER_GUIDE.md) · 🇮🇹 [it](../../it/docs/USER_GUIDE.md) · 🇷🇺 [ru](../../ru/docs/USER_GUIDE.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/USER_GUIDE.md) · 🇯🇵 [ja](../../ja/docs/USER_GUIDE.md) · 🇰🇷 [ko](../../ko/docs/USER_GUIDE.md) · 🇸🇦 [ar](../../ar/docs/USER_GUIDE.md) · 🇮🇳 [in](../../in/docs/USER_GUIDE.md) · 🇹🇭 [th](../../th/docs/USER_GUIDE.md) · 🇻🇳 [vi](../../vi/docs/USER_GUIDE.md) · 🇮🇩 [id](../../id/docs/USER_GUIDE.md) · 🇲🇾 [ms](../../ms/docs/USER_GUIDE.md) · 🇳🇱 [nl](../../nl/docs/USER_GUIDE.md) · 🇵🇱 [pl](../../pl/docs/USER_GUIDE.md) · 🇸🇪 [sv](../../sv/docs/USER_GUIDE.md) · 🇳🇴 [no](../../no/docs/USER_GUIDE.md) · 🇩🇰 [da](../../da/docs/USER_GUIDE.md) · 🇫🇮 [fi](../../fi/docs/USER_GUIDE.md) · 🇵🇹 [pt](../../pt/docs/USER_GUIDE.md) · 🇷🇴 [ro](../../ro/docs/USER_GUIDE.md) · 🇭🇺 [hu](../../hu/docs/USER_GUIDE.md) · 🇧🇬 [bg](../../bg/docs/USER_GUIDE.md) · 🇸🇰 [sk](../../sk/docs/USER_GUIDE.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/USER_GUIDE.md) · 🇮🇱 [he](../../he/docs/USER_GUIDE.md) · 🇵🇭 [phi](../../phi/docs/USER_GUIDE.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/USER_GUIDE.md) · 🇨🇿 [cs](../../cs/docs/USER_GUIDE.md)
+>>>>>>> Stashed changes
+=======
+<<<<<<<< Updated upstream:docs/i18n/pl/docs/USER_GUIDE.md
+# User Guide (Polski)
+
+🌐 **Languages:** 🇺🇸 [English](../../../../docs/USER_GUIDE.md) · 🇸🇦 [ar](../../ar/docs/USER_GUIDE.md) · 🇧🇬 [bg](../../bg/docs/USER_GUIDE.md) · 🇧🇩 [bn](../../bn/docs/USER_GUIDE.md) · 🇨🇿 [cs](../../cs/docs/USER_GUIDE.md) · 🇩🇰 [da](../../da/docs/USER_GUIDE.md) · 🇩🇪 [de](../../de/docs/USER_GUIDE.md) · 🇪🇸 [es](../../es/docs/USER_GUIDE.md) · 🇮🇷 [fa](../../fa/docs/USER_GUIDE.md) · 🇫🇮 [fi](../../fi/docs/USER_GUIDE.md) · 🇫🇷 [fr](../../fr/docs/USER_GUIDE.md) · 🇮🇳 [gu](../../gu/docs/USER_GUIDE.md) · 🇮🇱 [he](../../he/docs/USER_GUIDE.md) · 🇮🇳 [hi](../../hi/docs/USER_GUIDE.md) · 🇭🇺 [hu](../../hu/docs/USER_GUIDE.md) · 🇮🇩 [id](../../id/docs/USER_GUIDE.md) · 🇮🇹 [it](../../it/docs/USER_GUIDE.md) · 🇯🇵 [ja](../../ja/docs/USER_GUIDE.md) · 🇰🇷 [ko](../../ko/docs/USER_GUIDE.md) · 🇮🇳 [mr](../../mr/docs/USER_GUIDE.md) · 🇲🇾 [ms](../../ms/docs/USER_GUIDE.md) · 🇳🇱 [nl](../../nl/docs/USER_GUIDE.md) · 🇳🇴 [no](../../no/docs/USER_GUIDE.md) · 🇵🇭 [phi](../../phi/docs/USER_GUIDE.md) · 🇵🇱 [pl](../../pl/docs/USER_GUIDE.md) · 🇵🇹 [pt](../../pt/docs/USER_GUIDE.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/USER_GUIDE.md) · 🇷🇴 [ro](../../ro/docs/USER_GUIDE.md) · 🇷🇺 [ru](../../ru/docs/USER_GUIDE.md) · 🇸🇰 [sk](../../sk/docs/USER_GUIDE.md) · 🇸🇪 [sv](../../sv/docs/USER_GUIDE.md) · 🇰🇪 [sw](../../sw/docs/USER_GUIDE.md) · 🇮🇳 [ta](../../ta/docs/USER_GUIDE.md) · 🇮🇳 [te](../../te/docs/USER_GUIDE.md) · 🇹🇭 [th](../../th/docs/USER_GUIDE.md) · 🇹🇷 [tr](../../tr/docs/USER_GUIDE.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/USER_GUIDE.md) · 🇵🇰 [ur](../../ur/docs/USER_GUIDE.md) · 🇻🇳 [vi](../../vi/docs/USER_GUIDE.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/USER_GUIDE.md)
+========
+# User Guide (한국어)
+
+🌐 **Languages:** 🇺🇸 [English](../../../../docs/USER_GUIDE.md) · 🇪🇸 [es](../../es/docs/USER_GUIDE.md) · 🇫🇷 [fr](../../fr/docs/USER_GUIDE.md) · 🇩🇪 [de](../../de/docs/USER_GUIDE.md) · 🇮🇹 [it](../../it/docs/USER_GUIDE.md) · 🇷🇺 [ru](../../ru/docs/USER_GUIDE.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/USER_GUIDE.md) · 🇯🇵 [ja](../../ja/docs/USER_GUIDE.md) · 🇰🇷 [ko](../../ko/docs/USER_GUIDE.md) · 🇸🇦 [ar](../../ar/docs/USER_GUIDE.md) · 🇮🇳 [in](../../in/docs/USER_GUIDE.md) · 🇹🇭 [th](../../th/docs/USER_GUIDE.md) · 🇻🇳 [vi](../../vi/docs/USER_GUIDE.md) · 🇮🇩 [id](../../id/docs/USER_GUIDE.md) · 🇲🇾 [ms](../../ms/docs/USER_GUIDE.md) · 🇳🇱 [nl](../../nl/docs/USER_GUIDE.md) · 🇵🇱 [pl](../../pl/docs/USER_GUIDE.md) · 🇸🇪 [sv](../../sv/docs/USER_GUIDE.md) · 🇳🇴 [no](../../no/docs/USER_GUIDE.md) · 🇩🇰 [da](../../da/docs/USER_GUIDE.md) · 🇫🇮 [fi](../../fi/docs/USER_GUIDE.md) · 🇵🇹 [pt](../../pt/docs/USER_GUIDE.md) · 🇷🇴 [ro](../../ro/docs/USER_GUIDE.md) · 🇭🇺 [hu](../../hu/docs/USER_GUIDE.md) · 🇧🇬 [bg](../../bg/docs/USER_GUIDE.md) · 🇸🇰 [sk](../../sk/docs/USER_GUIDE.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/USER_GUIDE.md) · 🇮🇱 [he](../../he/docs/USER_GUIDE.md) · 🇵🇭 [phi](../../phi/docs/USER_GUIDE.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/USER_GUIDE.md) · 🇨🇿 [cs](../../cs/docs/USER_GUIDE.md)
+>>>>>>>> Stashed changes:docs/i18n/ko/docs/USER_GUIDE.md
 >>>>>>> Stashed changes
 
 ---
@@ -324,7 +336,15 @@ Model: cc/claude-opus-4-7
 
 ---
 
+<<<<<<< Updated upstream
 ## 배포
+=======
+<<<<<<<< Updated upstream:docs/i18n/pl/docs/USER_GUIDE.md
+## Wdrożenie
+========
+## 배포
+>>>>>>>> Stashed changes:docs/i18n/ko/docs/USER_GUIDE.md
+>>>>>>> Stashed changes
 
 ### Global npm install (Recommended)
 
@@ -511,9 +531,17 @@ do_install() {
 export PORT="${PORT:-20128}"
 export DATA_DIR="${DATA_DIR:-${XDG_DATA_HOME:-${HOME}/.local/share}/omniroute}"
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 export APP_LOG_TO_FILE="${APP_LOG_TO_FILE:-false}"
 =======
 export LOG_TO_FILE="${LOG_TO_FILE:-false}"
+>>>>>>> Stashed changes
+=======
+<<<<<<<< Updated upstream:docs/i18n/pl/docs/USER_GUIDE.md
+export APP_LOG_TO_FILE="${APP_LOG_TO_FILE:-false}"
+========
+export LOG_TO_FILE="${LOG_TO_FILE:-false}"
+>>>>>>>> Stashed changes:docs/i18n/ko/docs/USER_GUIDE.md
 >>>>>>> Stashed changes
 mkdir -p "${DATA_DIR}"
 exec node /usr/lib/omniroute/.next/standalone/server.js "$@"
@@ -531,6 +559,10 @@ post_install() {
 ### Environment Variables
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+<<<<<<<< Updated upstream:docs/i18n/pl/docs/USER_GUIDE.md
+>>>>>>> Stashed changes
 | Variable                                | Default                              | Description                                                                                               |
 | --------------------------------------- | ------------------------------------ | --------------------------------------------------------------------------------------------------------- |
 | `JWT_SECRET`                            | `omniroute-default-secret-change-me` | JWT signing secret (**change in production**)                                                             |
@@ -553,7 +585,11 @@ post_install() {
 | `OMNIROUTE_MEMORY_MB`                   | `512`                                | Node.js heap limit in MB                                                                                  |
 | `PROMPT_CACHE_MAX_SIZE`                 | `50`                                 | Max prompt cache entries                                                                                  |
 | `SEMANTIC_CACHE_MAX_SIZE`               | `100`                                | Max semantic cache entries                                                                                |
+<<<<<<< Updated upstream
 =======
+=======
+========
+>>>>>>> Stashed changes
 | Variable                     | Default                              | Description                                                                                |
 | ---------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------ |
 | `JWT_SECRET`                 | `omniroute-default-secret-change-me` | JWT signing secret (**change in production**)                                              |
@@ -574,6 +610,10 @@ post_install() {
 | `OMNIROUTE_MEMORY_MB`        | `512`                                | Node.js heap limit in MB                                                                   |
 | `PROMPT_CACHE_MAX_SIZE`      | `50`                                 | Max prompt cache entries                                                                   |
 | `SEMANTIC_CACHE_MAX_SIZE`    | `100`                                | Max semantic cache entries                                                                 |
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>>> Stashed changes:docs/i18n/ko/docs/USER_GUIDE.md
 >>>>>>> Stashed changes
 
 For the full environment variable reference, see the [README](../README.md).
@@ -700,12 +740,22 @@ Returns models grouped by provider with types (`chat`, `embedding`, `image`).
 - Creates a temporary `https://*.trycloudflare.com` URL that forwards to your current OpenAI-compatible `/v1` endpoint
 - First enable installs `cloudflared` only when needed; later restarts reuse the same managed binary
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+<<<<<<<< Updated upstream:docs/i18n/pl/docs/USER_GUIDE.md
+>>>>>>> Stashed changes
 - Quick Tunnels are not auto-restored after an OmniRoute or container restart; re-enable them from the dashboard when needed
 - Tunnel URLs are ephemeral and change every time you stop/start the tunnel
 - Managed Quick Tunnels default to HTTP/2 transport to avoid noisy QUIC UDP buffer warnings in constrained containers
 - Set `CLOUDFLARED_PROTOCOL=quic` or `auto` if you want to override the managed transport choice
+<<<<<<< Updated upstream
 =======
 - Tunnel URLs are ephemeral and change every time you stop/start the tunnel
+>>>>>>> Stashed changes
+=======
+========
+- Tunnel URLs are ephemeral and change every time you stop/start the tunnel
+>>>>>>>> Stashed changes:docs/i18n/ko/docs/USER_GUIDE.md
 >>>>>>> Stashed changes
 - Set `CLOUDFLARED_BIN` if you prefer using a preinstalled `cloudflared` binary instead of the managed download
 
@@ -861,6 +911,10 @@ curl -X POST http://localhost:20128/api/db-backups/import \
 The settings page is organized into 6 tabs for easy navigation:
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+<<<<<<<< Updated upstream:docs/i18n/pl/docs/USER_GUIDE.md
+>>>>>>> Stashed changes
 | Tab            | Contents                                                                                     |
 | -------------- | -------------------------------------------------------------------------------------------- |
 | **General**    | System storage tools, appearance settings, theme controls, and per-item sidebar visibility   |
@@ -869,7 +923,11 @@ The settings page is organized into 6 tabs for easy navigation:
 | **Resilience** | Request queue, connection cooldown, provider breaker config, and wait-for-cooldown behavior  |
 | **AI**         | Thinking budget configuration, global system prompt injection, prompt cache stats            |
 | **Advanced**   | Global proxy configuration (HTTP/SOCKS5)                                                     |
+<<<<<<< Updated upstream
 =======
+=======
+========
+>>>>>>> Stashed changes
 | Tab            | Contents                                                                                       |
 | -------------- | ---------------------------------------------------------------------------------------------- |
 | **General**    | System storage tools, appearance settings, theme controls, and per-item sidebar visibility     |
@@ -878,6 +936,10 @@ The settings page is organized into 6 tabs for easy navigation:
 | **Resilience** | Provider profiles, editable rate limits, circuit breaker status, policies & locked identifiers |
 | **AI**         | Thinking budget configuration, global system prompt injection, prompt cache stats              |
 | **Advanced**   | Global proxy configuration (HTTP/SOCKS5)                                                       |
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>>> Stashed changes:docs/i18n/ko/docs/USER_GUIDE.md
 >>>>>>> Stashed changes
 
 ---
@@ -965,7 +1027,15 @@ Access via **Dashboard → Health**. Real-time system health overview with 6 car
 
 OmniRoute is available as a native desktop application for Windows, macOS, and Linux.
 
+<<<<<<< Updated upstream
 ### 설치
+=======
+<<<<<<<< Updated upstream:docs/i18n/pl/docs/USER_GUIDE.md
+### Zainstaluj
+========
+### 설치
+>>>>>>>> Stashed changes:docs/i18n/ko/docs/USER_GUIDE.md
+>>>>>>> Stashed changes
 
 ```bash
 # From the electron directory:

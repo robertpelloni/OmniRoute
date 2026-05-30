@@ -14,9 +14,12 @@ export default function ProxyTab() {
   const t = useTranslations("settings");
   const tc = useTranslations("common");
   const [debugMode, setDebugMode] = useState(false);
+<<<<<<< Updated upstream
   const [usageTokenBuffer, setUsageTokenBuffer] = useState<number | null>(null);
   const [bufferInput, setBufferInput] = useState("");
   const [bufferSaving, setBufferSaving] = useState(false);
+=======
+>>>>>>> Stashed changes
   const [loading, setLoading] = useState(true);
 
   const loadGlobalProxy = async () => {
@@ -30,23 +33,34 @@ export default function ProxyTab() {
   };
 
   const updateDebugMode = async (value: boolean) => {
+<<<<<<< Updated upstream
     const previousValue = debugMode;
     setDebugMode(value);
+=======
+>>>>>>> Stashed changes
     try {
       const res = await fetch("/api/settings", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ debugMode: value }),
       });
+<<<<<<< Updated upstream
       if (!res.ok) {
         setDebugMode(previousValue);
       }
     } catch (err) {
       setDebugMode(previousValue);
+=======
+      if (res.ok) {
+        setDebugMode(value);
+      }
+    } catch (err) {
+>>>>>>> Stashed changes
       console.error("Failed to update debugMode:", err);
     }
   };
 
+<<<<<<< Updated upstream
   const updateUsageTokenBuffer = async () => {
     const val = parseInt(bufferInput, 10);
     if (isNaN(val) || val < 0 || val > 50000) return;
@@ -67,6 +81,8 @@ export default function ProxyTab() {
     }
   };
 
+=======
+>>>>>>> Stashed changes
   useEffect(() => {
     mountedRef.current = true;
     async function init() {
@@ -86,16 +102,23 @@ export default function ProxyTab() {
   }, []);
 
   useEffect(() => {
+<<<<<<< Updated upstream
     fetch("/api/settings", { cache: "no-store" })
+=======
+    fetch("/api/settings")
+>>>>>>> Stashed changes
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP error ${res.status}`);
         return res.json();
       })
       .then((data) => {
         setDebugMode(data.debugMode === true);
+<<<<<<< Updated upstream
         const buf = typeof data.usageTokenBuffer === "number" ? data.usageTokenBuffer : 2000;
         setUsageTokenBuffer(buf);
         setBufferInput(String(buf));
+=======
+>>>>>>> Stashed changes
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -139,12 +162,16 @@ export default function ProxyTab() {
         </Card>
 
         <ProxyRegistryManager />
+<<<<<<< Updated upstream
         <OneproxyTab />
+=======
+>>>>>>> Stashed changes
         <Card className="p-6 mt-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="font-medium">{t("debugToggle")}</p>
             </div>
+<<<<<<< Updated upstream
             <Toggle checked={debugMode} onChange={updateDebugMode} disabled={loading} />
           </div>
         </Card>
@@ -186,6 +213,15 @@ export default function ProxyTab() {
           </div>
         </Card>
         <RequestLimitsTab />
+=======
+            <Toggle
+              checked={debugMode}
+              onChange={() => updateDebugMode(!debugMode)}
+              disabled={loading}
+            />
+          </div>
+        </Card>
+>>>>>>> Stashed changes
       </div>
 
       <ProxyConfigModal

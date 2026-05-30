@@ -209,6 +209,7 @@ export function translateRequest(
     result.tools = sanitizeToolDescriptions(result.tools);
   }
 
+<<<<<<< Updated upstream
   // Reasoning Replay Cache (#1628): Re-inject cached reasoning_content for
   // thinking-mode models (DeepSeek V4, Kimi K2, Qwen-Thinking, etc.) when
   // clients omit it from the conversation history. Without this, DeepSeek V4
@@ -249,6 +250,21 @@ export function translateRequest(
     for (const msg of result.messages) {
       if (msg.reasoning_content !== undefined) {
         delete msg.reasoning_content;
+=======
+  // Inject reasoning_content = "" for DeepSeek/Reasoning models assistant messages with tool_calls
+  // if omitted by the client, to avoid upstream 400 errors (e.g. "Messages with role 'assistant' that contain tool_calls must also include reasoning_content")
+  const isReasoner =
+    provider === "deepseek" || (typeof model === "string" && /r1|reason/i.test(model));
+  if (isReasoner && result.messages && Array.isArray(result.messages)) {
+    for (const msg of result.messages) {
+      if (
+        msg.role === "assistant" &&
+        Array.isArray(msg.tool_calls) &&
+        msg.tool_calls.length > 0 &&
+        msg.reasoning_content === undefined
+      ) {
+        msg.reasoning_content = "";
+>>>>>>> Stashed changes
       }
     }
   }

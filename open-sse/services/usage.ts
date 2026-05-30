@@ -146,6 +146,7 @@ function shouldDisplayGitHubQuota(quota: UsageQuota | null): quota is UsageQuota
   return quota.total > 0 || quota.remainingPercentage !== undefined;
 }
 
+<<<<<<< Updated upstream
 function createQuotaFromUsage(
   usedValue: unknown,
   totalValue: unknown,
@@ -517,6 +518,17 @@ async function getCrofUsage(apiKey: string) {
 
 async function getGlmUsage(apiKey: string, providerSpecificData?: Record<string, unknown>) {
   const quotaUrl = getGlmQuotaUrl(providerSpecificData);
+=======
+// GLM (Z.AI) quota API config
+const GLM_QUOTA_URLS: Record<string, string> = {
+  international: "https://api.z.ai/api/monitor/usage/quota/limit",
+  china: "https://open.bigmodel.cn/api/monitor/usage/quota/limit",
+};
+
+async function getGlmUsage(apiKey: string, providerSpecificData?: Record<string, unknown>) {
+  const region = providerSpecificData?.apiRegion || "international";
+  const quotaUrl = GLM_QUOTA_URLS[region] || GLM_QUOTA_URLS.international;
+>>>>>>> Stashed changes
 
   const res = await fetch(quotaUrl, {
     headers: {
@@ -561,6 +573,7 @@ async function getGlmUsage(apiKey: string, providerSpecificData?: Record<string,
   return { plan, quotas };
 }
 
+<<<<<<< Updated upstream
 /**
  * Bailian (Alibaba Coding Plan) Usage
  * Fetches triple-window quota (5h, weekly, monthly) and returns worst-case.
@@ -679,13 +692,20 @@ async function getNanoGptUsage(apiKey: string) {
   }
 }
 
+=======
+>>>>>>> Stashed changes
 /**
  * Get usage data for a provider connection
  * @param {Object} connection - Provider connection with accessToken
  * @returns {Promise<unknown>} Usage data with quotas
  */
+<<<<<<< Updated upstream
 export async function getUsageForProvider(connection, options: { forceRefresh?: boolean } = {}) {
   const { id, provider, accessToken, apiKey, providerSpecificData, projectId, email } = connection;
+=======
+export async function getUsageForProvider(connection) {
+  const { provider, accessToken, apiKey, providerSpecificData, projectId } = connection;
+>>>>>>> Stashed changes
 
   switch (provider) {
     case "github":
@@ -706,6 +726,7 @@ export async function getUsageForProvider(connection, options: { forceRefresh?: 
     case "qwen":
       return await getQwenUsage(accessToken, providerSpecificData);
     case "qoder":
+<<<<<<< Updated upstream
       return await getQoderUsage(accessToken);
     case "glm":
     case "glmt":
@@ -721,6 +742,11 @@ export async function getUsageForProvider(connection, options: { forceRefresh?: 
       return await getBailianCodingPlanUsage(id, apiKey, providerSpecificData);
     case "nanogpt":
       return await getNanoGptUsage(apiKey);
+=======
+      return await getIflowUsage(accessToken);
+    case "glm":
+      return await getGlmUsage(apiKey, providerSpecificData);
+>>>>>>> Stashed changes
     default:
       return { message: `Usage API not implemented for ${provider}` };
   }
@@ -738,7 +764,11 @@ function parseResetTime(resetValue) {
     if (resetValue instanceof Date) {
       date = resetValue;
     } else if (typeof resetValue === "number") {
+<<<<<<< Updated upstream
       date = new Date(resetValue < 1e12 ? resetValue * 1000 : resetValue);
+=======
+      date = new Date(resetValue);
+>>>>>>> Stashed changes
     } else if (typeof resetValue === "string") {
       date = new Date(resetValue);
     } else {
@@ -947,6 +977,7 @@ function inferGitHubPlanName(data: JsonRecord, premiumQuota: UsageQuota | null):
   return "GitHub Copilot";
 }
 
+<<<<<<< Updated upstream
 function buildCursorUsageHeaders(accessToken: string): Record<string, string> {
   return getCursorUsageHeaders(accessToken, CURSOR_USAGE_CONFIG.clientVersion);
 }
@@ -1130,6 +1161,25 @@ async function getGeminiUsage(accessToken, providerSpecificData?, connectionProj
   }
 
   try {
+=======
+// ── Gemini CLI subscription info cache ──────────────────────────────────────
+// Prevents duplicate loadCodeAssist calls within the same quota cycle.
+// Key: accessToken → { data, fetchedAt }
+const _geminiCliSubCache = new Map();
+const GEMINI_CLI_CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+
+/**
+ * Gemini CLI Usage — fetch per-model quota from Cloud Code Assist API.
+ * Gemini CLI and Antigravity share the same upstream (cloudcode-pa.googleapis.com),
+ * so this follows the same pattern as getAntigravityUsage().
+ */
+async function getGeminiUsage(accessToken, providerSpecificData?, connectionProjectId?) {
+  if (!accessToken) {
+    return { plan: "Free", message: "Gemini CLI access token not available." };
+  }
+
+  try {
+>>>>>>> Stashed changes
     const subscriptionInfo = await getGeminiCliSubscriptionInfoCached(accessToken);
     const projectId =
       connectionProjectId ||
@@ -1432,6 +1482,7 @@ function getAntigravityPlanLabel(subscriptionInfo) {
 }
 
 /**
+<<<<<<< Updated upstream
  * Proactive credit balance probe for Antigravity.
  *
  * Fires a minimal streamGenerateContent request with GOOGLE_ONE_AI credits enabled
@@ -1475,6 +1526,28 @@ async function probeAntigravityCreditBalance(
     )
     .finally(() => {
       _antigravityCreditProbeInflight.delete(cacheKey);
+=======
+ * Antigravity Usage - Fetch quota from Google Cloud Code API
+ * Uses fetchAvailableModels API which returns ALL models (including Claude)
+ * with per-model quotaInfo (remainingFraction, resetTime).
+ * retrieveUserQuota only returns Gemini models — not suitable for Antigravity.
+ */
+async function getAntigravityUsage(accessToken, providerSpecificData) {
+  try {
+    const subscriptionInfo = await getAntigravitySubscriptionInfoCached(accessToken);
+    const projectId = subscriptionInfo?.cloudaicompanionProject || null;
+
+    // Fetch model list with quota info from fetchAvailableModels
+    const response = await fetch(ANTIGRAVITY_CONFIG.quotaApiUrl, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "User-Agent": ANTIGRAVITY_CONFIG.userAgent,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(projectId ? { project: projectId } : {}),
+      signal: AbortSignal.timeout(10000),
+>>>>>>> Stashed changes
     });
 
   _antigravityCreditProbeInflight.set(cacheKey, promise);
@@ -1613,6 +1686,7 @@ async function getAntigravityUsage(
     const modelEntries = toRecord(dataObj.models);
     const quotas: Record<string, UsageQuota> = {};
 
+<<<<<<< Updated upstream
     // Parse per-model quota info from fetchAvailableModels response.
     for (const [modelKey, infoValue] of Object.entries(modelEntries)) {
       const info = toRecord(infoValue);
@@ -1622,6 +1696,37 @@ async function getAntigravityUsage(
       if (
         info.isInternal === true ||
         !isUserCallableAntigravityModelId(modelKey) ||
+=======
+    // Models excluded from quota display — internal/special-purpose models that
+    // the Antigravity API returns quota for but are not user-callable via
+    // generateContent.  Matches CLIProxyAPI's hardcoded exclusion list.
+    const ANTIGRAVITY_EXCLUDED_MODELS = new Set([
+      "chat_20706",
+      "chat_23310",
+      "tab_flash_lite_preview",
+      "tab_jump_flash_lite_preview",
+      "gemini-2.5-flash-thinking",
+      "gemini-2.5-pro", // browser subagent model — not user-callable
+      "gemini-2.5-flash", // internal — quota always exhausted on free tier
+      "gemini-2.5-flash-lite", // internal — quota always exhausted on free tier
+      "gemini-2.5-flash-preview-image-generation", // image-gen only, not usable for chat
+      "gemini-3.1-flash-image-preview", // image-gen preview, not usable for chat
+      "gemini-3-flash-agent", // internal agent model — not user-callable
+      "gemini-3.1-flash-lite", // not usable for chat
+      "gemini-3-pro-low", // not usable for chat
+      "gemini-3-pro-high", // not usable for chat
+    ]);
+
+    // Parse per-model quota info from fetchAvailableModels response.
+    for (const [modelKey, infoValue] of Object.entries(modelEntries)) {
+      const info = toRecord(infoValue);
+      const quotaInfo = toRecord(info.quotaInfo);
+
+      // Skip internal, excluded, and models without quota info
+      if (
+        info.isInternal === true ||
+        ANTIGRAVITY_EXCLUDED_MODELS.has(modelKey) ||
+>>>>>>> Stashed changes
         Object.keys(quotaInfo).length === 0
       ) {
         continue;

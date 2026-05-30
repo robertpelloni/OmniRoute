@@ -7,11 +7,14 @@ import useThemeStore, { COLOR_THEMES } from "@/store/themeStore";
 import { cn } from "@/shared/utils/cn";
 import { useTranslations } from "next-intl";
 import {
+<<<<<<< Updated upstream
   COMBO_CONFIG_MODE_SETTING_KEY,
   normalizeComboConfigMode,
   type ComboConfigMode,
 } from "@/shared/constants/comboConfigMode";
 import {
+=======
+>>>>>>> Stashed changes
   HIDDEN_SIDEBAR_ITEMS_SETTING_KEY,
   SIDEBAR_SECTIONS,
   SIDEBAR_SETTINGS_UPDATED_EVENT,
@@ -35,10 +38,13 @@ export default function AppearanceTab() {
     settings[HIDDEN_SIDEBAR_ITEMS_SETTING_KEY]
   );
   const hiddenSidebarSet = new Set(hiddenSidebarItems);
+<<<<<<< Updated upstream
   const comboConfigMode = normalizeComboConfigMode(settings[COMBO_CONFIG_MODE_SETTING_KEY]);
   const showCloudflaredTunnel = settings.hideEndpointCloudflaredTunnel !== true;
   const showTailscaleFunnel = settings.hideEndpointTailscaleFunnel !== true;
   const showNgrokTunnel = settings.hideEndpointNgrokTunnel !== true;
+=======
+>>>>>>> Stashed changes
 
   const getSettingsLabel = (key: string, fallback: string) =>
     typeof t.has === "function" && t.has(key) ? t(key) : fallback;
@@ -116,6 +122,7 @@ export default function AppearanceTab() {
     { id: "cyan", color: COLOR_THEMES.cyan, label: t("themeCyan") },
   ];
 
+<<<<<<< Updated upstream
   const comboConfigModeOptions: Array<{
     id: ComboConfigMode;
     icon: string;
@@ -142,6 +149,8 @@ export default function AppearanceTab() {
     },
   ];
 
+=======
+>>>>>>> Stashed changes
   const showDebug = settings.debugMode === true;
   const sidebarSections = SIDEBAR_SECTIONS.filter(
     (section) => section.visibility !== "debug" || showDebug
@@ -260,6 +269,7 @@ export default function AppearanceTab() {
 
         <div className="pt-4 border-t border-border">
           <div className="mb-3">
+<<<<<<< Updated upstream
             <p className="font-medium">
               {getSettingsLabel("endpointTunnelVisibility", "Endpoint tunnel visibility")}
             </p>
@@ -386,6 +396,8 @@ export default function AppearanceTab() {
 
         <div className="pt-4 border-t border-border">
           <div className="mb-3">
+=======
+>>>>>>> Stashed changes
             <p className="font-medium">{t("sidebarVisibilityToggle")}</p>
             <p className="text-sm text-text-muted">
               {getSettingsLabel(

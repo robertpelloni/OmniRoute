@@ -45,6 +45,7 @@ export async function POST(request) {
     if (isValidationFailure(validation)) {
       return NextResponse.json({ error: validation.error }, { status: 400 });
     }
+<<<<<<< Updated upstream
     const {
       provider,
       apiKey,
@@ -64,6 +65,11 @@ export async function POST(request) {
     if (cx) {
       providerSpecificData.cx = cx;
     }
+=======
+    const { provider, apiKey, validationModelId } = validation.data;
+
+    let providerSpecificData: any = { validationModelId };
+>>>>>>> Stashed changes
 
     if (isOpenAICompatibleProvider(provider) || isAnthropicCompatibleProvider(provider)) {
       const node: any = await getProviderNodeById(provider);
@@ -80,7 +86,11 @@ export async function POST(request) {
       }
       providerSpecificData = {
         ...providerSpecificData,
+<<<<<<< Updated upstream
         baseUrl: bodyBaseUrl || node.baseUrl,
+=======
+        baseUrl: node.baseUrl,
+>>>>>>> Stashed changes
         apiType: node.apiType,
         chatPath: node.chatPath,
         modelsPath: node.modelsPath,

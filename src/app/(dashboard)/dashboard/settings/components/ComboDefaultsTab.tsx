@@ -3,10 +3,14 @@
 import { useState, useEffect } from "react";
 import { Card, Button, Input, Toggle } from "@/shared/components";
 import { cn } from "@/shared/utils/cn";
+<<<<<<< Updated upstream
 import {
   ROUTING_STRATEGIES,
   SETTINGS_FALLBACK_STRATEGY_VALUES,
 } from "@/shared/constants/routingStrategies";
+=======
+import { ROUTING_STRATEGIES } from "@/shared/constants/routingStrategies";
+>>>>>>> Stashed changes
 import { useTranslations } from "next-intl";
 
 const STRATEGY_LABEL_FALLBACKS: Record<string, string> = {
@@ -82,11 +86,15 @@ export default function ComboDefaultsTab() {
   const tc = useTranslations("common");
   const strategyOptions = ROUTING_STRATEGIES.map((strategy) => ({
     value: strategy.value,
+<<<<<<< Updated upstream
     label: translateOrFallback(
       t,
       strategy.labelKey,
       STRATEGY_LABEL_FALLBACKS[strategy.value] || strategy.value
     ),
+=======
+    label: t(strategy.labelKey),
+>>>>>>> Stashed changes
     icon: strategy.icon,
   }));
   const numericSettings = [
@@ -221,6 +229,13 @@ export default function ComboDefaultsTab() {
             "If providers vary in quality or cost, start with Cost Opt for background work and Least Used for balanced wear."
           )}
         </p>
+      </div>
+      <div className="mb-4 rounded-lg border border-amber-500/20 bg-amber-500/5 p-3">
+        <p className="text-xs font-medium text-amber-700 dark:text-amber-300">
+          {t("comboDefaultsGuideTitle")}
+        </p>
+        <p className="text-xs text-text-muted mt-1">{t("comboDefaultsGuideHint1")}</p>
+        <p className="text-xs text-text-muted">{t("comboDefaultsGuideHint2")}</p>
       </div>
       <div className="mb-4 rounded-lg border border-amber-500/20 bg-amber-500/5 p-3">
         <p className="text-xs font-medium text-amber-700 dark:text-amber-300">

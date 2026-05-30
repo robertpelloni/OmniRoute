@@ -2,11 +2,16 @@ import { NextResponse } from "next/server";
 import { getSettings, updateSettings } from "@/lib/localDb";
 import { updateAutoDisableAccountsSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
+<<<<<<< Updated upstream
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
 
 export async function GET(request: Request) {
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
+=======
+
+export async function GET() {
+>>>>>>> Stashed changes
   try {
     const settings = await getSettings();
     return NextResponse.json({
@@ -23,8 +28,11 @@ export async function GET(request: Request) {
 }
 
 export async function PUT(request: Request) {
+<<<<<<< Updated upstream
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
+=======
+>>>>>>> Stashed changes
   let rawBody: unknown;
   try {
     rawBody = await request.json();

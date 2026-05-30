@@ -73,9 +73,15 @@ async function main() {
     [
       "./node_modules/vitest/vitest.mjs",
       "run",
+<<<<<<< Updated upstream
       "--environment",
       "node",
       "tests/e2e/protocol-clients.test.ts",
+=======
+      "tests/e2e/protocol-clients.test.ts",
+      "--dir",
+      "tests",
+>>>>>>> Stashed changes
     ],
     {
       stdio: "inherit",

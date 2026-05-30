@@ -11,12 +11,17 @@
 import Bottleneck from "bottleneck";
 import { parseRetryAfterFromBody } from "./accountFallback.ts";
 import { getProviderCategory } from "../config/providerRegistry.ts";
+<<<<<<< Updated upstream
 import { getCodexRateLimitKey } from "../executors/codex.ts";
 import {
   DEFAULT_RESILIENCE_SETTINGS,
   resolveResilienceSettings,
   type RequestQueueSettings,
 } from "../../src/lib/resilience/settings";
+=======
+import { DEFAULT_API_LIMITS } from "../config/constants.ts";
+import { getCodexRateLimitKey } from "../executors/codex.ts";
+>>>>>>> Stashed changes
 
 interface LearnedLimitEntry {
   provider: string;
@@ -299,11 +304,14 @@ function getLimiterKey(provider, connectionId, model = null) {
   if (provider === "codex" && model) {
     return `${provider}:${getCodexRateLimitKey(connectionId, model)}`;
   }
+<<<<<<< Updated upstream
   // Gemini AI Studio and GitHub Copilot have per-model quotas — use model-scoped
   // limiter keys so a 429 on one model doesn't pause requests for other models.
   if ((provider === "gemini" || provider === "github") && model) {
     return `${provider}:${connectionId}:${model}`;
   }
+=======
+>>>>>>> Stashed changes
   return `${provider}:${connectionId}`;
 }
 
@@ -355,6 +363,7 @@ export async function withRateLimit(provider, connectionId, model, fn, signal = 
     return fn();
   }
 
+<<<<<<< Updated upstream
   if (signal?.aborted) {
     const reason = signal.reason;
     if (reason instanceof Error) throw reason;
@@ -409,6 +418,10 @@ export async function withRateLimit(provider, connectionId, model, fn, signal = 
     }
     throw err;
   }
+=======
+  const limiter = getLimiter(provider, connectionId, model);
+  return limiter.schedule(fn);
+>>>>>>> Stashed changes
 }
 
 // ─── Header Parsing ──────────────────────────────────────────────────────────

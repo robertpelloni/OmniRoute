@@ -42,11 +42,14 @@ interface ApiKeyMetadata {
   maxRequestsPerMinute: number | null;
   // T08: Per-key max concurrent sticky sessions (0 = unlimited)
   maxSessions: number;
+<<<<<<< Updated upstream
   // Phase 3 lifecycle/policy fields
   revokedAt: string | null;
   expiresAt: string | null;
   ipAllowlist: string[];
   scopes: string[];
+=======
+>>>>>>> Stashed changes
 }
 
 interface ApiKeyRow extends JsonRecord {
@@ -229,6 +232,11 @@ function ensureApiKeysColumns(db: ApiKeysDbLike) {
       db.exec("ALTER TABLE api_keys ADD COLUMN max_sessions INTEGER NOT NULL DEFAULT 0");
       console.log("[DB] Added api_keys.max_sessions column");
     }
+    // T08: max concurrent sticky sessions per key (0 = unlimited)
+    if (!columnNames.has("max_sessions")) {
+      db.exec("ALTER TABLE api_keys ADD COLUMN max_sessions INTEGER NOT NULL DEFAULT 0");
+      console.log("[DB] Added api_keys.max_sessions column");
+    }
     _schemaChecked = true;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
@@ -256,7 +264,11 @@ function getPreparedStatements(db: ApiKeysDbLike): ApiKeysStatements {
       "SELECT id, expires_at, revoked_at, is_active FROM api_keys WHERE key = ?"
     );
     _stmtGetKeyMetadata = db.prepare<ApiKeyRow>(
+<<<<<<< Updated upstream
       "SELECT id, name, machine_id, allowed_models, allowed_connections, no_log, auto_resolve, is_active, access_schedule, max_requests_per_day, max_requests_per_minute, max_sessions, revoked_at, expires_at, ip_allowlist, scopes FROM api_keys WHERE key = ?"
+=======
+      "SELECT id, name, machine_id, allowed_models, allowed_connections, no_log, auto_resolve, is_active, access_schedule, max_requests_per_day, max_requests_per_minute, max_sessions FROM api_keys WHERE key = ?"
+>>>>>>> Stashed changes
     );
     _stmtInsertKey = db.prepare(
       "INSERT INTO api_keys (id, name, key, machine_id, allowed_models, no_log, created_at, key_prefix) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
@@ -773,10 +785,13 @@ export async function getApiKeyMetadata(
     maxRequestsPerMinute: typeof rawMaxRPM === "number" && rawMaxRPM > 0 ? rawMaxRPM : null,
     // T08: max concurrent sessions; 0 = unlimited (default & backward-compatible)
     maxSessions: typeof rawMaxSessions === "number" && rawMaxSessions > 0 ? rawMaxSessions : 0,
+<<<<<<< Updated upstream
     revokedAt: parseNullableTimestamp(record.revoked_at ?? (record as JsonRecord).revokedAt),
     expiresAt: parseNullableTimestamp(record.expires_at ?? (record as JsonRecord).expiresAt),
     ipAllowlist: parseStringList(record.ip_allowlist ?? (record as JsonRecord).ipAllowlist),
     scopes: parseStringList((record as JsonRecord).scopes),
+=======
+>>>>>>> Stashed changes
   };
 
   if (!metadata.id) {

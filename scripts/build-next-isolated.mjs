@@ -1,10 +1,15 @@
 #!/usr/bin/env node
 
 import fs from "node:fs/promises";
+<<<<<<< Updated upstream
 import os from "node:os";
 import path from "node:path";
 import { spawn } from "node:child_process";
 import { pathToFileURL } from "node:url";
+=======
+import path from "node:path";
+import { spawn } from "node:child_process";
+>>>>>>> Stashed changes
 
 /**
  * This repository contains a legacy `app/` snapshot (packaging/runtime artifacts)
@@ -14,6 +19,7 @@ import { pathToFileURL } from "node:url";
  */
 
 const projectRoot = process.cwd();
+<<<<<<< Updated upstream
 const backupRoot = path.join(os.tmpdir(), `omniroute-build-isolated-${process.pid}-${Date.now()}`);
 
 export function getTransientBuildPaths(rootDir = projectRoot, env = process.env) {
@@ -40,6 +46,10 @@ export function getTransientBuildPaths(rootDir = projectRoot, env = process.env)
 
   return paths;
 }
+=======
+const legacyAppDir = path.join(projectRoot, "app");
+const backupDir = path.join(projectRoot, `.app-build-backup-${process.pid}-${Date.now()}`);
+>>>>>>> Stashed changes
 
 async function exists(targetPath) {
   try {
@@ -50,6 +60,7 @@ async function exists(targetPath) {
   }
 }
 
+<<<<<<< Updated upstream
 export async function movePath(sourcePath, destinationPath, fsImpl = fs) {
   const mkdir = typeof fsImpl.mkdir === "function" ? fsImpl.mkdir.bind(fsImpl) : fs.mkdir.bind(fs);
   await mkdir(path.dirname(destinationPath), { recursive: true });
@@ -81,6 +92,15 @@ function runNextBuild() {
       cwd: projectRoot,
       stdio: "inherit",
       env: resolveNextBuildEnv(process.env),
+=======
+function runNextBuild() {
+  return new Promise((resolve) => {
+    const nextBin = path.join(projectRoot, "node_modules", "next", "dist", "bin", "next");
+    const child = spawn(process.execPath, [nextBin, "build"], {
+      cwd: projectRoot,
+      stdio: "inherit",
+      env: process.env,
+>>>>>>> Stashed changes
     });
 
     const forward = (signal) => {
@@ -102,6 +122,7 @@ function runNextBuild() {
   });
 }
 
+<<<<<<< Updated upstream
 export function resolveNextBuildBundlerFlag(baseEnv = process.env) {
   return baseEnv.OMNIROUTE_USE_TURBOPACK === "1" ? "--turbopack" : "--webpack";
 }
@@ -237,11 +258,24 @@ export async function main() {
         );
       }
     }
+=======
+async function main() {
+  let moved = false;
+
+  try {
+    if (await exists(legacyAppDir)) {
+      await fs.rename(legacyAppDir, backupDir);
+      moved = true;
+    }
+
+    const result = await runNextBuild();
+>>>>>>> Stashed changes
     process.exitCode = result.code;
   } catch (error) {
     console.error("[build-next-isolated] Build failed:", error);
     process.exitCode = 1;
   } finally {
+<<<<<<< Updated upstream
     while (movedPaths.length > 0) {
       const entry = movedPaths.pop();
       if (!entry) continue;
@@ -250,11 +284,20 @@ export async function main() {
       } catch (restoreError) {
         console.error(
           `[build-next-isolated] Failed to restore ${entry.label} from ${entry.backupPath}:`,
+=======
+    if (moved) {
+      try {
+        await fs.rename(backupDir, legacyAppDir);
+      } catch (restoreError) {
+        console.error(
+          `[build-next-isolated] Failed to restore legacy app dir from ${backupDir}:`,
+>>>>>>> Stashed changes
           restoreError
         );
         process.exitCode = 1;
       }
     }
+<<<<<<< Updated upstream
 
     try {
       await fs.rm(backupRoot, { recursive: true, force: true });
@@ -269,3 +312,9 @@ const entryScript = process.argv[1] ? pathToFileURL(process.argv[1]).href : null
 if (entryScript === import.meta.url) {
   await main();
 }
+=======
+  }
+}
+
+await main();
+>>>>>>> Stashed changes

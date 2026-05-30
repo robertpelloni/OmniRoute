@@ -24,7 +24,14 @@ export async function GET(request: Request) {
 
     if (logType === "call-logs" || logType === "request-logs") {
       tableName = "call_logs";
+<<<<<<< Updated upstream
       rows = await exportCallLogsSince(since);
+=======
+      const stmt = db.prepare(
+        "SELECT * FROM call_logs WHERE timestamp >= @since ORDER BY timestamp DESC"
+      );
+      rows = stmt.all({ since });
+>>>>>>> Stashed changes
     } else if (logType === "proxy-logs") {
       tableName = "proxy_logs";
       const stmt = db.prepare(

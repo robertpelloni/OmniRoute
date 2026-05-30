@@ -142,6 +142,7 @@ omniroute --mcp
 | 14  | `omniroute_best_combo_for_task`    | `read:combos`, `read:health`         | AI-powered combo recommendation by task type with budget/latency constraints                   |
 | 15  | `omniroute_explain_route`          | `read:health`, `read:usage`          | Explain why a request was routed to a provider (scoring factors, fallbacks)                    |
 | 16  | `omniroute_get_session_snapshot`   | `read:usage`                         | Full session snapshot: cost, tokens, top models, errors, budget status                         |
+<<<<<<< Updated upstream
 
 ### Cache and Compression Tools
 
@@ -159,6 +160,8 @@ MCP listable metadata descriptions are compressed at registration/list time when
 compression is enabled. `omniroute_compression_status` exposes those savings separately as
 `analytics.mcpDescriptionCompression` with `source: "mcp_metadata_estimate"`, so clients do not
 mistake metadata shrink estimates for provider token receipts.
+=======
+>>>>>>> Stashed changes
 
 ---
 

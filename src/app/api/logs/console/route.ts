@@ -13,7 +13,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { readFileSync, existsSync } from "fs";
 import { getAppLogFilePath } from "@/lib/logEnv";
+<<<<<<< Updated upstream
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
+=======
+>>>>>>> Stashed changes
 
 const LEVEL_ORDER: Record<string, number> = {
   trace: 5,

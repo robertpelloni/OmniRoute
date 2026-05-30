@@ -56,12 +56,19 @@ export default function CLIToolsPageClient({ machineId: _machineId }) {
   const [toolStatuses, setToolStatuses] = useState({});
   const [statusesLoaded, setStatusesLoaded] = useState(false);
   const [dynamicModels, setDynamicModels] = useState([]);
+<<<<<<< Updated upstream
   const [activeCategory, setActiveCategory] = useState("auto");
   const translateOrFallback = useCallback(
     (key, fallback, values = undefined) => {
       try {
         const translated = t(key, values);
         return translated === key || translated === `cliTools.${key}` ? fallback : translated;
+=======
+  const translateOrFallback = useCallback(
+    (key, fallback, values = undefined) => {
+      try {
+        return t(key, values);
+>>>>>>> Stashed changes
       } catch {
         return fallback;
       }
@@ -419,6 +426,7 @@ export default function CLIToolsPageClient({ machineId: _machineId }) {
         </div>
       </Card>
 
+<<<<<<< Updated upstream
       <Card>
         <div className="flex flex-col gap-4">
           <div className="flex items-start justify-between gap-4 flex-wrap">
@@ -447,6 +455,8 @@ export default function CLIToolsPageClient({ machineId: _machineId }) {
         </div>
       </Card>
 
+=======
+>>>>>>> Stashed changes
       {!hasActiveProviders && (
         <Card className="border-yellow-500/50 bg-yellow-500/5">
           <div className="flex items-center gap-3">
@@ -462,7 +472,11 @@ export default function CLIToolsPageClient({ machineId: _machineId }) {
       )}
 
       <div className="flex flex-col gap-4">
+<<<<<<< Updated upstream
         {toolEntries.map(([toolId, tool]) => {
+=======
+        {Object.entries(CLI_TOOLS).map(([toolId, tool]) => {
+>>>>>>> Stashed changes
           const docsHref = getToolDocsHref(toolId, tool);
           const isExternalDocs = /^https?:\/\//i.test(docsHref);
           return (

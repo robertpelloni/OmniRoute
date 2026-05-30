@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 <<<<<<<< Updated upstream:docs/i18n/no/docs/CLI-TOOLS.md
 # CLI Tools Setup Guide — OmniRoute (Norsk)
 
@@ -14,10 +15,20 @@
 
 🌐 **Languages:** 🇺🇸 [English](../../../../docs/CLI-TOOLS.md) · 🇪🇸 [es](../../es/docs/CLI-TOOLS.md) · 🇫🇷 [fr](../../fr/docs/CLI-TOOLS.md) · 🇩🇪 [de](../../de/docs/CLI-TOOLS.md) · 🇮🇹 [it](../../it/docs/CLI-TOOLS.md) · 🇷🇺 [ru](../../ru/docs/CLI-TOOLS.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/CLI-TOOLS.md) · 🇯🇵 [ja](../../ja/docs/CLI-TOOLS.md) · 🇰🇷 [ko](../../ko/docs/CLI-TOOLS.md) · 🇸🇦 [ar](../../ar/docs/CLI-TOOLS.md) · 🇮🇳 [hi](../../hi/docs/CLI-TOOLS.md) · 🇮🇳 [in](../../in/docs/CLI-TOOLS.md) · 🇹🇭 [th](../../th/docs/CLI-TOOLS.md) · 🇻🇳 [vi](../../vi/docs/CLI-TOOLS.md) · 🇮🇩 [id](../../id/docs/CLI-TOOLS.md) · 🇲🇾 [ms](../../ms/docs/CLI-TOOLS.md) · 🇳🇱 [nl](../../nl/docs/CLI-TOOLS.md) · 🇵🇱 [pl](../../pl/docs/CLI-TOOLS.md) · 🇸🇪 [sv](../../sv/docs/CLI-TOOLS.md) · 🇳🇴 [no](../../no/docs/CLI-TOOLS.md) · 🇩🇰 [da](../../da/docs/CLI-TOOLS.md) · 🇫🇮 [fi](../../fi/docs/CLI-TOOLS.md) · 🇵🇹 [pt](../../pt/docs/CLI-TOOLS.md) · 🇷🇴 [ro](../../ro/docs/CLI-TOOLS.md) · 🇭🇺 [hu](../../hu/docs/CLI-TOOLS.md) · 🇧🇬 [bg](../../bg/docs/CLI-TOOLS.md) · 🇸🇰 [sk](../../sk/docs/CLI-TOOLS.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/CLI-TOOLS.md) · 🇮🇱 [he](../../he/docs/CLI-TOOLS.md) · 🇵🇭 [phi](../../phi/docs/CLI-TOOLS.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/CLI-TOOLS.md) · 🇨🇿 [cs](../../cs/docs/CLI-TOOLS.md) · 🇹🇷 [tr](../../tr/docs/CLI-TOOLS.md)
 ========
+=======
+<<<<<<<< Updated upstream:docs/i18n/sv/docs/CLI-TOOLS.md
+# CLI Tools Setup Guide — OmniRoute (Svenska)
+
+🌐 **Languages:** 🇺🇸 [English](../../../../docs/CLI-TOOLS.md) · 🇸🇦 [ar](../../ar/docs/CLI-TOOLS.md) · 🇧🇬 [bg](../../bg/docs/CLI-TOOLS.md) · 🇧🇩 [bn](../../bn/docs/CLI-TOOLS.md) · 🇨🇿 [cs](../../cs/docs/CLI-TOOLS.md) · 🇩🇰 [da](../../da/docs/CLI-TOOLS.md) · 🇩🇪 [de](../../de/docs/CLI-TOOLS.md) · 🇪🇸 [es](../../es/docs/CLI-TOOLS.md) · 🇮🇷 [fa](../../fa/docs/CLI-TOOLS.md) · 🇫🇮 [fi](../../fi/docs/CLI-TOOLS.md) · 🇫🇷 [fr](../../fr/docs/CLI-TOOLS.md) · 🇮🇳 [gu](../../gu/docs/CLI-TOOLS.md) · 🇮🇱 [he](../../he/docs/CLI-TOOLS.md) · 🇮🇳 [hi](../../hi/docs/CLI-TOOLS.md) · 🇭🇺 [hu](../../hu/docs/CLI-TOOLS.md) · 🇮🇩 [id](../../id/docs/CLI-TOOLS.md) · 🇮🇹 [it](../../it/docs/CLI-TOOLS.md) · 🇯🇵 [ja](../../ja/docs/CLI-TOOLS.md) · 🇰🇷 [ko](../../ko/docs/CLI-TOOLS.md) · 🇮🇳 [mr](../../mr/docs/CLI-TOOLS.md) · 🇲🇾 [ms](../../ms/docs/CLI-TOOLS.md) · 🇳🇱 [nl](../../nl/docs/CLI-TOOLS.md) · 🇳🇴 [no](../../no/docs/CLI-TOOLS.md) · 🇵🇭 [phi](../../phi/docs/CLI-TOOLS.md) · 🇵🇱 [pl](../../pl/docs/CLI-TOOLS.md) · 🇵🇹 [pt](../../pt/docs/CLI-TOOLS.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/CLI-TOOLS.md) · 🇷🇴 [ro](../../ro/docs/CLI-TOOLS.md) · 🇷🇺 [ru](../../ru/docs/CLI-TOOLS.md) · 🇸🇰 [sk](../../sk/docs/CLI-TOOLS.md) · 🇸🇪 [sv](../../sv/docs/CLI-TOOLS.md) · 🇰🇪 [sw](../../sw/docs/CLI-TOOLS.md) · 🇮🇳 [ta](../../ta/docs/CLI-TOOLS.md) · 🇮🇳 [te](../../te/docs/CLI-TOOLS.md) · 🇹🇭 [th](../../th/docs/CLI-TOOLS.md) · 🇹🇷 [tr](../../tr/docs/CLI-TOOLS.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/CLI-TOOLS.md) · 🇵🇰 [ur](../../ur/docs/CLI-TOOLS.md) · 🇻🇳 [vi](../../vi/docs/CLI-TOOLS.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/CLI-TOOLS.md)
+========
+>>>>>>> Stashed changes
 # CLI Tools Setup Guide — OmniRoute (Norsk)
 
 🌐 **Languages:** 🇺🇸 [English](../../../../docs/CLI-TOOLS.md) · 🇪🇸 [es](../../es/docs/CLI-TOOLS.md) · 🇫🇷 [fr](../../fr/docs/CLI-TOOLS.md) · 🇩🇪 [de](../../de/docs/CLI-TOOLS.md) · 🇮🇹 [it](../../it/docs/CLI-TOOLS.md) · 🇷🇺 [ru](../../ru/docs/CLI-TOOLS.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/CLI-TOOLS.md) · 🇯🇵 [ja](../../ja/docs/CLI-TOOLS.md) · 🇰🇷 [ko](../../ko/docs/CLI-TOOLS.md) · 🇸🇦 [ar](../../ar/docs/CLI-TOOLS.md) · 🇮🇳 [in](../../in/docs/CLI-TOOLS.md) · 🇹🇭 [th](../../th/docs/CLI-TOOLS.md) · 🇻🇳 [vi](../../vi/docs/CLI-TOOLS.md) · 🇮🇩 [id](../../id/docs/CLI-TOOLS.md) · 🇲🇾 [ms](../../ms/docs/CLI-TOOLS.md) · 🇳🇱 [nl](../../nl/docs/CLI-TOOLS.md) · 🇵🇱 [pl](../../pl/docs/CLI-TOOLS.md) · 🇸🇪 [sv](../../sv/docs/CLI-TOOLS.md) · 🇳🇴 [no](../../no/docs/CLI-TOOLS.md) · 🇩🇰 [da](../../da/docs/CLI-TOOLS.md) · 🇫🇮 [fi](../../fi/docs/CLI-TOOLS.md) · 🇵🇹 [pt](../../pt/docs/CLI-TOOLS.md) · 🇷🇴 [ro](../../ro/docs/CLI-TOOLS.md) · 🇭🇺 [hu](../../hu/docs/CLI-TOOLS.md) · 🇧🇬 [bg](../../bg/docs/CLI-TOOLS.md) · 🇸🇰 [sk](../../sk/docs/CLI-TOOLS.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/CLI-TOOLS.md) · 🇮🇱 [he](../../he/docs/CLI-TOOLS.md) · 🇵🇭 [phi](../../phi/docs/CLI-TOOLS.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/CLI-TOOLS.md) · 🇨🇿 [cs](../../cs/docs/CLI-TOOLS.md)
 >>>>>>>> Stashed changes:docs/i18n/no/docs/CLI-TOOLS.md
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 ---
@@ -69,12 +80,19 @@ Current list (v3.0.0-rc.16):
 | **OpenCode**       | `opencode`    | `opencode` | guide      | npm            |
 | **Kiro AI**        | `kiro`        | app/cli    | mitm       | desktop/CLI    |
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 <<<<<<<< Updated upstream:docs/i18n/no/docs/CLI-TOOLS.md
 | **Qwen Code**      | `qwen`        | `qwen`     | custom     | npm            |
 ========
 >>>>>>>> Stashed changes:docs/i18n/ro/docs/CLI-TOOLS.md
 =======
 <<<<<<<< Updated upstream:docs/i18n/in/docs/CLI-TOOLS.md
+| **Qwen Code**      | `qwen`        | `qwen`     | custom     | npm            |
+========
+>>>>>>>> Stashed changes:docs/i18n/no/docs/CLI-TOOLS.md
+>>>>>>> Stashed changes
+=======
+<<<<<<<< Updated upstream:docs/i18n/sv/docs/CLI-TOOLS.md
 | **Qwen Code**      | `qwen`        | `qwen`     | custom     | npm            |
 ========
 >>>>>>>> Stashed changes:docs/i18n/no/docs/CLI-TOOLS.md
@@ -385,6 +403,7 @@ They run as internal routes and use OmniRoute's model routing automatically.
 ---
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 <<<<<<<< Updated upstream:docs/i18n/no/docs/CLI-TOOLS.md
 ## Feilsøking
 ========
@@ -393,6 +412,13 @@ They run as internal routes and use OmniRoute's model routing automatically.
 =======
 <<<<<<<< Updated upstream:docs/i18n/in/docs/CLI-TOOLS.md
 ## समस्या निवारण
+========
+## Feilsøking
+>>>>>>>> Stashed changes:docs/i18n/no/docs/CLI-TOOLS.md
+>>>>>>> Stashed changes
+=======
+<<<<<<<< Updated upstream:docs/i18n/sv/docs/CLI-TOOLS.md
+## Felsökning
 ========
 ## Feilsøking
 >>>>>>>> Stashed changes:docs/i18n/no/docs/CLI-TOOLS.md
@@ -417,6 +443,7 @@ OMNIROUTE_URL="http://localhost:20128/v1"
 OMNIROUTE_KEY="sk-your-omniroute-key"
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 <<<<<<<< Updated upstream:docs/i18n/no/docs/CLI-TOOLS.md
 npm install -g @anthropic-ai/claude-code @openai/codex opencode-ai cline kilocode @qwen-code/qwen-code
 ========
@@ -424,10 +451,16 @@ npm install -g @anthropic-ai/claude-code @openai/codex opencode-ai cline kilocod
 >>>>>>>> Stashed changes:docs/i18n/ro/docs/CLI-TOOLS.md
 =======
 <<<<<<<< Updated upstream:docs/i18n/in/docs/CLI-TOOLS.md
+=======
+<<<<<<<< Updated upstream:docs/i18n/sv/docs/CLI-TOOLS.md
+>>>>>>> Stashed changes
 npm install -g @anthropic-ai/claude-code @openai/codex opencode-ai cline kilocode @qwen-code/qwen-code
 ========
 npm install -g @anthropic-ai/claude-code @openai/codex opencode-ai cline kilocode
 >>>>>>>> Stashed changes:docs/i18n/no/docs/CLI-TOOLS.md
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 # Kiro CLI

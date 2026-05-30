@@ -1,5 +1,6 @@
 import { createHash, randomUUID } from "node:crypto";
 
+<<<<<<< Updated upstream
 import { getStainlessTimeoutSeconds } from "@/shared/utils/runtimeTimeouts";
 import { ANTHROPIC_VERSION_HEADER } from "../config/anthropicHeaders.ts";
 import { supportsXHighEffort } from "../config/providerModels.ts";
@@ -54,6 +55,18 @@ const CONTEXT_1M_SUPPORTED_MODELS = [
 export const CLAUDE_CODE_COMPATIBLE_STAINLESS_TIMEOUT_SECONDS = getStainlessTimeoutSeconds(
   process.env
 );
+=======
+export const CLAUDE_CODE_COMPATIBLE_PREFIX = "anthropic-compatible-cc-";
+export const CLAUDE_CODE_COMPATIBLE_DEFAULT_CHAT_PATH = "/v1/messages?beta=true";
+export const CLAUDE_CODE_COMPATIBLE_DEFAULT_MODELS_PATH = "/models";
+export const CLAUDE_CODE_COMPATIBLE_DEFAULT_MAX_TOKENS = 8092;
+export const CLAUDE_CODE_COMPATIBLE_ANTHROPIC_VERSION = "2023-06-01";
+export const CLAUDE_CODE_COMPATIBLE_ANTHROPIC_BETA =
+  "claude-code-20250219,interleaved-thinking-2025-05-14,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24";
+export const CLAUDE_CODE_COMPATIBLE_USER_AGENT = "claude-cli/2.1.89 (external, sdk-cli)";
+export const CLAUDE_CODE_COMPATIBLE_BILLING_HEADER =
+  "x-anthropic-billing-header: cc_version=2.1.89.728; cc_entrypoint=sdk-cli; cch=00000;";
+>>>>>>> Stashed changes
 
 type HeaderLike =
   | Headers
@@ -70,12 +83,16 @@ type MessageLike = {
 type BuildRequestOptions = {
   sourceBody?: Record<string, unknown> | null;
   normalizedBody?: Record<string, unknown> | null;
+<<<<<<< Updated upstream
   claudeBody?: Record<string, unknown> | null;
+=======
+>>>>>>> Stashed changes
   model: string;
   stream?: boolean;
   cwd?: string;
   now?: Date;
   sessionId?: string | null;
+<<<<<<< Updated upstream
   preserveCacheControl?: boolean;
 };
 
@@ -83,6 +100,10 @@ function supportsClaudeXHighEffort(model: string | null | undefined): boolean {
   return typeof model === "string" && supportsXHighEffort("claude", model);
 }
 
+=======
+};
+
+>>>>>>> Stashed changes
 export function isClaudeCodeCompatibleProvider(provider: string | null | undefined): boolean {
   return typeof provider === "string" && provider.startsWith(CLAUDE_CODE_COMPATIBLE_PREFIX);
 }
@@ -92,7 +113,11 @@ export function stripAnthropicMessagesSuffix(baseUrl: string | null | undefined)
     .trim()
     .replace(/\/$/, "");
   if (!normalized) return "";
+<<<<<<< Updated upstream
   return normalized.split("?")[0].replace(/\/messages$/i, "");
+=======
+  return normalized.replace(/\/messages(?:\?[^#]*)?$/i, "");
+>>>>>>> Stashed changes
 }
 
 export function stripClaudeCodeCompatibleEndpointSuffix(
@@ -102,7 +127,11 @@ export function stripClaudeCodeCompatibleEndpointSuffix(
     .trim()
     .replace(/\/$/, "");
   if (!normalized) return "";
+<<<<<<< Updated upstream
   return normalized.split("?")[0].replace(/\/(?:v\d+\/)?messages$/i, "");
+=======
+  return normalized.replace(/\/(?:v\d+\/)?messages(?:\?[^#]*)?$/i, "");
+>>>>>>> Stashed changes
 }
 
 function joinNormalizedBaseUrlAndPath(baseUrl: string, path: string): string {
@@ -128,6 +157,7 @@ export function joinClaudeCodeCompatibleUrl(baseUrl: string, path: string): stri
   return joinNormalizedBaseUrlAndPath(stripClaudeCodeCompatibleEndpointSuffix(baseUrl), path);
 }
 
+<<<<<<< Updated upstream
 export function appendAnthropicBetaHeader(
   headers: Record<string, string>,
   betaHeader: string
@@ -159,11 +189,14 @@ export function modelSupportsContext1mBeta(model: string | null | undefined): bo
   );
 }
 
+=======
+>>>>>>> Stashed changes
 export function buildClaudeCodeCompatibleHeaders(
   apiKey: string,
   stream = false,
   sessionId?: string | null
 ): Record<string, string> {
+<<<<<<< Updated upstream
   void stream;
   // These headers intentionally mirror Claude Code's wire image closely.
   // For CC-compatible relays, passing the upstream's client-gating checks is
@@ -172,12 +205,19 @@ export function buildClaudeCodeCompatibleHeaders(
     "Content-Type": "application/json",
     Accept: "application/json",
     Authorization: `Bearer ${apiKey}`,
+=======
+  return {
+    "Content-Type": "application/json",
+    Accept: stream ? "text/event-stream" : "application/json",
+    "x-api-key": apiKey,
+>>>>>>> Stashed changes
     "anthropic-version": CLAUDE_CODE_COMPATIBLE_ANTHROPIC_VERSION,
     "anthropic-beta": CLAUDE_CODE_COMPATIBLE_ANTHROPIC_BETA,
     "anthropic-dangerous-direct-browser-access": "true",
     "x-app": "cli",
     "User-Agent": CLAUDE_CODE_COMPATIBLE_USER_AGENT,
     "X-Stainless-Retry-Count": "0",
+<<<<<<< Updated upstream
     "X-Stainless-Timeout": String(CLAUDE_CODE_COMPATIBLE_STAINLESS_TIMEOUT_SECONDS),
     "X-Stainless-Lang": "js",
     "X-Stainless-Package-Version": CLAUDE_CODE_COMPATIBLE_STAINLESS_PACKAGE_VERSION,
@@ -186,6 +226,18 @@ export function buildClaudeCodeCompatibleHeaders(
     "X-Stainless-Runtime": "node",
     "X-Stainless-Runtime-Version": CLAUDE_CODE_COMPATIBLE_STAINLESS_RUNTIME_VERSION,
     "accept-encoding": "gzip, deflate, br, zstd",
+=======
+    "X-Stainless-Timeout": "300",
+    "X-Stainless-Lang": "js",
+    "X-Stainless-Package-Version": "0.74.0",
+    "X-Stainless-OS": "MacOS",
+    "X-Stainless-Arch": "arm64",
+    "X-Stainless-Runtime": "node",
+    "X-Stainless-Runtime-Version": "v25.8.1",
+    "accept-language": "*",
+    "sec-fetch-mode": "cors",
+    "accept-encoding": "identity",
+>>>>>>> Stashed changes
     ...(sessionId ? { "X-Claude-Code-Session-Id": sessionId } : {}),
   };
 }
@@ -199,7 +251,11 @@ export function buildClaudeCodeCompatibleValidationPayload(model = "claude-sonne
       max_tokens: 1,
     },
     model,
+<<<<<<< Updated upstream
     stream: true,
+=======
+    stream: false,
+>>>>>>> Stashed changes
     sessionId,
     cwd: process.cwd(),
     now: new Date(),
@@ -220,6 +276,7 @@ export function resolveClaudeCodeCompatibleSessionId(headers?: HeaderLike): stri
 export function buildClaudeCodeCompatibleRequest({
   sourceBody,
   normalizedBody,
+<<<<<<< Updated upstream
   claudeBody,
   model,
   stream = false,
@@ -259,12 +316,34 @@ export function buildClaudeCodeCompatibleRequest({
         preserveCacheControl
       )
     : buildClaudeCodeCompatibleTools(normalizedBody, sourceBody);
+=======
+  model,
+  stream = false,
+  cwd = process.cwd(),
+  now = new Date(),
+  sessionId,
+}: BuildRequestOptions) {
+  const normalized = normalizedBody || {};
+  const messages = Array.isArray(normalized.messages)
+    ? buildClaudeCodeCompatibleMessages(normalized.messages as MessageLike[])
+    : [];
+  const system = buildClaudeCodeCompatibleSystemBlocks(
+    normalized.messages as MessageLike[],
+    cwd,
+    now
+  );
+  const resolvedSessionId = sessionId || randomUUID();
+  const effort = resolveClaudeCodeCompatibleEffort(sourceBody, normalizedBody, model);
+  const maxTokens = resolveClaudeCodeCompatibleMaxTokens(sourceBody, normalizedBody);
+  const tools = buildClaudeCodeCompatibleTools(normalizedBody, sourceBody);
+>>>>>>> Stashed changes
   const toolChoice =
     tools.length > 0
       ? buildClaudeCodeCompatibleToolChoice(
           normalizedBody?.["tool_choice"] ?? sourceBody?.["tool_choice"]
         )
       : undefined;
+<<<<<<< Updated upstream
   const metadata = resolveClaudeCodeCompatibleMetadata({
     claudeBody,
     sourceBody,
@@ -284,21 +363,52 @@ export function buildClaudeCodeCompatibleRequest({
     model,
     effort,
   });
+=======
+>>>>>>> Stashed changes
 
   return {
     model,
     messages,
     system,
     tools,
+<<<<<<< Updated upstream
     metadata,
     max_tokens: maxTokens,
     thinking,
     output_config: outputConfig,
+=======
+    metadata: {
+      user_id: JSON.stringify({
+        device_id: createHash("sha256")
+          .update(String(cwd || ""))
+          .digest("hex")
+          .slice(0, 24),
+        account_uuid: "",
+        session_id: resolvedSessionId,
+      }),
+    },
+    max_tokens: maxTokens,
+    thinking: {
+      type: "adaptive",
+    },
+    context_management: {
+      edits: [
+        {
+          type: "clear_thinking_20251015",
+          keep: "all",
+        },
+      ],
+    },
+    output_config: {
+      effort,
+    },
+>>>>>>> Stashed changes
     ...(toolChoice ? { tool_choice: toolChoice } : {}),
     ...(stream ? { stream: true } : {}),
   };
 }
 
+<<<<<<< Updated upstream
 /**
  * Full Claude Code request processing pipeline.
  *
@@ -363,11 +473,17 @@ export {
   enforceCacheControlLimit,
 } from "./claudeCodeConstraints.ts";
 
+=======
+>>>>>>> Stashed changes
 export function resolveClaudeCodeCompatibleEffort(
   sourceBody?: Record<string, unknown> | null,
   normalizedBody?: Record<string, unknown> | null,
   model?: string | null
+<<<<<<< Updated upstream
 ): "low" | "medium" | "high" | "xhigh" {
+=======
+): "low" | "medium" | "high" {
+>>>>>>> Stashed changes
   const raw =
     readNestedString(sourceBody, ["output_config", "effort"]) ||
     readNestedString(sourceBody, ["reasoning", "effort"]) ||
@@ -378,14 +494,21 @@ export function resolveClaudeCodeCompatibleEffort(
     "";
 
   const normalizedEffort = raw.toLowerCase();
+<<<<<<< Updated upstream
 
   if (!normalizedEffort) {
     return supportsClaudeXHighEffort(model) ? "xhigh" : "high";
   }
+=======
+  void model;
+
+  if (!normalizedEffort) return "high";
+>>>>>>> Stashed changes
   if (normalizedEffort === "low") return "low";
   if (normalizedEffort === "medium") return "medium";
   if (normalizedEffort === "high") return "high";
   if (normalizedEffort === "none" || normalizedEffort === "disabled") return "low";
+<<<<<<< Updated upstream
   if (normalizedEffort === "xhigh") {
     return supportsClaudeXHighEffort(model) ? "xhigh" : "high";
   }
@@ -393,6 +516,12 @@ export function resolveClaudeCodeCompatibleEffort(
     return supportsClaudeXHighEffort(model) ? "xhigh" : "high";
   }
   return supportsClaudeXHighEffort(model) ? "xhigh" : "high";
+=======
+  if (normalizedEffort === "max" || normalizedEffort === "xhigh") {
+    return "high";
+  }
+  return "high";
+>>>>>>> Stashed changes
 }
 
 export function resolveClaudeCodeCompatibleMaxTokens(
@@ -424,6 +553,7 @@ function buildClaudeCodeCompatibleMessages(messages: MessageLike[]) {
     .filter(
       (
         message
+<<<<<<< Updated upstream
       ): message is {
         role: "user" | "assistant";
         content: Array<{ type: string; text: string }>;
@@ -434,6 +564,13 @@ function buildClaudeCodeCompatibleMessages(messages: MessageLike[]) {
     role: "user" | "assistant";
     content: Array<{ type: string; text: string }>;
   }> = [];
+=======
+      ): message is { role: "user" | "assistant"; content: Array<Record<string, unknown>> } =>
+        !!message && message.content.length > 0
+    );
+
+  const merged: Array<{ role: "user" | "assistant"; content: Array<Record<string, unknown>> }> = [];
+>>>>>>> Stashed changes
 
   for (const message of converted) {
     const last = merged[merged.length - 1];
@@ -463,12 +600,17 @@ function buildClaudeCodeCompatibleMessages(messages: MessageLike[]) {
       return [
         {
           role: "user" as const,
+<<<<<<< Updated upstream
           content: [{ type: "text", text: fallbackText }],
+=======
+          content: [{ type: "text", text: fallbackText, cache_control: { type: "ephemeral" } }],
+>>>>>>> Stashed changes
         },
       ];
     }
   }
 
+<<<<<<< Updated upstream
   return merged;
 }
 
@@ -590,6 +732,62 @@ function containsDefaultSystemSkeleton(blocks: Array<Record<string, unknown>>) {
       return Object.entries(defaultBlock).every(([key, value]) => candidateBlock[key] === value);
     })
   );
+=======
+  for (let i = merged.length - 1; i >= 0; i--) {
+    if (merged[i].role !== "user") continue;
+    const lastBlock = merged[i].content[merged[i].content.length - 1];
+    if (lastBlock) {
+      lastBlock.cache_control = { type: "ephemeral" };
+    }
+    break;
+  }
+
+  return merged;
+}
+
+function buildClaudeCodeCompatibleSystemBlocks(
+  messages: MessageLike[] | undefined,
+  cwd: string,
+  now: Date
+) {
+  const customSystemBlocks = Array.isArray(messages)
+    ? messages
+        .filter((message) => {
+          const role = String(message?.role || "").toLowerCase();
+          return role === "system" || role === "developer";
+        })
+        .map((message) => contentToText(message?.content))
+        .filter(Boolean)
+    : [];
+
+  const dateText = formatDate(now);
+  const blocks: Array<Record<string, unknown>> = [
+    {
+      type: "text",
+      text: CLAUDE_CODE_COMPATIBLE_BILLING_HEADER,
+    },
+    {
+      type: "text",
+      text: "You are a Claude agent, built on Anthropic's Claude Agent SDK.",
+      cache_control: { type: "ephemeral" },
+    },
+    {
+      type: "text",
+      text: `You are Claude Code, Anthropic's official CLI for Claude.\n\nCWD: ${cwd}\nDate: ${dateText}`,
+      cache_control: { type: "ephemeral" },
+    },
+  ];
+
+  for (const systemText of customSystemBlocks) {
+    blocks.push({
+      type: "text",
+      text: systemText,
+      cache_control: { type: "ephemeral" },
+    });
+  }
+
+  return blocks;
+>>>>>>> Stashed changes
 }
 
 function convertClaudeCodeCompatibleMessage(message: MessageLike | null | undefined) {
@@ -624,6 +822,7 @@ function buildClaudeCodeCompatibleTools(
 
   return rawTools
     .map((tool) => convertClaudeCodeCompatibleTool(tool))
+<<<<<<< Updated upstream
     .filter((tool): tool is Record<string, unknown> => !!tool)
     .map((tool) => ({ ...tool }));
 }
@@ -641,6 +840,9 @@ function buildClaudeCodeCompatibleToolsFromClaude(
     }
     return preparedTool;
   });
+=======
+    .filter((tool): tool is Record<string, unknown> => !!tool);
+>>>>>>> Stashed changes
 }
 
 function convertClaudeCodeCompatibleTool(tool: unknown) {
@@ -701,6 +903,7 @@ function buildClaudeCodeCompatibleToolChoice(choice: unknown) {
   return null;
 }
 
+<<<<<<< Updated upstream
 function prepareClaudeCodeCompatibleBody(
   claudeBody: Record<string, unknown>,
   preserveCacheControl: boolean
@@ -963,6 +1166,8 @@ function cloneValue<T>(value: T): T {
   return JSON.parse(JSON.stringify(value)) as T;
 }
 
+=======
+>>>>>>> Stashed changes
 function contentToText(content: unknown): string {
   if (typeof content === "string") {
     return content.trim();
@@ -1011,6 +1216,23 @@ function getHeader(headers: HeaderLike, name: string): string | null {
   return null;
 }
 
+<<<<<<< Updated upstream
+=======
+function formatDate(date: Date): string {
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+
+  const parts = formatter.formatToParts(date);
+  const year = parts.find((part) => part.type === "year")?.value || "1970";
+  const month = parts.find((part) => part.type === "month")?.value || "01";
+  const day = parts.find((part) => part.type === "day")?.value || "01";
+  return `${year}-${month}-${day}`;
+}
+
+>>>>>>> Stashed changes
 function toNonEmptyString(value: unknown): string | null {
   if (typeof value !== "string") return null;
   const trimmed = value.trim();

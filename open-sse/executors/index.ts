@@ -11,6 +11,7 @@ import { CloudflareAIExecutor } from "./cloudflare-ai.ts";
 import { OpencodeExecutor } from "./opencode.ts";
 import { PuterExecutor } from "./puter.ts";
 import { VertexExecutor } from "./vertex.ts";
+<<<<<<< Updated upstream
 import { CliproxyapiExecutor } from "./cliproxyapi.ts";
 import { PerplexityWebExecutor } from "./perplexity-web.ts";
 import { GrokWebExecutor } from "./grok-web.ts";
@@ -21,6 +22,8 @@ import { AzureOpenAIExecutor } from "./azure-openai.ts";
 import { GitlabExecutor } from "./gitlab.ts";
 import { NlpCloudExecutor } from "./nlpcloud.ts";
 import { PetalsExecutor } from "./petals.ts";
+=======
+>>>>>>> Stashed changes
 
 const executors = {
   antigravity: new AntigravityExecutor(),
@@ -46,6 +49,7 @@ const executors = {
   puter: new PuterExecutor(),
   pu: new PuterExecutor(), // Alias
   vertex: new VertexExecutor(),
+<<<<<<< Updated upstream
   "vertex-partner": new VertexExecutor(),
   cliproxyapi: new CliproxyapiExecutor(),
   cpa: new CliproxyapiExecutor(), // Alias
@@ -58,6 +62,8 @@ const executors = {
   "bb-web": new BlackboxWebExecutor(), // Alias
   "muse-spark-web": new MuseSparkWebExecutor(),
   "ms-web": new MuseSparkWebExecutor(), // Alias
+=======
+>>>>>>> Stashed changes
 };
 
 const defaultCache = new Map();
@@ -85,6 +91,7 @@ export { PollinationsExecutor } from "./pollinations.ts";
 export { CloudflareAIExecutor } from "./cloudflare-ai.ts";
 export { OpencodeExecutor } from "./opencode.ts";
 export { PuterExecutor } from "./puter.ts";
+<<<<<<< Updated upstream
 export { CliproxyapiExecutor } from "./cliproxyapi.ts";
 export { VertexExecutor } from "./vertex.ts";
 export { PerplexityWebExecutor } from "./perplexity-web.ts";
@@ -96,3 +103,6 @@ export { AzureOpenAIExecutor } from "./azure-openai.ts";
 export { GitlabExecutor } from "./gitlab.ts";
 export { NlpCloudExecutor } from "./nlpcloud.ts";
 export { PetalsExecutor } from "./petals.ts";
+=======
+export { VertexExecutor } from "./vertex.ts";
+>>>>>>> Stashed changes

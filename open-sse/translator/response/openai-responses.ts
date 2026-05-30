@@ -18,7 +18,11 @@ export function openaiToOpenAIResponsesResponse(chunk, state) {
     return flushEvents(state);
   }
 
+<<<<<<< Updated upstream
   // Capture usage from all chunks that carry it (usage-only chunks OR final chunks with finish_reason)
+=======
+  // Capture usage from any chunk that carries it (usage-only chunks OR final chunks with finish_reason)
+>>>>>>> Stashed changes
   // Normalize Chat Completions format (prompt_tokens/completion_tokens) to Responses API format
   // (input_tokens/output_tokens) so response.completed always has the fields Codex expects.
   if (chunk.usage) {
@@ -30,6 +34,7 @@ export function openaiToOpenAIResponsesResponse(chunk, state) {
       output_tokens,
       total_tokens: u.total_tokens ?? input_tokens + output_tokens,
     };
+<<<<<<< Updated upstream
     const cachedTokens =
       u.input_tokens_details?.cached_tokens ?? u.prompt_tokens_details?.cached_tokens;
     if (cachedTokens) {
@@ -39,6 +44,10 @@ export function openaiToOpenAIResponsesResponse(chunk, state) {
       u.output_tokens_details?.reasoning_tokens ?? u.completion_tokens_details?.reasoning_tokens;
     if (reasoningTokens) {
       state.usage.output_tokens_details = { reasoning_tokens: reasoningTokens };
+=======
+    if (u.prompt_tokens_details?.cached_tokens) {
+      state.usage.input_tokens_details = { cached_tokens: u.prompt_tokens_details.cached_tokens };
+>>>>>>> Stashed changes
     }
   }
 
@@ -795,10 +804,30 @@ export function openaiResponsesToOpenAIResponse(chunk, state) {
     return null;
   }
 
+<<<<<<< Updated upstream
   if (eventType === "response.failed" || eventType === "error") {
     state.upstreamError = normalizeUpstreamFailure(data);
     state.finishReasonSent = true;
     return null;
+=======
+  // Reasoning events — emit as reasoning_content in Chat format
+  if (eventType === "response.reasoning_summary_text.delta") {
+    const reasoningDelta = data.delta || "";
+    if (!reasoningDelta) return null;
+    return {
+      id: state.chatId,
+      object: "chat.completion.chunk",
+      created: state.created,
+      model: state.model || "gpt-4",
+      choices: [
+        {
+          index: 0,
+          delta: { reasoning_content: reasoningDelta },
+          finish_reason: null,
+        },
+      ],
+    };
+>>>>>>> Stashed changes
   }
 
   // Reasoning events — emit as reasoning_content in Chat format

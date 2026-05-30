@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { skillExecutor } from "@/lib/skills/executor";
+<<<<<<< Updated upstream
 import { parsePaginationParams, buildPaginatedResponse } from "@/shared/types/pagination";
 import { z } from "zod";
 import { validateBody, isValidationFailure } from "@/shared/validation/helpers";
@@ -20,11 +21,19 @@ export async function GET(request: Request) {
       (params.page - 1) * params.limit
     );
     return NextResponse.json(buildPaginatedResponse(executions, total, params));
+=======
+
+export async function GET() {
+  try {
+    const executions = skillExecutor.listExecutions();
+    return NextResponse.json({ executions });
+>>>>>>> Stashed changes
   } catch (err: unknown) {
     const error = err instanceof Error ? err.message : String(err);
     return NextResponse.json({ error }, { status: 500 });
   }
 }
+<<<<<<< Updated upstream
 
 const executionSchema = z.object({
   skillName: z.string().min(1),
@@ -58,3 +67,5 @@ export async function POST(request: Request) {
     return NextResponse.json({ error }, { status: 500 });
   }
 }
+=======
+>>>>>>> Stashed changes

@@ -54,6 +54,7 @@ export async function getSettings() {
     maxRetryIntervalSec: 30,
     antigravitySignatureCacheMode: "enabled",
     requireLogin: true,
+<<<<<<< Updated upstream
     mcpEnabled: false,
     a2aEnabled: false,
     hiddenSidebarItems: [],
@@ -65,6 +66,11 @@ export async function getSettings() {
     idempotencyWindowMs: 5000,
     wsAuth: false,
     maxBodySizeMb: requestBodyLimitMbFromEnv(process.env.MAX_BODY_SIZE_BYTES),
+=======
+    hiddenSidebarItems: [],
+    alwaysPreserveClientCache: "auto",
+    idempotencyWindowMs: 5000,
+>>>>>>> Stashed changes
   };
   for (const row of rows) {
     const record = toRecord(row);
@@ -637,6 +643,7 @@ export async function getCacheMetrics() {
         `
       SELECT
         provider,
+<<<<<<< Updated upstream
         COUNT(*) as totalRequests,
         SUM(CASE WHEN tokens_cache_read > 0 OR tokens_cache_creation > 0 THEN 1 ELSE 0 END) as cachedRequests,
         SUM(CASE WHEN tokens_cache_read > 0 OR tokens_cache_creation > 0 THEN tokens_input ELSE 0 END) as inputTokens,
@@ -646,12 +653,26 @@ export async function getCacheMetrics() {
       WHERE provider IS NOT NULL
       GROUP BY provider
       HAVING cachedRequests > 0
+=======
+        COUNT(*) as requests,
+        SUM(tokens_input) as inputTokens,
+        SUM(tokens_cache_read) as cachedTokens,
+        SUM(tokens_cache_creation) as cacheCreationTokens
+      FROM usage_history
+      WHERE (tokens_cache_read > 0 OR tokens_cache_creation > 0)
+        AND provider IS NOT NULL
+      GROUP BY provider
+>>>>>>> Stashed changes
     `
       )
       .all() as Array<{
       provider: string;
+<<<<<<< Updated upstream
       totalRequests: number;
       cachedRequests: number;
+=======
+      requests: number;
+>>>>>>> Stashed changes
       inputTokens: number | null;
       cachedTokens: number | null;
       cacheCreationTokens: number | null;
@@ -695,8 +716,11 @@ export async function getCacheMetrics() {
       string,
       {
         requests: number;
+<<<<<<< Updated upstream
         totalRequests: number;
         cachedRequests: number;
+=======
+>>>>>>> Stashed changes
         inputTokens: number;
         cachedTokens: number;
         cacheCreationTokens: number;
@@ -704,9 +728,13 @@ export async function getCacheMetrics() {
     > = {};
     for (const row of byProviderRows) {
       byProvider[row.provider] = {
+<<<<<<< Updated upstream
         requests: row.cachedRequests,
         totalRequests: row.totalRequests,
         cachedRequests: row.cachedRequests,
+=======
+        requests: row.requests,
+>>>>>>> Stashed changes
         inputTokens: row.inputTokens || 0,
         cachedTokens: row.cachedTokens || 0,
         cacheCreationTokens: row.cacheCreationTokens || 0,

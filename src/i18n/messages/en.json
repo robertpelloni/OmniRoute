@@ -137,6 +137,7 @@
     "Failed to save pricing": "Failed to save pricing",
     "Failed to reset pricing": "Failed to reset pricing",
     "apikey": "API Key",
+<<<<<<< Updated upstream
     "http": "HTTP",
     "goToDashboard": "Go to Dashboard",
     "checkSystemStatus": "Check System Status",
@@ -649,6 +650,9 @@
     "learnedFromHeaders": "Learned From Headers",
     "totalRequests": "Total Requests",
     "cloudUnstableNote": "Cloud Unstable Note"
+=======
+    "http": "HTTP"
+>>>>>>> Stashed changes
   },
   "sidebar": {
     "home": "Home",
@@ -707,6 +711,7 @@
     "themeCyan": "Cyan",
     "cliToolsShort": "Tools",
     "cache": "Cache",
+<<<<<<< Updated upstream
     "cacheShort": "Cache",
     "batch": "Batch Testing",
     "themeSystem": "Theme System",
@@ -839,6 +844,9 @@
     "success": "Success",
     "failure": "Failure",
     "noMcpEvents": "No MCP audit events recorded."
+=======
+    "cacheShort": "Cache"
+>>>>>>> Stashed changes
   },
   "themesPage": {
     "title": "Themes",
@@ -924,6 +932,7 @@
     "evals": "Evals",
     "utilization": "Utilization",
     "utilizationDescription": "Provider quota usage trends and rate limit tracking",
+<<<<<<< Updated upstream
     "modelStatus": "Model Status",
     "modelStatusCooldown": "Cooldown",
     "modelStatusUnavailable": "Unavailable",
@@ -932,6 +941,10 @@
     "comboHealthDescription": "Combo-level quota, usage distribution, and performance metrics",
     "compressionAnalyticsTitle": "Compression Analytics",
     "compressionAnalyticsDescription": "Compression analytics — token savings, mode breakdown, and provider stats."
+=======
+    "comboHealth": "Combo Health",
+    "comboHealthDescription": "Combo-level quota, usage distribution, and performance metrics"
+>>>>>>> Stashed changes
   },
   "apiManager": {
     "title": "API Keys",
@@ -1290,6 +1303,7 @@
       "continue": "Use when running Continue in IDEs and you need portable JSON-based provider configuration.",
       "opencode": "Use when you prefer terminal-native agent runs and scripted automation via OpenCode.",
       "kiro": "Use when integrating Kiro and controlling model routing centrally from OmniRoute.",
+<<<<<<< Updated upstream
       "windsurf": "Use when you want an AI-first IDE with Codeium/Windsurf models routed through OmniRoute.",
       "antigravity": "Use when Antigravity/Kiro traffic must be intercepted through MITM and routed to OmniRoute.",
       "copilot": "Use when you want Copilot chat style UX while enforcing OmniRoute keys and routing rules.",
@@ -1297,6 +1311,10 @@
       "qwen": "Use when you need Alibaba Qwen Code CLI for coding tasks.",
       "hermes": "Use when you need a lightweight terminal-native AI assistant for quick tasks.",
       "custom": "Use for custom tool implementations or generic OpenAI-compatible configurations."
+=======
+      "antigravity": "Use when Antigravity/Kiro traffic must be intercepted through MITM and routed to OmniRoute.",
+      "copilot": "Use when you want Copilot chat style UX while enforcing OmniRoute keys and routing rules."
+>>>>>>> Stashed changes
     },
     "toolDescriptions": {
       "antigravity": "Google Antigravity IDE with MITM",
@@ -1311,11 +1329,15 @@
       "opencode": "OpenCode AI coding agent (Terminal)",
       "kiro": "Amazon Kiro — AI-powered IDE",
       "windsurf": "Windsurf AI Code Editor",
+<<<<<<< Updated upstream
       "copilot": "GitHub Copilot AI Assistant",
       "qwen": "Alibaba Qwen Code CLI",
       "amp": "Sourcegraph Amp coding assistant CLI",
       "hermes": "Hermes AI Terminal Assistant",
       "custom": "Generic OpenAI-compatible CLI or SDK configuration generator"
+=======
+      "copilot": "GitHub Copilot AI Assistant"
+>>>>>>> Stashed changes
     },
     "guides": {
       "cursor": {
@@ -1567,6 +1589,7 @@
         "when": "Use when you want perfectly even spread — each model used once before repeating.",
         "avoid": "Avoid when models have different quality or latency and order matters.",
         "example": "Example: Multiple accounts of the same model to distribute usage evenly."
+<<<<<<< Updated upstream
       },
       "p2c": {
         "when": "Use when you want low-latency selection using Power-of-Two-Choices algorithm.",
@@ -1597,6 +1620,8 @@
         "when": "Use when you need to optimize context window usage across models.",
         "avoid": "Avoid when models have similar context lengths or tasks are simple.",
         "example": "Example: Distribute long conversations across models with larger context windows."
+=======
+>>>>>>> Stashed changes
       }
     },
     "advancedHelp": {
@@ -1741,6 +1766,7 @@
         "tip1": "Use at least 2 models for meaningful distribution.",
         "tip2": "Works best with equivalent-performance models.",
         "tip3": "Ideal for load balancing across multiple API accounts."
+<<<<<<< Updated upstream
       },
       "fill-first": {
         "description": "Exhaust provider quotas sequentially before falling back.",
@@ -1888,6 +1914,12 @@
     "agentFeaturesToolFilterHint": "Tool filter regex for agents",
     "agentFeaturesContextCacheHint": "Enable in-context cache for agent tools",
     "agentFeaturesContextCacheProtection": "Protect cache from agent tool mutations"
+=======
+      }
+    },
+    "templateFreeStack": "Free Stack ($0)",
+    "templateFreeStackDesc": "Round-robin across all free providers: Kiro (Claude), Qoder (5 models), Qwen (4 models), Gemini CLI. Zero cost, never stops coding."
+>>>>>>> Stashed changes
   },
   "costs": {
     "title": "Costs",
@@ -2783,7 +2815,10 @@
     "chatCompletions": "Chat Completions",
     "importingModels": "Importing...",
     "importFromModels": "Import from /models",
+<<<<<<< Updated upstream
     "modelsImported": "{count} models imported",
+=======
+>>>>>>> Stashed changes
     "allModelsAlreadyImported": "All models already imported",
     "noNewModelsToImport": "No new models to import — all models are already in the registry or custom models list",
     "skippingExistingModels": "Skipping {count} existing models",
@@ -2917,9 +2952,12 @@
     "compatUpstreamAddRow": "Add header",
     "compatUpstreamRemoveRow": "Remove row",
     "compatBadgeUpstreamHeaders": "Headers",
+<<<<<<< Updated upstream
     "perModelQuotaLabel": "Per-Model Quota",
     "perModelQuotaDescription": "When enabled, 429/404 errors only lock the specific model, not the entire connection. Use for providers with per-model rate limits (e.g., ModelScope).",
     "perModelQuotaToggle": "Per-Model Quota Toggle",
+=======
+>>>>>>> Stashed changes
     "modelId": "Model ID",
     "customModelPlaceholder": "e.g. gpt-4.5-turbo",
     "loading": "Loading...",
@@ -3291,6 +3329,7 @@
     "themeLight": "Light",
     "themeDark": "Dark",
     "themeSystem": "System",
+<<<<<<< Updated upstream
     "endpointTunnelVisibility": "Endpoint tunnel visibility",
     "endpointTunnelVisibilityDesc": "Hide tunnel controls from the Endpoint page without changing tunnel state.",
     "showCloudflareTunnel": "Cloudflare Quick Tunnel",
@@ -3299,6 +3338,8 @@
     "showTailscaleFunnelDesc": "Show Tailscale Funnel controls on the Endpoint page.",
     "showNgrokTunnel": "ngrok Tunnel",
     "showNgrokTunnelDesc": "Show ngrok Tunnel controls on the Endpoint page.",
+=======
+>>>>>>> Stashed changes
     "sidebarVisibility": "Hide sidebar items",
     "sidebarVisibilityDesc": "Hide any sidebar navigation entry to reduce visual clutter without disabling any features",
     "sidebarVisibilityHint": "Any sidebar section is hidden automatically when all of its entries are hidden",
@@ -3328,6 +3369,10 @@
     "uploadFavicon": "Upload Favicon",
     "resetFavicon": "Reset Favicon",
     "faviconPreview": "Favicon Preview",
+<<<<<<< Updated upstream
+=======
+    "promptCache": "Prompt Cache",
+>>>>>>> Stashed changes
     "flushCache": "Flush Cache",
     "flushing": "Flushing…",
     "size": "Size",
@@ -4418,7 +4463,11 @@
     "restartServerWithNewPassword": "Restart the server - it will use the new password",
     "backToLogin": "Back to Login",
     "forgotPassword": "Forgot password?",
+<<<<<<< Updated upstream
     "defaultPasswordHint": "Default password: CHANGEME (unless INITIAL_PASSWORD was set)",
+=======
+    "defaultPasswordHint": "Default password: 123456 (unless INITIAL_PASSWORD was set)",
+>>>>>>> Stashed changes
     "Authorization": "Authorization",
     "Content-Disposition": "Content-Disposition",
     "waitingForAuthorization": "Waiting for authorization...",
@@ -4426,11 +4475,15 @@
     "waitingForOpenAIAuthorization": "Waiting for OpenAI authorization...",
     "waitingForAntigravityAuthorization": "Waiting for Antigravity authorization...",
     "waitingForQoderAuthorization": "Waiting for Qoder authorization...",
+<<<<<<< Updated upstream
     "exchangingCodeForTokens": "Exchanging code for tokens...",
     "nodeIncompatibleTitle": "Incompatible Node.js Version",
     "nodeIncompatibleDesc": "You are running Node.js {version}, which is outside OmniRoute's supported secure runtime policy. Use a patched Node.js 20.x or 22.x LTS release.",
     "nodeIncompatibleFixLabel": "Fix: install a patched Node.js 22 LTS release",
     "nodeIncompatibleHint": "OmniRoute requires Node.js 20.20.2+ (20.x LTS), 22.22.2+ (22.x LTS) or 24.0.0+ (24.x LTS). Node 24 LTS is recommended."
+=======
+    "exchangingCodeForTokens": "Exchanging code for tokens..."
+>>>>>>> Stashed changes
   },
   "landing": {
     "brandName": "OmniRoute",
@@ -4796,6 +4849,7 @@
     "setupGuideCustomAgentTitle": "Register custom binary",
     "setupGuideCustomAgentDesc": "Use Add Custom Agent when your CLI is not in the built-in list. Provide binary name and version command.",
     "setupGuideCommandMissingTitle": "Fix 'command not found'",
+<<<<<<< Updated upstream
     "setupGuideCommandMissingDesc": "Ensure the CLI command exists in PATH, open a new terminal session, and rerun Refresh.",
     "cliToolsRedirectTitle": "Looking to configure your IDE?",
     "cliToolsRedirectDesc": "If you want to point Claude Code, Cursor, Codex, or any IDE at OmniRoute as a proxy, go to CLI Tools instead. This page is for the reverse — using local CLI binaries as execution targets that OmniRoute can spawn and route requests through.",
@@ -4831,6 +4885,33 @@
     "settingsRoutingLink": "Settings/Routing",
     "openSettings": "Settings"
   },
+=======
+    "setupGuideCommandMissingDesc": "Ensure the CLI command exists in PATH, open a new terminal session, and rerun Refresh."
+  },
+  "autoCombo": {
+    "title": "Auto-Combo Engine",
+    "statusNormal": "Normal",
+    "statusIncident": "Incident Mode",
+    "modePack": "Mode Pack",
+    "providerScores": "Provider Scores",
+    "noAutoCombo": "No auto-combo configured.",
+    "excludedProviders": "Excluded Providers",
+    "noExclusions": "No providers currently excluded.",
+    "factorQuota": "Quota",
+    "factorHealth": "Health",
+    "factorCost": "Cost",
+    "factorLatency": "Latency",
+    "factorTaskFit": "Task Fit",
+    "factorStability": "Stability",
+    "factorTierPriority": "Tier Priority",
+    "factorTierPriorityDesc": "Prefers accounts with higher quota tiers (Ultra/Pro over Free)",
+    "scoreFactorBreakdown": "Scoring Factors",
+    "modePackShipFast": "Ship Fast",
+    "modePackCostSaver": "Cost Saver",
+    "modePackQualityFirst": "Quality First",
+    "modePackOfflineFriendly": "Offline Friendly"
+  },
+>>>>>>> Stashed changes
   "templateNames": {
     "simple-chat": "Simple Chat",
     "streaming": "Streaming",
@@ -4876,9 +4957,15 @@
   },
   "cache": {
     "title": "Cache Management",
+<<<<<<< Updated upstream
     "description": "Monitor provider prompt cache efficiency and local semantic response reuse.",
     "refresh": "Refresh",
     "clearAll": "Clear Semantic Cache",
+=======
+    "description": "Monitor and manage semantic response cache, hit rates, and token savings.",
+    "refresh": "Refresh",
+    "clearAll": "Clear All",
+>>>>>>> Stashed changes
     "memoryEntries": "Memory Entries",
     "memoryEntriesSub": "In-memory LRU",
     "dbEntries": "DB Entries",
@@ -4901,11 +4988,16 @@
     "idempotency": "Idempotency Layer",
     "activeDedupKeys": "Active Dedup Keys",
     "dedupWindow": "Dedup Window",
+<<<<<<< Updated upstream
     "clearSuccess": "Semantic cache cleared. {count} entries removed.",
+=======
+    "clearSuccess": "Cache cleared. {count} expired entries removed.",
+>>>>>>> Stashed changes
     "clearError": "Failed to clear cache.",
     "unavailable": "Cache unavailable",
     "unavailableDesc": "Could not fetch cache statistics. Make sure the server is running.",
     "promptCache": "Prompt Cache (Provider-Side)",
+<<<<<<< Updated upstream
     "semanticCache": "Semantic Cache",
     "promptCacheSectionDesc": "Shows provider-side prompt caching activity from usage history so you can see where cache control is active and how much input reuse you are getting.",
     "promptTrendDesc": "Hourly request volume, cache coverage, and cache read volume across the last 24 hours.",
@@ -4929,6 +5021,19 @@
     "peakCacheRate": "Peak Cache Rate",
     "trendHour": "Hour",
     "activityVolume": "Activity",
+=======
+    "cachedRequests": "Cached Requests",
+    "cacheHitRate": "Cache Hit Rate",
+    "cachedTokens": "Cached Tokens",
+    "cacheCreationTokens": "Cache Creation Tokens",
+    "cacheMetrics": "Prompt Cache Metrics",
+    "withCacheControl": "With Cache Control",
+    "cachedTokensRead": "Cached Tokens (Read)",
+    "cacheCreationWrite": "Cache Creation (Write)",
+    "cacheReuseRatio": "Cache Reuse Ratio",
+    "cacheReuseRatioDesc": "Cached tokens / Total input tokens",
+    "estCostSaved": "Est. Cost Saved",
+>>>>>>> Stashed changes
     "requestsShort": "reqs",
     "inputShort": "In",
     "cachedShort": "Cached",
@@ -4936,6 +5041,7 @@
     "resetting": "Resetting...",
     "resetMetrics": "Reset Metrics",
     "byProvider": "Breakdown by Provider",
+<<<<<<< Updated upstream
     "providerCacheRateDesc": "Each provider exposes total input tokens, cache read tokens, and cache write tokens so you can verify the reuse ratio against raw totals.",
     "provider": "Provider",
     "requests": "Requests",
@@ -4957,10 +5063,26 @@
     "noEntries": "No cache entries found",
     "noPromptCacheData": "No provider-side prompt cache activity has been recorded yet.",
     "noTrendData": "No prompt cache activity has been recorded over the last 24 hours.",
+=======
+    "provider": "Provider",
+    "requests": "Requests",
+    "inputTokens": "Input Tokens",
+    "cachedTokensCol": "Cached",
+    "cacheCreation": "Creation",
+    "trend24h": "Cache Trend (24h)",
+    "cached": "Cached",
+    "overview": "Overview",
+    "entries": "Entries",
+    "searchEntries": "Search entries...",
+    "search": "Search",
+    "loading": "Loading...",
+    "noEntries": "No cache entries found",
+>>>>>>> Stashed changes
     "signature": "Signature",
     "model": "Model",
     "created": "Created",
     "expires": "Expires",
+<<<<<<< Updated upstream
     "actions": "Actions",
     "deduplicatedRequests": "Deduplicated Requests",
     "savedCalls": "Saved API Calls",
@@ -5337,5 +5459,8 @@
     "codex": "Codex",
     "claude": "Claude",
     "kilo": "Kilo"
+=======
+    "actions": "Actions"
+>>>>>>> Stashed changes
   }
 }

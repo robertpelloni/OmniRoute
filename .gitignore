@@ -101,6 +101,10 @@ docs/*
 !docs/MCP-SERVER.md
 !docs/CLI-TOOLS.md
 !docs/COVERAGE_PLAN.md
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 
 
 >>>>>>> Stashed changes
@@ -162,6 +166,7 @@ typescript
 
 # Gemini Antigravity agent data
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 .gemini/
 
 # Superpowers plans/specs (internal tooling, not project code)
@@ -179,6 +184,9 @@ bun.lock
 
 # Private environment variables for .http-client
 http-client.private.env.json
+=======
+.gemini/
+>>>>>>> Stashed changes
 =======
 .gemini/
 >>>>>>> Stashed changes

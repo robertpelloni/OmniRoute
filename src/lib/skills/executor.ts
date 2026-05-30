@@ -1,11 +1,15 @@
 import { skillRegistry } from "./registry";
 import { SkillExecution, SkillStatus, SkillHandler } from "./types";
 import { getDbInstance } from "../db/core";
+<<<<<<< Updated upstream
 import { getSettings } from "../db/settings";
 import { randomUUID } from "crypto";
 import { logger } from "../../../open-sse/utils/logger.ts";
 
 const log = logger("SKILLS_EXECUTOR");
+=======
+import { randomUUID } from "crypto";
+>>>>>>> Stashed changes
 
 class SkillExecutor {
   private static instance: SkillExecutor;
@@ -39,11 +43,14 @@ class SkillExecutor {
     input: Record<string, unknown>,
     context: { apiKeyId: string; sessionId?: string }
   ): Promise<SkillExecution> {
+<<<<<<< Updated upstream
     const settings = await getSettings();
     if (settings.skillsEnabled === false) {
       throw new Error("Skills execution is disabled. Enable Skills in Settings > AI.");
     }
 
+=======
+>>>>>>> Stashed changes
     const skill = skillRegistry.getSkill(skillName, context.apiKeyId);
     if (!skill) {
       throw new Error(`Skill not found: ${skillName}`);
@@ -57,8 +64,11 @@ class SkillExecutor {
     const executionId = randomUUID();
     const startTime = Date.now();
 
+<<<<<<< Updated upstream
     log.info("skills.executor.start", { skillId: skill.id, skillName, apiKeyId: context.apiKeyId });
 
+=======
+>>>>>>> Stashed changes
     try {
       db.prepare(
         `INSERT INTO skill_executions (id, skill_id, api_key_id, session_id, input, status, created_at)
@@ -98,12 +108,15 @@ class SkillExecutor {
         `UPDATE skill_executions SET output = ?, status = ?, error_message = ?, duration_ms = ? WHERE id = ?`
       ).run(output ? JSON.stringify(output) : null, status, errorMessage, durationMs, executionId);
 
+<<<<<<< Updated upstream
       log.info("skills.executor.complete", {
         skillId: skill.id,
         success: status === SkillStatus.SUCCESS,
         durationMs,
       });
 
+=======
+>>>>>>> Stashed changes
       return {
         id: executionId,
         skillId: skill.id,
@@ -156,17 +169,28 @@ class SkillExecutor {
     };
   }
 
+<<<<<<< Updated upstream
   listExecutions(apiKeyId?: string, limit: number = 50, offset: number = 0): SkillExecution[] {
+=======
+  listExecutions(apiKeyId?: string, limit: number = 50): SkillExecution[] {
+>>>>>>> Stashed changes
     const db = getDbInstance();
     const rows = apiKeyId
       ? db
           .prepare(
+<<<<<<< Updated upstream
             "SELECT * FROM skill_executions WHERE api_key_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?"
           )
           .all(apiKeyId, limit, offset)
       : db
           .prepare("SELECT * FROM skill_executions ORDER BY created_at DESC LIMIT ? OFFSET ?")
           .all(limit, offset);
+=======
+            "SELECT * FROM skill_executions WHERE api_key_id = ? ORDER BY created_at DESC LIMIT ?"
+          )
+          .all(apiKeyId, limit)
+      : db.prepare("SELECT * FROM skill_executions ORDER BY created_at DESC LIMIT ?").all(limit);
+>>>>>>> Stashed changes
 
     return (rows as any[]).map((row) => ({
       id: row.id,
@@ -181,6 +205,7 @@ class SkillExecutor {
       createdAt: new Date(row.created_at),
     }));
   }
+<<<<<<< Updated upstream
 
   countExecutions(apiKeyId?: string): number {
     const db = getDbInstance();
@@ -191,6 +216,8 @@ class SkillExecutor {
       : (db.prepare("SELECT COUNT(*) as count FROM skill_executions").get() as any);
     return row?.count ?? 0;
   }
+=======
+>>>>>>> Stashed changes
 }
 
 export const skillExecutor = SkillExecutor.getInstance();

@@ -68,6 +68,7 @@ export function extractUsageFromResponse(responseBody, provider) {
       cache_read_input_tokens: responsesUsage.cache_read_input_tokens,
       cached_tokens:
         responsesUsage.input_tokens_details?.cached_tokens ??
+<<<<<<< Updated upstream
         responsesUsage.prompt_tokens_details?.cached_tokens ??
         responsesUsage.cache_read_input_tokens,
       cache_creation_input_tokens: responsesUsage.cache_creation_input_tokens,
@@ -75,6 +76,34 @@ export function extractUsageFromResponse(responseBody, provider) {
         responsesUsage.output_tokens_details?.reasoning_tokens ??
         responsesUsage.completion_tokens_details?.reasoning_tokens ??
         responsesUsage.reasoning_tokens,
+=======
+        responsesUsage.cache_read_input_tokens,
+      cache_creation_input_tokens: responsesUsage.cache_creation_input_tokens,
+      reasoning_tokens:
+        responsesUsage.reasoning_tokens || responsesUsage.output_tokens_details?.reasoning_tokens,
+    };
+  }
+
+  // Claude format
+  if (
+    responseBody.usage &&
+    typeof responseBody.usage === "object" &&
+    (responseBody.usage.input_tokens !== undefined ||
+      responseBody.usage.output_tokens !== undefined)
+  ) {
+    const inputTokens = responseBody.usage.input_tokens || 0;
+    const cacheRead = responseBody.usage.cache_read_input_tokens || 0;
+    const cacheCreation = responseBody.usage.cache_creation_input_tokens || 0;
+
+    // Total prompt tokens = input + cache_read + cache_creation (per Claude API docs)
+    const promptTokens = inputTokens + cacheRead + cacheCreation;
+
+    return {
+      prompt_tokens: promptTokens,
+      completion_tokens: responseBody.usage.output_tokens || 0,
+      cache_read_input_tokens: cacheRead,
+      cache_creation_input_tokens: cacheCreation,
+>>>>>>> Stashed changes
     };
   }
 

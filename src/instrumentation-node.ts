@@ -83,6 +83,9 @@ export async function registerNodejs(): Promise<void> {
   // Trigger request-log layout migration during startup, before any request hits usageDb.
   await import("@/lib/usage/migrations");
 
+  // Trigger request-log layout migration during startup, before any request hits usageDb.
+  await import("@/lib/usage/migrations");
+
   const { initConsoleInterceptor } = await import("@/lib/consoleInterceptor");
   initConsoleInterceptor();
 
@@ -90,7 +93,10 @@ export async function registerNodejs(): Promise<void> {
     { initGracefulShutdown },
     { initApiBridgeServer },
     { startBackgroundRefresh },
+<<<<<<< Updated upstream
     { ensureCloudSyncInitialized },
+=======
+>>>>>>> Stashed changes
     { startProviderLimitsSyncScheduler },
     { getSettings },
     { applyRuntimeSettings },
@@ -104,7 +110,10 @@ export async function registerNodejs(): Promise<void> {
     import("@/lib/gracefulShutdown"),
     import("@/lib/apiBridgeServer"),
     import("@/domain/quotaCache"),
+<<<<<<< Updated upstream
     import("@/lib/initCloudSync"),
+=======
+>>>>>>> Stashed changes
     import("@/shared/services/providerLimitsSyncScheduler"),
     import("@/lib/db/settings"),
     import("@/lib/config/runtimeSettings"),
@@ -118,6 +127,7 @@ export async function registerNodejs(): Promise<void> {
 
   initGracefulShutdown();
   initApiBridgeServer();
+<<<<<<< Updated upstream
   startSpendBatchWriter();
   registerDefaultGuardrails();
   registerBuiltinSkills(skillExecutor);
@@ -137,6 +147,12 @@ export async function registerNodejs(): Promise<void> {
     initBatchProcessor();
     console.log("[STARTUP] Batch processor started");
   }
+=======
+  startBackgroundRefresh();
+  console.log("[STARTUP] Quota cache background refresh started");
+  startProviderLimitsSyncScheduler();
+  console.log("[STARTUP] Provider limits sync scheduler started");
+>>>>>>> Stashed changes
 
   try {
     const [{ migrateCodexConnectionDefaultsFromLegacySettings }, { seedDefaultModelAliases }] =

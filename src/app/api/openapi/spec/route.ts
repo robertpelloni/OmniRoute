@@ -9,6 +9,7 @@ import path from "path";
 import yaml from "js-yaml";
 
 let cachedSpec: { data: any; mtime: number } | null = null;
+<<<<<<< Updated upstream
 const OPENAPI_SPEC_CANDIDATES = [
   path.join(/* turbopackIgnore: true */ process.cwd(), "docs", "openapi.yaml"),
   path.join(/* turbopackIgnore: true */ process.cwd(), "app", "docs", "openapi.yaml"),
@@ -18,6 +19,19 @@ export async function GET() {
   try {
     let specPath = "";
     for (const p of OPENAPI_SPEC_CANDIDATES) {
+=======
+
+export async function GET() {
+  try {
+    // Try multiple locations for the spec file
+    const candidates = [
+      path.join(process.cwd(), "docs", "openapi.yaml"),
+      path.join(process.cwd(), "app", "docs", "openapi.yaml"),
+    ];
+
+    let specPath = "";
+    for (const p of candidates) {
+>>>>>>> Stashed changes
       if (fs.existsSync(p)) {
         specPath = p;
         break;

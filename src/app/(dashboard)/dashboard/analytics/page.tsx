@@ -4,7 +4,10 @@ import { useState, Suspense } from "react";
 import { UsageAnalytics, CardSkeleton, SegmentedControl } from "@/shared/components";
 import EvalsTab from "../usage/components/EvalsTab";
 import SearchAnalyticsTab from "./SearchAnalyticsTab";
+<<<<<<< Updated upstream
 import CompressionAnalyticsTab from "./CompressionAnalyticsTab";
+=======
+>>>>>>> Stashed changes
 import DiversityScoreCard from "./components/DiversityScoreCard";
 import ProviderUtilizationTab from "./ProviderUtilizationTab";
 import ComboHealthTab from "./ComboHealthTab";
@@ -20,7 +23,10 @@ export default function AnalyticsPage() {
     search: "Search request analytics — provider breakdown, cache hit rate, and cost tracking.",
     utilization: t("utilizationDescription"),
     comboHealth: t("comboHealthDescription"),
+<<<<<<< Updated upstream
     compression: t("compressionAnalyticsDescription"),
+=======
+>>>>>>> Stashed changes
   };
 
   return (
@@ -41,25 +47,42 @@ export default function AnalyticsPage() {
           { value: "search", label: "Search" },
           { value: "utilization", label: t("utilization") },
           { value: "comboHealth", label: t("comboHealth") },
+<<<<<<< Updated upstream
           { value: "compression", label: t("compressionAnalyticsTitle") },
+=======
+>>>>>>> Stashed changes
         ]}
         value={activeTab}
         onChange={setActiveTab}
       />
 
       {activeTab === "overview" && (
+<<<<<<< Updated upstream
         <>
           <Suspense fallback={<CardSkeleton />}>
             <UsageAnalytics />
           </Suspense>
           <DiversityScoreCard />
         </>
+=======
+        <div className="flex flex-col gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <DiversityScoreCard />
+          </div>
+          <Suspense fallback={<CardSkeleton />}>
+            <UsageAnalytics />
+          </Suspense>
+        </div>
+>>>>>>> Stashed changes
       )}
       {activeTab === "evals" && <EvalsTab />}
       {activeTab === "search" && <SearchAnalyticsTab />}
       {activeTab === "utilization" && <ProviderUtilizationTab />}
       {activeTab === "comboHealth" && <ComboHealthTab />}
+<<<<<<< Updated upstream
       {activeTab === "compression" && <CompressionAnalyticsTab />}
+=======
+>>>>>>> Stashed changes
     </div>
   );
 }

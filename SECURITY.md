@@ -21,9 +21,15 @@ If you discover a security vulnerability in OmniRoute, please report it responsi
 | Version | Support Status |
 | ------- | -------------- |
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 | 3.6.x   | ✅ Active      |
 | 3.5.x   | ✅ Security    |
 | < 3.5.0 | ❌ Unsupported |
+=======
+| 3.4.x   | ✅ Active      |
+| 3.0.x   | ✅ Security    |
+| < 3.0.0 | ❌ Unsupported |
+>>>>>>> Stashed changes
 =======
 | 3.4.x   | ✅ Active      |
 | 3.0.x   | ✅ Security    |

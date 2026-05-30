@@ -7,9 +7,15 @@ description: Analyze open feature request issues, implement viable ones on dedic
 ## Overview
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 A **5-phase** workflow that systematically harvests feature requests from GitHub issues, creates structured idea files, researches solutions across the internet and Git repositories, presents a consolidated report for user approval, then generates detailed implementation plans and executes them.
 =======
 Fetches open feature request issues, analyzes each against the current codebase, implements viable ones **on the current release branch** (`release/vX.Y.Z`), and responds to authors with results. Does NOT merge to main — the release branch is later merged via PR.
+=======
+Fetches open feature request issues, analyzes each against the current codebase, implements viable ones **on the current release branch** (`release/vX.Y.Z`), and responds to authors with results. Does NOT merge to main — the release branch is later merged via PR.
+
+> **BRANCH RULE**: All work MUST happen on the current `release/vX.Y.Z` branch. Never create separate `feat/` branches. If no release branch exists yet, create one first using `/generate-release` Phase 1 steps 1–5.
+>>>>>>> Stashed changes
 
 > **BRANCH RULE**: All work MUST happen on the current `release/vX.Y.Z` branch. Never create separate `feat/` branches. If no release branch exists yet, create one first using `/generate-release` Phase 1 steps 1–5.
 >>>>>>> Stashed changes
@@ -47,7 +53,11 @@ _tasks/features-vX.Y.Z/   # Implementation plans (per-release)
 - Run: `git -C <project_root> remote get-url origin` to extract owner/repo.
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ### 1.2 Ensure Release Branch Exists
+=======
+### 2. Ensure Release Branch Exists
+>>>>>>> Stashed changes
 =======
 ### 2. Ensure Release Branch Exists
 >>>>>>> Stashed changes
@@ -60,7 +70,43 @@ Before doing any work, ensure you are on the current release branch:
 # Check current branch
 git branch --show-current
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+
+# If on main, determine next version and create the release branch
+VERSION=$(node -p "require('./package.json').version")
+NEXT=$(node -p "const [a,b,c]=('$VERSION').split('.').map(Number); c>=9?a+'.'+(b+1)+'.0':a+'.'+b+'.'+(c+1)")
+git checkout -b release/v$NEXT
+npm version patch --no-git-tag-version
+npm install
+```
+
+If already on a `release/vX.Y.Z` branch, continue working there.
+
+### 3. Fetch Open Feature Request Issues
+
+// turbo-all
+
+**⚠️ CRITICAL**: The JSON output of `gh issue list` can be truncated by the tool, silently hiding issues and their comments. You MUST use the two-step approach below to guarantee **all** feature requests and their full conversations are fetched.
+
+**Step 3a — Get Issue numbers only** (small output, never truncated):
+
+- Run: `gh issue list --repo <owner>/<repo> --state open --labels "enhancement" --limit 500 --json number --jq '.[].number'`
+- (Also run the same for `--labels "feature"` if they are separated, or filter all open issues if labels are not strictly used).
+- This outputs one issue number per line. Count them and confirm total.
+
+**Step 3b — Fetch full metadata & conversations for each Issue** (one call per issue):
+
+- For each issue number from step 3a, run:
+  `gh issue view <NUMBER> --repo <owner>/<repo> --json number,title,labels,body,comments,createdAt,author`
+- Read not just the body, but **ALL comments (`comments` array)** completely to understand the full context, agreements, and restrictions discussed by the community.
+- You may batch these into parallel calls (up to 4 at a time).
+- Filter for issues that are feature requests (if not already filtered by label).
+- Sort by oldest first.
+
+### 4. Analyze Each Feature Request
+>>>>>>> Stashed changes
 
 # If on main, determine next version and create the release branch
 VERSION=$(node -p "require('./package.json').version")
@@ -249,6 +295,8 @@ For each viable feature, perform systematic research:
 =======
 > **⚠️ ALL implementation happens on the release branch.**
 
+> **⚠️ ALL implementation happens on the release branch.**
+
 1. **Research** — Read all related source files to understand the current architecture
 2. **Design** — Plan the implementation, filling gaps in the original request
 3. **Implement** — Build the complete solution following project patterns, **on the release branch**
@@ -257,6 +305,9 @@ For each viable feature, perform systematic research:
 6. **Continue** — Move to the next feature (do not switch branches)
 
 ### 5. Respond to Authors
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 ```
@@ -740,6 +791,7 @@ git fetch origin
 git checkout release/vX.Y.Z
 npm install && npm run dev
 ```
+<<<<<<< Updated upstream
 >>>>>>> Stashed changes
 
 ```bash
@@ -754,6 +806,17 @@ Then **DELETE the idea file** — it has served its purpose:
 rm _ideia/viable/<NUMBER>-<title>.md
 rm _ideia/viable/<NUMBER>-<title>.requirements.md  # if exists
 ```
+=======
+
+### Next steps:
+
+1. **Test it** — Please verify it works as you expected
+2. **Want to improve it?** — Feel free to open a follow-up PR targeting `release/vX.Y.Z`
+3. **Not quite right?** — Let us know in this issue what needs to change
+
+This will be included in the next release. Looking forward to your feedback! 🚀
+````
+>>>>>>> Stashed changes
 
 > **Why delete?** `viable/` only holds features that still NEED to be done. Once implemented, the commit history and CHANGELOG are the source of truth. Keeping the file would be confusing.
 =======
@@ -831,4 +894,7 @@ Present a summary report to the user via `notify_user`:
 | #N    | Title | ✅ Implemented | Committed on release/vX |
 | #N    | Title | ❓ Needs Info  | Comment posted          |
 | #N    | Title | ❌ Not Viable  | Closed with explanation |
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

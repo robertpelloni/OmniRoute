@@ -1,7 +1,11 @@
 # OmniRoute — Dashboard Features Gallery (עברית)
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 🌐 **Languages:** 🇺🇸 [English](../../../../docs/FEATURES.md) · 🇸🇦 [ar](../../ar/docs/FEATURES.md) · 🇧🇬 [bg](../../bg/docs/FEATURES.md) · 🇧🇩 [bn](../../bn/docs/FEATURES.md) · 🇨🇿 [cs](../../cs/docs/FEATURES.md) · 🇩🇰 [da](../../da/docs/FEATURES.md) · 🇩🇪 [de](../../de/docs/FEATURES.md) · 🇪🇸 [es](../../es/docs/FEATURES.md) · 🇮🇷 [fa](../../fa/docs/FEATURES.md) · 🇫🇮 [fi](../../fi/docs/FEATURES.md) · 🇫🇷 [fr](../../fr/docs/FEATURES.md) · 🇮🇳 [gu](../../gu/docs/FEATURES.md) · 🇮🇱 [he](../../he/docs/FEATURES.md) · 🇮🇳 [hi](../../hi/docs/FEATURES.md) · 🇭🇺 [hu](../../hu/docs/FEATURES.md) · 🇮🇩 [id](../../id/docs/FEATURES.md) · 🇮🇹 [it](../../it/docs/FEATURES.md) · 🇯🇵 [ja](../../ja/docs/FEATURES.md) · 🇰🇷 [ko](../../ko/docs/FEATURES.md) · 🇮🇳 [mr](../../mr/docs/FEATURES.md) · 🇲🇾 [ms](../../ms/docs/FEATURES.md) · 🇳🇱 [nl](../../nl/docs/FEATURES.md) · 🇳🇴 [no](../../no/docs/FEATURES.md) · 🇵🇭 [phi](../../phi/docs/FEATURES.md) · 🇵🇱 [pl](../../pl/docs/FEATURES.md) · 🇵🇹 [pt](../../pt/docs/FEATURES.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/FEATURES.md) · 🇷🇴 [ro](../../ro/docs/FEATURES.md) · 🇷🇺 [ru](../../ru/docs/FEATURES.md) · 🇸🇰 [sk](../../sk/docs/FEATURES.md) · 🇸🇪 [sv](../../sv/docs/FEATURES.md) · 🇰🇪 [sw](../../sw/docs/FEATURES.md) · 🇮🇳 [ta](../../ta/docs/FEATURES.md) · 🇮🇳 [te](../../te/docs/FEATURES.md) · 🇹🇭 [th](../../th/docs/FEATURES.md) · 🇹🇷 [tr](../../tr/docs/FEATURES.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/FEATURES.md) · 🇵🇰 [ur](../../ur/docs/FEATURES.md) · 🇻🇳 [vi](../../vi/docs/FEATURES.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/FEATURES.md)
+=======
+🌐 **Languages:** 🇺🇸 [English](../../../../docs/FEATURES.md) · 🇪🇸 [es](../../es/docs/FEATURES.md) · 🇫🇷 [fr](../../fr/docs/FEATURES.md) · 🇩🇪 [de](../../de/docs/FEATURES.md) · 🇮🇹 [it](../../it/docs/FEATURES.md) · 🇷🇺 [ru](../../ru/docs/FEATURES.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/FEATURES.md) · 🇯🇵 [ja](../../ja/docs/FEATURES.md) · 🇰🇷 [ko](../../ko/docs/FEATURES.md) · 🇸🇦 [ar](../../ar/docs/FEATURES.md) · 🇮🇳 [in](../../in/docs/FEATURES.md) · 🇹🇭 [th](../../th/docs/FEATURES.md) · 🇻🇳 [vi](../../vi/docs/FEATURES.md) · 🇮🇩 [id](../../id/docs/FEATURES.md) · 🇲🇾 [ms](../../ms/docs/FEATURES.md) · 🇳🇱 [nl](../../nl/docs/FEATURES.md) · 🇵🇱 [pl](../../pl/docs/FEATURES.md) · 🇸🇪 [sv](../../sv/docs/FEATURES.md) · 🇳🇴 [no](../../no/docs/FEATURES.md) · 🇩🇰 [da](../../da/docs/FEATURES.md) · 🇫🇮 [fi](../../fi/docs/FEATURES.md) · 🇵🇹 [pt](../../pt/docs/FEATURES.md) · 🇷🇴 [ro](../../ro/docs/FEATURES.md) · 🇭🇺 [hu](../../hu/docs/FEATURES.md) · 🇧🇬 [bg](../../bg/docs/FEATURES.md) · 🇸🇰 [sk](../../sk/docs/FEATURES.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/FEATURES.md) · 🇮🇱 [he](../../he/docs/FEATURES.md) · 🇵🇭 [phi](../../phi/docs/FEATURES.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/FEATURES.md) · 🇨🇿 [cs](../../cs/docs/FEATURES.md)
+>>>>>>> Stashed changes
 =======
 🌐 **Languages:** 🇺🇸 [English](../../../../docs/FEATURES.md) · 🇪🇸 [es](../../es/docs/FEATURES.md) · 🇫🇷 [fr](../../fr/docs/FEATURES.md) · 🇩🇪 [de](../../de/docs/FEATURES.md) · 🇮🇹 [it](../../it/docs/FEATURES.md) · 🇷🇺 [ru](../../ru/docs/FEATURES.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/FEATURES.md) · 🇯🇵 [ja](../../ja/docs/FEATURES.md) · 🇰🇷 [ko](../../ko/docs/FEATURES.md) · 🇸🇦 [ar](../../ar/docs/FEATURES.md) · 🇮🇳 [in](../../in/docs/FEATURES.md) · 🇹🇭 [th](../../th/docs/FEATURES.md) · 🇻🇳 [vi](../../vi/docs/FEATURES.md) · 🇮🇩 [id](../../id/docs/FEATURES.md) · 🇲🇾 [ms](../../ms/docs/FEATURES.md) · 🇳🇱 [nl](../../nl/docs/FEATURES.md) · 🇵🇱 [pl](../../pl/docs/FEATURES.md) · 🇸🇪 [sv](../../sv/docs/FEATURES.md) · 🇳🇴 [no](../../no/docs/FEATURES.md) · 🇩🇰 [da](../../da/docs/FEATURES.md) · 🇫🇮 [fi](../../fi/docs/FEATURES.md) · 🇵🇹 [pt](../../pt/docs/FEATURES.md) · 🇷🇴 [ro](../../ro/docs/FEATURES.md) · 🇭🇺 [hu](../../hu/docs/FEATURES.md) · 🇧🇬 [bg](../../bg/docs/FEATURES.md) · 🇸🇰 [sk](../../sk/docs/FEATURES.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/FEATURES.md) · 🇮🇱 [he](../../he/docs/FEATURES.md) · 🇵🇭 [phi](../../phi/docs/FEATURES.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/FEATURES.md) · 🇨🇿 [cs](../../cs/docs/FEATURES.md)
 >>>>>>> Stashed changes
@@ -23,6 +27,7 @@ Manage AI provider connections: OAuth providers (Claude Code, Codex, Gemini CLI)
 ## 🎨 Combos
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 Create model routing combos with 13 strategies: priority, weighted, round-robin, random, least-used, cost-optimized, strict-random, auto, fill-first, p2c, lkgp, context-optimized, and **context-relay**. Each combo chains multiple models with automatic fallback and includes quick templates and readiness checks.
 
 Recent combo improvements:
@@ -31,6 +36,9 @@ Recent combo improvements:
 - **Repeated provider support** — reuse the same provider many times in one combo as long as the `(provider, model, connection)` tuple is unique
 - **Combo target health** — analytics and health surfaces now distinguish individual combo targets/steps instead of collapsing everything into model strings
 - **Composite tier ordering** — `defaultTier -> fallbackTier` now influences runtime execution/fallback order for top-level combo steps
+=======
+Create model routing combos with 6 strategies: priority, weighted, round-robin, random, least-used, and cost-optimized. Each combo chains multiple models with automatic fallback and includes quick templates and readiness checks.
+>>>>>>> Stashed changes
 =======
 Create model routing combos with 6 strategies: priority, weighted, round-robin, random, least-used, and cost-optimized. Each combo chains multiple models with automatic fallback and includes quick templates and readiness checks.
 >>>>>>> Stashed changes
@@ -50,7 +58,11 @@ Comprehensive usage analytics with token consumption, cost estimates, activity h
 ## 🏥 System Health
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 Real-time monitoring: uptime, memory, version, latency percentiles (p50/p95/p99), cache statistics, provider circuit breaker states, active quota-monitored sessions, and combo target health.
+=======
+Real-time monitoring: uptime, memory, version, latency percentiles (p50/p95/p99), cache statistics, and provider circuit breaker states.
+>>>>>>> Stashed changes
 =======
 Real-time monitoring: uptime, memory, version, latency percentiles (p50/p95/p99), cache statistics, and provider circuit breaker states.
 >>>>>>> Stashed changes
@@ -88,7 +100,11 @@ Comprehensive settings panel with tabs:
 - **Security** — API endpoint protection, custom provider blocking, IP filtering, session info
 - **Routing** — Model aliases, background task degradation
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **Resilience** — Rate limit persistence, circuit breaker tuning, auto-disable banned accounts, provider expiration monitoring, **Context Relay** handoff threshold and summary model configuration
+=======
+- **Resilience** — Rate limit persistence, circuit breaker tuning, auto-disable banned accounts, provider expiration monitoring
+>>>>>>> Stashed changes
 =======
 - **Resilience** — Rate limit persistence, circuit breaker tuning, auto-disable banned accounts, provider expiration monitoring
 >>>>>>> Stashed changes
@@ -117,6 +133,7 @@ Dashboard for discovering and managing CLI agents. Shows a grid of 14 built-in a
 
 ---
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 ## 🔗 Context Relay _(v3.5.5+)_
 
@@ -182,6 +199,8 @@ Clean removal scripts for all installation methods:
 
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ## 🖼️ Media _(v2.0.3+)_
 
 Generate images, videos, and music from the dashboard. Supports OpenAI, xAI, Together, Hyperbolic, SD WebUI, ComfyUI, AnimateDiff, Stable Audio Open, and MusicGen.
@@ -229,6 +248,7 @@ Key features:
 - Auto-update on restart
 - Platform-conditional UI (macOS traffic lights, Windows/Linux default titlebar)
 - Hardened Electron build packaging — symlinked `node_modules` in the standalone bundle is detected and rejected before packaging, preventing runtime dependency on the build machine (v2.5.5+)
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 - **Graceful shutdown** — Electron `before-quit` shuts down Next.js cleanly, preventing SQLite WAL database locks (v3.6.2+)
 
@@ -288,6 +308,10 @@ Chat requests now **automatically retry** when an upstream provider returns a mo
 ## 📋 Compliance Audit v2 _(v3.6.6+)_
 
 The audit log has been expanded with cursor-based pagination, request context enrichment (request ID, user agent, IP), structured auth events, provider CRUD events with diff context, and SSRF-blocked validation logging. New events emitted by `src/lib/compliance/providerAudit.ts`.
+=======
+
+📖 See [`electron/README.md`](../electron/README.md) for full documentation.
+>>>>>>> Stashed changes
 =======
 
 📖 See [`electron/README.md`](../electron/README.md) for full documentation.

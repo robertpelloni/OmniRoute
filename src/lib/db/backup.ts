@@ -23,6 +23,7 @@ type CountRow = { cnt?: number };
 let _lastBackupAt = 0;
 const BACKUP_THROTTLE_MS = 60 * 60 * 1000; // 60 minutes
 const MAX_DB_BACKUPS = 20;
+<<<<<<< Updated upstream
 const DEFAULT_DB_BACKUP_RETENTION_DAYS = 0;
 const TRUE_ENV_VALUES = new Set(["1", "true", "yes", "on"]);
 
@@ -165,6 +166,11 @@ function isSqliteAutoBackupDisabled() {
       process.argv.some((a) => a.includes("test")));
   if (isTest) return true;
 
+=======
+const TRUE_ENV_VALUES = new Set(["1", "true", "yes", "on"]);
+
+function isSqliteAutoBackupDisabled() {
+>>>>>>> Stashed changes
   const value = process.env.DISABLE_SQLITE_AUTO_BACKUP;
   if (!value) return false;
   return TRUE_ENV_VALUES.has(value.trim().toLowerCase());
@@ -352,7 +358,11 @@ export async function restoreDbBackup(backupId: string) {
   // Force pre-restore backup (bypass throttle) and await so the DB is not closed while backup runs
   if (!isSqliteAutoBackupDisabled()) {
     _lastBackupAt = 0;
+<<<<<<< Updated upstream
     const backupDirForPre = getBackupDir();
+=======
+    const backupDirForPre = DB_BACKUPS_DIR || path.join(DATA_DIR, "db_backups");
+>>>>>>> Stashed changes
     if (SQLITE_FILE && fs.existsSync(SQLITE_FILE)) {
       const stat = fs.statSync(SQLITE_FILE);
       if (stat.size >= 4096) {

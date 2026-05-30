@@ -1,7 +1,11 @@
 # Changelog (日本語)
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 🌐 **Languages:** 🇺🇸 [English](../../../CHANGELOG.md) · 🇸🇦 [ar](../ar/CHANGELOG.md) · 🇧🇬 [bg](../bg/CHANGELOG.md) · 🇧🇩 [bn](../bn/CHANGELOG.md) · 🇨🇿 [cs](../cs/CHANGELOG.md) · 🇩🇰 [da](../da/CHANGELOG.md) · 🇩🇪 [de](../de/CHANGELOG.md) · 🇪🇸 [es](../es/CHANGELOG.md) · 🇮🇷 [fa](../fa/CHANGELOG.md) · 🇫🇮 [fi](../fi/CHANGELOG.md) · 🇫🇷 [fr](../fr/CHANGELOG.md) · 🇮🇳 [gu](../gu/CHANGELOG.md) · 🇮🇱 [he](../he/CHANGELOG.md) · 🇮🇳 [hi](../hi/CHANGELOG.md) · 🇭🇺 [hu](../hu/CHANGELOG.md) · 🇮🇩 [id](../id/CHANGELOG.md) · 🇮🇹 [it](../it/CHANGELOG.md) · 🇯🇵 [ja](../ja/CHANGELOG.md) · 🇰🇷 [ko](../ko/CHANGELOG.md) · 🇮🇳 [mr](../mr/CHANGELOG.md) · 🇲🇾 [ms](../ms/CHANGELOG.md) · 🇳🇱 [nl](../nl/CHANGELOG.md) · 🇳🇴 [no](../no/CHANGELOG.md) · 🇵🇭 [phi](../phi/CHANGELOG.md) · 🇵🇱 [pl](../pl/CHANGELOG.md) · 🇵🇹 [pt](../pt/CHANGELOG.md) · 🇧🇷 [pt-BR](../pt-BR/CHANGELOG.md) · 🇷🇴 [ro](../ro/CHANGELOG.md) · 🇷🇺 [ru](../ru/CHANGELOG.md) · 🇸🇰 [sk](../sk/CHANGELOG.md) · 🇸🇪 [sv](../sv/CHANGELOG.md) · 🇰🇪 [sw](../sw/CHANGELOG.md) · 🇮🇳 [ta](../ta/CHANGELOG.md) · 🇮🇳 [te](../te/CHANGELOG.md) · 🇹🇭 [th](../th/CHANGELOG.md) · 🇹🇷 [tr](../tr/CHANGELOG.md) · 🇺🇦 [uk-UA](../uk-UA/CHANGELOG.md) · 🇵🇰 [ur](../ur/CHANGELOG.md) · 🇻🇳 [vi](../vi/CHANGELOG.md) · 🇨🇳 [zh-CN](../zh-CN/CHANGELOG.md)
+=======
+🌐 **Languages:** 🇺🇸 [English](../../../CHANGELOG.md) · 🇪🇸 [es](../es/CHANGELOG.md) · 🇫🇷 [fr](../fr/CHANGELOG.md) · 🇩🇪 [de](../de/CHANGELOG.md) · 🇮🇹 [it](../it/CHANGELOG.md) · 🇷🇺 [ru](../ru/CHANGELOG.md) · 🇨🇳 [zh-CN](../zh-CN/CHANGELOG.md) · 🇯🇵 [ja](../ja/CHANGELOG.md) · 🇰🇷 [ko](../ko/CHANGELOG.md) · 🇸🇦 [ar](../ar/CHANGELOG.md) · 🇮🇳 [in](../in/CHANGELOG.md) · 🇹🇭 [th](../th/CHANGELOG.md) · 🇻🇳 [vi](../vi/CHANGELOG.md) · 🇮🇩 [id](../id/CHANGELOG.md) · 🇲🇾 [ms](../ms/CHANGELOG.md) · 🇳🇱 [nl](../nl/CHANGELOG.md) · 🇵🇱 [pl](../pl/CHANGELOG.md) · 🇸🇪 [sv](../sv/CHANGELOG.md) · 🇳🇴 [no](../no/CHANGELOG.md) · 🇩🇰 [da](../da/CHANGELOG.md) · 🇫🇮 [fi](../fi/CHANGELOG.md) · 🇵🇹 [pt](../pt/CHANGELOG.md) · 🇷🇴 [ro](../ro/CHANGELOG.md) · 🇭🇺 [hu](../hu/CHANGELOG.md) · 🇧🇬 [bg](../bg/CHANGELOG.md) · 🇸🇰 [sk](../sk/CHANGELOG.md) · 🇺🇦 [uk-UA](../uk-UA/CHANGELOG.md) · 🇮🇱 [he](../he/CHANGELOG.md) · 🇵🇭 [phi](../phi/CHANGELOG.md) · 🇧🇷 [pt-BR](../pt-BR/CHANGELOG.md) · 🇨🇿 [cs](../cs/CHANGELOG.md)
+>>>>>>> Stashed changes
 =======
 🌐 **Languages:** 🇺🇸 [English](../../../CHANGELOG.md) · 🇪🇸 [es](../es/CHANGELOG.md) · 🇫🇷 [fr](../fr/CHANGELOG.md) · 🇩🇪 [de](../de/CHANGELOG.md) · 🇮🇹 [it](../it/CHANGELOG.md) · 🇷🇺 [ru](../ru/CHANGELOG.md) · 🇨🇳 [zh-CN](../zh-CN/CHANGELOG.md) · 🇯🇵 [ja](../ja/CHANGELOG.md) · 🇰🇷 [ko](../ko/CHANGELOG.md) · 🇸🇦 [ar](../ar/CHANGELOG.md) · 🇮🇳 [in](../in/CHANGELOG.md) · 🇹🇭 [th](../th/CHANGELOG.md) · 🇻🇳 [vi](../vi/CHANGELOG.md) · 🇮🇩 [id](../id/CHANGELOG.md) · 🇲🇾 [ms](../ms/CHANGELOG.md) · 🇳🇱 [nl](../nl/CHANGELOG.md) · 🇵🇱 [pl](../pl/CHANGELOG.md) · 🇸🇪 [sv](../sv/CHANGELOG.md) · 🇳🇴 [no](../no/CHANGELOG.md) · 🇩🇰 [da](../da/CHANGELOG.md) · 🇫🇮 [fi](../fi/CHANGELOG.md) · 🇵🇹 [pt](../pt/CHANGELOG.md) · 🇷🇴 [ro](../ro/CHANGELOG.md) · 🇭🇺 [hu](../hu/CHANGELOG.md) · 🇧🇬 [bg](../bg/CHANGELOG.md) · 🇸🇰 [sk](../sk/CHANGELOG.md) · 🇺🇦 [uk-UA](../uk-UA/CHANGELOG.md) · 🇮🇱 [he](../he/CHANGELOG.md) · 🇵🇭 [phi](../phi/CHANGELOG.md) · 🇧🇷 [pt-BR](../pt-BR/CHANGELOG.md) · 🇨🇿 [cs](../cs/CHANGELOG.md)
 >>>>>>> Stashed changes
@@ -10,6 +14,7 @@
 
 ## [Unreleased]
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 ### ✨ New Features
 
@@ -1538,6 +1543,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **Testing:** Added vitest configuration for component testing and Playwright specs for settings toggles.
 - **Doc Updates:** Expanded root readmes, translated chinese documents natively, and cleaned up obsolete files.
 =======
+=======
+>>>>>>> Stashed changes
 ### 🛠️ Maintenance
 
 - **AGENTS.md rewrite:** Condensed from 297→153 lines. Added build/lint/test commands (including single-test execution), code style guidelines (Prettier, TypeScript, ESLint, naming, imports, error handling, security), and trimmed verbose architecture tables for AI agent consumption.
@@ -1553,6 +1560,9 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### 🛠️ Maintenance
 
 - **Release Branch Integration:** Consolidated the active feature branches into `release/v3.4.2` on top of current `main` and validated the branch with lint, unit, coverage, build, and CI-mode E2E runs.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 ## [3.4.1] - 2026-03-31
@@ -1564,12 +1574,15 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### ✨ New Features
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
 - **feat(providers):** Integrate AgentRouter as a new OpenAI-compatible passthrough provider with $200 free credits via sign-up (Issue #1572).
 - **feat(ui):** Implement on-demand per-model testing in the provider dashboard, allowing single-token diagnostic checks without triggering rate-limits (Issue #1532).
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **.ENV Migration Utility:** Included `scripts/migrate-env.mjs` to seamlessly migrate `<v3.3` configurations to `v3.4.x` strict security validation constraints (FASE-01), repairing startup crashes caused by short `JWT_SECRET` instances.
@@ -1583,6 +1596,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -1593,6 +1607,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **429 Quota Parsing:** Parsed long quota reset times from error bodies to honor correct backoffs and prevent rate-limited account bans (#859)
@@ -1632,6 +1648,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -1642,6 +1659,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Qwen Auth Routing:** Re-routed Qwen OAuth completions from the DashScope API to the Web Inference API (`chat.qwen.ai`), resolving authorization failures (#844, #807, #832)
@@ -1662,6 +1681,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -1672,6 +1692,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Custom Provider Rotation:** Integrated `getRotatingApiKey` internally inside DefaultExecutor, ensuring `extraApiKeys` rotation triggers correctly for custom and compatible upstream providers (#815)
@@ -1689,6 +1711,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -1699,6 +1722,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Cache Dashboard Sizing:** Improved the UI layout sizes and context headers for the advanced cache pages (#835)
@@ -1714,6 +1739,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -1726,6 +1752,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 - **OpenCode Config:** Restructured generated `opencode.json` to use the `@ai-sdk/openai-compatible` record-based schema with `options` and `models` as object maps instead of flat arrays, fixing config validation failures (#816)
 - **i18n Missing Keys:** Added missing `cloudflaredUrlNotice` translation key across all 30 language files to prevent `MISSING_MESSAGE` console errors in the Endpoint page (#823)
 
@@ -1735,6 +1763,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 
 ### 🐛 Bug Fixes
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
@@ -1746,6 +1775,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Token Accounting:** Included prompt cache tokens safely in historical usage inputs calculations for correct quota deductions (PR #822)
@@ -1759,6 +1790,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### ✨ New Features
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
@@ -1767,11 +1799,14 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 - **Gemini Quota Tracking:** Added real-time Gemini CLI quota tracking via the `retrieveUserQuota` API (PR #825)
 - **Cache Dashboard:** Enhanced the Cache Dashboard to display prompt cache metrics, 24h trends, and estimated cost savings (PR #824)
 
 ### 🐛 Bug Fixes
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
@@ -1785,6 +1820,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 - **User Experience:** Removed invasive auto-opening OAuth modal loops on barren provider detailed pages (PR #820)
 - **Dependency Updates:** Bumped and locked down dependencies for development and production trees including Next.js 16.2.1, Recharts, and TailwindCSS 4.2.2 (PR #826, #827)
 
@@ -1795,12 +1832,15 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### ✨ New Features
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
 - **feat(providers):** Integrate AgentRouter as a new OpenAI-compatible passthrough provider with $200 free credits via sign-up (Issue #1572).
 - **feat(ui):** Implement on-demand per-model testing in the provider dashboard, allowing single-token diagnostic checks without triggering rate-limits (Issue #1532).
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **A2A Workflows:** Added deterministic FSM orchestrator for multi-step agent workflows.
@@ -1814,6 +1854,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -1824,6 +1865,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Codex & Claude Compatibility:** Fixed UI fallbacks, patched Codex non-streaming integration issues, and resolved CLI runtime detection on Windows.
@@ -1841,6 +1884,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -1851,6 +1895,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **CI/CD Reliability:** Patched GitHub Actions to stable dependency versions (`actions/checkout@v4`, `actions/upload-artifact@v4`) to mitigate unannounced builder environment deprecations.
@@ -1865,6 +1911,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### ✨ New Features
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
@@ -1873,11 +1920,14 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 - **Cloudflare Tunnels:** Cloudflare Quick Tunnel integration with dashboard controls (PR #772).
 - **Diagnostics:** Semantic cache bypass for combo live tests (PR #773).
 
 ### 🐛 Bug Fixes
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
@@ -1889,6 +1939,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Streaming Stability:** Apply `FETCH_TIMEOUT_MS` to streaming requests' initial `fetch()` call to prevent 300s Node.js TCP timeout causing silent task failures (#769).
@@ -1902,6 +1954,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -1912,6 +1965,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **OpenAI Codex:** Fallback processing fix for `type: "text"` elements carrying null or empty datasets that caused 400 rejection (#742).
@@ -1930,6 +1985,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -1940,6 +1996,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Auto-Update Test** — Fixed `buildDockerComposeUpdateScript` test assertion to match unexpanded shell variable references (`$TARGET_TAG`, `${TARGET_TAG#v}`) in the generated deploy script, aligning with the refactored template from v3.2.8.
@@ -1957,6 +2015,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -1967,6 +2026,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Tool Definition Validation** — Repaired Gemini API integration by normalizing enum types inside tool definitions, preventing upstream HTTP 400 parameter errors (PR #760)
@@ -1983,6 +2044,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -1993,6 +2055,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Authentication Logic** — Fixed a bug where saving dashboard settings or adding models failed with a 401 Unauthorized error when `requireLogin` was disabled. API endpoints now correctly evaluate the global authentication toggle. Resolved global redirection by reactivating `src/middleware.ts`.
@@ -2023,6 +2087,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -2033,6 +2098,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **OpenCode Go MiniMax Auth (#733)** — Corrected the authentication header logic for `minimax` models on OpenCode Go to use `x-api-key` instead of standard bearer tokens across the `/messages` protocol.
@@ -2054,6 +2121,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -2064,6 +2132,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Gemini Tools HTTP 400 Payload Invalid Argument (#731)** — Prevented `thoughtSignature` array injections inside standard Gemini `functionCall` sequences blocking agentic routing flows.
@@ -2079,6 +2149,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -2089,6 +2160,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Core Routing Schemas & Leaks** — Expanded `comboStrategySchema` to natively support `fill-first` and `p2c` strategies to unblock complex combo editing natively.
@@ -2102,6 +2175,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### ✨ New Features
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
@@ -2110,10 +2184,13 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 - **Four-Stage Request Log Pipeline (#705)** — Refactored log persistence to save comprehensive payloads at four distinct pipeline stages: Client Request, Translated Provider Request, Provider Response, and Translated Client Response. Introduced `streamPayloadCollector` for robust SSE stream truncation and payload serialization.
 
 ### 🐛 Bug Fixes
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
@@ -2125,6 +2202,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Mobile UI Fixes (#659)** — Prevented table components on the dashboard from breaking the layout on narrow viewports by adding proper horizontal scrolling and overflow containment to `DashboardLayout`.
@@ -2136,6 +2215,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### ✨ New Features
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
@@ -2144,10 +2224,13 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 - **Global Fallback Provider (#689)** — When all combo models are exhausted (502/503), OmniRoute now attempts a configurable global fallback model before returning the error. Set `globalFallbackModel` in settings to enable.
 
 ### 🐛 Bug Fixes
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
@@ -2159,6 +2242,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Fix #721** — Fixed context pinning bypass during tool-call responses. Non-streaming tagging used wrong JSON path (`json.messages` → `json.choices[0].message`). Streaming injection now triggers on `finish_reason` chunks for tool-call-only streams. `injectModelTag()` now appends synthetic pin messages for non-string content.
@@ -2174,6 +2259,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### ✨ New Features
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
@@ -2182,12 +2268,15 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 - **Cache Management UI** — Added a dedicated semantic caching dashboard at \`/dashboard/cache\` with targeted API invalidation and 31-language i18n support (PR #701 by @oyi77)
 - **GLM Quota Tracking** — Added real-time usage and session quota tracking for the GLM Coding (Z.AI) provider (PR #698 by @christopher-s)
 - **Detailed Log Payloads** — Wired full four-stage pipeline payload capturing (original, translated, provider-response, streamed-deltas) directly into the UI (PR #705 by @rdself)
 
 ### 🐛 Bug Fixes
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
@@ -2199,6 +2288,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Fix #708** — Prevented token bleeding for Claude Code users routing through OmniRoute by correctly preserving native \`cache_control\` headers during Claude-to-Claude passthrough (PR #708 by @tombii)
@@ -2215,6 +2306,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -2225,6 +2317,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Fix #706** — Fixed icon fallback rendering caused by Tailwind V4 `font-sans` override by applying `!important` to `.material-symbols-outlined`.
@@ -2237,12 +2331,15 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### ✨ New Features
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
 - **feat(providers):** Integrate AgentRouter as a new OpenAI-compatible passthrough provider with $200 free credits via sign-up (Issue #1572).
 - **feat(ui):** Implement on-demand per-model testing in the provider dashboard, allowing single-token diagnostic checks without triggering rate-limits (Issue #1532).
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Schema Coercion** — Auto-coerce string-encoded numeric JSON Schema constraints (e.g. `"minimum": "1"`) to proper types, preventing 400 errors from Cursor, Cline, and other clients sending malformed tool schemas.
@@ -2254,6 +2351,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -2264,6 +2362,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Fix #709** — `system-info.mjs` no longer crashes when the output directory doesn't exist (added `mkdirSync` with recursive flag).
@@ -2291,6 +2391,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -2301,6 +2402,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Claude Prompt Caching Passthrough** — Fixed cache_control markers being stripped in Claude passthrough mode (Claude → OmniRoute → Claude), which caused Claude Code users to deplete their Anthropic API quota 5-10x faster than direct connections. OmniRoute now preserves client's cache_control markers when sourceFormat and targetFormat are both Claude, ensuring prompt caching works correctly and dramatically reducing token consumption.
@@ -2310,6 +2413,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### 🐛 Bug Fixes & Features
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -2322,12 +2426,15 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 - **Platform Core:** Implemented global state handling for Hidden Models & Combos preventing them from cluttering the catalog or leaking into connected MCP agents (#681).
 - **Stability:** Patched streaming crashes related to the native Antigravity provider integration failing due to unhandled undefined state arrays (#684).
 - **Localization Sync:** Deployed a fully overhauled `i18n` synchronizer detecting missing nested JSON properties and retro-fitting 30 locales sequentially (#685).## [3.1.7] - 2026-03-27
 
 ### 🐛 Bug Fixes
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
@@ -2339,6 +2446,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Streaming Stability:** Fixed `hasValuableContent` returning `undefined` for empty chunks in SSE streams (#676).
@@ -2351,6 +2460,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -2363,6 +2473,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 - **Claude Native Tool Name Restoration** — Tool names like `TodoWrite` are no longer prefixed with `proxy_` in Claude passthrough responses (both streaming and non-streaming). Includes unit test coverage (PR #663 by @coobabm)
 - **Clear All Models Alias Cleanup** — "Clear All Models" button now also removes associated model aliases, preventing ghost models in the UI (PR #664 by @rdself)
 
@@ -2372,6 +2484,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 
 ### 🐛 Bug Fixes
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
@@ -2383,6 +2496,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Backoff Auto-Decay** — Rate-limited accounts now auto-recover when their cooldown window expires, fixing a deadlock where high `backoffLevel` permanently deprioritized accounts (PR #657 by @brendandebeasi)
@@ -2398,6 +2513,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -2408,6 +2524,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Streaming Override Fix** — Explicit `stream: true` in request body now takes priority over `Accept: application/json` header. Clients sending both will correctly receive SSE streaming responses (#656)
@@ -2433,6 +2551,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -2443,6 +2562,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Critical: Tool Calling Regression** — Fixed `proxy_Bash` errors by disabling the `proxy_` tool name prefix in the Claude passthrough path. Tools like `Bash`, `Read`, `Write` were being renamed to `proxy_Bash`, `proxy_Read`, etc., causing Claude to reject them (#618)
@@ -2459,6 +2580,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### ✨ New Features
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
@@ -2467,11 +2589,14 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 - **Vision Capability Metadata**: Added `capabilities.vision`, `input_modalities`, and `output_modalities` to `/v1/models` entries for vision-capable models (PR #646)
 - **Gemini 3.1 Models**: Added `gemini-3.1-pro-preview` and `gemini-3.1-flash-lite-preview` to the Antigravity provider (#645)
 
 ### 🐛 Bug Fixes
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
@@ -2483,6 +2608,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Ollama Cloud 401 Error**: Fixed incorrect API base URL — changed from `api.ollama.com` to official `ollama.com/v1/chat/completions` (#643)
@@ -2499,6 +2626,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### ✨ New Features
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
@@ -2507,11 +2635,14 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 - **GitHub Issue Templates**: Added standardized bug report, feature request, and config/proxy issue templates (#641)
 - **Clear All Models**: Added a "Clear All Models" button to the provider detail page with i18n support in 29 languages (#634)
 
 ### 🐛 Bug Fixes
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
@@ -2523,6 +2654,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Locale Conflict (`in.json`)**: Renamed the Hindi locale file from `in.json` (Indonesian ISO code) to `hi.json` to fix translation conflicts in Weblate (#642)
@@ -2542,6 +2675,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -2552,6 +2686,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **NaN tokens in Claude Code / client responses (#617):**
@@ -2575,6 +2711,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -2585,6 +2722,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Translation Failures for OpenAI-format Providers in Claude CLI (#632):**
@@ -2601,6 +2740,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -2613,6 +2753,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 - **Antigravity Token Refresh:** Fixed `client_secret is missing` error for npm-installed users — the `clientSecretDefault` was empty in providerRegistry, causing Google to reject token refresh requests (#588)
 - **OpenCode Zen Models:** Added `modelsUrl` to the OpenCode Zen registry entry so "Import from /models" works correctly (#612)
 - **Streaming Artifacts:** Fixed excessive newlines left in responses after thinking-tag signature stripping (#626)
@@ -2622,12 +2764,15 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### ✨ New Features
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
 - **feat(providers):** Integrate AgentRouter as a new OpenAI-compatible passthrough provider with $200 free credits via sign-up (Issue #1572).
 - **feat(ui):** Implement on-demand per-model testing in the provider dashboard, allowing single-token diagnostic checks without triggering rate-limits (Issue #1532).
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Playground Account/Key Selector:** Persistent, always-visible dropdown to select specific provider accounts/keys for testing — fetches all connections at startup and filters by selected provider
@@ -2645,6 +2790,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -2657,6 +2803,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 - **Limits/Proxy:** Fixed Codex limit fetching for accounts behind SOCKS5 proxies — token refresh now runs inside proxy context
 - **CI:** Fixed integration test `v1/models` assertion failure in CI environments without provider connections
 - **Settings:** Proxy test button now shows success/failure results immediately (previously hidden behind health data)
@@ -2664,12 +2812,15 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### ✨ New Features
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
 - **feat(providers):** Integrate AgentRouter as a new OpenAI-compatible passthrough provider with $200 free credits via sign-up (Issue #1572).
 - **feat(ui):** Implement on-demand per-model testing in the provider dashboard, allowing single-token diagnostic checks without triggering rate-limits (Issue #1532).
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Playground:** Added Account selector dropdown — test specific connections individually when a provider has multiple accounts
@@ -2685,12 +2836,15 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### ✨ New Features
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
 - **feat(providers):** Integrate AgentRouter as a new OpenAI-compatible passthrough provider with $200 free credits via sign-up (Issue #1572).
 - **feat(ui):** Implement on-demand per-model testing in the provider dashboard, allowing single-token diagnostic checks without triggering rate-limits (Issue #1532).
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Limits UI:** Added tag grouping feature to the connections dashboard to improve visual organization for accounts with custom tags.
@@ -2702,6 +2856,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -2712,6 +2867,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Streaming:** Fixed `TextDecoder` state corruption inside combo `sanitize` TransformStream which caused SSE garbled output matching multibyte characters (PR #614)
@@ -2726,6 +2883,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### ✨ New Features
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
@@ -2734,10 +2892,13 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 - **Auto-Sync Models:** Added a UI toggle and `sync-models` endpoint to automatically synchronise model lists per provider using a scheduled interval scheduler (PR #597)
 
 ### 🐛 Bug Fixes
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
@@ -2749,6 +2910,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Timeouts:** Elevated default proxies `FETCH_TIMEOUT_MS` and `STREAM_IDLE_TIMEOUT_MS` to 10 minutes to properly support deep reasoning models (like o1) without aborting requests (Fixes #609)
@@ -2774,6 +2937,7 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -2784,6 +2948,8 @@ We identified that **37 community PRs** across past releases (v3.4.0 → v3.7.4)
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 #### fix(ui): Proxy Management UI Stabilization
@@ -2965,6 +3131,7 @@ Full media generation playground at `/dashboard/media`: Image Generation, Video,
 ### 🐛 Bug Fixes (40+)
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -2975,6 +3142,8 @@ Full media generation playground at `/dashboard/media`: Image Generation, Video,
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 #### OAuth & Auth
@@ -3156,6 +3325,7 @@ docker pull diegosouzapw/omniroute:3.0.0
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -3166,6 +3336,8 @@ docker pull diegosouzapw/omniroute:3.0.0
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **#585** — `<omniModel>` internal tags no longer leak to clients in SSE responses. Added outbound sanitization `TransformStream` in `combo.ts`
@@ -3186,12 +3358,15 @@ docker pull diegosouzapw/omniroute:3.0.0
 ### ✨ New Features
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
 - **feat(providers):** Integrate AgentRouter as a new OpenAI-compatible passthrough provider with $200 free credits via sign-up (Issue #1572).
 - **feat(ui):** Implement on-demand per-model testing in the provider dashboard, allowing single-token diagnostic checks without triggering rate-limits (Issue #1532).
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - Increased media transcription limits
@@ -3204,12 +3379,15 @@ docker pull diegosouzapw/omniroute:3.0.0
 ### ✨ New Features
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
 - **feat(providers):** Integrate AgentRouter as a new OpenAI-compatible passthrough provider with $200 free credits via sign-up (Issue #1572).
 - **feat(ui):** Implement on-demand per-model testing in the provider dashboard, allowing single-token diagnostic checks without triggering rate-limits (Issue #1532).
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **#563** — Per-model Combo Routing: map model name patterns (glob) to specific combos for automatic routing
@@ -3304,12 +3482,15 @@ docker pull diegosouzapw/omniroute:3.0.0
 ### ✨ New Features
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
 - **feat(providers):** Integrate AgentRouter as a new OpenAI-compatible passthrough provider with $200 free credits via sign-up (Issue #1572).
 - **feat(ui):** Implement on-demand per-model testing in the provider dashboard, allowing single-token diagnostic checks without triggering rate-limits (Issue #1532).
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **T29** — Vertex AI SA JSON Executor: implemented using the `jose` library to handle JWT/Service Account auth, along with configurable regions in the UI and automatic partner model URL building.
@@ -3354,12 +3535,15 @@ Both providers use the new `OpencodeExecutor` with multi-format routing (`/chat/
 ### ✨ New Features
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
 - **feat(providers):** Integrate AgentRouter as a new OpenAI-compatible passthrough provider with $200 free credits via sign-up (Issue #1572).
 - **feat(ui):** Implement on-demand per-model testing in the provider dashboard, allowing single-token diagnostic checks without triggering rate-limits (Issue #1532).
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 #### 🔑 Registered Keys Provisioning API (#464)
@@ -3425,7 +3609,11 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 
 - **#489 — Antigravity:** Missing `googleProjectId` returns a structured 422 error with reconnect guidance instead of a cryptic crash.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **#510 — Windows paths:** MSYS2/Git-Bash paths (`/c/Program Files/...`) are now normalized to `C:\Program Files\...` automatically.
+=======
+- **#510 — Windows paths:** MSYS2/Git-Bash paths (`/c/Program Files/...`) are now normalized to `C:\\Program Files\\...` automatically.
+>>>>>>> Stashed changes
 =======
 - **#510 — Windows paths:** MSYS2/Git-Bash paths (`/c/Program Files/...`) are now normalized to `C:\\Program Files\\...` automatically.
 >>>>>>> Stashed changes
@@ -3496,12 +3684,15 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### ✨ New Features
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
 - **feat(providers):** Integrate AgentRouter as a new OpenAI-compatible passthrough provider with $200 free credits via sign-up (Issue #1572).
 - **feat(ui):** Implement on-demand per-model testing in the provider dashboard, allowing single-token diagnostic checks without triggering rate-limits (Issue #1532).
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **#464** — Registered Keys Provisioning API: auto-issue API keys with per-provider & per-account quota enforcement
@@ -3522,12 +3713,15 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### ✨ New Features
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
 - **feat(providers):** Integrate AgentRouter as a new OpenAI-compatible passthrough provider with $200 free credits via sign-up (Issue #1572).
 - **feat(ui):** Implement on-demand per-model testing in the provider dashboard, allowing single-token diagnostic checks without triggering rate-limits (Issue #1532).
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **#530 (PR)** — OpenCode Zen and OpenCode Go providers added (by @kang-heewon)
@@ -3541,12 +3735,15 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### ✨ New Features
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
 - **feat(providers):** Integrate AgentRouter as a new OpenAI-compatible passthrough provider with $200 free credits via sign-up (Issue #1572).
 - **feat(ui):** Implement on-demand per-model testing in the provider dashboard, allowing single-token diagnostic checks without triggering rate-limits (Issue #1532).
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **#529** — Provider icons now use [@lobehub/icons](https://github.com/lobehub/lobe-icons) with graceful PNG fallback and a `ProviderIcon` component (130+ providers supported)
@@ -3578,7 +3775,11 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **#532** — OpenCode GO API key validation now uses the correct `zen/v1` endpoint (`testKeyBaseUrl`)
 - **#489** — Antigravity: missing `googleProjectId` returns structured 422 error with reconnect guidance
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **#510** — Windows: MSYS2/Git-Bash paths (`/c/Program Files/...`) are now normalized to `C:\Program Files\...`
+=======
+- **#510** — Windows: MSYS2/Git-Bash paths (`/c/Program Files/...`) are now normalized to `C:\\Program Files\\...`
+>>>>>>> Stashed changes
 =======
 - **#510** — Windows: MSYS2/Git-Bash paths (`/c/Program Files/...`) are now normalized to `C:\\Program Files\\...`
 >>>>>>> Stashed changes
@@ -3602,6 +3803,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -3617,6 +3819,11 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **Context cache protection regex misses `
 ` prefix** — `CACHE_TAG_PATTERN` in `comboAgentMiddleware.ts` updated to match both literal `
 ` (backslash-n) and actual newline U+000A that `combo.ts` streaming injects around the `<omniModel>` tag after fix #515. Fixes #531.
+=======
+- **CLI tools save masked API key to config files** — `claude-settings`, `cline-settings`, and `openclaw-settings` POST routes now accept a `keyId` param and resolve the real API key from DB before writing to disk. `ClaudeToolCard` updated to send `keyId` instead of the masked display string. Fixes #523, #526.
+- **Custom embedding providers: `No credentials` error** — `/v1/embeddings` now tracks `credentialsProviderId` separately from the routing prefix, so credentials are fetched from the matching provider node ID rather than the public prefix string. Fixes a regression where `google/gemini-embedding-001` and similar custom-provider models would always fail with a credentials error. Fixes #532-related. (PR #528 by @jacob2826)
+- **Context cache protection regex misses `\n` prefix** — `CACHE_TAG_PATTERN` in `comboAgentMiddleware.ts` updated to match both literal `\n` (backslash-n) and actual newline U+000A that `combo.ts` streaming injects around the `<omniModel>` tag after fix #515. Fixes #531.
+>>>>>>> Stashed changes
 =======
 - **CLI tools save masked API key to config files** — `claude-settings`, `cline-settings`, and `openclaw-settings` POST routes now accept a `keyId` param and resolve the real API key from DB before writing to disk. `ClaudeToolCard` updated to send `keyId` instead of the masked display string. Fixes #523, #526.
 - **Custom embedding providers: `No credentials` error** — `/v1/embeddings` now tracks `credentialsProviderId` separately from the routing prefix, so credentials are fetched from the matching provider node ID rather than the public prefix string. Fixes a regression where `google/gemini-embedding-001` and similar custom-provider models would always fail with a credentials error. Fixes #532-related. (PR #528 by @jacob2826)
@@ -3638,6 +3845,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -3650,15 +3858,23 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 - **fix(translator)**: Preserve `prompt_cache_key` in Responses API → Chat Completions translation (#517)
   — The field is a cache-affinity signal used by Codex; stripping it was preventing prompt cache hits.
   Fixed in `openai-responses.ts` and `responsesApiHelper.ts`.
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(combo)**: Escape `
 ` in `tagContent` so injected JSON string is valid (#515)
   — Template literal newlines (U+000A) are not allowed unescaped inside JSON string values.
   Replaced with `\n` literal sequences in `open-sse/services/combo.ts`.
+=======
+- **fix(combo)**: Escape `\n` in `tagContent` so injected JSON string is valid (#515)
+  — Template literal newlines (U+000A) are not allowed unescaped inside JSON string values.
+  Replaced with `\\n` literal sequences in `open-sse/services/combo.ts`.
+>>>>>>> Stashed changes
 =======
 - **fix(combo)**: Escape `\n` in `tagContent` so injected JSON string is valid (#515)
   — Template literal newlines (U+000A) are not allowed unescaped inside JSON string values.
@@ -3717,6 +3933,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -3727,6 +3944,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **fix(transcription)**: Deepgram and HuggingFace audio transcription now correctly map `video/mp4` → `audio/mp4` and other media MIME types via new `resolveAudioContentType()` helper. Previously, uploading `.mp4` files consistently returned "No speech detected" because Deepgram was receiving `Content-Type: video/mp4`.
@@ -3775,12 +3994,15 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### ✨ New Features
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
 - **feat(providers):** Integrate AgentRouter as a new OpenAI-compatible passthrough provider with $200 free credits via sign-up (Issue #1572).
 - **feat(ui):** Implement on-demand per-model testing in the provider dashboard, allowing single-token diagnostic checks without triggering rate-limits (Issue #1532).
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **feat(search)**: Search Analytics tab in `/dashboard/analytics` — provider breakdown, cache hit rate, cost tracking. New API: `GET /api/v1/search/analytics` (#feat/search-provider-routing)
@@ -3790,6 +4012,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 
 ### 🐛 Bug Fixes
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
@@ -3801,6 +4024,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **fix(#506)**: Cross-platform `machineId` — `getMachineIdRaw()` rewritten with try/catch waterfall (Windows REG.exe → macOS ioreg → Linux file read → hostname → `os.hostname()`). Eliminates `process.platform` branching that Next.js bundler dead-code-eliminated, fixing `'head' is not recognized` on Windows. Also fixes #466.
@@ -4013,6 +4238,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -4023,6 +4249,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **fix(kiro)**: Strip injected `model` field from request body — Kiro API rejects unknown top-level fields (#478, @prakersh)
@@ -4058,6 +4286,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -4068,6 +4297,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **fix(docker)**: Added missing `split2` dependency to Docker image — `pino-abstract-transport` requires it at runtime but it was not being copied into the standalone container, causing `Cannot find module 'split2'` crashes (#459)
@@ -4085,6 +4316,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -4095,6 +4327,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **fix(combos)**: Zod schemas (`updateComboSchema` and `createComboSchema`) now include `system_message`, `tool_filter_regex`, and `context_cache_protection`. Fixes bug where agent-specific settings created via the dashboard were silently discarded by the backend validation layer (#458)
@@ -4109,6 +4343,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -4119,6 +4354,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **fix(budget)**: "Save Limits" no longer returns 422 — `warningThreshold` is now correctly sent as fraction (0–1) instead of percentage (0–100) (#451)
@@ -4137,6 +4374,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -4147,6 +4385,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **fix(docker)**: `pino-abstract-transport` and `pino-pretty` now explicitly copied in Docker runner stage — Next.js standalone trace misses these peer deps, causing `Cannot find module pino-abstract-transport` crash on startup (#449)
@@ -4165,6 +4405,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -4175,6 +4416,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **fix(ux)**: Show default password hint on login page — new users now see `"Default password: 123456"` below the password input (#437)
@@ -4198,6 +4441,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -4208,6 +4452,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **fix(search)**: Fix Brave news normalizer (was returning 0 results), enforce max_results truncation post-normalization, fix Endpoints page fetch URL (#443 by @Regis-RCR)
@@ -4224,6 +4470,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -4234,6 +4481,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **fix(codex)**: Block weekly-exhausted accounts in direct API fallback (#440)
@@ -4250,6 +4499,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -4260,6 +4510,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **fix(logs)**: Fix light mode contrast in request logs filter buttons and combo badge (#378)
@@ -4275,12 +4527,15 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### ✨ New Features
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
 - **feat(providers):** Integrate AgentRouter as a new OpenAI-compatible passthrough provider with $200 free credits via sign-up (Issue #1572).
 - **feat(ui):** Implement on-demand per-model testing in the provider dashboard, allowing single-token diagnostic checks without triggering rate-limits (Issue #1532).
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **feat(search)**: Unified web search routing — `POST /v1/search` with 5 providers (Serper, Brave, Perplexity, Exa, Tavily)
@@ -4354,6 +4609,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes / Closures
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -4364,6 +4620,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **close(#411)**: better-sqlite3 hashed module resolution on Windows — fixed in v2.6.10 (f02c5b5)
@@ -4377,6 +4635,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -4387,6 +4646,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **fix(install/#426)**: On Windows, `npm install -g omniroute` used to fail with `better_sqlite3.node is not a valid Win32 application` because the bundled native binary was compiled for Linux. Adds **Strategy 1.5** to `scripts/postinstall.mjs`: uses `@mapbox/node-pre-gyp install --fallback-to-build=false` (bundled within `better-sqlite3`) to download the correct prebuilt binary for the current OS/arch without requiring any build tools (no node-gyp, no Python, no MSVC). Falls back to `npm rebuild` only if the download fails. Adds platform-specific error messages with clear manual fix instructions.
@@ -4400,6 +4661,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -4411,6 +4673,9 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
 - **fix(ci)**: Remove word "any" from comments in `openai-responses.ts` and `chatCore.ts` that were failing the t11 `any` budget check (false positive from regex counting comments)
+=======
+- **fix(ci)**: Remove word "any" from comments in `openai-responses.ts` and `chatCore.ts` that were failing the t11 `\bany\b` budget check (false positive from regex counting comments)
+>>>>>>> Stashed changes
 =======
 - **fix(ci)**: Remove word "any" from comments in `openai-responses.ts` and `chatCore.ts` that were failing the t11 `\bany\b` budget check (false positive from regex counting comments)
 >>>>>>> Stashed changes
@@ -4456,6 +4721,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -4466,6 +4732,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **fix(sse)**: Strip Claude-specific fields (`metadata`, `anthropic_version`) when target is OpenAI-compat (#421, @prakersh)
@@ -4490,6 +4758,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -4500,6 +4769,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **fix(build)**: Removed `node:` protocol prefix from `import` statements in 17 files under `src/`. The `node:fs`, `node:path`, `node:url`, `node:os` etc. imports caused `Ecmascript file had an error` on Turbopack builds (Next.js 15 Docker) and on upgrades from older npm global installs. Affected files: `migrationRunner.ts`, `core.ts`, `backup.ts`, `prompts.ts`, `dataPaths.ts`, and 12 others in `src/app/api/` and `src/lib/`.
@@ -4514,6 +4785,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### ✨ New Features
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
@@ -4522,10 +4794,13 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 - **feat(api)**: Added **Kilo Gateway** (`api.kilo.ai`) as a new API Key provider (alias `kg`) — 335+ models, 6 free models, 3 auto-routing models (`kilo-auto/frontier`, `kilo-auto/balanced`, `kilo-auto/free`). Passthrough models supported via `/api/gateway/models` endpoint. (PR #408 by @Regis-RCR)
 
 ### 🐛 Bug Fixes
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
@@ -4537,6 +4812,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **fix(sse)**: Strip unsupported parameters for reasoning models (o1, o1-mini, o1-pro, o3, o3-mini). Models in the `o1`/`o3` family reject `temperature`, `top_p`, `frequency_penalty`, `presence_penalty`, `logprobs`, `top_logprobs`, and `n` with HTTP 400. Parameters are now stripped at the `chatCore` layer before forwarding. Uses a declarative `unsupportedParams` field per model and a precomputed O(1) Map for lookup. (PR #412 by @Regis-RCR)
@@ -4556,6 +4833,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -4566,6 +4844,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **fix(providers)**: Removed non-existent model names across 5 providers:
@@ -4584,6 +4864,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -4594,6 +4875,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **fix(build)**: Turbopack hash-strip now runs at **compile time** for ALL packages — not just `better-sqlite3`. Step 5.6 in `prepublish.mjs` walks every `.js` in `app/.next/server/` and strips the 16-char hex suffix from any hashed `require()`. Fixes `zod-dcb22c...`, `pino-...`, etc. MODULE_NOT_FOUND on global npm installs. Closes #398
@@ -4617,6 +4900,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -4627,6 +4911,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **fix(build)**: Extended webpack `externals` hash-strip to cover ALL `serverExternalPackages`, not just `better-sqlite3`. Next.js 16 Turbopack hashes `zod`, `pino`, and every other server-external package into names like `zod-dcb22c6336e0bc69` that don't exist in `node_modules` at runtime. A HASH_PATTERN regex catch-all now strips the 16-char suffix and falls back to the base package name. Also added `NEXT_PRIVATE_BUILD_WORKER=0` in `prepublish.mjs` to reinforce webpack mode, plus a post-build scan that reports any remaining hashed refs. (#396, #398, PR #403)
@@ -4652,6 +4938,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -4662,6 +4949,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **fix(build)**: Force `better-sqlite3` to always be required by its exact package name in the webpack server bundle. Next.js 16 compiled the instrumentation hook into a separate chunk and emitted `require('better-sqlite3-<hash>')` — a hashed module name that doesn't exist in `node_modules` — even though the package was listed in `serverExternalPackages`. Added an explicit `externals` function to the server webpack config so the bundler always emits `require('better-sqlite3')`, resolving the startup `500 Internal Server Error` on clean global installs. (#394, PR #395)
@@ -4680,6 +4969,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -4690,6 +4980,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **fix(media)**: ComfyUI and SD WebUI no longer appear in the Media page provider list when unconfigured — fetches `/api/providers` on mount and hides local providers with no connections (#390)
@@ -4714,6 +5006,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -4724,6 +5017,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **fix(codex)**: Preserve native Responses API passthrough for Codex clients — avoids unnecessary translation mutations (PR #387)
@@ -4739,6 +5034,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -4749,6 +5045,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **fix(build)**: `scripts/prepublish.mjs` still used deprecated `--webpack` flag causing Next.js standalone build to fail silently — npm publish completed without `app/server.js`, breaking VPS deployment
@@ -4762,6 +5060,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -4772,6 +5071,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **fix(media)**: Transcription "API Key Required" false positive when audio contains no speech (music, silence) — now shows "No speech detected" instead
@@ -4787,6 +5088,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -4797,6 +5099,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **fix(oauth) #384**: Antigravity Google OAuth now correctly sends `client_secret` to the token endpoint. The fallback for `ANTIGRAVITY_OAUTH_CLIENT_SECRET` was an empty string, which is falsy — so `client_secret` was never included in the request, causing `"client_secret is missing"` errors for all users without a custom env var. Closes #383.
@@ -4811,6 +5115,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -4823,11 +5128,14 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 - **fix(models) #380**: `GET /api/models` now includes provider aliases when building the active-provider filter — models for `claude` (alias `cc`) and `github` (alias `gh`) were always shown regardless of whether a connection was configured, because `PROVIDER_MODELS` keys are aliases but DB connections are stored under provider IDs. Fixed by expanding each active provider ID to also include its alias via `PROVIDER_ID_TO_ALIAS`. Closes #353.
 - **fix(electron) #379**: New `scripts/prepare-electron-standalone.mjs` stages a dedicated `/.next/electron-standalone` bundle before Electron packaging. Aborts with a clear error if `node_modules` is a symlink (electron-builder would ship a runtime dependency on the build machine). Cross-platform path sanitization via `path.basename`. By @kfiramar.
 
 ### ✨ New Features
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
@@ -4835,6 +5143,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **feat(providers):** Integrate AgentRouter as a new OpenAI-compatible passthrough provider with $200 free credits via sign-up (Issue #1572).
 - **feat(ui):** Implement on-demand per-model testing in the provider dashboard, allowing single-token diagnostic checks without triggering rate-limits (Issue #1532).
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **feat(kiro) #381**: Kiro credit balance tracking — usage endpoint now returns credit data for Kiro accounts by calling `codewhisperer.us-east-1.amazonaws.com/getUserCredits` (same endpoint Kiro IDE uses internally). Returns remaining credits, total allowance, renewal date, and subscription tier. Closes #337.
@@ -4846,6 +5156,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes (PRs #374, #375, #376 by @kfiramar)
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -4856,6 +5167,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **fix(logger) #376**: Restore pino transport logger path — `formatters.level` combined with `transport.targets` is rejected by pino. Transport-backed configs now strip the level formatter via `getTransportCompatibleConfig()`. Also corrects numeric level mapping in `/api/logs/console`: `30→info, 40→warn, 50→error` (was shifted by one).
@@ -4875,6 +5188,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes (PRs #369, #371, #372, #373 by @kfiramar)
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -4885,6 +5199,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **fix(db) #373**: Add `provider_connections.group` column to base schema + backfill migration for existing databases — column was used in all queries but missing from schema definition
@@ -4903,6 +5219,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### ✨ New Features (PRs #366, #367, #368)
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
@@ -4911,12 +5228,15 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 - **Codex Quota Policy (PR #366)**: Per-account 5h/weekly quota window toggles in Provider dashboard. Accounts are automatically skipped when enabled windows reach 90% threshold and re-admitted after `resetAt`. Includes `quotaCache.ts` with side-effect free status getter.
 - **Codex Fast Tier Toggle (PR #367)**: Dashboard → Settings → Codex Service Tier. Default-off toggle injects `service_tier: "flex"` only for Codex requests, reducing cost ~80%. Full stack: UI tab + API endpoint + executor + translator + startup restore.
 - **gpt-5.4 Model (PR #368)**: Adds `cx/gpt-5.4` and `codex/gpt-5.4` to the Codex model registry. Regression test included.
 
 ### 🐛 Bug Fixes
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
@@ -4930,6 +5250,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 - **fix #356**: Analytics charts (Top Provider, By Account, Provider Breakdown) now display human-readable provider names/labels instead of raw internal IDs for OpenAI-compatible providers.
 
 > Major release: strict-random routing strategy, API key access controls, connection groups, external pricing sync, and critical bug fixes for thinking models, combo testing, and tool name validation.
@@ -4937,12 +5259,15 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### ✨ New Features (PRs #363 & #365)
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
 - **feat(providers):** Integrate AgentRouter as a new OpenAI-compatible passthrough provider with $200 free credits via sign-up (Issue #1572).
 - **feat(ui):** Implement on-demand per-model testing in the provider dashboard, allowing single-token diagnostic checks without triggering rate-limits (Issue #1532).
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Strict-Random Routing Strategy**: Fisher-Yates shuffle deck with anti-repeat guarantee and mutex serialization for concurrent requests. Independent decks per combo and per provider.
@@ -4954,6 +5279,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -4964,6 +5290,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **fix #355**: Stream idle timeout increased from 60s to 300s — prevents aborting extended-thinking models (claude-opus-4-6, o3, etc.) during long reasoning phases. Configurable via `STREAM_IDLE_TIMEOUT_MS`.
@@ -4979,12 +5307,15 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### ✨ New Features
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
 - **feat(providers):** Integrate AgentRouter as a new OpenAI-compatible passthrough provider with $200 free credits via sign-up (Issue #1572).
 - **feat(ui):** Implement on-demand per-model testing in the provider dashboard, allowing single-token diagnostic checks without triggering rate-limits (Issue #1532).
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **API Key Round-Robin (T07)**: Provider connections can now hold multiple API keys (Edit Connection → Extra API Keys). Requests rotate round-robin between primary + extra keys via `providerSpecificData.extraApiKeys[]`. Keys are held in-memory indexed per connection — no DB schema changes required.
@@ -4999,6 +5330,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### ✨ New Features
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
@@ -5007,12 +5339,15 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 - **Fill-First & P2C Routing Strategies**: Added `fill-first` (drain quota before moving on) and `p2c` (Power-of-Two-Choices low-latency selection) to combo strategy picker, with full guidance panels and color-coded badges.
 - **Free Stack Preset Models**: Creating a combo with the Free Stack template now auto-fills 7 best-in-class free provider models (Gemini CLI, Kiro, Qoder×2, Qwen, NVIDIA NIM, Groq). Users just activate the providers and get a $0/month combo out-of-the-box.
 - **Wider Combo Modal**: Create/Edit combo modal now uses `max-w-4xl` for comfortable editing of large combos.
 
 ### 🐛 Bug Fixes
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
@@ -5026,6 +5361,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 - **Limits page HTTP 500 for Codex & GitHub**: `getCodexUsage()` and `getGitHubUsage()` now return a user-friendly message when the provider returns 401/403 (expired token), instead of throwing and causing a 500 error on the Limits page.
 - **MaintenanceBanner false-positive**: Banner no longer shows "Server is unreachable" spuriously on page load. Fixed by calling `checkHealth()` immediately on mount and removing stale `show`-state closure.
 - **Provider icon tooltips**: Edit (pencil) and delete icon buttons in the provider connection row now have native HTML tooltips — all 6 action icons are now self-documented.
@@ -5035,12 +5372,15 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### ✨ New Features
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
 - **feat(providers):** Integrate AgentRouter as a new OpenAI-compatible passthrough provider with $200 free credits via sign-up (Issue #1572).
 - **feat(ui):** Implement on-demand per-model testing in the provider dashboard, allowing single-token diagnostic checks without triggering rate-limits (Issue #1532).
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Task-Aware Smart Routing (T05)**: Automatic model selection based on request content type — coding → deepseek-chat, analysis → gemini-2.5-pro, vision → gpt-4o, summarization → gemini-2.5-flash. Configurable via Settings. New `GET/PUT/POST /api/settings/task-routing` API.
@@ -5055,6 +5395,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -5065,6 +5406,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Fix #302 — OpenAI SDK stream=False drops tool_calls**: T01 Accept header negotiation no longer forces streaming when `body.stream` is explicitly `false`. Was causing tool_calls to be silently dropped when using the OpenAI Python SDK in non-streaming mode.
@@ -5138,6 +5481,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
 - **fix(build):** Copy the `wreq-js` native runtime directory into the isolated Next.js standalone output so packaged Playwright/E2E starts can load the instrumentation hook on Linux.
@@ -5148,6 +5492,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Qoder OAuth (#339)**: Restored the valid default `clientSecret` — was previously an empty string, causing "Bad client credentials" on every connect attempt. The public credential is now the default fallback (overridable via `QODER_OAUTH_CLIENT_SECRET` env var).
@@ -5167,12 +5513,15 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### ✨ New Features
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **feat(providers):** Implement Image Generation and Editing capabilities for ChatGPT Web, including in-band chat image generation and caching (#1606).
 - **feat(ui):** Integrate OpenCode Zen/Go API tool logo SVG and polish API key copy-to-clipboard interactions (#1607).
 
 - **feat(providers):** Integrate AgentRouter as a new OpenAI-compatible passthrough provider with $200 free credits via sign-up (Issue #1572).
 - **feat(ui):** Implement on-demand per-model testing in the provider dashboard, allowing single-token diagnostic checks without triggering rate-limits (Issue #1532).
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Tiered Quota Scoring (Auto-Combo)**: Added `tierPriority` as a 7th scoring factor — accounts with Ultra/Pro tiers are now preferred over Free tiers when other factors are equal. New optional fields `accountTier` and `quotaResetIntervalSecs` on `ProviderCandidate`. All 4 mode packs updated (`ship-fast`, `cost-saver`, `quality-first`, `offline-friendly`).
@@ -5182,6 +5531,7 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 
 ### 🐛 Bug Fixes
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 - **fix(mitm):** Compile MITM utilities as NodeNext ESM during prepublish, copy the CommonJS MITM server into the standalone artifact, and resolve MITM data paths without relying on Next.js aliases in packaged runtime.
 - **fix(build):** Move the local `.tmp/wine32` Wine prefix out of the isolated Next.js build path so Windows Electron packaging artifacts cannot trigger `EACCES` scans during Node 24 builds.
@@ -5193,6 +5543,8 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **fix(cli):** Replace shell-interpolated setup and privileged command execution paths with argument-based `spawn`/`execFile` helpers for database setup, Tailscale sudo commands, MITM DNS edits, and certificate install/uninstall flows.
 - **fix(ui):** Keep provider icons resilient by using direct `@lobehub/icons` components first, then local PNG/SVG fallbacks, avoiding the `@lobehub/ui` peer runtime in the dashboard.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - **Auth — First-time password**: `INITIAL_PASSWORD` env var is now accepted when setting the first dashboard password. Uses `timingSafeEqual` for constant-time comparison, preventing timing attacks. (#333)

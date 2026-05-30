@@ -363,6 +363,7 @@ if (existsSync(mitmSrc)) {
   writeFileSync(tmpTsconfigPath, JSON.stringify(mitmTsconfig, null, 2));
 
   try {
+<<<<<<< Updated upstream:scripts/prepublish.ts
     execFileSync(NPX_BIN, ["tsc", "-p", "tsconfig.mitm.tmp.json"], {
       cwd: ROOT,
       stdio: "inherit",
@@ -371,6 +372,9 @@ if (existsSync(mitmSrc)) {
     if (existsSync(mitmServerSrc)) {
       cpSync(mitmServerSrc, join(mitmDest, "server.cjs"));
     }
+=======
+    execSync("npx tsc -p " + JSON.stringify(tmpTsconfigPath), { cwd: ROOT, stdio: "inherit" });
+>>>>>>> Stashed changes:scripts/prepublish.mjs
     console.log("  ✅ MITM utilities compiled to app/src/mitm/");
   } catch (err: any) {
     console.warn("  ⚠️  MITM compile warning (non-fatal):", err.message);

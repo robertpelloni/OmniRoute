@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 <<<<<<<< Updated upstream:docs/i18n/no/docs/TROUBLESHOOTING.md
 # Troubleshooting (Norsk)
 
@@ -13,6 +14,11 @@
 
 🌐 **Languages:** 🇺🇸 [English](../../../../docs/TROUBLESHOOTING.md) · 🇪🇸 [es](../../es/docs/TROUBLESHOOTING.md) · 🇫🇷 [fr](../../fr/docs/TROUBLESHOOTING.md) · 🇩🇪 [de](../../de/docs/TROUBLESHOOTING.md) · 🇮🇹 [it](../../it/docs/TROUBLESHOOTING.md) · 🇷🇺 [ru](../../ru/docs/TROUBLESHOOTING.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/TROUBLESHOOTING.md) · 🇯🇵 [ja](../../ja/docs/TROUBLESHOOTING.md) · 🇰🇷 [ko](../../ko/docs/TROUBLESHOOTING.md) · 🇸🇦 [ar](../../ar/docs/TROUBLESHOOTING.md) · 🇮🇳 [in](../../in/docs/TROUBLESHOOTING.md) · 🇹🇭 [th](../../th/docs/TROUBLESHOOTING.md) · 🇻🇳 [vi](../../vi/docs/TROUBLESHOOTING.md) · 🇮🇩 [id](../../id/docs/TROUBLESHOOTING.md) · 🇲🇾 [ms](../../ms/docs/TROUBLESHOOTING.md) · 🇳🇱 [nl](../../nl/docs/TROUBLESHOOTING.md) · 🇵🇱 [pl](../../pl/docs/TROUBLESHOOTING.md) · 🇸🇪 [sv](../../sv/docs/TROUBLESHOOTING.md) · 🇳🇴 [no](../../no/docs/TROUBLESHOOTING.md) · 🇩🇰 [da](../../da/docs/TROUBLESHOOTING.md) · 🇫🇮 [fi](../../fi/docs/TROUBLESHOOTING.md) · 🇵🇹 [pt](../../pt/docs/TROUBLESHOOTING.md) · 🇷🇴 [ro](../../ro/docs/TROUBLESHOOTING.md) · 🇭🇺 [hu](../../hu/docs/TROUBLESHOOTING.md) · 🇧🇬 [bg](../../bg/docs/TROUBLESHOOTING.md) · 🇸🇰 [sk](../../sk/docs/TROUBLESHOOTING.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/TROUBLESHOOTING.md) · 🇮🇱 [he](../../he/docs/TROUBLESHOOTING.md) · 🇵🇭 [phi](../../phi/docs/TROUBLESHOOTING.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/TROUBLESHOOTING.md) · 🇨🇿 [cs](../../cs/docs/TROUBLESHOOTING.md)
 >>>>>>> Stashed changes
+=======
+# Troubleshooting (Norsk)
+
+🌐 **Languages:** 🇺🇸 [English](../../../../docs/TROUBLESHOOTING.md) · 🇪🇸 [es](../../es/docs/TROUBLESHOOTING.md) · 🇫🇷 [fr](../../fr/docs/TROUBLESHOOTING.md) · 🇩🇪 [de](../../de/docs/TROUBLESHOOTING.md) · 🇮🇹 [it](../../it/docs/TROUBLESHOOTING.md) · 🇷🇺 [ru](../../ru/docs/TROUBLESHOOTING.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/TROUBLESHOOTING.md) · 🇯🇵 [ja](../../ja/docs/TROUBLESHOOTING.md) · 🇰🇷 [ko](../../ko/docs/TROUBLESHOOTING.md) · 🇸🇦 [ar](../../ar/docs/TROUBLESHOOTING.md) · 🇮🇳 [in](../../in/docs/TROUBLESHOOTING.md) · 🇹🇭 [th](../../th/docs/TROUBLESHOOTING.md) · 🇻🇳 [vi](../../vi/docs/TROUBLESHOOTING.md) · 🇮🇩 [id](../../id/docs/TROUBLESHOOTING.md) · 🇲🇾 [ms](../../ms/docs/TROUBLESHOOTING.md) · 🇳🇱 [nl](../../nl/docs/TROUBLESHOOTING.md) · 🇵🇱 [pl](../../pl/docs/TROUBLESHOOTING.md) · 🇸🇪 [sv](../../sv/docs/TROUBLESHOOTING.md) · 🇳🇴 [no](../../no/docs/TROUBLESHOOTING.md) · 🇩🇰 [da](../../da/docs/TROUBLESHOOTING.md) · 🇫🇮 [fi](../../fi/docs/TROUBLESHOOTING.md) · 🇵🇹 [pt](../../pt/docs/TROUBLESHOOTING.md) · 🇷🇴 [ro](../../ro/docs/TROUBLESHOOTING.md) · 🇭🇺 [hu](../../hu/docs/TROUBLESHOOTING.md) · 🇧🇬 [bg](../../bg/docs/TROUBLESHOOTING.md) · 🇸🇰 [sk](../../sk/docs/TROUBLESHOOTING.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/TROUBLESHOOTING.md) · 🇮🇱 [he](../../he/docs/TROUBLESHOOTING.md) · 🇵🇭 [phi](../../phi/docs/TROUBLESHOOTING.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/TROUBLESHOOTING.md) · 🇨🇿 [cs](../../cs/docs/TROUBLESHOOTING.md)
+>>>>>>> Stashed changes
 
 ---
 
@@ -22,6 +28,7 @@ Common problems and solutions for OmniRoute.
 
 ## Quick Fixes
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 | Problem                                             | Solution                                                                                                                                                 |
 | --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -113,6 +120,8 @@ omniroute
 
 **Fix (v3.5.5+):** OmniRoute now uses undici's own `fetch()` function when a proxy dispatcher is active, ensuring consistent behavior. Update to v3.5.5+.
 =======
+=======
+>>>>>>> Stashed changes
 | Problem                       | Solution                                                           |
 | ----------------------------- | ------------------------------------------------------------------ |
 | First login not working       | Set `INITIAL_PASSWORD` in `.env` (no hardcoded default)            |
@@ -120,6 +129,9 @@ omniroute
 | No request logs under `logs/` | Set `ENABLE_REQUEST_LOGS=true`                                     |
 | EACCES: permission denied     | Set `DATA_DIR=/path/to/writable/dir` to override `~/.omniroute`    |
 | Routing strategy not saving   | Update to v1.4.11+ (Zod schema fix for settings persistence)       |
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 ---
@@ -211,11 +223,17 @@ curl -s http://localhost:20128/api/cli-tools/openclaw-settings | jq '{installed,
 ## Debugging
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ### Enable Log Files
 
 Set `APP_LOG_TO_FILE=true` in your `.env` file. Application logs are written under `logs/`.
 Request artifacts are stored under `${DATA_DIR}/call_logs/` when the call log pipeline is
 enabled in settings.
+=======
+### Enable Request Logs
+
+Set `ENABLE_REQUEST_LOGS=true` in your `.env` file. Logs appear under `logs/` directory.
+>>>>>>> Stashed changes
 =======
 ### Enable Request Logs
 
@@ -236,9 +254,14 @@ curl http://localhost:20128/api/monitoring/health
 
 - Main state: `${DATA_DIR}/storage.sqlite` (providers, combos, aliases, keys, settings)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - Usage: SQLite tables in `storage.sqlite` (`usage_history`, `call_logs`, `proxy_logs`) + optional `${DATA_DIR}/call_logs/`
 - Application logs: `<repo>/logs/...` (when `APP_LOG_TO_FILE=true`)
 - Call log artifacts: `${DATA_DIR}/call_logs/YYYY-MM-DD/...` when the call log pipeline is enabled
+=======
+- Usage: SQLite tables in `storage.sqlite` (`usage_history`, `call_logs`, `proxy_logs`) + optional `${DATA_DIR}/log.txt` and `${DATA_DIR}/call_logs/`
+- Request logs: `<repo>/logs/...` (when `ENABLE_REQUEST_LOGS=true`)
+>>>>>>> Stashed changes
 =======
 - Usage: SQLite tables in `storage.sqlite` (`usage_history`, `call_logs`, `proxy_logs`) + optional `${DATA_DIR}/log.txt` and `${DATA_DIR}/call_logs/`
 - Request logs: `<repo>/logs/...` (when `ENABLE_REQUEST_LOGS=true`)

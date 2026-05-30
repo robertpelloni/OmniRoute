@@ -217,6 +217,7 @@ Response example:
 ### Settings
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 | Endpoint                        | Method        | Description               |
 | ------------------------------- | ------------- | ------------------------- |
 | `/api/settings`                 | GET/PUT/PATCH | General settings          |
@@ -244,6 +245,8 @@ Response example:
 | `/api/context/combos/[id]/assignments` | GET/PUT        | Assign compression combos to routing combos                              |
 | `/api/context/analytics`               | GET            | Compression analytics alias                                              |
 =======
+=======
+>>>>>>> Stashed changes
 | Endpoint                        | Method        | Description            |
 | ------------------------------- | ------------- | ---------------------- |
 | `/api/settings`                 | GET/PUT/PATCH | General settings       |
@@ -252,6 +255,9 @@ Response example:
 | `/api/settings/ip-filter`       | GET/PUT       | IP allowlist/blocklist |
 | `/api/settings/thinking-budget` | GET/PUT       | Reasoning token budget |
 | `/api/settings/system-prompt`   | GET/PUT       | Global system prompt   |
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 ### Monitoring
@@ -289,8 +295,11 @@ Response example:
 | `/api/tunnels/cloudflared` | GET    | Read Cloudflare Quick Tunnel install/runtime status for the dashboard   |
 | `/api/tunnels/cloudflared` | POST   | Enable or disable the Cloudflare Quick Tunnel (`action=enable/disable`) |
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 | `/api/tunnels/ngrok`       | GET    | Read ngrok Tunnel runtime status for the dashboard                      |
 | `/api/tunnels/ngrok`       | POST   | Enable or disable the ngrok Tunnel (`action=enable/disable`)            |
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 
@@ -319,6 +328,7 @@ GET response includes `agents[]` (id, name, binary, version, installed, protocol
 ### Resilience & Rate Limits
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 | Endpoint                | Method    | Description                                                                        |
 | ----------------------- | --------- | ---------------------------------------------------------------------------------- |
 | `/api/resilience`       | GET/PATCH | Get/update request queue, connection cooldown, provider breaker, and wait settings |
@@ -326,12 +336,17 @@ GET response includes `agents[]` (id, name, binary, version, installed, protocol
 | `/api/rate-limits`      | GET       | Per-account rate limit status                                                      |
 | `/api/rate-limit`       | GET       | Global rate limit configuration                                                    |
 =======
+=======
+>>>>>>> Stashed changes
 | Endpoint                | Method    | Description                     |
 | ----------------------- | --------- | ------------------------------- |
 | `/api/resilience`       | GET/PATCH | Get/update resilience profiles  |
 | `/api/resilience/reset` | POST      | Reset circuit breakers          |
 | `/api/rate-limits`      | GET       | Per-account rate limit status   |
 | `/api/rate-limit`       | GET       | Global rate limit configuration |
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 ### Evals

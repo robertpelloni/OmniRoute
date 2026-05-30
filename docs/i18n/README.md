@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 # 🌐 Multilingual Documentation — OmniRoute
 
 Translations of documentation into 39 languages. Code blocks remain in English.
@@ -51,6 +52,14 @@ Translations of documentation into 30 languages. Code blocks remain in English.
 
 ---
 
+=======
+# 🌐 Multilingual Documentation — 9router
+
+Translations of documentation into 30 languages. Code blocks remain in English.
+
+---
+
+>>>>>>> Stashed changes
 - 🇪🇸 **Español** (`es`): [Docs Root](./es/README.md)
 - 🇫🇷 **Français** (`fr`): [Docs Root](./fr/README.md)
 - 🇩🇪 **Deutsch** (`de`): [Docs Root](./de/README.md)
@@ -81,4 +90,7 @@ Translations of documentation into 30 languages. Code blocks remain in English.
 - 🇵🇭 **Filipino** (`phi`): [Docs Root](./phi/README.md)
 - 🇧🇷 **Português (Brasil)** (`pt-BR`): [Docs Root](./pt-BR/README.md)
 - 🇨🇿 **Čeština** (`cs`): [Docs Root](./cs/README.md)
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

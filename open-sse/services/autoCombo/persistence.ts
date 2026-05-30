@@ -7,7 +7,11 @@
 
 import fs from "fs";
 import path from "path";
+<<<<<<< Updated upstream
 import { resolveDataDir } from "@/lib/dataPaths";
+=======
+import { resolveDataDir } from "../../../src/lib/dataPaths";
+>>>>>>> Stashed changes
 
 export interface AdaptationState {
   comboId: string;

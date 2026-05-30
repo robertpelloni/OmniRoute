@@ -2,6 +2,7 @@ import { getUpstreamTimeoutConfig } from "@/shared/utils/runtimeTimeouts";
 import { loadProviderCredentials } from "./credentialLoader.ts";
 import { generateLegacyProviders } from "./providerRegistry.ts";
 
+<<<<<<< Updated upstream
 const upstreamTimeouts = getUpstreamTimeoutConfig(process.env, (message) => {
   console.warn(`[open-sse] ${message}`);
 });
@@ -21,6 +22,15 @@ export const STREAM_IDLE_TIMEOUT_MS = upstreamTimeouts.streamIdleTimeoutMs;
 // Prevents indefinite hangs when the upstream sends headers but stalls on the body.
 // Defaults to FETCH_TIMEOUT_MS. Override with FETCH_BODY_TIMEOUT_MS env var.
 export const FETCH_BODY_TIMEOUT_MS = upstreamTimeouts.fetchBodyTimeoutMs;
+=======
+// Timeout for non-streaming fetch requests (ms). Prevents stalled connections.
+export const FETCH_TIMEOUT_MS = parseInt(process.env.FETCH_TIMEOUT_MS || "600000", 10);
+
+// Idle timeout for SSE streams (ms). Closes stream if no data for this duration.
+// Default: 120s balances deep-reasoning pauses with fast zombie stream detection (#473).
+// Extended-thinking models rarely pause >90s between chunks. Override with STREAM_IDLE_TIMEOUT_MS env var.
+export const STREAM_IDLE_TIMEOUT_MS = parseInt(process.env.STREAM_IDLE_TIMEOUT_MS || "600000", 10);
+>>>>>>> Stashed changes
 
 // Provider configurations
 // OAuth credentials read from env vars with hardcoded fallbacks for backward compatibility.
@@ -56,8 +66,13 @@ export const OAUTH_ENDPOINTS = {
     auth: "https://chat.qwen.ai/api/v1/oauth2/device/code", // From CLIProxyAPI
   },
   qoder: {
+<<<<<<< Updated upstream
     token: process.env.QODER_OAUTH_TOKEN_URL || "",
     auth: process.env.QODER_OAUTH_AUTHORIZE_URL || "",
+=======
+    token: "https://qoder.cn/oauth/token",
+    auth: "https://qoder.cn/oauth",
+>>>>>>> Stashed changes
   },
   github: {
     token: "https://github.com/login/oauth/access_token",

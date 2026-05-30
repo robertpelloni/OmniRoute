@@ -136,6 +136,7 @@
     "Failed to save pricing": "Fiyat kaydedilemedi",
     "Failed to reset pricing": "Fiyatlandırma sıfırlanamadı",
     "apikey": "API Anahtarı",
+<<<<<<< Updated upstream
     "http": "HTTP",
     "nothingHere": "Nothing here yet",
     "goToDashboard": "Go to Dashboard",
@@ -649,17 +650,27 @@
     "learnedFromHeaders": "Learned From Headers",
     "totalRequests": "Total Requests",
     "cloudUnstableNote": "Cloud Unstable Note"
+=======
+    "http": "HTTP"
+>>>>>>> Stashed changes
   },
   "sidebar": {
     "home": "Ana Sayfa",
     "dashboard": "Kontrol Paneli",
     "providers": "Sağlayıcılar",
     "combos": "Kombinasyonlar",
+<<<<<<< Updated upstream
+=======
+    "autoCombo": "Otomatik Kombo",
+>>>>>>> Stashed changes
     "usage": "Kullanım",
     "analytics": "Analizler",
     "costs": "Maliyetler",
     "health": "Sağlık",
+<<<<<<< Updated upstream
     "proxy": "Proxy",
+=======
+>>>>>>> Stashed changes
     "limits": "Limitler ve Kotalar",
     "cliTools": "CLI Araçları",
     "media": "Medya",
@@ -682,11 +693,14 @@
     "debug": "Hata ayıklama",
     "system": "Sistem",
     "help": "Yardım",
+<<<<<<< Updated upstream
     "primarySection": "Main",
     "cliSection": "CLI",
     "debugSection": "Debug",
     "systemSection": "System",
     "helpSection": "Help",
+=======
+>>>>>>> Stashed changes
     "serverDisconnected": "Sunucu Bağlantısı Kesildi",
     "serverDisconnectedMsg": "Proxy sunucusu durduruldu veya yeniden başlatılıyor.",
     "expandSidebar": "Kenar çubuğunu genişlet",
@@ -703,6 +717,7 @@
     "themeOrange": "Turuncu",
     "themeCyan": "Camgöbeği",
     "cliToolsShort": "Araçlar",
+<<<<<<< Updated upstream
     "cache": "Cache",
     "cacheShort": "Cache",
     "memory": "Memory",
@@ -741,6 +756,15 @@
     "contextCaveman": "Caveman",
     "contextRtk": "RTK",
     "contextCombos": "Compression Combos"
+=======
+    "cliSection": "CLI",
+    "debugSection": "Debug",
+    "helpSection": "Help",
+    "primarySection": "Main",
+    "systemSection": "System",
+    "cache": "Cache",
+    "cacheShort": "Cache"
+>>>>>>> Stashed changes
   },
   "themesPage": {
     "title": "Temalar",
@@ -827,9 +851,13 @@
     "utilization": "Kullanım",
     "utilizationDescription": "Sağlayıcı kota kullanım trendleri ve hız limiti takibi",
     "comboHealth": "Kombo Sağlığı",
+<<<<<<< Updated upstream
     "comboHealthDescription": "Kombo düzeyinde kota, kullanım dağılımı ve performans metrikleri",
     "compressionAnalyticsTitle": "Compression Analytics",
     "compressionAnalyticsDescription": "Compression analytics — token savings, mode breakdown, and provider stats."
+=======
+    "comboHealthDescription": "Kombo düzeyinde kota, kullanım dağılımı ve performans metrikleri"
+>>>>>>> Stashed changes
   },
   "apiManager": {
     "title": "API Anahtarları",
@@ -1189,10 +1217,14 @@
       "opencode": "Terminal yerel ajan çalıştırmaları ve OpenCode ile betik tabanlı otomasyon tercih ettiğinizde kullanın.",
       "kiro": "Kiro'yu entegre ederken model yönlendirmesini OmniRoute üzerinden merkezi olarak yönetmek istediğinizde kullanın.",
       "antigravity": "Antigravity/Kiro trafiğinin MITM üzerinden yakalanıp OmniRoute'a yönlendirilmesi gerektiğinde kullanın.",
+<<<<<<< Updated upstream
       "copilot": "OmniRoute anahtarları ve yönlendirme kuralları uygulanırken Copilot sohbet tarzı bir UX istediğinizde kullanın.",
       "windsurf": "Use when you want an AI-first IDE with Codeium/Windsurf models routed through OmniRoute.",
       "amp": "Use when you want Amp CLI routed through OmniRoute with stable shorthand aliases and OpenAI-compatible setup.",
       "qwen": "Use when you want Qwen Code CLI with OmniRoute-managed provider settings and multi-provider model access."
+=======
+      "copilot": "OmniRoute anahtarları ve yönlendirme kuralları uygulanırken Copilot sohbet tarzı bir UX istediğinizde kullanın."
+>>>>>>> Stashed changes
     },
     "toolDescriptions": {
       "antigravity": "MITM ile Google Antigravity IDE",
@@ -1207,9 +1239,13 @@
       "opencode": "OpenCode AI kodlama ajanı (Terminal)",
       "kiro": "Amazon Kiro - AI destekli IDE",
       "windsurf": "Windsurf AI Code Editor",
+<<<<<<< Updated upstream
       "copilot": "GitHub Copilot AI Assistant",
       "qwen": "Alibaba Qwen Code CLI",
       "amp": "Sourcegraph Amp coding assistant CLI"
+=======
+      "copilot": "GitHub Copilot AI Assistant"
+>>>>>>> Stashed changes
     },
     "guides": {
       "cursor": {
@@ -1273,7 +1309,11 @@
           },
           "3": {
             "title": "Temel URL'yi Ayarla",
+<<<<<<< Updated upstream
             "desc": "opencode config set baseUrl {baseUrl}"
+=======
+            "desc": "opencode config set baseUrl {{baseUrl}}"
+>>>>>>> Stashed changes
           },
           "4": {
             "title": "Modeli Seçin"
@@ -1333,6 +1373,7 @@
           }
         }
       }
+<<<<<<< Updated upstream
     },
     "autoConfiguredTab": "Auto Configured Tab",
     "toolCategoriesDesc": "Tool Categories Desc",
@@ -1341,6 +1382,9 @@
     "mitmClientsTab": "Mitm Clients Tab",
     "toolCategories": "Tool Categories",
     "visibleToolsCount": "Visible Tools Count"
+=======
+    }
+>>>>>>> Stashed changes
   },
   "combos": {
     "title": "Kombolar",
@@ -1451,6 +1495,7 @@
         "when": "Use when you want perfectly even spread — each model used once before repeating.",
         "avoid": "Avoid when models have different quality or latency and order matters.",
         "example": "Example: Multiple accounts of the same model to distribute usage evenly."
+<<<<<<< Updated upstream
       },
       "p2c": {
         "avoid": "Avoid for small combos with 2 or fewer models — no benefit over round-robin.",
@@ -1461,6 +1506,8 @@
         "when": "Use when long sessions must survive account rotation without losing the working context.",
         "example": "Example: Codex sessions that rotate across multiple accounts near quota exhaustion.",
         "avoid": "Avoid when account switching is rare or when you do not want extra summarization requests."
+=======
+>>>>>>> Stashed changes
       }
     },
     "advancedHelp": {
@@ -1564,6 +1611,7 @@
       }
     },
     "templateFreeStack": "Ücretsiz Yığın ($0)",
+<<<<<<< Updated upstream
     "templateFreeStackDesc": "Tüm ücretsiz sağlayıcılarda round-robin: Kiro (Claude), Qoder (5 model), Qwen (4 model), Gemini CLI. Sıfır maliyet, kodlama kesintisiz.",
     "auto": "Auto Combo",
     "autoDesc": "Self-healing smart routing pool (Performance optimized)",
@@ -1691,6 +1739,9 @@
     "excludedProvidersHint": "Providers with an OPEN circuit breaker are temporarily excluded from routing.",
     "reviewName": "Name",
     "providerScores": "Provider Scores"
+=======
+    "templateFreeStackDesc": "Tüm ücretsiz sağlayıcılarda round-robin: Kiro (Claude), Qoder (5 model), Qwen (4 model), Gemini CLI. Sıfır maliyet, kodlama kesintisiz."
+>>>>>>> Stashed changes
   },
   "costs": {
     "title": "Maliyetler",
@@ -1699,6 +1750,7 @@
     "breakdown": "Maliyet Dağılımı",
     "noData": "Maliyet verisi yok",
     "byModel": "Modele göre",
+<<<<<<< Updated upstream
     "byProvider": "Sağlayıcıya göre",
     "spend30d": "Spend30D",
     "activeModels": "Active Models",
@@ -1717,6 +1769,9 @@
     "noCostDataTitle": "No Cost Data Title",
     "topModels": "Top Models",
     "requestsInWindow": "Requests In Window"
+=======
+    "byProvider": "Sağlayıcıya göre"
+>>>>>>> Stashed changes
   },
   "endpoint": {
     "title": "API Uç Noktası",
@@ -1735,7 +1790,10 @@
     "disableCloud": "Bulutu Devre Dışı Bırak",
     "enableCloud": "Bulutu Etkinleştir",
     "modelsAcrossEndpoints": "{endpoints} uç noktada {models} model",
+<<<<<<< Updated upstream
     "loadingModels": "Kullanılabilir modeller yükleniyor...",
+=======
+>>>>>>> Stashed changes
     "chatDesc": "Tüm sağlayıcılarla akışlı ve akışsız sohbet",
     "embeddings": "Embedding'ler",
     "embeddingsDesc": "Arama ve RAG iş akışları için metin embedding'leri",
@@ -1793,6 +1851,7 @@
     "cloudWorkerUnreachable": "Bulut worker'ına ulaşılamadı. Bulut hizmetinin çalıştığından emin olun (`/cloud` içinde `npm run dev`).",
     "connectionFailed": "Bağlantı başarısız oldu",
     "syncFailed": "Bulut verileri senkronize edilemedi",
+<<<<<<< Updated upstream
     "cloudflaredTitle": "Cloudflare Quick Tunnel",
     "cloudflaredDescription": "Create a Cloudflare Quick Tunnel for this endpoint to make it accessible from the internet without configuring DNS.",
     "cloudflaredUrlNotice": "Creates a temporary Cloudflare Quick Tunnel. URLs change after restart.",
@@ -1812,6 +1871,8 @@
     "cloudflaredUnsupportedNote": "This platform is not supported for managed installation.",
     "cloudflaredIdleNote": "Create a temporary Cloudflare Quick Tunnel for this endpoint.",
     "cloudflaredLastError": "Last error: {error}",
+=======
+>>>>>>> Stashed changes
     "providerModelsTitle": "{provider} — Modeller",
     "noModelsForProvider": "Bu sağlayıcı için kullanılabilir model yok.",
     "chat": "Chat",
@@ -1847,6 +1908,7 @@
     "a2aQuickStartStep3": "Görevleri `tasks/get` ve `tasks/cancel` ile izleyin ve yönetin.",
     "completionsLegacy": "Tamamlamalar (Eski)",
     "completionsLegacyDesc": "Eski OpenAI metin tamamlamaları — hem bilgi istemi dizesini hem de mesaj dizisi biçimini kabul eder",
+<<<<<<< Updated upstream
     "musicDesc": "Generate music and audio tracks via ComfyUI (Stable Audio, MusicGen)",
     "musicGeneration": "Music Generation",
     "videoGeneration": "Video Generation",
@@ -1883,6 +1945,27 @@
     "tailscaleInstallPasswordHint": "On macOS and Linux, sudo may be required for the package install and daemon start.",
     "tailscaleSudoPlaceholder": "Optional sudo password",
     "tailscaleInstalling": "Installing"
+=======
+    "cloudflaredDescription": "Create a Cloudflare Quick Tunnel for this endpoint to make it accessible from the internet without configuring DNS.",
+    "cloudflaredDisable": "Stop Tunnel",
+    "cloudflaredEnable": "Enable Tunnel",
+    "cloudflaredError": "Error",
+    "cloudflaredIdleNote": "Create a temporary Cloudflare Quick Tunnel for this endpoint.",
+    "cloudflaredInstallAndEnable": "Install & Enable",
+    "cloudflaredLastError": "Last error: {error}",
+    "cloudflaredNotInstalled": "Not installed",
+    "cloudflaredRequestFailed": "Failed to update Cloudflare tunnel",
+    "cloudflaredRunning": "Running",
+    "cloudflaredStarted": "Cloudflare tunnel started",
+    "cloudflaredStarting": "Starting",
+    "cloudflaredStopped": "Cloudflare tunnel stopped",
+    "cloudflaredStoppedState": "Stopped",
+    "cloudflaredTemporaryNote": "Quick Tunnel URLs are temporary and will change after restart.",
+    "cloudflaredTitle": "Cloudflare Quick Tunnel",
+    "cloudflaredUnsupported": "Unsupported",
+    "cloudflaredUnsupportedNote": "This platform is not supported for managed installation.",
+    "cloudflaredUrlNotice": "Creates a temporary Cloudflare Quick Tunnel. URLs change after restart."
+>>>>>>> Stashed changes
   },
   "endpoints": {
     "tabProxy": "Uç Nokta Proxy",
@@ -1962,11 +2045,15 @@
     "tableApiKey": "API Anahtarı",
     "failed": "başarısız",
     "previous": "Önceki",
+<<<<<<< Updated upstream
     "next": "Sonraki",
     "apiKeyId": "Api Key Id",
     "offset": "Offset",
     "limit": "Limit",
     "tool": "Tool"
+=======
+    "next": "Sonraki"
+>>>>>>> Stashed changes
   },
   "a2aDashboard": {
     "loading": "A2A kontrol paneli yükleniyor...",
@@ -2020,11 +2107,15 @@
     "close": "Kapat",
     "metadata": "Meta veriler",
     "events": "Etkinlikler",
+<<<<<<< Updated upstream
     "artifacts": "Çıktılar",
     "tablePhase": "Table Phase",
     "offset": "Offset",
     "limit": "Limit",
     "skill": "Skill"
+=======
+    "artifacts": "Çıktılar"
+>>>>>>> Stashed changes
   },
   "health": {
     "title": "Sistem Sağlığı",
@@ -2098,12 +2189,16 @@
     "resetAllTitle": "Tüm devre kesicileri sağlıklı duruma sıfırla",
     "resetting": "Sıfırlanıyor...",
     "resetAll": "Tümünü Sıfırla",
+<<<<<<< Updated upstream
     "until": "{time} saatine kadar",
     "limitExhausted": "Exhausted",
     "learnedFromHeaders": "Learned from headers",
     "remainingOfLimit": "{remaining}/{limit} remaining",
     "throttleStatus": "Throttle: {value}",
     "lastHeaderUpdate": "Header update: {age}"
+=======
+    "until": "{time} saatine kadar"
+>>>>>>> Stashed changes
   },
   "limits": {
     "title": "Limitler ve Kotalar",
@@ -2141,6 +2236,7 @@
     "notAvailable": "—",
     "noEntries": "Denetim günlüğü girişi bulunamadı",
     "previous": "Önceki",
+<<<<<<< Updated upstream
     "next": "Sonraki",
     "providerWarningTitle": "Provider Warning Title",
     "viewDetails": "View Details",
@@ -2182,6 +2278,9 @@
     "timeRange": "Time Range",
     "lastNHours": "Last {hours}",
     "defaultRange": "default"
+=======
+    "next": "Sonraki"
+>>>>>>> Stashed changes
   },
   "onboarding": {
     "welcome": "Hoş geldiniz",
@@ -2295,8 +2394,11 @@
     "failedCreate": "Sağlayıcı oluşturulamadı",
     "errorOccurred": "Bir hata oluştu. Lütfen tekrar deneyin.",
     "modelStatus": "Model Durumu",
+<<<<<<< Updated upstream
     "showConfiguredOnly": "Configured only",
     "searchProviders": "Sağlayıcı ara...",
+=======
+>>>>>>> Stashed changes
     "allModelsOperational": "Tüm modeller çalışır durumda",
     "modelsWithIssues": "{count} modelde sorun var",
     "allModelsNormal": "Tüm modeller normal şekilde yanıt veriyor.",
@@ -2349,9 +2451,12 @@
     "chatCompletions": "Sohbet Tamamlamaları",
     "importingModels": "İçe aktarılıyor...",
     "importFromModels": "/models'ten içe aktar",
+<<<<<<< Updated upstream
     "allModelsAlreadyImported": "Tüm modeller zaten içe aktarıldı",
     "noNewModelsToImport": "İçe aktarılacak yeni model yok — tüm modeller zaten kayıt defterinde veya özel modeller listesinde",
     "skippingExistingModels": "{count} mevcut model atlanıyor",
+=======
+>>>>>>> Stashed changes
     "autoSync": "Otomatik Senkronizasyon",
     "autoSyncTooltip": "Model listesini her 24 saatte bir otomatik olarak yenileyin (MODEL_SYNC_INTERVAL_HOURS aracılığıyla yapılandırılabilir)",
     "autoSyncEnabled": "Otomatik senkronizasyon etkin — modeller periyodik olarak yenilenecek",
@@ -2372,10 +2477,13 @@
     "adding": "Ekleniyor...",
     "importingModelsTitle": "Modelleri İçe Aktarma",
     "copyModel": "Modeli kopyala",
+<<<<<<< Updated upstream
     "filterModels": "Modelleri filtrele…",
     "modelsActive": "etkin",
     "showModel": "Modeli göster",
     "hideModel": "Modeli gizle",
+=======
+>>>>>>> Stashed changes
     "removeModel": "Modeli kaldır",
     "rateLimitProtected": "Korumalı",
     "rateLimitUnprotected": "Korumasız",
@@ -2521,12 +2629,15 @@
     "compatibleProdPlaceholder": "{type} Uyumlu (Üretim)",
     "tokenRefreshed": "Jeton başarıyla yenilendi",
     "tokenRefreshFailed": "Jeton yenileme başarısız oldu",
+<<<<<<< Updated upstream
     "applyCodexAuthLocal": "Apply auth",
     "exportCodexAuthFile": "Export auth",
     "codexAuthAppliedLocal": "Codex auth.json applied locally",
     "codexAuthApplyFailed": "Failed to apply Codex auth.json locally",
     "codexAuthExported": "Codex auth.json exported",
     "codexAuthExportFailed": "Failed to export Codex auth.json",
+=======
+>>>>>>> Stashed changes
     "advancedSettings": "Gelişmiş Ayarlar",
     "chatPathLabel": "Sohbet Uç Noktası Yolu",
     "chatPathPlaceholder": "/chat/completions",
@@ -2534,6 +2645,7 @@
     "modelsPathLabel": "Model Uç Noktası Yolu",
     "modelsPathPlaceholder": "/models",
     "modelsPathHint": "Doğrulama için özel model yolu (ör. /v4/models)",
+<<<<<<< Updated upstream
     "modelsImported": "{count} models imported",
     "close": "Close",
     "statusDeactivated": "Deactivated (Manual)",
@@ -2708,6 +2820,17 @@
     "perModelQuotaLabel": "Per Model Quota Label",
     "expiredBadge": "Expired",
     "expiringSoonBadge": "Expiring Soon"
+=======
+    "allModelsAlreadyImported": "Tüm modeller zaten içe aktarıldı",
+    "noNewModelsToImport": "İçe aktarılacak yeni model yok — tüm modeller zaten kayıt defterinde veya özel modeller listesinde",
+    "skippingExistingModels": "{count} mevcut model atlanıyor",
+    "applyCodexAuthLocal": "Apply auth",
+    "codexAuthAppliedLocal": "Codex auth.json applied locally",
+    "codexAuthApplyFailed": "Failed to apply Codex auth.json locally",
+    "codexAuthExportFailed": "Failed to export Codex auth.json",
+    "codexAuthExported": "Codex auth.json exported",
+    "exportCodexAuthFile": "Export auth"
+>>>>>>> Stashed changes
   },
   "settings": {
     "title": "Ayarlar",
@@ -2720,6 +2843,7 @@
     "systemPrompt": "Sistem İstemi",
     "thinkingBudget": "Düşünme Bütçesi",
     "proxy": "Proxy",
+<<<<<<< Updated upstream
     "httpProxy": "HTTP Proxy",
     "1proxy": "1proxy",
     "proxySubTabsAria": "Proxy sections",
@@ -2736,6 +2860,8 @@
     "requestBodyLimitSaving": "Saving...",
     "requestBodyLimitSave": "Save",
     "requestBodyLimitCurrent": "Current: {value}",
+=======
+>>>>>>> Stashed changes
     "pricing": "Fiyatlandırma",
     "storage": "Depolama",
     "policies": "Politikalar",
@@ -2747,8 +2873,11 @@
     "darkMode": "Karanlık Mod",
     "lightMode": "Açık Mod",
     "systemTheme": "Sistem Teması",
+<<<<<<< Updated upstream
     "debugToggle": "Enable Debug Mode",
     "sidebarVisibilityToggle": "Show Sidebar Items",
+=======
+>>>>>>> Stashed changes
     "enableCache": "Önbelleği Etkinleştir",
     "cacheTTL": "Önbellek TTL",
     "maxCacheSize": "Maksimum Önbellek Boyutu",
@@ -2757,6 +2886,7 @@
     "cacheMisses": "Önbellek Iskalamaları",
     "hitRate": "İsabet Oranı",
     "cacheEntries": "Önbellek Girişleri",
+<<<<<<< Updated upstream
     "cacheSettings": "Cache Settings",
     "semanticCache": "Semantic Cache",
     "maxEntries": "Max Entries",
@@ -2768,6 +2898,8 @@
     "loading": "Loading...",
     "saving": "Kaydediliyor...",
     "save": "Save",
+=======
+>>>>>>> Stashed changes
     "circuitBreaker": "Devre Kesici",
     "retryPolicy": "Yeniden Deneme Politikası",
     "maxRetries": "Maksimum Yeniden Deneme Sayısı",
@@ -2775,10 +2907,13 @@
     "timeoutMs": "Zaman Aşımı (ms)",
     "enableSystemPrompt": "Sistem İstemini Etkinleştir",
     "systemPromptText": "Sistem İstemi Metni",
+<<<<<<< Updated upstream
     "autoDisableBannedAccounts": "Auto-Disable Banned Accounts",
     "autoDisableDescription": "Permanently mark provider connections as deactivated if they return specific terminal ban signals (e.g. HTTP 403 'verify your account'). This removes them from the combo rotation.",
     "autoDisableThreshold": "Ban Threshold",
     "autoDisableThresholdDesc": "Consecutive ban signals required before permanent deactivation.",
+=======
+>>>>>>> Stashed changes
     "enableThinking": "Düşünmeyi Etkinleştir",
     "maxThinkingTokens": "Maksimum Düşünme Jetonları",
     "enableProxy": "Proxy'yi Etkinleştir",
@@ -2815,9 +2950,12 @@
     "themeLight": "Açık",
     "themeDark": "Koyu",
     "themeSystem": "Sistem",
+<<<<<<< Updated upstream
     "sidebarVisibility": "Hide sidebar items",
     "sidebarVisibilityDesc": "Hide any sidebar navigation entry to reduce visual clutter.",
     "sidebarVisibilityHint": "Any sidebar section is hidden automatically when a...",
+=======
+>>>>>>> Stashed changes
     "hideHealthLogs": "Sağlık Kontrolü Günlüklerini Gizle",
     "hideHealthLogsDesc": "Açıkken, sunucu konsolundaki [HealthCheck] mesajlarını gizler.",
     "themeAccent": "Tema rengi",
@@ -2830,6 +2968,7 @@
     "themeViolet": "Menekşe",
     "themeOrange": "Turuncu",
     "themeCyan": "Camgöbeği",
+<<<<<<< Updated upstream
     "whitelabeling": "Branding",
     "whitelabelingDesc": "Customize the application name and logo",
     "appName": "Application Name",
@@ -2844,6 +2983,9 @@
     "uploadFavicon": "Upload Favicon",
     "resetFavicon": "Reset Favicon",
     "faviconPreview": "Favicon Preview",
+=======
+    "promptCache": "İstem Önbelleği",
+>>>>>>> Stashed changes
     "flushCache": "Önbelleği Boşalt",
     "flushing": "Boşaltılıyor…",
     "size": "Boyut",
@@ -2928,7 +3070,11 @@
     "stickyLimitDesc": "Geçişten önce hesap başına çağrı sayısı",
     "modelAliases": "Model Takma Adları",
     "modelAliasesTitle": "Model Takma Adları",
+<<<<<<< Updated upstream
     "modelAliasesDesc": "Remap model names using exact matches or wildcard patterns.",
+=======
+    "modelAliasesDesc": "Model adlarını yeniden eşlemek için joker karakter desenleri • * ve ?",
+>>>>>>> Stashed changes
     "addCustomAlias": "Özel Takma Ad Ekle",
     "deprecatedModelId": "Kullanımdan kaldırılan model kimliği",
     "newModelId": "Yeni model kimliği",
@@ -3134,6 +3280,10 @@
     "unsaved": "kaydedilmemiş",
     "resetDefaults": "Varsayılanları Sıfırla",
     "saveProvider": "Sağlayıcıyı Kaydet",
+<<<<<<< Updated upstream
+=======
+    "saving": "Kaydediliyor...",
+>>>>>>> Stashed changes
     "model": "Model",
     "models": "modeller",
     "moreProviders": "{count} sağlayıcı daha",
@@ -3165,6 +3315,7 @@
     "editPricing": "Fiyatlandırmayı Düzenle",
     "viewFullDetails": "Tüm Ayrıntıları Görüntüle",
     "themeCoral": "Mercan",
+<<<<<<< Updated upstream
     "modelsDevTitle": "Model Database",
     "modelsDevDesc": "Auto-sync pricing, capabilities & specs from models.dev",
     "modelsDevEnabled": "Enable models.dev Sync",
@@ -3381,6 +3532,26 @@
       "full": "Respond terse and compact. Preserve all technical substance.",
       "ultra": "Respond ultra terse with common technical abbreviations. Preserve exact symbols."
     }
+=======
+    "sidebarVisibility": "Hide sidebar items",
+    "sidebarVisibilityDesc": "Hide any sidebar navigation entry to reduce visual clutter.",
+    "sidebarVisibilityHint": "Any sidebar section is hidden automatically when a...",
+    "semanticCache": "Semantic Cache",
+    "autoDisableDescription": "Permanently mark provider connections as deactivated if they return specific terminal ban signals (e.g. HTTP 403 'verify your account'). This removes them from the combo rotation.",
+    "preserveClientCache": "Preserve Client Cache",
+    "cacheSettings": "Cache Settings",
+    "autoDisableThreshold": "Ban Threshold",
+    "autoDisableBannedAccounts": "Auto-Disable Banned Accounts",
+    "ttlMinutes": "TTL (minutes)",
+    "maxEntries": "Max Entries",
+    "loading": "Loading...",
+    "save": "Save",
+    "autoDisableThresholdDesc": "Consecutive ban signals required before permanent deactivation.",
+    "debugToggle": "Enable Debug Mode",
+    "sidebarVisibilityToggle": "Show Sidebar Items",
+    "enabled": "Enabled",
+    "strategy": "Strategy"
+>>>>>>> Stashed changes
   },
   "translator": {
     "title": "Çeviri",
@@ -3679,6 +3850,7 @@
     "tierPro": "Profesyonel",
     "tierPlus": "Artı",
     "tierFree": "Ücretsiz",
+<<<<<<< Updated upstream
     "tierUnknown": "Bilinmiyor",
     "suiteBuilderSaveFailed": "Failed to save suite",
     "scorecardTitle": "Scorecard",
@@ -3772,6 +3944,9 @@
     "suiteBuilderDescriptionLabel": "Description",
     "targetComparisonHint": "Side-by-side comparison of evaluation results between targets.",
     "compareCompletedWithScore": "Comparison completed — {score}% pass rate"
+=======
+    "tierUnknown": "Bilinmiyor"
+>>>>>>> Stashed changes
   },
   "modals": {
     "waitingAuth": "Yetkilendirme bekleniyor",
@@ -3890,7 +4065,11 @@
     "restartServerWithNewPassword": "Sunucuyu yeniden başlatın; yeni şifre kullanılacaktır",
     "backToLogin": "Girişe Geri Dön",
     "forgotPassword": "Şifrenizi mi unuttunuz?",
+<<<<<<< Updated upstream
     "defaultPasswordHint": "Varsayılan şifre: CHANGEME (INITIAL_PASSWORD ayarlanmadığı sürece)",
+=======
+    "defaultPasswordHint": "Varsayılan şifre: 123456 (INITIAL_PASSWORD ayarlanmadığı sürece)",
+>>>>>>> Stashed changes
     "Authorization": "Authorization",
     "Content-Disposition": "Content-Disposition",
     "waitingForAuthorization": "Yetkilendirme bekleniyor...",
@@ -3898,11 +4077,15 @@
     "waitingForOpenAIAuthorization": "OpenAI yetkilendirmesi bekleniyor...",
     "waitingForAntigravityAuthorization": "Antigravity yetkilendirmesi bekleniyor...",
     "waitingForQoderAuthorization": "Qoder yetkilendirmesi bekleniyor...",
+<<<<<<< Updated upstream
     "exchangingCodeForTokens": "Kod jetonlarla değiştiriliyor...",
     "nodeIncompatibleHint": "OmniRoute requires Node.js 20.20.2+ (20.x LTS), 22.22.2+ (22.x LTS) or 24.0.0+ (24.x LTS). Node 24 LTS is recommended.",
     "nodeIncompatibleTitle": "Incompatible Node.js Version",
     "nodeIncompatibleFixLabel": "Fix: install a patched Node.js 22 LTS release",
     "nodeIncompatibleDesc": "You are running Node.js {version}, which is outside OmniRoute's supported secure runtime policy. Use a patched Node.js 20.x or 22.x LTS release."
+=======
+    "exchangingCodeForTokens": "Kod jetonlarla değiştiriliyor..."
+>>>>>>> Stashed changes
   },
   "landing": {
     "brandName": "OmniRoute",
@@ -4111,9 +4294,13 @@
     "troubleshootingCodexFamily": "GitHub Codex ailesi modelleri için modeli gh/codex-model olarak tutun; yönlendirici /responses uç noktasını otomatik seçer.",
     "troubleshootingTestConnection": "IDE'lerden veya harici istemcilerden test yapmadan önce Kontrol Paneli > Sağlayıcılar > Bağlantıyı Test Et'i kullanın.",
     "troubleshootingCircuitBreaker": "Bir sağlayıcıda devre kesici açık görünüyorsa cooldown süresinin dolmasını bekleyin veya ayrıntılar için Sağlık sayfasını kontrol edin.",
+<<<<<<< Updated upstream
     "troubleshootingOAuth": "OAuth sağlayıcıları için belirteçlerin süresi dolduğunda yeniden kimlik doğrulaması yapın. Sağlayıcı kartı durum göstergesini kontrol edin.",
     "deployTermuxTitle": "Termux (Android)",
     "deployTermuxText": "Run OmniRoute headless on Android via Termux. Access the dashboard from your mobile browser."
+=======
+    "troubleshootingOAuth": "OAuth sağlayıcıları için belirteçlerin süresi dolduğunda yeniden kimlik doğrulaması yapın. Sağlayıcı kartı durum göstergesini kontrol edin."
+>>>>>>> Stashed changes
   },
   "legal": {
     "privacyPolicy": "Gizlilik Politikası",
@@ -4204,6 +4391,7 @@
     "setupGuideCustomAgentTitle": "Özel Binary Kaydet",
     "setupGuideCustomAgentDesc": "CLI'niz yerleşik listede olmadığında Özel Ajan Ekle'yi kullanın. Binary adı ve sürüm komutunu girin.",
     "setupGuideCommandMissingTitle": "'Komut bulunamadı' sorununu düzeltin",
+<<<<<<< Updated upstream
     "setupGuideCommandMissingDesc": "PATH'de CLI komutunun mevcut olduğundan emin olun, yeni bir terminal oturumu açın ve Yenile'yi yeniden çalıştırın.",
     "cliToolsRedirectTitle": "Cli Tools Redirect Title",
     "cliToolsRedirectDesc": "Cli Tools Redirect Desc",
@@ -4218,6 +4406,32 @@
     "flowExecute": "Flow Execute",
     "flowSpawn": "Flow Spawn",
     "cliToolsRedirectCta": "Cli Tools Redirect Cta"
+=======
+    "setupGuideCommandMissingDesc": "PATH'de CLI komutunun mevcut olduğundan emin olun, yeni bir terminal oturumu açın ve Yenile'yi yeniden çalıştırın."
+  },
+  "autoCombo": {
+    "title": "Otomatik Kombo Motoru",
+    "statusNormal": "Normal Mod",
+    "statusIncident": "Olay Modu",
+    "modePack": "Mod Paketi",
+    "providerScores": "Sağlayıcı Puanları",
+    "noAutoCombo": "Otomatik kombo yapılandırılmamış.",
+    "excludedProviders": "Hariç Tutulan Sağlayıcılar",
+    "noExclusions": "Şu anda hariç tutulan hiçbir sağlayıcı yok.",
+    "factorQuota": "Kota",
+    "factorHealth": "Sağlık",
+    "factorCost": "Maliyet",
+    "factorLatency": "Gecikme",
+    "factorTaskFit": "Görev Uyumu",
+    "factorStability": "Kararlılık",
+    "factorTierPriority": "Seviye Önceliği",
+    "factorTierPriorityDesc": "Daha yüksek kota kademelerine sahip hesapları tercih eder (Ücretsiz yerine Ultra/Pro)",
+    "scoreFactorBreakdown": "Puanlama Faktörleri",
+    "modePackShipFast": "Hızlı Teslim",
+    "modePackCostSaver": "Maliyet Tasarrufu",
+    "modePackQualityFirst": "Kalite Öncelikli",
+    "modePackOfflineFriendly": "Çevrimdışı Dostu"
+>>>>>>> Stashed changes
   },
   "templateNames": {
     "simple-chat": "Basit Sohbet",
@@ -4264,6 +4478,7 @@
   },
   "cache": {
     "title": "Cache Management",
+<<<<<<< Updated upstream
     "description": "Monitor and manage semantic response cache, hit rates, and token savings.",
     "refresh": "Refresh",
     "clearAll": "Clear All",
@@ -4607,5 +4822,73 @@
     "noProxyLogs": "No proxy logs yet. Configure proxies and make API calls to see them here.",
     "noMatchingLogs": "No logs match the current filters.",
     "tlsFingerprint": "Chrome 124 TLS Fingerprint"
+=======
+    "behavior": "Cache Behavior",
+    "behaviorBypass": "Bypass with header {header}.",
+    "tokensSavedSub": "Estimated from hits",
+    "unavailableDesc": "Could not fetch cache statistics. Make sure the server is running.",
+    "memoryEntries": "Memory Entries",
+    "dedupWindow": "Dedup Window",
+    "hitRate": "Hit Rate",
+    "idempotency": "Idempotency Layer",
+    "memoryEntriesSub": "In-memory LRU",
+    "tokensSaved": "Tokens Saved",
+    "cacheHits": "Cache Hits",
+    "autoRefresh": "Auto-refreshes every {seconds}s",
+    "dbEntriesSub": "Persisted (SQLite)",
+    "misses": "Misses",
+    "behaviorTtl": "Default TTL: 30 minutes. Configure via {envVar}.",
+    "cacheHitsSub": "of {total} total",
+    "total": "Total",
+    "refresh": "Refresh",
+    "clearAll": "Clear All",
+    "performance": "Cache Performance",
+    "unavailable": "Cache unavailable",
+    "description": "Monitor and manage semantic response cache, hit rates, and token savings.",
+    "clearError": "Failed to clear cache.",
+    "clearSuccess": "Cache cleared. {count} expired entries removed.",
+    "hits": "Hits",
+    "dbEntries": "DB Entries",
+    "behaviorTwoTier": "Two-tier storage: in-memory LRU (fast) + SQLite (persistent across restarts).",
+    "activeDedupKeys": "Active Dedup Keys",
+    "behaviorDeterministic": "Only non-streaming requests with temperature=0 are cached.",
+    "inputTokens": "Input Tokens",
+    "requestsShort": "reqs",
+    "inputShort": "In",
+    "resetting": "Resetting...",
+    "cachedTokensCol": "Cached",
+    "search": "Search",
+    "cacheReuseRatioDesc": "Cached tokens / Total input tokens",
+    "resetMetrics": "Reset Metrics",
+    "loading": "Loading...",
+    "cachedRequests": "Cached Requests",
+    "model": "Model",
+    "cached": "Cached",
+    "actions": "Actions",
+    "trend24h": "Cache Trend (24h)",
+    "cachedShort": "Cached",
+    "cacheCreation": "Creation",
+    "byProvider": "Breakdown by Provider",
+    "created": "Created",
+    "cacheCreationTokens": "Cache Creation Tokens",
+    "withCacheControl": "With Cache Control",
+    "searchEntries": "Search entries...",
+    "cacheReuseRatio": "Cache Reuse Ratio",
+    "estCostSaved": "Est. Cost Saved",
+    "cachedTokens": "Cached Tokens",
+    "requests": "Requests",
+    "signature": "Signature",
+    "cacheCreationWrite": "Cache Creation (Write)",
+    "expires": "Expires",
+    "writeShort": "Write",
+    "cacheHitRate": "Cache Hit Rate",
+    "cacheMetrics": "Prompt Cache Metrics",
+    "overview": "Overview",
+    "promptCache": "Prompt Cache (Provider-Side)",
+    "provider": "Provider",
+    "cachedTokensRead": "Cached Tokens (Read)",
+    "entries": "Entries",
+    "noEntries": "No cache entries found"
+>>>>>>> Stashed changes
   }
 }

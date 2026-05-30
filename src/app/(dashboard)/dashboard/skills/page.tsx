@@ -1,9 +1,15 @@
 "use client";
 
+<<<<<<< Updated upstream
 import { useState, useEffect, useRef } from "react";
 import { Card } from "@/shared/components";
 import { useTranslations } from "next-intl";
 import type { SkillsProvider } from "@/lib/skills/providerSettings";
+=======
+import { useState, useEffect } from "react";
+import { Card } from "@/shared/components";
+import { useTranslations } from "next-intl";
+>>>>>>> Stashed changes
 
 interface Skill {
   id: string;
@@ -11,10 +17,13 @@ interface Skill {
   version: string;
   description: string;
   enabled: boolean;
+<<<<<<< Updated upstream
   mode?: "on" | "off" | "auto";
   sourceProvider?: "skillsmp" | "skillssh" | "local";
   tags?: string[];
   installCount?: number;
+=======
+>>>>>>> Stashed changes
   createdAt: string;
 }
 
@@ -31,6 +40,7 @@ export default function SkillsPage() {
   const [skills, setSkills] = useState<Skill[]>([]);
   const [executions, setExecutions] = useState<Execution[]>([]);
   const [loading, setLoading] = useState(true);
+<<<<<<< Updated upstream
   const [skillsPage, setSkillsPage] = useState(1);
   const [skillsTotal, setSkillsTotal] = useState(0);
   const [skillsTotalPages, setSkillsTotalPages] = useState(1);
@@ -120,16 +130,32 @@ export default function SkillsPage() {
           setSkillsProvider(settingsData.skillsProvider);
         }
 
+=======
+  const [activeTab, setActiveTab] = useState<"skills" | "executions" | "sandbox">("skills");
+  const t = useTranslations("skills");
+
+  useEffect(() => {
+    Promise.all([
+      fetch("/api/skills").then((r) => r.json()),
+      fetch("/api/skills/executions").then((r) => r.json()),
+    ])
+      .then(([skillsData, executionsData]) => {
+        setSkills(skillsData.skills || []);
+        setExecutions(executionsData.executions || []);
+>>>>>>> Stashed changes
         setLoading(false);
       })
       .catch(() => setLoading(false));
   }, []);
 
+<<<<<<< Updated upstream
   const refreshSkills = async () => {
     setSkillsPage(1);
     await fetchSkills(1);
   };
 
+=======
+>>>>>>> Stashed changes
   const toggleSkill = async (skillId: string, enabled: boolean) => {
     await fetch(`/api/skills/${skillId}`, {
       method: "PUT",
@@ -139,6 +165,7 @@ export default function SkillsPage() {
     setSkills(skills.map((s) => (s.id === skillId ? { ...s, enabled: !enabled } : s)));
   };
 
+<<<<<<< Updated upstream
   const setSkillMode = async (skillId: string, mode: "on" | "off" | "auto") => {
     await fetch(`/api/skills/${skillId}`, {
       method: "PUT",
@@ -302,6 +329,8 @@ export default function SkillsPage() {
     }
   };
 
+=======
+>>>>>>> Stashed changes
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -312,6 +341,7 @@ export default function SkillsPage() {
 
   return (
     <div className="flex flex-col gap-6">
+<<<<<<< Updated upstream
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">{t("title")}</h1>
@@ -323,6 +353,11 @@ export default function SkillsPage() {
         >
           Install Skill
         </button>
+=======
+      <div>
+        <h1 className="text-2xl font-bold">{t("title")}</h1>
+        <p className="text-text-muted mt-1">{t("description")}</p>
+>>>>>>> Stashed changes
       </div>
 
       <div className="flex gap-2 border-b border-border">
@@ -356,6 +391,7 @@ export default function SkillsPage() {
         >
           {t("sandboxTab")}
         </button>
+<<<<<<< Updated upstream
         <button
           onClick={() => setActiveTab("marketplace")}
           className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
@@ -366,10 +402,13 @@ export default function SkillsPage() {
         >
           Marketplace
         </button>
+=======
+>>>>>>> Stashed changes
       </div>
 
       {activeTab === "skills" && (
         <div className="grid gap-4">
+<<<<<<< Updated upstream
           <Card>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2 items-center">
               <input
@@ -419,6 +458,8 @@ export default function SkillsPage() {
             )}
           </Card>
 
+=======
+>>>>>>> Stashed changes
           {skills.length === 0 ? (
             <Card>
               <div className="text-center py-8 text-text-muted">{t("noSkills")}</div>
@@ -433,6 +474,7 @@ export default function SkillsPage() {
                       <span className="text-xs px-2 py-0.5 rounded bg-surface/50 text-text-muted">
                         v{skill.version}
                       </span>
+<<<<<<< Updated upstream
                       <span className="text-xs px-2 py-0.5 rounded bg-surface/50 text-text-muted">
                         {(skill.sourceProvider || "local").toUpperCase()}
                       </span>
@@ -508,10 +550,30 @@ export default function SkillsPage() {
                       />
                     </button>
                   </div>
+=======
+                    </div>
+                    <p className="text-sm text-text-muted mt-1">{skill.description}</p>
+                  </div>
+                  <button
+                    onClick={() => toggleSkill(skill.id, skill.enabled)}
+                    className={`relative w-11 h-6 rounded-full transition-colors ${
+                      skill.enabled ? "bg-violet-500" : "bg-border"
+                    }`}
+                    role="switch"
+                    aria-checked={skill.enabled}
+                  >
+                    <span
+                      className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${
+                        skill.enabled ? "translate-x-5" : "translate-x-0"
+                      }`}
+                    />
+                  </button>
+>>>>>>> Stashed changes
                 </div>
               </Card>
             ))
           )}
+<<<<<<< Updated upstream
           <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
             <span className="text-sm text-text-muted">
               Page {skillsPage} of {skillsTotalPages} ({skillsTotal} total)
@@ -541,6 +603,8 @@ export default function SkillsPage() {
               </button>
             </div>
           </div>
+=======
+>>>>>>> Stashed changes
         </div>
       )}
 
@@ -590,6 +654,7 @@ export default function SkillsPage() {
               </tbody>
             </table>
           </div>
+<<<<<<< Updated upstream
           <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
             <span className="text-sm text-text-muted">
               Page {execPage} of {execTotalPages} ({execTotal} total)
@@ -619,6 +684,8 @@ export default function SkillsPage() {
               </button>
             </div>
           </div>
+=======
+>>>>>>> Stashed changes
         </Card>
       )}
 
@@ -659,6 +726,7 @@ export default function SkillsPage() {
           </Card>
         </div>
       )}
+<<<<<<< Updated upstream
 
       {activeTab === "marketplace" && (
         <div className="grid gap-4">
@@ -847,6 +915,8 @@ export default function SkillsPage() {
           </div>
         </div>
       )}
+=======
+>>>>>>> Stashed changes
     </div>
   );
 }

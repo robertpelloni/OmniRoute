@@ -362,6 +362,7 @@ function formatFileSize(bytes: number): string {
   return `${(bytes / (1024 * 1024 * 1024)).toFixed(2)} GB`;
 }
 
+<<<<<<< Updated upstream:src/app/(dashboard)/dashboard/cache/media/MediaPageClient.tsx
 function fileToDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -377,6 +378,8 @@ function fileToDataUrl(file: File): Promise<string> {
   });
 }
 
+=======
+>>>>>>> Stashed changes:src/app/(dashboard)/dashboard/media/MediaPageClient.tsx
 /** Render image result thumbnails */
 function ImageResults({ data }: { data: any }) {
   const images: Array<{ url?: string; b64_json?: string; revised_prompt?: string }> =
@@ -449,8 +452,11 @@ export default function MediaPageClient() {
   const MAX_TRANSCRIPTION_FILE_SIZE = 4 * 1024 * 1024 * 1024; // 4 GB
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [fileSizeError, setFileSizeError] = useState<string | null>(null);
+<<<<<<< Updated upstream:src/app/(dashboard)/dashboard/cache/media/MediaPageClient.tsx
   const [imageInputFile, setImageInputFile] = useState<File | null>(null);
   const [imageMaskFile, setImageMaskFile] = useState<File | null>(null);
+=======
+>>>>>>> Stashed changes:src/app/(dashboard)/dashboard/media/MediaPageClient.tsx
 
   // Fix #390: Track which local providers (sdwebui, comfyui) are actually configured
   // so we can hide them when they haven't been set up in the providers page

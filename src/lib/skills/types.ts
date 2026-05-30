@@ -26,10 +26,13 @@ export interface Skill {
   schema: SkillSchema;
   handler: string;
   enabled: boolean;
+<<<<<<< Updated upstream
   mode?: "on" | "off" | "auto";
   sourceProvider?: "skillsmp" | "skillssh" | "local";
   tags?: string[];
   installCount?: number;
+=======
+>>>>>>> Stashed changes
   createdAt: Date;
   updatedAt: Date;
 }

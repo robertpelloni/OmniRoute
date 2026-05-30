@@ -1,5 +1,6 @@
 "use client";
 
+<<<<<<< Updated upstream
 import { useEffect, useMemo, useState } from "react";
 import { Button, Card } from "@/shared/components";
 import { useTranslations } from "next-intl";
@@ -15,11 +16,42 @@ export default function RoutingTab() {
     alwaysPreserveClientCache: "auto",
     antigravitySignatureCacheMode: "enabled",
     cliCompatProviders: [],
+=======
+import { useState, useEffect } from "react";
+import { Card, Input, Button } from "@/shared/components";
+import FallbackChainsEditor from "./FallbackChainsEditor";
+import {
+  ROUTING_STRATEGIES,
+  SETTINGS_FALLBACK_STRATEGY_VALUES,
+} from "@/shared/constants/routingStrategies";
+import { useTranslations } from "next-intl";
+
+const STRATEGIES = ROUTING_STRATEGIES.filter((strategy) =>
+  SETTINGS_FALLBACK_STRATEGY_VALUES.includes(strategy.value)
+).map((strategy) => ({
+  value: strategy.value,
+  labelKey: strategy.labelKey,
+  descKey: strategy.settingsDescKey,
+  icon: strategy.icon,
+}));
+
+export default function RoutingTab() {
+  const [settings, setSettings] = useState<any>({
+    fallbackStrategy: "fill-first",
+    alwaysPreserveClientCache: "auto",
+>>>>>>> Stashed changes
   });
   const [loading, setLoading] = useState(true);
   const [lkgpCacheLoading, setLkgpCacheLoading] = useState(false);
   const [lkgpCacheStatus, setLkgpCacheStatus] = useState({ type: "", message: "" });
   const t = useTranslations("settings");
+<<<<<<< Updated upstream
+=======
+  const strategyHintKeyByValue = STRATEGIES.reduce<Record<string, string>>((acc, strategy) => {
+    acc[strategy.value] = strategy.descKey;
+    return acc;
+  }, {});
+>>>>>>> Stashed changes
 
   useEffect(() => {
     fetch("/api/settings")
@@ -71,11 +103,52 @@ export default function RoutingTab() {
   return (
     <div className="flex flex-col gap-6">
       <Card>
+<<<<<<< Updated upstream
         <div className="flex items-start justify-between gap-4">
           <div className="flex gap-3">
             <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-500 h-fit">
               <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
                 network_ping
+=======
+        <div className="flex items-center gap-3 mb-4">
+          <div className="p-2 rounded-lg bg-blue-500/10 text-blue-500">
+            <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
+              route
+            </span>
+          </div>
+          <h3 className="text-lg font-semibold">{t("routingStrategy")}</h3>
+        </div>
+
+        <div className="mb-4 rounded-lg border border-blue-500/20 bg-blue-500/5 p-3">
+          <p className="text-xs font-medium text-blue-700 dark:text-blue-300">
+            {t("routingAdvancedGuideTitle")}
+          </p>
+          <p className="text-xs text-text-muted mt-1">{t("routingAdvancedGuideHint1")}</p>
+          <p className="text-xs text-text-muted">{t("routingAdvancedGuideHint2")}</p>
+        </div>
+
+        <div
+          className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2 mb-4"
+          style={{ gridAutoRows: "1fr" }}
+        >
+          {STRATEGIES.map((s) => (
+            <button
+              key={s.value}
+              onClick={() => updateSetting({ fallbackStrategy: s.value })}
+              disabled={loading}
+              className={`flex flex-col items-center gap-2 p-4 rounded-lg border text-center transition-all ${
+                settings.fallbackStrategy === s.value
+                  ? "border-blue-500/50 bg-blue-500/5 ring-1 ring-blue-500/20"
+                  : "border-border/50 hover:border-border hover:bg-surface/30"
+              }`}
+            >
+              <span
+                className={`material-symbols-outlined text-[24px] ${
+                  settings.fallbackStrategy === s.value ? "text-blue-400" : "text-text-muted"
+                }`}
+              >
+                {s.icon}
+>>>>>>> Stashed changes
               </span>
             </div>
             <div>
@@ -103,21 +176,39 @@ export default function RoutingTab() {
         </div>
       </Card>
 
+<<<<<<< Updated upstream
       <Card>
         <div className="flex items-start justify-between gap-4">
           <div className="flex gap-3">
             <div className="p-2 rounded-lg bg-amber-500/10 text-amber-500 h-fit">
               <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
                 verified
+=======
+      {/* Adaptive Volume Routing */}
+      <Card>
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex gap-3">
+            <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-500 h-fit">
+              <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
+                network_ping
+>>>>>>> Stashed changes
               </span>
             </div>
             <div>
               <h3 className="text-lg font-semibold">
+<<<<<<< Updated upstream
                 {t("lkgpToggleTitle") || "Last Known Good Provider (LKGP)"}
               </h3>
               <p className="text-sm text-text-muted mt-1">
                 {t("lkgpToggleDesc") ||
                   "When enabled, the router remembers which provider last served a successful response and tries it first on subsequent requests."}
+=======
+                {t("adaptiveVolumeRouting") || "Adaptive Volume Routing"}
+              </h3>
+              <p className="text-sm text-text-muted mt-1">
+                {t("adaptiveVolumeRoutingDesc") ||
+                  "Automatically adjusts traffic volume between providers based on real-time latency and error rates."}
+>>>>>>> Stashed changes
               </p>
             </div>
           </div>
@@ -126,14 +217,20 @@ export default function RoutingTab() {
               <input
                 type="checkbox"
                 className="sr-only peer"
+<<<<<<< Updated upstream
                 checked={settings.lkgpEnabled !== false}
                 onChange={(e) => updateSetting({ lkgpEnabled: e.target.checked })}
+=======
+                checked={!!settings.adaptiveVolumeRouting}
+                onChange={(e) => updateSetting({ adaptiveVolumeRouting: e.target.checked })}
+>>>>>>> Stashed changes
                 disabled={loading}
               />
               <div className="w-11 h-6 bg-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
             </label>
           </div>
         </div>
+<<<<<<< Updated upstream
         <div className="mt-3 pt-3 border-t border-border/30 flex items-center gap-2">
           <Button
             variant="outline"
@@ -184,6 +281,11 @@ export default function RoutingTab() {
 
       <FallbackChainsEditor />
 
+=======
+      </Card>
+
+      {/* Wildcard Aliases */}
+>>>>>>> Stashed changes
       <Card>
         <div className="flex items-center gap-3 mb-4">
           <div className="p-2 rounded-lg bg-sky-500/10 text-sky-500">
@@ -252,6 +354,7 @@ export default function RoutingTab() {
         </div>
       </Card>
 
+<<<<<<< Updated upstream
       <Card>
         <div className="flex items-center gap-3 mb-4">
           <div className="p-2 rounded-lg bg-indigo-500/10 text-indigo-500">
@@ -312,6 +415,12 @@ export default function RoutingTab() {
         </div>
       </Card>
 
+=======
+      {/* Fallback Chains */}
+      <FallbackChainsEditor />
+
+      {/* Client Cache Control */}
+>>>>>>> Stashed changes
       <Card>
         <div className="flex items-center gap-3 mb-4">
           <div className="p-2 rounded-lg bg-green-500/10 text-green-500">
@@ -322,7 +431,11 @@ export default function RoutingTab() {
           <div>
             <h3 className="text-lg font-semibold">Client Cache Control</h3>
             <p className="text-sm text-text-muted">
+<<<<<<< Updated upstream
               Configure whether OmniRoute preserves client-provided cache_control markers
+=======
+              Configure how client-side cache_control headers are handled
+>>>>>>> Stashed changes
             </p>
           </div>
         </div>
@@ -332,17 +445,29 @@ export default function RoutingTab() {
             {
               value: "auto",
               label: "Auto (Recommended)",
+<<<<<<< Updated upstream
               desc: "For deterministic Claude-compatible flows, preserve client-provided cache_control as-is. If the request has no cache_control, OmniRoute does not inject any bridge-owned markers for CC-compatible third-party proxy compatibility.",
+=======
+              desc: "Preserve cache_control only for caching-aware clients (Claude Code) with deterministic routing",
+>>>>>>> Stashed changes
             },
             {
               value: "always",
               label: "Always Preserve",
+<<<<<<< Updated upstream
               desc: "Always forward client-provided cache_control headers to upstream providers as-is.",
+=======
+              desc: "Always forward client cache_control headers to upstream providers",
+>>>>>>> Stashed changes
             },
             {
               value: "never",
               label: "Never Preserve",
+<<<<<<< Updated upstream
               desc: "Always remove client cache_control headers and let OmniRoute manage caching where native provider flows support it.",
+=======
+              desc: "Always remove client cache_control headers, let OmniRoute manage caching",
+>>>>>>> Stashed changes
             },
           ].map((option) => (
             <button

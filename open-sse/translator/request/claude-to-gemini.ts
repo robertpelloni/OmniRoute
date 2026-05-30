@@ -172,11 +172,30 @@ export function claudeToGeminiRequest(model, body, stream) {
   }
 
   // ── Convert tools ──────────────────────────────────────────────
+<<<<<<< Updated upstream
   const geminiTools = buildGeminiTools(body.tools, {
     toolNameMap,
   });
   if (geminiTools) {
     result.tools = geminiTools;
+=======
+  if (body.tools && Array.isArray(body.tools) && body.tools.length > 0) {
+    const functionDeclarations = [];
+    for (const tool of body.tools) {
+      if (tool.name) {
+        functionDeclarations.push({
+          name: tool.name,
+          description: tool.description || "",
+          parameters: cleanJSONSchemaForAntigravity(
+            tool.input_schema || { type: "object", properties: {} }
+          ),
+        });
+      }
+    }
+    if (functionDeclarations.length > 0) {
+      result.tools = [{ functionDeclarations }];
+    }
+>>>>>>> Stashed changes
   }
 
   // ── Thinking config ────────────────────────────────────────────

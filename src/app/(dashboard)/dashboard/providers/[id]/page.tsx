@@ -27,8 +27,11 @@ import {
   isOpenAICompatibleProvider,
   isAnthropicCompatibleProvider,
   isClaudeCodeCompatibleProvider,
+<<<<<<< Updated upstream
   isSelfHostedChatProvider,
   supportsApiKeyOnFreeProvider,
+=======
+>>>>>>> Stashed changes
 } from "@/shared/constants/providers";
 import { getModelsByProviderId } from "@/shared/constants/models";
 import {
@@ -46,6 +49,7 @@ import {
   type ModelCompatProtocolKey,
 } from "@/shared/constants/modelCompat";
 import { resolveManagedModelAlias } from "@/shared/utils/providerModelAliases";
+<<<<<<< Updated upstream
 import { maskEmail, pickMaskedDisplayValue, pickDisplayValue } from "@/shared/utils/maskEmail";
 import useEmailPrivacyStore from "@/store/emailPrivacyStore";
 import EmailPrivacyToggle from "@/shared/components/EmailPrivacyToggle";
@@ -56,6 +60,8 @@ import {
 import { isClaudeExtraUsageBlockEnabled } from "@/lib/providers/claudeExtraUsage";
 import { parseExtraApiKeys } from "@/shared/utils/parseApiKeys";
 import { resolveDashboardProviderInfo } from "../providerPageUtils";
+=======
+>>>>>>> Stashed changes
 
 type CompatByProtocolMap = Partial<
   Record<
@@ -74,7 +80,10 @@ type ModelCompatSavePatch = {
   preserveOpenAIDeveloperRole?: boolean;
   upstreamHeaders?: Record<string, string>;
   compatByProtocol?: CompatByProtocolMap;
+<<<<<<< Updated upstream
   isHidden?: boolean;
+=======
+>>>>>>> Stashed changes
 };
 
 type CompatModelRow = {
@@ -85,7 +94,10 @@ type CompatModelRow = {
   supportedEndpoints?: string[];
   normalizeToolCallId?: boolean;
   preserveOpenAIDeveloperRole?: boolean;
+<<<<<<< Updated upstream
   isHidden?: boolean;
+=======
+>>>>>>> Stashed changes
   upstreamHeaders?: Record<string, string>;
   compatByProtocol?: CompatByProtocolMap;
 };
@@ -334,7 +346,10 @@ function anyUpstreamHeadersBadge(
 interface ModelRowProps {
   model: { id: string; name?: string; source?: string; isHidden?: boolean };
   fullModel: string;
+<<<<<<< Updated upstream
   provider: string;
+=======
+>>>>>>> Stashed changes
   copied?: string;
   onCopy: (text: string, key: string) => void;
   t: (key: string, values?: Record<string, unknown>) => string;
@@ -416,9 +431,13 @@ interface CompatibleModelsSectionProps {
   providerStorageAlias: string;
   providerDisplayAlias: string;
   modelAliases: Record<string, string>;
+<<<<<<< Updated upstream
   customModels?: CompatModelRow[];
   fallbackModels?: CompatModelRow[];
   allowImport: boolean;
+=======
+  fallbackModels?: CompatModelRow[];
+>>>>>>> Stashed changes
   description: string;
   inputLabel: string;
   inputPlaceholder: string;
@@ -596,6 +615,7 @@ interface EditCompatibleNodeModalProps {
   isCcCompatible?: boolean;
 }
 
+<<<<<<< Updated upstream
 const CC_COMPATIBLE_DEFAULT_CHAT_PATH = "/v1/messages?beta=true";
 const CODEX_REASONING_STRENGTH_OPTIONS = [
   { value: "none", label: "None" },
@@ -604,6 +624,12 @@ const CODEX_REASONING_STRENGTH_OPTIONS = [
   { value: "high", label: "High" },
   { value: "xhigh", label: "XHigh" },
 ];
+=======
+const CC_COMPATIBLE_LABEL = "CC Compatible";
+const CC_COMPATIBLE_DETAILS_TITLE = "CC Compatible Details";
+const CC_COMPATIBLE_DEFAULT_CHAT_PATH = "/v1/messages?beta=true";
+const CC_COMPATIBLE_DEFAULT_MODELS_PATH = "/models";
+>>>>>>> Stashed changes
 
 function normalizeCodexLimitPolicy(policy: unknown): { use5h: boolean; useWeekly: boolean } {
   const record =
@@ -679,8 +705,12 @@ function ModelCompatPopover({
   const ref = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
   const [portalPanelRect, setPortalPanelRect] = useState<{
+<<<<<<< Updated upstream
     top?: number;
     bottom?: number;
+=======
+    top: number;
+>>>>>>> Stashed changes
     left: number;
     width: number;
   } | null>(null);
@@ -772,6 +802,7 @@ function ModelCompatPopover({
     const width = Math.min(window.innerWidth - 2 * margin, 24 * 16);
     let left = rect.right - width;
     left = Math.max(margin, Math.min(left, window.innerWidth - width - margin));
+<<<<<<< Updated upstream
     // Estimated panel height: capped at min(82vh, 42rem=672px)
     const estimatedPanelHeight = Math.min(window.innerHeight * 0.82, 672);
     const spaceBelow = window.innerHeight - rect.bottom - margin;
@@ -782,6 +813,9 @@ function ModelCompatPopover({
     } else {
       setPortalPanelRect({ top: rect.bottom + 8, left, width });
     }
+=======
+    setPortalPanelRect({ top: rect.bottom + 8, left, width });
+>>>>>>> Stashed changes
   }, [open]);
 
   useLayoutEffect(() => {
@@ -822,9 +856,13 @@ function ModelCompatPopover({
             className={panelChromeClass}
             style={{
               position: "fixed",
+<<<<<<< Updated upstream
               ...(portalPanelRect.top !== undefined
                 ? { top: portalPanelRect.top }
                 : { bottom: portalPanelRect.bottom }),
+=======
+              top: portalPanelRect.top,
+>>>>>>> Stashed changes
               left: portalPanelRect.left,
               width: portalPanelRect.width,
               zIndex: 10040,
@@ -898,7 +936,11 @@ function ModelCompatPopover({
                         onChange={(e) => updateHeaderRow(row.id, { name: e.target.value })}
                         onBlur={onHeaderFieldBlur}
                         disabled={disabled}
+<<<<<<< Updated upstream
                         placeholder={t("compatUpstreamHeaderNamePlaceholder")}
+=======
+                        placeholder="Authentication"
+>>>>>>> Stashed changes
                         className="gap-0 min-w-0"
                         inputClassName="h-9 bg-white py-1.5 px-2 text-xs font-mono dark:bg-zinc-900"
                         autoComplete="off"
@@ -924,7 +966,11 @@ function ModelCompatPopover({
                             onHeaderFieldBlur();
                           }}
                           disabled={disabled}
+<<<<<<< Updated upstream
                           placeholder={t("compatUpstreamHeaderValuePlaceholder")}
+=======
+                          placeholder="•••"
+>>>>>>> Stashed changes
                           className="gap-0 min-w-0"
                           inputClassName="h-9 bg-white py-1.5 px-2 text-xs dark:bg-zinc-900"
                           autoComplete="off"
@@ -1007,6 +1053,7 @@ export default function ProviderDetailPage() {
   }>({ customModels: [], modelCompatOverrides: [] });
   const [syncedAvailableModels, setSyncedAvailableModels] = useState<any[]>([]);
   const [compatSavingModelId, setCompatSavingModelId] = useState<string | null>(null);
+<<<<<<< Updated upstream
   const [modelFilter, setModelFilter] = useState("");
   const [togglingModelId, setTogglingModelId] = useState<string | null>(null);
   const [testingModelId, setTestingModelId] = useState<string | null>(null);
@@ -1014,6 +1061,8 @@ export default function ProviderDetailPage() {
   const [bulkVisibilityAction, setBulkVisibilityAction] = useState<"select" | "deselect" | null>(
     null
   );
+=======
+>>>>>>> Stashed changes
   const [applyingCodexAuthId, setApplyingCodexAuthId] = useState<string | null>(null);
   const [exportingCodexAuthId, setExportingCodexAuthId] = useState<string | null>(null);
   const isOpenAICompatible = isOpenAICompatibleProvider(providerId);
@@ -1023,6 +1072,7 @@ export default function ProviderDetailPage() {
   const isCompatible = isOpenAICompatible || isAnthropicCompatible || isCcCompatible;
   const isAnthropicProtocolCompatible = isAnthropicCompatible || isCcCompatible;
 
+<<<<<<< Updated upstream
   const setShowOAuthModal = (show: boolean, connectionRow?: ConnectionRowConnection) => {
     _setShowOAuthModal(show);
     setReauthConnection(show && connectionRow ? connectionRow : null);
@@ -1074,6 +1124,37 @@ export default function ProviderDetailPage() {
       }));
     return [...builtInModels, ...syncedExtras, ...customExtras];
   }, [providerId, registryModels, syncedAvailableModels, modelMeta.customModels]);
+=======
+  const providerInfo = providerNode
+    ? {
+        id: providerNode.id,
+        name:
+          providerNode.name ||
+          (isCcCompatible
+            ? CC_COMPATIBLE_LABEL
+            : providerNode.type === "anthropic-compatible"
+              ? t("anthropicCompatibleName")
+              : t("openaiCompatibleName")),
+        color: isCcCompatible
+          ? "#B45309"
+          : providerNode.type === "anthropic-compatible"
+            ? "#D97757"
+            : "#10A37F",
+        textIcon: isCcCompatible
+          ? "CC"
+          : providerNode.type === "anthropic-compatible"
+            ? "AC"
+            : "OC",
+        apiType: providerNode.apiType,
+        baseUrl: providerNode.baseUrl,
+        type: providerNode.type,
+      }
+    : (FREE_PROVIDERS as any)[providerId] ||
+      (OAUTH_PROVIDERS as any)[providerId] ||
+      (APIKEY_PROVIDERS as any)[providerId];
+  const isOAuth = !!(FREE_PROVIDERS as any)[providerId] || !!(OAUTH_PROVIDERS as any)[providerId];
+  const models = getModelsByProviderId(providerId);
+>>>>>>> Stashed changes
   const providerAlias = getProviderAlias(providerId);
   const isManagedAvailableModelsProvider = isCompatible || providerId === "openrouter";
   const isSearchProvider = providerId.endsWith("-search");
@@ -1274,6 +1355,7 @@ export default function ProviderDetailPage() {
       void loadConnProxies(connections);
     }
   }, [loading, connections, loadConnProxies]);
+<<<<<<< Updated upstream
 
   const onTestModel = async (modelId: string, fullModel: string) => {
     setTestingModelId(modelId);
@@ -1309,6 +1391,8 @@ export default function ProviderDetailPage() {
       setTestingModelId(null);
     }
   };
+=======
+>>>>>>> Stashed changes
 
   const handleSetAlias = async (modelId, alias, providerAliasOverride = providerAlias) => {
     const fullModel = `${providerAliasOverride}/${modelId}`;
@@ -2255,11 +2339,14 @@ export default function ProviderDetailPage() {
     protocol = MODEL_COMPAT_PROTOCOL_KEYS[0]
   ) => effectivePreserveForProtocol(modelId, protocol, customMap, overrideMap);
 
+<<<<<<< Updated upstream
   const effectiveModelHidden = useCallback(
     (modelId: string) => isModelHidden(modelId, customMap, overrideMap),
     [customMap, overrideMap]
   );
 
+=======
+>>>>>>> Stashed changes
   const getUpstreamHeadersRecordForModel = useCallback(
     (modelId: string, protocol: string) =>
       effectiveUpstreamHeadersForProtocol(modelId, protocol, customMap, overrideMap),
@@ -2392,7 +2479,11 @@ export default function ProviderDetailPage() {
   };
 
   const renderModelsSection = () => {
+<<<<<<< Updated upstream
     const autoSyncToggle = compatibleSupportsModelImport && canImportModels && (
+=======
+    const autoSyncToggle = canImportModels && (
+>>>>>>> Stashed changes
       <button
         onClick={handleToggleAutoSync}
         disabled={togglingAutoSync}
@@ -2427,7 +2518,11 @@ export default function ProviderDetailPage() {
         providerId === "openrouter"
           ? t("openRouterAnyModelHint")
           : isCcCompatible
+<<<<<<< Updated upstream
             ? t("ccCompatibleModelsDescription")
+=======
+            ? "CC Compatible provider models are routed through the Claude Code-compatible bridge."
+>>>>>>> Stashed changes
             : t("compatibleModelsDescription", {
                 type: isAnthropicCompatible ? t("anthropic") : t("openai"),
               });
@@ -2451,8 +2546,12 @@ export default function ProviderDetailPage() {
             providerStorageAlias={providerStorageAlias}
             providerDisplayAlias={providerDisplayAlias}
             modelAliases={modelAliases}
+<<<<<<< Updated upstream
             customModels={modelMeta.customModels}
             fallbackModels={compatibleFallbackModels}
+=======
+            fallbackModels={providerId === "openrouter" ? modelMeta.customModels : undefined}
+>>>>>>> Stashed changes
             description={description}
             inputLabel={inputLabel}
             inputPlaceholder={inputPlaceholder}
@@ -2470,6 +2569,7 @@ export default function ProviderDetailPage() {
             saveModelCompatFlags={saveModelCompatFlags}
             compatSavingModelId={compatSavingModelId}
             onModelsChanged={fetchProviderModelMeta}
+<<<<<<< Updated upstream
             allowImport={compatibleSupportsModelImport}
             isModelHidden={effectiveModelHidden}
             onToggleHidden={(modelId, hidden) =>
@@ -2483,6 +2583,8 @@ export default function ProviderDetailPage() {
             onTestModel={onTestModel}
             modelTestStatus={modelTestStatus}
             testingModelId={testingModelId}
+=======
+>>>>>>> Stashed changes
           />
         </div>
       );
@@ -2538,6 +2640,7 @@ export default function ProviderDetailPage() {
       );
     }
 
+<<<<<<< Updated upstream
     const importButton =
       providerId === "gemini" ? null : (
         <div className="flex items-center gap-2 mb-4">
@@ -2556,6 +2659,25 @@ export default function ProviderDetailPage() {
           )}
         </div>
       );
+=======
+    const importButton = (
+      <div className="flex items-center gap-2 mb-4">
+        <Button
+          size="sm"
+          variant="secondary"
+          icon="download"
+          onClick={handleImportModels}
+          disabled={!canImportModels || importingModels}
+        >
+          {importingModels ? t("importingModels") : t("importFromModels")}
+        </Button>
+        {autoSyncToggle}
+        {!canImportModels && (
+          <span className="text-xs text-text-muted">{t("addConnectionToImport")}</span>
+        )}
+      </div>
+    );
+>>>>>>> Stashed changes
 
     if (models.length === 0) {
       return (
@@ -2608,13 +2730,20 @@ export default function ProviderDetailPage() {
           />
         )}
         <div className="flex flex-wrap gap-3">
+<<<<<<< Updated upstream
           {filteredModels.map((model) => {
+=======
+          {models.map((model) => {
+>>>>>>> Stashed changes
             return (
               <ModelRow
                 key={model.id}
                 model={model}
                 fullModel={`${providerDisplayAlias}/${model.id}`}
+<<<<<<< Updated upstream
                 provider={providerId}
+=======
+>>>>>>> Stashed changes
                 copied={copied}
                 onCopy={copy}
                 t={t}
@@ -2742,13 +2871,33 @@ export default function ProviderDetailPage() {
             <div>
               <h2 className="text-lg font-semibold">
                 {isCcCompatible
+<<<<<<< Updated upstream
                   ? t("ccCompatibleDetailsTitle")
+=======
+                  ? CC_COMPATIBLE_DETAILS_TITLE
+>>>>>>> Stashed changes
                   : isAnthropicCompatible
                     ? t("anthropicCompatibleDetails")
                     : t("openaiCompatibleDetails")}
               </h2>
               <p className="text-sm text-text-muted">
+<<<<<<< Updated upstream
                 {getApiLabel()} · {(providerNode.baseUrl || "").replace(/\/$/, "")}/{getApiPath()}
+=======
+                {isAnthropicProtocolCompatible
+                  ? t("messagesApi")
+                  : providerNode.apiType === "responses"
+                    ? t("responsesApi")
+                    : t("chatCompletions")}{" "}
+                · {(providerNode.baseUrl || "").replace(/\/$/, "")}/
+                {isCcCompatible
+                  ? (providerNode.chatPath || CC_COMPATIBLE_DEFAULT_CHAT_PATH).replace(/^\//, "")
+                  : isAnthropicCompatible
+                    ? (providerNode.chatPath || "/messages").replace(/^\//, "")
+                    : providerNode.apiType === "responses"
+                      ? (providerNode.chatPath || "/responses").replace(/^\//, "")
+                      : (providerNode.chatPath || "/chat/completions").replace(/^\//, "")}
+>>>>>>> Stashed changes
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-2">
@@ -2772,7 +2921,11 @@ export default function ProviderDetailPage() {
                     !confirm(
                       t("deleteCompatibleNodeConfirm", {
                         type: isCcCompatible
+<<<<<<< Updated upstream
                           ? t("ccCompatibleLabel")
+=======
+                          ? CC_COMPATIBLE_LABEL
+>>>>>>> Stashed changes
                           : isAnthropicCompatible
                             ? t("anthropic")
                             : t("openai"),
@@ -2880,6 +3033,7 @@ export default function ProviderDetailPage() {
               )
             )}
           </div>
+<<<<<<< Updated upstream
 
           {connections.length === 0 ? (
             <div className="text-center py-12">
@@ -3160,6 +3314,182 @@ export default function ProviderDetailPage() {
           </div>
         </Card>
       )}
+=======
+        ) : (
+          (() => {
+            // Group connections by tag (providerSpecificData.tag)
+            const sorted = [...connections].sort((a, b) => (a.priority || 0) - (b.priority || 0));
+            const hasAnyTag = sorted.some((c) => c.providerSpecificData?.tag as string | undefined);
+
+            if (!hasAnyTag) {
+              // No tags — render flat list as before
+              return (
+                <div className="flex flex-col divide-y divide-black/[0.03] dark:divide-white/[0.03]">
+                  {sorted.map((conn, index) => (
+                    <ConnectionRow
+                      key={conn.id}
+                      connection={conn}
+                      isOAuth={isOAuth}
+                      isFirst={index === 0}
+                      isLast={index === sorted.length - 1}
+                      onMoveUp={() => handleSwapPriority(conn, sorted[index - 1])}
+                      onMoveDown={() => handleSwapPriority(conn, sorted[index + 1])}
+                      onToggleActive={(isActive) => handleUpdateConnectionStatus(conn.id, isActive)}
+                      onToggleRateLimit={(enabled) => handleToggleRateLimit(conn.id, enabled)}
+                      isCodex={providerId === "codex"}
+                      onToggleCodex5h={(enabled) =>
+                        handleToggleCodexLimit(conn.id, "use5h", enabled)
+                      }
+                      onToggleCodexWeekly={(enabled) =>
+                        handleToggleCodexLimit(conn.id, "useWeekly", enabled)
+                      }
+                      onRetest={() => handleRetestConnection(conn.id)}
+                      isRetesting={retestingId === conn.id}
+                      onEdit={() => {
+                        setSelectedConnection(conn);
+                        setShowEditModal(true);
+                      }}
+                      onDelete={() => handleDelete(conn.id)}
+                      onReauth={isOAuth ? () => setShowOAuthModal(true) : undefined}
+                      onRefreshToken={isOAuth ? () => handleRefreshToken(conn.id) : undefined}
+                      isRefreshing={refreshingId === conn.id}
+                      onApplyCodexAuthLocal={
+                        providerId === "codex"
+                          ? () => handleApplyCodexAuthLocal(conn.id)
+                          : undefined
+                      }
+                      isApplyingCodexAuthLocal={applyingCodexAuthId === conn.id}
+                      onExportCodexAuthFile={
+                        providerId === "codex"
+                          ? () => handleExportCodexAuthFile(conn.id)
+                          : undefined
+                      }
+                      isExportingCodexAuthFile={exportingCodexAuthId === conn.id}
+                      onProxy={() =>
+                        setProxyTarget({
+                          level: "key",
+                          id: conn.id,
+                          label: conn.name || conn.email || conn.id,
+                        })
+                      }
+                      hasProxy={!!connProxyMap[conn.id]?.proxy}
+                      proxySource={connProxyMap[conn.id]?.level || null}
+                      proxyHost={connProxyMap[conn.id]?.proxy?.host || null}
+                    />
+                  ))}
+                </div>
+              );
+            }
+
+            // Build ordered tag groups: untagged first, then alphabetically
+            const groupMap = new Map<string, typeof sorted>();
+            for (const conn of sorted) {
+              const tag = (conn.providerSpecificData?.tag as string | undefined)?.trim() || "";
+              if (!groupMap.has(tag)) groupMap.set(tag, []);
+              groupMap.get(tag)!.push(conn);
+            }
+            const groupKeys = Array.from(groupMap.keys()).sort((a, b) => {
+              if (a === "") return -1;
+              if (b === "") return 1;
+              return a.localeCompare(b);
+            });
+
+            return (
+              <div className="flex flex-col gap-0">
+                {groupKeys.map((tag, gi) => {
+                  const groupConns = groupMap.get(tag)!;
+                  return (
+                    <div
+                      key={tag || "__untagged__"}
+                      className={
+                        gi > 0
+                          ? "border-t border-black/[0.06] dark:border-white/[0.06] mt-1 pt-1"
+                          : ""
+                      }
+                    >
+                      {tag && (
+                        <div className="flex items-center gap-2 px-3 pt-2 pb-1">
+                          <span className="material-symbols-outlined text-[13px] text-text-muted/50">
+                            label
+                          </span>
+                          <span className="text-[11px] font-semibold uppercase tracking-widest text-text-muted/60 select-none">
+                            {tag}
+                          </span>
+                          <div className="flex-1 h-px bg-black/[0.04] dark:bg-white/[0.04]" />
+                          <span className="text-[10px] text-text-muted/40">
+                            {groupConns.length}
+                          </span>
+                        </div>
+                      )}
+                      <div className="flex flex-col divide-y divide-black/[0.03] dark:divide-white/[0.03]">
+                        {groupConns.map((conn, index) => (
+                          <ConnectionRow
+                            key={conn.id}
+                            connection={conn}
+                            isOAuth={isOAuth}
+                            isFirst={gi === 0 && index === 0}
+                            isLast={gi === groupKeys.length - 1 && index === groupConns.length - 1}
+                            onMoveUp={() =>
+                              handleSwapPriority(conn, sorted[sorted.indexOf(conn) - 1])
+                            }
+                            onMoveDown={() =>
+                              handleSwapPriority(conn, sorted[sorted.indexOf(conn) + 1])
+                            }
+                            onToggleActive={(isActive) =>
+                              handleUpdateConnectionStatus(conn.id, isActive)
+                            }
+                            onToggleRateLimit={(enabled) => handleToggleRateLimit(conn.id, enabled)}
+                            isCodex={providerId === "codex"}
+                            onToggleCodex5h={(enabled) =>
+                              handleToggleCodexLimit(conn.id, "use5h", enabled)
+                            }
+                            onToggleCodexWeekly={(enabled) =>
+                              handleToggleCodexLimit(conn.id, "useWeekly", enabled)
+                            }
+                            onRetest={() => handleRetestConnection(conn.id)}
+                            isRetesting={retestingId === conn.id}
+                            onEdit={() => {
+                              setSelectedConnection(conn);
+                              setShowEditModal(true);
+                            }}
+                            onDelete={() => handleDelete(conn.id)}
+                            onReauth={isOAuth ? () => setShowOAuthModal(true) : undefined}
+                            onRefreshToken={isOAuth ? () => handleRefreshToken(conn.id) : undefined}
+                            isRefreshing={refreshingId === conn.id}
+                            onApplyCodexAuthLocal={
+                              providerId === "codex"
+                                ? () => handleApplyCodexAuthLocal(conn.id)
+                                : undefined
+                            }
+                            isApplyingCodexAuthLocal={applyingCodexAuthId === conn.id}
+                            onExportCodexAuthFile={
+                              providerId === "codex"
+                                ? () => handleExportCodexAuthFile(conn.id)
+                                : undefined
+                            }
+                            isExportingCodexAuthFile={exportingCodexAuthId === conn.id}
+                            onProxy={() =>
+                              setProxyTarget({
+                                level: "key",
+                                id: conn.id,
+                                label: conn.name || conn.email || conn.id,
+                              })
+                            }
+                            hasProxy={!!connProxyMap[conn.id]?.proxy}
+                            proxySource={connProxyMap[conn.id]?.level || null}
+                            proxyHost={connProxyMap[conn.id]?.proxy?.host || null}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })()
+        )}
+      </Card>
+>>>>>>> Stashed changes
 
       {/* Models — hidden for search providers (they don't have models) */}
       {!isSearchProvider && !isUpstreamProxyProvider && (
@@ -3167,6 +3497,7 @@ export default function ProviderDetailPage() {
           <h2 className="text-lg font-semibold mb-4">{t("availableModels")}</h2>
           {renderModelsSection()}
 
+<<<<<<< Updated upstream
           {/* Custom Models — available for all providers */}
           <CustomModelsSection
             providerId={providerId}
@@ -3175,6 +3506,18 @@ export default function ProviderDetailPage() {
             onCopy={copy}
             onModelsChanged={fetchProviderModelMeta}
           />
+=======
+          {/* Custom Models — available for providers without managed available-model metadata */}
+          {!isManagedAvailableModelsProvider && (
+            <CustomModelsSection
+              providerId={providerId}
+              providerAlias={providerDisplayAlias}
+              copied={copied}
+              onCopy={copy}
+              onModelsChanged={fetchProviderModelMeta}
+            />
+          )}
+>>>>>>> Stashed changes
         </Card>
       )}
 
@@ -3205,6 +3548,7 @@ export default function ProviderDetailPage() {
       )}
 
       {/* Modals */}
+<<<<<<< Updated upstream
       {!isUpstreamProxyProvider &&
         (providerId === "kiro" || providerId === "amazon-q" ? (
           <KiroOAuthWrapper
@@ -3258,6 +3602,53 @@ export default function ProviderDetailPage() {
         />
       )}
       {!isUpstreamProxyProvider && isCompatible && (
+=======
+      {providerId === "kiro" ? (
+        <KiroOAuthWrapper
+          isOpen={showOAuthModal}
+          providerInfo={providerInfo}
+          onSuccess={handleOAuthSuccess}
+          onClose={() => {
+            setShowOAuthModal(false);
+          }}
+        />
+      ) : providerId === "cursor" ? (
+        <CursorAuthModal
+          isOpen={showOAuthModal}
+          onSuccess={handleOAuthSuccess}
+          onClose={() => {
+            setShowOAuthModal(false);
+          }}
+        />
+      ) : (
+        <OAuthModal
+          isOpen={showOAuthModal}
+          provider={providerId}
+          providerInfo={providerInfo}
+          onSuccess={handleOAuthSuccess}
+          onClose={() => {
+            setShowOAuthModal(false);
+          }}
+        />
+      )}
+      <AddApiKeyModal
+        isOpen={showAddApiKeyModal}
+        provider={providerId}
+        providerName={providerInfo.name}
+        isCompatible={isCompatible}
+        isAnthropic={isAnthropicProtocolCompatible}
+        isCcCompatible={isCcCompatible}
+        onSave={handleSaveApiKey}
+        onClose={() => setShowAddApiKeyModal(false)}
+      />
+      <EditConnectionModal
+        isOpen={showEditModal}
+        connection={selectedConnection}
+        onSave={handleUpdateConnection}
+        onClose={() => setShowEditModal(false)}
+      />
+      {isCompatible && (
+>>>>>>> Stashed changes
         <EditCompatibleNodeModal
           isOpen={showEditNodeModal}
           node={providerNode}
@@ -3491,7 +3882,10 @@ export default function ProviderDetailPage() {
 function ModelRow({
   model,
   fullModel,
+<<<<<<< Updated upstream
   provider,
+=======
+>>>>>>> Stashed changes
   copied,
   onCopy,
   t,
@@ -3509,6 +3903,7 @@ function ModelRow({
 }: ModelRowProps) {
   const isHidden = Boolean(model.isHidden);
   return (
+<<<<<<< Updated upstream
     <div
       className={`flex min-w-[220px] max-w-md items-center gap-2 rounded-lg border border-border px-3 py-2 hover:bg-sidebar/50 transition-opacity ${
         isHidden ? "opacity-50" : ""
@@ -3519,6 +3914,11 @@ function ModelRow({
           className="material-symbols-outlined shrink-0 text-base"
           style={{ color: isHidden ? "var(--color-text-muted)" : undefined }}
         >
+=======
+    <div className="flex min-w-[220px] max-w-md items-center gap-2 rounded-lg border border-border px-3 py-2 hover:bg-sidebar/50">
+      <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
+        <span className="material-symbols-outlined shrink-0 text-base text-text-muted">
+>>>>>>> Stashed changes
           smart_toy
         </span>
         <code className="rounded bg-sidebar px-1.5 py-0.5 font-mono text-xs text-text-muted">
@@ -3535,6 +3935,7 @@ function ModelRow({
           </span>
         </button>
       </div>
+<<<<<<< Updated upstream
       <div className="flex shrink-0 items-center gap-1">
         {onTestModel && (
           <button
@@ -3580,6 +3981,9 @@ function ModelRow({
             </span>
           </button>
         )}
+=======
+      <div className="shrink-0">
+>>>>>>> Stashed changes
         <ModelCompatPopover
           t={t}
           effectiveModelNormalize={(p) => effectiveModelNormalize(model.id, p)}
@@ -3596,6 +4000,7 @@ function ModelRow({
   );
 }
 
+<<<<<<< Updated upstream
 function ModelVisibilityToolbar({
   t,
   filterValue,
@@ -3660,6 +4065,23 @@ function ModelVisibilityToolbar({
     </div>
   );
 }
+=======
+ModelRow.propTypes = {
+  model: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+  }).isRequired,
+  fullModel: PropTypes.string.isRequired,
+  copied: PropTypes.string,
+  onCopy: PropTypes.func.isRequired,
+  t: PropTypes.func,
+  showDeveloperToggle: PropTypes.bool,
+  effectiveModelNormalize: PropTypes.func.isRequired,
+  effectiveModelPreserveDeveloper: PropTypes.func.isRequired,
+  getUpstreamHeadersRecord: PropTypes.func.isRequired,
+  saveModelCompatFlags: PropTypes.func.isRequired,
+  compatDisabled: PropTypes.bool,
+};
+>>>>>>> Stashed changes
 
 function PassthroughModelsSection({
   providerAlias,
@@ -3830,6 +4252,24 @@ function PassthroughModelsSection({
   );
 }
 
+<<<<<<< Updated upstream
+=======
+PassthroughModelsSection.propTypes = {
+  providerAlias: PropTypes.string.isRequired,
+  modelAliases: PropTypes.object.isRequired,
+  copied: PropTypes.string,
+  onCopy: PropTypes.func.isRequired,
+  onSetAlias: PropTypes.func.isRequired,
+  onDeleteAlias: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired,
+  effectiveModelNormalize: PropTypes.func.isRequired,
+  effectiveModelPreserveDeveloper: PropTypes.func.isRequired,
+  getUpstreamHeadersRecord: PropTypes.func.isRequired,
+  saveModelCompatFlags: PropTypes.func.isRequired,
+  compatSavingModelId: PropTypes.string,
+};
+
+>>>>>>> Stashed changes
 function PassthroughModelRow({
   modelId,
   fullModel,
@@ -3852,6 +4292,7 @@ function PassthroughModelRow({
   testingModel,
 }: PassthroughModelRowProps) {
   return (
+<<<<<<< Updated upstream
     <div
       className={`flex gap-0 rounded-lg border border-border p-3 transition-opacity hover:bg-sidebar/50 ${
         isHidden ? "opacity-50" : ""
@@ -3862,6 +4303,11 @@ function PassthroughModelRow({
           className="material-symbols-outlined shrink-0 text-base text-text-muted"
           style={{ color: isHidden ? "var(--color-text-muted)" : undefined }}
         >
+=======
+    <div className="flex gap-0 rounded-lg border border-border p-3 hover:bg-sidebar/50">
+      <div className="flex min-w-0 flex-1 items-start gap-3">
+        <span className="material-symbols-outlined shrink-0 text-base text-text-muted">
+>>>>>>> Stashed changes
           smart_toy
         </span>
         <div className="min-w-0 flex-1">
@@ -3884,6 +4330,7 @@ function PassthroughModelRow({
         </div>
       </div>
       <div className="flex shrink-0 items-center gap-1 self-start">
+<<<<<<< Updated upstream
         {onTestModel && (
           <button
             onClick={() => onTestModel(modelId, fullModel)}
@@ -3928,6 +4375,8 @@ function PassthroughModelRow({
             </span>
           </button>
         )}
+=======
+>>>>>>> Stashed changes
         <ModelCompatPopover
           t={t}
           effectiveModelNormalize={(p) => effectiveModelNormalize(modelId, p)}
@@ -3951,6 +4400,24 @@ function PassthroughModelRow({
   );
 }
 
+<<<<<<< Updated upstream
+=======
+PassthroughModelRow.propTypes = {
+  modelId: PropTypes.string.isRequired,
+  fullModel: PropTypes.string.isRequired,
+  copied: PropTypes.string,
+  onCopy: PropTypes.func.isRequired,
+  onDeleteAlias: PropTypes.func.isRequired,
+  t: PropTypes.func,
+  showDeveloperToggle: PropTypes.bool,
+  effectiveModelNormalize: PropTypes.func.isRequired,
+  effectiveModelPreserveDeveloper: PropTypes.func.isRequired,
+  getUpstreamHeadersRecord: PropTypes.func.isRequired,
+  saveModelCompatFlags: PropTypes.func.isRequired,
+  compatDisabled: PropTypes.bool,
+};
+
+>>>>>>> Stashed changes
 // ============ Custom Models Section (for ALL providers) ============
 
 function CustomModelsSection({
@@ -4344,9 +4811,13 @@ function CustomModelsSection({
                     <div className="mt-3 min-w-0 max-w-full rounded-lg border border-border bg-muted p-3 dark:bg-zinc-900">
                       <div className="flex min-w-0 flex-wrap items-end gap-x-3 gap-y-2">
                         <div className="w-[11rem] shrink-0 min-w-0">
+<<<<<<< Updated upstream
                           <label className="text-xs text-text-muted mb-1 block">
                             {t("apiFormatLabel")}
                           </label>
+=======
+                          <label className="text-xs text-text-muted mb-1 block">API Format</label>
+>>>>>>> Stashed changes
                           <select
                             value={editingApiFormat}
                             onChange={(e) => setEditingApiFormat(e.target.value)}
@@ -4363,10 +4834,17 @@ function CustomModelsSection({
                         </div>
                         <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1 overflow-x-auto overflow-y-visible [scrollbar-width:thin]">
                           <span className="text-xs text-text-muted shrink-0">
+<<<<<<< Updated upstream
                             {t("supportedEndpointsLabel")}
                           </span>
                           <div className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1 min-w-0">
                             {["chat", "embeddings", "rerank", "images", "audio"].map((ep) => (
+=======
+                            Supported Endpoints
+                          </span>
+                          <div className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1 min-w-0">
+                            {["chat", "embeddings", "images", "audio"].map((ep) => (
+>>>>>>> Stashed changes
                               <label
                                 key={ep}
                                 className="flex items-center gap-1.5 text-xs text-text-main cursor-pointer whitespace-nowrap"
@@ -4441,6 +4919,7 @@ function CustomModelsSection({
                     showDeveloperToggle
                     disabled={savingModelId === model.id}
                   />
+<<<<<<< Updated upstream
                   <button
                     onClick={() => handleToggleHidden(model.id, !model.isHidden)}
                     disabled={togglingModelId === model.id}
@@ -4451,6 +4930,8 @@ function CustomModelsSection({
                       {model.isHidden ? "visibility_off" : "visibility"}
                     </span>
                   </button>
+=======
+>>>>>>> Stashed changes
                   <button
                     onClick={() => handleRemove(model.id)}
                     className="rounded p-1 text-red-500 hover:bg-red-50"
@@ -4474,7 +4955,10 @@ function CompatibleModelsSection({
   providerStorageAlias,
   providerDisplayAlias,
   modelAliases,
+<<<<<<< Updated upstream
   customModels = [],
+=======
+>>>>>>> Stashed changes
   fallbackModels = [],
   description,
   inputLabel,
@@ -4519,6 +5003,7 @@ function CompatibleModelsSection({
   );
 
   const allModels = useMemo(() => {
+<<<<<<< Updated upstream
     const rows = providerAliases.map(([alias, fullModel]: [string, any]) => {
       const fmStr = fullModel as string;
       const prefix = `${providerStorageAlias}/`;
@@ -4532,10 +5017,17 @@ function CompatibleModelsSection({
         isHidden: isModelHidden(modelId),
       };
     });
+=======
+    const rows = providerAliases.map(([alias, fullModel]: [string, any]) => ({
+      modelId: (fullModel as string).replace(`${providerStorageAlias}/`, ""),
+      alias,
+    }));
+>>>>>>> Stashed changes
 
     const seenModelIds = new Set(rows.map((row) => row.modelId));
     for (const model of fallbackModels) {
       if (!model?.id || seenModelIds.has(model.id)) continue;
+<<<<<<< Updated upstream
       rows.push({
         modelId: model.id,
         alias: null,
@@ -4543,10 +5035,14 @@ function CompatibleModelsSection({
         source: "fallback",
         isHidden: isModelHidden(model.id),
       });
+=======
+      rows.push({ modelId: model.id, alias: null });
+>>>>>>> Stashed changes
       seenModelIds.add(model.id);
     }
 
     return rows;
+<<<<<<< Updated upstream
   }, [customModelMap, fallbackModels, isModelHidden, providerAliases, providerStorageAlias]);
   const filteredModels = allModels.filter((model) =>
     matchesModelCatalogQuery(modelFilter, {
@@ -4559,6 +5055,9 @@ function CompatibleModelsSection({
   const activeCount = allModels.filter((model) => !model.isHidden).length;
   const hiddenFilteredCount = filteredModels.filter((model) => model.isHidden).length;
   const visibleFilteredCount = filteredModels.length - hiddenFilteredCount;
+=======
+  }, [fallbackModels, providerAliases, providerStorageAlias]);
+>>>>>>> Stashed changes
 
   const resolveAlias = useCallback(
     (modelId: string, workingAliases: Record<string, string>) =>
@@ -4624,7 +5123,49 @@ function CompatibleModelsSection({
 
     setImporting(true);
     try {
+<<<<<<< Updated upstream
       await onImportWithProgress(activeConnection.id);
+=======
+      const workingAliases = { ...modelAliases };
+      await onImportWithProgress(
+        // fetchModels callback
+        async () => {
+          const res = await fetch(`/api/providers/${activeConnection.id}/models`);
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || t("failedImportModels"));
+          return data;
+        },
+        // processModel callback
+        async (model: any) => {
+          const modelId = model.id || model.name || model.model;
+          if (!modelId) return false;
+          const resolvedAlias = resolveAlias(modelId, workingAliases);
+          if (!resolvedAlias) return false;
+
+          // Save to customModels DB FIRST - only create alias if this succeeds
+          const customModelRes = await fetch("/api/provider-models", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              provider: providerStorageAlias,
+              modelId,
+              modelName: model.name || modelId,
+              source: "imported",
+            }),
+          });
+
+          if (!customModelRes.ok) {
+            notify.error(t("failedSaveImportedModel"));
+            return false;
+          }
+
+          // Only create alias after customModel is saved successfully
+          await onSetAlias(modelId, resolvedAlias, providerStorageAlias);
+          workingAliases[resolvedAlias] = `${providerStorageAlias}/${modelId}`;
+          return true;
+        }
+      );
+>>>>>>> Stashed changes
     } catch (error) {
       console.error("Error importing models:", error);
       notify.error(t("failedImportModelsTryAgain"));
@@ -4702,6 +5243,7 @@ function CompatibleModelsSection({
 
       {allModels.length > 0 && (
         <div className="flex flex-col gap-3">
+<<<<<<< Updated upstream
           <ModelVisibilityToolbar
             t={t}
             filterValue={modelFilter}
@@ -4724,6 +5266,9 @@ function CompatibleModelsSection({
             deselectAllDisabled={visibleFilteredCount === 0 || bulkTogglePending}
           />
           {filteredModels.map(({ modelId, alias, isHidden, source }) => (
+=======
+          {allModels.map(({ modelId, alias }) => (
+>>>>>>> Stashed changes
             <PassthroughModelRow
               key={`${providerStorageAlias}:${modelId}`}
               modelId={modelId}
@@ -4757,6 +5302,38 @@ function CompatibleModelsSection({
   );
 }
 
+<<<<<<< Updated upstream
+=======
+CompatibleModelsSection.propTypes = {
+  providerStorageAlias: PropTypes.string.isRequired,
+  providerDisplayAlias: PropTypes.string.isRequired,
+  modelAliases: PropTypes.object.isRequired,
+  fallbackModels: PropTypes.array,
+  description: PropTypes.string.isRequired,
+  inputLabel: PropTypes.string.isRequired,
+  inputPlaceholder: PropTypes.string.isRequired,
+  copied: PropTypes.string,
+  onCopy: PropTypes.func.isRequired,
+  onSetAlias: PropTypes.func.isRequired,
+  onDeleteAlias: PropTypes.func.isRequired,
+  connections: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      isActive: PropTypes.bool,
+    })
+  ).isRequired,
+  isAnthropic: PropTypes.bool,
+  onImportWithProgress: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired,
+  effectiveModelNormalize: PropTypes.func.isRequired,
+  effectiveModelPreserveDeveloper: PropTypes.func.isRequired,
+  getUpstreamHeadersRecord: PropTypes.func.isRequired,
+  saveModelCompatFlags: PropTypes.func.isRequired,
+  compatSavingModelId: PropTypes.string,
+  onModelsChanged: PropTypes.func,
+};
+
+>>>>>>> Stashed changes
 function CooldownTimer({ until }: CooldownTimerProps) {
   const [remaining, setRemaining] = useState("");
 
@@ -5368,6 +5945,34 @@ function ConnectionRow({
             {exportCodexAuthLabel}
           </Button>
         )}
+        {isCodex && onApplyCodexAuthLocal && (
+          <Button
+            size="sm"
+            variant="ghost"
+            icon="download_done"
+            loading={isApplyingCodexAuthLocal}
+            disabled={isApplyingCodexAuthLocal}
+            onClick={onApplyCodexAuthLocal}
+            className="!h-7 !px-2 text-xs text-emerald-500 hover:text-emerald-400"
+            title={applyCodexAuthLabel}
+          >
+            {applyCodexAuthLabel}
+          </Button>
+        )}
+        {isCodex && onExportCodexAuthFile && (
+          <Button
+            size="sm"
+            variant="ghost"
+            icon="download"
+            loading={isExportingCodexAuthFile}
+            disabled={isExportingCodexAuthFile}
+            onClick={onExportCodexAuthFile}
+            className="!h-7 !px-2 text-xs text-sky-500 hover:text-sky-400"
+            title={exportCodexAuthLabel}
+          >
+            {exportCodexAuthLabel}
+          </Button>
+        )}
         <Toggle
           size="sm"
           checked={connection.isActive ?? true}
@@ -5411,6 +6016,7 @@ function ConnectionRow({
   );
 }
 
+<<<<<<< Updated upstream
 const CONFIGURABLE_BASE_URL_PROVIDERS = new Set([
   "azure-openai",
   "bailian-coding-plan",
@@ -5428,6 +6034,45 @@ const DEFAULT_PROVIDER_BASE_URLS: Record<string, string> = {
   "xiaomi-mimo": "https://token-plan-sgp.xiaomimimo.com/v1",
   "searxng-search": "http://localhost:8888/search",
   petals: "https://chat.petals.dev/api/v1/generate",
+=======
+ConnectionRow.propTypes = {
+  connection: PropTypes.shape({
+    id: PropTypes.string,
+    name: PropTypes.string,
+    email: PropTypes.string,
+    displayName: PropTypes.string,
+    rateLimitedUntil: PropTypes.string,
+    rateLimitProtection: PropTypes.bool,
+    testStatus: PropTypes.string,
+    isActive: PropTypes.bool,
+    priority: PropTypes.number,
+    lastError: PropTypes.string,
+    lastErrorType: PropTypes.string,
+    lastErrorSource: PropTypes.string,
+    errorCode: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    globalPriority: PropTypes.number,
+    providerSpecificData: PropTypes.object,
+  }).isRequired,
+  isOAuth: PropTypes.bool.isRequired,
+  isCodex: PropTypes.bool,
+  isFirst: PropTypes.bool.isRequired,
+  isLast: PropTypes.bool.isRequired,
+  onMoveUp: PropTypes.func.isRequired,
+  onMoveDown: PropTypes.func.isRequired,
+  onToggleActive: PropTypes.func.isRequired,
+  onToggleRateLimit: PropTypes.func.isRequired,
+  onToggleCodex5h: PropTypes.func,
+  onToggleCodexWeekly: PropTypes.func,
+  onRetest: PropTypes.func.isRequired,
+  isRetesting: PropTypes.bool,
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onReauth: PropTypes.func,
+  onApplyCodexAuthLocal: PropTypes.func,
+  isApplyingCodexAuthLocal: PropTypes.bool,
+  onExportCodexAuthFile: PropTypes.func,
+  isExportingCodexAuthFile: PropTypes.bool,
+>>>>>>> Stashed changes
 };
 
 function getLocalProviderMetadata(providerId?: string | null) {
@@ -5555,6 +6200,7 @@ function AddApiKeyModal({
   onClose,
 }: AddApiKeyModalProps) {
   const t = useTranslations("providers");
+<<<<<<< Updated upstream
   const usesBaseUrl = isBaseUrlConfigurableProvider(provider);
   const defaultBaseUrl = getProviderBaseUrlDefault(provider);
   const isVertex = provider === "vertex" || provider === "vertex-partner";
@@ -5573,11 +6219,19 @@ function AddApiKeyModal({
   const isWebSessionProvider = isGrokWeb || isPerplexityWeb || isBlackboxWeb || isMuseSparkWeb;
   const isPetals = provider === "petals";
   const apiKeyOptional = isSearxng || isPetals || isLocalSelfHostedProvider;
+=======
+  const isBailian = provider === "bailian-coding-plan";
+  const defaultBailianUrl = "https://coding-intl.dashscope.aliyuncs.com/apps/anthropic/v1";
+  const isVertex = provider === "vertex";
+  const defaultRegion = "us-central1";
+  const isGlm = provider === "glm";
+>>>>>>> Stashed changes
 
   const [formData, setFormData] = useState({
     name: "",
     apiKey: "",
     priority: 1,
+<<<<<<< Updated upstream
     baseUrl: defaultBaseUrl,
     cx: "",
     region: isVertex ? defaultRegion : "",
@@ -5590,6 +6244,12 @@ function AddApiKeyModal({
     consoleApiKey: "",
     ccCompatibleContext1m: false,
     passthroughModels: false,
+=======
+    baseUrl: isBailian ? defaultBailianUrl : "",
+    region: isVertex ? defaultRegion : "",
+    apiRegion: "international",
+    validationModelId: "",
+>>>>>>> Stashed changes
   });
   const [validating, setValidating] = useState(false);
   const [validationResult, setValidationResult] = useState(null);
@@ -5647,9 +6307,12 @@ function AddApiKeyModal({
           provider,
           apiKey: formData.apiKey,
           validationModelId: formData.validationModelId || undefined,
+<<<<<<< Updated upstream
           customUserAgent: formData.customUserAgent.trim() || undefined,
           baseUrl: formData.baseUrl.trim() || undefined,
           cx: formData.cx.trim() || undefined,
+=======
+>>>>>>> Stashed changes
         }),
       });
       const data = await res.json();
@@ -5694,9 +6357,12 @@ function AddApiKeyModal({
             provider,
             apiKey: formData.apiKey,
             validationModelId: formData.validationModelId || undefined,
+<<<<<<< Updated upstream
             customUserAgent: formData.customUserAgent.trim() || undefined,
             baseUrl: formData.baseUrl.trim() || undefined,
             cx: formData.cx.trim() || undefined,
+=======
+>>>>>>> Stashed changes
           }),
         });
         const data = await res.json();
@@ -5762,6 +6428,24 @@ function AddApiKeyModal({
           Object.keys(providerSpecificData).length > 0 ? providerSpecificData : undefined,
       };
 
+<<<<<<< Updated upstream
+=======
+      // Include baseUrl in providerSpecificData for bailian-coding-plan
+      if (isBailian) {
+        payload.providerSpecificData = {
+          baseUrl: validatedBailianBaseUrl,
+        };
+      } else if (isVertex) {
+        payload.providerSpecificData = {
+          region: formData.region,
+        };
+      } else if (isGlm) {
+        payload.providerSpecificData = {
+          apiRegion: formData.apiRegion,
+        };
+      }
+
+>>>>>>> Stashed changes
       const error = await onSave(payload);
       if (error) {
         setSaveError(typeof error === "string" ? error : t("failedSaveConnection"));
@@ -5803,8 +6487,12 @@ function AddApiKeyModal({
             value={formData.apiKey}
             onChange={(e) => setFormData({ ...formData, apiKey: e.target.value })}
             className="flex-1"
+<<<<<<< Updated upstream
             placeholder={apiCredentialPlaceholder}
             hint={apiCredentialHint}
+=======
+            placeholder={isVertex ? "Cole o Service Account JSON aqui" : undefined}
+>>>>>>> Stashed changes
           />
           <div className="pt-6">
             <Button
@@ -5938,6 +6626,13 @@ function AddApiKeyModal({
           hint="Usado como fallback se a listagem de models não estiver disponível"
         />
         <Input
+          label="Model ID (opcional)"
+          placeholder="ex: grok-3 ou meta-llama/Llama-3.1-8B-Instruct"
+          value={formData.validationModelId}
+          onChange={(e) => setFormData({ ...formData, validationModelId: e.target.value })}
+          hint="Usado como fallback se a listagem de models não estiver disponível"
+        />
+        <Input
           label={t("priorityLabel")}
           type="number"
           value={formData.priority}
@@ -5956,6 +6651,7 @@ function AddApiKeyModal({
         )}
         {isVertex && (
           <Input
+<<<<<<< Updated upstream
             label={t("regionLabel")}
             value={formData.region}
             onChange={(e) => setFormData({ ...formData, region: e.target.value })}
@@ -5970,22 +6666,42 @@ function AddApiKeyModal({
             onChange={(e) => setFormData({ ...formData, accountId: e.target.value })}
             placeholder={t("accountIdPlaceholder")}
             hint={t("accountIdHint")}
+=======
+            label="Região (Region)"
+            value={formData.region}
+            onChange={(e) => setFormData({ ...formData, region: e.target.value })}
+            placeholder={defaultRegion}
+            hint="ex: us-central1 ou europe-west4. Partner models usam a região global automaticamente."
+>>>>>>> Stashed changes
           />
         )}
         {isGlm && (
           <div>
+<<<<<<< Updated upstream
             <label className="text-sm font-medium text-text-main mb-1 block">
               {t("apiRegionLabel")}
             </label>
+=======
+            <label className="text-sm font-medium text-text-main mb-1 block">API Region</label>
+>>>>>>> Stashed changes
             <select
               value={formData.apiRegion}
               onChange={(e) => setFormData({ ...formData, apiRegion: e.target.value })}
               className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-background focus:outline-none focus:border-primary"
             >
+<<<<<<< Updated upstream
               <option value="international">{t("apiRegionInternational")}</option>
               <option value="china">{t("apiRegionChina")}</option>
             </select>
             <p className="text-xs text-text-muted mt-1">{t("apiRegionHint")}</p>
+=======
+              <option value="international">International (api.z.ai)</option>
+              <option value="china">China Mainland (open.bigmodel.cn)</option>
+            </select>
+            <p className="text-xs text-text-muted mt-1">
+              Select the endpoint region for API access and quota tracking.
+            </p>
+>>>>>>> Stashed changes
           </div>
         )}
         <div className="flex gap-2">
@@ -6011,6 +6727,20 @@ function AddApiKeyModal({
   );
 }
 
+<<<<<<< Updated upstream
+=======
+AddApiKeyModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  provider: PropTypes.string,
+  providerName: PropTypes.string,
+  isCompatible: PropTypes.bool,
+  isAnthropic: PropTypes.bool,
+  isCcCompatible: PropTypes.bool,
+  onSave: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+};
+
+>>>>>>> Stashed changes
 function normalizeAndValidateHttpBaseUrl(rawValue, fallbackUrl) {
   const value = (typeof rawValue === "string" ? rawValue.trim() : "") || fallbackUrl;
   try {
@@ -6034,11 +6764,15 @@ function EditConnectionModal({ isOpen, connection, onSave, onClose }: EditConnec
     apiKey: "",
     healthCheckInterval: 60,
     baseUrl: "",
+<<<<<<< Updated upstream
     cx: "",
+=======
+>>>>>>> Stashed changes
     region: "",
     apiRegion: "international",
     validationModelId: "",
     tag: "",
+<<<<<<< Updated upstream
     routingTags: "",
     excludedModels: "",
     customUserAgent: "",
@@ -6053,6 +6787,8 @@ function EditConnectionModal({ isOpen, connection, onSave, onClose }: EditConnec
         ? isClaudeExtraUsageBlockEnabled(connection?.provider, connection?.providerSpecificData)
         : false,
     passthroughModels: connection?.providerSpecificData?.passthroughModels === true,
+=======
+>>>>>>> Stashed changes
   });
   const [testing, setTesting] = useState(false);
   const [testResult, setTestResult] = useState(null);
@@ -6066,6 +6802,7 @@ function EditConnectionModal({ isOpen, connection, onSave, onClose }: EditConnec
   const { emailsVisible: showEmail, toggleEmailVisibility: toggleShowEmail } =
     useEmailPrivacyStore();
 
+<<<<<<< Updated upstream
   const usesBaseUrl = isBaseUrlConfigurableProvider(connection?.provider);
   const defaultBaseUrl = getProviderBaseUrlDefault(connection?.provider);
   const isVertex = connection?.provider === "vertex" || connection?.provider === "vertex-partner";
@@ -6088,6 +6825,13 @@ function EditConnectionModal({ isOpen, connection, onSave, onClose }: EditConnec
     : isSearxng || isPetals
       ? t("apiKeyOptionalHint")
       : t("leaveBlankKeepCurrentApiKey");
+=======
+  const isBailian = connection?.provider === "bailian-coding-plan";
+  const defaultBailianUrl = "https://coding-intl.dashscope.aliyuncs.com/apps/anthropic/v1";
+  const isVertex = connection?.provider === "vertex";
+  const isGlm = connection?.provider === "glm";
+  const defaultRegion = "us-central1";
+>>>>>>> Stashed changes
 
   useEffect(() => {
     if (isOpen && connection) {
@@ -6095,6 +6839,7 @@ function EditConnectionModal({ isOpen, connection, onSave, onClose }: EditConnec
       const existingBaseUrl = typeof rawBaseUrl === "string" ? rawBaseUrl : "";
       const rawRegion = connection.providerSpecificData?.region;
       const existingRegion = typeof rawRegion === "string" ? rawRegion : "";
+<<<<<<< Updated upstream
       const rawCustomUserAgent = connection.providerSpecificData?.customUserAgent;
       const existingCustomUserAgent =
         typeof rawCustomUserAgent === "string" ? rawCustomUserAgent : "";
@@ -6108,6 +6853,8 @@ function EditConnectionModal({ isOpen, connection, onSave, onClose }: EditConnec
       );
       const rawConsoleApiKey = connection.providerSpecificData?.consoleApiKey;
       const existingConsoleApiKey = typeof rawConsoleApiKey === "string" ? rawConsoleApiKey : "";
+=======
+>>>>>>> Stashed changes
       setFormData({
         name: connection.name || "",
         priority: connection.priority || 1,
@@ -6117,12 +6864,17 @@ function EditConnectionModal({ isOpen, connection, onSave, onClose }: EditConnec
             : "",
         apiKey: "",
         healthCheckInterval: connection.healthCheckInterval ?? 60,
+<<<<<<< Updated upstream
         baseUrl: existingBaseUrl || defaultBaseUrl,
         cx: existingCx,
+=======
+        baseUrl: existingBaseUrl || (isBailian ? defaultBailianUrl : ""),
+>>>>>>> Stashed changes
         region: existingRegion || (isVertex ? defaultRegion : ""),
         apiRegion: (connection.providerSpecificData?.apiRegion as string) || "international",
         validationModelId: (connection.providerSpecificData?.validationModelId as string) || "",
         tag: (connection.providerSpecificData?.tag as string) || "",
+<<<<<<< Updated upstream
         routingTags: formatRoutingTagsInput(connection.providerSpecificData?.tags),
         excludedModels: formatExcludedModelsInput(
           connection.providerSpecificData?.excludedModels ??
@@ -6140,6 +6892,8 @@ function EditConnectionModal({ isOpen, connection, onSave, onClose }: EditConnec
           connection.providerSpecificData
         ),
         passthroughModels: connection?.providerSpecificData?.passthroughModels === true,
+=======
+>>>>>>> Stashed changes
       });
       // Load existing extra keys from providerSpecificData
       const existing = connection.providerSpecificData?.extraApiKeys;
@@ -6151,7 +6905,11 @@ function EditConnectionModal({ isOpen, connection, onSave, onClose }: EditConnec
       setValidationResult(null);
       setSaveError(null);
     }
+<<<<<<< Updated upstream
   }, [isOpen, connection, defaultBaseUrl, isVertex]);
+=======
+  }, [connection, isBailian, isVertex]);
+>>>>>>> Stashed changes
 
   const handleTest = async () => {
     if (!connection?.provider) return;
@@ -6194,9 +6952,12 @@ function EditConnectionModal({ isOpen, connection, onSave, onClose }: EditConnec
           provider: connection.provider,
           apiKey: formData.apiKey,
           validationModelId: formData.validationModelId || undefined,
+<<<<<<< Updated upstream
           customUserAgent: formData.customUserAgent.trim() || undefined,
           baseUrl: formData.baseUrl.trim() || undefined,
           cx: formData.cx.trim() || undefined,
+=======
+>>>>>>> Stashed changes
         }),
       });
       const data = await res.json();
@@ -6270,9 +7031,12 @@ function EditConnectionModal({ isOpen, connection, onSave, onClose }: EditConnec
                 provider: connection.provider,
                 apiKey: formData.apiKey,
                 validationModelId: formData.validationModelId || undefined,
+<<<<<<< Updated upstream
                 customUserAgent: formData.customUserAgent.trim() || undefined,
                 baseUrl: formData.baseUrl.trim() || undefined,
                 cx: formData.cx.trim() || undefined,
+=======
+>>>>>>> Stashed changes
               }),
             });
             const data = await res.json();
@@ -6300,6 +7064,7 @@ function EditConnectionModal({ isOpen, connection, onSave, onClose }: EditConnec
           ...(connection.providerSpecificData || {}),
           extraApiKeys: extraApiKeys.filter((k) => k.trim().length > 0),
           tag: formData.tag.trim() || undefined,
+<<<<<<< Updated upstream
           tags: parseRoutingTagsInput(formData.routingTags),
           excludedModels: parseExcludedModelsInput(formData.excludedModels),
           customUserAgent: formData.customUserAgent.trim(),
@@ -6362,6 +7127,20 @@ function EditConnectionModal({ isOpen, connection, onSave, onClose }: EditConnec
           updates.providerSpecificData.openaiStoreEnabled =
             formData.codexOpenaiStoreEnabled === true;
         }
+=======
+        };
+        if (formData.validationModelId) {
+          updates.providerSpecificData.validationModelId = formData.validationModelId;
+        }
+        // Update baseUrl for bailian-coding-plan
+        if (isBailian) {
+          updates.providerSpecificData.baseUrl = validatedBailianBaseUrl;
+        } else if (isVertex) {
+          updates.providerSpecificData.region = formData.region;
+        } else if (isGlm) {
+          updates.providerSpecificData.apiRegion = formData.apiRegion;
+        }
+>>>>>>> Stashed changes
       } else {
         // Also persist tag for OAuth accounts
         updates.providerSpecificData = {
@@ -6399,6 +7178,7 @@ function EditConnectionModal({ isOpen, connection, onSave, onClose }: EditConnec
           placeholder={isOAuth ? t("accountName") : t("productionKey")}
         />
         <Input
+<<<<<<< Updated upstream
           label={t("tagGroupLabel")}
           value={formData.tag}
           onChange={(e) => setFormData({ ...formData, tag: e.target.value })}
@@ -6462,6 +7242,14 @@ function EditConnectionModal({ isOpen, connection, onSave, onClose }: EditConnec
             />
           </div>
         )}
+=======
+          label="Tag / Group"
+          value={formData.tag}
+          onChange={(e) => setFormData({ ...formData, tag: e.target.value })}
+          placeholder="e.g. personal, work, team-a"
+          hint="Used to group accounts in the provider view"
+        />
+>>>>>>> Stashed changes
         {isOAuth && connection.email && (
           <div className="bg-sidebar/50 p-3 rounded-lg">
             <p className="text-sm text-text-muted mb-1">{t("email")}</p>
@@ -6536,8 +7324,13 @@ function EditConnectionModal({ isOpen, connection, onSave, onClose }: EditConnec
                 type="password"
                 value={formData.apiKey}
                 onChange={(e) => setFormData({ ...formData, apiKey: e.target.value })}
+<<<<<<< Updated upstream
                 placeholder={isVertex ? t("vertexServiceAccountPlaceholder") : t("enterNewApiKey")}
                 hint={apiCredentialHint}
+=======
+                placeholder={isVertex ? "Cole o Service Account JSON aqui" : t("enterNewApiKey")}
+                hint={t("leaveBlankKeepCurrentApiKey")}
+>>>>>>> Stashed changes
                 className="flex-1"
               />
               <div className="pt-6">
@@ -6616,11 +7409,19 @@ function EditConnectionModal({ isOpen, connection, onSave, onClose }: EditConnec
               </div>
             )}
             <Input
+<<<<<<< Updated upstream
               label={t("validationModelIdLabel")}
               placeholder={t("validationModelIdPlaceholder")}
               value={formData.validationModelId}
               onChange={(e) => setFormData({ ...formData, validationModelId: e.target.value })}
               hint={t("validationModelIdHint")}
+=======
+              label="Model ID (opcional)"
+              placeholder="ex: grok-3 ou meta-llama/Llama-3.1-8B-Instruct"
+              value={formData.validationModelId}
+              onChange={(e) => setFormData({ ...formData, validationModelId: e.target.value })}
+              hint="Usado como fallback se a listagem de models não estiver disponível"
+>>>>>>> Stashed changes
             />
           </>
         )}
@@ -6637,6 +7438,7 @@ function EditConnectionModal({ isOpen, connection, onSave, onClose }: EditConnec
 
         {isVertex && (
           <Input
+<<<<<<< Updated upstream
             label={t("regionLabel")}
             value={formData.region}
             onChange={(e) => setFormData({ ...formData, region: e.target.value })}
@@ -6652,23 +7454,43 @@ function EditConnectionModal({ isOpen, connection, onSave, onClose }: EditConnec
             onChange={(e) => setFormData({ ...formData, accountId: e.target.value })}
             placeholder={t("accountIdPlaceholder")}
             hint={t("accountIdHint")}
+=======
+            label="Região (Region)"
+            value={formData.region}
+            onChange={(e) => setFormData({ ...formData, region: e.target.value })}
+            placeholder={defaultRegion}
+            hint="ex: us-central1 ou europe-west4. Partner models usam a região global automaticamente."
+>>>>>>> Stashed changes
           />
         )}
 
         {isGlm && (
           <div>
+<<<<<<< Updated upstream
             <label className="text-sm font-medium text-text-main mb-1 block">
               {t("apiRegionLabel")}
             </label>
+=======
+            <label className="text-sm font-medium text-text-main mb-1 block">API Region</label>
+>>>>>>> Stashed changes
             <select
               value={formData.apiRegion}
               onChange={(e) => setFormData({ ...formData, apiRegion: e.target.value })}
               className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-background focus:outline-none focus:border-primary"
             >
+<<<<<<< Updated upstream
               <option value="international">{t("apiRegionInternational")}</option>
               <option value="china">{t("apiRegionChina")}</option>
             </select>
             <p className="text-xs text-text-muted mt-1">{t("apiRegionHint")}</p>
+=======
+              <option value="international">International (api.z.ai)</option>
+              <option value="china">China Mainland (open.bigmodel.cn)</option>
+            </select>
+            <p className="text-xs text-text-muted mt-1">
+              Select the endpoint region for API access and quota tracking.
+            </p>
+>>>>>>> Stashed changes
           </div>
         )}
 
@@ -6829,13 +7651,22 @@ function EditCompatibleNodeModal({
               ? "https://api.anthropic.com/v1"
               : "https://api.openai.com/v1"),
         chatPath: node.chatPath || (isCcCompatible ? CC_COMPATIBLE_DEFAULT_CHAT_PATH : ""),
+<<<<<<< Updated upstream
         modelsPath: isCcCompatible ? "" : node.modelsPath || "",
+=======
+        modelsPath: node.modelsPath || (isCcCompatible ? CC_COMPATIBLE_DEFAULT_MODELS_PATH : ""),
+>>>>>>> Stashed changes
       });
       setShowAdvanced(
         !!(
           node.chatPath ||
+<<<<<<< Updated upstream
           (!isCcCompatible && node.modelsPath) ||
           (isCcCompatible && !node.chatPath)
+=======
+          node.modelsPath ||
+          (isCcCompatible && !node.chatPath && !node.modelsPath)
+>>>>>>> Stashed changes
         )
       );
     }
@@ -6859,7 +7690,12 @@ function EditCompatibleNodeModal({
         prefix: formData.prefix,
         baseUrl: formData.baseUrl,
         chatPath: formData.chatPath || (isCcCompatible ? CC_COMPATIBLE_DEFAULT_CHAT_PATH : ""),
+<<<<<<< Updated upstream
         modelsPath: isCcCompatible ? "" : formData.modelsPath,
+=======
+        modelsPath:
+          formData.modelsPath || (isCcCompatible ? CC_COMPATIBLE_DEFAULT_MODELS_PATH : ""),
+>>>>>>> Stashed changes
       };
       if (!isAnthropic) {
         payload.apiType = formData.apiType;
@@ -6882,7 +7718,12 @@ function EditCompatibleNodeModal({
           type: isAnthropic ? "anthropic-compatible" : "openai-compatible",
           compatMode: isCcCompatible ? "cc" : undefined,
           chatPath: formData.chatPath || (isCcCompatible ? CC_COMPATIBLE_DEFAULT_CHAT_PATH : ""),
+<<<<<<< Updated upstream
           modelsPath: isCcCompatible ? "" : formData.modelsPath,
+=======
+          modelsPath:
+            formData.modelsPath || (isCcCompatible ? CC_COMPATIBLE_DEFAULT_MODELS_PATH : ""),
+>>>>>>> Stashed changes
         }),
       });
       const data = await res.json();
@@ -6901,7 +7742,11 @@ function EditCompatibleNodeModal({
       isOpen={isOpen}
       title={
         isCcCompatible
+<<<<<<< Updated upstream
           ? t("ccCompatibleDetailsTitle")
+=======
+          ? CC_COMPATIBLE_DETAILS_TITLE
+>>>>>>> Stashed changes
           : t("editCompatibleTitle", { type: isAnthropic ? t("anthropic") : t("openai") })
       }
       onClose={onClose}
@@ -6923,12 +7768,20 @@ function EditCompatibleNodeModal({
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           placeholder={
             isCcCompatible
+<<<<<<< Updated upstream
               ? t("ccCompatibleNamePlaceholder")
+=======
+              ? "CC Compatible Production"
+>>>>>>> Stashed changes
               : t("compatibleProdPlaceholder", {
                   type: isAnthropic ? t("anthropic") : t("openai"),
                 })
           }
+<<<<<<< Updated upstream
           hint={isCcCompatible ? t("ccCompatibleNameHint") : t("nameHint")}
+=======
+          hint={isCcCompatible ? "Display name for this provider" : t("nameHint")}
+>>>>>>> Stashed changes
         />
         <Input
           label={isCcCompatible ? "Prefix" : t("prefixLabel")}
@@ -6936,12 +7789,20 @@ function EditCompatibleNodeModal({
           onChange={(e) => setFormData({ ...formData, prefix: e.target.value })}
           placeholder={
             isCcCompatible
+<<<<<<< Updated upstream
               ? t("ccCompatiblePrefixPlaceholder")
+=======
+              ? "cc"
+>>>>>>> Stashed changes
               : isAnthropic
                 ? t("anthropicPrefixPlaceholder")
                 : t("openaiPrefixPlaceholder")
           }
+<<<<<<< Updated upstream
           hint={isCcCompatible ? t("ccCompatiblePrefixHint") : t("prefixHint")}
+=======
+          hint={isCcCompatible ? "Used for aliases such as prefix/model-id" : t("prefixHint")}
+>>>>>>> Stashed changes
         />
         {!isAnthropic && (
           <Select
@@ -6957,14 +7818,22 @@ function EditCompatibleNodeModal({
           onChange={(e) => setFormData({ ...formData, baseUrl: e.target.value })}
           placeholder={
             isCcCompatible
+<<<<<<< Updated upstream
               ? t("ccCompatibleBaseUrlPlaceholder")
+=======
+              ? "https://example.com/v1"
+>>>>>>> Stashed changes
               : isAnthropic
                 ? t("anthropicBaseUrlPlaceholder")
                 : t("openaiBaseUrlPlaceholder")
           }
           hint={
             isCcCompatible
+<<<<<<< Updated upstream
               ? t("ccCompatibleBaseUrlHint")
+=======
+              ? "Base URL for the CC-compatible site. Do not include /messages."
+>>>>>>> Stashed changes
               : t("compatibleBaseUrlHint", {
                   type: isAnthropic ? t("anthropic") : t("openai"),
                 })
@@ -6998,7 +7867,24 @@ function EditCompatibleNodeModal({
                     ? "/messages"
                     : t("chatPathPlaceholder")
               }
+<<<<<<< Updated upstream
               hint={isCcCompatible ? t("ccCompatibleChatPathHint") : t("chatPathHint")}
+=======
+              hint={
+                isCcCompatible
+                  ? "Defaults to the strict Claude Code-compatible messages path"
+                  : t("chatPathHint")
+              }
+            />
+            <Input
+              label={isCcCompatible ? "Models Path" : t("modelsPathLabel")}
+              value={formData.modelsPath}
+              onChange={(e) => setFormData({ ...formData, modelsPath: e.target.value })}
+              placeholder={
+                isCcCompatible ? CC_COMPATIBLE_DEFAULT_MODELS_PATH : t("modelsPathPlaceholder")
+              }
+              hint={isCcCompatible ? "Defaults to /models" : t("modelsPathHint")}
+>>>>>>> Stashed changes
             />
             {!isCcCompatible && (
               <Input
@@ -7052,3 +7938,23 @@ function EditCompatibleNodeModal({
     </Modal>
   );
 }
+<<<<<<< Updated upstream
+=======
+
+EditCompatibleNodeModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  node: PropTypes.shape({
+    id: PropTypes.string,
+    name: PropTypes.string,
+    prefix: PropTypes.string,
+    apiType: PropTypes.string,
+    baseUrl: PropTypes.string,
+    chatPath: PropTypes.string,
+    modelsPath: PropTypes.string,
+  }),
+  onSave: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  isAnthropic: PropTypes.bool,
+  isCcCompatible: PropTypes.bool,
+};
+>>>>>>> Stashed changes

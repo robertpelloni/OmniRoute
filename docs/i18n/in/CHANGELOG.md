@@ -1,7 +1,13 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 # Changelog (हिन्दी (IN))
 
 🌐 **Languages:** 🇺🇸 [English](../../../CHANGELOG.md) · 🇪🇸 [es](../es/CHANGELOG.md) · 🇫🇷 [fr](../fr/CHANGELOG.md) · 🇩🇪 [de](../de/CHANGELOG.md) · 🇮🇹 [it](../it/CHANGELOG.md) · 🇷🇺 [ru](../ru/CHANGELOG.md) · 🇨🇳 [zh-CN](../zh-CN/CHANGELOG.md) · 🇯🇵 [ja](../ja/CHANGELOG.md) · 🇰🇷 [ko](../ko/CHANGELOG.md) · 🇸🇦 [ar](../ar/CHANGELOG.md) · 🇮🇳 [hi](../hi/CHANGELOG.md) · 🇮🇳 [in](../in/CHANGELOG.md) · 🇹🇭 [th](../th/CHANGELOG.md) · 🇻🇳 [vi](../vi/CHANGELOG.md) · 🇮🇩 [id](../id/CHANGELOG.md) · 🇲🇾 [ms](../ms/CHANGELOG.md) · 🇳🇱 [nl](../nl/CHANGELOG.md) · 🇵🇱 [pl](../pl/CHANGELOG.md) · 🇸🇪 [sv](../sv/CHANGELOG.md) · 🇳🇴 [no](../no/CHANGELOG.md) · 🇩🇰 [da](../da/CHANGELOG.md) · 🇫🇮 [fi](../fi/CHANGELOG.md) · 🇵🇹 [pt](../pt/CHANGELOG.md) · 🇷🇴 [ro](../ro/CHANGELOG.md) · 🇭🇺 [hu](../hu/CHANGELOG.md) · 🇧🇬 [bg](../bg/CHANGELOG.md) · 🇸🇰 [sk](../sk/CHANGELOG.md) · 🇺🇦 [uk-UA](../uk-UA/CHANGELOG.md) · 🇮🇱 [he](../he/CHANGELOG.md) · 🇵🇭 [phi](../phi/CHANGELOG.md) · 🇧🇷 [pt-BR](../pt-BR/CHANGELOG.md) · 🇨🇿 [cs](../cs/CHANGELOG.md) · 🇹🇷 [tr](../tr/CHANGELOG.md)
+=======
+# Changelog (हिन्दी)
+
+🌐 **Languages:** 🇺🇸 [English](../../../CHANGELOG.md) · 🇪🇸 [es](../es/CHANGELOG.md) · 🇫🇷 [fr](../fr/CHANGELOG.md) · 🇩🇪 [de](../de/CHANGELOG.md) · 🇮🇹 [it](../it/CHANGELOG.md) · 🇷🇺 [ru](../ru/CHANGELOG.md) · 🇨🇳 [zh-CN](../zh-CN/CHANGELOG.md) · 🇯🇵 [ja](../ja/CHANGELOG.md) · 🇰🇷 [ko](../ko/CHANGELOG.md) · 🇸🇦 [ar](../ar/CHANGELOG.md) · 🇮🇳 [in](../in/CHANGELOG.md) · 🇹🇭 [th](../th/CHANGELOG.md) · 🇻🇳 [vi](../vi/CHANGELOG.md) · 🇮🇩 [id](../id/CHANGELOG.md) · 🇲🇾 [ms](../ms/CHANGELOG.md) · 🇳🇱 [nl](../nl/CHANGELOG.md) · 🇵🇱 [pl](../pl/CHANGELOG.md) · 🇸🇪 [sv](../sv/CHANGELOG.md) · 🇳🇴 [no](../no/CHANGELOG.md) · 🇩🇰 [da](../da/CHANGELOG.md) · 🇫🇮 [fi](../fi/CHANGELOG.md) · 🇵🇹 [pt](../pt/CHANGELOG.md) · 🇷🇴 [ro](../ro/CHANGELOG.md) · 🇭🇺 [hu](../hu/CHANGELOG.md) · 🇧🇬 [bg](../bg/CHANGELOG.md) · 🇸🇰 [sk](../sk/CHANGELOG.md) · 🇺🇦 [uk-UA](../uk-UA/CHANGELOG.md) · 🇮🇱 [he](../he/CHANGELOG.md) · 🇵🇭 [phi](../phi/CHANGELOG.md) · 🇧🇷 [pt-BR](../pt-BR/CHANGELOG.md) · 🇨🇿 [cs](../cs/CHANGELOG.md)
+>>>>>>> Stashed changes
 =======
 # Changelog (हिन्दी)
 
@@ -12,6 +18,7 @@
 
 ## [Unreleased]
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 ---
 
@@ -807,6 +814,8 @@
 - **Testing:** Added vitest configuration for component testing and Playwright specs for settings toggles.
 - **Doc Updates:** Expanded root readmes, translated chinese documents natively, and cleaned up obsolete files.
 =======
+=======
+>>>>>>> Stashed changes
 ### 🛠️ Maintenance
 
 - **AGENTS.md rewrite:** Condensed from 297→153 lines. Added build/lint/test commands (including single-test execution), code style guidelines (Prettier, TypeScript, ESLint, naming, imports, error handling, security), and trimmed verbose architecture tables for AI agent consumption.
@@ -822,6 +831,9 @@
 ### 🛠️ Maintenance
 
 - **Release Branch Integration:** Consolidated the active feature branches into `release/v3.4.2` on top of current `main` and validated the branch with lint, unit, coverage, build, and CI-mode E2E runs.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 ## [3.4.1] - 2026-03-31
@@ -2012,7 +2024,11 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 
 - **#489 — Antigravity:** Missing `googleProjectId` returns a structured 422 error with reconnect guidance instead of a cryptic crash.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **#510 — Windows paths:** MSYS2/Git-Bash paths (`/c/Program Files/...`) are now normalized to `C:\Program Files\...` automatically.
+=======
+- **#510 — Windows paths:** MSYS2/Git-Bash paths (`/c/Program Files/...`) are now normalized to `C:\\Program Files\\...` automatically.
+>>>>>>> Stashed changes
 =======
 - **#510 — Windows paths:** MSYS2/Git-Bash paths (`/c/Program Files/...`) are now normalized to `C:\\Program Files\\...` automatically.
 >>>>>>> Stashed changes
@@ -2138,7 +2154,11 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **#532** — OpenCode GO API key validation now uses the correct `zen/v1` endpoint (`testKeyBaseUrl`)
 - **#489** — Antigravity: missing `googleProjectId` returns structured 422 error with reconnect guidance
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **#510** — Windows: MSYS2/Git-Bash paths (`/c/Program Files/...`) are now normalized to `C:\Program Files\...`
+=======
+- **#510** — Windows: MSYS2/Git-Bash paths (`/c/Program Files/...`) are now normalized to `C:\\Program Files\\...`
+>>>>>>> Stashed changes
 =======
 - **#510** — Windows: MSYS2/Git-Bash paths (`/c/Program Files/...`) are now normalized to `C:\\Program Files\\...`
 >>>>>>> Stashed changes
@@ -2164,9 +2184,13 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 - **CLI tools save masked API key to config files** — `claude-settings`, `cline-settings`, and `openclaw-settings` POST routes now accept a `keyId` param and resolve the real API key from DB before writing to disk. `ClaudeToolCard` updated to send `keyId` instead of the masked display string. Fixes #523, #526.
 - **Custom embedding providers: `No credentials` error** — `/v1/embeddings` now tracks `credentialsProviderId` separately from the routing prefix, so credentials are fetched from the matching provider node ID rather than the public prefix string. Fixes a regression where `google/gemini-embedding-001` and similar custom-provider models would always fail with a credentials error. Fixes #532-related. (PR #528 by @jacob2826)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **Context cache protection regex misses `
 ` prefix** — `CACHE_TAG_PATTERN` in `comboAgentMiddleware.ts` updated to match both literal `
 ` (backslash-n) and actual newline U+000A that `combo.ts` streaming injects around the `<omniModel>` tag after fix #515. Fixes #531.
+=======
+- **Context cache protection regex misses `\n` prefix** — `CACHE_TAG_PATTERN` in `comboAgentMiddleware.ts` updated to match both literal `\n` (backslash-n) and actual newline U+000A that `combo.ts` streaming injects around the `<omniModel>` tag after fix #515. Fixes #531.
+>>>>>>> Stashed changes
 =======
 - **Context cache protection regex misses `\n` prefix** — `CACHE_TAG_PATTERN` in `comboAgentMiddleware.ts` updated to match both literal `\n` (backslash-n) and actual newline U+000A that `combo.ts` streaming injects around the `<omniModel>` tag after fix #515. Fixes #531.
 >>>>>>> Stashed changes
@@ -2190,10 +2214,16 @@ OmniRoute now automatically refreshes model lists for connected providers every 
   Fixed in `openai-responses.ts` and `responsesApiHelper.ts`.
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(combo)**: Escape `
 ` in `tagContent` so injected JSON string is valid (#515)
   — Template literal newlines (U+000A) are not allowed unescaped inside JSON string values.
   Replaced with `\n` literal sequences in `open-sse/services/combo.ts`.
+=======
+- **fix(combo)**: Escape `\n` in `tagContent` so injected JSON string is valid (#515)
+  — Template literal newlines (U+000A) are not allowed unescaped inside JSON string values.
+  Replaced with `\\n` literal sequences in `open-sse/services/combo.ts`.
+>>>>>>> Stashed changes
 =======
 - **fix(combo)**: Escape `\n` in `tagContent` so injected JSON string is valid (#515)
   — Template literal newlines (U+000A) are not allowed unescaped inside JSON string values.
@@ -2748,7 +2778,11 @@ OmniRoute now automatically refreshes model lists for connected providers every 
 ### 🐛 Bug Fixes
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **fix(ci)**: Remove word "any" from comments in `openai-responses.ts` and `chatCore.ts` that were failing the t11 `any` budget check (false positive from regex counting comments)
+=======
+- **fix(ci)**: Remove word "any" from comments in `openai-responses.ts` and `chatCore.ts` that were failing the t11 `\bany\b` budget check (false positive from regex counting comments)
+>>>>>>> Stashed changes
 =======
 - **fix(ci)**: Remove word "any" from comments in `openai-responses.ts` and `chatCore.ts` that were failing the t11 `\bany\b` budget check (false positive from regex counting comments)
 >>>>>>> Stashed changes

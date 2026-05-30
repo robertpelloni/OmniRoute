@@ -211,7 +211,11 @@ export async function POST(request: Request) {
     if (isValidationFailure(validation)) {
       return NextResponse.json({ error: validation.error }, { status: 400 });
     }
+<<<<<<< Updated upstream
     const { baseUrl, model, reasoningEffort, wireApi, modelMappings } = validation.data;
+=======
+    const { baseUrl, model } = validation.data;
+>>>>>>> Stashed changes
     let { apiKey } = validation.data;
     if (!apiKey) {
       return NextResponse.json(
@@ -220,7 +224,14 @@ export async function POST(request: Request) {
       );
     }
 
+<<<<<<< Updated upstream
     // Resolve real key from DB by ID
+=======
+    // (#549) Resolve real key from DB if keyId was provided.
+    // The dashboard sends masked key strings — resolving by ID guarantees
+    // we always write the full key value to the config file.
+    const keyId = typeof rawBody?.keyId === "string" ? rawBody.keyId.trim() : null;
+>>>>>>> Stashed changes
     if (keyId) {
       try {
         const keyRecord = await getApiKeyById(keyId);

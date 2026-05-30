@@ -136,6 +136,7 @@
     "Failed to save pricing": "Nem sikerült menteni az árakat",
     "Failed to reset pricing": "Nem sikerült visszaállítani az árakat",
     "apikey": "API kulcs",
+<<<<<<< Updated upstream
     "http": "HTTP",
     "nothingHere": "Nothing here yet",
     "goToDashboard": "Go to Dashboard",
@@ -649,6 +650,9 @@
     "learnedFromHeaders": "Learned From Headers",
     "totalRequests": "Total Requests",
     "cloudUnstableNote": "Cloud Unstable Note"
+=======
+    "http": "HTTP"
+>>>>>>> Stashed changes
   },
   "sidebar": {
     "home": "Otthon",
@@ -703,6 +707,7 @@
     "themeViolet": "Violet",
     "themeOrange": "narancssárga",
     "themeCyan": "Cián",
+<<<<<<< Updated upstream
     "cliToolsShort": "Eszközök",
     "cache": "Cache",
     "cacheShort": "Cache",
@@ -742,6 +747,21 @@
     "contextCaveman": "Caveman",
     "contextRtk": "RTK",
     "contextCombos": "Compression Combos"
+=======
+    "endpoints": "Végpontok",
+    "playground": "Játszótér",
+    "agents": "Ügynökök",
+    "cliToolsShort": "Eszközök",
+    "autoCombo": "Auto Combo",
+    "searchTools": "Search Tools",
+    "cache": "Cache",
+    "cacheShort": "Cache",
+    "cliSection": "CLI",
+    "debugSection": "Debug",
+    "helpSection": "Help",
+    "primarySection": "Main",
+    "systemSection": "System"
+>>>>>>> Stashed changes
   },
   "themesPage": {
     "title": "Témák",
@@ -828,9 +848,13 @@
     "utilization": "Kihasználtság",
     "utilizationDescription": "Szolgáltatói kvótahasználati trendek és sebességkorlát-követés",
     "comboHealth": "Kombo egészsége",
+<<<<<<< Updated upstream
     "comboHealthDescription": "Kombó szintű kvóta, használateloszlás és teljesítménymutatók",
     "compressionAnalyticsTitle": "Compression Analytics",
     "compressionAnalyticsDescription": "Compression analytics — token savings, mode breakdown, and provider stats."
+=======
+    "comboHealthDescription": "Kombó szintű kvóta, használateloszlás és teljesítménymutatók"
+>>>>>>> Stashed changes
   },
   "apiManager": {
     "title": "API kulcsok",
@@ -937,7 +961,28 @@
     "permissionsTitle": "Engedélyek: {name}",
     "allowAllDesc": "Ezzel a gombbal minden elérhető modell elérhető.",
     "restrictDesc": "Ezzel a kulccsal {selectedCount}/{totalModels} modell érhető el.",
-    "selectedCount": "{count} kiválasztva"
+    "selectedCount": "{count} kiválasztva",
+    "autoResolve": "Auto-Resolve",
+    "autoResolveDesc": "Auto-resolve ambiguous model names to native provider for this API key.",
+    "keyActive": "Key Active",
+    "keyActiveDesc": "Enable or disable this API key. Disabled keys are immediately rejected with 403.",
+    "accessSchedule": "Access Schedule",
+    "accessScheduleDesc": "Restrict access to specific hours and days of the week.",
+    "scheduleFrom": "From",
+    "scheduleUntil": "Until",
+    "scheduleDays": "Days",
+    "scheduleTimezone": "Timezone",
+    "scheduleTimezoneHint": "Use IANA timezone names, e.g. America/New_York, Europe/Berlin",
+    "scheduleActive": "Schedule",
+    "disabled": "Disabled",
+    "daySun": "Sun",
+    "dayMon": "Mon",
+    "dayTue": "Tue",
+    "dayWed": "Wed",
+    "dayThu": "Thu",
+    "dayFri": "Fri",
+    "daySat": "Sat",
+    "keyOnlyAvailableAtCreation": "Full key available only at creation time — copy it when you first create the key"
   },
   "auditLog": {
     "title": "Ellenőrzési napló",
@@ -1208,9 +1253,13 @@
       "opencode": "OpenCode AI coding agent (Terminal)",
       "kiro": "Amazon Kiro — AI-powered IDE",
       "windsurf": "Windsurf AI Code Editor",
+<<<<<<< Updated upstream
       "copilot": "GitHub Copilot AI Assistant",
       "qwen": "Alibaba Qwen Code CLI",
       "amp": "Sourcegraph Amp coding assistant CLI"
+=======
+      "copilot": "GitHub Copilot AI Assistant"
+>>>>>>> Stashed changes
     },
     "guides": {
       "cursor": {
@@ -1335,6 +1384,7 @@
         }
       }
     },
+<<<<<<< Updated upstream
     "autoConfiguredTab": "Auto Configured Tab",
     "toolCategoriesDesc": "Tool Categories Desc",
     "allToolsTab": "All Tools Tab",
@@ -1342,6 +1392,29 @@
     "mitmClientsTab": "Mitm Clients Tab",
     "toolCategories": "Tool Categories",
     "visibleToolsCount": "Visible Tools Count"
+=======
+    "mitmHowWorksDesc": "{toolName} sends requests to its provider endpoint. MITM intercepts and redirects them to OmniRoute.",
+    "mitmStep1": "1. Start MITM to route requests through OmniRoute.",
+    "mitmStep2Prefix": "2. Add",
+    "mitmStep2Suffix": "to your hosts file as 127.0.0.1.",
+    "mitmStep3": "3. Open {toolName} and requests will be proxied.",
+    "whenToUseLabel": "Mikor kell használni",
+    "openToolDocs": "Nyissa meg az eszközdokumentumokat",
+    "toolUseCases": {
+      "claude": "Használja, ha erős tervezési munkafolyamatokat és hosszú, több fájlból álló refaktorokat szeretne a Claude Code segítségével.",
+      "codex": "Akkor használja, ha csapata szabványosítva van az OpenAI Codex CLI-folyamatokon és a profilalapú hitelesítésen.",
+      "droid": "Használja, ha egy könnyű terminálügynökre van szüksége, amely a gyors kódolásra és parancsvégrehajtási ciklusokra összpontosít.",
+      "openclaw": "Akkor használja, ha Open Claw stílusú kódoló ügynököt szeretne, de az OmniRoute házirendeken keresztül irányítja.",
+      "cline": "Akkor használja, ha kódoló ügynököket konfigurál a szerkesztőkön belül, és irányított beállítást szeretne az OmniRoute modellekkel.",
+      "kilo": "Akkor használja, ha a munkafolyamat a Kilo Code parancsoktól és a gyors iteratív szerkesztésektől függ.",
+      "cursor": "Használja a Kurzorban való kódoláshoz, és egyéni OpenAI-kompatibilis modellekre van szüksége az OmniRoute-on keresztül.",
+      "continue": "Használja a Continue futtatásakor az IDE-ben, és hordozható JSON-alapú szolgáltatói konfigurációra van szüksége.",
+      "opencode": "Akkor használja, ha a terminál-natív ügynökfuttatásokat és az OpenCode-on keresztüli parancsfájl-automatizálást részesíti előnyben.",
+      "kiro": "Használja a Kiro integrálásához és a modell-útválasztás központi vezérléséhez az OmniRoute-ból.",
+      "antigravity": "Akkor használja, ha az Antigravity/Kiro forgalmat MITM-en keresztül kell elfogni, és az OmniRoute-hoz kell irányítani.",
+      "copilot": "Használja, ha másodpilóta csevegési stílusú UX-et szeretne, miközben betartja az OmniRoute kulcsokat és útválasztási szabályokat."
+    }
+>>>>>>> Stashed changes
   },
   "combos": {
     "title": "Kombók",
@@ -1452,6 +1525,7 @@
         "when": "Use when you want perfectly even spread — each model used once before repeating.",
         "avoid": "Avoid when models have different quality or latency and order matters.",
         "example": "Example: Multiple accounts of the same model to distribute usage evenly."
+<<<<<<< Updated upstream
       },
       "context-relay": {
         "avoid": "Avoid when account switching is rare or when you do not want extra summarization requests.",
@@ -1462,6 +1536,8 @@
         "when": "Use when you want low-latency selection using Power-of-Two-Choices algorithm.",
         "example": "Example: High-throughput inference across 4+ equivalent model endpoints.",
         "avoid": "Avoid for small combos with 2 or fewer models — no benefit over round-robin."
+=======
+>>>>>>> Stashed changes
       }
     },
     "advancedHelp": {
@@ -1565,6 +1641,7 @@
       }
     },
     "templateFreeStack": "Free Stack ($0)",
+<<<<<<< Updated upstream
     "templateFreeStackDesc": "Round-robin across all free providers: Kiro (Claude), Qoder (5 models), Qwen (4 models), Gemini CLI. Zero cost, never stops coding.",
     "auto": "Auto Combo",
     "autoDesc": "Self-healing smart routing pool (Performance optimized)",
@@ -1692,6 +1769,9 @@
     "filterDeterministic": "Deterministic",
     "contextRelayMaxMessagesHelp": "Limits how much recent history is condensed into the relay summary.",
     "intelligentPanelTitle": "Intelligent Routing Dashboard"
+=======
+    "templateFreeStackDesc": "Round-robin across all free providers: Kiro (Claude), Qoder (5 models), Qwen (4 models), Gemini CLI. Zero cost, never stops coding."
+>>>>>>> Stashed changes
   },
   "costs": {
     "title": "Költségek",
@@ -1848,6 +1928,7 @@
     "a2aQuickStartStep3": "Kövesse nyomon és vezérelje a feladatokat a `tasks/get` és `tasks/cancel` használatával.",
     "completionsLegacy": "Completions (Legacy)",
     "completionsLegacyDesc": "Legacy OpenAI text completions — accepts both prompt string and messages array format",
+<<<<<<< Updated upstream
     "musicGeneration": "Music Generation",
     "musicDesc": "Generate music and audio tracks via ComfyUI (Stable Audio, MusicGen)",
     "videoGeneration": "Video Generation",
@@ -1908,6 +1989,32 @@
     "featureWebhooks": "Webhook configuration and event subscriptions",
     "featureSwagger": "OpenAPI / Swagger spec auto-generation",
     "featureAuth": "API key and OAuth scope management per endpoint"
+=======
+    "categorySearch": "Search & Discovery",
+    "webSearch": "Web Search",
+    "webSearchDesc": "Unified web search across multiple providers with automatic failover and caching",
+    "searchProvider": "Search Provider",
+    "searchProviderDesc": "This provider is used for web search via POST /v1/search. No model configuration needed — search providers are ready to use once an API key is connected.",
+    "cloudflaredDescription": "Create a Cloudflare Quick Tunnel for this endpoint to make it accessible from the internet without configuring DNS.",
+    "cloudflaredDisable": "Stop Tunnel",
+    "cloudflaredEnable": "Enable Tunnel",
+    "cloudflaredError": "Error",
+    "cloudflaredIdleNote": "Create a temporary Cloudflare Quick Tunnel for this endpoint.",
+    "cloudflaredInstallAndEnable": "Install & Enable",
+    "cloudflaredLastError": "Last error: {error}",
+    "cloudflaredNotInstalled": "Not installed",
+    "cloudflaredRequestFailed": "Failed to update Cloudflare tunnel",
+    "cloudflaredRunning": "Running",
+    "cloudflaredStarted": "Cloudflare tunnel started",
+    "cloudflaredStarting": "Starting",
+    "cloudflaredStopped": "Cloudflare tunnel stopped",
+    "cloudflaredStoppedState": "Stopped",
+    "cloudflaredTemporaryNote": "Quick Tunnel URLs are temporary and will change after restart.",
+    "cloudflaredTitle": "Cloudflare Quick Tunnel",
+    "cloudflaredUnsupported": "Unsupported",
+    "cloudflaredUnsupportedNote": "This platform is not supported for managed installation.",
+    "cloudflaredUrlNotice": "Creates a temporary Cloudflare Quick Tunnel. URLs change after restart."
+>>>>>>> Stashed changes
   },
   "mcpDashboard": {
     "loading": "Loading MCP dashboard...",
@@ -2112,11 +2219,20 @@
     "resetting": "Visszaállítás...",
     "resetAll": "Összes visszaállítása",
     "until": "{time}-ig",
+<<<<<<< Updated upstream
     "limitExhausted": "Exhausted",
     "learnedFromHeaders": "Learned from headers",
     "remainingOfLimit": "{remaining}/{limit} remaining",
     "throttleStatus": "Throttle: {value}",
     "lastHeaderUpdate": "Header update: {age}"
+=======
+    "activeProviders": "{count} active",
+    "monitoredProviders": "{count} monitored",
+    "configuredProvidersLabel": "A műszerfalon konfigurálva",
+    "configuredProvidersHint": "A /dashboard/providers mappába mentett hitelesítő adatokkal rendelkező szolgáltatók, a futásidejű állapottól függetlenül.",
+    "activeProvidersHint": "Konfigurált szolgáltatók, amelyek jelenleg engedélyezve vannak az útválasztási kérelmek számára.",
+    "monitoredProvidersHint": "Azok a szolgáltatók, amelyeket jelenleg a megszakítók állapotfigyelői követnek nyomon."
+>>>>>>> Stashed changes
   },
   "limits": {
     "title": "Korlátok és kvóták",
@@ -2362,6 +2478,7 @@
     "chatCompletions": "Csevegés befejezése",
     "importingModels": "Importálás...",
     "importFromModels": "Importálás a /models-ből",
+<<<<<<< Updated upstream
     "allModelsAlreadyImported": "Minden modell már importálva van",
     "noNewModelsToImport": "Nincs új modell az importáláshoz — minden modell már a nyilvántartásban vagy az egyéni modellek listájában van",
     "skippingExistingModels": "{count} meglévő modell kihagyása",
@@ -2370,6 +2487,8 @@
     "autoSyncEnabled": "Automatikus szinkronizálás engedélyezve – a modellek rendszeresen frissülnek",
     "autoSyncDisabled": "Az automatikus szinkronizálás letiltva",
     "autoSyncToggleFailed": "Failed to toggle auto-sync",
+=======
+>>>>>>> Stashed changes
     "clearAllModels": "Minden modell törlése",
     "clearAllModelsConfirm": "Biztosan eltávolítja ennek a szolgáltatónak az összes modelljét? Ezt nem lehet visszavonni.",
     "clearAllModelsSuccess": "Minden modell törölve",
@@ -2547,6 +2666,7 @@
     "modelsPathLabel": "Models Endpoint Path",
     "modelsPathPlaceholder": "/models",
     "modelsPathHint": "Custom models path for validation (e.g. /v4/models)",
+<<<<<<< Updated upstream
     "modelsImported": "{count} models imported",
     "close": "Close",
     "statusDeactivated": "Deactivated (Manual)",
@@ -2721,6 +2841,46 @@
     "perModelQuotaLabel": "Per Model Quota Label",
     "expiredBadge": "Expired",
     "expiringSoonBadge": "Expiring Soon"
+=======
+    "builtInModels": "Built-in models",
+    "builtInModelsHint": "Registry models for this provider. Use the pencil to set compatibility options.",
+    "normalizeToolCallIdLabel": "Normalize tool call IDs to 9 characters (e.g. Mistral)",
+    "preserveDeveloperRoleLabel": "Keep OpenAI Responses developer role (do not map to system)",
+    "compatAdjustmentsTitle": "Compatibility",
+    "compatButtonLabel": "Compatibility",
+    "compatToolIdShort": "Tool ID 9",
+    "compatDeveloperShort": "Developer role",
+    "compatDoNotPreserveDeveloper": "Do not preserve developer role",
+    "compatBadgeNoPreserve": "No preserve",
+    "compatProtocolLabel": "Client request protocol",
+    "compatProtocolHint": "These options apply when OmniRoute detects this request shape (OpenAI Chat, Responses API, or Anthropic Messages).",
+    "compatProtocolOpenAI": "OpenAI Chat Completions",
+    "compatProtocolOpenAIResponses": "OpenAI Responses API",
+    "compatProtocolClaude": "Anthropic Messages",
+    "tokenRefreshed": "Token refreshed successfully",
+    "tokenRefreshFailed": "Token refresh failed",
+    "compatBadgeUpstreamHeaders": "Headers",
+    "compatUpstreamAddRow": "Add header",
+    "compatUpstreamHeaderName": "Header name",
+    "compatUpstreamHeaderValue": "Value",
+    "compatUpstreamHeadersHint": "High-privilege setting — same trust level as editing provider API credentials; only trusted admins should use it. Merged after OmniRoute adds auth from the provider API key. If a custom header uses the same name as an existing one (e.g. Authorization), your value fully replaces the auto-generated header (including the Bearer token) — the upstream only sees what you typed, not the key from settings. Misconfiguration can cause 401 or broken upstream auth. One row per header (e.g. extra Authentication for some gateways). Hover or focus the value to preview. Saves on blur, outside click, or closing this panel.",
+    "compatUpstreamHeadersLabel": "Extra upstream headers",
+    "compatUpstreamRemoveRow": "Remove row",
+    "autoSync": "Automatikus szinkronizálás",
+    "autoSyncTooltip": "A modelllista automatikus frissítése 24 óránként (konfigurálható: MODEL_SYNC_INTERVAL_HOURS)",
+    "autoSyncEnabled": "Automatikus szinkronizálás engedélyezve – a modellek rendszeresen frissülnek",
+    "autoSyncDisabled": "Az automatikus szinkronizálás letiltva",
+    "autoSyncToggleFailed": "Failed to toggle auto-sync",
+    "allModelsAlreadyImported": "Minden modell már importálva van",
+    "noNewModelsToImport": "Nincs új modell az importáláshoz — minden modell már a nyilvántartásban vagy az egyéni modellek listájában van",
+    "skippingExistingModels": "{count} meglévő modell kihagyása",
+    "applyCodexAuthLocal": "Apply auth",
+    "codexAuthAppliedLocal": "Codex auth.json applied locally",
+    "codexAuthApplyFailed": "Failed to apply Codex auth.json locally",
+    "codexAuthExportFailed": "Failed to export Codex auth.json",
+    "codexAuthExported": "Codex auth.json exported",
+    "exportCodexAuthFile": "Export auth"
+>>>>>>> Stashed changes
   },
   "settings": {
     "title": "Beállítások elemre",
@@ -3178,6 +3338,7 @@
     "editPricing": "Árak szerkesztése",
     "viewFullDetails": "Teljes részletek megtekintése",
     "themeCoral": "Korall",
+<<<<<<< Updated upstream
     "modelsDevTitle": "Model Database",
     "modelsDevDesc": "Auto-sync pricing, capabilities & specs from models.dev",
     "modelsDevEnabled": "Enable models.dev Sync",
@@ -3394,6 +3555,37 @@
       "full": "Respond terse and compact. Preserve all technical substance.",
       "ultra": "Respond ultra terse with common technical abbreviations. Preserve exact symbols."
     }
+=======
+    "cliFingerprint": "CLI Fingerprint Matching",
+    "cliFingerprintDesc": "Match native CLI binary signatures when proxying requests. Reorders headers and body fields to look identical to the official CLI tools. Your proxy IP is preserved.",
+    "cliFingerprintEnabled": "{count} provider(s) with CLI fingerprint active",
+    "enableFingerprintTitle": "Enable fingerprint for {provider}",
+    "disableFingerprintTitle": "Disable fingerprint for {provider}",
+    "routingAdvancedGuideTitle": "Speciális útbaigazítás",
+    "routingAdvancedGuideHint1": "Használja a Fill First funkciót a kiszámítható prioritáshoz, a Round Robint a méltányossághoz és a P2C-t a késleltetési rugalmassághoz.",
+    "routingAdvancedGuideHint2": "Ha a szolgáltatók minősége/költségei eltérőek, kezdje a Cost Opt opcióval a háttérmunkához és a Least Used beállítással a kiegyensúlyozott viselet érdekében.",
+    "comboDefaultsGuideTitle": "A kombinált alapértelmezett beállítások hangolása",
+    "comboDefaultsGuideHint1": "Tartsa alacsonyan az újrapróbálkozásokat az alacsony késleltetésű folyamatokban; csak hosszú generációs feladatok esetén növelje az időtúllépést.",
+    "comboDefaultsGuideHint2": "Használja a szolgáltató felülbírálását, ha az egyik szolgáltatónak a globális alapértelmezetttől eltérő időtúllépési/újrapróbálkozási viselkedésre van szüksége.",
+    "sidebarVisibility": "Hide sidebar items",
+    "sidebarVisibilityDesc": "Hide any sidebar navigation entry to reduce visual clutter.",
+    "sidebarVisibilityHint": "Any sidebar section is hidden automatically when a...",
+    "semanticCache": "Semantic Cache",
+    "autoDisableDescription": "Permanently mark provider connections as deactivated if they return specific terminal ban signals (e.g. HTTP 403 'verify your account'). This removes them from the combo rotation.",
+    "preserveClientCache": "Preserve Client Cache",
+    "cacheSettings": "Cache Settings",
+    "autoDisableThreshold": "Ban Threshold",
+    "autoDisableBannedAccounts": "Auto-Disable Banned Accounts",
+    "ttlMinutes": "TTL (minutes)",
+    "maxEntries": "Max Entries",
+    "loading": "Loading...",
+    "save": "Save",
+    "autoDisableThresholdDesc": "Consecutive ban signals required before permanent deactivation.",
+    "debugToggle": "Enable Debug Mode",
+    "sidebarVisibilityToggle": "Show Sidebar Items",
+    "enabled": "Enabled",
+    "strategy": "Strategy"
+>>>>>>> Stashed changes
   },
   "translator": {
     "title": "Fordító",
@@ -3903,7 +4095,11 @@
     "restartServerWithNewPassword": "Indítsa újra a szervert - az új jelszót fogja használni",
     "backToLogin": "Vissza a Bejelentkezéshez",
     "forgotPassword": "Elfelejtetted a jelszavad?",
+<<<<<<< Updated upstream
     "defaultPasswordHint": "Default password: CHANGEME (unless INITIAL_PASSWORD was set)",
+=======
+    "defaultPasswordHint": "Default password: 123456 (unless INITIAL_PASSWORD was set)",
+>>>>>>> Stashed changes
     "Authorization": "Engedélyezés",
     "Content-Disposition": "Tartalom-Diszpozíció",
     "waitingForAuthorization": "Várakozás az engedélyezésre...",
@@ -3911,11 +4107,15 @@
     "waitingForOpenAIAuthorization": "Várakozás az OpenAI engedélyezésére...",
     "waitingForAntigravityAuthorization": "Várakozás az Antigravitációs engedélyezésre...",
     "waitingForQoderAuthorization": "Várakozás az Qoder engedélyezésére...",
+<<<<<<< Updated upstream
     "exchangingCodeForTokens": "Kód cseréje tokenre...",
     "nodeIncompatibleTitle": "Incompatible Node.js Version",
     "nodeIncompatibleFixLabel": "Fix: install a patched Node.js 22 LTS release",
     "nodeIncompatibleHint": "OmniRoute requires Node.js 20.20.2+ (20.x LTS), 22.22.2+ (22.x LTS) or 24.0.0+ (24.x LTS). Node 24 LTS is recommended.",
     "nodeIncompatibleDesc": "You are running Node.js {version}, which is outside OmniRoute's supported secure runtime policy. Use a patched Node.js 20.x or 22.x LTS release."
+=======
+    "exchangingCodeForTokens": "Kód cseréje tokenre..."
+>>>>>>> Stashed changes
   },
   "landing": {
     "brandName": "OmniRoute",
@@ -4125,8 +4325,22 @@
     "troubleshootingTestConnection": "Az IDE-kből vagy külső kliensekből történő tesztelés előtt használja az Irányítópult > Szolgáltatók > Kapcsolat tesztelése menüpontot.",
     "troubleshootingCircuitBreaker": "Ha a szolgáltató azt mutatja, hogy az áramkör megszakítója nyitva van, várja meg a lehűlést, vagy nézze meg az Egészség oldalt a részletekért.",
     "troubleshootingOAuth": "OAuth-szolgáltatók esetén hitelesítse újra, ha a tokenek lejárnak. Ellenőrizze a szolgáltatói kártya állapotjelzőjét.",
+<<<<<<< Updated upstream
     "deployTermuxTitle": "Termux (Android)",
     "deployTermuxText": "Run OmniRoute headless on Android via Termux. Access the dashboard from your mobile browser."
+=======
+    "managementApiReference": "Management API Reference",
+    "managementApiDescription": "Automation endpoints for proxy registry, scope assignments, and legacy proxy migration.",
+    "mgmtProxiesListNote": "List saved proxy registry items (supports pagination).",
+    "mgmtProxiesCreateNote": "Create a reusable proxy item in the registry.",
+    "mgmtProxiesHealthNote": "Get 24h/rolling health metrics per saved proxy from proxy logs.",
+    "mgmtProxiesBulkAssignNote": "Assign or clear one proxy across many scope IDs in one request.",
+    "mgmtAssignmentsListNote": "List proxy assignments by scope, scope_id, or proxy_id.",
+    "mgmtAssignmentsUpdateNote": "Assign or clear proxy for global/provider/account/combo scope.",
+    "mgmtLegacyMigrationNote": "Import legacy proxyConfig maps into registry assignments.",
+    "endpointSpeechNote": "Szövegfelolvasó generálás (ElevenLabs, OpenAI TTS).",
+    "endpointEmbeddingsNote": "Szövegbeágyazás generálása (OpenAI, Cohere, Voyage)."
+>>>>>>> Stashed changes
   },
   "legal": {
     "privacyPolicy": "Adatvédelmi szabályzat",
@@ -4217,6 +4431,7 @@
     "setupGuideCustomAgentTitle": "Register custom binary",
     "setupGuideCustomAgentDesc": "Use Add Custom Agent when your CLI is not in the built-in list. Provide binary name and version command.",
     "setupGuideCommandMissingTitle": "Fix 'command not found'",
+<<<<<<< Updated upstream
     "setupGuideCommandMissingDesc": "Ensure the CLI command exists in PATH, open a new terminal session, and rerun Refresh.",
     "cliToolsRedirectTitle": "Cli Tools Redirect Title",
     "cliToolsRedirectDesc": "Cli Tools Redirect Desc",
@@ -4232,6 +4447,84 @@
     "flowSpawn": "Flow Spawn",
     "cliToolsRedirectCta": "Cli Tools Redirect Cta"
   },
+=======
+    "setupGuideCommandMissingDesc": "Ensure the CLI command exists in PATH, open a new terminal session, and rerun Refresh."
+  },
+  "autoCombo": {
+    "title": "Auto-Combo Engine",
+    "statusNormal": "Normal",
+    "statusIncident": "Incident Mode",
+    "modePack": "Mode Pack",
+    "providerScores": "Provider Scores",
+    "noAutoCombo": "No auto-combo configured.",
+    "excludedProviders": "Excluded Providers",
+    "noExclusions": "No providers currently excluded.",
+    "factorQuota": "Quota",
+    "factorHealth": "Health",
+    "factorCost": "Cost",
+    "factorLatency": "Latency",
+    "factorTaskFit": "Task Fit",
+    "factorStability": "Stability",
+    "factorTierPriority": "Tier Priority",
+    "factorTierPriorityDesc": "Prefers accounts with higher quota tiers (Ultra/Pro over Free)",
+    "scoreFactorBreakdown": "Scoring Factors",
+    "modePackShipFast": "Ship Fast",
+    "modePackCostSaver": "Cost Saver",
+    "modePackQualityFirst": "Quality First",
+    "modePackOfflineFriendly": "Offline Friendly"
+  },
+  "search": {
+    "searchQuery": "Search Query",
+    "searchResults": "Search Results",
+    "cachedResult": "Cached",
+    "searchCost": "Cost",
+    "searchTools": "Search Tools",
+    "searchToolsDesc": "Advanced search testing with provider comparison",
+    "compareProviders": "Compare Providers",
+    "rerankResults": "Rerank Results",
+    "searchHistory": "Search History",
+    "urlOverlap": "URL Overlap",
+    "noSearchProviders": "No search providers configured. Add providers in Settings.",
+    "noRerankModels": "No rerank model available",
+    "webSearch": "Web Search",
+    "provider": "Provider",
+    "searchType": "Search Type",
+    "maxResults": "Max Results",
+    "filters": "Filters",
+    "country": "Country",
+    "language": "Language",
+    "timeRange": "Time Range",
+    "includeDomains": "Include Domains",
+    "excludeDomains": "Exclude Domains",
+    "safeSearch": "Safe Search",
+    "formatted": "Formatted",
+    "rawJson": "JSON",
+    "cacheMiss": "cache miss",
+    "cacheHit": "cache hit",
+    "latency": "Latency",
+    "cost": "Cost",
+    "results": "Results",
+    "rerank": "Rerank",
+    "rerankModel": "Rerank Model",
+    "positionDelta": "Position Change",
+    "emptyState": "Send a search query to see results",
+    "safeSearchOff": "Off",
+    "safeSearchModerate": "Moderate",
+    "safeSearchStrict": "Strict",
+    "queryPlaceholder": "Enter search query...",
+    "providerAuto": "auto (cheapest)",
+    "searchTypeWeb": "web",
+    "searchTypeNews": "news",
+    "optionAny": "any",
+    "timeRangeDay": "Past day",
+    "timeRangeWeek": "Past week",
+    "timeRangeMonth": "Past month",
+    "timeRangeYear": "Past year",
+    "domainPlaceholder": "example.com",
+    "requestTimedOut": "Request timed out ({seconds}s)",
+    "networkError": "Network error"
+  },
+>>>>>>> Stashed changes
   "templateNames": {
     "simple-chat": "Egyszerű csevegés",
     "streaming": "Streaming",
@@ -4281,6 +4574,7 @@
     "refresh": "Refresh",
     "clearAll": "Clear All",
     "memoryEntries": "Memory Entries",
+<<<<<<< Updated upstream
     "memoryEntriesSub": "In-memory LRU",
     "dbEntries": "DB Entries",
     "dbEntriesSub": "Persisted (SQLite)",
@@ -4302,10 +4596,20 @@
     "idempotency": "Idempotency Layer",
     "activeDedupKeys": "Active Dedup Keys",
     "dedupWindow": "Dedup Window",
+=======
+    "dbEntries": "DB Entries",
+    "cacheHits": "Cache Hits",
+    "tokensSaved": "Tokens Saved",
+    "hitRate": "Hit Rate",
+    "performance": "Cache Performance",
+    "behavior": "Cache Behavior",
+    "idempotency": "Idempotency Layer",
+>>>>>>> Stashed changes
     "clearSuccess": "Cache cleared. {count} expired entries removed.",
     "clearError": "Failed to clear cache.",
     "unavailable": "Cache unavailable",
     "unavailableDesc": "Could not fetch cache statistics. Make sure the server is running.",
+<<<<<<< Updated upstream
     "promptCache": "Prompt Cache (Provider-Side)",
     "cachedRequests": "Cached Requests",
     "cacheHitRate": "Cache Hit Rate",
@@ -4620,5 +4924,58 @@
     "noProxyLogs": "No proxy logs yet. Configure proxies and make API calls to see them here.",
     "noMatchingLogs": "No logs match the current filters.",
     "tlsFingerprint": "Chrome 124 TLS Fingerprint"
+=======
+    "memoryEntriesSub": "In-memory LRU",
+    "dbEntriesSub": "Persisted (SQLite)",
+    "cacheHitsSub": "of {total} total",
+    "tokensSavedSub": "Estimated from hits",
+    "autoRefresh": "Auto-refreshes every {seconds}s",
+    "hits": "Hits",
+    "misses": "Misses",
+    "total": "Total",
+    "behaviorDeterministic": "Only non-streaming requests with temperature=0 are cached.",
+    "behaviorBypass": "Bypass with header {header}.",
+    "behaviorTwoTier": "Two-tier storage: in-memory LRU (fast) + SQLite (persistent across restarts).",
+    "behaviorTtl": "Default TTL: 30 minutes. Configure via {envVar}.",
+    "activeDedupKeys": "Active Dedup Keys",
+    "dedupWindow": "Dedup Window",
+    "inputTokens": "Input Tokens",
+    "requestsShort": "reqs",
+    "inputShort": "In",
+    "resetting": "Resetting...",
+    "cachedTokensCol": "Cached",
+    "search": "Search",
+    "cacheReuseRatioDesc": "Cached tokens / Total input tokens",
+    "resetMetrics": "Reset Metrics",
+    "loading": "Loading...",
+    "cachedRequests": "Cached Requests",
+    "model": "Model",
+    "cached": "Cached",
+    "actions": "Actions",
+    "trend24h": "Cache Trend (24h)",
+    "cachedShort": "Cached",
+    "cacheCreation": "Creation",
+    "byProvider": "Breakdown by Provider",
+    "created": "Created",
+    "cacheCreationTokens": "Cache Creation Tokens",
+    "withCacheControl": "With Cache Control",
+    "searchEntries": "Search entries...",
+    "cacheReuseRatio": "Cache Reuse Ratio",
+    "estCostSaved": "Est. Cost Saved",
+    "cachedTokens": "Cached Tokens",
+    "requests": "Requests",
+    "signature": "Signature",
+    "cacheCreationWrite": "Cache Creation (Write)",
+    "expires": "Expires",
+    "writeShort": "Write",
+    "cacheHitRate": "Cache Hit Rate",
+    "cacheMetrics": "Prompt Cache Metrics",
+    "overview": "Overview",
+    "promptCache": "Prompt Cache (Provider-Side)",
+    "provider": "Provider",
+    "cachedTokensRead": "Cached Tokens (Read)",
+    "entries": "Entries",
+    "noEntries": "No cache entries found"
+>>>>>>> Stashed changes
   }
 }

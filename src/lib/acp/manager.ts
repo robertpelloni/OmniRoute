@@ -47,11 +47,14 @@ export class AcpManager extends EventEmitter {
     args: string[] = [],
     env: Record<string, string> = {}
   ): AcpSession {
+<<<<<<< Updated upstream
     const ALLOWED_AGENTS = ["claude", "codex", "gemini", "qwen"];
     if (!ALLOWED_AGENTS.includes(agentId)) {
       throw new Error(`Unknown agent: ${agentId}`);
     }
 
+=======
+>>>>>>> Stashed changes
     const sessionId = `acp-${agentId}-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`;
 
     const child = spawn(binary, args, {

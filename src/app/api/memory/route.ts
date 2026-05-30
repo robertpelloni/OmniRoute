@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { listMemories, createMemory } from "@/lib/memory/store";
+<<<<<<< Updated upstream
 import { MemoryType } from "@/lib/memory/types";
 import { parsePaginationParams, buildPaginatedResponse } from "@/shared/types/pagination";
 import { z } from "zod";
@@ -61,6 +62,26 @@ export async function GET(request: Request) {
       ...paginatedResponse,
       stats,
     });
+=======
+
+export async function GET(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const apiKeyId = searchParams.get("apiKeyId") || undefined;
+    const type = (searchParams.get("type") as any) || undefined;
+    const sessionId = searchParams.get("sessionId") || undefined;
+    const limitParams = searchParams.get("limit");
+    const offsetParams = searchParams.get("offset");
+
+    const memories = await listMemories({
+      apiKeyId,
+      type,
+      sessionId,
+      limit: limitParams ? parseInt(limitParams, 10) : undefined,
+      offset: offsetParams ? parseInt(offsetParams, 10) : undefined,
+    });
+    return NextResponse.json({ memories });
+>>>>>>> Stashed changes
   } catch (err: unknown) {
     const error = err instanceof Error ? err.message : String(err);
     return NextResponse.json({ error }, { status: 500 });
@@ -69,12 +90,17 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+<<<<<<< Updated upstream
     const rawBody = await request.json();
     const validation = validateBody(createMemorySchema, rawBody);
     if (isValidationFailure(validation)) {
       return NextResponse.json(validation.error, { status: 400 });
     }
     const memoryId = await createMemory(validation.data);
+=======
+    const body = await request.json();
+    const memoryId = await createMemory(body);
+>>>>>>> Stashed changes
     return NextResponse.json({ success: true, id: memoryId });
   } catch (err: unknown) {
     const error = err instanceof Error ? err.message : String(err);

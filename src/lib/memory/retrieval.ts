@@ -1,6 +1,7 @@
 import { getDbInstance } from "../db/core";
 import { Memory, MemoryConfig, MemoryType } from "./types";
 import { MemoryConfigSchema } from "./schemas";
+<<<<<<< Updated upstream
 import { logger } from "../../../open-sse/utils/logger.ts";
 
 const log = logger("MEMORY_RETRIEVAL");
@@ -27,6 +28,8 @@ interface RetrievalOptions extends Partial<MemoryConfig> {
   query?: string;
   sessionId?: string;
 }
+=======
+>>>>>>> Stashed changes
 
 /**
  * Simple token estimation function (roughly 1 token per 4 characters)
@@ -36,6 +39,7 @@ export function estimateTokens(text: string): number {
   return Math.ceil(text.length / 4);
 }
 
+<<<<<<< Updated upstream
 function hasTable(tableName: string): boolean {
   const db = getDbInstance();
   const row = db
@@ -106,20 +110,31 @@ function getRelevanceScore(memory: Memory, query: string): number {
   return score;
 }
 
+=======
+>>>>>>> Stashed changes
 /**
  * Retrieve memories with token budget enforcement
  */
 export async function retrieveMemories(
   apiKeyId: string,
+<<<<<<< Updated upstream
   config: RetrievalOptions = {}
 ): Promise<Memory[]> {
   log.info("memory.retrieval.start", { apiKeyId, strategy: config.retrievalStrategy });
 
+=======
+  config: Partial<MemoryConfig> = {}
+): Promise<Memory[]> {
+>>>>>>> Stashed changes
   // Validate and normalize config
   const normalizedConfig = MemoryConfigSchema.parse({
     enabled: true,
     maxTokens: 2000,
+<<<<<<< Updated upstream
     retrievalStrategy: "exact",
+=======
+    retrievalStrategy: "recent",
+>>>>>>> Stashed changes
     autoSummarize: false,
     persistAcrossModels: false,
     retentionDays: 30,
@@ -127,6 +142,7 @@ export async function retrieveMemories(
     ...config,
   });
 
+<<<<<<< Updated upstream
   if (!normalizedConfig.enabled || normalizedConfig.maxTokens <= 0) {
     return [];
   }
@@ -286,6 +302,56 @@ export async function retrieveMemories(
   // Process memories until budget exceeded
   for (const entry of rankedRows) {
     const memory = entry.memory;
+=======
+  const maxTokens = Math.min(Math.max(normalizedConfig.maxTokens, 100), 8000);
+  const strategy = normalizedConfig.retrievalStrategy;
+
+  const db = getDbInstance();
+  const memories: Memory[] = [];
+  let totalTokens = 0;
+
+  // Build base query
+  let query = "SELECT * FROM memory WHERE apiKeyId = ?";
+  const params: any[] = [apiKeyId];
+
+  // Add ordering based on strategy
+  switch (strategy) {
+    case "semantic":
+      // For now, semantic search is same as exact (FTS5 not implemented yet)
+      query += " ORDER BY createdAt DESC";
+      break;
+    case "hybrid":
+      // Hybrid is same as exact for now
+      query += " ORDER BY createdAt DESC";
+      break;
+    case "exact":
+    default:
+      query += " ORDER BY createdAt DESC";
+  }
+
+  // Add limit for performance
+  query += " LIMIT 100";
+
+  // Execute query
+  const stmt = db.prepare(query);
+  const rows = stmt.all(...params);
+
+  // Process memories until budget exceeded
+  for (const row of rows) {
+    const memory: Memory = {
+      id: String((row as any).id),
+      apiKeyId: String((row as any).apiKeyId),
+      sessionId: String((row as any).sessionId),
+      type: (row as any).type as MemoryType,
+      key: String((row as any).key),
+      content: String((row as any).content),
+      metadata: JSON.parse(String((row as any).metadata)),
+      createdAt: new Date(String((row as any).createdAt)),
+      updatedAt: new Date(String((row as any).updatedAt)),
+      expiresAt: (row as any).expiresAt ? new Date(String((row as any).expiresAt)) : null,
+    };
+
+>>>>>>> Stashed changes
     // Estimate tokens for this memory
     const memoryTokens = estimateTokens(memory.content);
 
@@ -293,13 +359,18 @@ export async function retrieveMemories(
     if (totalTokens + memoryTokens > maxTokens) {
       // If we haven't added any memories yet, add this one anyway
       if (memories.length === 0) {
+<<<<<<< Updated upstream
         memories.push(entry);
+=======
+        memories.push(memory);
+>>>>>>> Stashed changes
         totalTokens += memoryTokens;
       }
       break;
     }
 
     // Add memory to results
+<<<<<<< Updated upstream
     memories.push(entry);
     totalTokens += memoryTokens;
   }
@@ -308,4 +379,11 @@ export async function retrieveMemories(
   log.info("memory.retrieval.complete", { apiKeyId, count: result.length });
   log.debug("memory.retrieval.selected", { ids: result.map((m) => m.id) });
   return result;
+=======
+    memories.push(memory);
+    totalTokens += memoryTokens;
+  }
+
+  return memories;
+>>>>>>> Stashed changes
 }

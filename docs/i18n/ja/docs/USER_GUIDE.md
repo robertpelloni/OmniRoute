@@ -1,7 +1,11 @@
 # User Guide (日本語)
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 🌐 **Languages:** 🇺🇸 [English](../../../../docs/USER_GUIDE.md) · 🇸🇦 [ar](../../ar/docs/USER_GUIDE.md) · 🇧🇬 [bg](../../bg/docs/USER_GUIDE.md) · 🇧🇩 [bn](../../bn/docs/USER_GUIDE.md) · 🇨🇿 [cs](../../cs/docs/USER_GUIDE.md) · 🇩🇰 [da](../../da/docs/USER_GUIDE.md) · 🇩🇪 [de](../../de/docs/USER_GUIDE.md) · 🇪🇸 [es](../../es/docs/USER_GUIDE.md) · 🇮🇷 [fa](../../fa/docs/USER_GUIDE.md) · 🇫🇮 [fi](../../fi/docs/USER_GUIDE.md) · 🇫🇷 [fr](../../fr/docs/USER_GUIDE.md) · 🇮🇳 [gu](../../gu/docs/USER_GUIDE.md) · 🇮🇱 [he](../../he/docs/USER_GUIDE.md) · 🇮🇳 [hi](../../hi/docs/USER_GUIDE.md) · 🇭🇺 [hu](../../hu/docs/USER_GUIDE.md) · 🇮🇩 [id](../../id/docs/USER_GUIDE.md) · 🇮🇹 [it](../../it/docs/USER_GUIDE.md) · 🇯🇵 [ja](../../ja/docs/USER_GUIDE.md) · 🇰🇷 [ko](../../ko/docs/USER_GUIDE.md) · 🇮🇳 [mr](../../mr/docs/USER_GUIDE.md) · 🇲🇾 [ms](../../ms/docs/USER_GUIDE.md) · 🇳🇱 [nl](../../nl/docs/USER_GUIDE.md) · 🇳🇴 [no](../../no/docs/USER_GUIDE.md) · 🇵🇭 [phi](../../phi/docs/USER_GUIDE.md) · 🇵🇱 [pl](../../pl/docs/USER_GUIDE.md) · 🇵🇹 [pt](../../pt/docs/USER_GUIDE.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/USER_GUIDE.md) · 🇷🇴 [ro](../../ro/docs/USER_GUIDE.md) · 🇷🇺 [ru](../../ru/docs/USER_GUIDE.md) · 🇸🇰 [sk](../../sk/docs/USER_GUIDE.md) · 🇸🇪 [sv](../../sv/docs/USER_GUIDE.md) · 🇰🇪 [sw](../../sw/docs/USER_GUIDE.md) · 🇮🇳 [ta](../../ta/docs/USER_GUIDE.md) · 🇮🇳 [te](../../te/docs/USER_GUIDE.md) · 🇹🇭 [th](../../th/docs/USER_GUIDE.md) · 🇹🇷 [tr](../../tr/docs/USER_GUIDE.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/USER_GUIDE.md) · 🇵🇰 [ur](../../ur/docs/USER_GUIDE.md) · 🇻🇳 [vi](../../vi/docs/USER_GUIDE.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/USER_GUIDE.md)
+=======
+🌐 **Languages:** 🇺🇸 [English](../../../../docs/USER_GUIDE.md) · 🇪🇸 [es](../../es/docs/USER_GUIDE.md) · 🇫🇷 [fr](../../fr/docs/USER_GUIDE.md) · 🇩🇪 [de](../../de/docs/USER_GUIDE.md) · 🇮🇹 [it](../../it/docs/USER_GUIDE.md) · 🇷🇺 [ru](../../ru/docs/USER_GUIDE.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/USER_GUIDE.md) · 🇯🇵 [ja](../../ja/docs/USER_GUIDE.md) · 🇰🇷 [ko](../../ko/docs/USER_GUIDE.md) · 🇸🇦 [ar](../../ar/docs/USER_GUIDE.md) · 🇮🇳 [in](../../in/docs/USER_GUIDE.md) · 🇹🇭 [th](../../th/docs/USER_GUIDE.md) · 🇻🇳 [vi](../../vi/docs/USER_GUIDE.md) · 🇮🇩 [id](../../id/docs/USER_GUIDE.md) · 🇲🇾 [ms](../../ms/docs/USER_GUIDE.md) · 🇳🇱 [nl](../../nl/docs/USER_GUIDE.md) · 🇵🇱 [pl](../../pl/docs/USER_GUIDE.md) · 🇸🇪 [sv](../../sv/docs/USER_GUIDE.md) · 🇳🇴 [no](../../no/docs/USER_GUIDE.md) · 🇩🇰 [da](../../da/docs/USER_GUIDE.md) · 🇫🇮 [fi](../../fi/docs/USER_GUIDE.md) · 🇵🇹 [pt](../../pt/docs/USER_GUIDE.md) · 🇷🇴 [ro](../../ro/docs/USER_GUIDE.md) · 🇭🇺 [hu](../../hu/docs/USER_GUIDE.md) · 🇧🇬 [bg](../../bg/docs/USER_GUIDE.md) · 🇸🇰 [sk](../../sk/docs/USER_GUIDE.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/USER_GUIDE.md) · 🇮🇱 [he](../../he/docs/USER_GUIDE.md) · 🇵🇭 [phi](../../phi/docs/USER_GUIDE.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/USER_GUIDE.md) · 🇨🇿 [cs](../../cs/docs/USER_GUIDE.md)
+>>>>>>> Stashed changes
 =======
 🌐 **Languages:** 🇺🇸 [English](../../../../docs/USER_GUIDE.md) · 🇪🇸 [es](../../es/docs/USER_GUIDE.md) · 🇫🇷 [fr](../../fr/docs/USER_GUIDE.md) · 🇩🇪 [de](../../de/docs/USER_GUIDE.md) · 🇮🇹 [it](../../it/docs/USER_GUIDE.md) · 🇷🇺 [ru](../../ru/docs/USER_GUIDE.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/USER_GUIDE.md) · 🇯🇵 [ja](../../ja/docs/USER_GUIDE.md) · 🇰🇷 [ko](../../ko/docs/USER_GUIDE.md) · 🇸🇦 [ar](../../ar/docs/USER_GUIDE.md) · 🇮🇳 [in](../../in/docs/USER_GUIDE.md) · 🇹🇭 [th](../../th/docs/USER_GUIDE.md) · 🇻🇳 [vi](../../vi/docs/USER_GUIDE.md) · 🇮🇩 [id](../../id/docs/USER_GUIDE.md) · 🇲🇾 [ms](../../ms/docs/USER_GUIDE.md) · 🇳🇱 [nl](../../nl/docs/USER_GUIDE.md) · 🇵🇱 [pl](../../pl/docs/USER_GUIDE.md) · 🇸🇪 [sv](../../sv/docs/USER_GUIDE.md) · 🇳🇴 [no](../../no/docs/USER_GUIDE.md) · 🇩🇰 [da](../../da/docs/USER_GUIDE.md) · 🇫🇮 [fi](../../fi/docs/USER_GUIDE.md) · 🇵🇹 [pt](../../pt/docs/USER_GUIDE.md) · 🇷🇴 [ro](../../ro/docs/USER_GUIDE.md) · 🇭🇺 [hu](../../hu/docs/USER_GUIDE.md) · 🇧🇬 [bg](../../bg/docs/USER_GUIDE.md) · 🇸🇰 [sk](../../sk/docs/USER_GUIDE.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/USER_GUIDE.md) · 🇮🇱 [he](../../he/docs/USER_GUIDE.md) · 🇵🇭 [phi](../../phi/docs/USER_GUIDE.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/USER_GUIDE.md) · 🇨🇿 [cs](../../cs/docs/USER_GUIDE.md)
 >>>>>>> Stashed changes
@@ -62,7 +66,11 @@ Complete guide for configuring providers, creating combos, integrating CLI tools
 ```
 Combo: "maximize-claude"
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   1. cc/claude-opus-4-7        (use subscription fully)
+=======
+  1. cc/claude-opus-4-6        (use subscription fully)
+>>>>>>> Stashed changes
 =======
   1. cc/claude-opus-4-6        (use subscription fully)
 >>>>>>> Stashed changes
@@ -94,7 +102,11 @@ Quality: Production-ready models
 ```
 Combo: "always-on"
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   1. cc/claude-opus-4-7        (best quality)
+=======
+  1. cc/claude-opus-4-6        (best quality)
+>>>>>>> Stashed changes
 =======
   1. cc/claude-opus-4-6        (best quality)
 >>>>>>> Stashed changes
@@ -136,7 +148,11 @@ Dashboard → Providers → Connect Claude Code
 
 Models:
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   cc/claude-opus-4-7
+=======
+  cc/claude-opus-4-6
+>>>>>>> Stashed changes
 =======
   cc/claude-opus-4-6
 >>>>>>> Stashed changes
@@ -183,7 +199,11 @@ Models:
   gh/gpt-5
   gh/claude-4.5-sonnet
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   gh/gemini-3.1-pro-preview
+=======
+  gh/gemini-3-pro
+>>>>>>> Stashed changes
 =======
   gh/gemini-3-pro
 >>>>>>> Stashed changes
@@ -244,8 +264,11 @@ Models: kr/claude-sonnet-4.5, kr/claude-haiku-4.5
 ## 🎨 Combos
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 You can reorder combo cards directly in **Dashboard → Combos** by dragging the handle on each card. The order is stored in SQLite and restored on reload.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 ### Example 1: Maximize Subscription → Cheap Backup
@@ -256,7 +279,11 @@ Dashboard → Combos → Create New
 Name: premium-coding
 Models:
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   1. cc/claude-opus-4-7 (Subscription primary)
+=======
+  1. cc/claude-opus-4-6 (Subscription primary)
+>>>>>>> Stashed changes
 =======
   1. cc/claude-opus-4-6 (Subscription primary)
 >>>>>>> Stashed changes
@@ -289,7 +316,11 @@ Settings → Models → Advanced:
   OpenAI API Base URL: http://localhost:20128/v1
   OpenAI API Key: [from omniroute dashboard]
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   Model: cc/claude-opus-4-7
+=======
+  Model: cc/claude-opus-4-6
+>>>>>>> Stashed changes
 =======
   Model: cc/claude-opus-4-6
 >>>>>>> Stashed changes
@@ -347,7 +378,11 @@ Provider: OpenAI Compatible
 Base URL: http://localhost:20128/v1
 API Key: [from dashboard]
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 Model: cc/claude-opus-4-7
+=======
+Model: cc/claude-opus-4-6
+>>>>>>> Stashed changes
 =======
 Model: cc/claude-opus-4-6
 >>>>>>> Stashed changes
@@ -377,6 +412,7 @@ omniroute --port 3000
 The CLI automatically loads `.env` from `~/.omniroute/.env` or `./.env`.
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ### Uninstalling
 
 When you no longer need OmniRoute, we provide two quick scripts for a clean removal:
@@ -388,6 +424,8 @@ When you no longer need OmniRoute, we provide two quick scripts for a clean remo
 
 > Note: To run these commands, navigate to the OmniRoute project folder (if you cloned it) and run them. Alternatively, if globally installed, you can simply run `npm uninstall -g omniroute`.
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 ### VPS Deployment
@@ -545,7 +583,11 @@ do_install() {
 export PORT="${PORT:-20128}"
 export DATA_DIR="${DATA_DIR:-${XDG_DATA_HOME:-${HOME}/.local/share}/omniroute}"
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 export APP_LOG_TO_FILE="${APP_LOG_TO_FILE:-false}"
+=======
+export LOG_TO_FILE="${LOG_TO_FILE:-false}"
+>>>>>>> Stashed changes
 =======
 export LOG_TO_FILE="${LOG_TO_FILE:-false}"
 >>>>>>> Stashed changes
@@ -564,6 +606,7 @@ post_install() {
 
 ### Environment Variables
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 | Variable                                | Default                              | Description                                                                                               |
 | --------------------------------------- | ------------------------------------ | --------------------------------------------------------------------------------------------------------- |
@@ -588,6 +631,8 @@ post_install() {
 | `PROMPT_CACHE_MAX_SIZE`                 | `50`                                 | Max prompt cache entries                                                                                  |
 | `SEMANTIC_CACHE_MAX_SIZE`               | `100`                                | Max semantic cache entries                                                                                |
 =======
+=======
+>>>>>>> Stashed changes
 | Variable                     | Default                              | Description                                                                                |
 | ---------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------ |
 | `JWT_SECRET`                 | `omniroute-default-secret-change-me` | JWT signing secret (**change in production**)                                              |
@@ -608,6 +653,9 @@ post_install() {
 | `OMNIROUTE_MEMORY_MB`        | `512`                                | Node.js heap limit in MB                                                                   |
 | `PROMPT_CACHE_MAX_SIZE`      | `50`                                 | Max prompt cache entries                                                                   |
 | `SEMANTIC_CACHE_MAX_SIZE`    | `100`                                | Max semantic cache entries                                                                 |
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 For the full environment variable reference, see the [README](../README.md).
@@ -620,7 +668,11 @@ For the full environment variable reference, see the [README](../README.md).
 <summary><b>View all available models</b></summary>
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 **Claude Code (`cc/`)** — Pro/Max: `cc/claude-opus-4-7`, `cc/claude-sonnet-4-5-20250929`, `cc/claude-haiku-4-5-20251001`
+=======
+**Claude Code (`cc/`)** — Pro/Max: `cc/claude-opus-4-6`, `cc/claude-sonnet-4-5-20250929`, `cc/claude-haiku-4-5-20251001`
+>>>>>>> Stashed changes
 =======
 **Claude Code (`cc/`)** — Pro/Max: `cc/claude-opus-4-6`, `cc/claude-sonnet-4-5-20250929`, `cc/claude-haiku-4-5-20251001`
 >>>>>>> Stashed changes
@@ -738,10 +790,14 @@ Returns models grouped by provider with types (`chat`, `embedding`, `image`).
 - Creates a temporary `https://*.trycloudflare.com` URL that forwards to your current OpenAI-compatible `/v1` endpoint
 - First enable installs `cloudflared` only when needed; later restarts reuse the same managed binary
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - Quick Tunnels are not auto-restored after an OmniRoute or container restart; re-enable them from the dashboard when needed
 - Tunnel URLs are ephemeral and change every time you stop/start the tunnel
 - Managed Quick Tunnels default to HTTP/2 transport to avoid noisy QUIC UDP buffer warnings in constrained containers
 - Set `CLOUDFLARED_PROTOCOL=quic` or `auto` if you want to override the managed transport choice
+=======
+- Tunnel URLs are ephemeral and change every time you stop/start the tunnel
+>>>>>>> Stashed changes
 =======
 - Tunnel URLs are ephemeral and change every time you stop/start the tunnel
 >>>>>>> Stashed changes
@@ -821,7 +877,11 @@ Define global fallback chains that apply across all requests:
 ```
 Chain: production-fallback
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   1. cc/claude-opus-4-7
+=======
+  1. cc/claude-opus-4-6
+>>>>>>> Stashed changes
 =======
   1. cc/claude-opus-4-6
 >>>>>>> Stashed changes
@@ -835,6 +895,7 @@ Chain: production-fallback
 
 Configure via **Dashboard → Settings → Resilience**.
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 OmniRoute implements provider-level resilience with five components:
 
@@ -852,6 +913,8 @@ OmniRoute implements provider-level resilience with five components:
    - **Failure Threshold** — Consecutive provider failures before opening the breaker
    - **Reset Timeout** — Time window before the provider is tested again
 =======
+=======
+>>>>>>> Stashed changes
 OmniRoute implements provider-level resilience with four components:
 
 1. **Provider Profiles** — Per-provider configuration for:
@@ -867,11 +930,15 @@ OmniRoute implements provider-level resilience with four components:
    - Click **Edit** to modify, then **Save** or **Cancel**. Values persist via the resilience API.
 
 3. **Circuit Breaker** — Tracks failures per provider and automatically opens the circuit when a threshold is reached:
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
    - **CLOSED** (Healthy) — Requests flow normally
    - **OPEN** — Provider is temporarily blocked after repeated failures
    - **HALF_OPEN** — Testing if provider has recovered
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
    Connection-scoped `429` rate limits stay in **Connection Cooldown** and do not count toward the provider breaker.
 
@@ -883,11 +950,16 @@ OmniRoute implements provider-level resilience with four components:
 
 **Pro Tip:** Use the **Health** page to inspect and reset live provider breakers after an outage. The Resilience page only changes configuration.
 =======
+=======
+>>>>>>> Stashed changes
 4. **Policies & Locked Identifiers** — Shows circuit breaker status and locked identifiers with force-unlock capability.
 
 5. **Rate Limit Auto-Detection** — Monitors `429` and `Retry-After` headers to proactively avoid hitting provider rate limits.
 
 **Pro Tip:** Use **Reset All** button to clear all circuit breakers and cooldowns when a provider recovers from an outage.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 ---
@@ -929,6 +1001,7 @@ curl -X POST http://localhost:20128/api/db-backups/import \
 The settings page is organized into 6 tabs for easy navigation:
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 | Tab            | Contents                                                                                     |
 | -------------- | -------------------------------------------------------------------------------------------- |
 | **General**    | System storage tools, appearance settings, theme controls, and per-item sidebar visibility   |
@@ -938,6 +1011,8 @@ The settings page is organized into 6 tabs for easy navigation:
 | **AI**         | Thinking budget configuration, global system prompt injection, prompt cache stats            |
 | **Advanced**   | Global proxy configuration (HTTP/SOCKS5)                                                     |
 =======
+=======
+>>>>>>> Stashed changes
 | Tab            | Contents                                                                                       |
 | -------------- | ---------------------------------------------------------------------------------------------- |
 | **General**    | System storage tools, appearance settings, theme controls, and per-item sidebar visibility     |
@@ -946,6 +1021,9 @@ The settings page is organized into 6 tabs for easy navigation:
 | **Resilience** | Provider profiles, editable rate limits, circuit breaker status, policies & locked identifiers |
 | **AI**         | Thinking budget configuration, global system prompt injection, prompt cache stats              |
 | **Advanced**   | Global proxy configuration (HTTP/SOCKS5)                                                       |
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 ---
@@ -1020,9 +1098,15 @@ Access via **Dashboard → Health**. Real-time system health overview with 6 car
 | --------------------- | ----------------------------------------------------------- |
 | **System Status**     | Uptime, version, memory usage, data directory               |
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 | **Provider Health**   | Global provider circuit breaker runtime state               |
 | **Rate Limits**       | Active connection cooldowns per account with remaining time |
 | **Active Lockouts**   | Active model-scoped lockouts and temporary exclusions       |
+=======
+| **Provider Health**   | Per-provider circuit breaker state (Closed/Open/Half-Open)  |
+| **Rate Limits**       | Active rate limit cooldowns per account with remaining time |
+| **Active Lockouts**   | Providers temporarily blocked by the lockout policy         |
+>>>>>>> Stashed changes
 =======
 | **Provider Health**   | Per-provider circuit breaker state (Closed/Open/Half-Open)  |
 | **Rate Limits**       | Active rate limit cooldowns per account with remaining time |

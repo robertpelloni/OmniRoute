@@ -6,12 +6,17 @@
 import { NextResponse } from "next/server";
 import { getWebhook, recordWebhookDelivery } from "@/lib/localDb";
 import { deliverWebhook } from "@/lib/webhookDispatcher";
+<<<<<<< Updated upstream
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
 
 export async function POST(_: Request, { params }: { params: Promise<{ id: string }> }) {
   const authError = await requireManagementAuth(_);
   if (authError) return authError;
 
+=======
+
+export async function POST(_: Request, { params }: { params: Promise<{ id: string }> }) {
+>>>>>>> Stashed changes
   try {
     const { id } = await params;
     const webhook = getWebhook(id);

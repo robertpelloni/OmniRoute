@@ -5,10 +5,16 @@ import { useTranslations } from "next-intl";
 export interface CacheTrendPoint {
   timestamp: string;
   requests: number;
+<<<<<<< Updated upstream
   cachedRequests: number;
   inputTokens: number;
   cachedTokens: number;
   cacheCreationTokens: number;
+=======
+  hits: number;
+  misses: number;
+  hitRate: number;
+>>>>>>> Stashed changes
 }
 
 interface CacheTrendsProps {
@@ -28,8 +34,12 @@ export default function CacheTrends({
 
   const trendData: CacheTrendPoint[] = data ?? [];
   const maxRequests = trendData.length > 0 ? Math.max(...trendData.map((p) => p.requests), 1) : 1;
+<<<<<<< Updated upstream
   const maxCachedRequests =
     trendData.length > 0 ? Math.max(...trendData.map((p) => p.cachedRequests), 0) : 0;
+=======
+  const peakHitRate = trendData.length > 0 ? Math.max(...trendData.map((p) => p.hitRate)) : null;
+>>>>>>> Stashed changes
 
   return (
     <div
@@ -71,21 +81,33 @@ export default function CacheTrends({
         </div>
       ) : (
         <>
+<<<<<<< Updated upstream
           {maxCachedRequests > 0 && (
             <div className="text-xs text-text-muted">
               {t("peakCached")}:{" "}
               <span className="font-medium text-foreground">
                 {maxCachedRequests} / {maxRequests}
               </span>
+=======
+          {peakHitRate !== null && (
+            <div className="text-xs text-text-muted">
+              Peak hit rate:{" "}
+              <span className="font-medium text-foreground">{peakHitRate.toFixed(1)}</span>
+>>>>>>> Stashed changes
             </div>
           )}
           <div className="flex items-end gap-1 h-32">
             {trendData.map((point) => {
               const height = Math.max(4, (point.requests / maxRequests) * 100);
+<<<<<<< Updated upstream
               const cachedHeight =
                 point.requests > 0
                   ? Math.max(2, (point.cachedRequests / point.requests) * height)
                   : 0;
+=======
+              const hitHeight =
+                point.requests > 0 ? Math.max(2, (point.hits / point.requests) * height) : 0;
+>>>>>>> Stashed changes
               const hour = new Date(point.timestamp).toLocaleTimeString([], {
                 hour: "2-digit",
                 minute: "2-digit",
@@ -98,17 +120,29 @@ export default function CacheTrends({
                   className="flex-1 flex flex-col items-center gap-1 group relative"
                 >
                   <div className="absolute bottom-full mb-1 hidden group-hover:block bg-surface-raised border border-border rounded px-2 py-1 text-xs whitespace-nowrap z-10">
+<<<<<<< Updated upstream
                     {hour}: {point.requests} {t("requests").toLowerCase()}, {point.cachedRequests}{" "}
                     {t("cached").toLowerCase()}
+=======
+                    {hour}: {point.requests} requests, {point.hits} cached
+>>>>>>> Stashed changes
                   </div>
                   <div className="w-full flex flex-col justify-end h-full gap-px">
                     <div
                       className="w-full bg-green-500/30 rounded-t"
+<<<<<<< Updated upstream
                       style={{ height: `${cachedHeight}%` }}
                     />
                     <div
                       className="w-full bg-text-muted/20 rounded-t"
                       style={{ height: `${height - cachedHeight}%` }}
+=======
+                      style={{ height: `${hitHeight}%` }}
+                    />
+                    <div
+                      className="w-full bg-text-muted/20 rounded-t"
+                      style={{ height: `${height - hitHeight}%` }}
+>>>>>>> Stashed changes
                     />
                   </div>
                   <span className="text-[10px] text-text-muted truncate w-full text-center">

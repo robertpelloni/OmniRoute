@@ -52,6 +52,7 @@ export default function SystemStorageTab() {
       app: 7,
       call: 7,
     },
+<<<<<<< Updated upstream
     tableMaxRows: {
       callLogs: 100000,
       proxyLogs: 100000,
@@ -61,6 +62,8 @@ export default function SystemStorageTab() {
       maxFiles: 20,
       days: 0,
     },
+=======
+>>>>>>> Stashed changes
     lastBackupAt: null,
   });
   const [backupCleanupOptions, setBackupCleanupOptions] = useState({
@@ -485,6 +488,7 @@ export default function SystemStorageTab() {
         </div>
       </div>
 
+<<<<<<< Updated upstream
       {/* Logs Settings Section */}
       <div className="p-3 rounded-lg bg-bg border border-border mb-4">
         <div className="flex items-start justify-between gap-3 flex-wrap">
@@ -577,14 +581,21 @@ export default function SystemStorageTab() {
         </div>
       </div>
 
+=======
+>>>>>>> Stashed changes
       <div className="p-3 rounded-lg bg-bg border border-border mb-4">
         <div className="flex items-start justify-between gap-3 flex-wrap">
           <div>
             <p className="text-sm font-medium text-text-main">Log retention policy</p>
             <p className="text-xs text-text-muted">
+<<<<<<< Updated upstream
               Request logs retain up to <code>CALL_LOGS_TABLE_MAX_ROWS</code> rows (default:
               100,000). Proxy logs retain up to <code>PROXY_LOGS_TABLE_MAX_ROWS</code> rows. Older
               entries auto-deleted.
+=======
+              Request logs follow <code>CALL_LOG_RETENTION_DAYS</code>. Application and audit logs
+              follow <code>APP_LOG_RETENTION_DAYS</code>.
+>>>>>>> Stashed changes
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -594,13 +605,17 @@ export default function SystemStorageTab() {
             <Badge variant="default" size="sm">
               App {storageHealth.retentionDays.app}d
             </Badge>
+<<<<<<< Updated upstream
             <Badge variant="default" size="sm">
               {formatRows(storageHealth.tableMaxRows?.callLogs)} rows
             </Badge>
+=======
+>>>>>>> Stashed changes
           </div>
         </div>
       </div>
 
+<<<<<<< Updated upstream
       <div className="p-3 rounded-lg bg-bg border border-border mb-4">
         <div className="flex items-start justify-between gap-3 flex-wrap mb-3">
           <div>
@@ -690,6 +705,8 @@ export default function SystemStorageTab() {
         )}
       </div>
 
+=======
+>>>>>>> Stashed changes
       {/* Export / Import */}
       <div className="flex flex-wrap items-center gap-2 mb-4">
         <Button variant="outline" size="sm" onClick={handleExport} loading={exportLoading}>

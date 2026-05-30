@@ -66,7 +66,11 @@ export const LANGUAGES: readonly {
   { code: "hi", label: "HI", name: "हिन्दी", flag: "🇮🇳" },
   { code: "hu", label: "HU", name: "Magyar", flag: "🇭🇺" },
   { code: "id", label: "ID", name: "Bahasa Indonesia", flag: "🇮🇩" },
+<<<<<<< Updated upstream
   { code: "in", label: "IN", name: "Bahasa Indonesia (Alt)", flag: "🇮🇩" },
+=======
+  { code: "hi", label: "HI", name: "हिन्दी", flag: "🇮🇳" },
+>>>>>>> Stashed changes
   { code: "it", label: "IT", name: "Italiano", flag: "🇮🇹" },
   { code: "ja", label: "JA", name: "日本語", flag: "🇯🇵" },
   { code: "ko", label: "KO", name: "한국어", flag: "🇰🇷" },

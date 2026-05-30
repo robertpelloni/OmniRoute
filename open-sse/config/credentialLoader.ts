@@ -39,6 +39,20 @@ let cachedProviders: Record<string, unknown> | null = null;
 type CredGlobals = typeof globalThis & { __omnirouteCredNoFileLogged?: boolean };
 function credGlobals(): CredGlobals {
   return globalThis as CredGlobals;
+<<<<<<< Updated upstream
+=======
+}
+
+/**
+ * Resolves the path to provider-credentials.json using the application's
+ * data directory. Delegates to resolveDataDir() which handles DATA_DIR env,
+ * platform-specific defaults, and fallback logic.
+ *
+ * previous: Priority: DATA_DIR env → ./data (project root)
+ */
+function resolveCredentialsPath() {
+  return join(resolveDataDir(), "provider-credentials.json");
+>>>>>>> Stashed changes
 }
 
 function resolveCredentialsPath(): string {

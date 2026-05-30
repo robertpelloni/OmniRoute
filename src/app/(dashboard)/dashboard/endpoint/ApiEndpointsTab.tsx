@@ -2,7 +2,10 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { Card } from "@/shared/components";
+<<<<<<< Updated upstream
 import { useDisplayBaseUrl } from "@/shared/hooks";
+=======
+>>>>>>> Stashed changes
 
 /* ─── Types ──────────────────────────────────────────── */
 interface Endpoint {
@@ -66,9 +69,13 @@ const WEBHOOK_EVENTS = [
 
 /* ─── Main Component ─────────────────────────────────── */
 export default function ApiEndpointsTab() {
+<<<<<<< Updated upstream
   const baseUrl = useDisplayBaseUrl();
   const [catalog, setCatalog] = useState<CatalogData | null>(null);
   const [catalogError, setCatalogError] = useState<string | null>(null);
+=======
+  const [catalog, setCatalog] = useState<CatalogData | null>(null);
+>>>>>>> Stashed changes
   const [loading, setLoading] = useState(true);
   const [section, setSection] = useState<"catalog" | "webhooks">("catalog");
   const [search, setSearch] = useState("");
@@ -96,6 +103,7 @@ export default function ApiEndpointsTab() {
       const res = await fetch("/api/openapi/spec");
       if (res.ok) {
         const data = await res.json();
+<<<<<<< Updated upstream
         return { data: data as CatalogData, error: null };
       }
       const body = await res.json().catch(() => null);
@@ -108,14 +116,26 @@ export default function ApiEndpointsTab() {
       const message = error instanceof Error ? error.message : "Failed to load API catalog";
       return { data: null, error: message };
     }
+=======
+        return data;
+      }
+    } catch {}
+    return null;
+>>>>>>> Stashed changes
   };
 
   useEffect(() => {
     let cancelled = false;
+<<<<<<< Updated upstream
     loadCatalog().then((result) => {
       if (!cancelled) {
         setCatalog(result.data);
         setCatalogError(result.error);
+=======
+    loadCatalog().then((data) => {
+      if (!cancelled) {
+        setCatalog(data);
+>>>>>>> Stashed changes
         setLoading(false);
       }
     });
@@ -352,6 +372,7 @@ export default function ApiEndpointsTab() {
       </div>
 
       {/* ═══ API CATALOG ═══ */}
+<<<<<<< Updated upstream
       {section === "catalog" && !catalog && (
         <Card className="p-6">
           <div className="flex items-start gap-3">
@@ -378,6 +399,8 @@ export default function ApiEndpointsTab() {
         </Card>
       )}
 
+=======
+>>>>>>> Stashed changes
       {section === "catalog" && catalog && (
         <>
           {/* Search & filter */}
@@ -538,7 +561,11 @@ export default function ApiEndpointsTab() {
                               Example
                             </p>
                             <code className="text-[11px] font-mono text-text-main break-all">
+<<<<<<< Updated upstream
                               curl -X {ep.method} {baseUrl}
+=======
+                              curl -X {ep.method} http://localhost:20128
+>>>>>>> Stashed changes
                               {ep.path.replace("/api/", "/")}
                               {ep.security ? ' -H "Authorization: Bearer YOUR_KEY"' : ""}
                               {ep.requestBody

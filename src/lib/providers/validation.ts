@@ -81,12 +81,15 @@ function normalizeBaseUrl(baseUrl: string) {
   return (baseUrl || "").trim().replace(/\/$/, "");
 }
 
+<<<<<<< Updated upstream
 function normalizeAzureOpenAIBaseUrl(baseUrl: string) {
   return normalizeBaseUrl(baseUrl)
     .replace(/\/openai$/i, "")
     .replace(/\/openai\/deployments\/[^/]+\/chat\/completions.*$/i, "");
 }
 
+=======
+>>>>>>> Stashed changes
 function normalizeAnthropicBaseUrl(baseUrl: string) {
   return stripAnthropicMessagesSuffix(baseUrl || "");
 }
@@ -365,6 +368,7 @@ async function validateOpenAILikeProvider({
   return { valid: true, error: null };
 }
 
+<<<<<<< Updated upstream
 async function validateDirectChatProvider({ url, headers, body, providerSpecificData = {} }: any) {
   try {
     const response = await validationWrite(url, {
@@ -533,6 +537,8 @@ async function validateRerankApiProvider({ apiKey, providerSpecificData = {}, ur
   }
 }
 
+=======
+>>>>>>> Stashed changes
 async function validateAnthropicLikeProvider({
   apiKey,
   baseUrl,
@@ -563,7 +569,11 @@ async function validateAnthropicLikeProvider({
   const testModelId =
     providerSpecificData?.validationModelId || modelId || "claude-3-5-sonnet-20241022";
 
+<<<<<<< Updated upstream
   const response = await validationWrite(baseUrl, {
+=======
+  const response = await fetch(baseUrl, {
+>>>>>>> Stashed changes
     method: "POST",
     headers: requestHeaders,
     body: JSON.stringify({
@@ -1991,6 +2001,7 @@ async function validateAnthropicCompatibleProvider({ apiKey, providerSpecificDat
     return { valid: false, error: "No base URL configured for Anthropic compatible provider" };
   }
 
+<<<<<<< Updated upstream
   const headers = applyCustomUserAgent(
     {
       "Content-Type": "application/json",
@@ -2004,6 +2015,18 @@ async function validateAnthropicCompatibleProvider({ apiKey, providerSpecificDat
   // Step 1: Try GET /models
   try {
     const modelsRes = await validationRead(
+=======
+  const headers = {
+    "Content-Type": "application/json",
+    "x-api-key": apiKey,
+    "anthropic-version": "2023-06-01",
+    Authorization: `Bearer ${apiKey}`,
+  };
+
+  // Step 1: Try GET /models
+  try {
+    const modelsRes = await fetch(
+>>>>>>> Stashed changes
       joinBaseUrlAndPath(baseUrl, providerSpecificData?.modelsPath || "/models"),
       {
         method: "GET",
@@ -2025,7 +2048,11 @@ async function validateAnthropicCompatibleProvider({ apiKey, providerSpecificDat
   // Step 2: Fallback — try a minimal messages request
   const testModelId = providerSpecificData?.validationModelId || "claude-3-5-sonnet-20241022";
   try {
+<<<<<<< Updated upstream
     const messagesRes = await validationWrite(
+=======
+    const messagesRes = await fetch(
+>>>>>>> Stashed changes
       joinBaseUrlAndPath(baseUrl, providerSpecificData?.chatPath || "/messages"),
       {
         method: "POST",
@@ -2126,6 +2153,80 @@ export async function validateClaudeCodeCompatibleProvider({
     };
   } catch (error: any) {
     return toValidationErrorResult(error);
+  }
+}
+
+export async function validateClaudeCodeCompatibleProvider({
+  apiKey,
+  providerSpecificData = {},
+}: any) {
+  const baseUrl = normalizeClaudeCodeCompatibleBaseUrl(providerSpecificData.baseUrl);
+  if (!baseUrl) {
+    return { valid: false, error: "No base URL configured for CC Compatible provider" };
+  }
+
+  const modelsPath = providerSpecificData?.modelsPath || CLAUDE_CODE_COMPATIBLE_DEFAULT_MODELS_PATH;
+  const chatPath = providerSpecificData?.chatPath || CLAUDE_CODE_COMPATIBLE_DEFAULT_CHAT_PATH;
+  const defaultHeaders = buildClaudeCodeCompatibleHeaders(apiKey, false);
+
+  try {
+    const modelsRes = await fetch(joinClaudeCodeCompatibleUrl(baseUrl, modelsPath), {
+      method: "GET",
+      headers: defaultHeaders,
+    });
+
+    if (modelsRes.ok) {
+      return { valid: true, error: null, method: "models_endpoint" };
+    }
+
+    if (modelsRes.status === 401 || modelsRes.status === 403) {
+      return { valid: false, error: "Invalid API key" };
+    }
+  } catch {
+    // Fall through to bridge request validation.
+  }
+
+  const payload = buildClaudeCodeCompatibleValidationPayload(
+    providerSpecificData?.validationModelId || "claude-sonnet-4-6"
+  );
+  const sessionId = JSON.parse(payload.metadata.user_id).session_id;
+
+  try {
+    const messagesRes = await fetch(joinClaudeCodeCompatibleUrl(baseUrl, chatPath), {
+      method: "POST",
+      headers: buildClaudeCodeCompatibleHeaders(apiKey, false, sessionId),
+      body: JSON.stringify(payload),
+    });
+
+    if (messagesRes.status === 401 || messagesRes.status === 403) {
+      return { valid: false, error: "Invalid API key" };
+    }
+
+    if (messagesRes.status === 429) {
+      return {
+        valid: true,
+        error: null,
+        method: "cc_bridge_request",
+        warning: "Rate limited, but credentials are valid",
+      };
+    }
+
+    if (messagesRes.status >= 400 && messagesRes.status < 500) {
+      return {
+        valid: true,
+        error: null,
+        method: "cc_bridge_request",
+        warning: "Bridge request reached upstream, but the model or payload was rejected",
+      };
+    }
+
+    return {
+      valid: messagesRes.ok,
+      error: messagesRes.ok ? null : `Validation failed: ${messagesRes.status}`,
+      method: "cc_bridge_request",
+    };
+  } catch (error: any) {
+    return { valid: false, error: error.message || "Connection failed" };
   }
 }
 
@@ -2922,6 +3023,7 @@ export async function validateProviderApiKey({ provider, apiKey, providerSpecifi
     inworld: validateInworldProvider,
     "aws-polly": validateAwsPollyProvider,
     "bailian-coding-plan": validateBailianCodingPlanProvider,
+<<<<<<< Updated upstream
     heroku: validateHerokuProvider,
     databricks: validateDatabricksProvider,
     datarobot: validateDataRobotProvider,
@@ -3033,6 +3135,14 @@ export async function validateProviderApiKey({ provider, apiKey, providerSpecifi
         const res = await validationWrite("https://api.longcat.chat/openai/v1/chat/completions", {
           method: "POST",
           headers: buildBearerHeaders(apiKey, providerSpecificData),
+=======
+    // LongCat AI — does not expose /v1/models; validate via chat completions directly (#592)
+    longcat: async ({ apiKey }: any) => {
+      try {
+        const res = await fetch("https://api.longcat.chat/openai/v1/chat/completions", {
+          method: "POST",
+          headers: buildBearerHeaders(apiKey),
+>>>>>>> Stashed changes
           body: JSON.stringify({
             model: "longcat",
             messages: [{ role: "user", content: "test" }],
@@ -3045,6 +3155,7 @@ export async function validateProviderApiKey({ provider, apiKey, providerSpecifi
         // Any non-auth response (200, 400, 422) means auth passed
         return { valid: true, error: null };
       } catch (error: any) {
+<<<<<<< Updated upstream
         return toValidationErrorResult(error);
       }
     },
@@ -3073,6 +3184,9 @@ export async function validateProviderApiKey({ provider, apiKey, providerSpecifi
         return { valid: true, error: null };
       } catch (error: any) {
         return toValidationErrorResult(error);
+=======
+        return { valid: false, error: error.message || "Connection failed" };
+>>>>>>> Stashed changes
       }
     },
     // Search providers — use factored validator

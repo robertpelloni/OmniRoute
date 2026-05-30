@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+<<<<<<< Updated upstream
 import { getAuditRequestContext, logAuditEvent } from "@/lib/compliance/index";
 import { validateClaudeCodeCompatibleProvider } from "@/lib/providers/validation";
 import {
@@ -11,6 +12,9 @@ import {
   PROVIDER_URL_BLOCKED_MESSAGE,
   getProviderOutboundGuard,
 } from "@/shared/network/outboundUrlGuard";
+=======
+import { validateClaudeCodeCompatibleProvider } from "@/lib/providers/validation";
+>>>>>>> Stashed changes
 import { isCcCompatibleProviderEnabled } from "@/shared/utils/featureFlags";
 import { providerNodeValidateSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
@@ -29,6 +33,7 @@ function sanitizeClaudeCodeCompatibleBaseUrl(baseUrl: string) {
     .replace(/\/(?:v\d+\/)?messages(?:\?[^#]*)?$/i, "");
 }
 
+<<<<<<< Updated upstream
 function sanitizeAuditBaseUrl(baseUrl: string) {
   if (!baseUrl) return null;
   try {
@@ -39,6 +44,8 @@ function sanitizeAuditBaseUrl(baseUrl: string) {
   }
 }
 
+=======
+>>>>>>> Stashed changes
 // POST /api/provider-nodes/validate - Validate API key against base URL
 export async function POST(request) {
   const auditContext = getAuditRequestContext(request);
@@ -79,6 +86,10 @@ export async function POST(request) {
           providerSpecificData: {
             baseUrl: sanitizeClaudeCodeCompatibleBaseUrl(baseUrl),
             chatPath: chatPath || undefined,
+<<<<<<< Updated upstream
+=======
+            modelsPath: modelsPath || undefined,
+>>>>>>> Stashed changes
           },
         });
 

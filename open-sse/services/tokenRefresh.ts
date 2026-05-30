@@ -247,10 +247,27 @@ export async function refreshKimiCodingToken(refreshToken, log, proxyConfig: unk
 export async function refreshClaudeOAuthToken(refreshToken, log, proxyConfig: unknown = null) {
   try {
     // Standard OAuth2 token refresh uses form-urlencoded (not JSON)
+<<<<<<< Updated upstream
     const params = buildFormParams({
       grant_type: "refresh_token",
       refresh_token: refreshToken,
       client_id: PROVIDERS.claude.clientId,
+=======
+    const params = new URLSearchParams({
+      grant_type: "refresh_token",
+      refresh_token: refreshToken,
+      client_id: PROVIDERS.claude.clientId,
+    });
+
+    const response = await fetch(OAUTH_ENDPOINTS.anthropic.token, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Accept: "application/json",
+        "anthropic-beta": "oauth-2025-04-20",
+      },
+      body: params.toString(),
+>>>>>>> Stashed changes
     });
 
     const response = await runWithProxyContext(proxyConfig, () =>
@@ -608,6 +625,7 @@ export async function refreshKiroToken(
 /**
  * Specialized refresh for Qoder OAuth tokens
  */
+<<<<<<< Updated upstream
 export async function refreshQoderToken(refreshToken, log, proxyConfig: unknown = null) {
   if (!OAUTH_ENDPOINTS.qoder.token || !PROVIDERS.qoder.clientId || !PROVIDERS.qoder.clientSecret) {
     log?.warn?.(
@@ -635,6 +653,25 @@ export async function refreshQoderToken(refreshToken, log, proxyConfig: unknown 
       }),
     })
   );
+=======
+export async function refreshIflowToken(refreshToken, log) {
+  const basicAuth = btoa(`${PROVIDERS.qoder.clientId}:${PROVIDERS.qoder.clientSecret}`);
+
+  const response = await fetch(OAUTH_ENDPOINTS.qoder.token, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Accept: "application/json",
+      Authorization: `Basic ${basicAuth}`,
+    },
+    body: new URLSearchParams({
+      grant_type: "refresh_token",
+      refresh_token: refreshToken,
+      client_id: PROVIDERS.qoder.clientId,
+      client_secret: PROVIDERS.qoder.clientSecret,
+    }),
+  });
+>>>>>>> Stashed changes
 
   if (!response.ok) {
     const errorText = await response.text();
@@ -769,7 +806,11 @@ async function _getAccessTokenInternal(provider, credentials, log, proxyConfig: 
       return await refreshQwenToken(credentials.refreshToken, log, proxyConfig);
 
     case "qoder":
+<<<<<<< Updated upstream
       return await refreshQoderToken(credentials.refreshToken, log, proxyConfig);
+=======
+      return await refreshIflowToken(credentials.refreshToken, log);
+>>>>>>> Stashed changes
 
     case "github":
       return await refreshGitHubToken(credentials.refreshToken, log, proxyConfig);

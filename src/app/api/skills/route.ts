@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { skillRegistry } from "@/lib/skills/registry";
+<<<<<<< Updated upstream
 import { parsePaginationParams, buildPaginatedResponse } from "@/shared/types/pagination";
 import { getSkillsProviderSetting } from "@/lib/skills/providerSettings";
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
@@ -54,6 +55,14 @@ export async function GET(request?: Request) {
       provider,
       popularDefaults: POPULAR_BY_PROVIDER[provider],
     });
+=======
+
+export async function GET() {
+  try {
+    await skillRegistry.loadFromDatabase();
+    const skills = skillRegistry.list();
+    return NextResponse.json({ skills });
+>>>>>>> Stashed changes
   } catch (err: unknown) {
     const error = err instanceof Error ? err.message : String(err);
     return NextResponse.json({ error }, { status: 500 });

@@ -1,9 +1,15 @@
 "use client";
 
+<<<<<<< Updated upstream
 import { useState, useEffect, useCallback } from "react";
 import { Card } from "@/shared/components";
 import { useTranslations } from "next-intl";
 import type { SkillsProvider } from "@/lib/skills/providerSettings";
+=======
+import { useState, useEffect } from "react";
+import { Card } from "@/shared/components";
+import { useTranslations } from "next-intl";
+>>>>>>> Stashed changes
 
 interface MemoryConfig {
   enabled: boolean;
@@ -30,6 +36,7 @@ export default function MemorySkillsTab() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [status, setStatus] = useState("");
+<<<<<<< Updated upstream
   const [skillsmpApiKey, setSkillsmpApiKey] = useState("");
   const [skillsmpSaving, setSkillsmpSaving] = useState(false);
   const [skillsmpStatus, setSkillsmpStatus] = useState("");
@@ -106,6 +113,21 @@ export default function MemorySkillsTab() {
 
   const save = async (updates: Partial<MemoryConfig>) => {
     const previousConfig = config;
+=======
+  const t = useTranslations("settings");
+
+  useEffect(() => {
+    fetch("/api/settings/memory")
+      .then((res) => res.json())
+      .then((data) => {
+        setConfig(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  const save = async (updates: Partial<MemoryConfig>) => {
+>>>>>>> Stashed changes
     const newConfig = { ...config, ...updates };
     setConfig(newConfig);
     setSaving(true);
@@ -117,6 +139,7 @@ export default function MemorySkillsTab() {
         body: JSON.stringify(newConfig),
       });
       if (res.ok) {
+<<<<<<< Updated upstream
         const savedConfig = await res.json().catch(() => newConfig);
         setConfig(savedConfig);
         setStatus("saved");
@@ -127,6 +150,14 @@ export default function MemorySkillsTab() {
       }
     } catch {
       setConfig(previousConfig);
+=======
+        setStatus("saved");
+        setTimeout(() => setStatus(""), 2000);
+      } else {
+        setStatus("error");
+      }
+    } catch {
+>>>>>>> Stashed changes
       setStatus("error");
     } finally {
       setSaving(false);
@@ -135,7 +166,11 @@ export default function MemorySkillsTab() {
 
   if (loading) {
     return (
+<<<<<<< Updated upstream
       <Card data-testid="memory-settings-card">
+=======
+      <Card>
+>>>>>>> Stashed changes
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-lg bg-violet-500/10 text-violet-500">
             <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
@@ -181,7 +216,10 @@ export default function MemorySkillsTab() {
             <p className="text-xs text-text-muted mt-0.5">{t("memoryEnabledDesc")}</p>
           </div>
           <button
+<<<<<<< Updated upstream
             data-testid="memory-enabled-switch"
+=======
+>>>>>>> Stashed changes
             onClick={() => save({ enabled: !config.enabled })}
             disabled={saving}
             className={`relative w-11 h-6 rounded-full transition-colors ${
@@ -210,7 +248,10 @@ export default function MemorySkillsTab() {
                 </span>
               </div>
               <input
+<<<<<<< Updated upstream
                 data-testid="memory-max-tokens-slider"
+=======
+>>>>>>> Stashed changes
                 type="range"
                 min="0"
                 max="16000"
@@ -236,7 +277,10 @@ export default function MemorySkillsTab() {
                 </span>
               </div>
               <input
+<<<<<<< Updated upstream
                 data-testid="memory-retention-slider"
+=======
+>>>>>>> Stashed changes
                 type="range"
                 min="1"
                 max="90"
@@ -257,7 +301,10 @@ export default function MemorySkillsTab() {
             <div className="grid grid-cols-3 gap-2">
               {STRATEGIES.map((s) => (
                 <button
+<<<<<<< Updated upstream
                   data-testid={`memory-strategy-${s.value}`}
+=======
+>>>>>>> Stashed changes
                   key={s.value}
                   onClick={() => save({ strategy: s.value as "recent" | "semantic" | "hybrid" })}
                   disabled={loading || saving}
@@ -280,7 +327,12 @@ export default function MemorySkillsTab() {
         )}
       </Card>
 
+<<<<<<< Updated upstream
       <Card data-testid="skills-settings-card">
+=======
+      {/* Skills Settings (placeholder) */}
+      <Card>
+>>>>>>> Stashed changes
         <div className="flex items-center gap-3 mb-5">
           <div className="p-2 rounded-lg bg-amber-500/10 text-amber-500">
             <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
@@ -299,7 +351,10 @@ export default function MemorySkillsTab() {
             <p className="text-xs text-text-muted mt-0.5">{t("skillsEnabledDesc")}</p>
           </div>
           <button
+<<<<<<< Updated upstream
             data-testid="skills-enabled-switch"
+=======
+>>>>>>> Stashed changes
             onClick={() => save({ skillsEnabled: !config.skillsEnabled })}
             disabled={saving}
             className={`relative w-11 h-6 rounded-full transition-colors ${
@@ -315,6 +370,7 @@ export default function MemorySkillsTab() {
             />
           </button>
         </div>
+<<<<<<< Updated upstream
       </Card>
 
       {/* SkillsMP Marketplace API Key */}
@@ -433,6 +489,10 @@ export default function MemorySkillsTab() {
             </p>
           </button>
         </div>
+=======
+
+        <p className="text-xs text-text-muted mt-3">{t("skillsComingSoon")}</p>
+>>>>>>> Stashed changes
       </Card>
     </div>
   );

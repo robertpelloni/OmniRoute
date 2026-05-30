@@ -115,6 +115,7 @@ export async function getComboByName(name: string) {
 export async function createCombo(data: JsonRecord) {
   const db = getDbInstance();
   const now = new Date().toISOString();
+<<<<<<< Updated upstream
   const sortOrder = typeof data.sortOrder === "number" ? data.sortOrder : getNextSortOrder();
   const comboId = typeof data.id === "string" && data.id.trim().length > 0 ? data.id : uuidv4();
   const combo = normalizeStoredCombo(
@@ -133,6 +134,19 @@ export async function createCombo(data: JsonRecord) {
     db,
     typeof data.name === "string" ? [data.name] : []
   );
+=======
+
+  const combo = {
+    id: uuidv4(),
+    name: data.name,
+    models: data.models || [],
+    strategy: data.strategy || "priority",
+    config: data.config || {},
+    isHidden: Boolean(data.isHidden),
+    createdAt: now,
+    updatedAt: now,
+  };
+>>>>>>> Stashed changes
 
   db.prepare(
     "INSERT INTO combos (id, name, data, sort_order, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)"
@@ -176,6 +190,7 @@ export async function updateCombo(id: string, data: JsonRecord) {
   return normalizedMerged;
 }
 
+<<<<<<< Updated upstream
 export async function reorderCombos(comboIds: string[]) {
   const db = getDbInstance();
   const rows = db
@@ -247,6 +262,8 @@ export async function reorderCombos(comboIds: string[]) {
   return getCombos();
 }
 
+=======
+>>>>>>> Stashed changes
 export async function deleteCombo(id: string) {
   const db = getDbInstance();
   const result = db.prepare("DELETE FROM combos WHERE id = ?").run(id);

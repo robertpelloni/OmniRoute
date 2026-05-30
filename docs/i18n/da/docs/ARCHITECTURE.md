@@ -1,9 +1,14 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 <<<<<<<< Updated upstream:docs/i18n/da/docs/ARCHITECTURE.md
 # OmniRoute Architecture (Dansk)
 =======
 <<<<<<<< Updated upstream:docs/i18n/no/docs/ARCHITECTURE.md
 # OmniRoute Architecture (Norsk)
+>>>>>>> Stashed changes
+=======
+<<<<<<<< Updated upstream:docs/i18n/tr/docs/ARCHITECTURE.md
+# OmniRoute Architecture (Türkçe)
 >>>>>>> Stashed changes
 
 🌐 **Languages:** 🇺🇸 [English](../../../../docs/ARCHITECTURE.md) · 🇸🇦 [ar](../../ar/docs/ARCHITECTURE.md) · 🇧🇬 [bg](../../bg/docs/ARCHITECTURE.md) · 🇧🇩 [bn](../../bn/docs/ARCHITECTURE.md) · 🇨🇿 [cs](../../cs/docs/ARCHITECTURE.md) · 🇩🇰 [da](../../da/docs/ARCHITECTURE.md) · 🇩🇪 [de](../../de/docs/ARCHITECTURE.md) · 🇪🇸 [es](../../es/docs/ARCHITECTURE.md) · 🇮🇷 [fa](../../fa/docs/ARCHITECTURE.md) · 🇫🇮 [fi](../../fi/docs/ARCHITECTURE.md) · 🇫🇷 [fr](../../fr/docs/ARCHITECTURE.md) · 🇮🇳 [gu](../../gu/docs/ARCHITECTURE.md) · 🇮🇱 [he](../../he/docs/ARCHITECTURE.md) · 🇮🇳 [hi](../../hi/docs/ARCHITECTURE.md) · 🇭🇺 [hu](../../hu/docs/ARCHITECTURE.md) · 🇮🇩 [id](../../id/docs/ARCHITECTURE.md) · 🇮🇹 [it](../../it/docs/ARCHITECTURE.md) · 🇯🇵 [ja](../../ja/docs/ARCHITECTURE.md) · 🇰🇷 [ko](../../ko/docs/ARCHITECTURE.md) · 🇮🇳 [mr](../../mr/docs/ARCHITECTURE.md) · 🇲🇾 [ms](../../ms/docs/ARCHITECTURE.md) · 🇳🇱 [nl](../../nl/docs/ARCHITECTURE.md) · 🇳🇴 [no](../../no/docs/ARCHITECTURE.md) · 🇵🇭 [phi](../../phi/docs/ARCHITECTURE.md) · 🇵🇱 [pl](../../pl/docs/ARCHITECTURE.md) · 🇵🇹 [pt](../../pt/docs/ARCHITECTURE.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/ARCHITECTURE.md) · 🇷🇴 [ro](../../ro/docs/ARCHITECTURE.md) · 🇷🇺 [ru](../../ru/docs/ARCHITECTURE.md) · 🇸🇰 [sk](../../sk/docs/ARCHITECTURE.md) · 🇸🇪 [sv](../../sv/docs/ARCHITECTURE.md) · 🇰🇪 [sw](../../sw/docs/ARCHITECTURE.md) · 🇮🇳 [ta](../../ta/docs/ARCHITECTURE.md) · 🇮🇳 [te](../../te/docs/ARCHITECTURE.md) · 🇹🇭 [th](../../th/docs/ARCHITECTURE.md) · 🇹🇷 [tr](../../tr/docs/ARCHITECTURE.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/ARCHITECTURE.md) · 🇵🇰 [ur](../../ur/docs/ARCHITECTURE.md) · 🇻🇳 [vi](../../vi/docs/ARCHITECTURE.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/ARCHITECTURE.md)
@@ -13,7 +18,11 @@
 _Last updated: 2026-04-15_
 ========
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 # OmniRoute Architecture (Norsk)
+=======
+# OmniRoute Architecture (Dansk)
+>>>>>>> Stashed changes
 =======
 # OmniRoute Architecture (Dansk)
 >>>>>>> Stashed changes
@@ -24,7 +33,11 @@ _Last updated: 2026-04-15_
 
 _Last updated: 2026-03-28_
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 >>>>>>>> Stashed changes:docs/i18n/no/docs/ARCHITECTURE.md
+=======
+>>>>>>>> Stashed changes:docs/i18n/da/docs/ARCHITECTURE.md
+>>>>>>> Stashed changes
 =======
 >>>>>>>> Stashed changes:docs/i18n/da/docs/ARCHITECTURE.md
 >>>>>>> Stashed changes
@@ -127,9 +140,13 @@ Main pages under `src/app/(dashboard)/dashboard/`:
 - `/dashboard/endpoint` — endpoint proxy + MCP + A2A + API endpoint tabs
 - `/dashboard/providers` — provider connections and credentials
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 <<<<<<<< Updated upstream:docs/i18n/da/docs/ARCHITECTURE.md
 =======
 <<<<<<<< Updated upstream:docs/i18n/no/docs/ARCHITECTURE.md
+>>>>>>> Stashed changes
+=======
+<<<<<<<< Updated upstream:docs/i18n/tr/docs/ARCHITECTURE.md
 >>>>>>> Stashed changes
 - `/dashboard/combos` — combo strategies, templates, step-based builder, model routing rules, manual persisted ordering
 - `/dashboard/costs` — cost aggregation and pricing visibility
@@ -139,7 +156,11 @@ Main pages under `src/app/(dashboard)/dashboard/`:
 - `/dashboard/costs` — cost aggregation and pricing visibility
 - `/dashboard/analytics` — usage analytics and evaluations
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 >>>>>>>> Stashed changes:docs/i18n/no/docs/ARCHITECTURE.md
+=======
+>>>>>>>> Stashed changes:docs/i18n/da/docs/ARCHITECTURE.md
+>>>>>>> Stashed changes
 =======
 >>>>>>>> Stashed changes:docs/i18n/da/docs/ARCHITECTURE.md
 >>>>>>> Stashed changes
@@ -149,6 +170,7 @@ Main pages under `src/app/(dashboard)/dashboard/`:
 - `/dashboard/media` — image/video/music playground
 - `/dashboard/search-tools` — search provider testing and history
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 <<<<<<<< Updated upstream:docs/i18n/da/docs/ARCHITECTURE.md
 - `/dashboard/health` — uptime, circuit breakers, rate limits, quota-monitored sessions
 ========
@@ -156,10 +178,16 @@ Main pages under `src/app/(dashboard)/dashboard/`:
 >>>>>>>> Stashed changes:docs/i18n/no/docs/ARCHITECTURE.md
 =======
 <<<<<<<< Updated upstream:docs/i18n/no/docs/ARCHITECTURE.md
+=======
+<<<<<<<< Updated upstream:docs/i18n/tr/docs/ARCHITECTURE.md
+>>>>>>> Stashed changes
 - `/dashboard/health` — uptime, circuit breakers, rate limits, quota-monitored sessions
 ========
 - `/dashboard/health` — uptime, circuit breakers, rate limits
 >>>>>>>> Stashed changes:docs/i18n/da/docs/ARCHITECTURE.md
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 - `/dashboard/logs` — request/proxy/audit/console logs
 - `/dashboard/settings` — system settings tabs (general, routing, combo defaults, etc.)
@@ -712,9 +740,13 @@ flowchart LR
 Each provider has a specialized executor extending `BaseExecutor` (in `open-sse/executors/base.ts`), which provides URL building, header construction, retry with exponential backoff, credential refresh hooks, and the `execute()` orchestration method.
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 <<<<<<<< Updated upstream:docs/i18n/da/docs/ARCHITECTURE.md
 =======
 <<<<<<<< Updated upstream:docs/i18n/no/docs/ARCHITECTURE.md
+>>>>>>> Stashed changes
+=======
+<<<<<<<< Updated upstream:docs/i18n/tr/docs/ARCHITECTURE.md
 >>>>>>> Stashed changes
 | Executor               | Provider(s)                                                                                                                                                 | Special Handling                                                     |
 | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
@@ -743,7 +775,11 @@ Each provider has a specialized executor extending `BaseExecutor` (in `open-sse/
 | `KiroExecutor`        | AWS CodeWhisperer/Kiro                                                                                                                                       | AWS EventStream binary format → SSE conversion                       |
 | `GeminiCLIExecutor`   | Gemini CLI                                                                                                                                                   | Google OAuth token refresh cycle                                     |
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 >>>>>>>> Stashed changes:docs/i18n/no/docs/ARCHITECTURE.md
+=======
+>>>>>>>> Stashed changes:docs/i18n/da/docs/ARCHITECTURE.md
+>>>>>>> Stashed changes
 =======
 >>>>>>>> Stashed changes:docs/i18n/da/docs/ARCHITECTURE.md
 >>>>>>> Stashed changes
@@ -765,9 +801,13 @@ All other providers (including custom compatible nodes) use the `DefaultExecutor
 | Kiro             | kiro             | AWS SSO OIDC          | ✅ (EventStream) | ❌         | ✅            | ✅ Usage limits    |
 | Qwen             | openai           | OAuth                 | ✅               | ✅         | ✅            | ⚠️ Per request     |
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 <<<<<<<< Updated upstream:docs/i18n/da/docs/ARCHITECTURE.md
 =======
 <<<<<<<< Updated upstream:docs/i18n/no/docs/ARCHITECTURE.md
+>>>>>>> Stashed changes
+=======
+<<<<<<<< Updated upstream:docs/i18n/tr/docs/ARCHITECTURE.md
 >>>>>>> Stashed changes
 | Qoder            | openai           | OAuth / PAT           | ✅               | ✅         | ✅            | ⚠️ Per request     |
 | Kilo Code        | openai           | OAuth                 | ✅               | ✅         | ✅            | ❌                 |
@@ -776,7 +816,11 @@ All other providers (including custom compatible nodes) use the `DefaultExecutor
 ========
 | Qoder            | openai           | OAuth (Basic)         | ✅               | ✅         | ✅            | ⚠️ Per request     |
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 >>>>>>>> Stashed changes:docs/i18n/no/docs/ARCHITECTURE.md
+=======
+>>>>>>>> Stashed changes:docs/i18n/da/docs/ARCHITECTURE.md
+>>>>>>> Stashed changes
 =======
 >>>>>>>> Stashed changes:docs/i18n/da/docs/ARCHITECTURE.md
 >>>>>>> Stashed changes

@@ -49,7 +49,11 @@ export async function getUsageForProvider(connection) {
     case "qwen":
       return await getQwenUsage(accessToken, providerSpecificData);
     case "qoder":
+<<<<<<< Updated upstream
       return await getQoderUsage(accessToken);
+=======
+      return await getIflowUsage(accessToken);
+>>>>>>> Stashed changes
     case "kiro":
     case "amazon-q":
       return await getKiroUsage(accessToken);
@@ -252,6 +256,7 @@ async function probeAntigravityCreditBalance(
 }
 
 /**
+<<<<<<< Updated upstream
  * Antigravity Usage
  * Calls fetchAvailableModels to get per-model quota fractions.
  * Credit balance (GOOGLE_ONE_AI) is read from the executor's in-memory cache,
@@ -390,6 +395,13 @@ async function getAntigravityUsage(
  */
 async function getClaudeUsage(accessToken?: string) {
   try {
+=======
+ * Claude Usage (legacy fallback)
+ * Real Claude OAuth quota windows are fetched in @omniroute/open-sse/services/usage.ts.
+ */
+async function getClaudeUsage() {
+  try {
+>>>>>>> Stashed changes
     return {
       message:
         "Claude connected. Detailed quota windows are handled by the open-sse usage service.",

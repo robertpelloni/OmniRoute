@@ -48,7 +48,11 @@ jobs:
       langs: ${{ steps.langs.outputs.langs }}
     steps:
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       - uses: actions/checkout@v6
+=======
+      - uses: actions/checkout@v4
+>>>>>>> Stashed changes
 =======
       - uses: actions/checkout@v4
 >>>>>>> Stashed changes
@@ -57,7 +61,11 @@ jobs:
           LANG_DIR="src/i18n/messages"
           LANGS=$(ls "$LANG_DIR"/*.json | xargs -n1 basename | sed 's/.json$//' | grep -v '^en$' | jq -R . | jq -s . | jq -c .)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           echo "langs=${LANGS}" >> "$GITHUB_OUTPUT"
+=======
+          echo "langs=${LANGS}" >> $GITHUB_OUTPUT
+>>>>>>> Stashed changes
 =======
           echo "langs=${LANGS}" >> $GITHUB_OUTPUT
 >>>>>>> Stashed changes
@@ -73,8 +81,13 @@ jobs:
     needs: i18n-matrix
     steps:
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
+=======
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v6.2.0
+>>>>>>> Stashed changes
 =======
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v6.2.0
@@ -89,7 +102,11 @@ jobs:
       - name: Upload result
         if: always()
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         uses: actions/upload-artifact@v7
+=======
+        uses: actions/upload-artifact@v4
+>>>>>>> Stashed changes
 =======
         uses: actions/upload-artifact@v4
 >>>>>>> Stashed changes
@@ -97,6 +114,7 @@ jobs:
           name: i18n-${{ matrix.lang }}
           path: result.txt
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
   pr-test-policy:
     name: PR Test Policy
@@ -108,12 +126,17 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v6
 =======
+=======
+>>>>>>> Stashed changes
   security:
     name: Security Audit
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         with:
           node-version: ${{ env.CI_NODE_VERSION }}
@@ -167,8 +190,8 @@ jobs:
       JWT_SECRET: ci-build-secret-with-sufficient-length-for-validation
       CSC_IDENTITY_AUTO_DISCOVERY: "false"
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.CI_NODE_VERSION }}
           cache: npm
@@ -247,8 +270,8 @@ jobs:
       API_KEY_SECRET: ci-test-api-key-secret-long
       DISABLE_SQLITE_AUTO_BACKUP: "true"
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.CI_NODE_26_VERSION }}
           cache: npm
@@ -273,6 +296,7 @@ jobs:
           node-version: ${{ env.CI_NODE_VERSION }}
           cache: npm
       - run: npm ci
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
       - run: npm run check:node-runtime
       - name: Run coverage gate
@@ -416,6 +440,9 @@ jobs:
 =======
       - run: npm run test:coverage
 >>>>>>> Stashed changes
+=======
+      - run: npm run test:coverage
+>>>>>>> Stashed changes
 
   test-e2e:
     name: E2E Tests (${{ matrix.shard }}/6)
@@ -487,6 +514,10 @@ jobs:
       - run: npm run test:security
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+  # 🔥 DASHBOARD
+>>>>>>> Stashed changes
 =======
   # 🔥 DASHBOARD
 >>>>>>> Stashed changes
@@ -496,6 +527,7 @@ jobs:
     if: always()
     needs:
       - lint
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
       - i18n
       - pr-test-policy
@@ -525,6 +557,8 @@ jobs:
         env:
           EVENT_NAME: ${{ github.event_name }}
 =======
+=======
+>>>>>>> Stashed changes
       - security
       - build
       - test-unit
@@ -541,6 +575,9 @@ jobs:
           path: results
 
       - name: Generate dashboard
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         run: |
           status() {
@@ -549,13 +586,17 @@ jobs:
               failure) echo "🔴 FAIL" ;;
               cancelled) echo "⚫ CANCELLED" ;;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
               skipped) echo "⚪ SKIPPED" ;;
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
               *) echo "🟡 UNKNOWN" ;;
             esac
           }
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
           echo "# 🚀 CI Dashboard" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
@@ -592,6 +633,8 @@ jobs:
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "## 🌍 Translations" >> "$GITHUB_STEP_SUMMARY"
 =======
+=======
+>>>>>>> Stashed changes
           echo "# 🚀 CI Dashboard" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
@@ -623,11 +666,15 @@ jobs:
           # 🔹 I18N
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## 🌍 Translations" >> $GITHUB_STEP_SUMMARY
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
           total=0
           langs=0
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
           if [ -d results ]; then
             for file in results/*.txt; do
@@ -652,6 +699,8 @@ jobs:
             echo "" >> "$GITHUB_STEP_SUMMARY"
             echo "✅ **All translations complete**" >> "$GITHUB_STEP_SUMMARY"
 =======
+=======
+>>>>>>> Stashed changes
           for dir in results/*; do
             file="$dir/result.txt"
             val=$(sed -r 's/\x1B\[[0-9;]*[mK]//g' "$file" | grep "Untranslated:" | awk '{print $2}')
@@ -672,5 +721,8 @@ jobs:
           else
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "✅ **All translations complete**" >> $GITHUB_STEP_SUMMARY
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
           fi

@@ -13,7 +13,10 @@
  *   - APP_LOG_MAX_FILE_SIZE: max file size before rotation (default: 50MB)
  *   - APP_LOG_RETENTION_DAYS: days to keep old logs (default: 7)
  *   - APP_LOG_MAX_FILES: max number of rotated log files to keep (default: 20)
+<<<<<<< Updated upstream
  *   - APP_LOG_ROTATION_CHECK_INTERVAL_MS: how often to check log size at runtime (default: 60000ms)
+=======
+>>>>>>> Stashed changes
  */
 
 import { existsSync, mkdirSync, statSync, renameSync, readdirSync, unlinkSync } from "fs";
@@ -25,6 +28,7 @@ import {
   getAppLogRetentionDays,
   getAppLogToFile,
 } from "./logEnv";
+<<<<<<< Updated upstream
 
 const DEFAULT_ROTATION_CHECK_INTERVAL_MS = 60_000;
 
@@ -52,6 +56,16 @@ export function getLogConfig() {
   const retentionDays = getAppLogRetentionDays();
   const maxFiles = getAppLogMaxFiles();
 
+=======
+
+export function getLogConfig() {
+  const logToFile = getAppLogToFile();
+  const logFilePath = getAppLogFilePath() || join(process.cwd(), "logs/application/app.log");
+  const maxFileSize = getAppLogMaxFileSize();
+  const retentionDays = getAppLogRetentionDays();
+  const maxFiles = getAppLogMaxFiles();
+
+>>>>>>> Stashed changes
   return { logToFile, logFilePath, maxFileSize, retentionDays, maxFiles };
 }
 
@@ -179,6 +193,7 @@ export function initLogRotation(): void {
   rotateIfNeeded(config.logFilePath, config.maxFileSize);
   cleanupOldLogs(config.logFilePath, config.retentionDays);
   cleanupOverflowLogs(config.logFilePath, config.maxFiles);
+<<<<<<< Updated upstream
 
   const intervalMs = getAppLogRotationCheckInterval();
   rotationTimer = setInterval(
@@ -203,4 +218,6 @@ export function closeLogRotation(): void {
     clearInterval(rotationTimer);
     rotationTimer = null;
   }
+=======
+>>>>>>> Stashed changes
 }

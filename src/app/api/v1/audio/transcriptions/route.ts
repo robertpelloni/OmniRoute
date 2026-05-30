@@ -1,3 +1,8 @@
+<<<<<<< Updated upstream
+=======
+import { CORS_ORIGIN } from "@/shared/utils/cors";
+
+>>>>>>> Stashed changes
 // Allow large audio/video file uploads — 5min for processing large files (up to 2GB)
 export const maxDuration = 300;
 import { handleAudioTranscription } from "@omniroute/open-sse/handlers/audioTranscription.ts";

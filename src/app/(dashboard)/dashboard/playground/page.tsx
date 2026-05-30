@@ -4,8 +4,11 @@ import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { Card, Button, Select, Badge } from "@/shared/components";
 import { ALIAS_TO_ID } from "@/shared/constants/providers";
+<<<<<<< Updated upstream
 import { pickMaskedDisplayValue, pickDisplayValue } from "@/shared/utils/maskEmail";
 import useEmailPrivacyStore from "@/store/emailPrivacyStore";
+=======
+>>>>>>> Stashed changes
 import dynamic from "next/dynamic";
 
 const Editor = dynamic(() => import("@monaco-editor/react"), { ssr: false });
@@ -30,12 +33,30 @@ interface ProviderOption {
 interface ConnectionOption {
   id: string;
   name: string;
+<<<<<<< Updated upstream
   email?: string;
+=======
+>>>>>>> Stashed changes
   provider: string;
   authType: string;
 }
 
+<<<<<<< Updated upstream
 // Endpoint options will be generated dynamically with translations
+=======
+const ENDPOINT_OPTIONS = [
+  { value: "chat", label: "Chat Completions" },
+  { value: "responses", label: "Responses" },
+  { value: "images", label: "Image Generation" },
+  { value: "embeddings", label: "Embeddings" },
+  { value: "speech", label: "Text to Speech" },
+  { value: "transcription", label: "Audio Transcription" },
+  { value: "video", label: "Video Generation" },
+  { value: "music", label: "Music Generation" },
+  { value: "rerank", label: "Rerank" },
+  { value: "search", label: "Web Search" },
+];
+>>>>>>> Stashed changes
 
 const DEFAULT_BODIES: Record<string, object> = {
   chat: {
@@ -233,6 +254,7 @@ export default function PlaygroundPage() {
   const isImageEndpoint = selectedEndpoint === "images";
   const supportsVision = isChatEndpoint && isVisionModel(selectedModel);
 
+<<<<<<< Updated upstream
   useEffect(() => {
     return () => {
       if (audioUrl) {
@@ -250,6 +272,17 @@ export default function PlaygroundPage() {
 
   // Fetch models and ALL connections at startup
   useEffect(() => {
+=======
+  // Load connections for a given provider — filtered from allConnections
+  const providerConnections = allConnections.filter((c) => {
+    if (!selectedProvider) return false;
+    const resolvedProvider = ALIAS_TO_ID[selectedProvider] || selectedProvider;
+    return c.provider === resolvedProvider || c.provider === selectedProvider;
+  });
+
+  // Fetch models and ALL connections at startup
+  useEffect(() => {
+>>>>>>> Stashed changes
     // Fetch models
     fetch("/v1/models")
       .then((res) => res.json())
@@ -280,8 +313,12 @@ export default function PlaygroundPage() {
         for (const conn of data?.connections || []) {
           conns.push({
             id: conn.id,
+<<<<<<< Updated upstream
             name: conn.name || conn.id,
             email: conn.email,
+=======
+            name: conn.name || conn.email || conn.id,
+>>>>>>> Stashed changes
             provider: conn.provider,
             authType: conn.authType || "apiKey",
           });
@@ -547,10 +584,17 @@ export default function PlaygroundPage() {
           )}
 
           {/* Account/Key — always shown when provider is selected */}
+<<<<<<< Updated upstream
           {!isSearchEndpoint && !isConversationalEndpoint && (
             <div className="flex-1 w-full">
               <label className="block text-xs font-medium text-text-muted mb-1.5 uppercase tracking-wider">
                 {t("accountKey")}
+=======
+          {!isSearchEndpoint && (
+            <div className="flex-1 w-full">
+              <label className="block text-xs font-medium text-text-muted mb-1.5 uppercase tracking-wider">
+                Account / Key
+>>>>>>> Stashed changes
               </label>
               <Select
                 value={selectedConnection}
@@ -560,12 +604,21 @@ export default function PlaygroundPage() {
                     value: "",
                     label:
                       providerConnections.length > 0
+<<<<<<< Updated upstream
                         ? t("autoAccounts", { count: providerConnections.length })
                         : t("noAccounts"),
                   },
                   ...providerConnections.map((c) => ({
                     value: c.id,
                     label: pickDisplayValue([c.name, c.email], emailsVisible, c.id),
+=======
+                        ? `Auto (${providerConnections.length} accounts)`
+                        : "No accounts",
+                  },
+                  ...providerConnections.map((c) => ({
+                    value: c.id,
+                    label: c.name,
+>>>>>>> Stashed changes
                   })),
                 ]}
                 className="w-full"

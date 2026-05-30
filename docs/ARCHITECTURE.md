@@ -3,7 +3,11 @@
 🌐 **Languages:** 🇺🇸 [English](ARCHITECTURE.md) | 🇧🇷 [Português (Brasil)](i18n/pt-BR/ARCHITECTURE.md) | 🇪🇸 [Español](i18n/es/ARCHITECTURE.md) | 🇫🇷 [Français](i18n/fr/ARCHITECTURE.md) | 🇮🇹 [Italiano](i18n/it/ARCHITECTURE.md) | 🇷🇺 [Русский](i18n/ru/ARCHITECTURE.md) | 🇨🇳 [中文 (简体)](i18n/zh-CN/ARCHITECTURE.md) | 🇩🇪 [Deutsch](i18n/de/ARCHITECTURE.md) | 🇮🇳 [हिन्दी](i18n/in/ARCHITECTURE.md) | 🇹🇭 [ไทย](i18n/th/ARCHITECTURE.md) | 🇺🇦 [Українська](i18n/uk-UA/ARCHITECTURE.md) | 🇸🇦 [العربية](i18n/ar/ARCHITECTURE.md) | 🇯🇵 [日本語](i18n/ja/ARCHITECTURE.md) | 🇻🇳 [Tiếng Việt](i18n/vi/ARCHITECTURE.md) | 🇧🇬 [Български](i18n/bg/ARCHITECTURE.md) | 🇩🇰 [Dansk](i18n/da/ARCHITECTURE.md) | 🇫🇮 [Suomi](i18n/fi/ARCHITECTURE.md) | 🇮🇱 [עברית](i18n/he/ARCHITECTURE.md) | 🇭🇺 [Magyar](i18n/hu/ARCHITECTURE.md) | 🇮🇩 [Bahasa Indonesia](i18n/id/ARCHITECTURE.md) | 🇰🇷 [한국어](i18n/ko/ARCHITECTURE.md) | 🇲🇾 [Bahasa Melayu](i18n/ms/ARCHITECTURE.md) | 🇳🇱 [Nederlands](i18n/nl/ARCHITECTURE.md) | 🇳🇴 [Norsk](i18n/no/ARCHITECTURE.md) | 🇵🇹 [Português (Portugal)](i18n/pt/ARCHITECTURE.md) | 🇷🇴 [Română](i18n/ro/ARCHITECTURE.md) | 🇵🇱 [Polski](i18n/pl/ARCHITECTURE.md) | 🇸🇰 [Slovenčina](i18n/sk/ARCHITECTURE.md) | 🇸🇪 [Svenska](i18n/sv/ARCHITECTURE.md) | 🇵🇭 [Filipino](i18n/phi/ARCHITECTURE.md) | 🇨🇿 [Čeština](i18n/cs/ARCHITECTURE.md)
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 _Last updated: 2026-05-02_
+=======
+_Last updated: 2026-03-28_
+>>>>>>> Stashed changes
 =======
 _Last updated: 2026-03-28_
 >>>>>>> Stashed changes
@@ -107,9 +111,15 @@ Main pages under `src/app/(dashboard)/dashboard/`:
 - `/dashboard/endpoint` — endpoint proxy + MCP + A2A + API endpoint tabs
 - `/dashboard/providers` — provider connections and credentials
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - `/dashboard/combos` — combo strategies, templates, step-based builder, model routing rules, manual persisted ordering
 - `/dashboard/costs` — cost aggregation and pricing visibility
 - `/dashboard/analytics` — usage analytics, evaluations, combo target health
+=======
+- `/dashboard/combos` — combo strategies, templates, model routing rules
+- `/dashboard/costs` — cost aggregation and pricing visibility
+- `/dashboard/analytics` — usage analytics and evaluations
+>>>>>>> Stashed changes
 =======
 - `/dashboard/combos` — combo strategies, templates, model routing rules
 - `/dashboard/costs` — cost aggregation and pricing visibility
@@ -121,12 +131,18 @@ Main pages under `src/app/(dashboard)/dashboard/`:
 - `/dashboard/media` — image/video/music playground
 - `/dashboard/search-tools` — search provider testing and history
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - `/dashboard/health` — uptime, circuit breakers, rate limits, quota-monitored sessions
 - `/dashboard/logs` — request/proxy/audit/console logs
 - `/dashboard/settings` — system settings tabs (general, routing, combo defaults, etc.)
 - `/dashboard/context/caveman` — Caveman compression rules, language packs, preview, and output mode
 - `/dashboard/context/rtk` — RTK command-output filters, preview, and runtime safety settings
 - `/dashboard/context/combos` — named compression pipelines assigned to routing combos
+=======
+- `/dashboard/health` — uptime, circuit breakers, rate limits
+- `/dashboard/logs` — request/proxy/audit/console logs
+- `/dashboard/settings` — system settings tabs (general, routing, combo defaults, etc.)
+>>>>>>> Stashed changes
 =======
 - `/dashboard/health` — uptime, circuit breakers, rate limits
 - `/dashboard/logs` — request/proxy/audit/console logs
@@ -736,10 +752,14 @@ All other providers (including custom compatible nodes) use the `DefaultExecutor
 | Kiro             | kiro             | AWS SSO OIDC          | ✅ (EventStream) | ❌         | ✅            | ✅ Usage limits    |
 | Qwen             | openai           | OAuth                 | ✅               | ✅         | ✅            | ⚠️ Per request     |
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 | Qoder            | openai           | OAuth / PAT           | ✅               | ✅         | ✅            | ⚠️ Per request     |
 | Kilo Code        | openai           | OAuth                 | ✅               | ✅         | ✅            | ❌                 |
 | Cline            | openai           | OAuth                 | ✅               | ✅         | ✅            | ❌                 |
 | Kimi Coding      | openai           | OAuth                 | ✅               | ✅         | ✅            | ❌                 |
+=======
+| Qoder            | openai           | OAuth (Basic)         | ✅               | ✅         | ✅            | ⚠️ Per request     |
+>>>>>>> Stashed changes
 =======
 | Qoder            | openai           | OAuth (Basic)         | ✅               | ✅         | ✅            | ⚠️ Per request     |
 >>>>>>> Stashed changes

@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 <<<<<<<< Updated upstream:docs/i18n/in/docs/ARCHITECTURE.md
 # OmniRoute Architecture (हिन्दी (IN))
 
@@ -12,6 +13,9 @@ _Last updated: 2026-04-15_
 =======
 # OmniRoute Architecture (हिन्दी)
 >>>>>>> Stashed changes
+=======
+# OmniRoute Architecture (हिन्दी)
+>>>>>>> Stashed changes
 
 🌐 **Languages:** 🇺🇸 [English](../../../../docs/ARCHITECTURE.md) · 🇪🇸 [es](../../es/docs/ARCHITECTURE.md) · 🇫🇷 [fr](../../fr/docs/ARCHITECTURE.md) · 🇩🇪 [de](../../de/docs/ARCHITECTURE.md) · 🇮🇹 [it](../../it/docs/ARCHITECTURE.md) · 🇷🇺 [ru](../../ru/docs/ARCHITECTURE.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/ARCHITECTURE.md) · 🇯🇵 [ja](../../ja/docs/ARCHITECTURE.md) · 🇰🇷 [ko](../../ko/docs/ARCHITECTURE.md) · 🇸🇦 [ar](../../ar/docs/ARCHITECTURE.md) · 🇮🇳 [in](../../in/docs/ARCHITECTURE.md) · 🇹🇭 [th](../../th/docs/ARCHITECTURE.md) · 🇻🇳 [vi](../../vi/docs/ARCHITECTURE.md) · 🇮🇩 [id](../../id/docs/ARCHITECTURE.md) · 🇲🇾 [ms](../../ms/docs/ARCHITECTURE.md) · 🇳🇱 [nl](../../nl/docs/ARCHITECTURE.md) · 🇵🇱 [pl](../../pl/docs/ARCHITECTURE.md) · 🇸🇪 [sv](../../sv/docs/ARCHITECTURE.md) · 🇳🇴 [no](../../no/docs/ARCHITECTURE.md) · 🇩🇰 [da](../../da/docs/ARCHITECTURE.md) · 🇫🇮 [fi](../../fi/docs/ARCHITECTURE.md) · 🇵🇹 [pt](../../pt/docs/ARCHITECTURE.md) · 🇷🇴 [ro](../../ro/docs/ARCHITECTURE.md) · 🇭🇺 [hu](../../hu/docs/ARCHITECTURE.md) · 🇧🇬 [bg](../../bg/docs/ARCHITECTURE.md) · 🇸🇰 [sk](../../sk/docs/ARCHITECTURE.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/ARCHITECTURE.md) · 🇮🇱 [he](../../he/docs/ARCHITECTURE.md) · 🇵🇭 [phi](../../phi/docs/ARCHITECTURE.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/ARCHITECTURE.md) · 🇨🇿 [cs](../../cs/docs/ARCHITECTURE.md)
 
@@ -19,7 +23,10 @@ _Last updated: 2026-04-15_
 
 _Last updated: 2026-03-28_
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 >>>>>>>> Stashed changes:docs/i18n/fi/docs/ARCHITECTURE.md
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 
@@ -30,6 +37,7 @@ It provides a single OpenAI-compatible endpoint (`/v1/*`) and routes traffic acr
 
 Core capabilities:
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 - OpenAI-compatible API surface for CLI/tools (100+ providers, 16 executors)
 - Request/response translation across provider formats
@@ -48,6 +56,8 @@ Core capabilities:
 - Moderations via `/v1/moderations`
 - Reranking via `/v1/rerank`
 =======
+=======
+>>>>>>> Stashed changes
 - OpenAI-compatible API surface for CLI/tools (28 providers)
 - Request/response translation across provider formats
 - Model combo fallback (multi-model sequence)
@@ -55,13 +65,20 @@ Core capabilities:
 - OAuth + API-key provider connection management
 - Embedding generation via `/v1/embeddings` (6 providers, 9 models)
 - Image generation via `/v1/images/generations` (4 providers, 9 models)
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 - Think tag parsing (`<think>...</think>`) for reasoning models
 - Response sanitization for strict OpenAI SDK compatibility
 - Role normalization (developer→system, system→user) for cross-provider compatibility
 - Structured output conversion (json_schema → Gemini responseSchema)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - Local persistence for providers, keys, aliases, combos, settings, pricing (26 DB modules)
+=======
+- Local persistence for providers, keys, aliases, combos, settings, pricing
+>>>>>>> Stashed changes
 =======
 - Local persistence for providers, keys, aliases, combos, settings, pricing
 >>>>>>> Stashed changes
@@ -77,6 +94,7 @@ Core capabilities:
 - Signature-based request deduplication cache
 - Domain layer: model availability, cost rules, fallback policy, lockout policy
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - Context Relay: session handoff summaries for account rotation continuity
 - Domain state persistence (SQLite write-through cache for fallbacks, budgets, lockouts, circuit breakers)
 - Policy engine for centralized request evaluation (lockout → budget → fallback)
@@ -87,10 +105,16 @@ Core capabilities:
 - Policy engine for centralized request evaluation (lockout → budget → fallback)
 - Request telemetry with p50/p95/p99 latency aggregation
 >>>>>>> Stashed changes
+=======
+- Domain state persistence (SQLite write-through cache for fallbacks, budgets, lockouts, circuit breakers)
+- Policy engine for centralized request evaluation (lockout → budget → fallback)
+- Request telemetry with p50/p95/p99 latency aggregation
+>>>>>>> Stashed changes
 - Correlation ID (X-Request-Id) for end-to-end tracing
 - Compliance audit logging with opt-out per API key
 - Eval framework for LLM quality assurance
 - Resilience UI dashboard with real-time circuit breaker status
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 - MCP Server (25 tools) with 3 transports (stdio/SSE/Streamable HTTP)
 - A2A Server (JSON-RPC 2.0 + SSE) with skills and task lifecycle
@@ -111,6 +135,9 @@ Core capabilities:
 - Cooldown-aware chat retries with configurable `requestRetry` and `maxRetryIntervalSec`
 - Runtime environment validation with Zod at startup
 - Compliance audit v2 with pagination, provider CRUD events, and SSRF-blocked validation logging
+=======
+- Modular OAuth providers (12 individual modules under `src/lib/oauth/providers/`)
+>>>>>>> Stashed changes
 =======
 - Modular OAuth providers (12 individual modules under `src/lib/oauth/providers/`)
 >>>>>>> Stashed changes
@@ -145,6 +172,7 @@ Main pages under `src/app/(dashboard)/dashboard/`:
 - `/dashboard/endpoint` — endpoint proxy + MCP + A2A + API endpoint tabs
 - `/dashboard/providers` — provider connections and credentials
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 <<<<<<<< Updated upstream:docs/i18n/in/docs/ARCHITECTURE.md
 - `/dashboard/combos` — combo strategies, templates, step-based builder, model routing rules, manual persisted ordering
 - `/dashboard/costs` — cost aggregation and pricing visibility
@@ -159,17 +187,26 @@ Main pages under `src/app/(dashboard)/dashboard/`:
 - `/dashboard/costs` — cost aggregation and pricing visibility
 - `/dashboard/analytics` — usage analytics and evaluations
 >>>>>>> Stashed changes
+=======
+- `/dashboard/combos` — combo strategies, templates, model routing rules
+- `/dashboard/costs` — cost aggregation and pricing visibility
+- `/dashboard/analytics` — usage analytics and evaluations
+>>>>>>> Stashed changes
 - `/dashboard/limits` — quota/rate controls
 - `/dashboard/cli-tools` — CLI onboarding, runtime detection, config generation
 - `/dashboard/agents` — detected ACP agents + custom agent registration
 - `/dashboard/media` — image/video/music playground
 - `/dashboard/search-tools` — search provider testing and history
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 <<<<<<<< Updated upstream:docs/i18n/in/docs/ARCHITECTURE.md
 - `/dashboard/health` — uptime, circuit breakers, rate limits, quota-monitored sessions
 ========
 - `/dashboard/health` — uptime, circuit breakers, rate limits
 >>>>>>>> Stashed changes:docs/i18n/fi/docs/ARCHITECTURE.md
+=======
+- `/dashboard/health` — uptime, circuit breakers, rate limits
+>>>>>>> Stashed changes
 =======
 - `/dashboard/health` — uptime, circuit breakers, rate limits
 >>>>>>> Stashed changes
@@ -276,12 +313,18 @@ Management domains:
 - Budget: `src/app/api/usage/budget` (GET/POST)
 - Fallback chains: `src/app/api/fallback/chains` (GET/POST/DELETE)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - Compliance audit: `src/app/api/compliance/audit-log` (GET, with pagination + structured metadata)
 - Evals: `src/app/api/evals` (GET/POST), `src/app/api/evals/[suiteId]` (GET)
 - Policies: `src/app/api/policies` (GET/POST)
 - Sync tokens: `src/app/api/sync/tokens` (GET/POST), `src/app/api/sync/tokens/[id]` (GET/DELETE)
 - Config bundle: `src/app/api/sync/bundle` (GET, ETag-versioned snapshot of settings/providers/combos/keys)
 - WebSocket: `src/app/api/v1/ws/route.ts` — Upgrade handler for OpenAI-compatible WS clients
+=======
+- Compliance audit: `src/app/api/compliance/audit-log` (GET)
+- Evals: `src/app/api/evals` (GET/POST), `src/app/api/evals/[suiteId]` (GET)
+- Policies: `src/app/api/policies` (GET/POST)
+>>>>>>> Stashed changes
 =======
 - Compliance audit: `src/app/api/compliance/audit-log` (GET)
 - Evals: `src/app/api/evals` (GET/POST), `src/app/api/evals/[suiteId]` (GET)
@@ -322,6 +365,7 @@ Services (business logic):
 - Rate limit management: `open-sse/services/rateLimitManager.ts`
 - Circuit breaker: `open-sse/services/circuitBreaker.ts`
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - Context handoff: `open-sse/services/contextHandoff.ts` — handoff summary generation and injection for context-relay strategy
 - Codex quota fetcher: `open-sse/services/codexQuotaFetcher.ts` — fetches Codex quota for context-relay handoff decisions
 - Cooldown-aware retry: `src/sse/services/cooldownAwareRetry.ts` — per-model cooldown retries with configurable `requestRetry` / `maxRetryIntervalSec`
@@ -332,6 +376,8 @@ Services (business logic):
 - Antigravity upstream: `open-sse/config/antigravityUpstream.ts` — base URL and discovery path constants
 - Codex client constants: `open-sse/config/codexClient.ts` — versioned user-agent and client-version values
 - Model alias seed: `src/lib/modelAliasSeed.ts` — seeds 30+ cross-proxy dialect aliases at startup
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 
@@ -352,7 +398,11 @@ Domain layer modules:
 - Domain state persistence: `src/lib/db/domainState.ts` — SQLite CRUD for fallback chains, budgets, cost history, lockout state, circuit breakers
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 OAuth provider modules (13 individual files under `src/lib/oauth/providers/`):
+=======
+OAuth provider modules (12 individual files under `src/lib/oauth/providers/`):
+>>>>>>> Stashed changes
 =======
 OAuth provider modules (12 individual files under `src/lib/oauth/providers/`):
 >>>>>>> Stashed changes
@@ -390,10 +440,13 @@ Domain State DB (SQLite):
 - Provider secrets persisted in `providerConnections` entries
 - Outbound proxy support via `open-sse/utils/proxyFetch.ts` (env vars) and `open-sse/utils/networkProxy.ts` (configurable per-provider or global)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - SSRF / outbound URL guard: `src/shared/network/outboundUrlGuard.ts` — blocks private/loopback/link-local ranges for all provider calls
 - Runtime env validation: `src/lib/env/runtimeEnv.ts` — Zod schema for all environment variables, surfaced as startup errors/warnings
 - Sync tokens: `src/lib/db/syncTokens.ts` — scoped tokens for config bundle download endpoints; backed by `sync_tokens` SQLite table (migration `024_create_sync_tokens.sql`)
 - WebSocket handshake auth: `src/lib/ws/handshake.ts` — validates WS upgrade requests via API key or session cookie
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 
@@ -714,10 +767,13 @@ flowchart LR
 - `src/app/api/sessions`: active session listing (GET)
 - `src/app/api/rate-limits`: per-account rate limit status (GET)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - `src/app/api/sync/tokens`: sync token CRUD (GET/POST)
 - `src/app/api/sync/tokens/[id]`: sync token get/delete (GET/DELETE)
 - `src/app/api/sync/bundle`: config bundle download (GET, ETag versioning)
 - `src/app/api/v1/ws`: WebSocket upgrade handler for OpenAI-compatible WS clients
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 
@@ -745,6 +801,7 @@ flowchart LR
 Each provider has a specialized executor extending `BaseExecutor` (in `open-sse/executors/base.ts`), which provides URL building, header construction, retry with exponential backoff, credential refresh hooks, and the `execute()` orchestration method.
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 <<<<<<<< Updated upstream:docs/i18n/in/docs/ARCHITECTURE.md
 | Executor               | Provider(s)                                                                                                                                                 | Special Handling                                                     |
 | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
@@ -765,6 +822,8 @@ Each provider has a specialized executor extending `BaseExecutor` (in `open-sse/
 ========
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 | Executor              | Provider(s)                                                                                                                                                  | Special Handling                                                     |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------- |
 | `DefaultExecutor`     | OpenAI, Claude, Gemini, Qwen, Qoder, OpenRouter, GLM, Kimi, MiniMax, DeepSeek, Groq, xAI, Mistral, Perplexity, Together, Fireworks, Cerebras, Cohere, NVIDIA | Dynamic URL/header config per provider                               |
@@ -775,7 +834,10 @@ Each provider has a specialized executor extending `BaseExecutor` (in `open-sse/
 | `KiroExecutor`        | AWS CodeWhisperer/Kiro                                                                                                                                       | AWS EventStream binary format → SSE conversion                       |
 | `GeminiCLIExecutor`   | Gemini CLI                                                                                                                                                   | Google OAuth token refresh cycle                                     |
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 >>>>>>>> Stashed changes:docs/i18n/fi/docs/ARCHITECTURE.md
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 
@@ -796,6 +858,7 @@ All other providers (including custom compatible nodes) use the `DefaultExecutor
 | Kiro             | kiro             | AWS SSO OIDC          | ✅ (EventStream) | ❌         | ✅            | ✅ Usage limits    |
 | Qwen             | openai           | OAuth                 | ✅               | ✅         | ✅            | ⚠️ Per request     |
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 <<<<<<<< Updated upstream:docs/i18n/in/docs/ARCHITECTURE.md
 | Qoder            | openai           | OAuth / PAT           | ✅               | ✅         | ✅            | ⚠️ Per request     |
 | Kilo Code        | openai           | OAuth                 | ✅               | ✅         | ✅            | ❌                 |
@@ -804,6 +867,9 @@ All other providers (including custom compatible nodes) use the `DefaultExecutor
 ========
 | Qoder            | openai           | OAuth (Basic)         | ✅               | ✅         | ✅            | ⚠️ Per request     |
 >>>>>>>> Stashed changes:docs/i18n/fi/docs/ARCHITECTURE.md
+=======
+| Qoder            | openai           | OAuth (Basic)         | ✅               | ✅         | ✅            | ⚠️ Per request     |
+>>>>>>> Stashed changes
 =======
 | Qoder            | openai           | OAuth (Basic)         | ✅               | ✅         | ✅            | ⚠️ Per request     |
 >>>>>>> Stashed changes
@@ -820,6 +886,7 @@ All other providers (including custom compatible nodes) use the `DefaultExecutor
 | Cohere           | openai           | API Key               | ✅               | ✅         | ❌            | ❌                 |
 | NVIDIA NIM       | openai           | API Key               | ✅               | ✅         | ❌            | ❌                 |
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 | Cloudflare AI    | openai           | API Token + Acct ID   | ✅               | ✅         | ❌            | ❌                 |
 | Pollinations     | openai           | None (no key)         | ✅               | ✅         | ❌            | ❌                 |
 | Scaleway AI      | openai           | API Key               | ✅               | ✅         | ❌            | ❌                 |
@@ -831,6 +898,8 @@ All other providers (including custom compatible nodes) use the `DefaultExecutor
 | Hyperbolic       | openai           | API Key               | ✅               | ✅         | ❌            | ❌                 |
 | Vertex AI        | gemini           | Service Account       | ✅               | ✅         | ✅            | ⚠️ Cloud Console   |
 | Puter            | openai           | API Key               | ✅               | ✅         | ❌            | ❌                 |
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 
@@ -893,6 +962,7 @@ Additional processing layers in the translation pipeline:
 The bypass handler (`open-sse/utils/bypassHandler.ts`) intercepts known "throwaway" requests from Claude CLI — warmup pings, title extractions, and token counts — and returns a **fake response** without consuming upstream provider tokens. This is triggered only when `User-Agent` contains `claude-cli`.
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ## Request Logging and Artifacts
 
 The older file-based request logger (`open-sse/utils/requestLogger.ts`) is retained only for
@@ -902,6 +972,8 @@ legacy compatibility. The current runtime contract uses:
 - SQLite-backed call log records in `call_logs`
 - `${DATA_DIR}/call_logs/YYYY-MM-DD/...` artifacts when the call log pipeline is enabled
 =======
+=======
+>>>>>>> Stashed changes
 ## Request Logger Pipeline
 
 The request logger (`open-sse/utils/requestLogger.ts`) provides a 7-stage debug logging pipeline, disabled by default, enabled via `ENABLE_REQUEST_LOGS=true`:
@@ -912,6 +984,9 @@ The request logger (`open-sse/utils/requestLogger.ts`) provides a 7-stage debug 
 ```
 
 Files are written to `<repo>/logs/<session>/` for each request session.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 ## Failure Modes and Resilience
@@ -944,12 +1019,15 @@ Files are written to `<repo>/logs/<session>/` for each request session.
 - legacy JSON → SQLite migration compatibility path
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ## 6) SSRF / Outbound URL Guard
 
 - `src/shared/network/outboundUrlGuard.ts` blocks all private/loopback/link-local target URLs before they reach provider executors
 - Provider model discovery and validation routes use `src/shared/network/safeOutboundFetch.ts` which applies the guard before every outbound request
 - Guard errors surface as `URL_GUARD_BLOCKED` with HTTP 422 and are logged to the compliance audit trail via `providerAudit.ts`
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 ## Observability and Operational Signals
@@ -961,8 +1039,12 @@ Runtime visibility sources:
 - four-stage detailed payload captures in SQLite (`request_detail_logs`) when `settings.detailed_logs_enabled=true`
 - textual request status log in `log.txt` (optional/compat)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - optional application log files under `logs/` when `APP_LOG_TO_FILE=true`
 - optional request artifacts under `${DATA_DIR}/call_logs/` when the call log pipeline is enabled
+=======
+- optional deep request/translation logs under `logs/` when `ENABLE_REQUEST_LOGS=true`
+>>>>>>> Stashed changes
 =======
 - optional deep request/translation logs under `logs/` when `ENABLE_REQUEST_LOGS=true`
 >>>>>>> Stashed changes
@@ -993,7 +1075,11 @@ Environment variables actively used by code:
 - Optional storage base override (Linux/macOS when `DATA_DIR` unset): `XDG_CONFIG_HOME`
 - Security hashing: `API_KEY_SECRET`, `MACHINE_ID_SALT`
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - Logging: `APP_LOG_TO_FILE`, `APP_LOG_RETENTION_DAYS`, `CALL_LOG_RETENTION_DAYS`
+=======
+- Logging: `ENABLE_REQUEST_LOGS`
+>>>>>>> Stashed changes
 =======
 - Logging: `ENABLE_REQUEST_LOGS`
 >>>>>>> Stashed changes
@@ -1012,10 +1098,14 @@ Environment variables actively used by code:
 6. Charts in the dashboard use **Recharts** (SVG-based) for accessible, interactive analytics visualizations (model usage bar charts, provider breakdown tables with success rates).
 7. E2E tests use **Playwright** (`tests/e2e/`), run via `npm run test:e2e`. Unit tests use **Node.js test runner** (`tests/unit/`), run via `npm run test:unit`. Source code under `src/` is **TypeScript** (`.ts`/`.tsx`); the `open-sse/` workspace remains JavaScript (`.js`).
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 8. Settings page is organized into 5 tabs: Security, Routing (6 global strategies: fill-first, round-robin, p2c, random, least-used, cost-optimized), Resilience (editable rate limits, circuit breaker, policies, **Context Relay** handoff config), AI (thinking budget, system prompt, prompt cache), Advanced (proxy).
 9. **Context Relay** strategy (`context-relay`) is split across two layers: `combo.ts` decides if a handoff should be generated, `chat.ts` injects the handoff after account resolution. Handoff data lives in `context_handoffs` SQLite table. This split is intentional because only `chat.ts` knows whether the actual account changed.
 10. **Proxy enforcement** is now comprehensive: `tokenHealthCheck.ts` resolves proxy per connection, `/api/providers/validate` uses `runWithProxyContext`, and `proxyFetch.ts` uses `undici.fetch()` to maintain dispatcher compatibility on Node 22.
 11. **Node.js runtime policy detection**: `/api/settings/require-login` returns `nodeVersion` and `nodeCompatible` fields. The login page renders a warning banner when the runtime falls outside the supported secure Node.js lines.
+=======
+8. Settings page is organized into 5 tabs: Security, Routing (6 global strategies: fill-first, round-robin, p2c, random, least-used, cost-optimized), Resilience (editable rate limits, circuit breaker, policies), AI (thinking budget, system prompt, prompt cache), Advanced (proxy).
+>>>>>>> Stashed changes
 =======
 8. Settings page is organized into 5 tabs: Security, Routing (6 global strategies: fill-first, round-robin, p2c, random, least-used, cost-optimized), Resilience (editable rate limits, circuit breaker, policies), AI (thinking budget, system prompt, prompt cache), Advanced (proxy).
 >>>>>>> Stashed changes

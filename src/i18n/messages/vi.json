@@ -136,6 +136,7 @@
     "Failed to save pricing": "Không lưu được giá",
     "Failed to reset pricing": "Không thể đặt lại giá",
     "apikey": "Khóa API",
+<<<<<<< Updated upstream
     "http": "HTTP",
     "nothingHere": "Nothing here yet",
     "checkSystemStatus": "Check System Status",
@@ -649,6 +650,9 @@
     "learnedFromHeaders": "Learned From Headers",
     "totalRequests": "Total Requests",
     "cloudUnstableNote": "Cloud Unstable Note"
+=======
+    "http": "HTTP"
+>>>>>>> Stashed changes
   },
   "sidebar": {
     "home": "Trang chủ",
@@ -703,6 +707,7 @@
     "themeViolet": "Violet",
     "themeOrange": "Orange",
     "themeCyan": "Cyan",
+<<<<<<< Updated upstream
     "cliToolsShort": "Công cụ",
     "cache": "Cache",
     "cacheShort": "Cache",
@@ -742,6 +747,21 @@
     "contextCaveman": "Caveman",
     "contextRtk": "RTK",
     "contextCombos": "Compression Combos"
+=======
+    "endpoints": "Điểm cuối",
+    "playground": "Playground",
+    "agents": "Tác nhân",
+    "cliToolsShort": "Công cụ",
+    "autoCombo": "Auto Combo",
+    "searchTools": "Search Tools",
+    "cache": "Cache",
+    "cacheShort": "Cache",
+    "cliSection": "CLI",
+    "debugSection": "Debug",
+    "helpSection": "Help",
+    "primarySection": "Main",
+    "systemSection": "System"
+>>>>>>> Stashed changes
   },
   "themesPage": {
     "title": "Themes",
@@ -828,9 +848,13 @@
     "utilization": "Tỷ lệ sử dụng",
     "utilizationDescription": "Xu hướng sử dụng hạn ngạch nhà cung cấp và theo dõi giới hạn tốc độ",
     "comboHealth": "Sức khỏe Combo",
+<<<<<<< Updated upstream
     "comboHealthDescription": "Hạn ngạch cấp combo, phân phối sử dụng và số liệu hiệu suất",
     "compressionAnalyticsTitle": "Compression Analytics",
     "compressionAnalyticsDescription": "Compression analytics — token savings, mode breakdown, and provider stats."
+=======
+    "comboHealthDescription": "Hạn ngạch cấp combo, phân phối sử dụng và số liệu hiệu suất"
+>>>>>>> Stashed changes
   },
   "apiManager": {
     "title": "Khóa API",
@@ -937,7 +961,28 @@
     "permissionsTitle": "Quyền: {name}",
     "allowAllDesc": "Chìa khóa này có thể truy cập vào tất cả các mô hình có sẵn.",
     "restrictDesc": "Khóa này có thể truy cập {selectedCount} trong số {totalModels} mô hình.",
-    "selectedCount": "{count} đã chọn"
+    "selectedCount": "{count} đã chọn",
+    "autoResolve": "Auto-Resolve",
+    "autoResolveDesc": "Auto-resolve ambiguous model names to native provider for this API key.",
+    "keyActive": "Key Active",
+    "keyActiveDesc": "Enable or disable this API key. Disabled keys are immediately rejected with 403.",
+    "accessSchedule": "Access Schedule",
+    "accessScheduleDesc": "Restrict access to specific hours and days of the week.",
+    "scheduleFrom": "From",
+    "scheduleUntil": "Until",
+    "scheduleDays": "Days",
+    "scheduleTimezone": "Timezone",
+    "scheduleTimezoneHint": "Use IANA timezone names, e.g. America/New_York, Europe/Berlin",
+    "scheduleActive": "Schedule",
+    "disabled": "Disabled",
+    "daySun": "Sun",
+    "dayMon": "Mon",
+    "dayTue": "Tue",
+    "dayWed": "Wed",
+    "dayThu": "Thu",
+    "dayFri": "Fri",
+    "daySat": "Sat",
+    "keyOnlyAvailableAtCreation": "Full key available only at creation time — copy it when you first create the key"
   },
   "auditLog": {
     "title": "Nhật ký kiểm tra",
@@ -1208,9 +1253,13 @@
       "opencode": "OpenCode AI coding agent (Terminal)",
       "kiro": "Amazon Kiro — AI-powered IDE",
       "windsurf": "Windsurf AI Code Editor",
+<<<<<<< Updated upstream
       "copilot": "GitHub Copilot AI Assistant",
       "qwen": "Alibaba Qwen Code CLI",
       "amp": "Sourcegraph Amp coding assistant CLI"
+=======
+      "copilot": "GitHub Copilot AI Assistant"
+>>>>>>> Stashed changes
     },
     "guides": {
       "cursor": {
@@ -1335,6 +1384,7 @@
         }
       }
     },
+<<<<<<< Updated upstream
     "autoConfiguredTab": "Auto Configured Tab",
     "toolCategoriesDesc": "Tool Categories Desc",
     "allToolsTab": "All Tools Tab",
@@ -1342,6 +1392,29 @@
     "mitmClientsTab": "Mitm Clients Tab",
     "toolCategories": "Tool Categories",
     "visibleToolsCount": "Visible Tools Count"
+=======
+    "mitmHowWorksDesc": "{toolName} sends requests to its provider endpoint. MITM intercepts and redirects them to OmniRoute.",
+    "mitmStep1": "1. Start MITM to route requests through OmniRoute.",
+    "mitmStep2Prefix": "2. Add",
+    "mitmStep2Suffix": "to your hosts file as 127.0.0.1.",
+    "mitmStep3": "3. Open {toolName} and requests will be proxied.",
+    "whenToUseLabel": "Khi nào nên sử dụng",
+    "openToolDocs": "Mở tài liệu công cụ",
+    "toolUseCases": {
+      "claude": "Sử dụng khi bạn muốn quy trình lập kế hoạch mạnh mẽ và các trình tái cấu trúc nhiều tệp dài với Mã Claude.",
+      "codex": "Sử dụng khi nhóm của bạn được chuẩn hóa trên các luồng OpenAI Codex CLI và xác thực dựa trên hồ sơ.",
+      "droid": "Sử dụng khi bạn cần một tác nhân đầu cuối nhẹ tập trung vào các vòng lặp thực thi lệnh và mã hóa nhanh.",
+      "openclaw": "Sử dụng khi bạn muốn một tác nhân mã hóa kiểu Open Claw nhưng được định tuyến thông qua các chính sách OmniRoute.",
+      "cline": "Sử dụng khi bạn định cấu hình các tác nhân mã hóa bên trong trình chỉnh sửa và muốn thiết lập có hướng dẫn với các mô hình OmniRoute.",
+      "kilo": "Sử dụng khi quy trình làm việc của bạn phụ thuộc vào các lệnh Kilo Code và các chỉnh sửa lặp lại nhanh chóng.",
+      "cursor": "Sử dụng khi mã hóa bằng Con trỏ và bạn cần các mô hình tương thích với OpenAI tùy chỉnh thông qua OmniRoute.",
+      "continue": "Sử dụng khi chạy Tiếp tục trong IDE và bạn cần cấu hình nhà cung cấp dựa trên JSON di động.",
+      "opencode": "Sử dụng khi bạn thích chạy tác nhân gốc trên thiết bị đầu cuối và tự động hóa theo kịch bản thông qua OpenCode.",
+      "kiro": "Sử dụng khi tích hợp Kiro và điều khiển định tuyến mô hình tập trung từ OmniRoute.",
+      "antigravity": "Sử dụng khi lưu lượng truy cập AntiGravity/Kiro phải bị chặn thông qua MITM và được định tuyến đến OmniRoute.",
+      "copilot": "Sử dụng khi bạn muốn UX kiểu trò chuyện Copilot trong khi thực thi các khóa OmniRoute và quy tắc định tuyến."
+    }
+>>>>>>> Stashed changes
   },
   "combos": {
     "title": "Combo",
@@ -1452,6 +1525,7 @@
         "when": "Use when you want perfectly even spread — each model used once before repeating.",
         "avoid": "Avoid when models have different quality or latency and order matters.",
         "example": "Example: Multiple accounts of the same model to distribute usage evenly."
+<<<<<<< Updated upstream
       },
       "p2c": {
         "example": "Example: High-throughput inference across 4+ equivalent model endpoints.",
@@ -1462,6 +1536,8 @@
         "example": "Example: Codex sessions that rotate across multiple accounts near quota exhaustion.",
         "avoid": "Avoid when account switching is rare or when you do not want extra summarization requests.",
         "when": "Use when long sessions must survive account rotation without losing the working context."
+=======
+>>>>>>> Stashed changes
       }
     },
     "advancedHelp": {
@@ -1565,6 +1641,7 @@
       }
     },
     "templateFreeStack": "Free Stack ($0)",
+<<<<<<< Updated upstream
     "templateFreeStackDesc": "Round-robin across all free providers: Kiro (Claude), Qoder (5 models), Qwen (4 models), Gemini CLI. Zero cost, never stops coding.",
     "auto": "Auto Combo",
     "autoDesc": "Self-healing smart routing pool (Performance optimized)",
@@ -1692,6 +1769,9 @@
     "reviewStrategy": "Strategy",
     "builderComboRefStep": "Add combo reference",
     "filterEmptyTitle": "No combos match this strategy filter."
+=======
+    "templateFreeStackDesc": "Round-robin across all free providers: Kiro (Claude), Qoder (5 models), Qwen (4 models), Gemini CLI. Zero cost, never stops coding."
+>>>>>>> Stashed changes
   },
   "costs": {
     "title": "Chi phí",
@@ -1848,6 +1928,7 @@
     "a2aQuickStartStep3": "Track and control tasks using `tasks/get` and `tasks/cancel`.",
     "completionsLegacy": "Completions (Legacy)",
     "completionsLegacyDesc": "Legacy OpenAI text completions — accepts both prompt string and messages array format",
+<<<<<<< Updated upstream
     "musicGeneration": "Music Generation",
     "musicDesc": "Generate music and audio tracks via ComfyUI (Stable Audio, MusicGen)",
     "videoGeneration": "Video Generation",
@@ -1908,6 +1989,32 @@
     "featureWebhooks": "Webhook configuration and event subscriptions",
     "featureSwagger": "OpenAPI / Swagger spec auto-generation",
     "featureAuth": "API key and OAuth scope management per endpoint"
+=======
+    "categorySearch": "Search & Discovery",
+    "webSearch": "Web Search",
+    "webSearchDesc": "Unified web search across multiple providers with automatic failover and caching",
+    "searchProvider": "Search Provider",
+    "searchProviderDesc": "This provider is used for web search via POST /v1/search. No model configuration needed — search providers are ready to use once an API key is connected.",
+    "cloudflaredDescription": "Create a Cloudflare Quick Tunnel for this endpoint to make it accessible from the internet without configuring DNS.",
+    "cloudflaredDisable": "Stop Tunnel",
+    "cloudflaredEnable": "Enable Tunnel",
+    "cloudflaredError": "Error",
+    "cloudflaredIdleNote": "Create a temporary Cloudflare Quick Tunnel for this endpoint.",
+    "cloudflaredInstallAndEnable": "Install & Enable",
+    "cloudflaredLastError": "Last error: {error}",
+    "cloudflaredNotInstalled": "Not installed",
+    "cloudflaredRequestFailed": "Failed to update Cloudflare tunnel",
+    "cloudflaredRunning": "Running",
+    "cloudflaredStarted": "Cloudflare tunnel started",
+    "cloudflaredStarting": "Starting",
+    "cloudflaredStopped": "Cloudflare tunnel stopped",
+    "cloudflaredStoppedState": "Stopped",
+    "cloudflaredTemporaryNote": "Quick Tunnel URLs are temporary and will change after restart.",
+    "cloudflaredTitle": "Cloudflare Quick Tunnel",
+    "cloudflaredUnsupported": "Unsupported",
+    "cloudflaredUnsupportedNote": "This platform is not supported for managed installation.",
+    "cloudflaredUrlNotice": "Creates a temporary Cloudflare Quick Tunnel. URLs change after restart."
+>>>>>>> Stashed changes
   },
   "mcpDashboard": {
     "loading": "Loading MCP dashboard...",
@@ -2112,11 +2219,20 @@
     "resetting": "Đang đặt lại...",
     "resetAll": "Đặt lại tất cả",
     "until": "Cho đến {time}",
+<<<<<<< Updated upstream
     "limitExhausted": "Exhausted",
     "learnedFromHeaders": "Learned from headers",
     "remainingOfLimit": "{remaining}/{limit} remaining",
     "throttleStatus": "Throttle: {value}",
     "lastHeaderUpdate": "Header update: {age}"
+=======
+    "activeProviders": "{count} active",
+    "monitoredProviders": "{count} monitored",
+    "configuredProvidersLabel": "Được định cấu hình trong bảng điều khiển",
+    "configuredProvidersHint": "Nhà cung cấp có thông tin xác thực được lưu trong /dashboard/providers, bất kể trạng thái thời gian chạy.",
+    "activeProvidersHint": "Nhà cung cấp được định cấu hình hiện đã được bật cho các yêu cầu định tuyến.",
+    "monitoredProvidersHint": "Các nhà cung cấp hiện được theo dõi bởi máy theo dõi tình trạng ngắt mạch."
+>>>>>>> Stashed changes
   },
   "limits": {
     "title": "Giới hạn & hạn ngạch",
@@ -2362,6 +2478,7 @@
     "chatCompletions": "Hoàn thành cuộc trò chuyện",
     "importingModels": "Đang nhập khẩu...",
     "importFromModels": "Nhập từ /model",
+<<<<<<< Updated upstream
     "allModelsAlreadyImported": "Tất cả mô hình đã được nhập",
     "noNewModelsToImport": "Không có mô hình mới để nhập — tất cả mô hình đã có trong danh mục hoặc danh sách mô hình tùy chỉnh",
     "skippingExistingModels": "Bỏ qua {count} mô hình hiện có",
@@ -2370,6 +2487,8 @@
     "autoSyncEnabled": "Đã bật tự động đồng bộ hóa - các mô hình sẽ làm mới định kỳ",
     "autoSyncDisabled": "Tự động đồng bộ hóa đã bị tắt",
     "autoSyncToggleFailed": "Không chuyển đổi được tính năng tự động đồng bộ hóa",
+=======
+>>>>>>> Stashed changes
     "clearAllModels": "Xóa tất cả các mẫu",
     "clearAllModelsConfirm": "Bạn có chắc chắn muốn xóa tất cả mô hình của nhà cung cấp này không? Điều này không thể hoàn tác được.",
     "clearAllModelsSuccess": "Tất cả các mô hình đã bị xóa",
@@ -2547,6 +2666,7 @@
     "modelsPathLabel": "Models Endpoint Path",
     "modelsPathPlaceholder": "/models",
     "modelsPathHint": "Custom models path for validation (e.g. /v4/models)",
+<<<<<<< Updated upstream
     "modelsImported": "{count} models imported",
     "close": "Close",
     "statusDeactivated": "Deactivated (Manual)",
@@ -2721,6 +2841,46 @@
     "perModelQuotaLabel": "Per Model Quota Label",
     "expiredBadge": "Expired",
     "expiringSoonBadge": "Expiring Soon"
+=======
+    "builtInModels": "Built-in models",
+    "builtInModelsHint": "Registry models for this provider. Use the pencil to set compatibility options.",
+    "normalizeToolCallIdLabel": "Normalize tool call IDs to 9 characters (e.g. Mistral)",
+    "preserveDeveloperRoleLabel": "Keep OpenAI Responses developer role (do not map to system)",
+    "compatAdjustmentsTitle": "Compatibility",
+    "compatButtonLabel": "Compatibility",
+    "compatToolIdShort": "Tool ID 9",
+    "compatDeveloperShort": "Developer role",
+    "compatDoNotPreserveDeveloper": "Do not preserve developer role",
+    "compatBadgeNoPreserve": "No preserve",
+    "compatProtocolLabel": "Client request protocol",
+    "compatProtocolHint": "These options apply when OmniRoute detects this request shape (OpenAI Chat, Responses API, or Anthropic Messages).",
+    "compatProtocolOpenAI": "OpenAI Chat Completions",
+    "compatProtocolOpenAIResponses": "OpenAI Responses API",
+    "compatProtocolClaude": "Anthropic Messages",
+    "tokenRefreshed": "Token refreshed successfully",
+    "tokenRefreshFailed": "Token refresh failed",
+    "compatBadgeUpstreamHeaders": "Headers",
+    "compatUpstreamAddRow": "Add header",
+    "compatUpstreamHeaderName": "Header name",
+    "compatUpstreamHeaderValue": "Value",
+    "compatUpstreamHeadersHint": "High-privilege setting — same trust level as editing provider API credentials; only trusted admins should use it. Merged after OmniRoute adds auth from the provider API key. If a custom header uses the same name as an existing one (e.g. Authorization), your value fully replaces the auto-generated header (including the Bearer token) — the upstream only sees what you typed, not the key from settings. Misconfiguration can cause 401 or broken upstream auth. One row per header (e.g. extra Authentication for some gateways). Hover or focus the value to preview. Saves on blur, outside click, or closing this panel.",
+    "compatUpstreamHeadersLabel": "Extra upstream headers",
+    "compatUpstreamRemoveRow": "Remove row",
+    "autoSync": "Tự động đồng bộ hóa",
+    "autoSyncTooltip": "Tự động làm mới danh sách mô hình sau mỗi 24 giờ (có thể định cấu hình qua MODEL_SYNC_INTERVAL_HOURS)",
+    "autoSyncEnabled": "Đã bật tự động đồng bộ hóa - các mô hình sẽ làm mới định kỳ",
+    "autoSyncDisabled": "Tự động đồng bộ hóa đã bị tắt",
+    "autoSyncToggleFailed": "Không chuyển đổi được tính năng tự động đồng bộ hóa",
+    "allModelsAlreadyImported": "Tất cả mô hình đã được nhập",
+    "noNewModelsToImport": "Không có mô hình mới để nhập — tất cả mô hình đã có trong danh mục hoặc danh sách mô hình tùy chỉnh",
+    "skippingExistingModels": "Bỏ qua {count} mô hình hiện có",
+    "applyCodexAuthLocal": "Apply auth",
+    "codexAuthAppliedLocal": "Codex auth.json applied locally",
+    "codexAuthApplyFailed": "Failed to apply Codex auth.json locally",
+    "codexAuthExportFailed": "Failed to export Codex auth.json",
+    "codexAuthExported": "Codex auth.json exported",
+    "exportCodexAuthFile": "Export auth"
+>>>>>>> Stashed changes
   },
   "settings": {
     "title": "Cài đặt",
@@ -3162,6 +3322,7 @@
     "editPricing": "Chỉnh sửa giá",
     "viewFullDetails": "Xem chi tiết đầy đủ",
     "themeCoral": "San hô",
+<<<<<<< Updated upstream
     "modelsDevTitle": "Model Database",
     "modelsDevDesc": "Auto-sync pricing, capabilities & specs from models.dev",
     "modelsDevEnabled": "Enable models.dev Sync",
@@ -3394,6 +3555,37 @@
       "full": "Respond terse and compact. Preserve all technical substance.",
       "ultra": "Respond ultra terse with common technical abbreviations. Preserve exact symbols."
     }
+=======
+    "cliFingerprint": "CLI Fingerprint Matching",
+    "cliFingerprintDesc": "Match native CLI binary signatures when proxying requests. Reorders headers and body fields to look identical to the official CLI tools. Your proxy IP is preserved.",
+    "cliFingerprintEnabled": "{count} provider(s) with CLI fingerprint active",
+    "enableFingerprintTitle": "Enable fingerprint for {provider}",
+    "disableFingerprintTitle": "Disable fingerprint for {provider}",
+    "routingAdvancedGuideTitle": "Hướng dẫn định tuyến nâng cao",
+    "routingAdvancedGuideHint1": "Sử dụng Fill First để có mức độ ưu tiên có thể dự đoán được, Round Robin để đảm bảo tính công bằng và P2C để có khả năng phục hồi độ trễ.",
+    "routingAdvancedGuideHint2": "Nếu các nhà cung cấp khác nhau về chất lượng/chi phí, hãy bắt đầu với Cost Opt cho công việc nền và Ít được sử dụng nhất để cân bằng độ hao mòn.",
+    "comboDefaultsGuideTitle": "Cách điều chỉnh mặc định kết hợp",
+    "comboDefaultsGuideHint1": "Giữ số lần thử ở mức thấp trong các luồng có độ trễ thấp; chỉ tăng thời gian chờ cho các tác vụ tạo dài.",
+    "comboDefaultsGuideHint2": "Sử dụng ghi đè nhà cung cấp khi một nhà cung cấp cần hành vi hết thời gian chờ/thử lại khác với mặc định chung.",
+    "sidebarVisibility": "Hide sidebar items",
+    "sidebarVisibilityDesc": "Hide any sidebar navigation entry to reduce visual clutter.",
+    "sidebarVisibilityHint": "Any sidebar section is hidden automatically when a...",
+    "semanticCache": "Semantic Cache",
+    "autoDisableDescription": "Permanently mark provider connections as deactivated if they return specific terminal ban signals (e.g. HTTP 403 'verify your account'). This removes them from the combo rotation.",
+    "preserveClientCache": "Preserve Client Cache",
+    "cacheSettings": "Cache Settings",
+    "autoDisableThreshold": "Ban Threshold",
+    "autoDisableBannedAccounts": "Auto-Disable Banned Accounts",
+    "ttlMinutes": "TTL (minutes)",
+    "maxEntries": "Max Entries",
+    "loading": "Loading...",
+    "save": "Save",
+    "autoDisableThresholdDesc": "Consecutive ban signals required before permanent deactivation.",
+    "debugToggle": "Enable Debug Mode",
+    "sidebarVisibilityToggle": "Show Sidebar Items",
+    "enabled": "Enabled",
+    "strategy": "Strategy"
+>>>>>>> Stashed changes
   },
   "translator": {
     "title": "Người phiên dịch",
@@ -3903,7 +4095,11 @@
     "restartServerWithNewPassword": "Khởi động lại máy chủ - nó sẽ sử dụng mật khẩu mới",
     "backToLogin": "Quay lại đăng nhập",
     "forgotPassword": "Quên mật khẩu?",
+<<<<<<< Updated upstream
     "defaultPasswordHint": "Default password: CHANGEME (unless INITIAL_PASSWORD was set)",
+=======
+    "defaultPasswordHint": "Default password: 123456 (unless INITIAL_PASSWORD was set)",
+>>>>>>> Stashed changes
     "Authorization": "Ủy quyền",
     "Content-Disposition": "Bố trí nội dung",
     "waitingForAuthorization": "Đang chờ cấp phép...",
@@ -3911,11 +4107,15 @@
     "waitingForOpenAIAuthorization": "Đang chờ ủy quyền OpenAI...",
     "waitingForAntigravityAuthorization": "Đang chờ ủy quyền chống hấp dẫn...",
     "waitingForQoderAuthorization": "Đang chờ ủy quyền Qoder...",
+<<<<<<< Updated upstream
     "exchangingCodeForTokens": "Đổi mã lấy token...",
     "nodeIncompatibleFixLabel": "Fix: install a patched Node.js 22 LTS release",
     "nodeIncompatibleTitle": "Incompatible Node.js Version",
     "nodeIncompatibleDesc": "You are running Node.js {version}, which is outside OmniRoute's supported secure runtime policy. Use a patched Node.js 20.x or 22.x LTS release.",
     "nodeIncompatibleHint": "OmniRoute requires Node.js 20.20.2+ (20.x LTS), 22.22.2+ (22.x LTS) or 24.0.0+ (24.x LTS). Node 24 LTS is recommended."
+=======
+    "exchangingCodeForTokens": "Đổi mã lấy token..."
+>>>>>>> Stashed changes
   },
   "landing": {
     "brandName": "OmniRoute",
@@ -4125,8 +4325,22 @@
     "troubleshootingTestConnection": "Sử dụng Trang tổng quan > Nhà cung cấp > Kiểm tra kết nối trước khi thử nghiệm từ IDE hoặc ứng dụng khách bên ngoài.",
     "troubleshootingCircuitBreaker": "Nếu nhà cung cấp hiển thị cầu dao đang mở, hãy đợi thời gian hồi chiêu hoặc kiểm tra trang Sức khỏe để biết chi tiết.",
     "troubleshootingOAuth": "Đối với nhà cung cấp OAuth, hãy xác thực lại nếu mã thông báo hết hạn. Kiểm tra chỉ báo trạng thái thẻ nhà cung cấp.",
+<<<<<<< Updated upstream
     "deployTermuxTitle": "Termux (Android)",
     "deployTermuxText": "Run OmniRoute headless on Android via Termux. Access the dashboard from your mobile browser."
+=======
+    "managementApiReference": "Management API Reference",
+    "managementApiDescription": "Automation endpoints for proxy registry, scope assignments, and legacy proxy migration.",
+    "mgmtProxiesListNote": "List saved proxy registry items (supports pagination).",
+    "mgmtProxiesCreateNote": "Create a reusable proxy item in the registry.",
+    "mgmtProxiesHealthNote": "Get 24h/rolling health metrics per saved proxy from proxy logs.",
+    "mgmtProxiesBulkAssignNote": "Assign or clear one proxy across many scope IDs in one request.",
+    "mgmtAssignmentsListNote": "List proxy assignments by scope, scope_id, or proxy_id.",
+    "mgmtAssignmentsUpdateNote": "Assign or clear proxy for global/provider/account/combo scope.",
+    "mgmtLegacyMigrationNote": "Import legacy proxyConfig maps into registry assignments.",
+    "endpointSpeechNote": "Tạo văn bản thành giọng nói (ElevenLabs, OpenAI TTS).",
+    "endpointEmbeddingsNote": "Tạo nhúng văn bản (OpenAI, Cohere, Voyage)."
+>>>>>>> Stashed changes
   },
   "legal": {
     "privacyPolicy": "Chính sách bảo mật",
@@ -4217,6 +4431,7 @@
     "setupGuideCustomAgentTitle": "Register custom binary",
     "setupGuideCustomAgentDesc": "Use Add Custom Agent when your CLI is not in the built-in list. Provide binary name and version command.",
     "setupGuideCommandMissingTitle": "Fix 'command not found'",
+<<<<<<< Updated upstream
     "setupGuideCommandMissingDesc": "Ensure the CLI command exists in PATH, open a new terminal session, and rerun Refresh.",
     "cliToolsRedirectTitle": "Cli Tools Redirect Title",
     "cliToolsRedirectDesc": "Cli Tools Redirect Desc",
@@ -4232,6 +4447,84 @@
     "flowSpawn": "Flow Spawn",
     "cliToolsRedirectCta": "Cli Tools Redirect Cta"
   },
+=======
+    "setupGuideCommandMissingDesc": "Ensure the CLI command exists in PATH, open a new terminal session, and rerun Refresh."
+  },
+  "autoCombo": {
+    "title": "Auto-Combo Engine",
+    "statusNormal": "Normal",
+    "statusIncident": "Incident Mode",
+    "modePack": "Mode Pack",
+    "providerScores": "Provider Scores",
+    "noAutoCombo": "No auto-combo configured.",
+    "excludedProviders": "Excluded Providers",
+    "noExclusions": "No providers currently excluded.",
+    "factorQuota": "Quota",
+    "factorHealth": "Health",
+    "factorCost": "Cost",
+    "factorLatency": "Latency",
+    "factorTaskFit": "Task Fit",
+    "factorStability": "Stability",
+    "factorTierPriority": "Tier Priority",
+    "factorTierPriorityDesc": "Prefers accounts with higher quota tiers (Ultra/Pro over Free)",
+    "scoreFactorBreakdown": "Scoring Factors",
+    "modePackShipFast": "Ship Fast",
+    "modePackCostSaver": "Cost Saver",
+    "modePackQualityFirst": "Quality First",
+    "modePackOfflineFriendly": "Offline Friendly"
+  },
+  "search": {
+    "searchQuery": "Search Query",
+    "searchResults": "Search Results",
+    "cachedResult": "Cached",
+    "searchCost": "Cost",
+    "searchTools": "Search Tools",
+    "searchToolsDesc": "Advanced search testing with provider comparison",
+    "compareProviders": "Compare Providers",
+    "rerankResults": "Rerank Results",
+    "searchHistory": "Search History",
+    "urlOverlap": "URL Overlap",
+    "noSearchProviders": "No search providers configured. Add providers in Settings.",
+    "noRerankModels": "No rerank model available",
+    "webSearch": "Web Search",
+    "provider": "Provider",
+    "searchType": "Search Type",
+    "maxResults": "Max Results",
+    "filters": "Filters",
+    "country": "Country",
+    "language": "Language",
+    "timeRange": "Time Range",
+    "includeDomains": "Include Domains",
+    "excludeDomains": "Exclude Domains",
+    "safeSearch": "Safe Search",
+    "formatted": "Formatted",
+    "rawJson": "JSON",
+    "cacheMiss": "cache miss",
+    "cacheHit": "cache hit",
+    "latency": "Latency",
+    "cost": "Cost",
+    "results": "Results",
+    "rerank": "Rerank",
+    "rerankModel": "Rerank Model",
+    "positionDelta": "Position Change",
+    "emptyState": "Send a search query to see results",
+    "safeSearchOff": "Off",
+    "safeSearchModerate": "Moderate",
+    "safeSearchStrict": "Strict",
+    "queryPlaceholder": "Enter search query...",
+    "providerAuto": "auto (cheapest)",
+    "searchTypeWeb": "web",
+    "searchTypeNews": "news",
+    "optionAny": "any",
+    "timeRangeDay": "Past day",
+    "timeRangeWeek": "Past week",
+    "timeRangeMonth": "Past month",
+    "timeRangeYear": "Past year",
+    "domainPlaceholder": "example.com",
+    "requestTimedOut": "Request timed out ({seconds}s)",
+    "networkError": "Network error"
+  },
+>>>>>>> Stashed changes
   "templateNames": {
     "simple-chat": "Trò chuyện đơn giản",
     "streaming": "Truyền phát",
@@ -4281,6 +4574,7 @@
     "refresh": "Refresh",
     "clearAll": "Clear All",
     "memoryEntries": "Memory Entries",
+<<<<<<< Updated upstream
     "memoryEntriesSub": "In-memory LRU",
     "dbEntries": "DB Entries",
     "dbEntriesSub": "Persisted (SQLite)",
@@ -4302,10 +4596,20 @@
     "idempotency": "Idempotency Layer",
     "activeDedupKeys": "Active Dedup Keys",
     "dedupWindow": "Dedup Window",
+=======
+    "dbEntries": "DB Entries",
+    "cacheHits": "Cache Hits",
+    "tokensSaved": "Tokens Saved",
+    "hitRate": "Hit Rate",
+    "performance": "Cache Performance",
+    "behavior": "Cache Behavior",
+    "idempotency": "Idempotency Layer",
+>>>>>>> Stashed changes
     "clearSuccess": "Cache cleared. {count} expired entries removed.",
     "clearError": "Failed to clear cache.",
     "unavailable": "Cache unavailable",
     "unavailableDesc": "Could not fetch cache statistics. Make sure the server is running.",
+<<<<<<< Updated upstream
     "promptCache": "Prompt Cache (Provider-Side)",
     "cachedRequests": "Cached Requests",
     "cacheHitRate": "Cache Hit Rate",
@@ -4620,5 +4924,58 @@
     "noProxyLogs": "No proxy logs yet. Configure proxies and make API calls to see them here.",
     "noMatchingLogs": "No logs match the current filters.",
     "tlsFingerprint": "Chrome 124 TLS Fingerprint"
+=======
+    "memoryEntriesSub": "In-memory LRU",
+    "dbEntriesSub": "Persisted (SQLite)",
+    "cacheHitsSub": "of {total} total",
+    "tokensSavedSub": "Estimated from hits",
+    "autoRefresh": "Auto-refreshes every {seconds}s",
+    "hits": "Hits",
+    "misses": "Misses",
+    "total": "Total",
+    "behaviorDeterministic": "Only non-streaming requests with temperature=0 are cached.",
+    "behaviorBypass": "Bypass with header {header}.",
+    "behaviorTwoTier": "Two-tier storage: in-memory LRU (fast) + SQLite (persistent across restarts).",
+    "behaviorTtl": "Default TTL: 30 minutes. Configure via {envVar}.",
+    "activeDedupKeys": "Active Dedup Keys",
+    "dedupWindow": "Dedup Window",
+    "inputTokens": "Input Tokens",
+    "requestsShort": "reqs",
+    "inputShort": "In",
+    "resetting": "Resetting...",
+    "cachedTokensCol": "Cached",
+    "search": "Search",
+    "cacheReuseRatioDesc": "Cached tokens / Total input tokens",
+    "resetMetrics": "Reset Metrics",
+    "loading": "Loading...",
+    "cachedRequests": "Cached Requests",
+    "model": "Model",
+    "cached": "Cached",
+    "actions": "Actions",
+    "trend24h": "Cache Trend (24h)",
+    "cachedShort": "Cached",
+    "cacheCreation": "Creation",
+    "byProvider": "Breakdown by Provider",
+    "created": "Created",
+    "cacheCreationTokens": "Cache Creation Tokens",
+    "withCacheControl": "With Cache Control",
+    "searchEntries": "Search entries...",
+    "cacheReuseRatio": "Cache Reuse Ratio",
+    "estCostSaved": "Est. Cost Saved",
+    "cachedTokens": "Cached Tokens",
+    "requests": "Requests",
+    "signature": "Signature",
+    "cacheCreationWrite": "Cache Creation (Write)",
+    "expires": "Expires",
+    "writeShort": "Write",
+    "cacheHitRate": "Cache Hit Rate",
+    "cacheMetrics": "Prompt Cache Metrics",
+    "overview": "Overview",
+    "promptCache": "Prompt Cache (Provider-Side)",
+    "provider": "Provider",
+    "cachedTokensRead": "Cached Tokens (Read)",
+    "entries": "Entries",
+    "noEntries": "No cache entries found"
+>>>>>>> Stashed changes
   }
 }

@@ -81,6 +81,9 @@ jobs:
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         with:
           node-version: 24

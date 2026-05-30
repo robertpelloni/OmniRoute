@@ -18,10 +18,13 @@ import { randomUUID } from "crypto";
 
 import { getImageProvider, parseImageModel } from "../config/imageRegistry.ts";
 import { mapImageSize } from "../translator/image/sizeMapper.ts";
+<<<<<<< Updated upstream
 import { getCodexClientVersion, getCodexUserAgent } from "../config/codexClient.ts";
 import { ChatGptWebExecutor } from "../executors/chatgpt-web.ts";
 import { getChatGptImage, findChatGptImageBySha256 } from "../services/chatgptImageCache.ts";
 import { createHash } from "node:crypto";
+=======
+>>>>>>> Stashed changes
 import { saveCallLog } from "@/lib/usageDb";
 import {
   submitComfyWorkflow,

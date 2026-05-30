@@ -3,8 +3,11 @@ import { z } from "zod";
 import { getDbInstance } from "@/lib/db/core";
 import { getComboById, getCombos } from "@/lib/db/combos";
 import { getQuotaSnapshots } from "@/lib/db/quotaSnapshots";
+<<<<<<< Updated upstream
 import { getComboMetrics } from "@omniroute/open-sse/services/comboMetrics.ts";
 import { resolveNestedComboTargets } from "@omniroute/open-sse/services/combo.ts";
+=======
+>>>>>>> Stashed changes
 import type {
   ComboHealthMetrics,
   ComboHealthResponse,
@@ -12,11 +15,20 @@ import type {
   UtilizationTimeRange,
 } from "@/shared/types/utilization";
 
+<<<<<<< Updated upstream
+=======
+type ComboModelNode = string | { model?: string | null };
+
+>>>>>>> Stashed changes
 type ComboRecord = {
   id?: string;
   name?: string;
   strategy?: string;
+<<<<<<< Updated upstream
   models?: unknown[];
+=======
+  models?: ComboModelNode[];
+>>>>>>> Stashed changes
 };
 
 type ModelUsageRow = {
@@ -45,6 +57,7 @@ type ProviderHealth = {
   trend: "improving" | "stable" | "declining";
 };
 
+<<<<<<< Updated upstream
 type ResolvedComboTargetView = {
   stepId: string;
   executionKey: string;
@@ -79,6 +92,8 @@ type HistoricalTargetMetricView = {
   lastUsedAt: string | null;
 };
 
+=======
+>>>>>>> Stashed changes
 const querySchema = z.object({
   range: z.enum(["1h", "24h", "7d", "30d"]),
   comboId: z
@@ -118,15 +133,35 @@ function toSafeNumber(value: number | null | undefined): number {
   return typeof value === "number" && Number.isFinite(value) ? value : 0;
 }
 
+<<<<<<< Updated upstream
+=======
+function normalizeComboModels(models: ComboModelNode[] | undefined): string[] {
+  if (!Array.isArray(models)) return [];
+
+  return models
+    .map((entry) => {
+      if (typeof entry === "string") return entry;
+      if (entry && typeof entry === "object" && typeof entry.model === "string") {
+        return entry.model;
+      }
+      return "";
+    })
+    .filter((entry): entry is string => entry.trim().length > 0);
+}
+
+>>>>>>> Stashed changes
 function extractProvider(model: string): string {
   const [provider] = model.split("/");
   return provider?.trim() || "unknown";
 }
 
+<<<<<<< Updated upstream
 function toNonEmptyString(value: unknown): string | null {
   return typeof value === "string" && value.trim().length > 0 ? value.trim() : null;
 }
 
+=======
+>>>>>>> Stashed changes
 function calculateGini(values: number[]): number {
   if (values.length === 0) return 0;
   const sorted = [...values].sort((a, b) => a - b);
@@ -222,6 +257,7 @@ function buildProviderHealth(provider: string, snapshots: QuotaSnapshotRow[]): P
   };
 }
 
+<<<<<<< Updated upstream
 function buildConnectionHealth(
   provider: string,
   connectionId: string,
@@ -266,6 +302,8 @@ function buildConnectionHealth(
   };
 }
 
+=======
+>>>>>>> Stashed changes
 function buildUsageSkew(
   comboName: string,
   comboModels: string[],
@@ -366,6 +404,7 @@ function buildQuotaHealth(providers: string[], since: string): ComboHealthMetric
   };
 }
 
+<<<<<<< Updated upstream
 function getHistoricalTargetMetrics(
   comboName: string,
   since: string
@@ -521,13 +560,21 @@ function buildComboHealth(
   since: string,
   allCombos: ComboRecord[]
 ): ComboHealthMetrics | null {
+=======
+function buildComboHealth(combo: ComboRecord, since: string): ComboHealthMetrics | null {
+>>>>>>> Stashed changes
   const comboId = typeof combo.id === "string" ? combo.id : "";
   const comboName = typeof combo.name === "string" ? combo.name : "";
   if (!comboId || !comboName) return null;
 
+<<<<<<< Updated upstream
   const targets = resolveNestedComboTargets(combo, allCombos) as ResolvedComboTargetView[];
   const models = targets.map((target) => target.modelStr);
   const providers = Array.from(new Set(targets.map((target) => target.provider)));
+=======
+  const models = normalizeComboModels(combo.models);
+  const providers = Array.from(new Set(models.map(extractProvider)));
+>>>>>>> Stashed changes
 
   return {
     comboId,
@@ -537,7 +584,10 @@ function buildComboHealth(
         ? combo.strategy
         : "priority",
     models,
+<<<<<<< Updated upstream
     targetHealth: buildTargetHealth(comboName, targets, since),
+=======
+>>>>>>> Stashed changes
     quotaHealth: buildQuotaHealth(providers, since),
     usageSkew: buildUsageSkew(comboName, models, since),
     performance: buildPerformance(comboName, since),
@@ -564,24 +614,38 @@ export async function GET(request: Request) {
     const { range, comboId } = parsedQuery.data;
     const since = getRangeStartIso(range);
 
+<<<<<<< Updated upstream
     const allCombos = (await getCombos()) as ComboRecord[];
     let combos: ComboRecord[] = [];
     if (comboId) {
       const combo =
         allCombos.find((entry) => entry.id === comboId) ||
         ((await getComboById(comboId)) as ComboRecord | null);
+=======
+    let combos: ComboRecord[] = [];
+    if (comboId) {
+      const combo = (await getComboById(comboId)) as ComboRecord | null;
+>>>>>>> Stashed changes
       if (!combo) {
         return NextResponse.json({ error: "Combo not found" }, { status: 404 });
       }
       combos = [combo];
     } else {
+<<<<<<< Updated upstream
       combos = allCombos;
+=======
+      combos = (await getCombos()) as ComboRecord[];
+>>>>>>> Stashed changes
     }
 
     const response: ComboHealthResponse = {
       timeRange: range,
       combos: combos
+<<<<<<< Updated upstream
         .map((combo) => buildComboHealth(combo, since, allCombos))
+=======
+        .map((combo) => buildComboHealth(combo, since))
+>>>>>>> Stashed changes
         .filter((combo): combo is ComboHealthMetrics => combo !== null),
     };
 

@@ -10,6 +10,7 @@ import { createOmnirouteWsBridge } from "./v1-ws-bridge.mjs";
 import { createResponsesWsProxy } from "./responses-ws-proxy.mjs";
 import { randomUUID } from "node:crypto";
 
+<<<<<<< Updated upstream
 // Add check for conflicting app/ directory (Issue #1206)
 const rootAppDir = path.join(process.cwd(), "app");
 if (fs.existsSync(rootAppDir) && fs.statSync(rootAppDir).isDirectory()) {
@@ -19,6 +20,20 @@ if (fs.existsSync(rootAppDir) && fs.statSync(rootAppDir).isDirectory()) {
   console.error("Next.js will serve 404s for all pages because it prefers the root 'app/' folder.");
   console.error("Please rename or delete the root 'app/' directory before starting OmniRoute.\n");
   process.exit(1);
+=======
+const mode = process.argv[2] === "start" ? "start" : "dev";
+
+// Load .env / server.env first so PORT / DASHBOARD_PORT from files affect --port below.
+const env = bootstrapEnv();
+const runtimePorts = resolveRuntimePorts(env);
+const { dashboardPort } = runtimePorts;
+
+const args = ["./node_modules/next/dist/bin/next", mode, "--port", String(dashboardPort)];
+// Default: use webpack (stable). Set OMNIROUTE_USE_TURBOPACK=1 in .env for Turbopack (faster dev).
+// Must read merged `env` from bootstrap — .env is not applied to process.env in the launcher.
+if (mode === "dev" && env.OMNIROUTE_USE_TURBOPACK !== "1") {
+  args.splice(2, 0, "--webpack");
+>>>>>>> Stashed changes
 }
 
 const mode = process.argv[2] === "start" ? "start" : "dev";

@@ -7,7 +7,11 @@ import { promisify } from "node:util";
 const execFileAsync = promisify(execFile);
 
 type ComposeCommand = "docker compose" | "docker-compose";
+<<<<<<< Updated upstream
 export type AutoUpdateMode = "npm" | "docker-compose" | "source";
+=======
+export type AutoUpdateMode = "npm" | "docker-compose";
+>>>>>>> Stashed changes
 
 type ExecFileLike = typeof execFileAsync;
 type SpawnLike = typeof spawn;
@@ -38,10 +42,14 @@ export type AutoUpdateLaunchResult = {
 };
 
 function normalizeMode(raw: string | undefined): AutoUpdateMode {
+<<<<<<< Updated upstream
   if (raw === "docker-compose" || raw === "source") {
     return raw;
   }
   return "npm";
+=======
+  return raw === "docker-compose" ? "docker-compose" : "npm";
+>>>>>>> Stashed changes
 }
 
 async function pathExists(targetPath: string): Promise<boolean> {
@@ -77,7 +85,11 @@ export function getAutoUpdateConfig(env: NodeJS.ProcessEnv = process.env): AutoU
     // If we are not in a global node_modules directory, we are likely a local source install/build.
     // Even if .git is missing (downloaded zip), we should treat it as source.
     if (isGitRepo || !isGlobalNodeModules) {
+<<<<<<< Updated upstream
       mode = "source";
+=======
+      mode = "source" as any;
+>>>>>>> Stashed changes
     }
   }
 
@@ -116,6 +128,7 @@ export async function validateAutoUpdateRuntime(
   execFileImpl: ExecFileLike = execFileAsync,
   existsImpl: (targetPath: string) => Promise<boolean> = pathExists
 ): Promise<AutoUpdateValidation> {
+<<<<<<< Updated upstream
   if (config.mode === "source") {
     const gitDir = path.join(process.cwd(), ".git");
     if (!(await existsImpl(gitDir))) {
@@ -139,6 +152,13 @@ export async function validateAutoUpdateRuntime(
     return {
       supported: true,
       reason: null,
+=======
+  if (config.mode === ("source" as any)) {
+    return {
+      supported: false,
+      reason:
+        "Manual 'git pull && npm install && npm run build' is required for source installations.",
+>>>>>>> Stashed changes
       composeCommand: null,
     };
   }
@@ -194,6 +214,7 @@ export async function validateAutoUpdateRuntime(
   return { supported: true, reason: null, composeCommand };
 }
 
+<<<<<<< Updated upstream
 export async function ensureGitTagExists(
   targetTag: string,
   execFileImpl: ExecFileLike = execFileAsync,
@@ -209,6 +230,8 @@ export async function ensureGitTagExists(
   }
 }
 
+=======
+>>>>>>> Stashed changes
 export function buildNpmUpdateScript(latest: string): string {
   return [
     "set -eu",
@@ -220,6 +243,7 @@ export function buildNpmUpdateScript(latest: string): string {
   ].join("\n");
 }
 
+<<<<<<< Updated upstream
 export function buildSourceUpdateScript(latest: string, gitRemote = "origin"): string {
   const targetTag = latest.startsWith("v") ? latest : `v${latest}`;
 
@@ -244,6 +268,8 @@ export function buildSourceUpdateScript(latest: string, gitRemote = "origin"): s
   ].join("\n");
 }
 
+=======
+>>>>>>> Stashed changes
 export function buildDockerComposeUpdateScript({
   latest,
   config,
@@ -297,16 +323,25 @@ export async function launchAutoUpdate({
   env = process.env,
   execFileImpl = execFileAsync,
   spawnImpl = spawn,
+<<<<<<< Updated upstream
   existsImpl = pathExists,
+=======
+>>>>>>> Stashed changes
 }: {
   latest: string;
   env?: NodeJS.ProcessEnv;
   execFileImpl?: ExecFileLike;
   spawnImpl?: SpawnLike;
+<<<<<<< Updated upstream
   existsImpl?: (targetPath: string) => Promise<boolean>;
 }): Promise<AutoUpdateLaunchResult> {
   const config = getAutoUpdateConfig(env);
   const validation = await validateAutoUpdateRuntime(config, execFileImpl, existsImpl);
+=======
+}): Promise<AutoUpdateLaunchResult> {
+  const config = getAutoUpdateConfig(env);
+  const validation = await validateAutoUpdateRuntime(config, execFileImpl);
+>>>>>>> Stashed changes
 
   if (!validation.supported) {
     return {
@@ -325,9 +360,13 @@ export async function launchAutoUpdate({
           config,
           composeCommand: validation.composeCommand || "docker-compose",
         })
+<<<<<<< Updated upstream
       : config.mode === "source"
         ? buildSourceUpdateScript(latest, config.gitRemote)
         : buildNpmUpdateScript(latest);
+=======
+      : buildNpmUpdateScript(latest);
+>>>>>>> Stashed changes
 
   mkdirSync(path.dirname(config.logPath), { recursive: true });
   const logFd = openSync(config.logPath, "a");

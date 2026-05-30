@@ -1,17 +1,29 @@
 import { NextResponse } from "next/server";
 import { getProviderConnectionById } from "@/models";
+<<<<<<< Updated upstream
 import { getSyncedAvailableModelsForConnection } from "@/lib/db/models";
 import {
   importManagedModels,
   type ManagedModelImportMode,
 } from "@/lib/providerModels/managedModelImport";
+=======
+import { getCustomModels, replaceCustomModels } from "@/lib/db/models";
+import {
+  syncManagedAvailableModelAliases,
+  usesManagedAvailableModels,
+} from "@/lib/providerModels/managedAvailableModels";
+>>>>>>> Stashed changes
 import { saveCallLog } from "@/lib/usage/callLogs";
 import { isAuthenticated } from "@/shared/utils/apiAuth";
 import {
   buildModelSyncInternalHeaders,
   isModelSyncInternalRequest,
 } from "@/shared/services/modelSyncScheduler";
+<<<<<<< Updated upstream
 import { GET as getProviderModels } from "../models/route";
+=======
+import { getModelsByProviderId } from "@/shared/constants/models";
+>>>>>>> Stashed changes
 
 type JsonRecord = Record<string, unknown>;
 
@@ -27,11 +39,15 @@ function normalizeModelForComparison(model: unknown) {
   const record = asRecord(model);
   const id = toNonEmptyString(record.id) || "";
   const name = toNonEmptyString(record.name) || id;
+<<<<<<< Updated upstream
   const rawSource = toNonEmptyString(record.source)?.toLowerCase();
   const source =
     rawSource === "api-sync" || rawSource === "auto-sync" || rawSource === "imported"
       ? "imported"
       : rawSource || "manual";
+=======
+  const source = toNonEmptyString(record.source) || "auto-sync";
+>>>>>>> Stashed changes
   const apiFormat = toNonEmptyString(record.apiFormat) || "chat-completions";
   const supportedEndpoints = Array.isArray(record.supportedEndpoints)
     ? Array.from(
@@ -52,6 +68,7 @@ function normalizeModelForComparison(model: unknown) {
   };
 }
 
+<<<<<<< Updated upstream
 function isManagedSyncedModel(model: unknown) {
   const record = asRecord(model);
   const source = toNonEmptyString(record.source)?.toLowerCase();
@@ -93,6 +110,8 @@ async function readJsonResponse(response: Response): Promise<{
   }
 }
 
+=======
+>>>>>>> Stashed changes
 function summarizeModelChanges(previousModels: unknown, nextModels: unknown) {
   const previousList = Array.isArray(previousModels) ? previousModels : [];
   const nextList = Array.isArray(nextModels) ? nextModels : [];
@@ -154,6 +173,7 @@ function getModelSyncChannelLabel(connection: unknown) {
   );
 }
 
+<<<<<<< Updated upstream
 async function fetchProviderModelsForSync(request: Request, connectionId: string) {
   // Construct a safe localhost URL from the incoming request's origin.
   // The route only accepts authenticated or internal-scheduler requests,
@@ -202,6 +222,14 @@ async function fetchProviderModelsForSync(request: Request, connectionId: string
  * upstream-discovered rows from the provider's custom model list. Successful
  * syncs only write a call log when the fetched channel or custom model cleanup
  * changes stored model state.
+=======
+/**
+ * POST /api/providers/[id]/sync-models
+ *
+ * Fetches the model list from a provider's /models endpoint and replaces the
+ * full custom models list for that provider. Successful syncs only write a
+ * call log when the fetched channel actually changes the stored model list.
+>>>>>>> Stashed changes
  *
  * Used by:
  * - modelSyncScheduler (auto-sync on interval)
@@ -210,9 +238,12 @@ async function fetchProviderModelsForSync(request: Request, connectionId: string
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const start = Date.now();
   const { id } = await params;
+<<<<<<< Updated upstream
   const mode = (
     new URL(request.url).searchParams.get("mode") === "import" ? "merge" : "sync"
   ) as ManagedModelImportMode;
+=======
+>>>>>>> Stashed changes
   let logProvider = "unknown";
   let channelLabel: string | null = null;
 
@@ -231,6 +262,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
 
     logProvider = toNonEmptyString(connection.provider) || "unknown";
     channelLabel = getModelSyncChannelLabel(connection);
+<<<<<<< Updated upstream
     const previousSyncedAvailableModelsForConnection = await getSyncedAvailableModelsForConnection(
       logProvider,
       id
@@ -246,6 +278,24 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       const responseStatus = modelsRes.ok ? 502 : modelsRes.status;
       const logError = payloadError || parseError || `HTTP ${modelsRes.status}`;
       const responseError = payloadError || parseError || "Failed to fetch models";
+=======
+
+    // Fetch models from the existing /api/providers/[id]/models endpoint
+    const origin = new URL(request.url).origin;
+    const modelsUrl = `${origin}/api/providers/${id}/models`;
+    const modelsRes = await fetch(modelsUrl, {
+      method: "GET",
+      headers: {
+        cookie: request.headers.get("cookie") || "",
+        ...buildModelSyncInternalHeaders(),
+      },
+    });
+
+    const duration = Date.now() - start;
+    const modelsData = await modelsRes.json();
+
+    if (!modelsRes.ok) {
+>>>>>>> Stashed changes
       // Log the failed attempt
       await saveCallLog({
         method: "GET",
@@ -256,6 +306,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
         sourceFormat: "-",
         connectionId: id,
         duration,
+<<<<<<< Updated upstream
         error: logError,
         requestType: "model-sync",
         ...(parseError
@@ -274,10 +325,20 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
           ...(parseError ? { upstreamStatus: modelsRes.status } : {}),
         },
         { status: responseStatus }
+=======
+        error: modelsData.error || `HTTP ${modelsRes.status}`,
+        requestType: "model-sync",
+      });
+
+      return NextResponse.json(
+        { error: modelsData.error || "Failed to fetch models" },
+        { status: modelsRes.status }
+>>>>>>> Stashed changes
       );
     }
 
     const fetchedModels = modelsData.models || [];
+<<<<<<< Updated upstream
     const {
       previousModels,
       previousSyncedAvailableModels,
@@ -316,6 +377,35 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     const shouldLog = modelChanges.total > 0 || customModelChanges.total > 0;
 
     if (shouldLog) {
+=======
+
+    // Filter out models already in the built-in registry
+    const registryIds = new Set(getModelsByProviderId(logProvider).map((m: any) => m.id));
+
+    // Replace the full model list
+    const models = fetchedModels
+      .map((m: any) => ({
+        id: m.id || m.name || m.model,
+        name: m.name || m.displayName || m.id || m.model,
+        source: "auto-sync",
+      }))
+      .filter((m: any) => m.id && !registryIds.has(m.id));
+
+    const previousModels = await getCustomModels(logProvider);
+    const replaced = await replaceCustomModels(logProvider, models);
+    const modelChanges = summarizeModelChanges(previousModels, replaced);
+
+    let syncedAliases = 0;
+    if (usesManagedAvailableModels(logProvider)) {
+      const aliasSync = await syncManagedAvailableModelAliases(
+        logProvider,
+        models.map((model: any) => model.id)
+      );
+      syncedAliases = aliasSync.assignedAliases.length;
+    }
+
+    if (modelChanges.total > 0) {
+>>>>>>> Stashed changes
       await saveCallLog({
         method: "GET",
         path: `/api/providers/${id}/models`,
@@ -327,16 +417,23 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
         duration: Date.now() - start,
         requestType: "model-sync",
         responseBody: {
+<<<<<<< Updated upstream
           syncedModels: syncedModelsCount,
           availableModelsCount,
+=======
+          syncedModels: models.length,
+>>>>>>> Stashed changes
           syncedAliases,
           provider: logProvider,
           channel: channelLabel,
           modelChanges,
+<<<<<<< Updated upstream
           customModelChanges,
           importedCount,
           updatedCount,
           mode,
+=======
+>>>>>>> Stashed changes
         },
       });
     }
@@ -344,6 +441,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     return NextResponse.json({
       ok: true,
       provider: logProvider,
+<<<<<<< Updated upstream
       mode,
       syncedModels: syncedModelsCount,
       availableModelsCount,
@@ -356,6 +454,13 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       logged: shouldLog,
       models: persistedModels,
       importedModels,
+=======
+      syncedModels: replaced.length,
+      syncedAliases,
+      modelChanges,
+      logged: modelChanges.total > 0,
+      models: replaced,
+>>>>>>> Stashed changes
     });
   } catch (error: any) {
     // Log error

@@ -20,10 +20,13 @@ function formatShare(value: number) {
   return formatPercent(value * 100, 1);
 }
 
+<<<<<<< Updated upstream
 function formatPercentOrDash(value: number | null, digits = 1) {
   return typeof value === "number" ? formatPercent(value, digits) : "n/a";
 }
 
+=======
+>>>>>>> Stashed changes
 function formatLatency(value: number) {
   return `${Math.round(value).toLocaleString()}ms`;
 }
@@ -99,7 +102,10 @@ function ComboHealthCard({ combo }: { combo: ComboHealthMetrics }) {
       ),
     [combo.usageSkew.modelDistribution]
   );
+<<<<<<< Updated upstream
   const targetHealth = combo.targetHealth || [];
+=======
+>>>>>>> Stashed changes
 
   return (
     <Card className="overflow-hidden p-0">
@@ -256,6 +262,7 @@ function ComboHealthCard({ combo }: { combo: ComboHealthMetrics }) {
           </div>
         </section>
       </div>
+<<<<<<< Updated upstream
 
       {targetHealth.length > 0 ? (
         <div className="border-t border-black/5 px-6 py-5 dark:border-white/5">
@@ -323,6 +330,8 @@ function ComboHealthCard({ combo }: { combo: ComboHealthMetrics }) {
           </div>
         </div>
       ) : null}
+=======
+>>>>>>> Stashed changes
     </Card>
   );
 }

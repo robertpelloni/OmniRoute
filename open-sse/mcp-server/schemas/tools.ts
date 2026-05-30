@@ -400,7 +400,11 @@ export const webSearchInput = z.object({
   query: z
     .string()
     .min(1, "Query is required")
+<<<<<<< Updated upstream
     .max(500, "Query must be 500 characters or fewer")
+=======
+    .max(1000, "Query must be 1000 characters or fewer")
+>>>>>>> Stashed changes
     .describe("The search query string"),
   max_results: z
     .number()
@@ -411,6 +415,7 @@ export const webSearchInput = z.object({
     .describe("Maximum number of search results to return"),
   search_type: z.enum(["web", "news"]).default("web").describe("Type of search to perform"),
   provider: z
+<<<<<<< Updated upstream
     .enum([
       "serper-search",
       "brave-search",
@@ -424,6 +429,11 @@ export const webSearchInput = z.object({
     ])
     .optional()
     .describe("Specific search provider to use"),
+=======
+    .string()
+    .optional()
+    .describe("Specific search provider to use (serper, brave, perplexity, exa, tavily)"),
+>>>>>>> Stashed changes
 });
 
 export const webSearchOutput = z.object({
@@ -449,7 +459,11 @@ export const webSearchOutput = z.object({
 export const webSearchTool: McpToolDefinition<typeof webSearchInput, typeof webSearchOutput> = {
   name: "omniroute_web_search",
   description:
+<<<<<<< Updated upstream
     "Performs a web search using OmniRoute's search gateway. Supports multiple providers (Serper, Brave, Perplexity, Exa, Tavily, Google PSE, Linkup, SearchAPI, SearXNG) with automatic failover. Returns search results with titles, URLs, snippets, and position data.",
+=======
+    "Performs a web search using OmniRoute's search gateway. Supports multiple providers (Serper, Brave, Perplexity, Exa, Tavily) with automatic failover. Returns search results with titles, URLs, snippets, and position data.",
+>>>>>>> Stashed changes
   inputSchema: webSearchInput,
   outputSchema: webSearchOutput,
   scopes: ["execute:search"],
@@ -920,10 +934,15 @@ export const cacheStatsOutput = z.object({
     .object({
       totalRequests: z.number(),
       requestsWithCacheControl: z.number(),
+<<<<<<< Updated upstream
       totalInputTokens: z.number(),
       totalCachedTokens: z.number(),
       totalCacheCreationTokens: z.number(),
       tokensSaved: z.number(),
+=======
+      totalCachedTokens: z.number(),
+      totalCacheCreationTokens: z.number(),
+>>>>>>> Stashed changes
       estimatedCostSaved: z.number(),
     })
     .nullable(),
@@ -931,11 +950,14 @@ export const cacheStatsOutput = z.object({
     activeKeys: z.number(),
     windowMs: z.number(),
   }),
+<<<<<<< Updated upstream
   config: z
     .object({
       semanticCacheEnabled: z.boolean(),
     })
     .optional(),
+=======
+>>>>>>> Stashed changes
 });
 
 export const cacheStatsTool: McpToolDefinition<typeof cacheStatsInput, typeof cacheStatsOutput> = {
@@ -973,6 +995,7 @@ export const cacheFlushTool: McpToolDefinition<typeof cacheFlushInput, typeof ca
   sourceEndpoints: ["/api/cache"],
 };
 
+<<<<<<< Updated upstream
 // ============ Compression Tools ============
 
 export const compressionStatusInput = z.object({}).describe("No parameters required");
@@ -1267,6 +1290,8 @@ export const oneproxyStatsTool: McpToolDefinition<
   sourceEndpoints: ["/api/settings/oneproxy"],
 };
 
+=======
+>>>>>>> Stashed changes
 // ============ Tool Registry ============
 
 /** All MCP tool definitions, ordered by phase then name */
@@ -1293,6 +1318,7 @@ export const MCP_TOOLS = [
   syncPricingTool,
   cacheStatsTool,
   cacheFlushTool,
+<<<<<<< Updated upstream
   compressionStatusTool,
   compressionConfigureTool,
   setCompressionEngineTool,
@@ -1301,6 +1327,8 @@ export const MCP_TOOLS = [
   oneproxyFetchTool,
   oneproxyRotateTool,
   oneproxyStatsTool,
+=======
+>>>>>>> Stashed changes
 ] as const;
 
 /** Essential tools only (Phase 1) */

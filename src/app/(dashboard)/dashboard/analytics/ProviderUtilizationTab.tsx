@@ -90,12 +90,16 @@ function getLatestPoints(points: ProviderUtilizationPoint[]) {
 
 export default function ProviderUtilizationTab() {
   const [range, setRange] = useState<UtilizationTimeRange>("24h");
+<<<<<<< Updated upstream
   const [aggregateBy, setAggregateBy] = useState<"provider" | "connection">("provider");
+=======
+>>>>>>> Stashed changes
   const [data, setData] = useState<ProviderUtilizationResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchUtilization = useCallback(
+<<<<<<< Updated upstream
     async (
       selectedRange: UtilizationTimeRange,
       selectedAggregate: "provider" | "connection",
@@ -111,6 +115,16 @@ export default function ProviderUtilizationTab() {
             cache: "no-store",
           }
         );
+=======
+    async (selectedRange: UtilizationTimeRange, signal?: AbortSignal) => {
+      setLoading(true);
+
+      try {
+        const response = await fetch(`/api/usage/utilization?range=${selectedRange}`, {
+          signal,
+          cache: "no-store",
+        });
+>>>>>>> Stashed changes
 
         if (!response.ok) {
           throw new Error("Failed to fetch utilization data");
@@ -140,10 +154,17 @@ export default function ProviderUtilizationTab() {
   useEffect(() => {
     const controller = new AbortController();
 
+<<<<<<< Updated upstream
     fetchUtilization(range, aggregateBy, controller.signal);
 
     return () => controller.abort();
   }, [fetchUtilization, range, aggregateBy]);
+=======
+    fetchUtilization(range, controller.signal);
+
+    return () => controller.abort();
+  }, [fetchUtilization, range]);
+>>>>>>> Stashed changes
 
   const providerColors = useMemo(() => {
     const colors = new Map<string, string>();
@@ -185,8 +206,13 @@ export default function ProviderUtilizationTab() {
   const handleRetry = useCallback(() => {
     setRetrying(true);
     setError(null);
+<<<<<<< Updated upstream
     fetchUtilization(range, aggregateBy).finally(() => setRetrying(false));
   }, [range, aggregateBy, fetchUtilization]);
+=======
+    fetchUtilization(range).finally(() => setRetrying(false));
+  }, [range, fetchUtilization]);
+>>>>>>> Stashed changes
 
   return (
     <div className="flex flex-col gap-6">
@@ -194,6 +220,7 @@ export default function ProviderUtilizationTab() {
         title="Provider utilization"
         subtitle={RANGE_LABELS[range]}
         icon="monitoring"
+<<<<<<< Updated upstream
         action={
           <div className="flex items-center gap-4">
             <div className="flex rounded-lg border border-border/50 bg-black/5 p-1 dark:bg-white/5">
@@ -223,6 +250,9 @@ export default function ProviderUtilizationTab() {
             <TimeRangeSelector value={range} onChange={setRange} />
           </div>
         }
+=======
+        action={<TimeRangeSelector value={range} onChange={setRange} />}
+>>>>>>> Stashed changes
         className="overflow-hidden"
       >
         {loading && !hasData ? (

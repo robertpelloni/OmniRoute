@@ -9,7 +9,10 @@ import { testProxySchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
 import { createErrorResponse, createErrorResponseFromUnknown } from "@/lib/api/errorResponse";
 import { getProxyById } from "@/lib/localDb";
+<<<<<<< Updated upstream
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
+=======
+>>>>>>> Stashed changes
 
 const BASE_SUPPORTED_PROXY_TYPES = new Set(["http", "https"]);
 

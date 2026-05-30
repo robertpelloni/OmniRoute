@@ -65,7 +65,11 @@ services:
       - "${API_PORT:-20129}:${API_PORT:-20129}"
     volumes:
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       - ./data:/app/data
+=======
+      - omniroute-data:/app/data
+>>>>>>> Stashed changes
 =======
       - omniroute-data:/app/data
 >>>>>>> Stashed changes

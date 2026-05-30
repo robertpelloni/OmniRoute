@@ -17,13 +17,20 @@ import {
   formatSSE,
   unwrapGeminiChunk,
 } from "./streamHelpers.ts";
+<<<<<<< Updated upstream
 import { calculateCost } from "@/lib/usage/costCalculator";
 import { buildOmniRouteSseMetadataComment } from "@/domain/omnirouteResponseMeta";
+=======
+>>>>>>> Stashed changes
 import {
   createStructuredSSECollector,
   buildStreamSummaryFromEvents,
 } from "./streamPayloadCollector.ts";
+<<<<<<< Updated upstream
 import { STREAM_IDLE_TIMEOUT_MS, FETCH_BODY_TIMEOUT_MS, HTTP_STATUS } from "../config/constants.ts";
+=======
+import { STREAM_IDLE_TIMEOUT_MS, HTTP_STATUS } from "../config/constants.ts";
+>>>>>>> Stashed changes
 import {
   sanitizeStreamingChunk,
   extractThinkingFromContent,
@@ -120,6 +127,7 @@ type StreamCompletePayload = {
   responseBody?: unknown;
   providerPayload?: unknown;
   clientPayload?: unknown;
+<<<<<<< Updated upstream
 };
 
 type StreamFailurePayload = {
@@ -127,6 +135,8 @@ type StreamFailurePayload = {
   message: string;
   code?: string;
   type?: string;
+=======
+>>>>>>> Stashed changes
 };
 
 type StreamOptions = {
@@ -171,6 +181,7 @@ type ToolCall = {
 
 type UsageTokenRecord = Record<string, number>;
 
+<<<<<<< Updated upstream
 function asRecord(value: unknown): JsonRecord {
   return value && typeof value === "object" && !Array.isArray(value) ? (value as JsonRecord) : {};
 }
@@ -402,6 +413,8 @@ function buildSyntheticClaudeEmptyResponseEvents(
   return events;
 }
 
+=======
+>>>>>>> Stashed changes
 function getOpenAIIntermediateChunks(value: unknown): unknown[] {
   if (!value || typeof value !== "object") return [];
   const candidate = (value as JsonRecord)._openaiIntermediate;
@@ -557,7 +570,10 @@ export function createSSEStream(options: StreamOptions = {}) {
   /** Passthrough: accumulate tool_calls deltas for call log responseBody */
   const passthroughToolCalls = new Map<string, ToolCall>();
   let passthroughToolCallSeq = 0;
+<<<<<<< Updated upstream
   let skipPassthroughEvent = false;
+=======
+>>>>>>> Stashed changes
 
   // State for translate mode (accumulatedContent for call log response body)
   const state: TranslateState | null =
@@ -576,6 +592,7 @@ export function createSSEStream(options: StreamOptions = {}) {
   // Passthrough: accumulate content and reasoning separately for call log response body
   let passthroughAccumulatedContent = "";
   let passthroughAccumulatedReasoning = "";
+<<<<<<< Updated upstream
   // Passthrough Responses SSE: snapshots of items seen via `response.output_item.done`,
   // used to backfill `response.completed.response.output` when upstream returns it
   // empty (which happens when `store: false` — see backfillResponsesCompletedOutput).
@@ -585,6 +602,8 @@ export function createSSEStream(options: StreamOptions = {}) {
   let passthroughResponsesCurrentFunctionCallKey: string | null = null;
   const passthroughResponsesReasoningSummarySeen = new Set<string>();
   const streamStartedAt = Date.now();
+=======
+>>>>>>> Stashed changes
 
   // Guard against duplicate [DONE] events — ensures exactly one per stream
   let doneSent = false;
@@ -890,6 +909,7 @@ export function createSSEStream(options: StreamOptions = {}) {
             let output;
             let injectedUsage = false;
             let clientPayload: unknown = null;
+<<<<<<< Updated upstream
             let failurePayload: StreamFailurePayload | null = null;
 
             if (skipPassthroughEvent) {
@@ -933,12 +953,15 @@ export function createSSEStream(options: StreamOptions = {}) {
               pendingPassthroughEventEmitted = false;
               continue;
             }
+=======
+>>>>>>> Stashed changes
 
             if (trimmed.startsWith("data:")) {
               const providerPayload = parseSSELine(trimmed);
               if (providerPayload) {
                 providerPayloadCollector.push(providerPayload);
                 if ((providerPayload as { done?: unknown }).done === true) {
+<<<<<<< Updated upstream
                   continue;
                 }
               }
@@ -947,6 +970,12 @@ export function createSSEStream(options: StreamOptions = {}) {
             if (trimmed.startsWith("data:") && trimmed.slice(5).trim() === "[DONE]") {
               continue;
             }
+=======
+                  clientPayloadCollector.push(providerPayload);
+                }
+              }
+            }
+>>>>>>> Stashed changes
 
             if (trimmed.startsWith("data:") && trimmed.slice(5).trim() !== "[DONE]") {
               try {
@@ -1140,6 +1169,7 @@ export function createSSEStream(options: StreamOptions = {}) {
                     if (eu.cache_creation_input_tokens)
                       u.cache_creation_input_tokens = eu.cache_creation_input_tokens;
                   }
+<<<<<<< Updated upstream
                   if (
                     shouldInjectClaudeEmptyResponseBeforeCurrentEvent(
                       claudeEmptyResponseLifecycle,
@@ -1155,6 +1185,8 @@ export function createSSEStream(options: StreamOptions = {}) {
                     });
                   }
                   updateClaudeEmptyResponseLifecycle(claudeEmptyResponseLifecycle, parsed);
+=======
+>>>>>>> Stashed changes
                   const restoredToolName = restoreClaudePassthroughToolUseName(parsed, toolNameMap);
                   // Track content length and accumulate from Claude format
                   if (parsed.delta?.text) {
@@ -1170,6 +1202,11 @@ export function createSSEStream(options: StreamOptions = {}) {
                       passthroughAccumulatedContent,
                       parsed.delta.thinking
                     );
+                  }
+                  if (restoredToolName) {
+                    output = `data: ${JSON.stringify(parsed)}
+`;
+                    injectedUsage = true;
                   }
                   if (restoredToolName) {
                     output = `data: ${JSON.stringify(parsed)}
@@ -1221,10 +1258,14 @@ export function createSSEStream(options: StreamOptions = {}) {
                     reasoningChunk.choices[0].finish_reason = null;
                     delete reasoningChunk.usage;
                     const rOutput = `data: ${JSON.stringify(reasoningChunk)}\n`;
+<<<<<<< Updated upstream
                     passthroughAccumulatedReasoning = appendBoundedText(
                       passthroughAccumulatedReasoning,
                       delta.reasoning_content
                     );
+=======
+                    passthroughAccumulatedReasoning += delta.reasoning_content;
+>>>>>>> Stashed changes
                     totalContentLength += delta.reasoning_content.length;
                     clientPayloadCollector.push(reasoningChunk);
                     reqLogger?.appendConvertedChunk?.(rOutput);
@@ -1283,10 +1324,14 @@ export function createSSEStream(options: StreamOptions = {}) {
                       delta.content
                     );
                   if (typeof delta?.reasoning_content === "string")
+<<<<<<< Updated upstream
                     passthroughAccumulatedReasoning = appendBoundedText(
                       passthroughAccumulatedReasoning,
                       delta.reasoning_content
                     );
+=======
+                    passthroughAccumulatedReasoning += delta.reasoning_content;
+>>>>>>> Stashed changes
 
                   const extracted = extractUsage(parsed);
                   if (extracted) {
@@ -1337,6 +1382,7 @@ export function createSSEStream(options: StreamOptions = {}) {
               }
             }
 
+<<<<<<< Updated upstream
             if (!trimmed && pendingPassthroughEventLine && !pendingPassthroughEventEmitted) {
               output = `${pendingPassthroughEventLine}\n${output}`;
               pendingPassthroughEventEmitted = true;
@@ -1344,6 +1390,8 @@ export function createSSEStream(options: StreamOptions = {}) {
 
             output = maybePrefixPendingPassthroughEvent(output, line);
 
+=======
+>>>>>>> Stashed changes
             if (clientPayload) {
               clientPayloadCollector.push(clientPayload);
             }
@@ -1381,6 +1429,16 @@ export function createSSEStream(options: StreamOptions = {}) {
           providerPayloadCollector.push(parsed);
 
           if (parsed && parsed.done) {
+<<<<<<< Updated upstream
+=======
+            if (!doneSent) {
+              doneSent = true;
+              clientPayloadCollector.push({ done: true });
+              const output = "data: [DONE]\n\n";
+              reqLogger?.appendConvertedChunk?.(output);
+              controller.enqueue(encoder.encode(output));
+            }
+>>>>>>> Stashed changes
             continue;
           }
 
@@ -1456,6 +1514,19 @@ export function createSSEStream(options: StreamOptions = {}) {
               if (state?.accumulatedContent !== undefined) state.accumulatedContent += r;
             }
           }
+          // Normalize `reasoning` alias → `reasoning_content` (NVIDIA kimi-k2.5 etc.)
+          if (
+            parsed.choices?.[0]?.delta?.reasoning &&
+            !parsed.choices?.[0]?.delta?.reasoning_content
+          ) {
+            const r = parsed.choices[0].delta.reasoning;
+            if (typeof r === "string") {
+              parsed.choices[0].delta.reasoning_content = r;
+              delete parsed.choices[0].delta.reasoning;
+              totalContentLength += r.length;
+              if (state?.accumulatedContent !== undefined) state.accumulatedContent += r;
+            }
+          }
 
           // Gemini / Cloud Code format - may have multiple parts
           // Cloud Code API wraps in { response: { candidates: [...] } }, so unwrap.
@@ -1509,7 +1580,56 @@ export function createSSEStream(options: StreamOptions = {}) {
 
           if (translated?.length > 0) {
             for (const item of translated) {
+<<<<<<< Updated upstream
               emitTranslatedClientItem(controller, item);
+=======
+              // Content for call log is accumulated only from parsed (above) to avoid double-counting;
+              // do not add again from item here.
+
+              // #723, #727: Sanitize intermediate stream chunks if target is OpenAI format loop
+              let itemSanitized: Record<string, unknown> = item;
+              if (targetFormat === FORMATS.OPENAI || targetFormat === FORMATS.OPENAI_RESPONSES) {
+                itemSanitized = sanitizeStreamingChunk(itemSanitized) as Record<string, unknown>;
+
+                // Extract reasoning tags from content if translation generated them
+                const delta = itemSanitized?.choices?.[0]?.delta;
+                if (delta?.content && typeof delta.content === "string") {
+                  const { content, thinking } = extractThinkingFromContent(delta.content);
+                  delta.content = content;
+                  if (thinking && !delta.reasoning_content) {
+                    delta.reasoning_content = thinking;
+                  }
+                }
+              }
+
+              // Filter empty chunks
+              if (!hasValuableContent(itemSanitized, sourceFormat)) {
+                continue; // Skip this empty chunk
+              }
+
+              // Inject estimated usage if finish chunk has no valid usage
+              const isFinishChunk =
+                itemSanitized.type === "message_delta" || itemSanitized.choices?.[0]?.finish_reason;
+              if (
+                state.finishReason &&
+                isFinishChunk &&
+                !hasValidUsage(itemSanitized.usage) &&
+                totalContentLength > 0
+              ) {
+                const estimated = estimateUsage(body, totalContentLength, sourceFormat);
+                itemSanitized.usage = filterUsageForFormat(estimated, sourceFormat); // Filter + already has buffer
+                state.usage = estimated;
+              } else if (state.finishReason && isFinishChunk && state.usage) {
+                // Add buffer and filter usage for client (but keep original in state.usage for logging)
+                const buffered = addBufferToUsage(state.usage);
+                itemSanitized.usage = filterUsageForFormat(buffered, sourceFormat);
+              }
+
+              const output = formatSSE(itemSanitized, sourceFormat);
+              clientPayloadCollector.push(itemSanitized);
+              reqLogger?.appendConvertedChunk?.(output);
+              controller.enqueue(encoder.encode(output));
+>>>>>>> Stashed changes
             }
           }
         }
@@ -1538,6 +1658,7 @@ export function createSSEStream(options: StreamOptions = {}) {
               if (buffer.startsWith("data:") && !buffer.startsWith("data: ")) {
                 output = "data: " + buffer.slice(5);
               }
+<<<<<<< Updated upstream
               const bufferedPayload = parseSSELine(bufferedLine);
               if (bufferedPayload) {
                 providerPayloadCollector.push(bufferedPayload);
@@ -1565,6 +1686,13 @@ export function createSSEStream(options: StreamOptions = {}) {
                 pendingPassthroughEventEmitted = true;
               }
               output = maybePrefixPendingPassthroughEvent(output, buffer);
+=======
+              const bufferedPayload = parseSSELine(buffer.trim());
+              if (bufferedPayload) {
+                providerPayloadCollector.push(bufferedPayload);
+                clientPayloadCollector.push(bufferedPayload);
+              }
+>>>>>>> Stashed changes
               reqLogger?.appendConvertedChunk?.(output);
               controller.enqueue(encoder.encode(output));
             }
@@ -1724,7 +1852,14 @@ export function createSSEStream(options: StreamOptions = {}) {
 
               if (translated?.length > 0) {
                 for (const item of translated) {
+<<<<<<< Updated upstream
                   emitTranslatedClientItem(controller, item);
+=======
+                  const output = formatSSE(item, sourceFormat);
+                  clientPayloadCollector.push(item);
+                  reqLogger?.appendConvertedChunk?.(output);
+                  controller.enqueue(encoder.encode(output));
+>>>>>>> Stashed changes
                 }
               }
             }
@@ -1784,6 +1919,7 @@ export function createSSEStream(options: StreamOptions = {}) {
 
           if (flushed?.length > 0) {
             for (const item of flushed) {
+<<<<<<< Updated upstream
               emitTranslatedClientItem(controller, item);
             }
           }
@@ -1801,6 +1937,12 @@ export function createSSEStream(options: StreamOptions = {}) {
                 includeMessageDelta: !claudeEmptyResponseLifecycle.hasMessageDelta,
                 includeMessageStop: !claudeEmptyResponseLifecycle.hasMessageStop,
               });
+=======
+              const output = formatSSE(item, sourceFormat);
+              clientPayloadCollector.push(item);
+              reqLogger?.appendConvertedChunk?.(output);
+              controller.enqueue(encoder.encode(output));
+>>>>>>> Stashed changes
             }
           }
 
@@ -1818,12 +1960,19 @@ export function createSSEStream(options: StreamOptions = {}) {
           if (!doneSent) {
             await emitFinalSseMetadata(controller, state?.usage as Record<string, unknown> | null);
             doneSent = true;
+<<<<<<< Updated upstream
             if (!clientExpectsResponsesStream) {
               clientPayloadCollector.push({ done: true });
               const doneOutput = "data: [DONE]\n\n";
               reqLogger?.appendConvertedChunk?.(doneOutput);
               controller.enqueue(encoder.encode(doneOutput));
             }
+=======
+            clientPayloadCollector.push({ done: true });
+            const doneOutput = "data: [DONE]\n\n";
+            reqLogger?.appendConvertedChunk?.(doneOutput);
+            controller.enqueue(encoder.encode(doneOutput));
+>>>>>>> Stashed changes
           }
 
           // Estimate usage if provider didn't return valid usage (for translate mode)

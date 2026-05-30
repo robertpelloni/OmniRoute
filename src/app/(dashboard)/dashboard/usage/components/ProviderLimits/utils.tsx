@@ -5,7 +5,10 @@ const PROVIDER_PLAN_FALLBACKS = new Set([
   "claude code",
   "kimi coding",
   "kiro",
+<<<<<<< Updated upstream
   "amazon q",
+=======
+>>>>>>> Stashed changes
   "openai codex",
   "codex",
   "github copilot",
@@ -20,8 +23,11 @@ const QUOTA_LABEL_MAP: Record<string, string> = {
   code_review: "Code Review",
   agentic_request: "Agentic",
   agentic_request_freetrial: "Agentic (Trial)",
+<<<<<<< Updated upstream
   credits: "AI Credits",
   models: "Models",
+=======
+>>>>>>> Stashed changes
 };
 
 function toRecord(value: unknown): Record<string, unknown> {
@@ -157,6 +163,7 @@ function normalizeQuotaEntry(name: string, quota: any = {}, extras: any = {}) {
   const usedRaw = Number(quota?.used || 0);
   const totalRaw = Number(quota?.total || 0);
   const resetAt = quota?.resetAt || null;
+<<<<<<< Updated upstream
 
   // T13: Only consider it stale if the reset time passed AND there's still usage shown.
   // If usage is already 0 (or remaining is 100%), it's naturally reset and doesn't need to be marked as stale.
@@ -169,6 +176,12 @@ function normalizeQuotaEntry(name: string, quota: any = {}, extras: any = {}) {
   const used = staleAfterReset ? 0 : usedRaw;
   const total = Number.isFinite(totalRaw) ? totalRaw : 0;
 
+=======
+  const staleAfterReset = isPastResetWindow(resetAt);
+  const used = staleAfterReset ? 0 : usedRaw;
+  const total = Number.isFinite(totalRaw) ? totalRaw : 0;
+  const remainingPercentageRaw = safePercentage(quota?.remainingPercentage);
+>>>>>>> Stashed changes
   const remainingPercentage =
     staleAfterReset && total > 0
       ? 100
@@ -214,6 +227,7 @@ export function parseQuotaData(provider, data) {
       case "antigravity":
         if (data.quotas) {
           Object.entries(data.quotas).forEach(([modelKey, quota]: [string, any]) => {
+<<<<<<< Updated upstream
             if (modelKey === "credits") {
               // Credit balance: render as "N credits remaining" counter, not a progress bar
               const remaining = Number(quota?.remaining ?? 0);
@@ -235,6 +249,8 @@ export function parseQuotaData(provider, data) {
               // Summary row: skip — individual models are shown via modelQuotas if needed
               return;
             }
+=======
+>>>>>>> Stashed changes
             if (quota?.unlimited && (!quota?.total || quota.total <= 0)) {
               return;
             }
@@ -285,6 +301,7 @@ export function parseQuotaData(provider, data) {
         if (data.quotas) {
           Object.entries(data.quotas).forEach(([modelKey, quota]: [string, any]) => {
             normalizedQuotas.push(normalizeQuotaEntry(modelKey, quota, { modelKey }));
+<<<<<<< Updated upstream
           });
         }
         break;
@@ -293,6 +310,8 @@ export function parseQuotaData(provider, data) {
         if (data.quotas) {
           Object.entries(data.quotas).forEach(([name, quota]: [string, any]) => {
             normalizedQuotas.push(normalizeQuotaEntry(name, quota));
+=======
+>>>>>>> Stashed changes
           });
         }
         break;

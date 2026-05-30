@@ -2,17 +2,23 @@
  * Memory store - CRUD operations with prepared statements and caching
  */
 
+<<<<<<< Updated upstream
 import { getDbInstance } from "../db/core";
 import { Memory, MemoryType } from "./types";
 import { logger } from "../../../open-sse/utils/logger.ts";
 
 const log = logger("MEMORY_STORE");
 
+=======
+import { getDbInstance, rowToCamel } from "../db/core";
+import { Memory, MemoryType } from "./types";
+>>>>>>> Stashed changes
 interface CacheEntry<T> {
   value: T;
   timestamp: number;
 }
 
+<<<<<<< Updated upstream
 interface MemoryRow {
   id: string;
   api_key_id: string;
@@ -26,6 +32,8 @@ interface MemoryRow {
   expires_at: string | null;
 }
 
+=======
+>>>>>>> Stashed changes
 // Memory cache configuration
 const MEMORY_CACHE_TTL = 300_000; // 5 minutes
 const MEMORY_MAX_CACHE_SIZE = 10_000;
@@ -46,10 +54,20 @@ function parseJSON(value: unknown): Record<string, unknown> {
   }
 }
 
+<<<<<<< Updated upstream
+=======
+// Cache invalidation strategy
+>>>>>>> Stashed changes
 function invalidateMemoryCache(key: string) {
   _memoryCache.delete(key);
 }
 
+<<<<<<< Updated upstream
+=======
+/**
+ * Memory cache management with size control
+ */
+>>>>>>> Stashed changes
 function evictIfNeeded<TKey, TValue>(cache: Map<TKey, TValue>) {
   if (cache.size > MEMORY_MAX_CACHE_SIZE) {
     // Remove oldest entries first
@@ -61,6 +79,7 @@ function evictIfNeeded<TKey, TValue>(cache: Map<TKey, TValue>) {
   }
 }
 
+<<<<<<< Updated upstream
 function rowToMemory(row: MemoryRow): Memory {
   return {
     id: String(row.id),
@@ -93,11 +112,69 @@ function findExistingMemory(
 
 /**
  * Create a new memory entry (UPSERT: updates existing if same apiKeyId + key)
+=======
+/**
+ * Get or compile regex for wildcard pattern
+ */
+function getWildcardRegex(pattern: string): RegExp {
+  // This function is copied from apiKeys.ts pattern
+  let regex = _regexCache.get(pattern);
+  if (!regex) {
+    const regexStr = pattern.replace(/\*/g, ".*");
+    regex = new RegExp(`^${regexStr}$`);
+    _regexCache.set(pattern, regex);
+    // Prevent unbounded growth
+    if (_regexCache.size > 100) {
+      const firstKey = _regexCache.keys().next().value;
+      if (firstKey) _regexCache.delete(firstKey);
+    }
+  }
+  return regex;
+}
+
+// Compiled regex cache for wildcard patterns
+const _regexCache = new Map<string, RegExp>();
+
+// Cache for memory validation (similar to apiKeys)
+const _memoryValidationCache = new Map<string, { exists: boolean; timestamp: number }>();
+const MEMORY_VALIDATION_CACHE_TTL = 60 * 1000; // 1 minute TTL
+
+/**
+ * Check if memory exists with caching
+ */
+async function memoryExists(id: string): Promise<boolean> {
+  if (!id || typeof id !== "string") return false;
+
+  const now = Date.now();
+
+  // Check cache first
+  const cached = _memoryValidationCache.get(id);
+  if (cached && now - cached.timestamp < MEMORY_VALIDATION_CACHE_TTL) {
+    return cached.exists;
+  }
+
+  const db = getDbInstance();
+  const stmt = db.prepare("SELECT 1 FROM memory WHERE id = ?");
+  const row = stmt.get(id);
+  const exists = !!row;
+
+  // Cache the result to prevent cache pollution
+  if (exists) {
+    _memoryValidationCache.set(id, { exists: true, timestamp: now });
+  }
+
+  return exists;
+}
+
+/**
+ * Create a new memory entry
+>>>>>>> Stashed changes
  */
 export async function createMemory(
   memory: Omit<Memory, "id" | "createdAt" | "updatedAt">
 ): Promise<Memory> {
   const db = getDbInstance();
+<<<<<<< Updated upstream
   const now = new Date().toISOString();
 
   // Check for existing memory with same apiKeyId + key (UPSERT logic)
@@ -151,6 +228,13 @@ export async function createMemory(
   const id = crypto.randomUUID();
   const stmt = db.prepare(
     "INSERT INTO memories (id, api_key_id, session_id, type, key, content, metadata, created_at, updated_at, expires_at) " +
+=======
+  const id = crypto.randomUUID();
+  const now = new Date().toISOString();
+
+  const stmt = db.prepare(
+    "INSERT INTO memory (id, apiKeyId, sessionId, type, key, content, metadata, createdAt, updatedAt, expiresAt) " +
+>>>>>>> Stashed changes
       "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
   );
 
@@ -161,7 +245,11 @@ export async function createMemory(
     memory.type,
     memory.key,
     memory.content,
+<<<<<<< Updated upstream
     JSON.stringify(memory.metadata ?? {}),
+=======
+    JSON.stringify(memory.metadata),
+>>>>>>> Stashed changes
     now,
     now,
     memory.expiresAt?.toISOString() ?? null
@@ -185,8 +273,11 @@ export async function createMemory(
   evictIfNeeded(_memoryCache);
   _memoryCache.set(id, { value: createdMemory, timestamp: Date.now() });
 
+<<<<<<< Updated upstream
   log.info("memory.stored", { apiKeyId: memory.apiKeyId, type: memory.type, id });
 
+=======
+>>>>>>> Stashed changes
   return createdMemory;
 }
 
@@ -203,8 +294,13 @@ export async function getMemory(id: string): Promise<Memory | null> {
   }
 
   const db = getDbInstance();
+<<<<<<< Updated upstream
   const stmt = db.prepare("SELECT * FROM memories WHERE id = ?");
   const row = stmt.get(id) as MemoryRow | undefined;
+=======
+  const stmt = db.prepare("SELECT * FROM memory WHERE id = ?");
+  const row = stmt.get(id) as any;
+>>>>>>> Stashed changes
 
   if (!row) {
     // Cache negative result briefly to prevent repeated DB hits
@@ -213,7 +309,22 @@ export async function getMemory(id: string): Promise<Memory | null> {
     return null;
   }
 
+<<<<<<< Updated upstream
   const memory = rowToMemory(row);
+=======
+  const memory: Memory = {
+    id: String(row.id),
+    apiKeyId: String(row.apiKeyId),
+    sessionId: String(row.sessionId),
+    type: row.type as MemoryType,
+    key: String(row.key),
+    content: String(row.content),
+    metadata: parseJSON(row.metadata),
+    createdAt: new Date(String(row.createdAt)),
+    updatedAt: new Date(String(row.updatedAt)),
+    expiresAt: row.expiresAt ? new Date(String(row.expiresAt)) : null,
+  };
+>>>>>>> Stashed changes
 
   // Cache the result
   evictIfNeeded(_memoryCache);
@@ -236,7 +347,11 @@ export async function updateMemory(
 
   // Build dynamic update query
   const fields: string[] = [];
+<<<<<<< Updated upstream
   const values: unknown[] = [];
+=======
+  const values: any[] = [];
+>>>>>>> Stashed changes
 
   if (updates.type !== undefined) {
     fields.push("type = ?");
@@ -255,17 +370,34 @@ export async function updateMemory(
     values.push(JSON.stringify(updates.metadata));
   }
   if (updates.expiresAt !== undefined) {
+<<<<<<< Updated upstream
     fields.push("expires_at = ?");
+=======
+    fields.push("expiresAt = ?");
+>>>>>>> Stashed changes
     values.push(updates.expiresAt?.toISOString() ?? null);
   }
 
   // Always update the updatedAt timestamp
+<<<<<<< Updated upstream
   fields.push("updated_at = ?");
   values.push(now);
 
   values.push(id); // For WHERE clause
 
   const stmt = db.prepare(`UPDATE memories SET ${fields.join(", ")} WHERE id = ?`);
+=======
+  fields.push("updatedAt = ?");
+  values.push(now);
+
+  if (fields.length === 0) {
+    return false; // No updates to apply
+  }
+
+  values.push(id); // For WHERE clause
+
+  const stmt = db.prepare(`UPDATE memory SET ${fields.join(", ")} WHERE id = ?`);
+>>>>>>> Stashed changes
 
   const result = stmt.run(...values);
 
@@ -286,7 +418,11 @@ export async function deleteMemory(id: string): Promise<boolean> {
   if (!id || typeof id !== "string") return false;
 
   const db = getDbInstance();
+<<<<<<< Updated upstream
   const stmt = db.prepare("DELETE FROM memories WHERE id = ?");
+=======
+  const stmt = db.prepare("DELETE FROM memory WHERE id = ?");
+>>>>>>> Stashed changes
   const result = stmt.run(id);
 
   if (result.changes === 0) {
@@ -296,18 +432,26 @@ export async function deleteMemory(id: string): Promise<boolean> {
   // Invalidate cache for this memory
   invalidateMemoryCache(id);
 
+<<<<<<< Updated upstream
   log.info("memory.deleted", { id });
 
+=======
+>>>>>>> Stashed changes
   return true;
 }
 
 /**
+<<<<<<< Updated upstream
  * List memories with optional filtering and pagination
+=======
+ * List memories with optional filtering
+>>>>>>> Stashed changes
  */
 export async function listMemories(filters: {
   apiKeyId?: string;
   type?: MemoryType;
   sessionId?: string;
+<<<<<<< Updated upstream
   query?: string;
   limit?: number;
   offset?: number;
@@ -322,10 +466,26 @@ export async function listMemories(filters: {
   if (filters.apiKeyId) {
     whereClauses.push("api_key_id = ?");
     whereParams.push(filters.apiKeyId);
+=======
+  limit?: number;
+  offset?: number;
+}): Promise<Memory[]> {
+  const db = getDbInstance();
+
+  // Build dynamic query
+  let query = "SELECT * FROM memory";
+  const params: any[] = [];
+  const whereClauses: string[] = [];
+
+  if (filters.apiKeyId) {
+    whereClauses.push("apiKeyId = ?");
+    params.push(filters.apiKeyId);
+>>>>>>> Stashed changes
   }
 
   if (filters.type) {
     whereClauses.push("type = ?");
+<<<<<<< Updated upstream
     whereParams.push(filters.type);
   }
 
@@ -370,22 +530,61 @@ export async function listMemories(filters: {
 
   // Build SELECT query with pagination
   let query = "SELECT * FROM memories";
+=======
+    params.push(filters.type);
+  }
+
+  if (filters.sessionId) {
+    whereClauses.push("sessionId = ?");
+    params.push(filters.sessionId);
+  }
+
+>>>>>>> Stashed changes
   if (whereClauses.length > 0) {
     query += " WHERE " + whereClauses.join(" AND ");
   }
 
   // Add ordering and pagination
+<<<<<<< Updated upstream
   query += " ORDER BY created_at DESC LIMIT ? OFFSET ?";
 
   // Build params for SELECT query (WHERE params + pagination params)
   const params = [...whereParams, effectiveLimit, effectiveOffset];
+=======
+  query += " ORDER BY createdAt DESC";
+
+  if (filters.limit !== undefined) {
+    query += " LIMIT ?";
+    params.push(filters.limit);
+  }
+
+  if (filters.offset !== undefined) {
+    query += " OFFSET ?";
+    params.push(filters.offset);
+  }
+>>>>>>> Stashed changes
 
   const stmt = db.prepare(query);
   const rows = stmt.all(...params);
 
+<<<<<<< Updated upstream
   return {
     data: (rows as MemoryRow[]).map(rowToMemory),
     total,
     byType,
   };
+=======
+  return (rows as any[]).map((row: any) => ({
+    id: String(row.id),
+    apiKeyId: String(row.apiKeyId),
+    sessionId: String(row.sessionId),
+    type: row.type as MemoryType,
+    key: String(row.key),
+    content: String(row.content),
+    metadata: parseJSON(row.metadata),
+    createdAt: new Date(String(row.createdAt)),
+    updatedAt: new Date(String(row.updatedAt)),
+    expiresAt: row.expiresAt ? new Date(String(row.expiresAt)) : null,
+  }));
+>>>>>>> Stashed changes
 }

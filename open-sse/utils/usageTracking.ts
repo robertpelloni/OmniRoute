@@ -363,6 +363,7 @@ export function extractUsage(chunk) {
     return normalizeUsage({
       prompt_tokens: chunk.usage.prompt_tokens ?? chunk.usage.input_tokens ?? 0,
       completion_tokens: chunk.usage.completion_tokens ?? chunk.usage.output_tokens ?? 0,
+<<<<<<< Updated upstream
       cached_tokens:
         chunk.usage.prompt_tokens_details?.cached_tokens ??
         chunk.usage.input_tokens_details?.cached_tokens ??
@@ -370,6 +371,10 @@ export function extractUsage(chunk) {
       reasoning_tokens:
         chunk.usage.completion_tokens_details?.reasoning_tokens ??
         chunk.usage.output_tokens_details?.reasoning_tokens,
+=======
+      cached_tokens: chunk.usage.prompt_tokens_details?.cached_tokens,
+      reasoning_tokens: chunk.usage.completion_tokens_details?.reasoning_tokens,
+>>>>>>> Stashed changes
     });
   }
 
@@ -518,11 +523,15 @@ export function logUsage(
   // - Claude: input_tokens, output_tokens
   const inTokens = getLoggedInputTokens(usage);
   const outTokens = getLoggedOutputTokens(usage);
+<<<<<<< Updated upstream
   void apiKeyInfo;
   const normalizedConnectionId = typeof connectionId === "string" ? connectionId : undefined;
   const accountPrefix = normalizedConnectionId
     ? normalizedConnectionId.slice(0, 8) + "..."
     : "unknown";
+=======
+  const accountPrefix = connectionId ? connectionId.slice(0, 8) + "..." : "unknown";
+>>>>>>> Stashed changes
 
   let msg = `[${getTimeString()}] 📊 ${COLORS.green}[USAGE] ${p} | in=${inTokens} | out=${outTokens} | account=${accountPrefix}${COLORS.reset}`;
 
@@ -552,6 +561,7 @@ export function logUsage(
     cacheCreation: cacheCreation || 0,
     reasoning: reasoning || 0,
   };
+<<<<<<< Updated upstream
   appendRequestLog({
     model: typeof model === "string" ? model : undefined,
     provider: typeof provider === "string" ? provider : undefined,
@@ -559,4 +569,7 @@ export function logUsage(
     tokens,
     status: "200 OK",
   }).catch(() => {});
+=======
+  appendRequestLog({ model, provider, connectionId, tokens, status: "200 OK" }).catch(() => {});
+>>>>>>> Stashed changes
 }

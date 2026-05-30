@@ -15,8 +15,15 @@ import ThinkingBudgetTab from "./components/ThinkingBudgetTab";
 import SystemPromptTab from "./components/SystemPromptTab";
 import ModelAliasesUnified from "./components/ModelAliasesUnified";
 import BackgroundDegradationTab from "./components/BackgroundDegradationTab";
+<<<<<<< Updated upstream
 import MemorySkillsTab from "./components/MemorySkillsTab";
 import ModelsDevSyncTab from "./components/ModelsDevSyncTab";
+=======
+
+import CacheStatsCard from "./components/CacheStatsCard";
+import CacheSettingsTab from "./components/CacheSettingsTab";
+import MemorySkillsTab from "./components/MemorySkillsTab";
+>>>>>>> Stashed changes
 import ResilienceTab from "./components/ResilienceTab";
 import CliproxyapiSettingsTab from "./components/CliproxyapiSettingsTab";
 import PayloadRulesTab from "./components/PayloadRulesTab";
@@ -114,8 +121,14 @@ export default function SettingsPage() {
               </Link>
               <VisionBridgeSettingsTab />
               <SystemPromptTab />
+<<<<<<< Updated upstream
               <MemorySkillsTab />
               <ModelsDevSyncTab />
+=======
+              <CacheStatsCard />
+              <CacheSettingsTab />
+              <MemorySkillsTab />
+>>>>>>> Stashed changes
             </div>
           )}
 

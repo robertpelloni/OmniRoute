@@ -1,8 +1,15 @@
 import initializeCloudSync from "@/shared/services/initializeCloudSync";
+<<<<<<< Updated upstream
 import { startBudgetResetJob } from "@/lib/jobs/budgetResetJob";
 import { startModelSyncScheduler } from "@/shared/services/modelSyncScheduler";
 
 // Initialize runtime background sync services once per server process.
+=======
+import { startModelSyncScheduler } from "@/shared/services/modelSyncScheduler";
+import "@/lib/tokenHealthCheck"; // Proactive token health-check scheduler
+
+// Initialize background sync services when this module is imported
+>>>>>>> Stashed changes
 let initialized = false;
 
 function isAutomatedTestProcess(
@@ -40,7 +47,10 @@ export async function ensureCloudSyncInitialized() {
       initTokenHealthCheck();
       await initializeCloudSync();
       startModelSyncScheduler();
+<<<<<<< Updated upstream
       startBudgetResetJob();
+=======
+>>>>>>> Stashed changes
       initialized = true;
     } catch (error) {
       console.error("[ServerInit] Error initializing background sync services:", error);

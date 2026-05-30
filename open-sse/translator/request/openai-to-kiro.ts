@@ -335,6 +335,10 @@ export function buildKiroPayload(model, body, stream, credentials) {
       : finalContent;
 
   // Use uuidv5 with the hash of the system prompt / first message to maintain AWS Builder ID context cache
+<<<<<<< Updated upstream
+=======
+  const { v5: uuidv5 } = require("uuid");
+>>>>>>> Stashed changes
   payload.conversationState.conversationId = uuidv5(
     (firstContent || "").substring(0, 4000),
     NAMESPACE_KIRO

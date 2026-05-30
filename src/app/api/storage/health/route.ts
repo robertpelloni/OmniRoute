@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import path from "path";
 import fs from "fs";
 import { resolveDataDir } from "@/lib/dataPaths";
+<<<<<<< Updated upstream
 import {
   getAppLogRetentionDays,
   getCallLogRetentionDays,
@@ -9,6 +10,9 @@ import {
   getProxyLogsTableMaxRows,
 } from "@/lib/logEnv";
 import { getDbBackupMaxFiles, getDbBackupRetentionDays } from "@/lib/db/backup";
+=======
+import { getAppLogRetentionDays, getCallLogRetentionDays } from "@/lib/logEnv";
+>>>>>>> Stashed changes
 
 /**
  * GET /api/storage/health — Return database storage information.
@@ -67,6 +71,7 @@ export async function GET() {
         app: getAppLogRetentionDays(),
         call: getCallLogRetentionDays(),
       },
+<<<<<<< Updated upstream
       tableMaxRows: {
         callLogs: getCallLogsTableMaxRows(),
         proxyLogs: getProxyLogsTableMaxRows(),
@@ -75,6 +80,8 @@ export async function GET() {
         maxFiles: getDbBackupMaxFiles(),
         days: getDbBackupRetentionDays(),
       },
+=======
+>>>>>>> Stashed changes
       dataDir: dataDir.startsWith(homeDir) ? "~" + dataDir.slice(homeDir.length) : dataDir,
     });
   } catch (error) {

@@ -206,6 +206,40 @@ export default function ApiManagerPageClient() {
   const fetchSessionCounts = async (apiKeys: ApiKey[]) => {
     if (apiKeys.length === 0) {
       setSessionCounts({});
+<<<<<<< Updated upstream
+=======
+      return;
+    }
+    try {
+      const res = await fetch("/api/sessions");
+      if (!res.ok) return;
+      const data = await res.json();
+      const byApiKeyRaw =
+        data && typeof data.byApiKey === "object" && !Array.isArray(data.byApiKey)
+          ? data.byApiKey
+          : {};
+      const normalized: Record<string, number> = {};
+      for (const key of apiKeys) {
+        const value = byApiKeyRaw[key.id];
+        normalized[key.id] =
+          typeof value === "number" && Number.isFinite(value) && value > 0 ? value : 0;
+      }
+      setSessionCounts(normalized);
+    } catch (error) {
+      console.log("Error fetching session counts:", error);
+    }
+  };
+
+  const clearError = useCallback(() => setError(null), []);
+
+  const handleCreateKey = async () => {
+    // Validate and sanitize input
+    const sanitizedName = sanitizeInput(newKeyName);
+    const validation = validateKeyName(sanitizedName, t);
+
+    if (!validation.valid) {
+      setError(validation.error || t("invalidKeyName"));
+>>>>>>> Stashed changes
       return;
     }
     try {

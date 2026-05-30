@@ -25,6 +25,7 @@ import { getAppLogFormat, getAppLogLevel } from "../../src/lib/logEnv";
 
 const LEVELS = { debug: 0, info: 1, warn: 2, error: 3 } as const;
 
+<<<<<<< Updated upstream
 type LogLevel = keyof typeof LEVELS;
 type LogMetadata = Record<string, unknown>;
 type ConsoleFn = (...data: unknown[]) => void;
@@ -50,6 +51,10 @@ function isLogLevel(value: string): value is LogLevel {
 const configuredLevel = getAppLogLevel("info").toLowerCase();
 const currentLevel = isLogLevel(configuredLevel) ? LEVELS[configuredLevel] : LEVELS.info;
 
+=======
+const currentLevel = LEVELS[getAppLogLevel("info").toLowerCase()] ?? LEVELS.info;
+
+>>>>>>> Stashed changes
 const jsonFormat = getAppLogFormat("text") === "json";
 
 let requestCounter = 0;

@@ -86,6 +86,7 @@ export const QWEN_CONFIG = {
 };
 
 // Qoder OAuth Configuration (Authorization Code)
+<<<<<<< Updated upstream
 const QODER_OAUTH_AUTHORIZE_URL = process.env.QODER_OAUTH_AUTHORIZE_URL || "";
 const QODER_OAUTH_TOKEN_URL = process.env.QODER_OAUTH_TOKEN_URL || "";
 const QODER_OAUTH_USERINFO_URL = process.env.QODER_OAUTH_USERINFO_URL || "";
@@ -105,6 +106,14 @@ export const QODER_CONFIG = {
   authorizeUrl: QODER_OAUTH_AUTHORIZE_URL,
   tokenUrl: QODER_OAUTH_TOKEN_URL,
   userInfoUrl: QODER_OAUTH_USERINFO_URL,
+=======
+export const QODER_CONFIG = {
+  clientId: process.env.QODER_OAUTH_CLIENT_ID || "10009311001",
+  clientSecret: process.env.QODER_OAUTH_CLIENT_SECRET || "4Z3YjXycVsQvyGF1etiNlIBB4RsqSDtW",
+  authorizeUrl: "https://qoder.cn/oauth",
+  tokenUrl: "https://qoder.cn/oauth/token",
+  userInfoUrl: "https://qoder.cn/api/oauth/getUserInfo",
+>>>>>>> Stashed changes
   extraParams: {
     loginMethod: "phone",
     type: "phone",

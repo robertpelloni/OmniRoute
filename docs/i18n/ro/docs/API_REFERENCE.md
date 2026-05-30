@@ -1,6 +1,18 @@
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:docs/i18n/ro/docs/API_REFERENCE.md
 # API Reference (Română)
 
 🌐 **Languages:** 🇺🇸 [English](../../../../docs/API_REFERENCE.md) · 🇸🇦 [ar](../../ar/docs/API_REFERENCE.md) · 🇧🇬 [bg](../../bg/docs/API_REFERENCE.md) · 🇧🇩 [bn](../../bn/docs/API_REFERENCE.md) · 🇨🇿 [cs](../../cs/docs/API_REFERENCE.md) · 🇩🇰 [da](../../da/docs/API_REFERENCE.md) · 🇩🇪 [de](../../de/docs/API_REFERENCE.md) · 🇪🇸 [es](../../es/docs/API_REFERENCE.md) · 🇮🇷 [fa](../../fa/docs/API_REFERENCE.md) · 🇫🇮 [fi](../../fi/docs/API_REFERENCE.md) · 🇫🇷 [fr](../../fr/docs/API_REFERENCE.md) · 🇮🇳 [gu](../../gu/docs/API_REFERENCE.md) · 🇮🇱 [he](../../he/docs/API_REFERENCE.md) · 🇮🇳 [hi](../../hi/docs/API_REFERENCE.md) · 🇭🇺 [hu](../../hu/docs/API_REFERENCE.md) · 🇮🇩 [id](../../id/docs/API_REFERENCE.md) · 🇮🇹 [it](../../it/docs/API_REFERENCE.md) · 🇯🇵 [ja](../../ja/docs/API_REFERENCE.md) · 🇰🇷 [ko](../../ko/docs/API_REFERENCE.md) · 🇮🇳 [mr](../../mr/docs/API_REFERENCE.md) · 🇲🇾 [ms](../../ms/docs/API_REFERENCE.md) · 🇳🇱 [nl](../../nl/docs/API_REFERENCE.md) · 🇳🇴 [no](../../no/docs/API_REFERENCE.md) · 🇵🇭 [phi](../../phi/docs/API_REFERENCE.md) · 🇵🇱 [pl](../../pl/docs/API_REFERENCE.md) · 🇵🇹 [pt](../../pt/docs/API_REFERENCE.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/API_REFERENCE.md) · 🇷🇴 [ro](../../ro/docs/API_REFERENCE.md) · 🇷🇺 [ru](../../ru/docs/API_REFERENCE.md) · 🇸🇰 [sk](../../sk/docs/API_REFERENCE.md) · 🇸🇪 [sv](../../sv/docs/API_REFERENCE.md) · 🇰🇪 [sw](../../sw/docs/API_REFERENCE.md) · 🇮🇳 [ta](../../ta/docs/API_REFERENCE.md) · 🇮🇳 [te](../../te/docs/API_REFERENCE.md) · 🇹🇭 [th](../../th/docs/API_REFERENCE.md) · 🇹🇷 [tr](../../tr/docs/API_REFERENCE.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/API_REFERENCE.md) · 🇵🇰 [ur](../../ur/docs/API_REFERENCE.md) · 🇻🇳 [vi](../../vi/docs/API_REFERENCE.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/API_REFERENCE.md)
+========
+# API Reference (Magyar)
+
+🌐 **Languages:** 🇺🇸 [English](../../../../docs/API_REFERENCE.md) · 🇪🇸 [es](../../es/docs/API_REFERENCE.md) · 🇫🇷 [fr](../../fr/docs/API_REFERENCE.md) · 🇩🇪 [de](../../de/docs/API_REFERENCE.md) · 🇮🇹 [it](../../it/docs/API_REFERENCE.md) · 🇷🇺 [ru](../../ru/docs/API_REFERENCE.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/API_REFERENCE.md) · 🇯🇵 [ja](../../ja/docs/API_REFERENCE.md) · 🇰🇷 [ko](../../ko/docs/API_REFERENCE.md) · 🇸🇦 [ar](../../ar/docs/API_REFERENCE.md) · 🇮🇳 [in](../../in/docs/API_REFERENCE.md) · 🇹🇭 [th](../../th/docs/API_REFERENCE.md) · 🇻🇳 [vi](../../vi/docs/API_REFERENCE.md) · 🇮🇩 [id](../../id/docs/API_REFERENCE.md) · 🇲🇾 [ms](../../ms/docs/API_REFERENCE.md) · 🇳🇱 [nl](../../nl/docs/API_REFERENCE.md) · 🇵🇱 [pl](../../pl/docs/API_REFERENCE.md) · 🇸🇪 [sv](../../sv/docs/API_REFERENCE.md) · 🇳🇴 [no](../../no/docs/API_REFERENCE.md) · 🇩🇰 [da](../../da/docs/API_REFERENCE.md) · 🇫🇮 [fi](../../fi/docs/API_REFERENCE.md) · 🇵🇹 [pt](../../pt/docs/API_REFERENCE.md) · 🇷🇴 [ro](../../ro/docs/API_REFERENCE.md) · 🇭🇺 [hu](../../hu/docs/API_REFERENCE.md) · 🇧🇬 [bg](../../bg/docs/API_REFERENCE.md) · 🇸🇰 [sk](../../sk/docs/API_REFERENCE.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/API_REFERENCE.md) · 🇮🇱 [he](../../he/docs/API_REFERENCE.md) · 🇵🇭 [phi](../../phi/docs/API_REFERENCE.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/API_REFERENCE.md) · 🇨🇿 [cs](../../cs/docs/API_REFERENCE.md)
+>>>>>>>> Stashed changes:docs/i18n/hu/docs/API_REFERENCE.md
+=======
+# API Reference (Română)
+
+🌐 **Languages:** 🇺🇸 [English](../../../../docs/API_REFERENCE.md) · 🇪🇸 [es](../../es/docs/API_REFERENCE.md) · 🇫🇷 [fr](../../fr/docs/API_REFERENCE.md) · 🇩🇪 [de](../../de/docs/API_REFERENCE.md) · 🇮🇹 [it](../../it/docs/API_REFERENCE.md) · 🇷🇺 [ru](../../ru/docs/API_REFERENCE.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/API_REFERENCE.md) · 🇯🇵 [ja](../../ja/docs/API_REFERENCE.md) · 🇰🇷 [ko](../../ko/docs/API_REFERENCE.md) · 🇸🇦 [ar](../../ar/docs/API_REFERENCE.md) · 🇮🇳 [in](../../in/docs/API_REFERENCE.md) · 🇹🇭 [th](../../th/docs/API_REFERENCE.md) · 🇻🇳 [vi](../../vi/docs/API_REFERENCE.md) · 🇮🇩 [id](../../id/docs/API_REFERENCE.md) · 🇲🇾 [ms](../../ms/docs/API_REFERENCE.md) · 🇳🇱 [nl](../../nl/docs/API_REFERENCE.md) · 🇵🇱 [pl](../../pl/docs/API_REFERENCE.md) · 🇸🇪 [sv](../../sv/docs/API_REFERENCE.md) · 🇳🇴 [no](../../no/docs/API_REFERENCE.md) · 🇩🇰 [da](../../da/docs/API_REFERENCE.md) · 🇫🇮 [fi](../../fi/docs/API_REFERENCE.md) · 🇵🇹 [pt](../../pt/docs/API_REFERENCE.md) · 🇷🇴 [ro](../../ro/docs/API_REFERENCE.md) · 🇭🇺 [hu](../../hu/docs/API_REFERENCE.md) · 🇧🇬 [bg](../../bg/docs/API_REFERENCE.md) · 🇸🇰 [sk](../../sk/docs/API_REFERENCE.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/API_REFERENCE.md) · 🇮🇱 [he](../../he/docs/API_REFERENCE.md) · 🇵🇭 [phi](../../phi/docs/API_REFERENCE.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/API_REFERENCE.md) · 🇨🇿 [cs](../../cs/docs/API_REFERENCE.md)
+>>>>>>> Stashed changes
 
 ---
 
@@ -70,7 +82,11 @@ Content-Type: application/json
 }
 ```
 
+<<<<<<< Updated upstream
 Available providers: Nebius, OpenAI, Mistral, Together AI, Fireworks, NVIDIA, **OpenRouter**, **GitHub Models**.
+=======
+Available providers: Nebius, OpenAI, Mistral, Together AI, Fireworks, NVIDIA.
+>>>>>>> Stashed changes
 
 ```bash
 # List all embedding models
@@ -93,7 +109,11 @@ Content-Type: application/json
 }
 ```
 
+<<<<<<< Updated upstream
 Available providers: OpenAI (DALL-E, GPT Image 1), xAI (Grok Image), Together AI (FLUX), Fireworks AI, Nebius (FLUX), Hyperbolic, NanoBanana, **OpenRouter**, SD WebUI (local), ComfyUI (local).
+=======
+Available providers: OpenAI (DALL-E), xAI (Grok Image), Together AI (FLUX), Fireworks AI.
+>>>>>>> Stashed changes
 
 ```bash
 # List all image models
@@ -181,6 +201,7 @@ Response example:
 
 ### Provider Management
 
+<<<<<<< Updated upstream
 | Endpoint                     | Method                | Description                                    |
 | ---------------------------- | --------------------- | ---------------------------------------------- |
 | `/api/providers`             | GET/POST              | List / create providers                        |
@@ -190,6 +211,17 @@ Response example:
 | `/api/providers/validate`    | POST                  | Validate provider config                       |
 | `/api/provider-nodes*`       | Various               | Provider node management                       |
 | `/api/provider-models`       | GET/POST/PATCH/DELETE | Custom models (add, update, hide/show, delete) |
+=======
+| Endpoint                     | Method          | Description              |
+| ---------------------------- | --------------- | ------------------------ |
+| `/api/providers`             | GET/POST        | List / create providers  |
+| `/api/providers/[id]`        | GET/PUT/DELETE  | Manage a provider        |
+| `/api/providers/[id]/test`   | POST            | Test provider connection |
+| `/api/providers/[id]/models` | GET             | List provider models     |
+| `/api/providers/validate`    | POST            | Validate provider config |
+| `/api/provider-nodes*`       | Various         | Provider node management |
+| `/api/provider-models`       | GET/POST/DELETE | Custom models            |
+>>>>>>> Stashed changes
 
 ### OAuth Flows
 
@@ -286,12 +318,27 @@ GET response includes `agents[]` (id, name, binary, version, installed, protocol
 
 ### Resilience & Rate Limits
 
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:docs/i18n/ro/docs/API_REFERENCE.md
 | Endpoint                | Method    | Description                                                                        |
 | ----------------------- | --------- | ---------------------------------------------------------------------------------- |
 | `/api/resilience`       | GET/PATCH | Get/update request queue, connection cooldown, provider breaker, and wait settings |
 | `/api/resilience/reset` | POST      | Reset provider circuit breakers                                                    |
 | `/api/rate-limits`      | GET       | Per-account rate limit status                                                      |
 | `/api/rate-limit`       | GET       | Global rate limit configuration                                                    |
+========
+=======
+>>>>>>> Stashed changes
+| Endpoint                | Method    | Description                     |
+| ----------------------- | --------- | ------------------------------- |
+| `/api/resilience`       | GET/PATCH | Get/update resilience profiles  |
+| `/api/resilience/reset` | POST      | Reset circuit breakers          |
+| `/api/rate-limits`      | GET       | Per-account rate limit status   |
+| `/api/rate-limit`       | GET       | Global rate limit configuration |
+<<<<<<< Updated upstream
+>>>>>>>> Stashed changes:docs/i18n/hu/docs/API_REFERENCE.md
+=======
+>>>>>>> Stashed changes
 
 ### Evals
 
@@ -322,6 +369,7 @@ These endpoints mirror Gemini's API format for clients that expect native Gemini
 
 ### Internal / System APIs
 
+<<<<<<< Updated upstream
 | Endpoint                 | Method | Description                                          |
 | ------------------------ | ------ | ---------------------------------------------------- |
 | `/api/init`              | GET    | Application initialization check (used on first run) |
@@ -354,6 +402,17 @@ Repairs missing or corrupted OAuth environment variables for a specific provider
 }
 ```
 
+=======
+| Endpoint        | Method | Description                                          |
+| --------------- | ------ | ---------------------------------------------------- |
+| `/api/init`     | GET    | Application initialization check (used on first run) |
+| `/api/tags`     | GET    | Ollama-compatible model tags (for Ollama clients)    |
+| `/api/restart`  | POST   | Trigger graceful server restart                      |
+| `/api/shutdown` | POST   | Trigger graceful server shutdown                     |
+
+> **Note:** These endpoints are used internally by the system or for Ollama client compatibility. They are not typically called by end users.
+
+>>>>>>> Stashed changes
 ---
 
 ## Audio Transcription
@@ -445,6 +504,28 @@ Content-Type: application/json
 }
 ```
 
+<<<<<<< Updated upstream
+=======
+---
+
+## Model Availability
+
+```bash
+# Get real-time model availability across all providers
+GET /api/models/availability
+
+# Check availability for a specific model
+POST /api/models/availability
+Content-Type: application/json
+
+{
+  "model": "claude-sonnet-4-5-20250929"
+}
+```
+
+---
+
+>>>>>>> Stashed changes
 ## Request Processing
 
 1. Client sends request to `/v1/*`

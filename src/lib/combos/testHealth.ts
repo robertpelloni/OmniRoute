@@ -1,9 +1,12 @@
 type JsonRecord = Record<string, unknown>;
 
+<<<<<<< Updated upstream
 const COMBO_TEST_MAX_TOKENS = 2048;
 const COMBO_TEST_OPERAND_MIN = 10000;
 const COMBO_TEST_OPERAND_RANGE = 90000;
 
+=======
+>>>>>>> Stashed changes
 function asRecord(value: unknown): JsonRecord {
   return value && typeof value === "object" && !Array.isArray(value) ? (value as JsonRecord) : {};
 }
@@ -107,6 +110,7 @@ function hasReasoningOnlyCompletion(body: JsonRecord): boolean {
   });
 }
 
+<<<<<<< Updated upstream
 function getRandomFiveDigitNumber() {
   return COMBO_TEST_OPERAND_MIN + Math.floor(Math.random() * COMBO_TEST_OPERAND_RANGE);
 }
@@ -134,6 +138,16 @@ export function buildComboTestRequestBody(modelStr: string, isEmbedding: boolean
     // Give reasoning-heavy models enough headroom to finish the request and
     // still emit a visible answer without immediate truncation.
     max_tokens: COMBO_TEST_MAX_TOKENS,
+=======
+export function buildComboTestRequestBody(modelStr: string) {
+  return {
+    model: modelStr,
+    messages: [{ role: "user", content: "Reply with OK only." }],
+    // Give reasoning-heavy models enough headroom to emit a tiny visible answer
+    // without turning the smoke test into a full-cost real request.
+    max_tokens: 64,
+    temperature: 0,
+>>>>>>> Stashed changes
     stream: false,
   };
 }
@@ -145,10 +159,13 @@ export function extractComboTestResponseText(responseBody: unknown): string {
     return body.output_text.trim();
   }
 
+<<<<<<< Updated upstream
   if (Array.isArray(body.data) && body.data[0]?.embedding) {
     return "[Embedding generated successfully]";
   }
 
+=======
+>>>>>>> Stashed changes
   if (Array.isArray(body.choices)) {
     for (const choice of body.choices) {
       const choiceRecord = asRecord(choice);

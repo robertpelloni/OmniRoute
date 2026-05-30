@@ -12,7 +12,10 @@ import {
 } from "@/lib/localDb";
 import { syncToCloud } from "@/lib/cloudSync";
 import { setQuotaCache } from "@/domain/quotaCache";
+<<<<<<< Updated upstream
 import { buildClaudeExtraUsageConnectionUpdate } from "@/lib/providers/claudeExtraUsage";
+=======
+>>>>>>> Stashed changes
 import { getMachineId } from "@/shared/utils/machine";
 import { USAGE_SUPPORTED_PROVIDERS } from "@/shared/constants/providers";
 import { getExecutor } from "@omniroute/open-sse/executors/index.ts";
@@ -29,11 +32,15 @@ interface ProviderConnectionLike {
   authType?: string;
   accessToken?: string;
   refreshToken?: string;
+<<<<<<< Updated upstream
   expiresAt?: string;
+=======
+>>>>>>> Stashed changes
   tokenExpiresAt?: string;
   providerSpecificData?: JsonRecord;
   testStatus?: string;
   isActive?: boolean;
+<<<<<<< Updated upstream
   lastError?: string | null;
   lastErrorAt?: string | null;
   lastErrorType?: string | null;
@@ -51,6 +58,11 @@ const PROVIDER_LIMITS_APIKEY_PROVIDERS = new Set([
   "crof",
   "nanogpt",
 ]);
+=======
+}
+
+const PROVIDER_LIMITS_APIKEY_PROVIDERS = new Set(["glm"]);
+>>>>>>> Stashed changes
 const DEFAULT_PROVIDER_LIMITS_SYNC_INTERVAL_MINUTES = 70;
 const PROVIDER_LIMITS_AUTO_SYNC_SETTING_KEY = "provider_limits_auto_sync_last_run";
 
@@ -106,7 +118,11 @@ async function refreshAndUpdateCredentials(connection: ProviderConnectionLike) {
   const credentials = {
     accessToken: connection.accessToken,
     refreshToken: connection.refreshToken,
+<<<<<<< Updated upstream
     expiresAt: connection.tokenExpiresAt || connection.expiresAt || null,
+=======
+    expiresAt: connection.tokenExpiresAt,
+>>>>>>> Stashed changes
     providerSpecificData: connection.providerSpecificData,
     copilotToken: connection.providerSpecificData?.copilotToken,
     copilotTokenExpiresAt: connection.providerSpecificData?.copilotTokenExpiresAt,
@@ -139,11 +155,16 @@ async function refreshAndUpdateCredentials(connection: ProviderConnectionLike) {
     updateData.refreshToken = refreshResult.refreshToken;
   }
   if (refreshResult.expiresIn) {
+<<<<<<< Updated upstream
     const expiresAt = new Date(Date.now() + refreshResult.expiresIn * 1000).toISOString();
     updateData.expiresAt = expiresAt;
     updateData.tokenExpiresAt = expiresAt;
   } else if (refreshResult.expiresAt) {
     updateData.expiresAt = refreshResult.expiresAt;
+=======
+    updateData.tokenExpiresAt = new Date(Date.now() + refreshResult.expiresIn * 1000).toISOString();
+  } else if (refreshResult.expiresAt) {
+>>>>>>> Stashed changes
     updateData.tokenExpiresAt = refreshResult.expiresAt;
   }
   if (refreshResult.copilotToken || refreshResult.copilotTokenExpiresAt) {
@@ -202,6 +223,7 @@ async function syncExpiredStatusIfNeeded(connection: ProviderConnectionLike, usa
   }
 }
 
+<<<<<<< Updated upstream
 async function syncClaudeExtraUsageStateIfNeeded(
   connection: ProviderConnectionLike,
   usage: JsonRecord
@@ -216,6 +238,8 @@ async function syncClaudeExtraUsageStateIfNeeded(
   };
 }
 
+=======
+>>>>>>> Stashed changes
 export function getProviderLimitsSyncIntervalMinutes(): number {
   const raw = Number.parseInt(process.env.PROVIDER_LIMITS_SYNC_INTERVAL_MINUTES ?? "", 10);
   return Number.isFinite(raw) && raw > 0 ? raw : DEFAULT_PROVIDER_LIMITS_SYNC_INTERVAL_MINUTES;
@@ -247,6 +271,7 @@ export async function fetchLiveProviderLimits(connectionId: string): Promise<{
   connection: ProviderConnectionLike;
   usage: JsonRecord;
 }> {
+<<<<<<< Updated upstream
   return fetchLiveProviderLimitsWithOptions(connectionId, { forceRefresh: false });
 }
 
@@ -257,6 +282,8 @@ async function fetchLiveProviderLimitsWithOptions(
   connection: ProviderConnectionLike;
   usage: JsonRecord;
 }> {
+=======
+>>>>>>> Stashed changes
   let connection = (await getProviderConnectionById(connectionId)) as ProviderConnectionLike | null;
   if (!connection) {
     throw withStatus(new Error("Connection not found"), 404);
@@ -267,12 +294,19 @@ async function fetchLiveProviderLimitsWithOptions(
   }
 
   if (connection.authType !== "oauth") {
+<<<<<<< Updated upstream
     const usage = (await getUsageForProvider(connection, options)) as JsonRecord;
+=======
+    const usage = (await getUsageForProvider(connection)) as JsonRecord;
+>>>>>>> Stashed changes
     if (isRecord(usage.quotas)) {
       setQuotaCache(connectionId, connection.provider, usage.quotas);
     }
     await syncExpiredStatusIfNeeded(connection, usage);
+<<<<<<< Updated upstream
     connection = await syncClaudeExtraUsageStateIfNeeded(connection, usage);
+=======
+>>>>>>> Stashed changes
     return { connection, usage };
   }
 
@@ -291,7 +325,11 @@ async function fetchLiveProviderLimitsWithOptions(
         await syncToCloudIfEnabled();
       }
 
+<<<<<<< Updated upstream
       const usageData = (await getUsageForProvider(conn, options)) as JsonRecord;
+=======
+      const usageData = (await getUsageForProvider(conn)) as JsonRecord;
+>>>>>>> Stashed changes
       connection = conn;
       return { usage: usageData };
     });
@@ -331,7 +369,10 @@ async function fetchLiveProviderLimitsWithOptions(
     setQuotaCache(connectionId, connection.provider, result.usage.quotas);
   }
   await syncExpiredStatusIfNeeded(connection, result.usage);
+<<<<<<< Updated upstream
   connection = await syncClaudeExtraUsageStateIfNeeded(connection, result.usage);
+=======
+>>>>>>> Stashed changes
 
   return {
     connection,
@@ -347,9 +388,13 @@ export async function fetchAndPersistProviderLimits(
   usage: JsonRecord;
   cache: ProviderLimitsCacheEntry;
 }> {
+<<<<<<< Updated upstream
   const { connection, usage } = await fetchLiveProviderLimitsWithOptions(connectionId, {
     forceRefresh: source === "manual",
   });
+=======
+  const { connection, usage } = await fetchLiveProviderLimits(connectionId);
+>>>>>>> Stashed changes
   const cache = toProviderLimitsCacheEntry(usage, source);
   setProviderLimitsCache(connectionId, cache);
   return { connection, usage, cache };
@@ -379,9 +424,13 @@ export async function syncAllProviderLimits(
     const chunk = connections.slice(i, i + concurrency);
     const results = await Promise.allSettled(
       chunk.map(async (connection) => {
+<<<<<<< Updated upstream
         const { usage } = await fetchLiveProviderLimitsWithOptions(connection.id, {
           forceRefresh: source === "manual",
         });
+=======
+        const { usage } = await fetchLiveProviderLimits(connection.id);
+>>>>>>> Stashed changes
         const cache = toProviderLimitsCacheEntry(usage, source);
         return { connectionId: connection.id, cache };
       })

@@ -3,7 +3,12 @@
 import { type ReactNode, useEffect, useState } from "react";
 import { Button, Card } from "@/shared/components";
 import { useNotificationStore } from "@/store/notificationStore";
+<<<<<<< Updated upstream
 import { useTranslations } from "next-intl";
+=======
+import { useLocale, useTranslations } from "next-intl";
+import AutoDisableCard from "./AutoDisableCard";
+>>>>>>> Stashed changes
 
 type RequestQueueSettings = {
   autoEnableApiKeyProviders: boolean;
@@ -732,10 +737,21 @@ export default function ResilienceTab() {
         saving={savingSection === "requestQueue"}
         onSave={(requestQueue) => savePatch("requestQueue", { requestQueue })}
       />
+<<<<<<< Updated upstream
       <ConnectionCooldownCard
         value={data.connectionCooldown}
         saving={savingSection === "connectionCooldown"}
         onSave={(connectionCooldown) => savePatch("connectionCooldown", { connectionCooldown })}
+=======
+      {/* 1.5 Auto Disable Banned Accounts */}
+      <AutoDisableCard />
+      {/* 2. Rate Limiting (editable defaults + active limiters) */}
+      <RateLimitCard
+        rateLimitStatus={data?.rateLimitStatus || []}
+        defaults={data?.defaults || {}}
+        onSaveDefaults={handleSaveDefaults}
+        saving={saving}
+>>>>>>> Stashed changes
       />
       <ProviderBreakerCard
         value={data.providerBreaker}

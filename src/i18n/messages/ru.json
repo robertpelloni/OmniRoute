@@ -36,7 +36,11 @@
     "time": "Время",
     "details": "Подробности",
     "created": "Создано",
+<<<<<<< Updated upstream
     "lastUsed": "Последнее обновление",
+=======
+    "lastUsed": "Last Refreshed",
+>>>>>>> Stashed changes
     "loadMore": "Загрузить больше",
     "noResults": "Результаты не найдены",
     "reloadPage": "Обновить страницу",
@@ -57,8 +61,13 @@
     "note": "Примечание",
     "free": "Бесплатно",
     "skipToContent": "Перейти к содержимому",
+<<<<<<< Updated upstream
     "maintenanceServerIssues": "На сервере возникли проблемы. Некоторые функции могут быть недоступны.",
     "maintenanceServerUnreachable": "Сервер недоступен. Повторное подключение...",
+=======
+    "maintenanceServerIssues": "Server is experiencing issues. Some features may be unavailable.",
+    "maintenanceServerUnreachable": "Server is unreachable. Reconnecting...",
+>>>>>>> Stashed changes
     "accept": "accept",
     "accountId": "accountId",
     "alias": "alias",
@@ -136,6 +145,7 @@
     "Failed to save pricing": "Не удалось сохранить цену.",
     "Failed to reset pricing": "Не удалось сбросить цены.",
     "apikey": "API-ключ",
+<<<<<<< Updated upstream
     "http": "HTTP",
     "checkSystemStatus": "Check System Status",
     "goToDashboard": "Go to Dashboard",
@@ -649,6 +659,9 @@
     "learnedFromHeaders": "Learned From Headers",
     "totalRequests": "Total Requests",
     "cloudUnstableNote": "Cloud Unstable Note"
+=======
+    "http": "HTTP"
+>>>>>>> Stashed changes
   },
   "sidebar": {
     "home": "Главная",
@@ -703,6 +716,7 @@
     "themeViolet": "Фиолетовый",
     "themeOrange": "Оранжевый",
     "themeCyan": "Голубой",
+<<<<<<< Updated upstream
     "cliToolsShort": "Инструменты",
     "cache": "Кэш",
     "cacheShort": "Кэш",
@@ -742,6 +756,21 @@
     "contextCaveman": "Caveman",
     "contextRtk": "RTK",
     "contextCombos": "Compression Combos"
+=======
+    "endpoints": "Конечные точки",
+    "playground": "Площадка",
+    "agents": "Агенты",
+    "cliToolsShort": "Инструменты",
+    "autoCombo": "Auto Combo",
+    "searchTools": "Search Tools",
+    "cache": "Cache",
+    "cacheShort": "Cache",
+    "cliSection": "CLI",
+    "debugSection": "Debug",
+    "helpSection": "Help",
+    "primarySection": "Main",
+    "systemSection": "System"
+>>>>>>> Stashed changes
   },
   "themesPage": {
     "title": "Темы",
@@ -828,9 +857,13 @@
     "utilization": "Использование",
     "utilizationDescription": "Тенденции использования квоты поставщика и отслеживание ограничений скорости",
     "comboHealth": "Здоровье комбо",
+<<<<<<< Updated upstream
     "comboHealthDescription": "Квота на уровне комбо, распределение использования и метрики производительности",
     "compressionAnalyticsTitle": "Compression Analytics",
     "compressionAnalyticsDescription": "Compression analytics — token savings, mode breakdown, and provider stats."
+=======
+    "comboHealthDescription": "Квота на уровне комбо, распределение использования и метрики производительности"
+>>>>>>> Stashed changes
   },
   "apiManager": {
     "title": "API-ключи",
@@ -937,7 +970,28 @@
     "permissionsTitle": "Разрешения: {name}",
     "allowAllDesc": "Этот ключ дает доступ ко всем доступным моделям.",
     "restrictDesc": "Этот ключ может получить доступ к {selectedCount} из моделей {totalModels}.",
-    "selectedCount": "{count} выбрано"
+    "selectedCount": "{count} выбрано",
+    "autoResolve": "Auto-Resolve",
+    "autoResolveDesc": "Auto-resolve ambiguous model names to native provider for this API key.",
+    "keyActive": "Key Active",
+    "keyActiveDesc": "Enable or disable this API key. Disabled keys are immediately rejected with 403.",
+    "accessSchedule": "Access Schedule",
+    "accessScheduleDesc": "Restrict access to specific hours and days of the week.",
+    "scheduleFrom": "From",
+    "scheduleUntil": "Until",
+    "scheduleDays": "Days",
+    "scheduleTimezone": "Timezone",
+    "scheduleTimezoneHint": "Use IANA timezone names, e.g. America/New_York, Europe/Berlin",
+    "scheduleActive": "Schedule",
+    "disabled": "Disabled",
+    "daySun": "Sun",
+    "dayMon": "Mon",
+    "dayTue": "Tue",
+    "dayWed": "Wed",
+    "dayThu": "Thu",
+    "dayFri": "Fri",
+    "daySat": "Sat",
+    "keyOnlyAvailableAtCreation": "Full key available only at creation time — copy it when you first create the key"
   },
   "auditLog": {
     "title": "Журнал аудита",
@@ -1256,12 +1310,19 @@
       "kilo": "Интерфейс командной строки Kilo Code AI Assistant",
       "cursor": "Редактор кода курсора AI",
       "continue": "Продолжить AI-помощник",
+<<<<<<< Updated upstream
       "opencode": "OpenCode - агент кодирования с ИИ в терминале",
       "kiro": "Amazon Kiro - IDE с ИИ",
       "windsurf": "Редактор кода Windsurf с ИИ",
       "copilot": "Ассистент GitHub Copilot с ИИ",
       "qwen": "Alibaba Qwen Code CLI",
       "amp": "Sourcegraph Amp coding assistant CLI"
+=======
+      "opencode": "OpenCode AI coding agent (Terminal)",
+      "kiro": "Amazon Kiro — AI-powered IDE",
+      "windsurf": "Windsurf AI Code Editor",
+      "copilot": "GitHub Copilot AI Assistant"
+>>>>>>> Stashed changes
     },
     "guides": {
       "cursor": {
@@ -1311,7 +1372,11 @@
           }
         },
         "notes": {
+<<<<<<< Updated upstream
           "0": "Continue использует JSON-файл конфигурации."
+=======
+          "0": "Continue использует файл конфигурации JSON."
+>>>>>>> Stashed changes
         }
       },
       "opencode": {
@@ -1328,11 +1393,19 @@
             "desc": "opencode config set baseUrl {baseUrl}"
           },
           "4": {
+<<<<<<< Updated upstream
             "title": "Выберите модель"
           },
           "5": {
             "title": "Используйте вариант мышления",
             "desc": "Для thinking-моделей запускайте с --variant high/low/max (пример команды ниже)."
+=======
+            "title": "Select Model"
+          },
+          "5": {
+            "title": "Use Thinking Variant",
+            "desc": "For thinking models, run with --variant high/low/max (example command below)."
+>>>>>>> Stashed changes
           }
         },
         "notes": {
@@ -1410,9 +1483,37 @@
             "title": "Select Model",
             "desc": "Choose a model from the dropdown"
           }
+        },
+        "notes": {
+          "0": "Kiro требует аккаунт Amazon."
+        }
+      },
+      "windsurf": {
+        "steps": {
+          "1": {
+            "title": "Open AI Settings",
+            "desc": "Click the AI Settings icon in Windsurf or go to Settings"
+          },
+          "2": {
+            "title": "Add Custom Provider",
+            "desc": "Select \"Add custom provider\" (OpenAI-compatible)"
+          },
+          "3": {
+            "title": "Base URL",
+            "desc": "http://127.0.0.1:20128/v1"
+          },
+          "4": {
+            "title": "API Key",
+            "desc": "Select your OmniRoute API key"
+          },
+          "5": {
+            "title": "Select Model",
+            "desc": "Choose a model from the dropdown"
+          }
         }
       }
     },
+<<<<<<< Updated upstream
     "guides.opencode.steps.1.title": "Установите OpenCode",
     "guides.opencode.steps.1.desc": "Установите через npm: npm install -g opencode-ai",
     "guides.opencode.steps.2.title": "API-ключ",
@@ -1444,6 +1545,29 @@
     "mitmClientsTab": "Mitm Clients Tab",
     "toolCategories": "Tool Categories",
     "visibleToolsCount": "Visible Tools Count"
+=======
+    "mitmHowWorksDesc": "{toolName} sends requests to its provider endpoint. MITM intercepts and redirects them to OmniRoute.",
+    "mitmStep1": "1. Start MITM to route requests through OmniRoute.",
+    "mitmStep2Prefix": "2. Add",
+    "mitmStep2Suffix": "to your hosts file as 127.0.0.1.",
+    "mitmStep3": "3. Open {toolName} and requests will be proxied.",
+    "whenToUseLabel": "Когда использовать",
+    "openToolDocs": "Открыть документацию по инструменту",
+    "toolUseCases": {
+      "claude": "Используйте, если вам нужны надежные рабочие процессы планирования и длительные рефакторинги нескольких файлов с помощью Claude Code.",
+      "codex": "Используйте, когда ваша команда стандартизирует потоки интерфейса командной строки OpenAI Codex и аутентификацию на основе профилей.",
+      "droid": "Используйте, когда вам нужен легкий агент терминала, ориентированный на быстрое кодирование и циклы выполнения команд.",
+      "openclaw": "Используйте, если вам нужен агент кодирования в стиле Open Claw, но маршрутизируемый через политики OmniRoute.",
+      "cline": "Используйте, если вы настраиваете агенты кодирования внутри редакторов и хотите выполнить управляемую настройку с помощью моделей OmniRoute.",
+      "kilo": "Используйте, когда ваш рабочий процесс зависит от команд Kilo Code и быстрого итеративного редактирования.",
+      "cursor": "Используйте при кодировании в Cursor, если вам нужны пользовательские модели, совместимые с OpenAI, через OmniRoute.",
+      "continue": "Используйте при запуске Продолжить в IDE, если вам нужна переносимая конфигурация поставщика на основе JSON.",
+      "opencode": "Используйте, если вы предпочитаете запускать собственные агенты терминала и автоматизировать скрипты через OpenCode.",
+      "kiro": "Используйте при интеграции Kiro и централизованном управлении маршрутизацией модели из OmniRoute.",
+      "antigravity": "Используйте, когда трафик Антигравитации/Киро необходимо перехватить через MITM и направить в OmniRoute.",
+      "copilot": "Используйте его, если вам нужен пользовательский интерфейс в стиле чата Copilot, одновременно обеспечивая соблюдение ключей OmniRoute и правил маршрутизации."
+    }
+>>>>>>> Stashed changes
   },
   "combos": {
     "title": "Комбо",
@@ -1546,6 +1670,7 @@
         "example": "Смешанные нагрузки, где одна модель часто перегружается."
       },
       "cost-optimized": {
+<<<<<<< Updated upstream
         "when": "Снижение стоимости - ваш главный приоритет.",
         "avoid": "Данные о ценах отсутствуют или устарели.",
         "example": "Фоновые или пакетные задачи, где важнее низкая стоимость."
@@ -1564,6 +1689,16 @@
         "example": "Example: High-throughput inference across 4+ equivalent model endpoints.",
         "avoid": "Avoid for small combos with 2 or fewer models — no benefit over round-robin.",
         "when": "Use when you want low-latency selection using Power-of-Two-Choices algorithm."
+=======
+        "when": "Cost reduction is your top priority.",
+        "avoid": "Pricing data is missing or outdated.",
+        "example": "Background or batch jobs where lower cost is preferred."
+      },
+      "strict-random": {
+        "when": "Use when you want perfectly even spread — each model used once before repeating.",
+        "avoid": "Avoid when models have different quality or latency and order matters.",
+        "example": "Example: Multiple accounts of the same model to distribute usage evenly."
+>>>>>>> Stashed changes
       }
     },
     "advancedHelp": {
@@ -1652,6 +1787,7 @@
         "tip3": "Отслеживайте использование по моделям, чтобы подтвердить выигрыш в распределении."
       },
       "cost-optimized": {
+<<<<<<< Updated upstream
         "title": "Маршрутизация с приоритетом бюджета",
         "description": "Маршрутизирует на более дешёвые модели, когда доступны данные о ценах.",
         "tip1": "Убедитесь, что цены есть для всех выбранных моделей.",
@@ -1794,6 +1930,24 @@
     "filterIntelligent": "Intelligent",
     "contextRelaySummaryModelHelp": "Optional override model used only for generating the handoff summary. Leave empty to reuse the active combo model.",
     "advancedWeightsTitle": "Advanced: Scoring Weights"
+=======
+        "title": "Budget-first routing",
+        "description": "Routes to lower-cost models when pricing metadata is available.",
+        "tip1": "Ensure pricing coverage for all selected models.",
+        "tip2": "Keep a quality fallback for hard prompts.",
+        "tip3": "Use for batch/background jobs where cost is the main KPI."
+      },
+      "strict-random": {
+        "title": "Shuffle deck distribution",
+        "description": "Each model is used exactly once per cycle before reshuffling.",
+        "tip1": "Use at least 2 models for meaningful distribution.",
+        "tip2": "Works best with equivalent-performance models.",
+        "tip3": "Ideal for load balancing across multiple API accounts."
+      }
+    },
+    "templateFreeStack": "Free Stack ($0)",
+    "templateFreeStackDesc": "Round-robin across all free providers: Kiro (Claude), Qoder (5 models), Qwen (4 models), Gemini CLI. Zero cost, never stops coding."
+>>>>>>> Stashed changes
   },
   "costs": {
     "title": "Затраты",
@@ -1920,6 +2074,7 @@
     "chat": "Чат",
     "embedding": "Встраивание",
     "image": "Изображение",
+<<<<<<< Updated upstream
     "custom": "Пользовательский",
     "modelsCount": "{count, plural, one {# модель} few {# модели} many {# моделей} other {# модели}}",
     "sectionTitle": "Интерфейс интеграции",
@@ -2010,6 +2165,62 @@
     "featureWebhooks": "Настройка вебхуков и подписки на события",
     "featureSwagger": "Автоматическая генерация спецификаций OpenAPI / Swagger",
     "featureAuth": "Управление API-ключами и OAuth-областями для каждого эндпоинта"
+=======
+    "custom": "обычай",
+    "modelsCount": "{count, plural, one {# model} other {# models}}",
+    "sectionTitle": "Integration Surface",
+    "sectionDescription": "OpenAI-compatible APIs and operational protocol endpoints",
+    "tabApis": "OpenAI-compatible APIs",
+    "tabProtocols": "Protocols",
+    "tabsAria": "Endpoint sections",
+    "protocolsTitle": "Protocols",
+    "protocolsDescription": "MCP and A2A are first-class endpoints with dedicated observability and controls.",
+    "mcpCardTitle": "MCP Server",
+    "mcpCardDescription": "Model Context Protocol over stdio",
+    "a2aCardTitle": "A2A Server",
+    "a2aCardDescription": "Agent2Agent JSON-RPC endpoint",
+    "protocolToolsLabel": "Tools",
+    "protocolTasksLabel": "Tasks",
+    "protocolActiveStreamsLabel": "Active streams",
+    "protocolLastActivity": "Last activity",
+    "quickStart": "Quick Start",
+    "openMcpDashboard": "Open MCP management",
+    "openA2aDashboard": "Open A2A management",
+    "mcpQuickStartTitle": "MCP Quick Start",
+    "mcpQuickStartStep1": "Run the MCP server via `omniroute --mcp`.",
+    "mcpQuickStartStep2": "Configure your MCP client to connect over stdio transport.",
+    "mcpQuickStartStep3": "Invoke tools such as `omniroute_get_health` and `omniroute_list_combos`.",
+    "a2aQuickStartTitle": "A2A Quick Start",
+    "a2aQuickStartStep1": "Discover the agent card at `/.well-known/agent.json`.",
+    "a2aQuickStartStep2": "Send JSON-RPC requests to `POST /a2a` using `message/send` or `message/stream`.",
+    "a2aQuickStartStep3": "Track and control tasks using `tasks/get` and `tasks/cancel`.",
+    "completionsLegacy": "Completions (Legacy)",
+    "completionsLegacyDesc": "Legacy OpenAI text completions — accepts both prompt string and messages array format",
+    "categorySearch": "Search & Discovery",
+    "webSearch": "Web Search",
+    "webSearchDesc": "Unified web search across multiple providers with automatic failover and caching",
+    "searchProvider": "Search Provider",
+    "searchProviderDesc": "This provider is used for web search via POST /v1/search. No model configuration needed — search providers are ready to use once an API key is connected.",
+    "cloudflaredDescription": "Create a Cloudflare Quick Tunnel for this endpoint to make it accessible from the internet without configuring DNS.",
+    "cloudflaredDisable": "Stop Tunnel",
+    "cloudflaredEnable": "Enable Tunnel",
+    "cloudflaredError": "Error",
+    "cloudflaredIdleNote": "Create a temporary Cloudflare Quick Tunnel for this endpoint.",
+    "cloudflaredInstallAndEnable": "Install & Enable",
+    "cloudflaredLastError": "Last error: {error}",
+    "cloudflaredNotInstalled": "Not installed",
+    "cloudflaredRequestFailed": "Failed to update Cloudflare tunnel",
+    "cloudflaredRunning": "Running",
+    "cloudflaredStarted": "Cloudflare tunnel started",
+    "cloudflaredStarting": "Starting",
+    "cloudflaredStopped": "Cloudflare tunnel stopped",
+    "cloudflaredStoppedState": "Stopped",
+    "cloudflaredTemporaryNote": "Quick Tunnel URLs are temporary and will change after restart.",
+    "cloudflaredTitle": "Cloudflare Quick Tunnel",
+    "cloudflaredUnsupported": "Unsupported",
+    "cloudflaredUnsupportedNote": "This platform is not supported for managed installation.",
+    "cloudflaredUrlNotice": "Creates a temporary Cloudflare Quick Tunnel. URLs change after restart."
+>>>>>>> Stashed changes
   },
   "mcpDashboard": {
     "loading": "Загрузка панели MCP...",
@@ -2214,11 +2425,20 @@
     "resetting": "Сброс...",
     "resetAll": "Сбросить все",
     "until": "До {time}",
+<<<<<<< Updated upstream
     "limitExhausted": "Exhausted",
     "learnedFromHeaders": "Learned from headers",
     "remainingOfLimit": "{remaining}/{limit} remaining",
     "throttleStatus": "Throttle: {value}",
     "lastHeaderUpdate": "Header update: {age}"
+=======
+    "activeProviders": "{count} active",
+    "monitoredProviders": "{count} monitored",
+    "configuredProvidersLabel": "Настраивается в приборной панели",
+    "configuredProvidersHint": "Поставщики, учетные данные которых сохранены в /dashboard/providers, независимо от состояния времени выполнения.",
+    "activeProvidersHint": "Настроенные поставщики в настоящее время включены для маршрутизации запросов.",
+    "monitoredProvidersHint": "Поставщики услуг в настоящее время отслеживаются с помощью мониторов состояния автоматических выключателей."
+>>>>>>> Stashed changes
   },
   "limits": {
     "title": "Лимиты и квоты",
@@ -2464,6 +2684,7 @@
     "chatCompletions": "Завершения чата",
     "importingModels": "Импорт...",
     "importFromModels": "Импорт из /модели",
+<<<<<<< Updated upstream
     "allModelsAlreadyImported": "Все модели уже импортированы",
     "noNewModelsToImport": "Нет новых моделей для импорта — все модели уже есть в реестре или списке пользовательских моделей",
     "skippingExistingModels": "Пропуск {count} существующих моделей",
@@ -2472,6 +2693,8 @@
     "autoSyncEnabled": "Автосинхронизация включена — модели будут периодически обновляться",
     "autoSyncDisabled": "Автосинхронизация отключена",
     "autoSyncToggleFailed": "Не удалось переключить автосинхронизацию",
+=======
+>>>>>>> Stashed changes
     "clearAllModels": "Очистить все модели",
     "clearAllModelsConfirm": "Вы уверены, что хотите удалить все модели для этого провайдера?",
     "clearAllModelsSuccess": "Все модели очищены",
@@ -2658,6 +2881,7 @@
     "chatPathHint": "Пользовательский путь чата для провайдеров с нестандартными API (например, /v4/chat/completions)",
     "modelsPathLabel": "Путь эндпоинта моделей",
     "modelsPathPlaceholder": "/models",
+<<<<<<< Updated upstream
     "modelsPathHint": "Пользовательский путь моделей для проверки (например, /v4/models)",
     "showEmails": "Show all emails",
     "deselectAllModels": "Deselect all",
@@ -2823,6 +3047,47 @@
     "perModelQuotaLabel": "Per Model Quota Label",
     "expiredBadge": "Expired",
     "expiringSoonBadge": "Expiring Soon"
+=======
+    "modelsPathHint": "Custom models path for validation (e.g. /v4/models)",
+    "builtInModels": "Built-in models",
+    "builtInModelsHint": "Registry models for this provider. Use the pencil to set compatibility options.",
+    "normalizeToolCallIdLabel": "Normalize tool call IDs to 9 characters (e.g. Mistral)",
+    "preserveDeveloperRoleLabel": "Keep OpenAI Responses developer role (do not map to system)",
+    "compatAdjustmentsTitle": "Compatibility",
+    "compatButtonLabel": "Compatibility",
+    "compatToolIdShort": "Tool ID 9",
+    "compatDeveloperShort": "Developer role",
+    "compatDoNotPreserveDeveloper": "Do not preserve developer role",
+    "compatBadgeNoPreserve": "No preserve",
+    "compatProtocolLabel": "Client request protocol",
+    "compatProtocolHint": "These options apply when OmniRoute detects this request shape (OpenAI Chat, Responses API, or Anthropic Messages).",
+    "compatProtocolOpenAI": "OpenAI Chat Completions",
+    "compatProtocolOpenAIResponses": "OpenAI Responses API",
+    "compatProtocolClaude": "Anthropic Messages",
+    "tokenRefreshed": "Token refreshed successfully",
+    "tokenRefreshFailed": "Token refresh failed",
+    "compatBadgeUpstreamHeaders": "Headers",
+    "compatUpstreamAddRow": "Add header",
+    "compatUpstreamHeaderName": "Header name",
+    "compatUpstreamHeaderValue": "Value",
+    "compatUpstreamHeadersHint": "High-privilege setting — same trust level as editing provider API credentials; only trusted admins should use it. Merged after OmniRoute adds auth from the provider API key. If a custom header uses the same name as an existing one (e.g. Authorization), your value fully replaces the auto-generated header (including the Bearer token) — the upstream only sees what you typed, not the key from settings. Misconfiguration can cause 401 or broken upstream auth. One row per header (e.g. extra Authentication for some gateways). Hover or focus the value to preview. Saves on blur, outside click, or closing this panel.",
+    "compatUpstreamHeadersLabel": "Extra upstream headers",
+    "compatUpstreamRemoveRow": "Remove row",
+    "autoSync": "Автосинхронизация",
+    "autoSyncTooltip": "Автоматически обновляет список моделей каждые 24 часа (настраивается через MODEL_SYNC_INTERVAL_HOURS)",
+    "autoSyncEnabled": "Автосинхронизация включена — модели будут периодически обновляться",
+    "autoSyncDisabled": "Автосинхронизация отключена",
+    "autoSyncToggleFailed": "Не удалось переключить автосинхронизацию",
+    "allModelsAlreadyImported": "Все модели уже импортированы",
+    "noNewModelsToImport": "Нет новых моделей для импорта — все модели уже есть в реестре или списке пользовательских моделей",
+    "skippingExistingModels": "Пропуск {count} существующих моделей",
+    "applyCodexAuthLocal": "Apply auth",
+    "codexAuthAppliedLocal": "Codex auth.json applied locally",
+    "codexAuthApplyFailed": "Failed to apply Codex auth.json locally",
+    "codexAuthExportFailed": "Failed to export Codex auth.json",
+    "codexAuthExported": "Codex auth.json exported",
+    "exportCodexAuthFile": "Export auth"
+>>>>>>> Stashed changes
   },
   "settings": {
     "title": "Настройки",
@@ -3294,6 +3559,7 @@
     "editPricing": "Изменить цену",
     "viewFullDetails": "Посмотреть полную информацию",
     "themeCoral": "Коралл",
+<<<<<<< Updated upstream
     "modelsDevTitle": "База моделей",
     "modelsDevDesc": "Автосинхронизация цен, возможностей и спецификаций из models.dev",
     "modelsDevEnabled": "Включить синхронизацию models.dev",
@@ -3496,6 +3762,37 @@
       "full": "Respond terse and compact. Preserve all technical substance.",
       "ultra": "Respond ultra terse with common technical abbreviations. Preserve exact symbols."
     }
+=======
+    "cliFingerprint": "CLI Fingerprint Matching",
+    "cliFingerprintDesc": "Match native CLI binary signatures when proxying requests. Reorders headers and body fields to look identical to the official CLI tools. Your proxy IP is preserved.",
+    "cliFingerprintEnabled": "{count} provider(s) with CLI fingerprint active",
+    "enableFingerprintTitle": "Enable fingerprint for {provider}",
+    "disableFingerprintTitle": "Disable fingerprint for {provider}",
+    "routingAdvancedGuideTitle": "Расширенное руководство по маршрутизации",
+    "routingAdvancedGuideHint1": "Используйте «Fill First» для предсказуемого приоритета, Round Robin для обеспечения справедливости и P2C для устойчивости к задержкам.",
+    "routingAdvancedGuideHint2": "Если поставщики различаются по качеству/стоимости, начните с варианта «Стоимость» для фоновой работы и «Наименее используемый» для сбалансированного износа.",
+    "comboDefaultsGuideTitle": "Как настроить комбо по умолчанию",
+    "comboDefaultsGuideHint1": "Сохраняйте низкий уровень повторных попыток в потоках с малой задержкой; увеличивайте таймаут только для задач длинной генерации.",
+    "comboDefaultsGuideHint2": "Используйте переопределения поставщика, если одному поставщику требуется другое поведение по тайм-ауту/повторной попытке, чем глобальные значения по умолчанию.",
+    "sidebarVisibility": "Hide sidebar items",
+    "sidebarVisibilityDesc": "Hide any sidebar navigation entry to reduce visual clutter.",
+    "sidebarVisibilityHint": "Any sidebar section is hidden automatically when a...",
+    "semanticCache": "Semantic Cache",
+    "autoDisableDescription": "Permanently mark provider connections as deactivated if they return specific terminal ban signals (e.g. HTTP 403 'verify your account'). This removes them from the combo rotation.",
+    "preserveClientCache": "Preserve Client Cache",
+    "cacheSettings": "Cache Settings",
+    "autoDisableThreshold": "Ban Threshold",
+    "autoDisableBannedAccounts": "Auto-Disable Banned Accounts",
+    "ttlMinutes": "TTL (minutes)",
+    "maxEntries": "Max Entries",
+    "loading": "Loading...",
+    "save": "Save",
+    "autoDisableThresholdDesc": "Consecutive ban signals required before permanent deactivation.",
+    "debugToggle": "Enable Debug Mode",
+    "sidebarVisibilityToggle": "Show Sidebar Items",
+    "enabled": "Enabled",
+    "strategy": "Strategy"
+>>>>>>> Stashed changes
   },
   "translator": {
     "title": "Переводчик",
@@ -3770,7 +4067,11 @@
     "loadingQuotas": "Загрузка...",
     "account": "Аккаунт",
     "modelQuotas": "Модельные квоты",
+<<<<<<< Updated upstream
     "lastUsed": "Последнее обновление",
+=======
+    "lastUsed": "Last Refreshed",
+>>>>>>> Stashed changes
     "actions": "Действия",
     "refreshQuota": "Обновить квоту",
     "today": "Сегодня",
@@ -4005,6 +4306,7 @@
     "restartServerWithNewPassword": "Перезагрузите сервер - он будет использовать новый пароль.",
     "backToLogin": "Вернуться к входу",
     "forgotPassword": "Забыли пароль?",
+<<<<<<< Updated upstream
     "defaultPasswordHint": "Пароль по умолчанию: CHANGEME (если не задан INITIAL_PASSWORD)",
     "Authorization": "Авторизация",
     "Content-Disposition": "Содержание-Расположение",
@@ -4018,6 +4320,17 @@
     "nodeIncompatibleHint": "OmniRoute requires Node.js 20.20.2+ (20.x LTS), 22.22.2+ (22.x LTS) or 24.0.0+ (24.x LTS). Node 24 LTS is recommended.",
     "nodeIncompatibleTitle": "Incompatible Node.js Version",
     "nodeIncompatibleFixLabel": "Fix: install a patched Node.js 22 LTS release"
+=======
+    "defaultPasswordHint": "Default password: 123456 (unless INITIAL_PASSWORD was set)",
+    "waitingForAuthorization": "Waiting for authorization...",
+    "waitingForGoogleAuthorization": "Waiting for Google authorization...",
+    "waitingForOpenAIAuthorization": "Waiting for OpenAI authorization...",
+    "waitingForAntigravityAuthorization": "Waiting for Antigravity authorization...",
+    "waitingForQoderAuthorization": "Waiting for Qoder authorization...",
+    "exchangingCodeForTokens": "Exchanging code for tokens...",
+    "Authorization": "Авторизация",
+    "Content-Disposition": "Содержание-Расположение"
+>>>>>>> Stashed changes
   },
   "landing": {
     "brandName": "ОмниРоут",
@@ -4227,8 +4540,22 @@
     "troubleshootingTestConnection": "Используйте «Панель мониторинга» > «Поставщики» > «Проверить соединение» перед тестированием из IDE или внешних клиентов.",
     "troubleshootingCircuitBreaker": "Если поставщик услуг показывает, что автоматический выключатель разомкнут, дождитесь охлаждения или посетите страницу «Здоровье» для получения подробной информации.",
     "troubleshootingOAuth": "Для поставщиков OAuth выполните повторную аутентификацию, если срок действия токенов истечет. Проверьте индикатор состояния карты провайдера.",
+<<<<<<< Updated upstream
     "deployTermuxTitle": "Termux (Android)",
     "deployTermuxText": "Run OmniRoute headless on Android via Termux. Access the dashboard from your mobile browser."
+=======
+    "managementApiReference": "Management API Reference",
+    "managementApiDescription": "Automation endpoints for proxy registry, scope assignments, and legacy proxy migration.",
+    "mgmtProxiesListNote": "List saved proxy registry items (supports pagination).",
+    "mgmtProxiesCreateNote": "Create a reusable proxy item in the registry.",
+    "mgmtProxiesHealthNote": "Get 24h/rolling health metrics per saved proxy from proxy logs.",
+    "mgmtProxiesBulkAssignNote": "Assign or clear one proxy across many scope IDs in one request.",
+    "mgmtAssignmentsListNote": "List proxy assignments by scope, scope_id, or proxy_id.",
+    "mgmtAssignmentsUpdateNote": "Assign or clear proxy for global/provider/account/combo scope.",
+    "mgmtLegacyMigrationNote": "Import legacy proxyConfig maps into registry assignments.",
+    "endpointSpeechNote": "Генерация речи из текста (ElevenLabs, OpenAI TTS).",
+    "endpointEmbeddingsNote": "Генерация текстовых эмбеддингов (OpenAI, Cohere, Voyage)."
+>>>>>>> Stashed changes
   },
   "legal": {
     "privacyPolicy": "Политика конфиденциальности",
@@ -4291,6 +4618,7 @@
     "termsSection6Text": "OmniRoute — это программное обеспечение с открытым исходным кодом. Вы можете свободно просматривать, изменять и распространять его в соответствии с условиями лицензии."
   },
   "agents": {
+<<<<<<< Updated upstream
     "title": "CLI-агенты",
     "description": "Находите установленные CLI-агенты в системе. Добавляйте пользовательские агенты для автоматического обнаружения.",
     "refresh": "Обновить",
@@ -4404,6 +4732,127 @@
     "thinking": "Шаблон рассуждения",
     "tool-calling": "Шаблон вызова инструментов",
     "multi-turn": "Шаблон многоходового диалога"
+=======
+    "title": "CLI Agents",
+    "description": "Discover installed CLI agents on your system. Add custom agents for auto-detection.",
+    "refresh": "Refresh",
+    "installed": "Installed",
+    "notFound": "Not Found",
+    "builtIn": "Built-in",
+    "custom": "Custom",
+    "remove": "Remove",
+    "addCustomAgent": "Add Custom Agent",
+    "addCustomAgentDesc": "Register any CLI tool for detection. It will be scanned automatically on refresh.",
+    "agentName": "Agent Name",
+    "binaryName": "Binary Name",
+    "versionCommand": "Version Command",
+    "spawnArgs": "Spawn Args",
+    "addAgent": "Add Agent",
+    "scanning": "Scanning system for CLI agents...",
+    "opencodeIntegration": "OpenCode Integration",
+    "opencodeDetected": "opencode {version} detected",
+    "opencodeDesc": "Generate a ready-to-use {configFile} with your OmniRoute base URL and all available models — drop it in your project root and run {command}.",
+    "downloadConfig": "Download {file}",
+    "downloaded": "Downloaded!",
+    "setupGuideTitle": "Setup guide",
+    "openCliTools": "Open CLI Tools",
+    "setupGuideDetectCliTitle": "Detect installed CLIs",
+    "setupGuideDetectCliDesc": "Click Refresh after installing or updating a CLI so OmniRoute can rescan binaries and versions.",
+    "setupGuideCustomAgentTitle": "Register custom binary",
+    "setupGuideCustomAgentDesc": "Use Add Custom Agent when your CLI is not in the built-in list. Provide binary name and version command.",
+    "setupGuideCommandMissingTitle": "Fix 'command not found'",
+    "setupGuideCommandMissingDesc": "Ensure the CLI command exists in PATH, open a new terminal session, and rerun Refresh."
+  },
+  "autoCombo": {
+    "title": "Auto-Combo Engine",
+    "statusNormal": "Normal",
+    "statusIncident": "Incident Mode",
+    "modePack": "Mode Pack",
+    "providerScores": "Provider Scores",
+    "noAutoCombo": "No auto-combo configured.",
+    "excludedProviders": "Excluded Providers",
+    "noExclusions": "No providers currently excluded.",
+    "factorQuota": "Quota",
+    "factorHealth": "Health",
+    "factorCost": "Cost",
+    "factorLatency": "Latency",
+    "factorTaskFit": "Task Fit",
+    "factorStability": "Stability",
+    "factorTierPriority": "Tier Priority",
+    "factorTierPriorityDesc": "Prefers accounts with higher quota tiers (Ultra/Pro over Free)",
+    "scoreFactorBreakdown": "Scoring Factors",
+    "modePackShipFast": "Ship Fast",
+    "modePackCostSaver": "Cost Saver",
+    "modePackQualityFirst": "Quality First",
+    "modePackOfflineFriendly": "Offline Friendly"
+  },
+  "search": {
+    "searchQuery": "Search Query",
+    "searchResults": "Search Results",
+    "cachedResult": "Cached",
+    "searchCost": "Cost",
+    "searchTools": "Search Tools",
+    "searchToolsDesc": "Advanced search testing with provider comparison",
+    "compareProviders": "Compare Providers",
+    "rerankResults": "Rerank Results",
+    "searchHistory": "Search History",
+    "urlOverlap": "URL Overlap",
+    "noSearchProviders": "No search providers configured. Add providers in Settings.",
+    "noRerankModels": "No rerank model available",
+    "webSearch": "Web Search",
+    "provider": "Provider",
+    "searchType": "Search Type",
+    "maxResults": "Max Results",
+    "filters": "Filters",
+    "country": "Country",
+    "language": "Language",
+    "timeRange": "Time Range",
+    "includeDomains": "Include Domains",
+    "excludeDomains": "Exclude Domains",
+    "safeSearch": "Safe Search",
+    "formatted": "Formatted",
+    "rawJson": "JSON",
+    "cacheMiss": "cache miss",
+    "cacheHit": "cache hit",
+    "latency": "Latency",
+    "cost": "Cost",
+    "results": "Results",
+    "rerank": "Rerank",
+    "rerankModel": "Rerank Model",
+    "positionDelta": "Position Change",
+    "emptyState": "Send a search query to see results",
+    "safeSearchOff": "Off",
+    "safeSearchModerate": "Moderate",
+    "safeSearchStrict": "Strict",
+    "queryPlaceholder": "Enter search query...",
+    "providerAuto": "auto (cheapest)",
+    "searchTypeWeb": "web",
+    "searchTypeNews": "news",
+    "optionAny": "any",
+    "timeRangeDay": "Past day",
+    "timeRangeWeek": "Past week",
+    "timeRangeMonth": "Past month",
+    "timeRangeYear": "Past year",
+    "domainPlaceholder": "example.com",
+    "requestTimedOut": "Request timed out ({seconds}s)",
+    "networkError": "Network error"
+  },
+  "templateNames": {
+    "simple-chat": "Simple Chat",
+    "streaming": "Streaming",
+    "system-prompt": "System Prompt",
+    "thinking": "Thinking",
+    "tool-calling": "Tool Calling",
+    "multi-turn": "Multi-turn"
+  },
+  "templateDescriptions": {
+    "simple-chat": "Basic chat template",
+    "streaming": "Streaming template",
+    "system-prompt": "System prompt template",
+    "thinking": "Thinking template",
+    "tool-calling": "Tool calling template",
+    "multi-turn": "Multi-turn template"
+>>>>>>> Stashed changes
   },
   "templatePayloads": {
     "simpleChat": {
@@ -4433,6 +4882,7 @@
     }
   },
   "cache": {
+<<<<<<< Updated upstream
     "title": "Управление кэшем",
     "description": "Отслеживайте и управляйте семантическим кэшем ответов, скоростью попаданий и экономией токенов.",
     "refresh": "Обновить",
@@ -4722,5 +5172,74 @@
     "noProxyLogs": "No proxy logs yet. Configure proxies and make API calls to see them here.",
     "noMatchingLogs": "No logs match the current filters.",
     "tlsFingerprint": "Chrome 124 TLS Fingerprint"
+=======
+    "title": "Cache Management",
+    "description": "Monitor and manage semantic response cache, hit rates, and token savings.",
+    "refresh": "Refresh",
+    "clearAll": "Clear All",
+    "memoryEntries": "Memory Entries",
+    "dbEntries": "DB Entries",
+    "cacheHits": "Cache Hits",
+    "tokensSaved": "Tokens Saved",
+    "hitRate": "Hit Rate",
+    "performance": "Cache Performance",
+    "behavior": "Cache Behavior",
+    "idempotency": "Idempotency Layer",
+    "clearSuccess": "Cache cleared. {count} expired entries removed.",
+    "clearError": "Failed to clear cache.",
+    "unavailable": "Cache unavailable",
+    "unavailableDesc": "Could not fetch cache statistics. Make sure the server is running.",
+    "memoryEntriesSub": "In-memory LRU",
+    "dbEntriesSub": "Persisted (SQLite)",
+    "cacheHitsSub": "of {total} total",
+    "tokensSavedSub": "Estimated from hits",
+    "autoRefresh": "Auto-refreshes every {seconds}s",
+    "hits": "Hits",
+    "misses": "Misses",
+    "total": "Total",
+    "behaviorDeterministic": "Only non-streaming requests with temperature=0 are cached.",
+    "behaviorBypass": "Bypass with header {header}.",
+    "behaviorTwoTier": "Two-tier storage: in-memory LRU (fast) + SQLite (persistent across restarts).",
+    "behaviorTtl": "Default TTL: 30 minutes. Configure via {envVar}.",
+    "activeDedupKeys": "Active Dedup Keys",
+    "dedupWindow": "Dedup Window",
+    "inputTokens": "Input Tokens",
+    "requestsShort": "reqs",
+    "inputShort": "In",
+    "resetting": "Resetting...",
+    "cachedTokensCol": "Cached",
+    "search": "Search",
+    "cacheReuseRatioDesc": "Cached tokens / Total input tokens",
+    "resetMetrics": "Reset Metrics",
+    "loading": "Loading...",
+    "cachedRequests": "Cached Requests",
+    "model": "Model",
+    "cached": "Cached",
+    "actions": "Actions",
+    "trend24h": "Cache Trend (24h)",
+    "cachedShort": "Cached",
+    "cacheCreation": "Creation",
+    "byProvider": "Breakdown by Provider",
+    "created": "Created",
+    "cacheCreationTokens": "Cache Creation Tokens",
+    "withCacheControl": "With Cache Control",
+    "searchEntries": "Search entries...",
+    "cacheReuseRatio": "Cache Reuse Ratio",
+    "estCostSaved": "Est. Cost Saved",
+    "cachedTokens": "Cached Tokens",
+    "requests": "Requests",
+    "signature": "Signature",
+    "cacheCreationWrite": "Cache Creation (Write)",
+    "expires": "Expires",
+    "writeShort": "Write",
+    "cacheHitRate": "Cache Hit Rate",
+    "cacheMetrics": "Prompt Cache Metrics",
+    "overview": "Overview",
+    "promptCache": "Prompt Cache (Provider-Side)",
+    "provider": "Provider",
+    "cachedTokensRead": "Cached Tokens (Read)",
+    "entries": "Entries",
+    "noEntries": "No cache entries found"
+>>>>>>> Stashed changes
   }
 }

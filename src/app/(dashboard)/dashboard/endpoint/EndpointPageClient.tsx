@@ -1,6 +1,10 @@
 "use client";
 
 import { useState, useEffect, useMemo, useCallback } from "react";
+<<<<<<< Updated upstream
+=======
+import PropTypes from "prop-types";
+>>>>>>> Stashed changes
 import Link from "next/link";
 import { Card, Button, Input, Modal, CardSkeleton, SegmentedControl } from "@/shared/components";
 import { useCopyToClipboard } from "@/shared/hooks/useCopyToClipboard";
@@ -36,6 +40,7 @@ type CloudflaredTunnelStatus = {
   logPath: string;
 };
 
+<<<<<<< Updated upstream
 type TailscaleTunnelPhase =
   | "unsupported"
   | "not_installed"
@@ -83,11 +88,14 @@ type NgrokTunnelStatus = {
   lastError: string | null;
 };
 
+=======
+>>>>>>> Stashed changes
 type TunnelNotice = {
   type: "success" | "error" | "info";
   message: string;
 };
 
+<<<<<<< Updated upstream
 type APIPageClientProps = {
   machineId: string;
 };
@@ -130,6 +138,9 @@ function runEndpointBackgroundTask(taskName: string, task: () => Promise<unknown
 }
 
 export default function APIPageClient({ machineId }: APIPageClientProps) {
+=======
+export default function APIPageClient({ machineId }) {
+>>>>>>> Stashed changes
   const [resolvedMachineId, setResolvedMachineId] = useState(machineId || "");
   const t = useTranslations("endpoint");
   const tc = useTranslations("common");
@@ -158,6 +169,7 @@ export default function APIPageClient({ machineId }: APIPageClientProps) {
   const [cloudflaredStatus, setCloudflaredStatus] = useState<CloudflaredTunnelStatus | null>(null);
   const [cloudflaredBusy, setCloudflaredBusy] = useState(false);
   const [cloudflaredNotice, setCloudflaredNotice] = useState<TunnelNotice | null>(null);
+<<<<<<< Updated upstream
   const [tailscaleStatus, setTailscaleStatus] = useState<TailscaleTunnelStatus | null>(null);
   const [tailscaleBusy, setTailscaleBusy] = useState(false);
   const [tailscaleNotice, setTailscaleNotice] = useState<TunnelNotice | null>(null);
@@ -172,6 +184,8 @@ export default function APIPageClient({ machineId }: APIPageClientProps) {
   const [ngrokNotice, setNgrokNotice] = useState<TunnelNotice | null>(null);
   const [ngrokToken, setNgrokToken] = useState("");
   const [showNgrokTunnel, setShowNgrokTunnel] = useState(true);
+=======
+>>>>>>> Stashed changes
 
   const { copied, copy } = useCopyToClipboard();
 
@@ -238,6 +252,7 @@ export default function APIPageClient({ machineId }: APIPageClientProps) {
     [translateOrFallback]
   );
 
+<<<<<<< Updated upstream
   const fetchTailscaleStatus = useCallback(
     async (silent = false) => {
       try {
@@ -327,6 +342,19 @@ export default function APIPageClient({ machineId }: APIPageClientProps) {
       mounted = false;
     };
   }, [fetchCloudflaredStatus, fetchTailscaleStatus, fetchNgrokStatus]);
+=======
+  useEffect(() => {
+    Promise.allSettled([
+      loadCloudSettings(),
+      fetchModels(),
+      fetchProtocolStatus(),
+      fetchSearchProviders(),
+      fetchCloudflaredStatus(true),
+    ]).finally(() => {
+      setLoading(false);
+    });
+  }, [fetchCloudflaredStatus]);
+>>>>>>> Stashed changes
 
   const fetchModels = async () => {
     setModelsLoading(true);
@@ -449,6 +477,7 @@ export default function APIPageClient({ machineId }: APIPageClientProps) {
         if (data.machineId) {
           setResolvedMachineId(data.machineId);
         }
+<<<<<<< Updated upstream
         setShowCloudflaredTunnel(tunnelVisibility.showCloudflaredTunnel);
         setShowTailscaleFunnel(tunnelVisibility.showTailscaleFunnel);
         setShowNgrokTunnel(tunnelVisibility.showNgrokTunnel);
@@ -467,6 +496,8 @@ export default function APIPageClient({ machineId }: APIPageClientProps) {
         }
 
         return tunnelVisibility;
+=======
+>>>>>>> Stashed changes
       }
     } catch (error) {
       console.log("Error loading cloud settings:", error);
@@ -506,6 +537,7 @@ export default function APIPageClient({ machineId }: APIPageClientProps) {
   }, [cloudflaredNotice]);
 
   useEffect(() => {
+<<<<<<< Updated upstream
     if (tailscaleNotice) {
       const timer = setTimeout(() => setTailscaleNotice(null), 5000);
       return () => clearTimeout(timer);
@@ -541,6 +573,14 @@ export default function APIPageClient({ machineId }: APIPageClientProps) {
     showNgrokTunnel,
     showTailscaleFunnel,
   ]);
+=======
+    const interval = setInterval(() => {
+      void fetchProtocolStatus();
+      void fetchCloudflaredStatus(true);
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [fetchCloudflaredStatus]);
+>>>>>>> Stashed changes
 
   const dispatchCloudChange = () => {
     globalThis.dispatchEvent(new Event("cloud-status-changed"));
@@ -639,6 +679,57 @@ export default function APIPageClient({ machineId }: APIPageClientProps) {
   const handleCloudflaredAction = async (action: "enable" | "disable") => {
     setCloudflaredBusy(true);
     setCloudflaredNotice(null);
+<<<<<<< Updated upstream
+=======
+
+    try {
+      const res = await fetch("/api/tunnels/cloudflared", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action }),
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        throw new Error(
+          data?.error ||
+            translateOrFallback("cloudflaredRequestFailed", "Failed to update Cloudflare tunnel")
+        );
+      }
+
+      if (data?.status) {
+        setCloudflaredStatus(data.status);
+      }
+
+      setCloudflaredNotice({
+        type: "success",
+        message:
+          action === "enable"
+            ? translateOrFallback("cloudflaredStarted", "Cloudflare tunnel started")
+            : translateOrFallback("cloudflaredStopped", "Cloudflare tunnel stopped"),
+      });
+    } catch (error) {
+      setCloudflaredNotice({
+        type: "error",
+        message:
+          error instanceof Error
+            ? error.message
+            : translateOrFallback("cloudflaredRequestFailed", "Failed to update Cloudflare tunnel"),
+      });
+    } finally {
+      setCloudflaredBusy(false);
+      await fetchCloudflaredStatus(true);
+    }
+  };
+
+  const [baseUrl, setBaseUrl] = useState("/v1");
+  const normalizedCloudBaseUrl = cloudBaseUrl
+    ? resolvedMachineId && !cloudBaseUrl.endsWith(`/${resolvedMachineId}`)
+      ? `${cloudBaseUrl}/${resolvedMachineId}`
+      : cloudBaseUrl
+    : null;
+  const cloudEndpointNew = normalizedCloudBaseUrl ? `${normalizedCloudBaseUrl}/v1` : null;
+>>>>>>> Stashed changes
 
     try {
       const res = await fetch("/api/tunnels/cloudflared", {
@@ -1069,6 +1160,7 @@ export default function APIPageClient({ machineId }: APIPageClientProps) {
     "cloudflaredUrlNotice",
     "Creates a temporary Cloudflare Quick Tunnel. The URL changes after every restart."
   );
+<<<<<<< Updated upstream
   const tailscalePhase = tailscaleStatus?.phase || "not_installed";
   const tailscalePhaseMeta: Record<TailscaleTunnelPhase, { label: string; className: string }> = {
     running: {
@@ -1143,6 +1235,8 @@ export default function APIPageClient({ machineId }: APIPageClientProps) {
     ? translateOrFallback("ngrokDisable", "Stop Tunnel")
     : translateOrFallback("ngrokEnable", "Enable Tunnel");
   const ngrokUrlNotice = translateOrFallback("ngrokUrlNotice", "Creates a public ngrok tunnel.");
+=======
+>>>>>>> Stashed changes
 
   return (
     <div className="flex flex-col gap-8">
@@ -1246,6 +1340,7 @@ export default function APIPageClient({ machineId }: APIPageClientProps) {
           </Button>
         </div>
 
+<<<<<<< Updated upstream
         {showCloudflaredTunnel && (
           <div className="rounded-xl border border-border/70 bg-surface/40 p-4">
             <div className="flex flex-col gap-3">
@@ -1596,6 +1691,100 @@ export default function APIPageClient({ machineId }: APIPageClientProps) {
             </div>
           </div>
         )}
+=======
+        <div className="rounded-xl border border-border/70 bg-surface/40 p-4">
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h3 className="text-sm font-semibold">
+                    {translateOrFallback("cloudflaredTitle", "Cloudflare Quick Tunnel")}
+                  </h3>
+                  <span
+                    className={`inline-flex items-center rounded-full border px-2 py-1 text-xs font-medium ${cloudflaredPhaseMeta[cloudflaredPhase].className}`}
+                  >
+                    {cloudflaredPhaseMeta[cloudflaredPhase].label}
+                  </span>
+                </div>
+              </div>
+
+              {cloudflaredStatus?.supported !== false && (
+                <Button
+                  size="sm"
+                  variant={cloudflaredStatus?.running ? "secondary" : "primary"}
+                  icon={cloudflaredStatus?.running ? "cloud_off" : "cloud_upload"}
+                  onClick={() =>
+                    handleCloudflaredAction(cloudflaredStatus?.running ? "disable" : "enable")
+                  }
+                  loading={cloudflaredBusy}
+                  className={
+                    cloudflaredStatus?.running
+                      ? "border-border/70! text-text-muted! hover:text-text!"
+                      : "bg-linear-to-r from-primary to-cyan-500 hover:from-primary-hover hover:to-cyan-600"
+                  }
+                >
+                  {cloudflaredActionLabel}
+                </Button>
+              )}
+            </div>
+
+            {cloudflaredNotice && (
+              <div
+                className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-sm ${
+                  cloudflaredNotice.type === "success"
+                    ? "border-green-500/30 bg-green-500/10 text-green-400"
+                    : cloudflaredNotice.type === "info"
+                      ? "border-blue-500/30 bg-blue-500/10 text-blue-400"
+                      : "border-red-500/30 bg-red-500/10 text-red-400"
+                }`}
+              >
+                <span className="material-symbols-outlined text-[18px]">
+                  {cloudflaredNotice.type === "success"
+                    ? "check_circle"
+                    : cloudflaredNotice.type === "info"
+                      ? "info"
+                      : "error"}
+                </span>
+                <span className="flex-1">{cloudflaredNotice.message}</span>
+                <button
+                  onClick={() => setCloudflaredNotice(null)}
+                  className="rounded p-0.5 transition-colors hover:bg-white/10"
+                >
+                  <span className="material-symbols-outlined text-[16px]">close</span>
+                </button>
+              </div>
+            )}
+
+            <p className="text-xs text-text-muted">{cloudflaredUrlNotice}</p>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Input
+                value={cloudflaredStatus?.apiUrl || ""}
+                readOnly
+                placeholder="https://*.trycloudflare.com/v1"
+                className="flex-1 min-w-0 font-mono text-sm"
+              />
+              <Button
+                variant="secondary"
+                icon={copied === "cloudflared_url" ? "check" : "content_copy"}
+                onClick={() =>
+                  cloudflaredStatus?.apiUrl && copy(cloudflaredStatus.apiUrl, "cloudflared_url")
+                }
+                disabled={!cloudflaredStatus?.apiUrl}
+                className="shrink-0 self-start sm:self-auto"
+              >
+                {copied === "cloudflared_url" ? tc("copied") : tc("copy")}
+              </Button>
+            </div>
+            {cloudflaredStatus?.lastError && (
+              <p className="text-xs text-red-400">
+                {translateOrFallback("cloudflaredLastError", "Last error: {error}", {
+                  error: cloudflaredStatus.lastError,
+                })}
+              </p>
+            )}
+          </div>
+        </div>
+>>>>>>> Stashed changes
       </Card>
 
       <Card>

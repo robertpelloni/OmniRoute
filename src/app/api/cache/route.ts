@@ -2,13 +2,20 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   getCacheStats,
   clearCache,
+<<<<<<< Updated upstream
+=======
+  cleanExpiredEntries,
+>>>>>>> Stashed changes
   invalidateByModel,
   invalidateBySignature,
   invalidateStale,
 } from "@/lib/semanticCache";
 import { getIdempotencyStats } from "@/lib/idempotencyLayer";
 import { getCacheMetrics, getCacheTrend } from "@/lib/db/settings";
+<<<<<<< Updated upstream
 import { getCachedSettings } from "@/lib/localDb";
+=======
+>>>>>>> Stashed changes
 import { isAuthenticated } from "@/shared/utils/apiAuth";
 
 function errorMessage(error: unknown): string {
@@ -29,7 +36,10 @@ export async function GET(req: NextRequest) {
     const idempotencyStats = await getIdempotencyStats();
     const promptCacheMetrics = await getCacheMetrics();
     const trend = await getCacheTrend(trendHours);
+<<<<<<< Updated upstream
     const settings = await getCachedSettings().catch(() => ({}));
+=======
+>>>>>>> Stashed changes
 
     return NextResponse.json({
       semanticCache: cacheStats,
@@ -91,8 +101,14 @@ export async function DELETE(req: NextRequest) {
     }
 
     // Full clear
+<<<<<<< Updated upstream
     const cleared = clearCache();
     return NextResponse.json({ ok: true, cleared, scope: "all" });
+=======
+    clearCache();
+    const expiredRemoved = cleanExpiredEntries();
+    return NextResponse.json({ ok: true, expiredRemoved, scope: "all" });
+>>>>>>> Stashed changes
   } catch (error) {
     return NextResponse.json({ error: errorMessage(error) }, { status: 500 });
   }

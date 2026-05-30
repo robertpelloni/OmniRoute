@@ -22,7 +22,11 @@ describe("MCP Essential Tools", () => {
   });
 
   describe("Tool schema validation", () => {
+<<<<<<< Updated upstream
     it("should have exactly 9 essential tools (includes web_search)", () => {
+=======
+    it("should have exactly 9 essential tools", () => {
+>>>>>>> Stashed changes
       const schemas = MCP_ESSENTIAL_TOOLS;
       expect(schemas).toHaveLength(9);
     });
@@ -214,6 +218,7 @@ describe("MCP Essential Tools", () => {
       expect(data.provider).toBe("brave");
     });
   });
+<<<<<<< Updated upstream
 });
 
 // ── omniroute_web_search: handler dispatch tests ──────────────────────────────
@@ -367,4 +372,6 @@ describe("omniroute_web_search handler (via MCP dispatch)", () => {
 
     expect(result.isError).toBe(true);
   });
+=======
+>>>>>>> Stashed changes
 });

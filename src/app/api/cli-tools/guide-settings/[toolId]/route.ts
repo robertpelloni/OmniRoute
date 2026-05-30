@@ -5,7 +5,11 @@ import os from "os";
 import { requireCliToolsAuth } from "@/lib/api/requireCliToolsAuth";
 import { getRuntimePorts } from "@/lib/runtime/ports";
 import { getOpenCodeConfigPath } from "@/shared/services/cliRuntime";
+<<<<<<< Updated upstream
 import { mergeOpenCodeConfigText } from "@/shared/services/opencodeConfig";
+=======
+import { mergeOpenCodeConfig } from "@/shared/services/opencodeConfig";
+>>>>>>> Stashed changes
 import { guideSettingsSaveSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
 import { resolveApiKey, getOrCreateApiKey } from "@/shared/services/apiKeyResolver";
@@ -54,10 +58,15 @@ export async function POST(request, { params }) {
         return await saveContinueConfig({ baseUrl, apiKey, model });
       case "opencode":
         // (#524) OpenCode config was never saved because only 'continue' was handled here.
+<<<<<<< Updated upstream
         // OpenCode reads ~/.config/opencode/opencode.json — write the OmniRoute settings there.
         return await saveOpenCodeConfig({ baseUrl, apiKey, model, models, modelLabels });
       case "qwen":
         return await saveQwenConfig({ baseUrl, apiKey, model });
+=======
+        // opencode reads ~/.config/opencode/config.toml — write the OmniRoute settings there.
+        return await saveOpenCodeConfig({ baseUrl, apiKey, model });
+>>>>>>> Stashed changes
       default:
         return NextResponse.json(
           { error: `Direct config save not supported for: ${toolId}` },
@@ -152,7 +161,11 @@ async function saveContinueConfig({ baseUrl, apiKey, model }) {
  *
  * (#524) OpenCode was silently failing because this handler was missing.
  */
+<<<<<<< Updated upstream
 async function saveOpenCodeConfig({ baseUrl, apiKey, model, models, modelLabels }) {
+=======
+async function saveOpenCodeConfig({ baseUrl, apiKey, model }) {
+>>>>>>> Stashed changes
   const configPath = getOpenCodeConfigPath();
   const configDir = path.dirname(configPath);
 
@@ -163,6 +176,7 @@ async function saveOpenCodeConfig({ baseUrl, apiKey, model, models, modelLabels 
     .trim()
     .replace(/\/+$/, "");
 
+<<<<<<< Updated upstream
   // Read existing JSONC/JSON text to preserve unrelated config formatting and fields.
   let existingConfigText = "";
   try {
@@ -180,6 +194,24 @@ async function saveOpenCodeConfig({ baseUrl, apiKey, model, models, modelLabels 
   });
 
   await fs.writeFile(configPath, nextConfigText, "utf-8");
+=======
+  // Read existing JSON to preserve other provider entries
+  let existingConfig: Record<string, any> = {};
+  try {
+    const raw = await fs.readFile(configPath, "utf-8");
+    existingConfig = JSON.parse(raw);
+  } catch {
+    // File doesn't exist or invalid JSON — start fresh
+  }
+
+  const nextConfig = mergeOpenCodeConfig(existingConfig, {
+    baseUrl: normalizedBaseUrl,
+    apiKey,
+    model,
+  });
+
+  await fs.writeFile(configPath, JSON.stringify(nextConfig, null, 2), "utf-8");
+>>>>>>> Stashed changes
 
   return NextResponse.json({
     success: true,
@@ -187,6 +219,7 @@ async function saveOpenCodeConfig({ baseUrl, apiKey, model, models, modelLabels 
     configPath,
   });
 }
+<<<<<<< Updated upstream
 
 /**
  * Save Qwen Code config to ~/.qwen/settings.json
@@ -241,3 +274,5 @@ async function saveQwenConfig({ baseUrl, apiKey, model }) {
     configPath,
   });
 }
+=======
+>>>>>>> Stashed changes

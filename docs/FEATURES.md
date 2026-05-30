@@ -71,10 +71,17 @@ Comprehensive settings panel with tabs:
 
 - **General** — System storage, backup management (export/import database)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **Appearance** — Theme selector (dark/light/system), color theme presets and custom colors, health log visibility, sidebar item visibility controls, Endpoint tunnel visibility controls
 - **Security** — API endpoint protection, custom provider blocking, IP filtering, session info
 - **Routing** — Model aliases, background task degradation
 - **Resilience** — Rate limit persistence, circuit breaker tuning, auto-disable banned accounts, provider expiration monitoring, **Context Relay** handoff threshold and summary model configuration
+=======
+- **Appearance** — Theme selector (dark/light/system), color theme presets and custom colors, health log visibility, sidebar item visibility controls
+- **Security** — API endpoint protection, custom provider blocking, IP filtering, session info
+- **Routing** — Model aliases, background task degradation
+- **Resilience** — Rate limit persistence, circuit breaker tuning, auto-disable banned accounts, provider expiration monitoring
+>>>>>>> Stashed changes
 =======
 - **Appearance** — Theme selector (dark/light/system), color theme presets and custom colors, health log visibility, sidebar item visibility controls
 - **Security** — API endpoint protection, custom provider blocking, IP filtering, session info
@@ -199,7 +206,11 @@ Real-time request logging with filtering by provider, model, account, and API ke
 ## 🌐 API Endpoint
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 Your unified API endpoint with capability breakdown: Chat Completions, Responses API, Embeddings, Image Generation, Reranking, Audio Transcription, Text-to-Speech, Moderations, and registered API keys. Cloudflare Quick Tunnel, Tailscale Funnel, ngrok Tunnel, and cloud proxy support are available for remote access.
+=======
+Your unified API endpoint with capability breakdown: Chat Completions, Responses API, Embeddings, Image Generation, Reranking, Audio Transcription, Text-to-Speech, Moderations, and registered API keys. Cloudflare Quick Tunnel integration and cloud proxy support for remote access.
+>>>>>>> Stashed changes
 =======
 Your unified API endpoint with capability breakdown: Chat Completions, Responses API, Embeddings, Image Generation, Reranking, Audio Transcription, Text-to-Speech, Moderations, and registered API keys. Cloudflare Quick Tunnel integration and cloud proxy support for remote access.
 >>>>>>> Stashed changes

@@ -136,6 +136,7 @@
     "Failed to save pricing": "Неуспешно запазване на цената",
     "Failed to reset pricing": "Неуспешно нулиране на цените",
     "apikey": "API ключ",
+<<<<<<< Updated upstream
     "http": "HTTP",
     "checkSystemStatus": "Check System Status",
     "goToDashboard": "Go to Dashboard",
@@ -649,6 +650,9 @@
     "learnedFromHeaders": "Learned From Headers",
     "totalRequests": "Total Requests",
     "cloudUnstableNote": "Cloud Unstable Note"
+=======
+    "http": "HTTP"
+>>>>>>> Stashed changes
   },
   "sidebar": {
     "home": "Начало",
@@ -703,6 +707,7 @@
     "themeViolet": "Виолетово",
     "themeOrange": "Оранжево",
     "themeCyan": "Циан",
+<<<<<<< Updated upstream
     "cliToolsShort": "Инструменти",
     "cache": "Cache",
     "cacheShort": "Cache",
@@ -742,6 +747,21 @@
     "contextCaveman": "Caveman",
     "contextRtk": "RTK",
     "contextCombos": "Compression Combos"
+=======
+    "endpoints": "Крайни точки",
+    "playground": "Площадка",
+    "agents": "Агенти",
+    "cliToolsShort": "Инструменти",
+    "autoCombo": "Auto Combo",
+    "searchTools": "Search Tools",
+    "cache": "Cache",
+    "cacheShort": "Cache",
+    "cliSection": "CLI",
+    "debugSection": "Debug",
+    "helpSection": "Help",
+    "primarySection": "Main",
+    "systemSection": "System"
+>>>>>>> Stashed changes
   },
   "themesPage": {
     "title": "Теми",
@@ -828,9 +848,13 @@
     "utilization": "Използване",
     "utilizationDescription": "Тенденции в използването на квотата на доставчика и проследяване на ограниченията на скоростта",
     "comboHealth": "Здраве на комбинацията",
+<<<<<<< Updated upstream
     "comboHealthDescription": "Квота на ниво комбинация, разпределение на използването и метрики на производителността",
     "compressionAnalyticsTitle": "Compression Analytics",
     "compressionAnalyticsDescription": "Compression analytics — token savings, mode breakdown, and provider stats."
+=======
+    "comboHealthDescription": "Квота на ниво комбинация, разпределение на използването и метрики на производителността"
+>>>>>>> Stashed changes
   },
   "apiManager": {
     "title": "API ключове",
@@ -937,7 +961,28 @@
     "permissionsTitle": "Разрешения: {name}",
     "allowAllDesc": "Този ключ има достъп до всички налични модели.",
     "restrictDesc": "Този ключ има достъп до {selectedCount} от {totalModels} модели.",
-    "selectedCount": "{count} избран"
+    "selectedCount": "{count} избран",
+    "autoResolve": "Auto-Resolve",
+    "autoResolveDesc": "Auto-resolve ambiguous model names to native provider for this API key.",
+    "keyActive": "Key Active",
+    "keyActiveDesc": "Enable or disable this API key. Disabled keys are immediately rejected with 403.",
+    "accessSchedule": "Access Schedule",
+    "accessScheduleDesc": "Restrict access to specific hours and days of the week.",
+    "scheduleFrom": "From",
+    "scheduleUntil": "Until",
+    "scheduleDays": "Days",
+    "scheduleTimezone": "Timezone",
+    "scheduleTimezoneHint": "Use IANA timezone names, e.g. America/New_York, Europe/Berlin",
+    "scheduleActive": "Schedule",
+    "disabled": "Disabled",
+    "daySun": "Sun",
+    "dayMon": "Mon",
+    "dayTue": "Tue",
+    "dayWed": "Wed",
+    "dayThu": "Thu",
+    "dayFri": "Fri",
+    "daySat": "Sat",
+    "keyOnlyAvailableAtCreation": "Full key available only at creation time — copy it when you first create the key"
   },
   "auditLog": {
     "title": "Дневник за одит",
@@ -1208,9 +1253,13 @@
       "opencode": "OpenCode AI coding agent (Terminal)",
       "kiro": "Amazon Kiro — AI-powered IDE",
       "windsurf": "Windsurf AI Code Editor",
+<<<<<<< Updated upstream
       "copilot": "GitHub Copilot AI Assistant",
       "qwen": "Alibaba Qwen Code CLI",
       "amp": "Sourcegraph Amp coding assistant CLI"
+=======
+      "copilot": "GitHub Copilot AI Assistant"
+>>>>>>> Stashed changes
     },
     "guides": {
       "cursor": {
@@ -1335,6 +1384,7 @@
         }
       }
     },
+<<<<<<< Updated upstream
     "autoConfiguredTab": "Auto Configured Tab",
     "toolCategoriesDesc": "Tool Categories Desc",
     "allToolsTab": "All Tools Tab",
@@ -1342,6 +1392,29 @@
     "mitmClientsTab": "Mitm Clients Tab",
     "toolCategories": "Tool Categories",
     "visibleToolsCount": "Visible Tools Count"
+=======
+    "mitmHowWorksDesc": "{toolName} sends requests to its provider endpoint. MITM intercepts and redirects them to OmniRoute.",
+    "mitmStep1": "1. Start MITM to route requests through OmniRoute.",
+    "mitmStep2Prefix": "2. Add",
+    "mitmStep2Suffix": "to your hosts file as 127.0.0.1.",
+    "mitmStep3": "3. Open {toolName} and requests will be proxied.",
+    "whenToUseLabel": "Кога да използвате",
+    "openToolDocs": "Отворете документите на инструмента",
+    "toolUseCases": {
+      "claude": "Използвайте, когато искате силни работни потоци за планиране и дълги многофайлови рефактори с Claude Code.",
+      "codex": "Използвайте, когато вашият екип е стандартизиран на OpenAI Codex CLI потоци и базирано на профил удостоверяване.",
+      "droid": "Използвайте, когато имате нужда от лек терминален агент, фокусиран върху цикли за бързо кодиране и изпълнение на команди.",
+      "openclaw": "Използвайте, когато искате агент за кодиране в стил Open Claw, но насочен през политиките на OmniRoute.",
+      "cline": "Използвайте, когато конфигурирате кодиращи агенти вътре в редактори и искате насочвана настройка с OmniRoute модели.",
+      "kilo": "Използвайте, когато вашият работен процес зависи от команди на Kilo Code и бързи итеративни редакции.",
+      "cursor": "Използвайте, когато кодирате в Cursor и имате нужда от персонализирани OpenAI-съвместими модели чрез OmniRoute.",
+      "continue": "Използвайте, когато изпълнявате Continue в IDE и имате нужда от преносима JSON-базирана конфигурация на доставчик.",
+      "opencode": "Използвайте, когато предпочитате нативни за терминални агенти и скриптова автоматизация чрез OpenCode.",
+      "kiro": "Използвайте, когато интегрирате Kiro и контролирате маршрутизирането на модела централно от OmniRoute.",
+      "antigravity": "Използвайте, когато трафикът на Antigravity/Kiro трябва да бъде прихванат чрез MITM и насочен към OmniRoute.",
+      "copilot": "Използвайте, когато искате UX в стил на чат Copilot, като същевременно налагате OmniRoute ключове и правила за маршрутизиране."
+    }
+>>>>>>> Stashed changes
   },
   "combos": {
     "title": "Комбота",
@@ -1452,6 +1525,7 @@
         "when": "Use when you want perfectly even spread — each model used once before repeating.",
         "avoid": "Avoid when models have different quality or latency and order matters.",
         "example": "Example: Multiple accounts of the same model to distribute usage evenly."
+<<<<<<< Updated upstream
       },
       "p2c": {
         "when": "Use when you want low-latency selection using Power-of-Two-Choices algorithm.",
@@ -1462,6 +1536,8 @@
         "example": "Example: Codex sessions that rotate across multiple accounts near quota exhaustion.",
         "when": "Use when long sessions must survive account rotation without losing the working context.",
         "avoid": "Avoid when account switching is rare or when you do not want extra summarization requests."
+=======
+>>>>>>> Stashed changes
       }
     },
     "advancedHelp": {
@@ -1565,6 +1641,7 @@
       }
     },
     "templateFreeStack": "Free Stack ($0)",
+<<<<<<< Updated upstream
     "templateFreeStackDesc": "Round-robin across all free providers: Kiro (Claude), Qoder (5 models), Qwen (4 models), Gemini CLI. Zero cost, never stops coding.",
     "auto": "Auto Combo",
     "autoDesc": "Self-healing smart routing pool (Performance optimized)",
@@ -1692,6 +1769,9 @@
     "weightQuota": "Quota",
     "builderComboRefStep": "Add combo reference",
     "intelligentPanelTitle": "Intelligent Routing Dashboard"
+=======
+    "templateFreeStackDesc": "Round-robin across all free providers: Kiro (Claude), Qoder (5 models), Qwen (4 models), Gemini CLI. Zero cost, never stops coding."
+>>>>>>> Stashed changes
   },
   "costs": {
     "title": "Разходи",
@@ -1848,6 +1928,7 @@
     "a2aQuickStartStep3": "Проследяване и контрол на задачите с помощта на @@ PH0 @@ и @@ PH1 @@.",
     "completionsLegacy": "Completions (Legacy)",
     "completionsLegacyDesc": "Legacy OpenAI text completions — accepts both prompt string and messages array format",
+<<<<<<< Updated upstream
     "musicDesc": "Generate music and audio tracks via ComfyUI (Stable Audio, MusicGen)",
     "musicGeneration": "Music Generation",
     "videoGeneration": "Video Generation",
@@ -1908,6 +1989,32 @@
     "featureWebhooks": "Webhook configuration and event subscriptions",
     "featureSwagger": "OpenAPI / Swagger spec auto-generation",
     "featureAuth": "API key and OAuth scope management per endpoint"
+=======
+    "categorySearch": "Search & Discovery",
+    "webSearch": "Web Search",
+    "webSearchDesc": "Unified web search across multiple providers with automatic failover and caching",
+    "searchProvider": "Search Provider",
+    "searchProviderDesc": "This provider is used for web search via POST /v1/search. No model configuration needed — search providers are ready to use once an API key is connected.",
+    "cloudflaredDescription": "Create a Cloudflare Quick Tunnel for this endpoint to make it accessible from the internet without configuring DNS.",
+    "cloudflaredDisable": "Stop Tunnel",
+    "cloudflaredEnable": "Enable Tunnel",
+    "cloudflaredError": "Error",
+    "cloudflaredIdleNote": "Create a temporary Cloudflare Quick Tunnel for this endpoint.",
+    "cloudflaredInstallAndEnable": "Install & Enable",
+    "cloudflaredLastError": "Last error: {error}",
+    "cloudflaredNotInstalled": "Not installed",
+    "cloudflaredRequestFailed": "Failed to update Cloudflare tunnel",
+    "cloudflaredRunning": "Running",
+    "cloudflaredStarted": "Cloudflare tunnel started",
+    "cloudflaredStarting": "Starting",
+    "cloudflaredStopped": "Cloudflare tunnel stopped",
+    "cloudflaredStoppedState": "Stopped",
+    "cloudflaredTemporaryNote": "Quick Tunnel URLs are temporary and will change after restart.",
+    "cloudflaredTitle": "Cloudflare Quick Tunnel",
+    "cloudflaredUnsupported": "Unsupported",
+    "cloudflaredUnsupportedNote": "This platform is not supported for managed installation.",
+    "cloudflaredUrlNotice": "Creates a temporary Cloudflare Quick Tunnel. URLs change after restart."
+>>>>>>> Stashed changes
   },
   "mcpDashboard": {
     "loading": "Зареждане на таблото за управление на MCP...",
@@ -2112,11 +2219,20 @@
     "resetting": "Нулиране...",
     "resetAll": "Нулиране на всички",
     "until": "До {time}",
+<<<<<<< Updated upstream
     "limitExhausted": "Exhausted",
     "learnedFromHeaders": "Learned from headers",
     "remainingOfLimit": "{remaining}/{limit} remaining",
     "throttleStatus": "Throttle: {value}",
     "lastHeaderUpdate": "Header update: {age}"
+=======
+    "activeProviders": "{count} active",
+    "monitoredProviders": "{count} monitored",
+    "configuredProvidersLabel": "Конфигуриран в таблото за управление",
+    "configuredProvidersHint": "Доставчици с идентификационни данни, записани в /dashboard/providers, независимо от състоянието на изпълнение.",
+    "activeProvidersHint": "Конфигурираните доставчици в момента са активирани за заявки за маршрутизиране.",
+    "monitoredProvidersHint": "Доставчиците в момента се проследяват от монитори за изправност на прекъсвачи."
+>>>>>>> Stashed changes
   },
   "limits": {
     "title": "Ограничения и квоти",
@@ -2362,6 +2478,7 @@
     "chatCompletions": "Чат завършвания",
     "importingModels": "Импортиране...",
     "importFromModels": "Импортиране от /models",
+<<<<<<< Updated upstream
     "allModelsAlreadyImported": "Всички модели вече са импортирани",
     "noNewModelsToImport": "Няма нови модели за импортиране — всички модели вече са в регистъра или списъка с персонализирани модели",
     "skippingExistingModels": "Пропускане на {count} съществуващи модела",
@@ -2370,6 +2487,8 @@
     "autoSyncEnabled": "Автоматичното синхронизиране е активирано — моделите ще се опресняват периодично",
     "autoSyncDisabled": "Автоматичното синхронизиране е деактивирано",
     "autoSyncToggleFailed": "Неуспешно превключване на автоматичното синхронизиране",
+=======
+>>>>>>> Stashed changes
     "clearAllModels": "Изчистване на всички модели",
     "clearAllModelsConfirm": "Сигурни ли сте, че искате да премахнете всички модели за този доставчик? Това не може да бъде отменено.",
     "clearAllModelsSuccess": "Всички модели изчистени",
@@ -2547,6 +2666,7 @@
     "modelsPathLabel": "Models Endpoint Path",
     "modelsPathPlaceholder": "/models",
     "modelsPathHint": "Custom models path for validation (e.g. /v4/models)",
+<<<<<<< Updated upstream
     "modelsImported": "{count} models imported",
     "close": "Close",
     "statusDeactivated": "Deactivated (Manual)",
@@ -2721,6 +2841,46 @@
     "perModelQuotaLabel": "Per Model Quota Label",
     "expiredBadge": "Expired",
     "expiringSoonBadge": "Expiring Soon"
+=======
+    "builtInModels": "Built-in models",
+    "builtInModelsHint": "Registry models for this provider. Use the pencil to set compatibility options.",
+    "normalizeToolCallIdLabel": "Normalize tool call IDs to 9 characters (e.g. Mistral)",
+    "preserveDeveloperRoleLabel": "Keep OpenAI Responses developer role (do not map to system)",
+    "compatAdjustmentsTitle": "Compatibility",
+    "compatButtonLabel": "Compatibility",
+    "compatToolIdShort": "Tool ID 9",
+    "compatDeveloperShort": "Developer role",
+    "compatDoNotPreserveDeveloper": "Do not preserve developer role",
+    "compatBadgeNoPreserve": "No preserve",
+    "compatProtocolLabel": "Client request protocol",
+    "compatProtocolHint": "These options apply when OmniRoute detects this request shape (OpenAI Chat, Responses API, or Anthropic Messages).",
+    "compatProtocolOpenAI": "OpenAI Chat Completions",
+    "compatProtocolOpenAIResponses": "OpenAI Responses API",
+    "compatProtocolClaude": "Anthropic Messages",
+    "tokenRefreshed": "Token refreshed successfully",
+    "tokenRefreshFailed": "Token refresh failed",
+    "compatBadgeUpstreamHeaders": "Headers",
+    "compatUpstreamAddRow": "Add header",
+    "compatUpstreamHeaderName": "Header name",
+    "compatUpstreamHeaderValue": "Value",
+    "compatUpstreamHeadersHint": "High-privilege setting — same trust level as editing provider API credentials; only trusted admins should use it. Merged after OmniRoute adds auth from the provider API key. If a custom header uses the same name as an existing one (e.g. Authorization), your value fully replaces the auto-generated header (including the Bearer token) — the upstream only sees what you typed, not the key from settings. Misconfiguration can cause 401 or broken upstream auth. One row per header (e.g. extra Authentication for some gateways). Hover or focus the value to preview. Saves on blur, outside click, or closing this panel.",
+    "compatUpstreamHeadersLabel": "Extra upstream headers",
+    "compatUpstreamRemoveRow": "Remove row",
+    "autoSync": "Автоматично синхронизиране",
+    "autoSyncTooltip": "Автоматично опресняване на списъка с модели на всеки 24 часа (може да се конфигурира чрез MODEL_SYNC_INTERVAL_HOURS)",
+    "autoSyncEnabled": "Автоматичното синхронизиране е активирано — моделите ще се опресняват периодично",
+    "autoSyncDisabled": "Автоматичното синхронизиране е деактивирано",
+    "autoSyncToggleFailed": "Неуспешно превключване на автоматичното синхронизиране",
+    "allModelsAlreadyImported": "Всички модели вече са импортирани",
+    "noNewModelsToImport": "Няма нови модели за импортиране — всички модели вече са в регистъра или списъка с персонализирани модели",
+    "skippingExistingModels": "Пропускане на {count} съществуващи модела",
+    "applyCodexAuthLocal": "Apply auth",
+    "codexAuthAppliedLocal": "Codex auth.json applied locally",
+    "codexAuthApplyFailed": "Failed to apply Codex auth.json locally",
+    "codexAuthExportFailed": "Failed to export Codex auth.json",
+    "codexAuthExported": "Codex auth.json exported",
+    "exportCodexAuthFile": "Export auth"
+>>>>>>> Stashed changes
   },
   "settings": {
     "title": "Настройки",
@@ -3178,6 +3338,7 @@
     "editPricing": "Редактиране на цените",
     "viewFullDetails": "Вижте пълните подробности",
     "themeCoral": "Корал",
+<<<<<<< Updated upstream
     "modelsDevTitle": "Model Database",
     "modelsDevDesc": "Auto-sync pricing, capabilities & specs from models.dev",
     "modelsDevEnabled": "Enable models.dev Sync",
@@ -3394,6 +3555,37 @@
       "full": "Respond terse and compact. Preserve all technical substance.",
       "ultra": "Respond ultra terse with common technical abbreviations. Preserve exact symbols."
     }
+=======
+    "cliFingerprint": "CLI Fingerprint Matching",
+    "cliFingerprintDesc": "Match native CLI binary signatures when proxying requests. Reorders headers and body fields to look identical to the official CLI tools. Your proxy IP is preserved.",
+    "cliFingerprintEnabled": "{count} provider(s) with CLI fingerprint active",
+    "enableFingerprintTitle": "Enable fingerprint for {provider}",
+    "disableFingerprintTitle": "Disable fingerprint for {provider}",
+    "routingAdvancedGuideTitle": "Разширено ръководство за маршрутизиране",
+    "routingAdvancedGuideHint1": "Използвайте Fill First за предвидим приоритет, Round Robin за справедливост и P2C за устойчивост на забавяне.",
+    "routingAdvancedGuideHint2": "Ако доставчиците се различават по отношение на качество/цена, започнете с Cost Opt за фонова работа и Least Used за балансирано износване.",
+    "comboDefaultsGuideTitle": "Как да настроите настройките по подразбиране на комбинацията",
+    "comboDefaultsGuideHint1": "Поддържайте ниски повторни опити в потоци с ниска латентност; увеличете времето за изчакване само за задачи с дълго генериране.",
+    "comboDefaultsGuideHint2": "Използвайте замени на доставчика, когато един доставчик се нуждае от различно поведение при изчакване/повторен опит от глобалните настройки по подразбиране.",
+    "sidebarVisibility": "Hide sidebar items",
+    "sidebarVisibilityDesc": "Hide any sidebar navigation entry to reduce visual clutter.",
+    "sidebarVisibilityHint": "Any sidebar section is hidden automatically when a...",
+    "semanticCache": "Semantic Cache",
+    "autoDisableDescription": "Permanently mark provider connections as deactivated if they return specific terminal ban signals (e.g. HTTP 403 'verify your account'). This removes them from the combo rotation.",
+    "preserveClientCache": "Preserve Client Cache",
+    "cacheSettings": "Cache Settings",
+    "autoDisableThreshold": "Ban Threshold",
+    "autoDisableBannedAccounts": "Auto-Disable Banned Accounts",
+    "ttlMinutes": "TTL (minutes)",
+    "maxEntries": "Max Entries",
+    "loading": "Loading...",
+    "save": "Save",
+    "autoDisableThresholdDesc": "Consecutive ban signals required before permanent deactivation.",
+    "debugToggle": "Enable Debug Mode",
+    "sidebarVisibilityToggle": "Show Sidebar Items",
+    "enabled": "Enabled",
+    "strategy": "Strategy"
+>>>>>>> Stashed changes
   },
   "translator": {
     "title": "Преводач",
@@ -3903,7 +4095,11 @@
     "restartServerWithNewPassword": "Рестартирайте сървъра - той ще използва новата парола",
     "backToLogin": "Назад към Вход",
     "forgotPassword": "Забравена парола?",
+<<<<<<< Updated upstream
     "defaultPasswordHint": "Default password: CHANGEME (unless INITIAL_PASSWORD was set)",
+=======
+    "defaultPasswordHint": "Default password: 123456 (unless INITIAL_PASSWORD was set)",
+>>>>>>> Stashed changes
     "Authorization": "Упълномощаване",
     "Content-Disposition": "Съдържание-разположение",
     "waitingForAuthorization": "Чака се оторизация...",
@@ -3911,11 +4107,15 @@
     "waitingForOpenAIAuthorization": "Изчаква се разрешение за OpenAI...",
     "waitingForAntigravityAuthorization": "Изчаква се разрешение за антигравитация...",
     "waitingForQoderAuthorization": "Изчаква се разрешение за Qoder...",
+<<<<<<< Updated upstream
     "exchangingCodeForTokens": "Размяна на код за токени...",
     "nodeIncompatibleHint": "OmniRoute requires Node.js 20.20.2+ (20.x LTS), 22.22.2+ (22.x LTS) or 24.0.0+ (24.x LTS). Node 24 LTS is recommended.",
     "nodeIncompatibleTitle": "Incompatible Node.js Version",
     "nodeIncompatibleDesc": "You are running Node.js {version}, which is outside OmniRoute's supported secure runtime policy. Use a patched Node.js 20.x or 22.x LTS release.",
     "nodeIncompatibleFixLabel": "Fix: install a patched Node.js 22 LTS release"
+=======
+    "exchangingCodeForTokens": "Размяна на код за токени..."
+>>>>>>> Stashed changes
   },
   "landing": {
     "brandName": "OmniRoute",
@@ -4125,8 +4325,22 @@
     "troubleshootingTestConnection": "Използвайте Табло > Доставчици > Тестване на връзката, преди да тествате от IDE или външни клиенти.",
     "troubleshootingCircuitBreaker": "Ако доставчикът покаже отворен прекъсвач, изчакайте охлаждането или проверете страницата Health за подробности.",
     "troubleshootingOAuth": "За доставчици на OAuth, повторно удостоверяване, ако токените изтекат. Проверете индикатора за състояние на картата на доставчика.",
+<<<<<<< Updated upstream
     "deployTermuxTitle": "Termux (Android)",
     "deployTermuxText": "Run OmniRoute headless on Android via Termux. Access the dashboard from your mobile browser."
+=======
+    "managementApiReference": "Management API Reference",
+    "managementApiDescription": "Automation endpoints for proxy registry, scope assignments, and legacy proxy migration.",
+    "mgmtProxiesListNote": "List saved proxy registry items (supports pagination).",
+    "mgmtProxiesCreateNote": "Create a reusable proxy item in the registry.",
+    "mgmtProxiesHealthNote": "Get 24h/rolling health metrics per saved proxy from proxy logs.",
+    "mgmtProxiesBulkAssignNote": "Assign or clear one proxy across many scope IDs in one request.",
+    "mgmtAssignmentsListNote": "List proxy assignments by scope, scope_id, or proxy_id.",
+    "mgmtAssignmentsUpdateNote": "Assign or clear proxy for global/provider/account/combo scope.",
+    "mgmtLegacyMigrationNote": "Import legacy proxyConfig maps into registry assignments.",
+    "endpointSpeechNote": "Генериране на текст към реч (ElevenLabs, OpenAI TTS).",
+    "endpointEmbeddingsNote": "Генериране на вграждане на текст (OpenAI, Cohere, Voyage)."
+>>>>>>> Stashed changes
   },
   "legal": {
     "privacyPolicy": "Политика за поверителност",
@@ -4217,6 +4431,7 @@
     "setupGuideCustomAgentTitle": "Register custom binary",
     "setupGuideCustomAgentDesc": "Use Add Custom Agent when your CLI is not in the built-in list. Provide binary name and version command.",
     "setupGuideCommandMissingTitle": "Fix 'command not found'",
+<<<<<<< Updated upstream
     "setupGuideCommandMissingDesc": "Ensure the CLI command exists in PATH, open a new terminal session, and rerun Refresh.",
     "cliToolsRedirectTitle": "Cli Tools Redirect Title",
     "cliToolsRedirectDesc": "Cli Tools Redirect Desc",
@@ -4232,6 +4447,84 @@
     "flowSpawn": "Flow Spawn",
     "cliToolsRedirectCta": "Cli Tools Redirect Cta"
   },
+=======
+    "setupGuideCommandMissingDesc": "Ensure the CLI command exists in PATH, open a new terminal session, and rerun Refresh."
+  },
+  "autoCombo": {
+    "title": "Auto-Combo Engine",
+    "statusNormal": "Normal",
+    "statusIncident": "Incident Mode",
+    "modePack": "Mode Pack",
+    "providerScores": "Provider Scores",
+    "noAutoCombo": "No auto-combo configured.",
+    "excludedProviders": "Excluded Providers",
+    "noExclusions": "No providers currently excluded.",
+    "factorQuota": "Quota",
+    "factorHealth": "Health",
+    "factorCost": "Cost",
+    "factorLatency": "Latency",
+    "factorTaskFit": "Task Fit",
+    "factorStability": "Stability",
+    "factorTierPriority": "Tier Priority",
+    "factorTierPriorityDesc": "Prefers accounts with higher quota tiers (Ultra/Pro over Free)",
+    "scoreFactorBreakdown": "Scoring Factors",
+    "modePackShipFast": "Ship Fast",
+    "modePackCostSaver": "Cost Saver",
+    "modePackQualityFirst": "Quality First",
+    "modePackOfflineFriendly": "Offline Friendly"
+  },
+  "search": {
+    "searchQuery": "Search Query",
+    "searchResults": "Search Results",
+    "cachedResult": "Cached",
+    "searchCost": "Cost",
+    "searchTools": "Search Tools",
+    "searchToolsDesc": "Advanced search testing with provider comparison",
+    "compareProviders": "Compare Providers",
+    "rerankResults": "Rerank Results",
+    "searchHistory": "Search History",
+    "urlOverlap": "URL Overlap",
+    "noSearchProviders": "No search providers configured. Add providers in Settings.",
+    "noRerankModels": "No rerank model available",
+    "webSearch": "Web Search",
+    "provider": "Provider",
+    "searchType": "Search Type",
+    "maxResults": "Max Results",
+    "filters": "Filters",
+    "country": "Country",
+    "language": "Language",
+    "timeRange": "Time Range",
+    "includeDomains": "Include Domains",
+    "excludeDomains": "Exclude Domains",
+    "safeSearch": "Safe Search",
+    "formatted": "Formatted",
+    "rawJson": "JSON",
+    "cacheMiss": "cache miss",
+    "cacheHit": "cache hit",
+    "latency": "Latency",
+    "cost": "Cost",
+    "results": "Results",
+    "rerank": "Rerank",
+    "rerankModel": "Rerank Model",
+    "positionDelta": "Position Change",
+    "emptyState": "Send a search query to see results",
+    "safeSearchOff": "Off",
+    "safeSearchModerate": "Moderate",
+    "safeSearchStrict": "Strict",
+    "queryPlaceholder": "Enter search query...",
+    "providerAuto": "auto (cheapest)",
+    "searchTypeWeb": "web",
+    "searchTypeNews": "news",
+    "optionAny": "any",
+    "timeRangeDay": "Past day",
+    "timeRangeWeek": "Past week",
+    "timeRangeMonth": "Past month",
+    "timeRangeYear": "Past year",
+    "domainPlaceholder": "example.com",
+    "requestTimedOut": "Request timed out ({seconds}s)",
+    "networkError": "Network error"
+  },
+>>>>>>> Stashed changes
   "templateNames": {
     "simple-chat": "Обикновен чат",
     "streaming": "Поточно предаване",
@@ -4281,6 +4574,7 @@
     "refresh": "Refresh",
     "clearAll": "Clear All",
     "memoryEntries": "Memory Entries",
+<<<<<<< Updated upstream
     "memoryEntriesSub": "In-memory LRU",
     "dbEntries": "DB Entries",
     "dbEntriesSub": "Persisted (SQLite)",
@@ -4302,10 +4596,20 @@
     "idempotency": "Idempotency Layer",
     "activeDedupKeys": "Active Dedup Keys",
     "dedupWindow": "Dedup Window",
+=======
+    "dbEntries": "DB Entries",
+    "cacheHits": "Cache Hits",
+    "tokensSaved": "Tokens Saved",
+    "hitRate": "Hit Rate",
+    "performance": "Cache Performance",
+    "behavior": "Cache Behavior",
+    "idempotency": "Idempotency Layer",
+>>>>>>> Stashed changes
     "clearSuccess": "Cache cleared. {count} expired entries removed.",
     "clearError": "Failed to clear cache.",
     "unavailable": "Cache unavailable",
     "unavailableDesc": "Could not fetch cache statistics. Make sure the server is running.",
+<<<<<<< Updated upstream
     "promptCache": "Prompt Cache (Provider-Side)",
     "cachedRequests": "Cached Requests",
     "cacheHitRate": "Cache Hit Rate",
@@ -4620,5 +4924,58 @@
     "noProxyLogs": "No proxy logs yet. Configure proxies and make API calls to see them here.",
     "noMatchingLogs": "No logs match the current filters.",
     "tlsFingerprint": "Chrome 124 TLS Fingerprint"
+=======
+    "memoryEntriesSub": "In-memory LRU",
+    "dbEntriesSub": "Persisted (SQLite)",
+    "cacheHitsSub": "of {total} total",
+    "tokensSavedSub": "Estimated from hits",
+    "autoRefresh": "Auto-refreshes every {seconds}s",
+    "hits": "Hits",
+    "misses": "Misses",
+    "total": "Total",
+    "behaviorDeterministic": "Only non-streaming requests with temperature=0 are cached.",
+    "behaviorBypass": "Bypass with header {header}.",
+    "behaviorTwoTier": "Two-tier storage: in-memory LRU (fast) + SQLite (persistent across restarts).",
+    "behaviorTtl": "Default TTL: 30 minutes. Configure via {envVar}.",
+    "activeDedupKeys": "Active Dedup Keys",
+    "dedupWindow": "Dedup Window",
+    "inputTokens": "Input Tokens",
+    "requestsShort": "reqs",
+    "inputShort": "In",
+    "resetting": "Resetting...",
+    "cachedTokensCol": "Cached",
+    "search": "Search",
+    "cacheReuseRatioDesc": "Cached tokens / Total input tokens",
+    "resetMetrics": "Reset Metrics",
+    "loading": "Loading...",
+    "cachedRequests": "Cached Requests",
+    "model": "Model",
+    "cached": "Cached",
+    "actions": "Actions",
+    "trend24h": "Cache Trend (24h)",
+    "cachedShort": "Cached",
+    "cacheCreation": "Creation",
+    "byProvider": "Breakdown by Provider",
+    "created": "Created",
+    "cacheCreationTokens": "Cache Creation Tokens",
+    "withCacheControl": "With Cache Control",
+    "searchEntries": "Search entries...",
+    "cacheReuseRatio": "Cache Reuse Ratio",
+    "estCostSaved": "Est. Cost Saved",
+    "cachedTokens": "Cached Tokens",
+    "requests": "Requests",
+    "signature": "Signature",
+    "cacheCreationWrite": "Cache Creation (Write)",
+    "expires": "Expires",
+    "writeShort": "Write",
+    "cacheHitRate": "Cache Hit Rate",
+    "cacheMetrics": "Prompt Cache Metrics",
+    "overview": "Overview",
+    "promptCache": "Prompt Cache (Provider-Side)",
+    "provider": "Provider",
+    "cachedTokensRead": "Cached Tokens (Read)",
+    "entries": "Entries",
+    "noEntries": "No cache entries found"
+>>>>>>> Stashed changes
   }
 }

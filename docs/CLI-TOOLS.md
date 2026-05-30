@@ -47,7 +47,10 @@ Current list (v3.0.0-rc.16):
 | **OpenCode**       | `opencode`    | `opencode` | guide      | npm            |
 | **Kiro AI**        | `kiro`        | app/cli    | mitm       | desktop/CLI    |
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 | **Qwen Code**      | `qwen`        | `qwen`     | custom     | npm            |
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 
@@ -378,7 +381,11 @@ OMNIROUTE_ANTHROPIC_URL="http://localhost:20128"
 OMNIROUTE_KEY="sk-your-omniroute-key"
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 npm install -g @anthropic-ai/claude-code @openai/codex opencode-ai cline kilocode @qwen-code/qwen-code
+=======
+npm install -g @anthropic-ai/claude-code @openai/codex opencode-ai cline kilocode
+>>>>>>> Stashed changes
 =======
 npm install -g @anthropic-ai/claude-code @openai/codex opencode-ai cline kilocode
 >>>>>>> Stashed changes

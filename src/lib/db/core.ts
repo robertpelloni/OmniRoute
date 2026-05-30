@@ -22,6 +22,7 @@ import { invalidateDbCache } from "./readCache";
 type SqliteDatabase = import("better-sqlite3").Database;
 type JsonRecord = Record<string, unknown>;
 type CheckpointMode = "PASSIVE" | "FULL" | "RESTART" | "TRUNCATE";
+<<<<<<< Updated upstream
 type PreservedTableSnapshot = {
   table: string;
   rowCount: number;
@@ -46,6 +47,8 @@ type CriticalTableSpec = {
   maxRows?: number;
   readRows?: (db: SqliteDatabase) => JsonRecord[];
 };
+=======
+>>>>>>> Stashed changes
 
 // ──────────────── Environment Detection ────────────────
 
@@ -286,6 +289,7 @@ const SCHEMA_SQL = `
     api_key_id TEXT,
     api_key_name TEXT,
     combo_name TEXT,
+<<<<<<< Updated upstream
     combo_step_id TEXT,
     combo_execution_key TEXT,
     error_summary TEXT,
@@ -297,6 +301,13 @@ const SCHEMA_SQL = `
     has_response_body INTEGER DEFAULT 0,
     has_pipeline_details INTEGER DEFAULT 0,
     request_summary TEXT
+=======
+    request_body TEXT,
+    response_body TEXT,
+    error TEXT,
+    artifact_relpath TEXT,
+    has_pipeline_details INTEGER DEFAULT 0
+>>>>>>> Stashed changes
   );
   CREATE INDEX IF NOT EXISTS idx_cl_timestamp ON call_logs(timestamp);
   CREATE INDEX IF NOT EXISTS idx_cl_status ON call_logs(status);
@@ -562,6 +573,7 @@ function ensureCallLogsColumns(db: SqliteDatabase) {
       db.exec("ALTER TABLE call_logs ADD COLUMN has_pipeline_details INTEGER DEFAULT 0");
       console.log("[DB] Added call_logs.has_pipeline_details column");
     }
+<<<<<<< Updated upstream
     if (!columnNames.has("requested_model")) {
       db.exec("ALTER TABLE call_logs ADD COLUMN requested_model TEXT DEFAULT NULL");
       console.log("[DB] Added call_logs.requested_model column");
@@ -630,12 +642,15 @@ function ensureCallLogsColumns(db: SqliteDatabase) {
     db.exec(
       "CREATE INDEX IF NOT EXISTS idx_cl_combo_target ON call_logs(combo_name, combo_execution_key, timestamp)"
     );
+=======
+>>>>>>> Stashed changes
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     console.warn("[DB] Failed to verify call_logs schema:", message);
   }
 }
 
+<<<<<<< Updated upstream
 function hasColumn(db: SqliteDatabase, tableName: string, columnName: string): boolean {
   const rows = db.prepare(`PRAGMA table_info(${tableName})`).all() as Array<{ name?: string }>;
   return rows.some((row) => row.name === columnName);
@@ -1103,6 +1118,8 @@ export function runManagedDbHealthCheck(options?: { autoRepair?: boolean }) {
   });
 }
 
+=======
+>>>>>>> Stashed changes
 export function getDbInstance(): SqliteDatabase {
   const existing = getDb();
   if (existing) return existing;
@@ -1357,7 +1374,10 @@ export function getDbInstance(): SqliteDatabase {
 }
 
 export function closeDbInstance(options?: { checkpointMode?: CheckpointMode | null }): boolean {
+<<<<<<< Updated upstream
   clearDbHealthCheckScheduler();
+=======
+>>>>>>> Stashed changes
   const db = getDb();
   if (!db) return false;
 

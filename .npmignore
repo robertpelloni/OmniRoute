@@ -70,6 +70,7 @@ omnirouteCloud/
 omnirouteSite/
 vscode-extension/
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
 # Root-level underscore-prefixed directories (private/draft — never publish)
 /_*/
@@ -101,5 +102,7 @@ test-results/
 playwright-report/
 blob-report/
 coverage/
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

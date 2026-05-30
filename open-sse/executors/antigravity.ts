@@ -1,6 +1,11 @@
+<<<<<<< Updated upstream
 import crypto, { randomUUID } from "crypto";
 import { BaseExecutor, mergeUpstreamExtraHeaders, type ExecuteInput } from "./base.ts";
 import { applyFingerprint, isCliCompatEnabled } from "../config/cliFingerprints.ts";
+=======
+import crypto from "crypto";
+import { BaseExecutor, mergeUpstreamExtraHeaders } from "./base.ts";
+>>>>>>> Stashed changes
 import { PROVIDERS, OAUTH_ENDPOINTS, HTTP_STATUS } from "../config/constants.ts";
 import { scrubProxyAndFingerprintHeaders } from "../services/antigravityHeaderScrub.ts";
 import { antigravityUserAgent } from "../services/antigravityHeaders.ts";
@@ -24,6 +29,7 @@ import {
 
 const MAX_RETRY_AFTER_MS = 60_000;
 const LONG_RETRY_THRESHOLD_MS = 60_000;
+<<<<<<< Updated upstream
 const CREDITS_EXHAUSTED_TTL_MS = 5 * 60 * 60 * 1000; // 5 hours
 
 const BARE_PRO_IDS = new Set(["gemini-3.1-pro"]);
@@ -198,6 +204,10 @@ function flushAntigravitySSEText(
   if (!trimmed.startsWith("data:")) return;
   processAntigravitySSEPayload(trimmed.slice(5).trim(), collected, log);
 }
+=======
+
+const BARE_PRO_IDS = new Set(["gemini-3.1-pro"]);
+>>>>>>> Stashed changes
 
 /**
  * Strip provider prefixes (e.g. "antigravity/model" → "model").
@@ -206,13 +216,17 @@ function flushAntigravitySSEText(
 function cleanModelName(model: string): string {
   if (!model) return model;
   let clean = model.includes("/") ? model.split("/").pop()! : model;
+<<<<<<< Updated upstream
   clean = resolveAntigravityModelId(clean);
+=======
+>>>>>>> Stashed changes
   // Normalize bare Pro IDs to the Low tier (matching OpenClaw convention).
   // The upstream API requires an explicit tier suffix; bare IDs cause errors.
   if (BARE_PRO_IDS.has(clean)) {
     clean = `${clean}-low`;
   }
   return clean;
+<<<<<<< Updated upstream
 }
 
 function attachToolNameMap<T>(payload: T, toolNameMap: Map<string, string> | null): T {
@@ -233,6 +247,8 @@ function attachToolNameMap<T>(payload: T, toolNameMap: Map<string, string> | nul
 function getRequestTargetModel(body: Record<string, unknown>): string {
   const target = body.model;
   return typeof target === "string" && target.length > 0 ? target : "unknown";
+=======
+>>>>>>> Stashed changes
 }
 
 export class AntigravityExecutor extends BaseExecutor {
@@ -258,12 +274,20 @@ export class AntigravityExecutor extends BaseExecutor {
       "User-Agent": antigravityUserAgent(),
       Accept: "text/event-stream",
       "X-OmniRoute-Source": "omniroute",
+<<<<<<< Updated upstream
+=======
+      Accept: "text/event-stream",
+>>>>>>> Stashed changes
     };
     // Scrub proxy/fingerprint headers that reveal non-native traffic
     return scrubProxyAndFingerprintHeaders(raw);
   }
 
+<<<<<<< Updated upstream
   transformRequest(model, body, stream, credentials): AntigravityRequestEnvelope | Response {
+=======
+  transformRequest(model, body, stream, credentials) {
+>>>>>>> Stashed changes
     // TODO: Consider removing project override like gemini-cli.ts — stored projectId
     // can become stale for Cloud Code accounts, causing 403 "has not been used in project X".
     // Antigravity accounts may have more stable project IDs, but the risk exists.
@@ -496,6 +520,7 @@ export class AntigravityExecutor extends BaseExecutor {
     const SSE_COLLECT_TIMEOUT_MS = 120_000;
 
     const collect = async () => {
+<<<<<<< Updated upstream
       const collected: AntigravityCollectedStream = {
         textContent: "",
         finishReason: "stop",
@@ -506,6 +531,13 @@ export class AntigravityExecutor extends BaseExecutor {
       let timedOut = false;
       const timeout = AbortSignal.timeout(SSE_COLLECT_TIMEOUT_MS);
       try {
+=======
+      const chunks: string[] = [];
+      let timedOut = false;
+      const timeout = AbortSignal.timeout(SSE_COLLECT_TIMEOUT_MS);
+      try {
+         
+>>>>>>> Stashed changes
         while (true) {
           if (signal?.aborted) throw new Error("Request aborted during SSE collection");
           const { done, value } = await Promise.race([
@@ -519,12 +551,16 @@ export class AntigravityExecutor extends BaseExecutor {
             ),
           ]);
           if (done) break;
+<<<<<<< Updated upstream
           processAntigravitySSEText(
             decoder.decode(value, { stream: true }),
             partialLine,
             collected,
             log
           );
+=======
+          chunks.push(decoder.decode(value, { stream: true }));
+>>>>>>> Stashed changes
         }
       } catch (err) {
         const msg = err?.message || String(err);
@@ -532,8 +568,51 @@ export class AntigravityExecutor extends BaseExecutor {
         log?.warn?.("SSE_COLLECT", `Error collecting SSE stream: ${msg}`);
         // Fall through — return whatever was collected so far
       }
+<<<<<<< Updated upstream
       processAntigravitySSEText(decoder.decode(), partialLine, collected, log);
       flushAntigravitySSEText(partialLine, collected, log);
+=======
+      const rawSSE = chunks.join("");
+
+      // Parse Gemini SSE: each line is "data: {json}"
+      let textContent = "";
+      let finishReason = "stop";
+      let usage: Record<string, unknown> | null = null;
+      const lines = rawSSE.split("\n");
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed.startsWith("data:")) continue;
+        const payload = trimmed.slice(5).trim();
+        if (!payload || payload === "[DONE]") continue;
+        try {
+          const parsed = JSON.parse(payload);
+          const candidate = parsed?.response?.candidates?.[0];
+          if (candidate?.content?.parts) {
+            for (const part of candidate.content.parts) {
+              if (typeof part.text === "string" && !part.thought && !part.thoughtSignature) {
+                textContent += part.text;
+              }
+            }
+          }
+          if (candidate?.finishReason) {
+            finishReason =
+              candidate.finishReason.toLowerCase() === "stop"
+                ? "stop"
+                : candidate.finishReason.toLowerCase();
+          }
+          if (parsed?.response?.usageMetadata) {
+            const um = parsed.response.usageMetadata;
+            usage = {
+              prompt_tokens: um.promptTokenCount || 0,
+              completion_tokens: um.candidatesTokenCount || 0,
+              total_tokens: um.totalTokenCount || 0,
+            };
+          }
+        } catch (e) {
+          log?.debug?.("SSE_PARSE", `Skipping malformed SSE line: ${payload.slice(0, 80)}`);
+        }
+      }
+>>>>>>> Stashed changes
 
       const result = {
         id: `chatcmpl-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`,
@@ -543,6 +622,7 @@ export class AntigravityExecutor extends BaseExecutor {
         choices: [
           {
             index: 0,
+<<<<<<< Updated upstream
             message: { role: "assistant", content: collected.textContent },
             finish_reason: timedOut ? "length" : collected.finishReason,
           },
@@ -550,6 +630,13 @@ export class AntigravityExecutor extends BaseExecutor {
         ...(collected.usage && { usage: collected.usage }),
         // Expose credit balance for upstream consumers (usage service, dashboard)
         ...(collected.remainingCredits && { _remainingCredits: collected.remainingCredits }),
+=======
+            message: { role: "assistant", content: textContent },
+            finish_reason: timedOut ? "length" : finishReason,
+          },
+        ],
+        ...(usage && { usage }),
+>>>>>>> Stashed changes
       };
 
       const syntheticStatus = timedOut ? 504 : response.status;
@@ -565,6 +652,7 @@ export class AntigravityExecutor extends BaseExecutor {
     return collect();
   }
 
+<<<<<<< Updated upstream
   async execute({
     model,
     body,
@@ -575,6 +663,9 @@ export class AntigravityExecutor extends BaseExecutor {
     upstreamExtraHeaders,
   }: ExecuteInput) {
     await resolveAntigravityVersion();
+=======
+  async execute({ model, body, stream, credentials, signal, log, upstreamExtraHeaders }) {
+>>>>>>> Stashed changes
     const fallbackCount = this.getFallbackCount();
     let lastError = null;
     let lastStatus = 0;
@@ -586,6 +677,7 @@ export class AntigravityExecutor extends BaseExecutor {
     // non-streaming Response so chatCore's non-streaming path stays unchanged.
     const upstreamStream = true;
 
+<<<<<<< Updated upstream
     // Account ID for credits tracking.
     // Use connectionId as the stable cache key — it's available in both the executor
     // (via credentials.connectionId) and the usage fetcher (via connection.id).
@@ -598,10 +690,13 @@ export class AntigravityExecutor extends BaseExecutor {
     const creditsMode = getCreditsMode();
     const useCreditsFirst = shouldUseCreditsFirst(credentials?.accessToken || "", creditsMode);
 
+=======
+>>>>>>> Stashed changes
     for (let urlIndex = 0; urlIndex < fallbackCount; urlIndex++) {
       const url = this.buildUrl(model, upstreamStream, urlIndex);
       const headers = this.buildHeaders(credentials, upstreamStream);
       mergeUpstreamExtraHeaders(headers, upstreamExtraHeaders);
+<<<<<<< Updated upstream
       const transformed = await this.transformRequest(model, body, upstreamStream, credentials);
       let requestToolNameMap: Map<string, string> | null = null;
 
@@ -624,6 +719,9 @@ export class AntigravityExecutor extends BaseExecutor {
         transformedBody = injectCreditsField(transformedBody);
         log?.debug?.("AG_CREDITS", "Credits-first enabled (ANTIGRAVITY_CREDITS=always)");
       }
+=======
+      const transformedBody = await this.transformRequest(model, body, upstreamStream, credentials);
+>>>>>>> Stashed changes
 
       // Initialize retry counter for this URL
       if (!retryAttemptsByUrl[urlIndex]) {
@@ -650,6 +748,7 @@ export class AntigravityExecutor extends BaseExecutor {
           signal,
         });
 
+<<<<<<< Updated upstream
         if (!response.ok) {
           log?.warn?.(
             "TELEMETRY",
@@ -657,6 +756,8 @@ export class AntigravityExecutor extends BaseExecutor {
           );
         }
 
+=======
+>>>>>>> Stashed changes
         // Parse retry time for 429/503 responses
         let retryMs = null;
 
@@ -673,6 +774,7 @@ export class AntigravityExecutor extends BaseExecutor {
               const errorBody = await response.clone().text();
               const errorJson = JSON.parse(errorBody);
               const errorMessage = errorJson?.error?.message || errorJson?.message || "";
+<<<<<<< Updated upstream
 
               // 1. Try to parse explicit retry time from message
               const parsedRetryMs = this.parseRetryFromErrorMessage(errorMessage);
@@ -775,6 +877,32 @@ export class AntigravityExecutor extends BaseExecutor {
                 "AG_429",
                 `Category: ${category}, Decision: ${decision.kind} — ${decision.reason}`
               );
+=======
+              retryMs = this.parseRetryFromErrorMessage(errorMessage);
+
+              if (!retryMs) {
+                // Dynamic quota interpretation logic for Free vs Pro accounts
+                const lowerMsg = errorMessage.toLowerCase();
+
+                if (
+                  lowerMsg.includes("free tier") ||
+                  lowerMsg.includes("exhausted your capacity") ||
+                  lowerMsg.includes("daily limit") ||
+                  lowerMsg.includes("quota exceeded")
+                ) {
+                  // Hard limit hit for Free accounts (or exhausting general capacity), fallback immediately.
+                  // Setting a massive retryMs forces an instant fallback.
+                  retryMs = 24 * 60 * 60 * 1000; // 24 hours
+                } else if (
+                  lowerMsg.includes("pro") ||
+                  lowerMsg.includes("per minute") ||
+                  lowerMsg.includes("rpm")
+                ) {
+                  // RPM limit for Pro counts, backoff up to 1 minute, then fallback
+                  retryMs = 60 * 1000; // 60s
+                }
+              }
+>>>>>>> Stashed changes
             } catch (e) {
               // Ignore parse errors, will fall back to exponential backoff
             }
@@ -849,12 +977,16 @@ export class AntigravityExecutor extends BaseExecutor {
               status: response.status,
               headers: response.headers,
             });
+<<<<<<< Updated upstream
             return {
               response: modifiedResponse,
               url,
               headers: finalHeaders,
               transformedBody: attachToolNameMap(transformedBody, requestToolNameMap),
             };
+=======
+            return { response: modifiedResponse, url, headers, transformedBody };
+>>>>>>> Stashed changes
           } catch (err) {
             log?.warn?.("RETRY", `Failed to embed retryAfterMs: ${err}`);
             // Fall back to original response
@@ -864,15 +996,24 @@ export class AntigravityExecutor extends BaseExecutor {
         // For non-streaming clients, collect the SSE stream and return a synthetic
         // non-streaming Response so chatCore doesn't need to handle SSE conversion.
         if (!stream) {
+<<<<<<< Updated upstream
           const collected = await this.collectStreamToResponse(
             response,
             model,
             url,
             finalHeaders,
+=======
+          return this.collectStreamToResponse(
+            response,
+            model,
+            url,
+            headers,
+>>>>>>> Stashed changes
             transformedBody,
             log,
             signal
           );
+<<<<<<< Updated upstream
           // When credits were injected (credits-first or credits-retry), the
           // synthetic body contains _remainingCredits — mirror it into the
           // balance cache so the dashboard stays fresh.
@@ -992,6 +1133,11 @@ export class AntigravityExecutor extends BaseExecutor {
           headers: finalHeaders,
           transformedBody: attachToolNameMap(transformedBody, requestToolNameMap),
         };
+=======
+        }
+
+        return { response, url, headers, transformedBody };
+>>>>>>> Stashed changes
       } catch (error) {
         lastError = error;
         log?.error?.(

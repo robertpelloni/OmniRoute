@@ -1,5 +1,8 @@
 import { spawn, execFile } from "child_process";
+<<<<<<< Updated upstream
 import { createHash } from "crypto";
+=======
+>>>>>>> Stashed changes
 import { promisify } from "util";
 import fs from "fs/promises";
 import fsSync from "fs";
@@ -10,8 +13,13 @@ import { getRuntimePorts } from "@/lib/runtime/ports";
 
 const execFileAsync = promisify(execFile);
 
+<<<<<<< Updated upstream
 const CLOUDFLARED_RELEASE_API_URL =
   "https://api.github.com/repos/cloudflare/cloudflared/releases/latest";
+=======
+const CLOUDFLARED_RELEASE_BASE =
+  "https://github.com/cloudflare/cloudflared/releases/latest/download";
+>>>>>>> Stashed changes
 const START_TIMEOUT_MS = 30000;
 const STOP_TIMEOUT_MS = 5000;
 const GENERIC_EXIT_ERROR_PREFIX = "cloudflared exited";
@@ -34,11 +42,15 @@ type AssetSpec = {
   assetName: string;
   binaryName: string;
   archive: "none" | "tgz";
+<<<<<<< Updated upstream
 };
 
 type ResolvedAssetSpec = AssetSpec & {
   downloadUrl: string;
   expectedSha256: string;
+=======
+  downloadUrl: string;
+>>>>>>> Stashed changes
 };
 
 type CloudflaredRuntimeDirs = {
@@ -62,7 +74,10 @@ type BinaryResolution = {
 type PersistedTunnelState = {
   binaryPath?: string | null;
   installSource?: CloudflaredInstallSource | null;
+<<<<<<< Updated upstream
   ownerPid?: number | null;
+=======
+>>>>>>> Stashed changes
   pid?: number | null;
   publicUrl?: string | null;
   apiUrl?: string | null;
@@ -134,9 +149,12 @@ let tunnelProcess: ReturnType<typeof spawn> | null = null;
 let tunnelPid: number | null = null;
 let installPromise: Promise<string> | null = null;
 let startPromise: Promise<CloudflaredTunnelStatus> | null = null;
+<<<<<<< Updated upstream
 const NON_ACTIONABLE_CLOUDFLARED_WARNING_PATTERNS = [
   /failed to sufficiently increase receive buffer size/i,
 ] as const;
+=======
+>>>>>>> Stashed changes
 
 function getTunnelDir() {
   return path.join(resolveDataDir(), "cloudflared");
@@ -256,6 +274,7 @@ async function appendTunnelLog(source: "stdout" | "stderr", message: string) {
 
 export function extractTryCloudflareUrl(text: string) {
   const match = text.match(/https:\/\/[a-z0-9-]+\.trycloudflare\.com\b/i);
+<<<<<<< Updated upstream
   if (!match) return null;
 
   try {
@@ -266,6 +285,9 @@ export function extractTryCloudflareUrl(text: string) {
   }
 
   return match[0];
+=======
+  return match ? match[0] : null;
+>>>>>>> Stashed changes
 }
 
 function normalizeCloudflaredLogLine(line: string) {
@@ -282,9 +304,12 @@ export function extractCloudflaredErrorMessage(text: string) {
     .filter(Boolean);
 
   for (let i = lines.length - 1; i >= 0; i--) {
+<<<<<<< Updated upstream
     if (NON_ACTIONABLE_CLOUDFLARED_WARNING_PATTERNS.some((pattern) => pattern.test(lines[i]))) {
       continue;
     }
+=======
+>>>>>>> Stashed changes
     if (/(?:\berror\b|\bfailed\b|\btls:\b|\bx509\b|\bcertificate\b)/i.test(lines[i])) {
       return lines[i];
     }
@@ -348,6 +373,7 @@ export function buildCloudflaredChildEnv(
     childEnv.SSL_CERT_DIR = defaultCertEnv.SSL_CERT_DIR;
   }
 
+<<<<<<< Updated upstream
   const requestedProtocol = String(
     sourceEnv.CLOUDFLARED_PROTOCOL || sourceEnv.TUNNEL_TRANSPORT_PROTOCOL || "http2"
   )
@@ -360,6 +386,8 @@ export function buildCloudflaredChildEnv(
     childEnv.TUNNEL_TRANSPORT_PROTOCOL = protocol;
   }
 
+=======
+>>>>>>> Stashed changes
   return childEnv;
 }
 
@@ -367,6 +395,7 @@ export function getCloudflaredStartArgs(targetUrl: string) {
   return ["tunnel", "--url", targetUrl, "--no-autoupdate"];
 }
 
+<<<<<<< Updated upstream
 function isStateOwnedByCurrentProcess(state: PersistedTunnelState) {
   return !!state.ownerPid && state.ownerPid === process.pid;
 }
@@ -402,11 +431,17 @@ function buildStoppedState(
   };
 }
 
+=======
+>>>>>>> Stashed changes
 export function getCloudflaredAssetSpec(
   platform = process.platform,
   arch = process.arch
 ): AssetSpec | null {
+<<<<<<< Updated upstream
   const matrix: Record<string, Record<string, AssetSpec>> = {
+=======
+  const matrix: Record<string, Record<string, Omit<AssetSpec, "downloadUrl">>> = {
+>>>>>>> Stashed changes
     linux: {
       x64: {
         assetName: "cloudflared-linux-amd64",
@@ -448,6 +483,7 @@ export function getCloudflaredAssetSpec(
   const spec = matrix[platform]?.[arch];
   if (!spec) return null;
 
+<<<<<<< Updated upstream
   return spec;
 }
 
@@ -517,6 +553,11 @@ async function resolveCloudflaredDownloadSpec(spec: AssetSpec): Promise<Resolved
     ...spec,
     downloadUrl,
     expectedSha256,
+=======
+  return {
+    ...spec,
+    downloadUrl: `${CLOUDFLARED_RELEASE_BASE}/${spec.assetName}`,
+>>>>>>> Stashed changes
   };
 }
 
@@ -559,19 +600,26 @@ async function extractArchive(archivePath: string, destinationDir: string) {
   await execFileAsync("tar", ["-xzf", archivePath, "-C", destinationDir], { timeout: 15000 });
 }
 
+<<<<<<< Updated upstream
 async function downloadToFile(
   url: string,
   destinationPath: string,
   expectedSha256: string,
   assetName: string
 ) {
+=======
+async function downloadToFile(url: string, destinationPath: string) {
+>>>>>>> Stashed changes
   const response = await proxyFetch(url, { redirect: "follow" });
   if (!response.ok) {
     throw new Error(`Download failed with status ${response.status}`);
   }
 
   const buffer = Buffer.from(await response.arrayBuffer());
+<<<<<<< Updated upstream
   verifyCloudflaredDownloadDigest(buffer, expectedSha256, assetName);
+=======
+>>>>>>> Stashed changes
   await fs.writeFile(destinationPath, buffer);
 }
 
@@ -602,6 +650,7 @@ async function installManagedBinary() {
     });
 
     try {
+<<<<<<< Updated upstream
       const downloadSpec = await resolveCloudflaredDownloadSpec(spec);
       await downloadToFile(
         downloadSpec.downloadUrl,
@@ -609,6 +658,9 @@ async function installManagedBinary() {
         downloadSpec.expectedSha256,
         downloadSpec.assetName
       );
+=======
+      await downloadToFile(spec.downloadUrl, tempDownloadPath);
+>>>>>>> Stashed changes
 
       if (spec.archive === "tgz") {
         await extractArchive(tempDownloadPath, path.dirname(managedBinaryPath));
@@ -695,12 +747,15 @@ async function stopExistingTunnel() {
     return;
   }
 
+<<<<<<< Updated upstream
   const state = await readStateFile();
   if (!isStateOwnedByCurrentProcess(state)) {
     await clearPidFile();
     return;
   }
 
+=======
+>>>>>>> Stashed changes
   const pid = await readPidFile();
   if (pid && isProcessAlive(pid)) {
     await killPid(pid);
@@ -710,6 +765,7 @@ async function stopExistingTunnel() {
 export async function getCloudflaredTunnelStatus(): Promise<CloudflaredTunnelStatus> {
   const state = await readStateFile();
   const resolved = await resolveBinary();
+<<<<<<< Updated upstream
   const pidFromState =
     tunnelPid || (isStateOwnedByCurrentProcess(state) ? state.pid || (await readPidFile()) : null);
   const running = isProcessAlive(pidFromState);
@@ -724,6 +780,11 @@ export async function getCloudflaredTunnelStatus(): Promise<CloudflaredTunnelSta
   }
 
   const publicUrl = running ? effectiveState.publicUrl || null : null;
+=======
+  const pidFromState = tunnelPid || state.pid || (await readPidFile());
+  const running = isProcessAlive(pidFromState);
+  const publicUrl = running ? state.publicUrl || null : null;
+>>>>>>> Stashed changes
   const phase =
     !getCloudflaredAssetSpec() && !resolved.binaryPath
       ? "unsupported"
@@ -732,7 +793,11 @@ export async function getCloudflaredTunnelStatus(): Promise<CloudflaredTunnelSta
           ? "running"
           : "starting"
         : resolved.binaryPath
+<<<<<<< Updated upstream
           ? effectiveState.lastError
+=======
+          ? state.lastError
+>>>>>>> Stashed changes
             ? "error"
             : "stopped"
           : "not_installed";
@@ -751,9 +816,15 @@ export async function getCloudflaredTunnelStatus(): Promise<CloudflaredTunnelSta
     pid: running ? pidFromState : null,
     publicUrl,
     apiUrl: publicUrl ? getTunnelApiUrl(publicUrl) : null,
+<<<<<<< Updated upstream
     targetUrl: effectiveState.targetUrl || getLocalTargetUrl(),
     phase,
     lastError: running ? null : effectiveState.lastError || null,
+=======
+    targetUrl: state.targetUrl || getLocalTargetUrl(),
+    phase,
+    lastError: running ? null : state.lastError || null,
+>>>>>>> Stashed changes
     logPath: getLogFilePath(),
   };
 }
@@ -782,7 +853,10 @@ export async function startCloudflaredTunnel(): Promise<CloudflaredTunnelStatus>
     await writeStateFile({
       binaryPath: binary.binaryPath,
       installSource: binary.source,
+<<<<<<< Updated upstream
       ownerPid: process.pid,
+=======
+>>>>>>> Stashed changes
       pid: null,
       publicUrl: null,
       apiUrl: null,
@@ -826,7 +900,10 @@ export async function startCloudflaredTunnel(): Promise<CloudflaredTunnelStatus>
         const errorMessage = source === "stderr" ? extractCloudflaredErrorMessage(text) : null;
         if (errorMessage) {
           await updateStateFile({
+<<<<<<< Updated upstream
             ownerPid: process.pid,
+=======
+>>>>>>> Stashed changes
             pid: child.pid,
             status: "error",
             lastError: errorMessage,
@@ -837,7 +914,10 @@ export async function startCloudflaredTunnel(): Promise<CloudflaredTunnelStatus>
 
         const apiUrl = getTunnelApiUrl(url);
         await updateStateFile({
+<<<<<<< Updated upstream
           ownerPid: process.pid,
+=======
+>>>>>>> Stashed changes
           pid: child.pid,
           publicUrl: url,
           apiUrl,
@@ -887,7 +967,10 @@ export async function startCloudflaredTunnel(): Promise<CloudflaredTunnelStatus>
         : "Failed to start cloudflared tunnel";
 
     await updateStateFile({
+<<<<<<< Updated upstream
       ownerPid: process.pid,
+=======
+>>>>>>> Stashed changes
       status: "error",
       lastError: message,
     });
@@ -901,8 +984,17 @@ export async function stopCloudflaredTunnel() {
   await stopExistingTunnel();
   const current = await readStateFile();
   await writeStateFile({
+<<<<<<< Updated upstream
     ...buildStoppedState(current, !!(await resolveBinary()).binaryPath),
     ownerPid: null,
+=======
+    ...current,
+    pid: null,
+    publicUrl: null,
+    apiUrl: null,
+    status: "stopped",
+    lastError: null,
+>>>>>>> Stashed changes
   });
   tunnelProcess = null;
   tunnelPid = null;

@@ -13,7 +13,11 @@ interface ServiceAccount {
 
 const TOKEN_CACHE = new Map<string, { token: string; expiresAt: number }>();
 
+<<<<<<< Updated upstream
 export function parseSAFromApiKey(apiKey: string): ServiceAccount {
+=======
+function parseSAFromApiKey(apiKey: string): ServiceAccount {
+>>>>>>> Stashed changes
   try {
     return JSON.parse(apiKey);
   } catch {
@@ -21,7 +25,11 @@ export function parseSAFromApiKey(apiKey: string): ServiceAccount {
   }
 }
 
+<<<<<<< Updated upstream
 export async function getAccessToken(sa: ServiceAccount): Promise<string> {
+=======
+async function getAccessToken(sa: ServiceAccount): Promise<string> {
+>>>>>>> Stashed changes
   if (!sa.client_email || !sa.private_key) {
     throw new Error(
       "Service Account JSON is missing required fields (client_email or private_key)"

@@ -31,6 +31,7 @@ export interface RequestDetailLog {
   duration_ms?: number;
   api_key_id?: string | null;
   no_log?: boolean;
+<<<<<<< Updated upstream
 }
 
 let requestDetailLogsTableExistsCache: boolean | undefined;
@@ -50,6 +51,8 @@ function requestDetailLogsTableExists(): boolean {
 
 export function resetRequestDetailLogsTableExistsCache(): void {
   requestDetailLogsTableExistsCache = undefined;
+=======
+>>>>>>> Stashed changes
 }
 
 /** Returns true if detailed logging is enabled in settings */
@@ -67,7 +70,11 @@ export async function isDetailedLoggingEnabled(): Promise<boolean> {
 export function saveRequestDetailLog(entry: RequestDetailLog): void {
   const noLogEnabled =
     Boolean(entry.no_log) || (entry.api_key_id ? isNoLog(entry.api_key_id) : false);
+<<<<<<< Updated upstream
   if (noLogEnabled || !requestDetailLogsTableExists()) return;
+=======
+  if (noLogEnabled) return;
+>>>>>>> Stashed changes
 
   const db = getDbInstance();
   const id = entry.id ?? uuidv4();
@@ -127,7 +134,10 @@ export function getRequestDetailLogById(id: string): RequestDetailLog | null {
 
 /** Get the most recent detailed log for a call log ID */
 export function getRequestDetailLogByCallLogId(callLogId: string): RequestDetailLog | null {
+<<<<<<< Updated upstream
   if (!requestDetailLogsTableExists()) return null;
+=======
+>>>>>>> Stashed changes
   const db = getDbInstance();
   const row = db
     .prepare(

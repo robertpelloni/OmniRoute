@@ -36,7 +36,11 @@
     "time": "Čas",
     "details": "Podrobnosti",
     "created": "Vytvořeno",
+<<<<<<< Updated upstream
     "lastUsed": "Naposledy aktualizováno",
+=======
+    "lastUsed": "Last Refreshed",
+>>>>>>> Stashed changes
     "loadMore": "Načíst více",
     "noResults": "Nenalezeny žádné výsledky",
     "reloadPage": "Znovu načíst stránku",
@@ -136,6 +140,7 @@
     "Failed to save pricing": "Nepodařilo se uložit ceny",
     "Failed to reset pricing": "Nepodařilo se resetovat ceny",
     "apikey": "API klíč",
+<<<<<<< Updated upstream
     "http": "HTTP",
     "goToDashboard": "Go to Dashboard",
     "nothingHere": "Nothing here yet",
@@ -649,6 +654,9 @@
     "learnedFromHeaders": "Learned From Headers",
     "totalRequests": "Total Requests",
     "cloudUnstableNote": "Cloud Unstable Note"
+=======
+    "http": "HTTP"
+>>>>>>> Stashed changes
   },
   "sidebar": {
     "home": "Domov",
@@ -703,6 +711,7 @@
     "themeOrange": "Oranžová",
     "themeCyan": "Azurová",
     "cliToolsShort": "Nástroje",
+<<<<<<< Updated upstream
     "cache": "Mezipaměť",
     "cacheShort": "Mezipaměť",
     "memory": "Paměť",
@@ -741,6 +750,15 @@
     "contextCaveman": "Caveman",
     "contextRtk": "RTK",
     "contextCombos": "Compression Combos"
+=======
+    "cache": "Cache",
+    "cacheShort": "Cache",
+    "cliSection": "CLI",
+    "debugSection": "Debug",
+    "helpSection": "Help",
+    "primarySection": "Main",
+    "systemSection": "System"
+>>>>>>> Stashed changes
   },
   "themesPage": {
     "title": "Motivy",
@@ -827,9 +845,13 @@
     "utilization": "Využití",
     "utilizationDescription": "Trendy využití kvót poskytovatele a sledování limitů rychlosti",
     "comboHealth": "Zdraví Combo",
+<<<<<<< Updated upstream
     "comboHealthDescription": "Kvóta na úrovni kombinace, distribuce využití a metriky výkonu",
     "compressionAnalyticsTitle": "Compression Analytics",
     "compressionAnalyticsDescription": "Compression analytics — token savings, mode breakdown, and provider stats."
+=======
+    "comboHealthDescription": "Kvóta na úrovni kombinace, distribuce využití a metriky výkonu"
+>>>>>>> Stashed changes
   },
   "apiManager": {
     "title": "API Klíče",
@@ -1022,7 +1044,11 @@
     "cost": "Náklady",
     "results": "Výsledky",
     "rerank": "Rerank",
+<<<<<<< Updated upstream
     "rerankModel": "Model pro přerovnání",
+=======
+    "rerankModel": "Rerank Model",
+>>>>>>> Stashed changes
     "positionDelta": "Změna pozice",
     "emptyState": "Odešlete vyhledávací dotaz pro zobrazení výsledků"
   },
@@ -1189,10 +1215,14 @@
       "opencode": "Použijte, pokud dáváte přednost spouštění agentů nativně v terminálu a skriptované automatizaci přes OpenCode.",
       "kiro": "Použijte při integraci Kiro a centrálním řízení směrování modelů z OmniRoute.",
       "antigravity": "Použijte, pokud musí být provoz Antigravity/Kiro zachycen prostřednictvím MITM a směrován do OmniRoute.",
+<<<<<<< Updated upstream
       "copilot": "Použijte, pokud chcete uživatelské rozhraní ve stylu Copilot chat a zároveň vynutit klíče a pravidla směrování OmniRoute.",
       "windsurf": "Use when you want an AI-first IDE with Codeium/Windsurf models routed through OmniRoute.",
       "amp": "Use when you want Amp CLI routed through OmniRoute with stable shorthand aliases and OpenAI-compatible setup.",
       "qwen": "Use when you want Qwen Code CLI with OmniRoute-managed provider settings and multi-provider model access."
+=======
+      "copilot": "Použijte, pokud chcete uživatelské rozhraní ve stylu Copilot chat a zároveň vynutit klíče a pravidla směrování OmniRoute."
+>>>>>>> Stashed changes
     },
     "toolDescriptions": {
       "antigravity": "Google Antigravity IDE s MITM",
@@ -1207,9 +1237,13 @@
       "opencode": "OpenCode AI coding agent (Terminál)",
       "kiro": "Amazon Kiro – AI poháněné IDE",
       "windsurf": "Windsurf AI Code Editor",
+<<<<<<< Updated upstream
       "copilot": "GitHub Copilot AI Assistant",
       "qwen": "Alibaba Qwen Code CLI",
       "amp": "Sourcegraph Amp coding assistant CLI"
+=======
+      "copilot": "GitHub Copilot AI Assistant"
+>>>>>>> Stashed changes
     },
     "guides": {
       "cursor": {
@@ -1279,8 +1313,13 @@
             "title": "Vybrat model"
           },
           "5": {
+<<<<<<< Updated upstream
             "title": "Použít variantu Thinking",
             "desc": "U modelů s reasoning spusťte s --variant high/low/max (viz příkaz níže)."
+=======
+            "title": "Use Thinking Variant",
+            "desc": "For thinking models, run with --variant high/low/max (example command below)."
+>>>>>>> Stashed changes
           }
         },
         "notes": {
@@ -1312,6 +1351,7 @@
       "windsurf": {
         "steps": {
           "1": {
+<<<<<<< Updated upstream
             "title": "Open AI nastavení",
             "desc": "Click the AI Settings icon in Windsurf or go to Settings"
           },
@@ -1330,6 +1370,26 @@
           "5": {
             "title": "Vybrat model",
             "desc": "Vyberte model z nabídky"
+=======
+            "title": "Open AI Settings",
+            "desc": "Click the AI Settings icon in Windsurf or go to Settings"
+          },
+          "2": {
+            "title": "Add Custom Provider",
+            "desc": "Select \"Add custom provider\" (OpenAI-compatible)"
+          },
+          "3": {
+            "title": "Base URL",
+            "desc": "http://127.0.0.1:20128/v1"
+          },
+          "4": {
+            "title": "API Key",
+            "desc": "Select your OmniRoute API key"
+          },
+          "5": {
+            "title": "Select Model",
+            "desc": "Choose a model from the dropdown"
+>>>>>>> Stashed changes
           }
         }
       }
@@ -1448,6 +1508,7 @@
         "example": "Úlohy na pozadí nebo dávkové úlohy, kde se upřednostňují nižší náklady."
       },
       "strict-random": {
+<<<<<<< Updated upstream
         "when": "Použijte, když chcete rovnoměrné rozložení — každý model se použije jednou před opakováním.",
         "avoid": "Nepoužívejte, když mají modely různou kvalitu nebo latenci a záleží na pořadí.",
         "example": "Příklad: Více účtů stejného modelu pro rovnoměrné rozložení využití."
@@ -1461,6 +1522,11 @@
         "example": "Example: High-throughput inference across 4+ equivalent model endpoints.",
         "avoid": "Avoid for small combos with 2 or fewer models — no benefit over round-robin.",
         "when": "Use when you want low-latency selection using Power-of-Two-Choices algorithm."
+=======
+        "when": "Use when you want perfectly even spread — each model used once before repeating.",
+        "avoid": "Avoid when models have different quality or latency and order matters.",
+        "example": "Example: Multiple accounts of the same model to distribute usage evenly."
+>>>>>>> Stashed changes
       }
     },
     "advancedHelp": {
@@ -1556,6 +1622,7 @@
         "tip3": "Používejte pro dávkové/úlohy na pozadí, kde jsou hlavním klíčovým ukazatelem výkonnosti náklady."
       },
       "strict-random": {
+<<<<<<< Updated upstream
         "title": "Rozložení typu zamíchaného balíčku",
         "description": "Každý model se použije právě jednou za cyklus před novým zamícháním.",
         "tip1": "Pro smysluplné rozložení použijte alespoň 2 modely.",
@@ -1691,6 +1758,17 @@
     "intelligentPanelTitle": "Intelligent Routing Dashboard",
     "budgetCapLabel": "Budget Cap (USD / request)",
     "reviewStrategy": "Strategy"
+=======
+        "title": "Shuffle deck distribution",
+        "description": "Each model is used exactly once per cycle before reshuffling.",
+        "tip1": "Use at least 2 models for meaningful distribution.",
+        "tip2": "Works best with equivalent-performance models.",
+        "tip3": "Ideal for load balancing across multiple API accounts."
+      }
+    },
+    "templateFreeStack": "Volný zásobník (0 $)",
+    "templateFreeStackDesc": "Round-robin mezi všemi bezplatnými poskytovateli: Kiro (Claude), Qoder (5 modelů), Qwen (4 modely), Gemini CLI. Bez nákladů, nikdy nepřestaňte kódovat."
+>>>>>>> Stashed changes
   },
   "costs": {
     "title": "Náklady",
@@ -1793,6 +1871,7 @@
     "cloudWorkerUnreachable": "Nepodařilo se spojit s pracovníkem cloudu. Ujistěte se, že cloud služba je spuštěna (spuštěním npm dev v /cloud).",
     "connectionFailed": "Připojení selhalo",
     "syncFailed": "Synchronizace cloudových dat selhalo",
+<<<<<<< Updated upstream
     "cloudflaredTitle": "Cloudflare Quick Tunnel",
     "cloudflaredDescription": "Create a Cloudflare Quick Tunnel for this endpoint to make it accessible from the internet without configuring DNS.",
     "cloudflaredUrlNotice": "Creates a temporary Cloudflare Quick Tunnel. URLs change after restart.",
@@ -1812,6 +1891,8 @@
     "cloudflaredUnsupportedNote": "This platform is not supported for managed installation.",
     "cloudflaredIdleNote": "Create a temporary Cloudflare Quick Tunnel for this endpoint.",
     "cloudflaredLastError": "Poslední chyba: {error}",
+=======
+>>>>>>> Stashed changes
     "providerModelsTitle": "{provider} — Modely",
     "noModelsForProvider": "Pro tohoto poskytovatele nejsou k dispozici žádné modely.",
     "chat": "Chat",
@@ -1847,6 +1928,7 @@
     "a2aQuickStartStep3": "Sledujte a ovládejte úkoly pomocí příkazů `tasks/get` a `tasks/cancel`.",
     "completionsLegacy": "Completions (Zastaralé)",
     "completionsLegacyDesc": "Zastaralé OpenAI text completion – akceptuje oba formáty, prompt string i messages array.",
+<<<<<<< Updated upstream
     "musicGeneration": "Music Generation",
     "musicDesc": "Generate music and audio tracks via ComfyUI (Stable Audio, MusicGen)",
     "videoGeneration": "Video Generation",
@@ -1883,6 +1965,27 @@
     "tailscaleInstallPasswordHint": "On macOS and Linux, sudo may be required for the package install and daemon start.",
     "tailscaleSudoPlaceholder": "Optional sudo password",
     "tailscaleInstalling": "Installing"
+=======
+    "cloudflaredDescription": "Create a Cloudflare Quick Tunnel for this endpoint to make it accessible from the internet without configuring DNS.",
+    "cloudflaredDisable": "Stop Tunnel",
+    "cloudflaredEnable": "Enable Tunnel",
+    "cloudflaredError": "Error",
+    "cloudflaredIdleNote": "Create a temporary Cloudflare Quick Tunnel for this endpoint.",
+    "cloudflaredInstallAndEnable": "Install & Enable",
+    "cloudflaredLastError": "Last error: {error}",
+    "cloudflaredNotInstalled": "Not installed",
+    "cloudflaredRequestFailed": "Failed to update Cloudflare tunnel",
+    "cloudflaredRunning": "Running",
+    "cloudflaredStarted": "Cloudflare tunnel started",
+    "cloudflaredStarting": "Starting",
+    "cloudflaredStopped": "Cloudflare tunnel stopped",
+    "cloudflaredStoppedState": "Stopped",
+    "cloudflaredTemporaryNote": "Quick Tunnel URLs are temporary and will change after restart.",
+    "cloudflaredTitle": "Cloudflare Quick Tunnel",
+    "cloudflaredUnsupported": "Unsupported",
+    "cloudflaredUnsupportedNote": "This platform is not supported for managed installation.",
+    "cloudflaredUrlNotice": "Creates a temporary Cloudflare Quick Tunnel. URLs change after restart."
+>>>>>>> Stashed changes
   },
   "endpoints": {
     "tabProxy": "Koncová Proxy",
@@ -2295,8 +2398,11 @@
     "failedCreate": "Vytvoření poskytovatele selhalo",
     "errorOccurred": "Došlo k chybě. Zkuste to prosím znovu.",
     "modelStatus": "Status modelu",
+<<<<<<< Updated upstream
     "showConfiguredOnly": "Configured only",
     "searchProviders": "Hledat poskytovatele...",
+=======
+>>>>>>> Stashed changes
     "allModelsOperational": "Všechny modely funkční",
     "modelsWithIssues": "{count} model(y) s problémy",
     "allModelsNormal": "Všechny modely reagují normálně.",
@@ -2311,12 +2417,20 @@
     "modeTest": "{mode} Test",
     "passedCount": "{count} prošlo",
     "failedCount": "{count} selhalo",
+<<<<<<< Updated upstream
     "testedCount": "{count} testováno",
+=======
+    "testedCount": "testováno",
+>>>>>>> Stashed changes
     "millisecondsAbbr": "{value}ms",
     "okShort": "OK",
     "errorShort": "CHYBA",
     "noActiveConnectionsInGroup": "Nenalezena žádná aktivní připojení pro tuto skupinu.",
+<<<<<<< Updated upstream
     "allTestsPassed": "Všech {total} testů prošlo",
+=======
+    "allTestsPassed": "Všechny testy úspěšné",
+>>>>>>> Stashed changes
     "testSummary": "{passed}/{total} prošlo, {failed} selhalo",
     "nameLabel": "Jméno",
     "prefixLabel": "Prefix",
@@ -2349,6 +2463,7 @@
     "chatCompletions": "Chat Completions",
     "importingModels": "Importuji...",
     "importFromModels": "Import z /models",
+<<<<<<< Updated upstream
     "allModelsAlreadyImported": "Všechny modely jsou již importovány",
     "noNewModelsToImport": "Žádné nové modely k importu — všechny modely jsou již v registru nebo v seznamu vlastních modelů",
     "skippingExistingModels": "Přeskakování {count} existujících modelů",
@@ -2357,6 +2472,8 @@
     "autoSyncEnabled": "Automatická synchronizace povolena – modely se budou pravidelně obnovovat",
     "autoSyncDisabled": "Automatická synchronizace zakázána",
     "autoSyncToggleFailed": "Nepodařilo se přepnout automatickou synchronizaci",
+=======
+>>>>>>> Stashed changes
     "clearAllModels": "Vymazat všechny modely",
     "clearAllModelsConfirm": "Opravdu chcete odstranit všechny modely pro tohoto poskytovatele?",
     "clearAllModelsSuccess": "Všechny modely vymazány",
@@ -2372,10 +2489,13 @@
     "adding": "Přidávám...",
     "importingModelsTitle": "Import modelů",
     "copyModel": "Kopírovat model",
+<<<<<<< Updated upstream
     "filterModels": "Filtrovat modely…",
     "modelsActive": "aktivní",
     "showModel": "Zobrazit model",
     "hideModel": "Skrýt model",
+=======
+>>>>>>> Stashed changes
     "removeModel": "Odebrat model",
     "rateLimitProtected": "Chráněn",
     "rateLimitUnprotected": "Nechráněn",
@@ -2469,7 +2589,11 @@
     "compatProtocolOpenAI": "OpenAI Chat Completions",
     "compatProtocolOpenAIResponses": "OpenAI Responses API",
     "compatProtocolClaude": "Anthropic Messages",
+<<<<<<< Updated upstream
     "compatUpstreamHeadersLabel": "Extra upstream hlavičky",
+=======
+    "compatUpstreamHeadersLabel": "Extra upstream headers",
+>>>>>>> Stashed changes
     "compatUpstreamHeadersHint": "Nastavení s vysokými oprávněními — stejná úroveň důvěryhodnosti jako při úpravách přihlašovacích údajů API poskytovatele; měli by jej používat pouze důvěryhodní administrátoři. Sloučeno poté, co OmniRoute přidá ověření z klíče API poskytovatele. Pokud vlastní záhlaví používá stejný název jako existující (např. Authorization), vaše hodnota zcela nahradí automaticky vygenerované záhlaví (včetně tokenu Bearer) — upstream vidí pouze to, co jste zadali, nikoli klíč z nastavení. Nesprávná nastavení může způsobit chybu 401 nebo nefunkční upstream ověření. Jeden řádek na jedno záhlaví (např. extra ověření pro některé brány). Pro náhled najděte na hodnotu nebo ji označte. Uloží se při odklonu, kliknutí mimo nebo zavření tohoto panelu.",
     "compatUpstreamHeaderName": "Název hlavičky",
     "compatUpstreamHeaderValue": "Hodnota",
@@ -2521,12 +2645,15 @@
     "compatibleProdPlaceholder": "{type} Kompatibilní (produkční)",
     "tokenRefreshed": "Token úspěšně obnoven",
     "tokenRefreshFailed": "Obnovení tokenu selhalo",
+<<<<<<< Updated upstream
     "applyCodexAuthLocal": "Použít autorizaci",
     "exportCodexAuthFile": "Export autorizace",
     "codexAuthAppliedLocal": "Codex auth.json applied locally",
     "codexAuthApplyFailed": "Failed to apply Codex auth.json locally",
     "codexAuthExported": "Codex auth.json exported",
     "codexAuthExportFailed": "Failed to export Codex auth.json",
+=======
+>>>>>>> Stashed changes
     "advancedSettings": "Pokročilé nastavení",
     "chatPathLabel": "Cesta koncového bodu chatu",
     "chatPathPlaceholder": "/chat/completions",
@@ -2534,6 +2661,7 @@
     "modelsPathLabel": "Cesta koncového bodu modelu",
     "modelsPathPlaceholder": "/models",
     "modelsPathHint": "Cesta k vlastním modelům pro validaci (např. /v4/models)",
+<<<<<<< Updated upstream
     "modelsImported": "{count} modelů importováno",
     "close": "Zavřít",
     "statusDeactivated": "Deaktivováno (Manuální)",
@@ -2708,6 +2836,22 @@
     "perModelQuotaLabel": "Per Model Quota Label",
     "expiredBadge": "Expired",
     "expiringSoonBadge": "Expiring Soon"
+=======
+    "autoSync": "Automatická synchronizace",
+    "autoSyncTooltip": "Automaticky obnovuje seznam modelů každých 24 hodin (lze nastavit přes MODEL_SYNC_INTERVAL_HOURS)",
+    "autoSyncEnabled": "Automatická synchronizace povolena – modely se budou pravidelně obnovovat",
+    "autoSyncDisabled": "Automatická synchronizace zakázána",
+    "autoSyncToggleFailed": "Nepodařilo se přepnout automatickou synchronizaci",
+    "allModelsAlreadyImported": "Všechny modely jsou již importovány",
+    "noNewModelsToImport": "Žádné nové modely k importu — všechny modely jsou již v registru nebo v seznamu vlastních modelů",
+    "skippingExistingModels": "Přeskakování {count} existujících modelů",
+    "applyCodexAuthLocal": "Apply auth",
+    "codexAuthAppliedLocal": "Codex auth.json applied locally",
+    "codexAuthApplyFailed": "Failed to apply Codex auth.json locally",
+    "codexAuthExportFailed": "Failed to export Codex auth.json",
+    "codexAuthExported": "Codex auth.json exported",
+    "exportCodexAuthFile": "Export auth"
+>>>>>>> Stashed changes
   },
   "settings": {
     "title": "Nastavení",
@@ -2747,8 +2891,11 @@
     "darkMode": "Tmavý režim",
     "lightMode": "Světelný režim",
     "systemTheme": "Systémové motiv",
+<<<<<<< Updated upstream
     "debugToggle": "Povolit režim ladění",
     "sidebarVisibilityToggle": "Zobrazit položky postranního panelu",
+=======
+>>>>>>> Stashed changes
     "enableCache": "Povolit mezipaměť",
     "cacheTTL": "TTL mezipamět",
     "maxCacheSize": "Maximální velikost mezipaměti",
@@ -2775,6 +2922,7 @@
     "timeoutMs": "Časový limit (ms)",
     "enableSystemPrompt": "Povolit systémový Prompt",
     "systemPromptText": "Text systémového Prompt",
+<<<<<<< Updated upstream
     "autoDisableBannedAccounts": "Automaticky zakázat zablokované účty",
     "autoDisableDescription": "Trvale označí připojení poskytovatele jako deaktivovaná, pokud vrátí specifické signály zablokování (např. HTTP 403 'verify your account'). Tím je odstraní z rotace komb.",
     "autoDisableThreshold": "Prahová hodnota zablokování",
@@ -2783,6 +2931,12 @@
     "maxThinkingTokens": "Max Thinking Tokenů",
     "enableProxy": "Povolit Proxy",
     "proxyUrl": "URL proxy",
+=======
+    "enableThinking": "Umožněte Thinking",
+    "maxThinkingTokens": "Max Thinking Tokenů",
+    "enableProxy": "Povolit Proxy",
+    "proxyUrl": "Proxy URL",
+>>>>>>> Stashed changes
     "pricingRates": "Formát cen",
     "currentPricing": "Přehled aktuálních cen",
     "loadingPricing": "Načítám cenoé údaje...",
@@ -2815,9 +2969,12 @@
     "themeLight": "Světlý",
     "themeDark": "Tmavý",
     "themeSystem": "Systém",
+<<<<<<< Updated upstream
     "sidebarVisibility": "Skrýt položky postranního panelu",
     "sidebarVisibilityDesc": "Hide any sidebar navigation entry to reduce visual clutter.",
     "sidebarVisibilityHint": "Any sidebar section is hidden automatically when a...",
+=======
+>>>>>>> Stashed changes
     "hideHealthLogs": "Skrýt protokoly kontrol zdraví",
     "hideHealthLogsDesc": "Pokud je zapnuto, potlačí zprávy [HealthCheck] v konzoli serveru",
     "themeAccent": "Barva motivu",
@@ -2830,6 +2987,7 @@
     "themeViolet": "Fialový",
     "themeOrange": "Pomerančový",
     "themeCyan": "Azurový",
+<<<<<<< Updated upstream
     "whitelabeling": "Branding",
     "whitelabelingDesc": "Přizpůsobení názvu a loga aplikace",
     "appName": "Název aplikace",
@@ -2844,6 +3002,9 @@
     "uploadFavicon": "Nahrát ikonu",
     "resetFavicon": "Obnovit ikonu",
     "faviconPreview": "Náhled ikony",
+=======
+    "promptCache": "Prompt Mezipaměť",
+>>>>>>> Stashed changes
     "flushCache": "Vyprázdnit mezipamět",
     "flushing": "Vyprázdňuji…",
     "size": "Velikost",
@@ -3134,6 +3295,10 @@
     "unsaved": "neuloženo",
     "resetDefaults": "Obnovit výchozí nastavení",
     "saveProvider": "Uložit poskytovatele",
+<<<<<<< Updated upstream
+=======
+    "saving": "Ukládám...",
+>>>>>>> Stashed changes
     "model": "Model",
     "models": "modely",
     "moreProviders": "{count} dalších poskytovatelů",
@@ -3165,6 +3330,7 @@
     "editPricing": "Upravit ceny",
     "viewFullDetails": "Zobrazit všechny podrobnosti",
     "themeCoral": "Korál",
+<<<<<<< Updated upstream
     "modelsDevTitle": "Model Database",
     "modelsDevDesc": "Auto-sync pricing, capabilities & specs from models.dev",
     "modelsDevEnabled": "Enable models.dev Sync",
@@ -3381,6 +3547,26 @@
       "full": "Respond terse and compact. Preserve all technical substance.",
       "ultra": "Respond ultra terse with common technical abbreviations. Preserve exact symbols."
     }
+=======
+    "sidebarVisibility": "Hide sidebar items",
+    "sidebarVisibilityDesc": "Hide any sidebar navigation entry to reduce visual clutter.",
+    "sidebarVisibilityHint": "Any sidebar section is hidden automatically when a...",
+    "semanticCache": "Semantic Cache",
+    "autoDisableDescription": "Permanently mark provider connections as deactivated if they return specific terminal ban signals (e.g. HTTP 403 'verify your account'). This removes them from the combo rotation.",
+    "preserveClientCache": "Preserve Client Cache",
+    "cacheSettings": "Cache Settings",
+    "autoDisableThreshold": "Ban Threshold",
+    "autoDisableBannedAccounts": "Auto-Disable Banned Accounts",
+    "ttlMinutes": "TTL (minutes)",
+    "maxEntries": "Max Entries",
+    "loading": "Loading...",
+    "save": "Save",
+    "autoDisableThresholdDesc": "Consecutive ban signals required before permanent deactivation.",
+    "debugToggle": "Enable Debug Mode",
+    "sidebarVisibilityToggle": "Show Sidebar Items",
+    "enabled": "Enabled",
+    "strategy": "Strategy"
+>>>>>>> Stashed changes
   },
   "translator": {
     "title": "Překladatel",
@@ -3655,13 +3841,22 @@
     "loadingQuotas": "Načítám...",
     "account": "Účet",
     "modelQuotas": "Kvóty Modelu",
+<<<<<<< Updated upstream
     "lastUsed": "Naposledy aktualizováno",
+=======
+    "lastUsed": "Last Refreshed",
+>>>>>>> Stashed changes
     "actions": "Akce",
     "refreshQuota": "Obnovit Kvótu",
     "today": "Dnes",
     "tomorrow": "Zítra",
+<<<<<<< Updated upstream
     "dayTimeFormat": "{day}, {time}",
     "inDuration": "za {duration}",
+=======
+    "dayTimeFormat": "{den}, {time}",
+    "inDuration": "za {trvání}",
+>>>>>>> Stashed changes
     "notApplicable": "N/A",
     "rawPlanWithValue": "Hrubý plán: {plan}",
     "noPlanFromProvider": "Žádný plán poskytovatele",
@@ -3679,6 +3874,7 @@
     "tierPro": "Pro",
     "tierPlus": "Plus",
     "tierFree": "Zdarma",
+<<<<<<< Updated upstream
     "tierUnknown": "Neznámý",
     "suiteBuilderSaveFailed": "Failed to save suite",
     "scorecardTitle": "Scorecard",
@@ -3772,6 +3968,9 @@
     "suiteBuilderDescriptionLabel": "Description",
     "targetComparisonHint": "Side-by-side comparison of evaluation results between targets.",
     "compareCompletedWithScore": "Comparison completed — {score}% pass rate"
+=======
+    "tierUnknown": "Neznámý"
+>>>>>>> Stashed changes
   },
   "modals": {
     "waitingAuth": "Očekávám Autorizaci",
@@ -3890,19 +4089,28 @@
     "restartServerWithNewPassword": "Restartujte server - použije se nové heslo.",
     "backToLogin": "Zpět na přihlášení",
     "forgotPassword": "Zapomněli jste heslo?",
+<<<<<<< Updated upstream
     "defaultPasswordHint": "Výchozí heslo: CHANGEME (pokud nebylo nastaveno INITIAL_PASSWORD)",
     "Authorization": "Autorizace",
     "Content-Disposition": "Obsah-Dispozice",
+=======
+    "defaultPasswordHint": "Výchozí heslo: 123456 (pokud nebylo nastaveno INITIAL_PASSWORD)",
+>>>>>>> Stashed changes
     "waitingForAuthorization": "Čekám na autorizaci...",
     "waitingForGoogleAuthorization": "Čekám na Google autorizaci...",
     "waitingForOpenAIAuthorization": "Čekám na OpenAI autorizaci...",
     "waitingForAntigravityAuthorization": "Čekám na Antigravity autorizaci...",
     "waitingForQoderAuthorization": "Čekám na Qoder autorizaci...",
     "exchangingCodeForTokens": "Vyměňuji kód za tokeny...",
+<<<<<<< Updated upstream
     "nodeIncompatibleHint": "OmniRoute requires Node.js 20.20.2+ (20.x LTS), 22.22.2+ (22.x LTS) or 24.0.0+ (24.x LTS). Node 24 LTS is recommended.",
     "nodeIncompatibleFixLabel": "Fix: install a patched Node.js 22 LTS release",
     "nodeIncompatibleDesc": "You are running Node.js {version}, which is outside OmniRoute's supported secure runtime policy. Use a patched Node.js 20.x or 22.x LTS release.",
     "nodeIncompatibleTitle": "Incompatible Node.js Version"
+=======
+    "Authorization": "Autorizace",
+    "Content-Disposition": "Obsah-Dispozice"
+>>>>>>> Stashed changes
   },
   "landing": {
     "brandName": "OmniRoute",
@@ -4204,6 +4412,7 @@
     "setupGuideCustomAgentTitle": "Zaregistrovat vlastní binární soubor",
     "setupGuideCustomAgentDesc": "Použijte možnost Přidat vlastního agenta, pokud vaše CLI není v zabudovaném seznamu. Zadejte název binárního souboru a příkaz verze.",
     "setupGuideCommandMissingTitle": "Opravte chybu‚ příkaz nenalezen",
+<<<<<<< Updated upstream
     "setupGuideCommandMissingDesc": "Ujistěte se, že CLI příkaz existuje v PATH, otevřete novou relaci terminálu a znovu spusťte tlačítko Obnovit.",
     "cliToolsRedirectTitle": "Cli Tools Redirect Title",
     "cliToolsRedirectDesc": "Cli Tools Redirect Desc",
@@ -4219,6 +4428,33 @@
     "flowSpawn": "Flow Spawn",
     "cliToolsRedirectCta": "Cli Tools Redirect Cta"
   },
+=======
+    "setupGuideCommandMissingDesc": "Ujistěte se, že CLI příkaz existuje v PATH, otevřete novou relaci terminálu a znovu spusťte tlačítko Obnovit."
+  },
+  "autoCombo": {
+    "title": "Auto-Kombo Modul",
+    "statusNormal": "Normální",
+    "statusIncident": "Režim Incidentu",
+    "modePack": "Balíček režimů",
+    "providerScores": "Skóre poskytovatelů",
+    "noAutoCombo": "Není nastaveno žádné automatické kombo.",
+    "excludedProviders": "Vyloučení poskytovatelé",
+    "noExclusions": "V současné době nejsou vyloučeni žádní poskytovatelé.",
+    "factorQuota": "Kvóta",
+    "factorHealth": "Zdraví",
+    "factorCost": "Náklady",
+    "factorLatency": "Latence",
+    "factorTaskFit": "Přizpůsobení úkolu",
+    "factorStability": "Stabilita",
+    "factorTierPriority": "Priorita úrovně",
+    "factorTierPriorityDesc": "Preferuje účty s vyššími kvótami (Ultra/Pro před Free)",
+    "scoreFactorBreakdown": "Faktory bodování",
+    "modePackShipFast": "Rychlá doprava",
+    "modePackCostSaver": "Úspora nákladů",
+    "modePackQualityFirst": "Kvalita na prvním místě",
+    "modePackOfflineFriendly": "Offline přátelské"
+  },
+>>>>>>> Stashed changes
   "templateNames": {
     "simple-chat": "Jednoduchý chat",
     "streaming": "Streamování",
@@ -4263,6 +4499,7 @@
     }
   },
   "cache": {
+<<<<<<< Updated upstream
     "title": "Správa mezipaměti",
     "description": "Sledujte a spravujte sémantickou mezipaměť odpovědí, míru úspěšnosti a úsporu tokenů.",
     "refresh": "Obnovit",
@@ -4607,5 +4844,74 @@
     "noProxyLogs": "No proxy logs yet. Configure proxies and make API calls to see them here.",
     "noMatchingLogs": "No logs match the current filters.",
     "tlsFingerprint": "Chrome 124 TLS Fingerprint"
+=======
+    "title": "Cache Management",
+    "description": "Monitor and manage semantic response cache, hit rates, and token savings.",
+    "refresh": "Refresh",
+    "clearAll": "Clear All",
+    "memoryEntries": "Memory Entries",
+    "dbEntries": "DB Entries",
+    "cacheHits": "Cache Hits",
+    "tokensSaved": "Tokens Saved",
+    "hitRate": "Hit Rate",
+    "performance": "Cache Performance",
+    "behavior": "Cache Behavior",
+    "idempotency": "Idempotency Layer",
+    "clearSuccess": "Cache cleared. {count} expired entries removed.",
+    "clearError": "Failed to clear cache.",
+    "unavailable": "Cache unavailable",
+    "unavailableDesc": "Could not fetch cache statistics. Make sure the server is running.",
+    "memoryEntriesSub": "In-memory LRU",
+    "dbEntriesSub": "Persisted (SQLite)",
+    "cacheHitsSub": "of {total} total",
+    "tokensSavedSub": "Estimated from hits",
+    "autoRefresh": "Auto-refreshes every {seconds}s",
+    "hits": "Hits",
+    "misses": "Misses",
+    "total": "Total",
+    "behaviorDeterministic": "Only non-streaming requests with temperature=0 are cached.",
+    "behaviorBypass": "Bypass with header {header}.",
+    "behaviorTwoTier": "Two-tier storage: in-memory LRU (fast) + SQLite (persistent across restarts).",
+    "behaviorTtl": "Default TTL: 30 minutes. Configure via {envVar}.",
+    "activeDedupKeys": "Active Dedup Keys",
+    "dedupWindow": "Dedup Window",
+    "inputTokens": "Input Tokens",
+    "requestsShort": "reqs",
+    "inputShort": "In",
+    "resetting": "Resetting...",
+    "cachedTokensCol": "Cached",
+    "search": "Search",
+    "cacheReuseRatioDesc": "Cached tokens / Total input tokens",
+    "resetMetrics": "Reset Metrics",
+    "loading": "Loading...",
+    "cachedRequests": "Cached Requests",
+    "model": "Model",
+    "cached": "Cached",
+    "actions": "Actions",
+    "trend24h": "Cache Trend (24h)",
+    "cachedShort": "Cached",
+    "cacheCreation": "Creation",
+    "byProvider": "Breakdown by Provider",
+    "created": "Created",
+    "cacheCreationTokens": "Cache Creation Tokens",
+    "withCacheControl": "With Cache Control",
+    "searchEntries": "Search entries...",
+    "cacheReuseRatio": "Cache Reuse Ratio",
+    "estCostSaved": "Est. Cost Saved",
+    "cachedTokens": "Cached Tokens",
+    "requests": "Requests",
+    "signature": "Signature",
+    "cacheCreationWrite": "Cache Creation (Write)",
+    "expires": "Expires",
+    "writeShort": "Write",
+    "cacheHitRate": "Cache Hit Rate",
+    "cacheMetrics": "Prompt Cache Metrics",
+    "overview": "Overview",
+    "promptCache": "Prompt Cache (Provider-Side)",
+    "provider": "Provider",
+    "cachedTokensRead": "Cached Tokens (Read)",
+    "entries": "Entries",
+    "noEntries": "No cache entries found"
+>>>>>>> Stashed changes
   }
 }

@@ -33,12 +33,18 @@ export default function CacheEntriesTab() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [deleting, setDeleting] = useState<string | null>(null);
+<<<<<<< Updated upstream
   const [error, setError] = useState<string | null>(null);
+=======
+>>>>>>> Stashed changes
 
   const fetchEntries = useCallback(
     async (page = 1) => {
       setLoading(true);
+<<<<<<< Updated upstream
       setError(null);
+=======
+>>>>>>> Stashed changes
       try {
         const params = new URLSearchParams({ page: String(page), limit: String(pagination.limit) });
         if (search) params.set("search", search);
@@ -48,6 +54,7 @@ export default function CacheEntriesTab() {
           const data = await res.json();
           setEntries(data.entries);
           setPagination(data.pagination);
+<<<<<<< Updated upstream
         } else {
           setEntries([]);
           setError(t("entriesLoadError"));
@@ -55,11 +62,20 @@ export default function CacheEntriesTab() {
       } catch {
         setEntries([]);
         setError(t("entriesLoadError"));
+=======
+        }
+      } catch {
+        // ignore
+>>>>>>> Stashed changes
       } finally {
         setLoading(false);
       }
     },
+<<<<<<< Updated upstream
     [pagination.limit, search, t]
+=======
+    [search, pagination.limit]
+>>>>>>> Stashed changes
   );
 
   useEffect(() => {
@@ -100,6 +116,7 @@ export default function CacheEntriesTab() {
 
       {loading ? (
         <div className="text-sm text-text-muted">{t("loading")}</div>
+<<<<<<< Updated upstream
       ) : error ? (
         <div className="flex items-center justify-between gap-3 rounded-xl border border-red-500/20 bg-red-500/5 px-4 py-3">
           <div className="text-sm text-red-300">{error}</div>
@@ -107,6 +124,8 @@ export default function CacheEntriesTab() {
             {t("refresh")}
           </Button>
         </div>
+=======
+>>>>>>> Stashed changes
       ) : entries.length === 0 ? (
         <div className="text-sm text-text-muted text-center py-8">{t("noEntries")}</div>
       ) : (
@@ -133,7 +152,11 @@ export default function CacheEntriesTab() {
                     <td className="py-2 pr-4">{entry.model}</td>
                     <td className="py-2 pr-4 tabular-nums">{entry.hit_count}</td>
                     <td className="py-2 pr-4 tabular-nums text-green-500">
+<<<<<<< Updated upstream
                       {(entry.tokens_saved ?? 0).toLocaleString()}
+=======
+                      {entry.tokens_saved.toLocaleString()}
+>>>>>>> Stashed changes
                     </td>
                     <td className="py-2 pr-4 text-xs text-text-muted">
                       {formatDate(entry.created_at)}

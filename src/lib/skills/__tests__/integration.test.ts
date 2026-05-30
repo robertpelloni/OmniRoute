@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { retrieveMemories } from "../../memory/retrieval";
 import { createMemory } from "../../memory/store";
@@ -19,15 +20,30 @@ describe("Memory + Skills Integration", () => {
     mockedGetSettings.mockResolvedValue({ skillsEnabled: true } as any);
   });
 
+=======
+import { describe, it, expect, beforeEach } from "vitest";
+import { retrieveMemories } from "../../memory/retrieval";
+import { createMemory, deleteMemory } from "../../memory/store";
+import { injectSkills } from "../injection";
+import { skillRegistry } from "../registry";
+import { skillExecutor } from "../executor";
+
+describe("Memory + Skills Integration", () => {
+  const apiKeyId = "test-api-key";
+
+>>>>>>> Stashed changes
   it("should retrieve and inject memories", async () => {
     await createMemory({
       apiKeyId,
       type: "factual" as any,
       key: "test-key",
       content: "Test memory content",
+<<<<<<< Updated upstream
       sessionId: "",
       metadata: {},
       expiresAt: null,
+=======
+>>>>>>> Stashed changes
     });
 
     const config = {
@@ -46,7 +62,11 @@ describe("Memory + Skills Integration", () => {
   });
 
   it("should register and list skills", async () => {
+<<<<<<< Updated upstream
     const _skill = await skillRegistry.register({
+=======
+    const skill = await skillRegistry.register({
+>>>>>>> Stashed changes
       name: "test-skill",
       version: "1.0.0",
       description: "Test skill",
@@ -58,6 +78,7 @@ describe("Memory + Skills Integration", () => {
     const skills = skillRegistry.list(apiKeyId);
     expect(skills.length).toBeGreaterThan(0);
   });
+<<<<<<< Updated upstream
 
   it("blocks execution when skillsEnabled=false", async () => {
     mockedGetSettings.mockResolvedValue({ skillsEnabled: false } as any);
@@ -136,4 +157,6 @@ describe("SkillsMP Marketplace Integration", () => {
     // Cleanup
     await skillRegistry.unregisterById(skill.id);
   });
+=======
+>>>>>>> Stashed changes
 });

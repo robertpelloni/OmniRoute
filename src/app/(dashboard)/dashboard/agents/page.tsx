@@ -5,6 +5,11 @@ import Link from "next/link";
 import { Card, Button, Input } from "@/shared/components";
 import ProviderIcon from "@/shared/components/ProviderIcon";
 import { useTranslations } from "next-intl";
+<<<<<<< Updated upstream
+=======
+import { AI_PROVIDERS } from "@/shared/constants/config";
+import { CLI_COMPAT_PROVIDER_IDS } from "@/shared/constants/cliCompatProviders";
+>>>>>>> Stashed changes
 
 interface AgentInfo {
   id: string;
@@ -41,6 +46,10 @@ const AGENT_ICON_MAP: Record<string, string> = {
   droid: "droid",
   goose: "goose",
   aider: "aider",
+<<<<<<< Updated upstream
+=======
+  iflow: "iflow",
+>>>>>>> Stashed changes
   kiro: "kiro",
   nanobot: "nanobot",
   picoclaw: "picoclaw",
@@ -357,6 +366,8 @@ export default function AgentsPage() {
       )}
 
       {/* Setup Guide */}
+<<<<<<< Updated upstream
+=======
       <Card>
         <div className="flex items-center justify-between gap-3 mb-4">
           <div className="flex items-center gap-3">
@@ -381,6 +392,97 @@ export default function AgentsPage() {
               <p className="text-sm font-medium">{t("setupGuideDetectCliTitle")}</p>
             </div>
             <p className="text-xs text-text-muted">{t("setupGuideDetectCliDesc")}</p>
+          </div>
+          <div className="rounded-lg border border-border/50 bg-black/[0.02] dark:bg-white/[0.02] p-3">
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="material-symbols-outlined text-[16px] text-amber-500">build</span>
+              <p className="text-sm font-medium">{t("setupGuideCustomAgentTitle")}</p>
+            </div>
+            <p className="text-xs text-text-muted">{t("setupGuideCustomAgentDesc")}</p>
+          </div>
+          <div className="rounded-lg border border-border/50 bg-black/[0.02] dark:bg-white/[0.02] p-3">
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="material-symbols-outlined text-[16px] text-emerald-500">
+                terminal
+              </span>
+              <p className="text-sm font-medium">{t("setupGuideCommandMissingTitle")}</p>
+            </div>
+            <p className="text-xs text-text-muted">{t("setupGuideCommandMissingDesc")}</p>
+          </div>
+        </div>
+      </Card>
+
+      {/* CLI Fingerprint Matching */}
+>>>>>>> Stashed changes
+      <Card>
+        <div className="flex items-center justify-between gap-3 mb-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-blue-500/10 text-blue-500">
+              <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
+                support
+              </span>
+            </div>
+            <h3 className="text-lg font-semibold">{t("setupGuideTitle")}</h3>
+          </div>
+          <Link
+            href="/dashboard/cli-tools"
+            className="text-xs px-2.5 py-1.5 rounded-lg border border-border/60 hover:bg-surface/40 transition-colors"
+          >
+            {t("openCliTools")}
+          </Link>
+        </div>
+<<<<<<< Updated upstream
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="rounded-lg border border-border/50 bg-black/[0.02] dark:bg-white/[0.02] p-3">
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="material-symbols-outlined text-[16px] text-blue-500">radar</span>
+              <p className="text-sm font-medium">{t("setupGuideDetectCliTitle")}</p>
+            </div>
+            <p className="text-xs text-text-muted">{t("setupGuideDetectCliDesc")}</p>
+=======
+        <div className="flex flex-col gap-4">
+          <p className="text-sm text-text-muted">{ts("cliFingerprintDesc")}</p>
+          <div className="flex flex-wrap gap-2">
+            {CLI_COMPAT_PROVIDER_IDS.map((providerId) => {
+              const providerMeta = Object.values(AI_PROVIDERS).find(
+                (p: any) => p.id === providerId
+              ) as any;
+              const isEnabled = (settings.cliCompatProviders || []).includes(providerId);
+              const displayName = providerMeta?.name || providerId;
+              const icon = providerMeta?.icon || "terminal";
+              const color = providerMeta?.color || "#888";
+              return (
+                <button
+                  key={providerId}
+                  onClick={() => {
+                    const current: string[] = settings.cliCompatProviders || [];
+                    const updated = current.includes(providerId)
+                      ? current.filter((p) => p !== providerId)
+                      : [...current, providerId];
+                    updateSetting("cliCompatProviders", updated);
+                  }}
+                  className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all border ${
+                    isEnabled
+                      ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400"
+                      : "bg-black/[0.02] dark:bg-white/[0.02] border-transparent text-text-muted hover:bg-black/[0.05] dark:hover:bg-white/[0.05]"
+                  }`}
+                >
+                  <span
+                    className="material-symbols-outlined text-[14px]"
+                    style={{ color: isEnabled ? undefined : color }}
+                  >
+                    {isEnabled ? "fingerprint" : icon}
+                  </span>
+                  {displayName}
+                  {isEnabled && (
+                    <span className="material-symbols-outlined text-[12px] text-emerald-500">
+                      check
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+>>>>>>> Stashed changes
           </div>
           <div className="rounded-lg border border-border/50 bg-black/[0.02] dark:bg-white/[0.02] p-3">
             <div className="flex items-center gap-2 mb-1.5">
@@ -481,6 +583,95 @@ export default function AgentsPage() {
         ))}
       </div>
 
+<<<<<<< Updated upstream
+=======
+      {/* OpenCode Config Generator — shown only when opencode is detected */}
+      {agents.find((a) => a.id === "opencode" && a.installed) && (
+        <Card>
+          <div className="flex items-start gap-3">
+            <div className="p-2 rounded-lg bg-violet-500/10 text-violet-500 shrink-0">
+              <span className="material-symbols-outlined text-[20px]">code_blocks</span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <h3 className="text-base font-semibold">{t("opencodeIntegration")}</h3>
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-medium">
+                  {t("opencodeDetected", {
+                    version: agents.find((a) => a.id === "opencode")?.version || "",
+                  })}
+                </span>
+              </div>
+              <p className="text-sm text-text-muted mb-3">
+                {t("opencodeDesc", {
+                  configFile: "opencode.json",
+                  command: "opencode",
+                })}
+              </p>
+              <Button
+                variant="secondary"
+                loading={opencodeConfigLoading}
+                onClick={async () => {
+                  setOpencodeConfigLoading(true);
+                  setOpencodeConfigDone(false);
+                  try {
+                    // Fetch available models
+                    const modelsRes = await fetch("/v1/models");
+                    const modelsData = modelsRes.ok ? await modelsRes.json() : { data: [] };
+                    const models: Record<string, { name: string }> = {};
+                    for (const m of modelsData.data || []) {
+                      models[m.id] = { name: m.id };
+                    }
+                    // Build opencode.json
+                    const baseURL = window.location.origin + "/v1";
+                    const config = {
+                      $schema: "https://opencode.ai/config.json",
+                      provider: {
+                        omniroute: {
+                          npm: "@ai-sdk/openai-compatible",
+                          name: "OmniRoute",
+                          options: {
+                            baseURL,
+                            apiKey: "YOUR_OMNIROUTE_API_KEY",
+                          },
+                          models:
+                            Object.keys(models).length > 0
+                              ? models
+                              : { "gpt-4o": { name: "gpt-4o" } },
+                        },
+                      },
+                    };
+                    // Download as file
+                    const blob = new Blob([JSON.stringify(config, null, 2)], {
+                      type: "application/json",
+                    });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = "opencode.json";
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    setOpencodeConfigDone(true);
+                    setTimeout(() => setOpencodeConfigDone(false), 3000);
+                  } catch (err) {
+                    console.error("Failed to generate opencode.json:", err);
+                  } finally {
+                    setOpencodeConfigLoading(false);
+                  }
+                }}
+              >
+                <span className="material-symbols-outlined text-[16px] mr-1">
+                  {opencodeConfigDone ? "check" : "download"}
+                </span>
+                {opencodeConfigDone
+                  ? t("downloaded")
+                  : t("downloadConfig", { file: "opencode.json" })}
+              </Button>
+            </div>
+          </div>
+        </Card>
+      )}
+
+>>>>>>> Stashed changes
       {/* Add Custom Agent */}
       <Card>
         <div className="flex items-center justify-between mb-4">

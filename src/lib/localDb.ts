@@ -58,12 +58,15 @@ export {
   getModelPreserveOpenAIDeveloperRole,
   getModelUpstreamExtraHeaders,
   getModelIsHidden,
+<<<<<<< Updated upstream
 
   // Synced Available Models
   getSyncedAvailableModels,
   getAllSyncedAvailableModels,
   replaceSyncedAvailableModelsForConnection,
   deleteSyncedAvailableModelsForConnection,
+=======
+>>>>>>> Stashed changes
 } from "./db/models";
 
 export type { ModelCompatPerProtocol, ModelCompatPatch, SyncedAvailableModel } from "./db/models";
@@ -238,6 +241,7 @@ export {
   resolveComboForModel,
 } from "./db/modelComboMappings";
 
+<<<<<<< Updated upstream
 export {
   // Files
   createFile,
@@ -262,6 +266,8 @@ export {
 export type { FileRecord } from "./db/files";
 export type { BatchRecord } from "./db/batches";
 
+=======
+>>>>>>> Stashed changes
 export type { ModelComboMapping } from "./db/modelComboMappings";
 
 export {
@@ -285,6 +291,7 @@ export {
   cleanupOldSnapshots,
 } from "./db/quotaSnapshots";
 
+<<<<<<< Updated upstream
 export * from "./db/sessionAccountAffinity";
 
 export type { QuotaSnapshotRow, ProviderUtilizationPoint } from "@/shared/types/utilization";
@@ -321,6 +328,11 @@ export {
 } from "./db/upstreamProxy";
 
 export {
+=======
+export type { QuotaSnapshotRow, ProviderUtilizationPoint } from "@/shared/types/utilization";
+
+export {
+>>>>>>> Stashed changes
   getProviderLimitsCache,
   getAllProviderLimitsCache,
   setProviderLimitsCache,
@@ -329,6 +341,7 @@ export {
 } from "./db/providerLimits";
 
 export type { ProviderLimitsCacheEntry } from "./db/providerLimits";
+<<<<<<< Updated upstream
 
 export {
   getPersistedCreditBalance,
@@ -369,3 +382,5 @@ export {
 } from "./db/oneproxy";
 
 export type { OneproxyProxyRecord, OneproxyStats } from "./db/oneproxy";
+=======
+>>>>>>> Stashed changes

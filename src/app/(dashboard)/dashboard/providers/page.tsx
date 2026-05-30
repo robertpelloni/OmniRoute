@@ -1,5 +1,6 @@
 "use client";
 
+<<<<<<< Updated upstream
 import { useState, useEffect, useCallback } from "react";
 import { CardSkeleton, Badge, Button, Input, Toggle } from "@/shared/components";
 import {
@@ -11,6 +12,28 @@ import {
   IMAGE_ONLY_PROVIDER_IDS,
   VIDEO_PROVIDER_IDS,
   isClaudeCodeCompatibleProvider,
+=======
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import ProviderIcon from "@/shared/components/ProviderIcon";
+import PropTypes from "prop-types";
+import {
+  Card,
+  CardSkeleton,
+  Badge,
+  Button,
+  Input,
+  Modal,
+  Select,
+  Toggle,
+} from "@/shared/components";
+import { OAUTH_PROVIDERS, APIKEY_PROVIDERS } from "@/shared/constants/config";
+import {
+  FREE_PROVIDERS,
+  isAnthropicCompatibleProvider,
+  isClaudeCodeCompatibleProvider,
+  isOpenAICompatibleProvider,
+>>>>>>> Stashed changes
 } from "@/shared/constants/providers";
 import { useRouter } from "next/navigation";
 import { getErrorCode, getRelativeTime } from "@/shared/utils";
@@ -29,11 +52,43 @@ import AddCompatibleProviderModal from "./components/AddCompatibleProviderModal"
 import ProviderCard from "./components/ProviderCard";
 import ProviderCountBadge from "./components/ProviderCountBadge";
 
+<<<<<<< Updated upstream
 function countConfigured<T>(entries: ProviderEntry<T>[]) {
   return {
     configured: entries.filter((entry) => Number(entry.stats?.total || 0) > 0).length,
     total: entries.length,
   };
+=======
+const CC_COMPATIBLE_LABEL = "CC Compatible";
+const ADD_CC_COMPATIBLE_LABEL = "Add CC Compatible";
+const CC_COMPATIBLE_DEFAULT_CHAT_PATH = "/v1/messages?beta=true";
+const CC_COMPATIBLE_DEFAULT_MODELS_PATH = "/models";
+
+// Shared helper function to avoid code duplication between ProviderCard and ApiKeyProviderCard
+function getStatusDisplay(connected, error, errorCode, t) {
+  const parts = [];
+  if (connected > 0) {
+    parts.push(
+      <Badge key="connected" variant="success" size="sm" dot>
+        {t("connected", { count: connected })}
+      </Badge>
+    );
+  }
+  if (error > 0) {
+    const errText = errorCode
+      ? t("errorCount", { count: error, code: errorCode })
+      : t("errorCountNoCode", { count: error });
+    parts.push(
+      <Badge key="error" variant="error" size="sm" dot>
+        {errText}
+      </Badge>
+    );
+  }
+  if (parts.length === 0) {
+    return <span className="text-text-muted">{t("noConnections")}</span>;
+  }
+  return parts;
+>>>>>>> Stashed changes
 }
 
 type ProviderBatchTestResult = {
@@ -381,11 +436,16 @@ export default function ProvidersPage() {
     )
     .map((node) => ({
       id: node.id,
+<<<<<<< Updated upstream
       name: node.name || ccCompatibleLabel,
+=======
+      name: node.name || CC_COMPATIBLE_LABEL,
+>>>>>>> Stashed changes
       color: "#B45309",
       textIcon: "CC",
     }));
 
+<<<<<<< Updated upstream
   const oauthProviderEntriesAll = buildMergedOAuthProviderEntries(
     OAUTH_PROVIDERS,
     FREE_PROVIDERS,
@@ -500,6 +560,8 @@ export default function ProvidersPage() {
     searchQuery
   );
 
+=======
+>>>>>>> Stashed changes
   if (loading) {
     return (
       <div className="flex flex-col gap-8">
@@ -511,6 +573,7 @@ export default function ProvidersPage() {
 
   return (
     <div className="flex flex-col gap-6">
+<<<<<<< Updated upstream
       {/* Search Bar */}
       <div className="flex items-center gap-3">
         <div className="relative flex-1">
@@ -536,6 +599,8 @@ export default function ProvidersPage() {
         </div>
       </div>
 
+=======
+>>>>>>> Stashed changes
       {/* Expiration Banner */}
       {expirations?.summary &&
         (expirations.summary.expired > 0 || expirations.summary.expiringSoon > 0) && (
@@ -558,6 +623,7 @@ export default function ProvidersPage() {
                 className={`font-semibold ${expirations.summary.expired > 0 ? "text-red-500" : "text-amber-500"}`}
               >
                 {expirations.summary.expired > 0
+<<<<<<< Updated upstream
                   ? t("expirationBannerExpired", { count: expirations.summary.expired })
                   : t("expirationBannerExpiringSoon", {
                       count: expirations.summary.expiringSoon,
@@ -567,12 +633,25 @@ export default function ProvidersPage() {
                 {expirations.summary.expired > 0
                   ? t("expirationBannerExpiredDesc")
                   : t("expirationBannerExpiringSoonDesc")}
+=======
+                  ? `${expirations.summary.expired} Provider connection(s) expired`
+                  : `${expirations.summary.expiringSoon} Provider connection(s) expiring soon`}
+              </h3>
+              <p className="text-sm mt-1 opacity-80 text-text-main">
+                {expirations.summary.expired > 0
+                  ? "Immediate action required. Expired connections will permanently fail."
+                  : "Please review and renew expiring connections to avoid disruption."}
+>>>>>>> Stashed changes
               </p>
             </div>
           </div>
         )}
 
+<<<<<<< Updated upstream
       {/* OAuth Providers (including providers that expose free tiers via OAuth) */}
+=======
+      {/* OAuth Providers */}
+>>>>>>> Stashed changes
       <div className="flex flex-col gap-4">
         <div className="flex flex-wrap items-center gap-2">
           <h2 className="text-xl font-semibold flex items-center gap-2 flex-1 min-w-0">
@@ -1062,8 +1141,18 @@ export default function ProvidersPage() {
               </button>
             )}
             {ccCompatibleProviderEnabled && (
+<<<<<<< Updated upstream
               <Button size="sm" icon="add" onClick={() => setShowAddCcCompatibleModal(true)}>
                 {addCcCompatibleLabel}
+=======
+              <Button
+                size="sm"
+                variant="secondary"
+                icon="add"
+                onClick={() => setShowAddCcCompatibleModal(true)}
+              >
+                {ADD_CC_COMPATIBLE_LABEL}
+>>>>>>> Stashed changes
               </Button>
             )}
             <Button size="sm" icon="add" onClick={() => setShowAddAnthropicCompatibleModal(true)}>
@@ -1086,6 +1175,7 @@ export default function ProvidersPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+<<<<<<< Updated upstream
             {compatibleProviderEntries.map(
               ({ providerId, provider, stats, displayAuthType, toggleAuthType }) => (
                 <ProviderCard
@@ -1098,6 +1188,22 @@ export default function ProvidersPage() {
                 />
               )
             )}
+=======
+            {[
+              ...compatibleProviders,
+              ...anthropicCompatibleProviders,
+              ...ccCompatibleProviders,
+            ].map((info) => (
+              <ApiKeyProviderCard
+                key={info.id}
+                providerId={info.id}
+                provider={info}
+                stats={getProviderStats(info.id, "apikey")}
+                authType="compatible"
+                onToggle={(active) => handleToggleProvider(info.id, "apikey", active)}
+              />
+            ))}
+>>>>>>> Stashed changes
           </div>
         )}
       </div>
@@ -1122,15 +1228,23 @@ export default function ProvidersPage() {
         }}
       />
       {ccCompatibleProviderEnabled && (
+<<<<<<< Updated upstream
         <AddCompatibleProviderModal
           isOpen={showAddCcCompatibleModal}
           mode="cc"
           title={addCcCompatibleLabel}
+=======
+        <AddCcCompatibleModal
+          isOpen={showAddCcCompatibleModal}
+>>>>>>> Stashed changes
           onClose={() => setShowAddCcCompatibleModal(false)}
           onCreated={(node) => {
             setProviderNodes((prev) => [...prev, node]);
             setShowAddCcCompatibleModal(false);
+<<<<<<< Updated upstream
             router.push(`/dashboard/providers/${node.id}`);
+=======
+>>>>>>> Stashed changes
           }}
         />
       )}
@@ -1165,6 +1279,867 @@ export default function ProvidersPage() {
   );
 }
 
+<<<<<<< Updated upstream
+=======
+function ProviderCard({ providerId, provider, stats, authType, onToggle }) {
+  const t = useTranslations("providers");
+  const tc = useTranslations("common");
+  const { connected, error, errorCode, errorTime, allDisabled } = stats;
+
+  // (#529) Icon state replaced by ProviderIcon component (Lobehub + PNG + generic fallback)
+
+  const dotColors = {
+    free: "bg-green-500",
+    oauth: "bg-blue-500",
+    apikey: "bg-amber-500",
+    compatible: "bg-orange-500",
+  };
+  const dotLabels = {
+    free: tc("free"),
+    oauth: t("oauthLabel"),
+    apikey: t("apiKeyLabel"),
+    compatible: t("compatibleLabel"),
+  };
+
+  return (
+    <Link href={`/dashboard/providers/${providerId}`} className="group">
+      <Card
+        padding="xs"
+        className={`h-full hover:bg-black/[0.01] dark:hover:bg-white/[0.01] transition-colors cursor-pointer ${allDisabled ? "opacity-50" : ""}`}
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div
+              className="size-8 rounded-lg flex items-center justify-center"
+              style={{ backgroundColor: `${provider.color}15` }}
+            >
+              {/* (#529) ProviderIcon: Lobehub icons → PNG fallback → generic icon */}
+              <ProviderIcon providerId={provider.id} size={28} type="color" />
+            </div>
+            <div>
+              <h3 className="font-semibold flex items-center gap-1.5">
+                {provider.name}
+                <span
+                  className={`size-2 rounded-full ${dotColors[authType] || dotColors.oauth} shrink-0`}
+                  title={dotLabels[authType] || t("oauthLabel")}
+                />
+              </h3>
+              <div className="flex items-center gap-2 text-xs flex-wrap">
+                {allDisabled ? (
+                  <Badge variant="default" size="sm">
+                    <span className="flex items-center gap-1">
+                      <span className="material-symbols-outlined text-[12px]">pause_circle</span>
+                      {t("disabled")}
+                    </span>
+                  </Badge>
+                ) : (
+                  <>
+                    {getStatusDisplay(connected, error, errorCode, t)}
+                    {stats.expiryStatus === "expired" && (
+                      <Badge variant="error" size="sm" dot>
+                        Expired
+                      </Badge>
+                    )}
+                    {stats.expiryStatus === "expiring_soon" && (
+                      <Badge variant="warning" size="sm" dot>
+                        Expiring Soon
+                      </Badge>
+                    )}
+                    {errorTime && <span className="text-text-muted">• {errorTime}</span>}
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            {stats.total > 0 && (
+              <div
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onToggle(!allDisabled ? false : true);
+                }}
+                className=""
+              >
+                <Toggle
+                  size="sm"
+                  checked={!allDisabled}
+                  onChange={() => {}}
+                  title={allDisabled ? t("enableProvider") : t("disableProvider")}
+                />
+              </div>
+            )}
+            <span className="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-opacity">
+              chevron_right
+            </span>
+          </div>
+        </div>
+      </Card>
+    </Link>
+  );
+}
+
+ProviderCard.propTypes = {
+  providerId: PropTypes.string.isRequired,
+  provider: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    color: PropTypes.string,
+    textIcon: PropTypes.string,
+  }).isRequired,
+  stats: PropTypes.shape({
+    connected: PropTypes.number,
+    error: PropTypes.number,
+    errorCode: PropTypes.string,
+    errorTime: PropTypes.string,
+  }).isRequired,
+  authType: PropTypes.string,
+};
+
+// API Key providers - use image with textIcon fallback (same as OAuth providers)
+function ApiKeyProviderCard({ providerId, provider, stats, authType, onToggle }) {
+  const t = useTranslations("providers");
+  const tc = useTranslations("common");
+  const { connected, error, errorCode, errorTime, allDisabled } = stats;
+  const isCompatible = isOpenAICompatibleProvider(providerId);
+  const isCcCompatible = isClaudeCodeCompatibleProvider(providerId);
+  const isAnthropicCompatible =
+    isAnthropicCompatibleProvider(providerId) && !isClaudeCodeCompatibleProvider(providerId);
+
+  const dotColors = {
+    free: "bg-green-500",
+    oauth: "bg-blue-500",
+    apikey: "bg-amber-500",
+    compatible: "bg-orange-500",
+  };
+  const dotLabels = {
+    free: tc("free"),
+    oauth: t("oauthLabel"),
+    apikey: t("apiKeyLabel"),
+    compatible: t("compatibleLabel"),
+  };
+
+  // (#529) Icon state replaced by ProviderIcon component
+  // For compatible/anthropic providers, continue using static PNGs via the icon path
+  const staticIconPath = (() => {
+    if (isCompatible) {
+      return provider.apiType === "responses" ? "/providers/oai-r.png" : "/providers/oai-cc.png";
+    }
+    if (isAnthropicCompatible || isCcCompatible) return "/providers/anthropic-m.png";
+    return null; // ProviderIcon will handle it
+  })();
+
+  return (
+    <Link href={`/dashboard/providers/${providerId}`} className="group">
+      <Card
+        padding="xs"
+        className={`h-full hover:bg-black/[0.01] dark:hover:bg-white/[0.01] transition-colors cursor-pointer ${allDisabled ? "opacity-50" : ""}`}
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div
+              className="size-8 rounded-lg flex items-center justify-center"
+              style={{ backgroundColor: `${provider.color}15` }}
+            >
+              {/* (#529) ProviderIcon with static override for compatible providers */}
+              {staticIconPath ? (
+                <Image
+                  src={staticIconPath}
+                  alt={provider.name}
+                  width={30}
+                  height={30}
+                  className="object-contain rounded-lg max-w-[30px] max-h-[30px]"
+                  sizes="30px"
+                />
+              ) : (
+                <ProviderIcon providerId={provider.id} size={28} type="color" />
+              )}
+            </div>
+            <div>
+              <h3 className="font-semibold flex items-center gap-1.5">
+                {provider.name}
+                <span
+                  className={`size-2 rounded-full ${dotColors[authType] || dotColors.apikey} shrink-0`}
+                  title={dotLabels[authType] || t("apiKeyLabel")}
+                />
+              </h3>
+              <div className="flex items-center gap-2 text-xs flex-wrap">
+                {allDisabled ? (
+                  <Badge variant="default" size="sm">
+                    <span className="flex items-center gap-1">
+                      <span className="material-symbols-outlined text-[12px]">pause_circle</span>
+                      {t("disabled")}
+                    </span>
+                  </Badge>
+                ) : (
+                  <>
+                    {getStatusDisplay(connected, error, errorCode, t)}
+                    {stats.expiryStatus === "expired" && (
+                      <Badge variant="error" size="sm" dot>
+                        Expired
+                      </Badge>
+                    )}
+                    {stats.expiryStatus === "expiring_soon" && (
+                      <Badge variant="warning" size="sm" dot>
+                        Expiring Soon
+                      </Badge>
+                    )}
+                    {isCompatible && (
+                      <Badge variant="default" size="sm">
+                        {provider.apiType === "responses" ? t("responses") : t("chat")}
+                      </Badge>
+                    )}
+                    {isCcCompatible && (
+                      <Badge variant="default" size="sm">
+                        CC
+                      </Badge>
+                    )}
+                    {isAnthropicCompatible && (
+                      <Badge variant="default" size="sm">
+                        {t("messages")}
+                      </Badge>
+                    )}
+                    {errorTime && <span className="text-text-muted">• {errorTime}</span>}
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            {stats.total > 0 && (
+              <div
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onToggle(!allDisabled ? false : true);
+                }}
+                className=""
+              >
+                <Toggle
+                  size="sm"
+                  checked={!allDisabled}
+                  onChange={() => {}}
+                  title={allDisabled ? t("enableProvider") : t("disableProvider")}
+                />
+              </div>
+            )}
+            <span className="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-opacity">
+              chevron_right
+            </span>
+          </div>
+        </div>
+      </Card>
+    </Link>
+  );
+}
+
+ApiKeyProviderCard.propTypes = {
+  providerId: PropTypes.string.isRequired,
+  provider: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    color: PropTypes.string,
+    textIcon: PropTypes.string,
+    apiType: PropTypes.string,
+  }).isRequired,
+  stats: PropTypes.shape({
+    connected: PropTypes.number,
+    error: PropTypes.number,
+    errorCode: PropTypes.string,
+    errorTime: PropTypes.string,
+  }).isRequired,
+  authType: PropTypes.string,
+};
+
+function AddOpenAICompatibleModal({ isOpen, onClose, onCreated }) {
+  const t = useTranslations("providers");
+  const [formData, setFormData] = useState({
+    name: "",
+    prefix: "",
+    apiType: "chat",
+    baseUrl: "https://api.openai.com/v1",
+    chatPath: "",
+    modelsPath: "",
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [checkKey, setCheckKey] = useState("");
+  const [validating, setValidating] = useState(false);
+  const [validationResult, setValidationResult] = useState<"success" | "failed" | null>(null);
+  const [showAdvanced, setShowAdvanced] = useState(false);
+
+  const apiTypeOptions = [
+    { value: "chat", label: t("chatCompletions") },
+    { value: "responses", label: t("responsesApi") },
+  ];
+
+  useEffect(() => {
+    const defaultBaseUrl = "https://api.openai.com/v1";
+    setFormData((prev) => ({
+      ...prev,
+      baseUrl: defaultBaseUrl,
+    }));
+  }, [formData.apiType]);
+
+  const handleSubmit = async () => {
+    if (!formData.name.trim() || !formData.prefix.trim() || !formData.baseUrl.trim()) return;
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/provider-nodes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          prefix: formData.prefix,
+          apiType: formData.apiType,
+          baseUrl: formData.baseUrl,
+          type: "openai-compatible",
+          chatPath: formData.chatPath || "",
+          modelsPath: formData.modelsPath || "",
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        onCreated(data.node);
+        setFormData({
+          name: "",
+          prefix: "",
+          apiType: "chat",
+          baseUrl: "https://api.openai.com/v1",
+          chatPath: "",
+          modelsPath: "",
+        });
+        setCheckKey("");
+        setValidationResult(null);
+        setShowAdvanced(false);
+      }
+    } catch (error) {
+      console.log("Error creating OpenAI Compatible node:", error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleValidate = async () => {
+    setValidating(true);
+    try {
+      const res = await fetch("/api/provider-nodes/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          baseUrl: formData.baseUrl,
+          apiKey: checkKey,
+          type: "openai-compatible",
+          modelsPath: formData.modelsPath || "",
+        }),
+      });
+      const data = await res.json();
+      setValidationResult(data.valid ? "success" : "failed");
+    } catch {
+      setValidationResult("failed");
+    } finally {
+      setValidating(false);
+    }
+  };
+
+  return (
+    <Modal isOpen={isOpen} title={t("addOpenAICompatible")} onClose={onClose}>
+      <div className="flex flex-col gap-4">
+        <Input
+          label={t("nameLabel")}
+          value={formData.name}
+          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          placeholder={t("compatibleProdPlaceholder", { type: t("openai") })}
+          hint={t("nameHint")}
+        />
+        <Input
+          label={t("prefixLabel")}
+          value={formData.prefix}
+          onChange={(e) => setFormData({ ...formData, prefix: e.target.value })}
+          placeholder={t("openaiPrefixPlaceholder")}
+          hint={t("prefixHint")}
+        />
+        <Select
+          label={t("apiTypeLabel")}
+          options={apiTypeOptions}
+          value={formData.apiType}
+          onChange={(e) => setFormData({ ...formData, apiType: e.target.value })}
+        />
+        <Input
+          label={t("baseUrlLabel")}
+          value={formData.baseUrl}
+          onChange={(e) => setFormData({ ...formData, baseUrl: e.target.value })}
+          placeholder={t("openaiBaseUrlPlaceholder")}
+          hint={t("compatibleBaseUrlHint", { type: t("openai") })}
+        />
+        <button
+          type="button"
+          className="text-sm text-text-muted hover:text-text-primary flex items-center gap-1"
+          onClick={() => setShowAdvanced(!showAdvanced)}
+          aria-expanded={showAdvanced}
+          aria-controls="advanced-settings"
+        >
+          <span
+            className={`transition-transform ${showAdvanced ? "rotate-90" : ""}`}
+            aria-hidden="true"
+          >
+            ▶
+          </span>
+          {t("advancedSettings")}
+        </button>
+        {showAdvanced && (
+          <div id="advanced-settings" className="flex flex-col gap-3 pl-2 border-l-2 border-border">
+            <Input
+              label={t("chatPathLabel")}
+              value={formData.chatPath}
+              onChange={(e) => setFormData({ ...formData, chatPath: e.target.value })}
+              placeholder={t("chatPathPlaceholder")}
+              hint={t("chatPathHint")}
+            />
+            <Input
+              label={t("modelsPathLabel")}
+              value={formData.modelsPath}
+              onChange={(e) => setFormData({ ...formData, modelsPath: e.target.value })}
+              placeholder={t("modelsPathPlaceholder")}
+              hint={t("modelsPathHint")}
+            />
+          </div>
+        )}
+        <div className="flex gap-2">
+          <Input
+            label={t("apiKeyForCheck")}
+            type="password"
+            value={checkKey}
+            onChange={(e) => setCheckKey(e.target.value)}
+            className="flex-1"
+          />
+          <div className="pt-6">
+            <Button
+              onClick={handleValidate}
+              disabled={!checkKey || validating || !formData.baseUrl.trim()}
+              variant="secondary"
+            >
+              {validating ? t("checking") : t("check")}
+            </Button>
+          </div>
+        </div>
+        {validationResult && (
+          <Badge variant={validationResult === "success" ? "success" : "error"}>
+            {validationResult === "success" ? t("valid") : t("invalid")}
+          </Badge>
+        )}
+        <div className="flex gap-2">
+          <Button
+            onClick={handleSubmit}
+            fullWidth
+            disabled={
+              !formData.name.trim() ||
+              !formData.prefix.trim() ||
+              !formData.baseUrl.trim() ||
+              submitting
+            }
+          >
+            {submitting ? t("creating") : t("add")}
+          </Button>
+          <Button onClick={onClose} variant="ghost" fullWidth>
+            {t("cancel")}
+          </Button>
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
+AddOpenAICompatibleModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onCreated: PropTypes.func.isRequired,
+};
+
+function AddAnthropicCompatibleModal({ isOpen, onClose, onCreated }) {
+  const t = useTranslations("providers");
+  const [formData, setFormData] = useState({
+    name: "",
+    prefix: "",
+    baseUrl: "https://api.anthropic.com/v1",
+    chatPath: "",
+    modelsPath: "",
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [checkKey, setCheckKey] = useState("");
+  const [validating, setValidating] = useState(false);
+  const [validationResult, setValidationResult] = useState<"success" | "failed" | null>(null);
+  const [showAdvanced, setShowAdvanced] = useState(false);
+
+  useEffect(() => {
+    // Reset validation when modal opens
+    if (isOpen) {
+      setValidationResult(null);
+      setCheckKey("");
+    }
+  }, [isOpen]);
+
+  const handleSubmit = async () => {
+    if (!formData.name.trim() || !formData.prefix.trim() || !formData.baseUrl.trim()) return;
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/provider-nodes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          prefix: formData.prefix,
+          baseUrl: formData.baseUrl,
+          type: "anthropic-compatible",
+          chatPath: formData.chatPath || "",
+          modelsPath: formData.modelsPath || "",
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        onCreated(data.node);
+        setFormData({
+          name: "",
+          prefix: "",
+          baseUrl: "https://api.anthropic.com/v1",
+          chatPath: "",
+          modelsPath: "",
+        });
+        setCheckKey("");
+        setValidationResult(null);
+        setShowAdvanced(false);
+      }
+    } catch (error) {
+      console.log("Error creating Anthropic Compatible node:", error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleValidate = async () => {
+    setValidating(true);
+    try {
+      const res = await fetch("/api/provider-nodes/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          baseUrl: formData.baseUrl,
+          apiKey: checkKey,
+          type: "anthropic-compatible",
+          modelsPath: formData.modelsPath || "",
+        }),
+      });
+      const data = await res.json();
+      setValidationResult(data.valid ? "success" : "failed");
+    } catch {
+      setValidationResult("failed");
+    } finally {
+      setValidating(false);
+    }
+  };
+
+  return (
+    <Modal isOpen={isOpen} title={t("addAnthropicCompatible")} onClose={onClose}>
+      <div className="flex flex-col gap-4">
+        <Input
+          label={t("nameLabel")}
+          value={formData.name}
+          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          placeholder={t("compatibleProdPlaceholder", { type: t("anthropic") })}
+          hint={t("nameHint")}
+        />
+        <Input
+          label={t("prefixLabel")}
+          value={formData.prefix}
+          onChange={(e) => setFormData({ ...formData, prefix: e.target.value })}
+          placeholder={t("anthropicPrefixPlaceholder")}
+          hint={t("prefixHint")}
+        />
+        <Input
+          label={t("baseUrlLabel")}
+          value={formData.baseUrl}
+          onChange={(e) => setFormData({ ...formData, baseUrl: e.target.value })}
+          placeholder={t("anthropicBaseUrlPlaceholder")}
+          hint={t("compatibleBaseUrlHint", { type: t("anthropic") })}
+        />
+        <button
+          type="button"
+          className="text-sm text-text-muted hover:text-text-primary flex items-center gap-1"
+          onClick={() => setShowAdvanced(!showAdvanced)}
+          aria-expanded={showAdvanced}
+          aria-controls="advanced-settings"
+        >
+          <span
+            className={`transition-transform ${showAdvanced ? "rotate-90" : ""}`}
+            aria-hidden="true"
+          >
+            ▶
+          </span>
+          {t("advancedSettings")}
+        </button>
+        {showAdvanced && (
+          <div id="advanced-settings" className="flex flex-col gap-3 pl-2 border-l-2 border-border">
+            <Input
+              label={t("chatPathLabel")}
+              value={formData.chatPath}
+              onChange={(e) => setFormData({ ...formData, chatPath: e.target.value })}
+              placeholder="/messages"
+              hint={t("chatPathHint")}
+            />
+            <Input
+              label={t("modelsPathLabel")}
+              value={formData.modelsPath}
+              onChange={(e) => setFormData({ ...formData, modelsPath: e.target.value })}
+              placeholder={t("modelsPathPlaceholder")}
+              hint={t("modelsPathHint")}
+            />
+          </div>
+        )}
+        <div className="flex gap-2">
+          <Input
+            label={t("apiKeyForCheck")}
+            type="password"
+            value={checkKey}
+            onChange={(e) => setCheckKey(e.target.value)}
+            className="flex-1"
+          />
+          <div className="pt-6">
+            <Button
+              onClick={handleValidate}
+              disabled={!checkKey || validating || !formData.baseUrl.trim()}
+              variant="secondary"
+            >
+              {validating ? t("checking") : t("check")}
+            </Button>
+          </div>
+        </div>
+        {validationResult && (
+          <Badge variant={validationResult === "success" ? "success" : "error"}>
+            {validationResult === "success" ? t("valid") : t("invalid")}
+          </Badge>
+        )}
+        <div className="flex gap-2">
+          <Button
+            onClick={handleSubmit}
+            fullWidth
+            disabled={
+              !formData.name.trim() ||
+              !formData.prefix.trim() ||
+              !formData.baseUrl.trim() ||
+              submitting
+            }
+          >
+            {submitting ? t("creating") : t("add")}
+          </Button>
+          <Button onClick={onClose} variant="ghost" fullWidth>
+            {t("cancel")}
+          </Button>
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
+AddAnthropicCompatibleModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onCreated: PropTypes.func.isRequired,
+};
+
+function AddCcCompatibleModal({ isOpen, onClose, onCreated }) {
+  const [formData, setFormData] = useState({
+    name: "",
+    prefix: "",
+    baseUrl: "https://api.anthropic.com",
+    chatPath: CC_COMPATIBLE_DEFAULT_CHAT_PATH,
+    modelsPath: CC_COMPATIBLE_DEFAULT_MODELS_PATH,
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [checkKey, setCheckKey] = useState("");
+  const [validating, setValidating] = useState(false);
+  const [validationResult, setValidationResult] = useState<"success" | "failed" | null>(null);
+  const [showAdvanced, setShowAdvanced] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setValidationResult(null);
+      setCheckKey("");
+    }
+  }, [isOpen]);
+
+  const handleSubmit = async () => {
+    if (!formData.name.trim() || !formData.prefix.trim() || !formData.baseUrl.trim()) return;
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/provider-nodes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          prefix: formData.prefix,
+          baseUrl: formData.baseUrl,
+          type: "anthropic-compatible",
+          compatMode: "cc",
+          chatPath: formData.chatPath || CC_COMPATIBLE_DEFAULT_CHAT_PATH,
+          modelsPath: formData.modelsPath || CC_COMPATIBLE_DEFAULT_MODELS_PATH,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        onCreated(data.node);
+        setFormData({
+          name: "",
+          prefix: "",
+          baseUrl: "https://api.anthropic.com",
+          chatPath: CC_COMPATIBLE_DEFAULT_CHAT_PATH,
+          modelsPath: CC_COMPATIBLE_DEFAULT_MODELS_PATH,
+        });
+        setCheckKey("");
+        setValidationResult(null);
+        setShowAdvanced(false);
+      }
+    } catch (error) {
+      console.log("Error creating CC Compatible node:", error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleValidate = async () => {
+    setValidating(true);
+    try {
+      const res = await fetch("/api/provider-nodes/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          baseUrl: formData.baseUrl,
+          apiKey: checkKey,
+          type: "anthropic-compatible",
+          compatMode: "cc",
+          chatPath: formData.chatPath || CC_COMPATIBLE_DEFAULT_CHAT_PATH,
+          modelsPath: formData.modelsPath || CC_COMPATIBLE_DEFAULT_MODELS_PATH,
+        }),
+      });
+      const data = await res.json();
+      setValidationResult(data.valid ? "success" : "failed");
+    } catch {
+      setValidationResult("failed");
+    } finally {
+      setValidating(false);
+    }
+  };
+
+  return (
+    <Modal isOpen={isOpen} title={ADD_CC_COMPATIBLE_LABEL} onClose={onClose}>
+      <div className="flex flex-col gap-4">
+        <Input
+          label="Name"
+          value={formData.name}
+          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          placeholder="CC Compatible Production"
+          hint="Display name for this Claude Code-compatible provider"
+        />
+        <Input
+          label="Prefix"
+          value={formData.prefix}
+          onChange={(e) => setFormData({ ...formData, prefix: e.target.value })}
+          placeholder="cc"
+          hint="Used for model aliases such as prefix/model-id"
+        />
+        <Input
+          label="Base URL"
+          value={formData.baseUrl}
+          onChange={(e) => setFormData({ ...formData, baseUrl: e.target.value })}
+          placeholder="https://example.com/v1"
+          hint="Base URL for the CC-compatible site. Do not include /messages."
+        />
+        <button
+          type="button"
+          className="text-sm text-text-muted hover:text-text-primary flex items-center gap-1"
+          onClick={() => setShowAdvanced(!showAdvanced)}
+          aria-expanded={showAdvanced}
+          aria-controls="advanced-settings-cc"
+        >
+          <span
+            className={`transition-transform ${showAdvanced ? "rotate-90" : ""}`}
+            aria-hidden="true"
+          >
+            ▶
+          </span>
+          Advanced settings
+        </button>
+        {showAdvanced && (
+          <div
+            id="advanced-settings-cc"
+            className="flex flex-col gap-3 pl-2 border-l-2 border-border"
+          >
+            <Input
+              label="Chat Path"
+              value={formData.chatPath}
+              onChange={(e) => setFormData({ ...formData, chatPath: e.target.value })}
+              placeholder={CC_COMPATIBLE_DEFAULT_CHAT_PATH}
+              hint="Defaults to the strict Claude Code-compatible messages path"
+            />
+            <Input
+              label="Models Path"
+              value={formData.modelsPath}
+              onChange={(e) => setFormData({ ...formData, modelsPath: e.target.value })}
+              placeholder={CC_COMPATIBLE_DEFAULT_MODELS_PATH}
+              hint="Defaults to /models"
+            />
+          </div>
+        )}
+        <div className="flex gap-2">
+          <Input
+            label="API Key for Check"
+            type="password"
+            value={checkKey}
+            onChange={(e) => setCheckKey(e.target.value)}
+            className="flex-1"
+          />
+          <div className="pt-6">
+            <Button
+              onClick={handleValidate}
+              disabled={!checkKey || validating || !formData.baseUrl.trim()}
+              variant="secondary"
+            >
+              {validating ? "Checking..." : "Check"}
+            </Button>
+          </div>
+        </div>
+        {validationResult && (
+          <Badge variant={validationResult === "success" ? "success" : "error"}>
+            {validationResult === "success" ? "Valid" : "Invalid"}
+          </Badge>
+        )}
+        <div className="flex gap-2">
+          <Button
+            onClick={handleSubmit}
+            fullWidth
+            disabled={
+              !formData.name.trim() ||
+              !formData.prefix.trim() ||
+              !formData.baseUrl.trim() ||
+              submitting
+            }
+          >
+            {submitting ? "Creating..." : "Add"}
+          </Button>
+          <Button onClick={onClose} variant="ghost" fullWidth>
+            Cancel
+          </Button>
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
+AddCcCompatibleModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onCreated: PropTypes.func.isRequired,
+};
+
+>>>>>>> Stashed changes
 // ─── Provider Test Results View (mirrors combo TestResultsView) ──────────────
 
 function ProviderTestResultsView({ results }: { results: ProviderBatchTestResults }) {

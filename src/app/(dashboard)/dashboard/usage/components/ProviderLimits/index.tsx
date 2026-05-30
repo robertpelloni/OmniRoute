@@ -262,7 +262,11 @@ export default function ProviderLimits() {
       refreshingAllRef.current = false;
       setRefreshingAll(false);
     }
+<<<<<<< Updated upstream
   }, [applyCachedQuotaState, fetchConnections]);
+=======
+  }, [refreshingAll, applyCachedQuotaState, fetchConnections]);
+>>>>>>> Stashed changes
 
   useEffect(() => {
     const init = async () => {
@@ -298,11 +302,15 @@ export default function ProviderLimits() {
       claude: 5,
       kiro: 6,
       glm: 7,
+<<<<<<< Updated upstream
       glmt: 8,
       "kimi-coding": 9,
       minimax: 10,
       "minimax-cn": 11,
       nanogpt: 12,
+=======
+      "kimi-coding": 8,
+>>>>>>> Stashed changes
     };
     return [...filteredConnections].sort(
       (a, b) => (priority[a.provider] || 9) - (priority[b.provider] || 9)
@@ -562,11 +570,15 @@ export default function ProviderLimits() {
                   </div>
                   <div className="min-w-0">
                     <div className="text-[13px] font-semibold text-text-main truncate">
+<<<<<<< Updated upstream
                       {pickDisplayValue(
                         [conn.name, conn.displayName, conn.email],
                         emailsVisible,
                         config.label
                       )}
+=======
+                      {conn.name || conn.displayName || conn.email || config.label}
+>>>>>>> Stashed changes
                     </div>
                     <div className="flex items-center gap-1.5 mt-1 min-h-5">
                       <span
@@ -613,10 +625,16 @@ export default function ProviderLimits() {
                     <div className="text-xs text-text-muted italic">{quota.message}</div>
                   ) : quota?.quotas?.length > 0 ? (
                     quota.quotas.map((q, i) => {
+<<<<<<< Updated upstream
                       const remainingPercentageRaw = q.unlimited
                         ? 100
                         : (q.remainingPercentage ?? calculatePercentage(q.used, q.total));
                       const remainingPercentage = Math.round(remainingPercentageRaw);
+=======
+                      const remainingPercentage = q.unlimited
+                        ? 100
+                        : (q.remainingPercentage ?? calculatePercentage(q.used, q.total));
+>>>>>>> Stashed changes
                       const colors = getBarColor(remainingPercentage);
                       const cd = formatCountdown(q.resetAt);
                       const shortName = formatQuotaLabel(q.name);
@@ -625,6 +643,7 @@ export default function ProviderLimits() {
                       return (
                         <div
                           key={i}
+<<<<<<< Updated upstream
                           className={`flex items-center gap-1.5 shrink-0 ${
                             i > 0 ? "border-l border-border/80 pl-3 ml-1" : ""
                           }`}
@@ -689,6 +708,50 @@ export default function ProviderLimits() {
                               </span>
                             </>
                           )}
+=======
+                          className={`flex items-center gap-1.5 min-w-[200px] shrink-0 ${
+                            i > 0 ? "border-l border-border/80 pl-3 ml-1" : ""
+                          }`}
+                        >
+                          {/* Model label */}
+                          <span
+                            title={q.modelKey || q.name}
+                            className="text-[11px] font-semibold py-0.5 px-2 rounded whitespace-nowrap min-w-[60px] text-center"
+                            style={{ background: colors.bg, color: colors.text }}
+                          >
+                            {shortName}
+                          </span>
+
+                          {/* Countdown */}
+                          {staleAfterReset ? (
+                            <span className="text-[10px] text-text-muted whitespace-nowrap">
+                              ⟳ Refreshing...
+                            </span>
+                          ) : cd ? (
+                            <span className="text-[10px] text-text-muted whitespace-nowrap">
+                              ⏱ {cd}
+                            </span>
+                          ) : null}
+
+                          {/* Progress bar */}
+                          <div className="flex-1 h-1.5 rounded-sm bg-black/[0.06] dark:bg-white/[0.06] min-w-[60px] overflow-hidden">
+                            <div
+                              className="h-full rounded-sm transition-[width] duration-300 ease-out"
+                              style={{
+                                width: `${Math.min(remainingPercentage, 100)}%`,
+                                background: colors.bar,
+                              }}
+                            />
+                          </div>
+
+                          {/* Percentage */}
+                          <span
+                            className="text-[11px] font-semibold min-w-[32px] text-right"
+                            style={{ color: colors.text }}
+                          >
+                            {remainingPercentage}%
+                          </span>
+>>>>>>> Stashed changes
                         </div>
                       );
                     })

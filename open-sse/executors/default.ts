@@ -7,6 +7,7 @@ import {
   CLAUDE_CODE_COMPATIBLE_DEFAULT_CHAT_PATH,
   joinClaudeCodeCompatibleUrl,
 } from "../services/claudeCodeCompatible.ts";
+<<<<<<< Updated upstream
 import { getGigachatAccessToken } from "../services/gigachatAuth.ts";
 import { getRegistryEntry } from "../config/providerRegistry.ts";
 import { applyProviderRequestDefaults } from "../services/providerRequestDefaults.ts";
@@ -94,6 +95,9 @@ function normalizeOpenAIChatUrl(baseUrl) {
   }
   return normalized.endsWith("/v1") ? `${normalized}/chat/completions` : normalized;
 }
+=======
+import { isClaudeCodeCompatible } from "../services/provider.ts";
+>>>>>>> Stashed changes
 
 export class DefaultExecutor extends BaseExecutor {
   constructor(provider) {
@@ -217,17 +221,23 @@ export class DefaultExecutor extends BaseExecutor {
         const resourceUrl = credentials?.providerSpecificData?.resourceUrl;
         return `https://${resourceUrl || "portal.qwen.ai"}/v1/chat/completions`;
       }
+<<<<<<< Updated upstream
       default: {
         const url = this.config.baseUrl;
         const entry = getRegistryEntry(this.provider);
         return entry?.urlSuffix ? `${url}${entry.urlSuffix}` : url;
       }
+=======
+      default:
+        return this.config.baseUrl;
+>>>>>>> Stashed changes
     }
   }
 
   buildHeaders(credentials, stream = true) {
     const headers = { "Content-Type": "application/json", ...this.config.headers };
 
+<<<<<<< Updated upstream
     // Allow per-provider User-Agent override via environment variable.
     const providerId = this.config?.id || this.provider;
     if (providerId) {
@@ -241,6 +251,8 @@ export class DefaultExecutor extends BaseExecutor {
       }
     }
 
+=======
+>>>>>>> Stashed changes
     // T07: resolve extra keys round-robin locally since DefaultExecutor overrides BaseExecutor buildHeaders
     const extraKeys =
       (credentials.providerSpecificData?.extraApiKeys as string[] | undefined) ?? [];
@@ -319,7 +331,10 @@ export class DefaultExecutor extends BaseExecutor {
         break;
       }
       case "claude":
+<<<<<<< Updated upstream
       case "anthropic":
+=======
+>>>>>>> Stashed changes
         effectiveKey
           ? (headers["x-api-key"] = effectiveKey)
           : (headers["Authorization"] = `Bearer ${credentials.accessToken}`);
@@ -329,8 +344,13 @@ export class DefaultExecutor extends BaseExecutor {
       case "kimi-coding":
       case "bailian-coding-plan":
       case "kimi-coding-apikey":
+<<<<<<< Updated upstream
       case "zai":
       case "glm-coding-apikey":
+=======
+      case "minimax":
+      case "minimax-cn":
+>>>>>>> Stashed changes
         headers["x-api-key"] = effectiveKey || credentials.accessToken;
         break;
       default:
@@ -351,6 +371,7 @@ export class DefaultExecutor extends BaseExecutor {
             headers["anthropic-version"] = "2023-06-01";
           }
         } else {
+<<<<<<< Updated upstream
           // Use registry authHeader if available, otherwise default to bearer
           const entry = getRegistryEntry(this.provider);
           const authHeader = entry?.authHeader || "bearer";
@@ -364,6 +385,9 @@ export class DefaultExecutor extends BaseExecutor {
               headers["Authorization"] = `Bearer ${token}`;
             }
           }
+=======
+          headers["Authorization"] = `Bearer ${effectiveKey || credentials.accessToken}`;
+>>>>>>> Stashed changes
         }
     }
 

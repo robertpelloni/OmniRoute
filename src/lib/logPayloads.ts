@@ -8,7 +8,10 @@ const SENSITIVE_KEYS = new Set([
   "Authorization",
   "x-api-key",
   "X-Api-Key",
+<<<<<<< Updated upstream
   "x-goog-api-key",
+=======
+>>>>>>> Stashed changes
   "access_token",
   "accessToken",
   "refresh_token",

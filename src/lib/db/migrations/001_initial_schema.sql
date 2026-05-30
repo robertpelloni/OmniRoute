@@ -130,6 +130,7 @@ CREATE TABLE IF NOT EXISTS call_logs (
   source_format TEXT,
   target_format TEXT,
   api_key_id TEXT,
+<<<<<<< Updated upstream
   api_key_name TEXT,
   combo_name TEXT,
   combo_step_id TEXT,
@@ -143,6 +144,15 @@ CREATE TABLE IF NOT EXISTS call_logs (
   has_response_body INTEGER DEFAULT 0,
   has_pipeline_details INTEGER DEFAULT 0,
   request_summary TEXT
+=======
+    api_key_name TEXT,
+    combo_name TEXT,
+    request_body TEXT,
+    response_body TEXT,
+    error TEXT,
+    artifact_relpath TEXT,
+    has_pipeline_details INTEGER DEFAULT 0
+>>>>>>> Stashed changes
 );
 CREATE INDEX IF NOT EXISTS idx_cl_timestamp ON call_logs(timestamp);
 CREATE INDEX IF NOT EXISTS idx_cl_status ON call_logs(status);

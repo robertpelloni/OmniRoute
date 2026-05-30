@@ -1,12 +1,20 @@
 # 🚀 OmniRoute — The Free AI Gateway (Українська)
 
+<<<<<<< Updated upstream
 🌐 **Languages:** 🇺🇸 [English](../../../README.md) · 🇸🇦 [ar](../ar/README.md) · 🇧🇬 [bg](../bg/README.md) · 🇧🇩 [bn](../bn/README.md) · 🇨🇿 [cs](../cs/README.md) · 🇩🇰 [da](../da/README.md) · 🇩🇪 [de](../de/README.md) · 🇪🇸 [es](../es/README.md) · 🇮🇷 [fa](../fa/README.md) · 🇫🇮 [fi](../fi/README.md) · 🇫🇷 [fr](../fr/README.md) · 🇮🇳 [gu](../gu/README.md) · 🇮🇱 [he](../he/README.md) · 🇮🇳 [hi](../hi/README.md) · 🇭🇺 [hu](../hu/README.md) · 🇮🇩 [id](../id/README.md) · 🇮🇹 [it](../it/README.md) · 🇯🇵 [ja](../ja/README.md) · 🇰🇷 [ko](../ko/README.md) · 🇮🇳 [mr](../mr/README.md) · 🇲🇾 [ms](../ms/README.md) · 🇳🇱 [nl](../nl/README.md) · 🇳🇴 [no](../no/README.md) · 🇵🇭 [phi](../phi/README.md) · 🇵🇱 [pl](../pl/README.md) · 🇵🇹 [pt](../pt/README.md) · 🇧🇷 [pt-BR](../pt-BR/README.md) · 🇷🇴 [ro](../ro/README.md) · 🇷🇺 [ru](../ru/README.md) · 🇸🇰 [sk](../sk/README.md) · 🇸🇪 [sv](../sv/README.md) · 🇰🇪 [sw](../sw/README.md) · 🇮🇳 [ta](../ta/README.md) · 🇮🇳 [te](../te/README.md) · 🇹🇭 [th](../th/README.md) · 🇹🇷 [tr](../tr/README.md) · 🇺🇦 [uk-UA](../uk-UA/README.md) · 🇵🇰 [ur](../ur/README.md) · 🇻🇳 [vi](../vi/README.md) · 🇨🇳 [zh-CN](../zh-CN/README.md)
+=======
+🌐 **Languages:** 🇺🇸 [English](../../../README.md) · 🇪🇸 [es](../es/README.md) · 🇫🇷 [fr](../fr/README.md) · 🇩🇪 [de](../de/README.md) · 🇮🇹 [it](../it/README.md) · 🇷🇺 [ru](../ru/README.md) · 🇨🇳 [zh-CN](../zh-CN/README.md) · 🇯🇵 [ja](../ja/README.md) · 🇰🇷 [ko](../ko/README.md) · 🇸🇦 [ar](../ar/README.md) · 🇮🇳 [in](../in/README.md) · 🇹🇭 [th](../th/README.md) · 🇻🇳 [vi](../vi/README.md) · 🇮🇩 [id](../id/README.md) · 🇲🇾 [ms](../ms/README.md) · 🇳🇱 [nl](../nl/README.md) · 🇵🇱 [pl](../pl/README.md) · 🇸🇪 [sv](../sv/README.md) · 🇳🇴 [no](../no/README.md) · 🇩🇰 [da](../da/README.md) · 🇫🇮 [fi](../fi/README.md) · 🇵🇹 [pt](../pt/README.md) · 🇷🇴 [ro](../ro/README.md) · 🇭🇺 [hu](../hu/README.md) · 🇧🇬 [bg](../bg/README.md) · 🇸🇰 [sk](../sk/README.md) · 🇺🇦 [uk-UA](../uk-UA/README.md) · 🇮🇱 [he](../he/README.md) · 🇵🇭 [phi](../phi/README.md) · 🇧🇷 [pt-BR](../pt-BR/README.md) · 🇨🇿 [cs](../cs/README.md)
+>>>>>>> Stashed changes
 
 ---
 
 ### Never stop coding. Smart routing to **FREE & low-cost AI models** with automatic fallback.
 
+<<<<<<< Updated upstream
 _Your universal API proxy — one endpoint, 100+ providers, zero downtime. Now with **MCP Server (25 tools)**, **A2A Protocol**, **Memory/Skills Systems** & **Electron Desktop App**._
+=======
+_Your universal API proxy — one endpoint, 60+ providers, zero downtime. Now with **MCP Server (25 tools)**, **A2A Protocol**, **Memory/Skills Systems** & **Electron Desktop App**._
+>>>>>>> Stashed changes
 
 **Chat Completions • Embeddings • Image Generation • Video • Music • Audio • Reranking • **Web Search** • MCP Server • A2A Protocol • 100% TypeScript**
 
@@ -15,6 +23,7 @@ _Your universal API proxy — one endpoint, 100+ providers, zero downtime. Now w
 <div align="center">
 
 [![npm version](https://img.shields.io/npm/v/omniroute?color=cb3837&logo=npm)](https://www.npmjs.com/package/omniroute)
+<<<<<<< Updated upstream
 [![Docker Hub](https://img.shields.io/docker/v/diegosouzapw/omniroute?label=Docker%20Hub&logo=docker&color=2496ED)](https://hub.docker.com/r/diegosouzapw/omniroute)
 
 ![NPM Downloads](https://img.shields.io/npm/dw/omniroute?label=npm%20down%20week&color=red)
@@ -37,6 +46,11 @@ _Your universal API proxy — one endpoint, 100+ providers, zero downtime. Now w
 [![fork](https://custom-icon-badges.demolab.com/github/forks/diegosouzapw/OmniRoute?logo=fork)](https://github.com/diegosouzapw/OmniRoute/network/members)
 [![watch](https://custom-icon-badges.demolab.com/github/watchers/diegosouzapw/OmniRoute?logo=eye)](https://github.com/diegosouzapw/OmniRoute/watchers)
 
+=======
+[![npm downloads](https://img.shields.io/npm/dm/omniroute?color=cb3837&logo=npm&label=npm%20downloads)](https://www.npmjs.com/package/omniroute)
+[![Docker Hub](https://img.shields.io/docker/v/diegosouzapw/omniroute?label=Docker%20Hub&logo=docker&color=2496ED)](https://hub.docker.com/r/diegosouzapw/omniroute)
+[![Docker Pulls](https://img.shields.io/docker/pulls/diegosouzapw/omniroute?logo=docker&color=2496ED&label=docker%20pulls)](https://hub.docker.com/r/diegosouzapw/omniroute)
+>>>>>>> Stashed changes
 [![License](https://img.shields.io/github/license/diegosouzapw/OmniRoute)](https://github.com/diegosouzapw/OmniRoute/blob/main/LICENSE)
 [![Website](https://img.shields.io/badge/Website-omniroute.online-blue?logo=google-chrome&logoColor=white)](https://omniroute.online)
 [![WhatsApp](https://img.shields.io/badge/WhatsApp-Community-25D366?logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/JI7cDQ1GyaiDHhVBpLxf8b?mode=gi_t)
@@ -49,6 +63,57 @@ _Your universal API proxy — one endpoint, 100+ providers, zero downtime. Now w
 
 ---
 
+<<<<<<< Updated upstream
+=======
+## Breaking Change: Unified Logging Upgrade
+
+> [!WARNING]
+> **This release changes both the on-disk request log layout and the logging environment variables.**
+>
+> If you are upgrading an existing instance:
+>
+> - Request logs now live in `DATA_DIR/call_logs/YYYY-MM-DD/` as **one JSON artifact per request**.
+> - The old `DATA_DIR/logs/` session folders and `DATA_DIR/log.txt` summary file are removed.
+> - On the first startup after upgrading, OmniRoute creates a safety backup at `DATA_DIR/log_archives/*.zip` before removing the deprecated request log layout.
+> - Legacy logging env vars such as `LOG_TO_FILE`, `LOG_FILE_PATH`, `LOG_MAX_FILE_SIZE`, `LOG_RETENTION_DAYS`, `LOG_LEVEL`, `LOG_FORMAT`, `ENABLE_REQUEST_LOGS`, `CALL_LOGS_MAX`, `CALL_LOG_PAYLOAD_MODE`, and `PROXY_LOG_MAX_ENTRIES` are no longer supported.
+> - Use the new env model instead:
+>   - `APP_LOG_TO_FILE`
+>   - `APP_LOG_FILE_PATH`
+>   - `APP_LOG_MAX_FILE_SIZE`
+>   - `APP_LOG_RETENTION_DAYS`
+>   - `APP_LOG_MAX_FILES`
+>   - `APP_LOG_LEVEL`
+>   - `APP_LOG_FORMAT`
+>   - `CALL_LOG_RETENTION_DAYS`
+>   - `CALL_LOG_MAX_ENTRIES`
+>
+> For release details and upgrade notes, see the [CHANGELOG](CHANGELOG.md).
+
+---
+
+## 🆕 What's New
+
+> **Upgrading from v2.9.5?** — See the [full CHANGELOG](CHANGELOG.md#300--2026-03-22-release-candidate--not-yet-merged-to-main) for all changes.
+
+| Area                         | Change                                                                                                                                                                    |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 🔒 **CodeQL Security**       | Fixed 10+ CodeQL alerts: polynomial-redos, insecure-randomness, shell-injection remediation                                                                               |
+| ✅ **Route Validation**      | All 176 API routes now validated with Zod schemas + `validateBody()` — CI `check:route-validation:t06` passes                                                             |
+| 🐛 **omniModel Tag Leak**    | Internal `<omniModel>` tags no longer leak to clients in SSE streaming responses (#585)                                                                                   |
+| 🔑 **Registered Keys API**   | Auto-provision API keys via `POST /api/v1/registered-keys` with per-provider/account quota enforcement, idempotency, SHA-256 storage, and optional GitHub issue reporting |
+| 🎨 **Provider Icons**        | 130+ provider logos via `@lobehub/icons` (SVG) with PNG → generic fallback chain                                                                                          |
+| 🔄 **Model Auto-Sync**       | 24h scheduler and manual UI toggle to sync model lists for built-in and custom OpenAI-compatible providers                                                                |
+| 🌐 **OpenCode Zen/Go**       | Two new providers from @kang-heewon via PR #530: free tier + subscription tier via `OpencodeExecutor`                                                                     |
+| 🐛 **Gemini CLI OAuth**      | Actionable error when `GEMINI_OAUTH_CLIENT_SECRET` is missing in Docker (was cryptic Google error)                                                                        |
+| 🐛 **OpenCode config**       | `saveOpenCodeConfig()` now correctly writes TOML to `XDG_CONFIG_HOME`                                                                                                     |
+| 🐛 **Pinned model override** | `body.model` correctly set to `pinnedModel` on context-cache protection                                                                                                   |
+| 🐛 **Codex/Claude loop**     | `tool_result` blocks now converted to text to stop infinite loops                                                                                                         |
+| 🐛 **Login redirect**        | Login no longer freezes after skipping password setup                                                                                                                     |
+| 🐛 **Windows paths**         | MSYS2/Git-Bash paths (`/c/...`) normalized to `C:\...` automatically                                                                                                      |
+
+---
+
+>>>>>>> Stashed changes
 ## 🖼️ Main Dashboard
 
 <div align="center">
@@ -245,11 +310,17 @@ Developers pay $20–200/month for Claude Pro, Codex Pro, or GitHub Copilot. Eve
 **How OmniRoute solves it:**
 
 - **Smart 4-Tier Fallback** — If subscription quota runs out, automatically redirects to API Key → Cheap → Free with zero manual intervention
+<<<<<<< Updated upstream
 - **Provider Limits Tracking** — Cached quota snapshots refresh on a server-side schedule (default `PROVIDER_LIMITS_SYNC_INTERVAL_MINUTES=70`) with manual refresh available in the UI
 - **Multi-Account Support** — Multiple accounts per provider with auto round-robin — when one runs out, switches to the next
 - **Custom Combos** — Customizable fallback chains with 13 balancing strategies (priority, weighted, fill-first, round-robin, P2C, random, least-used, cost-optimized, strict-random, auto, lkgp, context-optimized, **context-relay**)
 - **Structured Combo Builder** — Build combos step-by-step with explicit provider + model + account selection, including repeated providers and fixed-account targets
 - **Quota-Aware P2C** — Power-of-two account selection now factors quota headroom, backoff, recent errors, and consecutive use
+=======
+- **Real-Time Quota Tracking** — Shows token consumption in real-time with reset countdown (5h, daily, weekly)
+- **Multi-Account Support** — Multiple accounts per provider with auto round-robin — when one runs out, switches to the next
+- **Custom Combos** — Customizable fallback chains with 9 balancing strategies (priority, weighted, fill-first, round-robin, P2C, random, least-used, cost-optimized, strict-random)
+>>>>>>> Stashed changes
 - **Codex Business Quotas** — Business/Team workspace quota monitoring directly in the dashboard
 
 </details>
@@ -261,7 +332,11 @@ OpenAI uses one format, Claude (Anthropic) uses another, Gemini yet another. If 
 
 **How OmniRoute solves it:**
 
+<<<<<<< Updated upstream
 - **Unified Endpoint** — A single `http://localhost:20128/v1` serves as proxy for all 100+ providers
+=======
+- **Unified Endpoint** — A single `http://localhost:20128/v1` serves as proxy for all 60+ providers
+>>>>>>> Stashed changes
 - **Format Translation** — Automatic and transparent: OpenAI ↔ Claude ↔ Gemini ↔ Responses API
 - **Response Sanitization** — Strips non-standard fields (`x_groq`, `usage_breakdown`, `service_tier`) that break OpenAI SDK v1.83+
 - **Role Normalization** — Converts `developer` → `system` for non-OpenAI providers; `system` → `user` for GLM/ERNIE
@@ -328,6 +403,7 @@ AI providers can become unstable, return 5xx errors, or hit temporary rate limit
 
 **How OmniRoute solves it:**
 
+<<<<<<< Updated upstream
 - **Request Queue & Pacing** — Per-connection request buckets smooth bursts before they hit upstream rate caps
 - **Connection Cooldown** — A single connection cools down after retryable failures with optional upstream `Retry-After` hints and exponential backoff
 - **Provider Circuit Breaker** — The provider only trips after fallback is exhausted and the provider request still fails with provider-wide transient errors; connection-scoped `429` rate limits stay in Connection Cooldown
@@ -335,6 +411,14 @@ AI providers can become unstable, return 5xx errors, or hit temporary rate limit
 - **Anti-Thundering Herd** — Mutex + semaphore protection against concurrent retry storms
 - **Combo Fallback Chains** — If the primary provider fails, automatically falls through the chain with no intervention
 - **Health Dashboard** — Uptime monitoring, provider circuit breaker states, cooldowns, cache stats, p50/p95/p99 latency
+=======
+- **Circuit Breaker per-model** — Auto-open/close with configurable thresholds and cooldown (Closed/Open/Half-Open), scoped per-model to avoid cascading blocks
+- **Exponential Backoff** — Progressive retry delays
+- **Anti-Thundering Herd** — Mutex + semaphore protection against concurrent retry storms
+- **Combo Fallback Chains** — If the primary provider fails, automatically falls through the chain with no intervention
+- **Combo Circuit Breaker** — Auto-disables failing providers within a combo chain
+- **Health Dashboard** — Uptime monitoring, circuit breaker states, lockouts, cache stats, p50/p95/p99 latency
+>>>>>>> Stashed changes
 
 </details>
 
@@ -348,7 +432,11 @@ Developers use Cursor, Claude Code, Codex CLI, OpenClaw, Gemini CLI, Kilo Code..
 - **CLI Tools Dashboard** — Dedicated page with one-click setup for Claude Code, Codex CLI, OpenClaw, Kilo Code, Antigravity, Cline
 - **GitHub Copilot Config Generator** — Generates `chatLanguageModels.json` for VS Code with bulk model selection
 - **Onboarding Wizard** — Guided 4-step setup for first-time users
+<<<<<<< Updated upstream
 - **One endpoint, all models** — Configure `http://localhost:20128/v1` once, access 100+ providers
+=======
+- **One endpoint, all models** — Configure `http://localhost:20128/v1` once, access 60+ providers
+>>>>>>> Stashed changes
 
 </details>
 
@@ -392,10 +480,17 @@ When a call fails, the dev doesn't know if it was a rate limit, expired token, w
 
 - **Unified Logs Dashboard** — 4 tabs: Request Logs, Proxy Logs, Audit Logs, Console
 - **Console Log Viewer** — Real-time terminal-style viewer with color-coded levels, auto-scroll, search, filter
+<<<<<<< Updated upstream
 - **SQLite Summary Logs** — Request and proxy log indexes stay queryable across restarts without loading large payload blobs into SQLite
 - **Translator Playground** — 4 debugging modes: Playground (format translation), Chat Tester (round-trip), Test Bench (batch), Live Monitor (real-time)
 - **Request Telemetry** — p50/p95/p99 latency + X-Request-Id tracing
 - **File-Based Detail Artifacts** — App logs rotate by size, retention days, and archive count; detailed request/response payloads live in `DATA_DIR/call_logs/` and rotate independently of SQLite summaries
+=======
+- **SQLite Proxy Logs** — Persistent logs that survive server restarts
+- **Translator Playground** — 4 debugging modes: Playground (format translation), Chat Tester (round-trip), Test Bench (batch), Live Monitor (real-time)
+- **Request Telemetry** — p50/p95/p99 latency + X-Request-Id tracing
+- **File-Based Logging with Rotation** — App logs rotate by size, retention days, and archive count; call log artifacts rotate by retention days and file count
+>>>>>>> Stashed changes
 - **System Info Report** — `npm run system-info` generates `system-info.txt` with your full environment (Node version, OmniRoute version, OS, CLI tools, Docker/PM2 status). Attach it when reporting issues for instant triage.
 
 </details>
@@ -475,7 +570,11 @@ As request volume grows, without caching the same questions generate duplicate c
 - **Semantic Cache** — Two-tier cache (signature + semantic) reduces cost and latency
 - **Request Idempotency** — 5s deduplication window for identical requests
 - **Rate Limit Detection** — Per-provider RPM, min gap, and max concurrent tracking
+<<<<<<< Updated upstream
 - **Request Queue & Pacing** — Configurable queue, pacing, and concurrency defaults in Settings → Resilience
+=======
+- **Editable Rate Limits** — Configurable defaults in Settings → Resilience with persistence
+>>>>>>> Stashed changes
 - **API Key Validation Cache** — 3-tier cache for production performance
 - **Health Dashboard with Telemetry** — p50/p95/p99 latency, cache stats, uptime
 
@@ -493,7 +592,10 @@ Developers who want all responses in a specific language, with a specific tone, 
 - **9 Routing Strategies** — Global strategies that determine how requests are distributed
 - **Wildcard Router** — `provider/*` patterns route dynamically to any provider
 - **Combo Enable/Disable Toggle** — Toggle combos directly from the dashboard
+<<<<<<< Updated upstream
 - **Manual Combo Ordering** — Drag combo cards by handle and persist the order in SQLite
+=======
+>>>>>>> Stashed changes
 - **Provider Toggle** — Enable/disable all connections for a provider with one click
 - **Blocked Providers** — Exclude specific providers from `/v1/models` listing
 
@@ -572,8 +674,13 @@ Teams need quick runtime changes during incidents or cost events.
 **How OmniRoute solves it:**
 
 - Switch combo activation directly from MCP dashboard
+<<<<<<< Updated upstream
 - Tune queue, cooldown, breaker, and wait settings from the dedicated Resilience page
 - Review live provider breaker state from the Health dashboard
+=======
+- Apply resilience profiles from pre-defined policy packs
+- Reset circuit breaker state from the same operations panel
+>>>>>>> Stashed changes
 
 </details>
 
@@ -681,6 +788,7 @@ Teams lose velocity when stitching multiple ad-hoc services and scripts.
 
 </details>
 
+<<<<<<< Updated upstream
 <details>
 <summary><b>📚 31. "My long sessions crash with 'context_length_exceeded' limits"</b></summary>
 
@@ -696,6 +804,10 @@ During deep debugging, long histories with tool results quickly exceed provider 
 
 ### Example Playbooks (Integrated Use Cases)
 
+=======
+### Example Playbooks (Integrated Use Cases)
+
+>>>>>>> Stashed changes
 **Playbook A: Maximize paid subscription + cheap backup**
 
 ```txt
@@ -779,6 +891,7 @@ omniroute
 
 Dashboard opens at `http://localhost:20128` and API base URL is `http://localhost:20128/v1`.
 
+<<<<<<< Updated upstream
 #### Arch Linux (AUR)
 
 Arch Linux users can install the [AUR package](https://aur.archlinux.org/packages/omniroute-bin), which installs OmniRoute and provides a systemd user service:
@@ -856,6 +969,26 @@ timeouts are also higher than your OmniRoute stream/fetch timeouts.
 
 ### 2) Connect providers and create your API key
 
+=======
+| Command                 | Description                                                 |
+| ----------------------- | ----------------------------------------------------------- |
+| `omniroute`             | Start server (`PORT=20128`, API and dashboard on same port) |
+| `omniroute --port 3000` | Set canonical/API port to 3000                              |
+| `omniroute --mcp`       | Start MCP server (stdio transport)                          |
+| `omniroute --no-open`   | Don't auto-open browser                                     |
+| `omniroute --help`      | Show help                                                   |
+
+Optional split-port mode:
+
+```bash
+PORT=20128 DASHBOARD_PORT=20129 omniroute
+# API:       http://localhost:20128/v1
+# Dashboard: http://localhost:20129
+```
+
+### 2) Connect providers and create your API key
+
+>>>>>>> Stashed changes
 1. Open Dashboard → `Providers` and connect at least one provider (OAuth or API key).
 2. Open Dashboard → `Endpoints` and create an API key.
 3. (Optional) Open Dashboard → `Combos` and set your fallback chain.
@@ -1004,7 +1137,11 @@ do_install() {
 #!/bin/sh
 export PORT="${PORT:-20128}"
 export DATA_DIR="${DATA_DIR:-${XDG_DATA_HOME:-${HOME}/.local/share}/omniroute}"
+<<<<<<< Updated upstream
 export APP_LOG_TO_FILE="${APP_LOG_TO_FILE:-false}"
+=======
+export LOG_TO_FILE="${LOG_TO_FILE:-false}"
+>>>>>>> Stashed changes
 mkdir -p "${DATA_DIR}"
 exec node /usr/lib/omniroute/.next/standalone/server.js "$@"
 EOF
@@ -1067,12 +1204,17 @@ Dashboard support for Docker deployments now includes a one-click **Cloudflare Q
 Notes:
 
 - Quick Tunnel URLs are temporary and change after every restart.
+<<<<<<< Updated upstream
 - Quick Tunnels are not auto-restored after an OmniRoute or container restart. Re-enable them from the dashboard when needed.
 - Managed install currently supports Linux, macOS, and Windows on `x64` / `arm64`.
 - Managed Quick Tunnels default to HTTP/2 transport to avoid noisy QUIC UDP buffer warnings in constrained container environments. Set `CLOUDFLARED_PROTOCOL=quic` or `auto` if you want a different transport.
 - Docker images bundle system CA roots and pass them to managed `cloudflared`, which avoids TLS trust failures when the tunnel bootstraps inside the container.
 - SQLite runs in WAL mode. `docker stop` should be allowed to finish so OmniRoute can checkpoint the latest changes back into `storage.sqlite`.
 - The bundled Compose files already set a 40s stop grace period. If you run the image directly, keep `--stop-timeout 40` (or similar) so manual stops do not cut off shutdown cleanup.
+=======
+- Managed install currently supports Linux, macOS, and Windows on `x64` / `arm64`.
+- Docker images bundle system CA roots and pass them to managed `cloudflared`, which avoids TLS trust failures when the tunnel bootstraps inside the container.
+>>>>>>> Stashed changes
 - Set `CLOUDFLARED_BIN=/absolute/path/to/cloudflared` if you want OmniRoute to use an existing binary instead of downloading one.
 
 **Using Docker Compose with Caddy (HTTPS Auto-TLS):**
@@ -1107,7 +1249,11 @@ volumes:
 | Image                    | Tag      | Size   | Description           |
 | ------------------------ | -------- | ------ | --------------------- |
 | `diegosouzapw/omniroute` | `latest` | ~250MB | Latest stable release |
+<<<<<<< Updated upstream
 | `diegosouzapw/omniroute` | `3.6.2`  | ~250MB | Current version       |
+=======
+| `diegosouzapw/omniroute` | `1.0.3`  | ~250MB | Current version       |
+>>>>>>> Stashed changes
 
 ---
 
@@ -1215,7 +1361,11 @@ Cerebras (cerebras/)   → Llama/Qwen world-fastest — 1M tok/day
 | `claude-haiku-4.5`  | `kr/`  | **Unlimited** | No reported daily cap |
 | `claude-opus-4.6`   | `kr/`  | **Unlimited** | Latest Opus via Kiro  |
 
+<<<<<<< Updated upstream
 ### 🟢 QODER MODELS (Free PAT via qodercli)
+=======
+### 🟢 QODER MODELS (Free OAuth — No Credit Card)
+>>>>>>> Stashed changes
 
 | Model              | Prefix | Limit         | Rate Limit      |
 | ------------------ | ------ | ------------- | --------------- |
@@ -1225,6 +1375,7 @@ Cerebras (cerebras/)   → Llama/Qwen world-fastest — 1M tok/day
 | `minimax-m2.1`     | `if/`  | **Unlimited** | No reported cap |
 | `kimi-k2`          | `if/`  | **Unlimited** | No reported cap |
 
+<<<<<<< Updated upstream
 > Recommended connection method: **Personal Access Token + `qodercli`**. Browser OAuth is
 > experimental and disabled by default unless `QODER_OAUTH_*` environment variables are configured.
 
@@ -1239,6 +1390,19 @@ Cerebras (cerebras/)   → Llama/Qwen world-fastest — 1M tok/day
 
 ### 🟣 GEMINI CLI (Google OAuth)
 
+=======
+### 🟡 QWEN MODELS (Device Code Auth)
+
+| Model               | Prefix | Limit         | Rate Limit          |
+| ------------------- | ------ | ------------- | ------------------- |
+| `qwen3-coder-plus`  | `qw/`  | **Unlimited** | No reported cap     |
+| `qwen3-coder-flash` | `qw/`  | **Unlimited** | No reported cap     |
+| `qwen3-coder-next`  | `qw/`  | **Unlimited** | No reported cap     |
+| `vision-model`      | `qw/`  | **Unlimited** | Multimodal (images) |
+
+### 🟣 GEMINI CLI (Google OAuth)
+
+>>>>>>> Stashed changes
 | Model                    | Prefix | Limit                       | Rate Limit    |
 | ------------------------ | ------ | --------------------------- | ------------- |
 | `gemini-3-flash-preview` | `gc/`  | **180K tok/month** + 1K/day | Monthly reset |
@@ -1354,6 +1518,7 @@ Then in `/dashboard/media` → **Transcription** tab: upload any audio or video 
 
 ## 💡 Key Features
 
+<<<<<<< Updated upstream
 OmniRoute v3.6 is built as an operational platform, not just a relay proxy.
 
 ### 🆕 New — v3.6.x Highlights (Apr 2026)
@@ -1380,6 +1545,9 @@ OmniRoute v3.6 is built as an operational platform, not just a relay proxy.
 | ⚠️ **Node.js 24 Login Warning**    | Login page proactively detects incompatible Node.js versions and shows a clear warning banner                                                     |
 | 📎 **Gemini PDF Attachments**      | PDF attachments correctly routed to Gemini via `inline_data` and generic base64 detection                                                         |
 | 🔒 **CodeQL Security Hardening**   | Resolved SSRF, insecure randomness, polynomial ReDoS, and incomplete URL sanitization alerts                                                      |
+=======
+OmniRoute v2.0 is built as an operational platform, not just a relay proxy.
+>>>>>>> Stashed changes
 
 ### 🆕 New — ClawRouter-Inspired Improvements (Mar 2026)
 
@@ -1420,7 +1588,11 @@ OmniRoute v3.6 is built as an operational platform, not just a relay proxy.
 | 📡 **A2A Task Lifecycle Management**  | List/filter tasks, inspect events/artifacts, cancel running tasks                                                                      |
 | 📋 **Agent Card Discovery**           | `/.well-known/agent.json` for client auto-discovery                                                                                    |
 | 🧪 **Protocol E2E Test Harness**      | Real MCP SDK + A2A client flows in `test:protocols:e2e`                                                                                |
+<<<<<<< Updated upstream
 | ⚙️ **Operational Controls**           | Switch combos, tune resilience settings, and review breaker state from dedicated Health and Settings surfaces                          |
+=======
+| ⚙️ **Operational Controls**           | Switch combo, apply resilience profiles, reset breakers from one control surface                                                       |
+>>>>>>> Stashed changes
 
 ### 🧠 Routing & Intelligence
 
@@ -1431,8 +1603,12 @@ OmniRoute v3.6 is built as an operational platform, not just a relay proxy.
 | 🔄 **Format Translation**          | OpenAI ↔ Claude ↔ Gemini ↔ Responses with schema-safe conversions        |
 | 👥 **Multi-Account Support**       | Multiple accounts per provider with intelligent selection                |
 | 🔄 **Auto Token Refresh**          | OAuth tokens refresh automatically with retry                            |
+<<<<<<< Updated upstream
 | 🎨 **Custom Combos**               | 13 balancing strategies + fallback chain control                         |
 | 🔗 **Context Relay**               | Session continuity handoffs when account rotation happens mid-session    |
+=======
+| 🎨 **Custom Combos**               | 9 balancing strategies + fallback chain control                          |
+>>>>>>> Stashed changes
 | 🌐 **Wildcard Router**             | `provider/*` dynamic routing                                             |
 | 🧠 **Thinking Budget Controls**    | Passthrough, auto, custom, and adaptive reasoning limits                 |
 | 🔀 **Model Aliases**               | Built-in + custom model aliasing and migration safety                    |
@@ -1460,6 +1636,7 @@ OmniRoute v3.6 is built as an operational platform, not just a relay proxy.
 
 ### 🛡️ Resilience, Security & Governance
 
+<<<<<<< Updated upstream
 | Feature                             | What It Does                                                                                            |
 | ----------------------------------- | ------------------------------------------------------------------------------------------------------- |
 | 🔌 **Provider Circuit Breakers**    | Provider-wide trip/recover after fallback exhaustion with configurable thresholds                       |
@@ -1484,14 +1661,38 @@ OmniRoute v3.6 is built as an operational platform, not just a relay proxy.
 | ⏳ **Wait For Cooldown** 🆕         | Auto-retry chat after connection cooldowns; configurable `enabled`, `maxRetries`, and `maxRetryWaitSec` |
 | 🔍 **Runtime Env Validation** 🆕    | Zod-based env schema validation at startup with actionable error messages                               |
 | 📋 **Compliance Audit v2** 🆕       | Pagination, request context, auth events, provider CRUD, and SSRF-blocked logging                       |
+=======
+| Feature                             | What It Does                                                                           |
+| ----------------------------------- | -------------------------------------------------------------------------------------- |
+| 🔌 **Circuit Breakers**             | Per-model trip/recover with threshold controls                                         |
+| 🎯 **Endpoint-Aware Models**        | Custom models declare supported endpoints + API format                                 |
+| 🛡️ **Anti-Thundering Herd**         | Mutex + semaphore protections on retry/rate events                                     |
+| 🧠 **Semantic + Signature Cache**   | Cost/latency reduction with two cache layers                                           |
+| ⚡ **Request Idempotency**          | Duplicate protection window                                                            |
+| 🔒 **TLS Fingerprint Spoofing**     | Browser-like TLS fingerprint — **reduces bot detection and account flagging**          |
+| 🔏 **CLI Fingerprint Matching**     | Matches native CLI request signatures — **reduces ban risk while preserving proxy IP** |
+| 🌐 **IP Filtering**                 | Allowlist/blocklist control for exposed deployments                                    |
+| 📊 **Editable Rate Limits**         | Configurable global/provider-level limits with persistence                             |
+| 📉 **Graceful Degradation**         | Multi-layer capability fallbacks protecting core gateway operations                    |
+| 📜 **Config Audit Trail**           | Diff-based change tracking preventing operational drift with simple rollbacks          |
+| ⏳ **Provider Health Sync**         | Proactive token expiration monitoring triggering alerts before authorization failures  |
+| 🚪 **Auto-Disable Banned Accounts** | Operational circuit breaker sealing permanently blocked token accounts automatically   |
+| 🔑 **API Key Management + Scoping** | Secure key issuance/rotation and model/provider controls                               |
+| 👁️ **Scoped API Key Reveal** 🆕     | Opt-in recovery of API keys via `ALLOW_API_KEY_REVEAL`                                 |
+| 🛡️ **Protected `/models`**          | Optional auth gating and provider hiding for model catalog                             |
+>>>>>>> Stashed changes
 
 ### 📊 Observability & Analytics
 
 | Feature                          | What It Does                                          |
 | -------------------------------- | ----------------------------------------------------- |
 | 📝 **Request + Proxy Logging**   | Full request/response and proxy logging               |
+<<<<<<< Updated upstream
 | 📉 **Streamed Detailed Logs**    | Reconstructs SSE payload streams cleanly into the UI  |
 | 🏷️ **Real-Time Model Badges** 🆕 | Live model status and daily quota countdown timers    |
+=======
+| 📉 **Streamed Detailed Logs** 🆕 | Reconstructs SSE payload streams cleanly into the UI  |
+>>>>>>> Stashed changes
 | 📋 **Unified Logs Dashboard**    | Request, proxy, audit, and console views in one page  |
 | 🔍 **Request Telemetry**         | p50/p95/p99 latency and request tracing               |
 | 🏥 **Health Dashboard**          | Uptime, breaker states, lockouts, cache stats         |
@@ -1499,7 +1700,10 @@ OmniRoute v3.6 is built as an operational platform, not just a relay proxy.
 | 📈 **Analytics Visualizations**  | Model/provider usage insights and trend views         |
 | 🧪 **Evaluation Framework**      | Golden set testing with configurable match strategies |
 | 📡 **Live Diagnostics** 🆕       | Semantic cache bypass for accurate combo live testing |
+<<<<<<< Updated upstream
 | 🔐 **TPS Log Metric** 🆕         | Tokens Per Second badge in log details modal          |
+=======
+>>>>>>> Stashed changes
 
 ### ☁️ Deployment & Platform
 
@@ -1519,8 +1723,11 @@ OmniRoute v3.6 is built as an operational platform, not just a relay proxy.
 | 👁️ **Sidebar Controls** 🆕     | Hide components and integrations from Appearance Settings             |
 | 📋 **Issue Templates**         | Standardized GitHub templates for bugs and features                   |
 | 📂 **Custom Data Directory**   | `DATA_DIR` override for storage location                              |
+<<<<<<< Updated upstream
 | 🌐 **V1 WebSocket Bridge** 🆕  | OpenAI-compatible WebSocket traffic proxied via `/v1/ws`              |
 | 🔑 **Sync Tokens & Bundle** 🆕 | Config sync tokens + versioned bundle endpoint with ETag support      |
+=======
+>>>>>>> Stashed changes
 
 ### Feature Deep Dive
 
@@ -1528,7 +1735,11 @@ OmniRoute v3.6 is built as an operational platform, not just a relay proxy.
 
 ```txt
 Combo: "my-coding-stack"
+<<<<<<< Updated upstream
   1. cc/claude-opus-4-7
+=======
+  1. cc/claude-opus-4-6
+>>>>>>> Stashed changes
   2. nvidia/llama-3.3-70b
   3. glm/glm-4.7
   4. if/kimi-k2-thinking
@@ -2007,7 +2218,11 @@ opencode
 **Rate limiting**
 
 - Subscription quota out → Fallback to GLM/MiniMax
+<<<<<<< Updated upstream
 - Add combo: `cc/claude-opus-4-7 → glm/glm-4.7 → if/kimi-k2-thinking`
+=======
+- Add combo: `cc/claude-opus-4-6 → glm/glm-4.7 → if/kimi-k2-thinking`
+>>>>>>> Stashed changes
 
 **OAuth token expired**
 
@@ -2040,10 +2255,15 @@ opencode
 
 **No request logs**
 
+<<<<<<< Updated upstream
 - `call_logs` in SQLite stores summary metadata for the Request Logs table and analytics views
 - Detailed request/response payloads are written to `DATA_DIR/call_logs/` as one JSON artifact per request
 - Enable pipeline capture from Dashboard → Logs → Request Logs if you need detailed per-stage payloads
 - `Export Logs` reads the artifact files on demand, while `Export All` includes the `call_logs/` directory alongside `storage.sqlite`
+=======
+- Request artifacts are written to `DATA_DIR/call_logs/` as one JSON file per request
+- Enable pipeline capture from Dashboard → Logs → Request Logs if you need detailed per-stage payloads
+>>>>>>> Stashed changes
 - Set `APP_LOG_TO_FILE=true` if you also want application console logs in `logs/application/app.log`
 - Adjust `APP_LOG_MAX_FILE_SIZE`, `APP_LOG_RETENTION_DAYS`, `APP_LOG_MAX_FILES`, and `CALL_LOG_MAX_ENTRIES` as needed
 
@@ -2249,7 +2469,11 @@ Se não quiser criar credenciais próprias agora, ainda é possível usar o flux
 - **Runtime**: Node.js 18–22 LTS (⚠️ Node.js 24+ is **not supported** — `better-sqlite3` native binaries are incompatible)
 - **Language**: TypeScript 5.9 — **100% TypeScript** across `src/` and `open-sse/` (zero `any` in core modules since v2.0)
 - **Framework**: Next.js 16 + React 19 + Tailwind CSS 4
+<<<<<<< Updated upstream
 - **Database**: better-sqlite3 (SQLite) + LowDB (JSON legacy) — domain state, proxy logs, MCP audit, routing decisions, memory, skills
+=======
+- **Database**: LowDB (JSON) + SQLite (domain state + proxy logs + MCP audit + routing decisions)
+>>>>>>> Stashed changes
 - **Schemas**: Zod (MCP tool I/O validation, API contracts)
 - **Protocols**: MCP (stdio/HTTP) + A2A v0.3 (JSON-RPC 2.0 + SSE)
 - **Streaming**: Server-Sent Events (SSE)
@@ -2267,6 +2491,7 @@ Se não quiser criar credenciais próprias agora, ainda é possível usar o flux
 
 ## Документація
 
+<<<<<<< Updated upstream
 | Document                                                 | Description                                         |
 | -------------------------------------------------------- | --------------------------------------------------- |
 | [User Guide](docs/USER_GUIDE.md)                         | Providers, combos, CLI integration, deployment      |
@@ -2286,11 +2511,29 @@ Se não quiser criar credenciais próprias agora, ainda é possível usar o flux
 | [VM Deployment](docs/VM_DEPLOYMENT_GUIDE.md)             | Complete guide: VM + nginx + Cloudflare setup       |
 | [Features Gallery](docs/FEATURES.md)                     | Visual dashboard tour with screenshots              |
 | [Release Checklist](docs/RELEASE_CHECKLIST.md)           | Pre-release validation steps                        |
+=======
+| Document                                       | Description                                         |
+| ---------------------------------------------- | --------------------------------------------------- |
+| [User Guide](docs/USER_GUIDE.md)               | Providers, combos, CLI integration, deployment      |
+| [API Reference](docs/API_REFERENCE.md)         | All endpoints with examples                         |
+| [MCP Server](open-sse/mcp-server/README.md)    | 16 MCP tools, IDE configs, Python/TS/Go clients     |
+| [A2A Server](src/lib/a2a/README.md)            | JSON-RPC 2.0 protocol, skills, streaming, task mgmt |
+| [Auto-Combo Engine](docs/auto-combo.md)        | 6-factor scoring, mode packs, self-healing          |
+| [Troubleshooting](docs/TROUBLESHOOTING.md)     | Common problems and solutions                       |
+| [Architecture](docs/ARCHITECTURE.md)           | System architecture and internals                   |
+| [Contributing](CONTRIBUTING.md)                | Development setup and guidelines                    |
+| [OpenAPI Spec](docs/openapi.yaml)              | OpenAPI 3.0 specification                           |
+| [Security Policy](SECURITY.md)                 | Vulnerability reporting and security practices      |
+| [VM Deployment](docs/VM_DEPLOYMENT_GUIDE.md)   | Complete guide: VM + nginx + Cloudflare setup       |
+| [Features Gallery](docs/FEATURES.md)           | Visual dashboard tour with screenshots              |
+| [Release Checklist](docs/RELEASE_CHECKLIST.md) | Pre-release validation steps                        |
+>>>>>>> Stashed changes
 
 ---
 
 ## 🗺️ Roadmap
 
+<<<<<<< Updated upstream
 OmniRoute has **218+ features planned** across multiple development phases. Here are the key areas:
 
 | Category                      | Planned Features | Highlights                                                                                            |
@@ -2301,6 +2544,18 @@ OmniRoute has **218+ features planned** across multiple development phases. Here
 | 🔄 **Provider Integrations**  | 20+              | Dynamic model registry, connection cooldowns, multi-account Codex, Copilot quota parsing              |
 | ⚡ **Performance**            | 15+              | Dual cache layer, prompt cache, response cache, streaming keepalive, batch API                        |
 | 🌐 **Ecosystem**              | 10+              | WebSocket API, config hot-reload, distributed config store, commercial mode                           |
+=======
+OmniRoute has **210+ features planned** across multiple development phases. Here are the key areas:
+
+| Category                      | Planned Features | Highlights                                                                             |
+| ----------------------------- | ---------------- | -------------------------------------------------------------------------------------- |
+| 🧠 **Routing & Intelligence** | 25+              | Lowest-latency routing, tag-based routing, quota preflight, P2C account selection      |
+| 🔒 **Security & Compliance**  | 20+              | SSRF hardening, credential cloaking, rate-limit per endpoint, management key scoping   |
+| 📊 **Observability**          | 15+              | OpenTelemetry integration, real-time quota monitoring, cost tracking per model         |
+| 🔄 **Provider Integrations**  | 20+              | Dynamic model registry, provider cooldowns, multi-account Codex, Copilot quota parsing |
+| ⚡ **Performance**            | 15+              | Dual cache layer, prompt cache, response cache, streaming keepalive, batch API         |
+| 🌐 **Ecosystem**              | 10+              | WebSocket API, config hot-reload, distributed config store, commercial mode            |
+>>>>>>> Stashed changes
 
 ### 🔜 Coming Soon
 
@@ -2349,6 +2604,7 @@ gh release create v2.0.0 --title "v2.0.0" --generate-notes
 
 ## 🌍 StarMapper
 
+<<<<<<< Updated upstream
 <a href="https://starmapper.bruniaux.com/diegosouzapw/omniroute">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://starmapper.bruniaux.com/api/map-image/diegosouzapw/omniroute?theme=dark" />
@@ -2361,6 +2617,12 @@ gh release create v2.0.0 --title "v2.0.0" --generate-notes
 
 Special thanks to **[9router](https://github.com/decolua/9router)** by **[decolua](https://github.com/decolua)** — the original project that inspired this fork. OmniRoute builds upon that incredible foundation with additional features, multi-modal APIs, and a full TypeScript rewrite.
 
+=======
+## 🙏 Acknowledgments
+
+Special thanks to **[9router](https://github.com/decolua/9router)** by **[decolua](https://github.com/decolua)** — the original project that inspired this fork. OmniRoute builds upon that incredible foundation with additional features, multi-modal APIs, and a full TypeScript rewrite.
+
+>>>>>>> Stashed changes
 Special thanks to **[CLIProxyAPI](https://github.com/router-for-me/CLIProxyAPI)** — the original Go implementation that inspired this JavaScript port.
 
 ---

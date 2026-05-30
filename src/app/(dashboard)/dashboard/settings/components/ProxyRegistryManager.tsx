@@ -38,6 +38,7 @@ type TestResult = {
   error?: string;
 };
 
+<<<<<<< Updated upstream
 type ParsedProxyEntry = {
   name: string;
   host: string;
@@ -55,6 +56,8 @@ type ParseError = {
   reason: string;
 };
 
+=======
+>>>>>>> Stashed changes
 const EMPTY_FORM = {
   id: "",
   name: "",
@@ -333,7 +336,11 @@ export default function ProxyRegistryManager() {
       if (!res.ok) {
         setTestById((prev) => ({
           ...prev,
+<<<<<<< Updated upstream
           [item.id]: { success: false, error: data?.error?.message || t("failed") },
+=======
+          [item.id]: { success: false, error: data?.error?.message || "Test failed" },
+>>>>>>> Stashed changes
         }));
         return;
       }
@@ -673,10 +680,15 @@ export default function ProxyRegistryManager() {
                             )
                           ) : health ? (
                             <>
+<<<<<<< Updated upstream
                               <span>{t("successRate", { rate: health.successRate ?? 0 })}</span>
                               <span>
                                 {t("avgLatency", { latency: health.avgLatencyMs ?? "-" })}
                               </span>
+=======
+                              <span>{health.successRate ?? 0}% success</span>
+                              <span>{health.avgLatencyMs ?? "-"} ms avg</span>
+>>>>>>> Stashed changes
                             </>
                           ) : (
                             <span>—</span>
@@ -685,8 +697,13 @@ export default function ProxyRegistryManager() {
                       </td>
                       <td className="py-2 pr-3 text-xs text-text-muted">
                         {usageById[item.id] != null
+<<<<<<< Updated upstream
                           ? t("assignmentsCount", { count: usageById[item.id].count })
                           : t("noData")}
+=======
+                          ? `${usageById[item.id].count} assignment(s)`
+                          : "—"}
+>>>>>>> Stashed changes
                       </td>
                       <td className="py-2">
                         <div className="flex items-center gap-1">
@@ -697,7 +714,11 @@ export default function ProxyRegistryManager() {
                             onClick={() => void handleTestProxy(item)}
                             loading={testingId === item.id}
                           >
+<<<<<<< Updated upstream
                             {t("test")}
+=======
+                            Test
+>>>>>>> Stashed changes
                           </Button>
                           <Button
                             size="sm"

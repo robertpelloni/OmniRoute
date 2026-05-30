@@ -356,13 +356,20 @@ export function clearCache(): number {
   let removed = 0;
   try {
     const db = getDbInstance();
+<<<<<<< Updated upstream
     const result = db.prepare("DELETE FROM semantic_cache").run();
     removed = result.changes || 0;
+=======
+    db.prepare("DELETE FROM semantic_cache").run();
+>>>>>>> Stashed changes
     db.prepare("UPDATE cache_metrics SET value = 0").run();
   } catch {
     // DB not available
   }
+<<<<<<< Updated upstream
   return removed;
+=======
+>>>>>>> Stashed changes
 }
 
 export function getCacheStats() {

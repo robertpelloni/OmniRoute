@@ -136,6 +136,7 @@
     "Failed to save pricing": "Kan de prijzen niet opslaan",
     "Failed to reset pricing": "Kan de prijzen niet opnieuw instellen",
     "apikey": "API-sleutel",
+<<<<<<< Updated upstream
     "http": "HTTP",
     "goToDashboard": "Go to Dashboard",
     "checkSystemStatus": "Check System Status",
@@ -649,6 +650,9 @@
     "learnedFromHeaders": "Learned From Headers",
     "totalRequests": "Total Requests",
     "cloudUnstableNote": "Cloud Unstable Note"
+=======
+    "http": "HTTP"
+>>>>>>> Stashed changes
   },
   "sidebar": {
     "home": "Thuis",
@@ -703,6 +707,7 @@
     "themeViolet": "Violet",
     "themeOrange": "Orange",
     "themeCyan": "Cyan",
+<<<<<<< Updated upstream
     "cliToolsShort": "Gereedschap",
     "cache": "Cache",
     "cacheShort": "Cache",
@@ -742,6 +747,21 @@
     "contextCaveman": "Caveman",
     "contextRtk": "RTK",
     "contextCombos": "Compression Combos"
+=======
+    "endpoints": "Eindpunten",
+    "playground": "Speeltuin",
+    "agents": "Agenten",
+    "cliToolsShort": "Gereedschap",
+    "autoCombo": "Auto Combo",
+    "searchTools": "Search Tools",
+    "cache": "Cache",
+    "cacheShort": "Cache",
+    "cliSection": "CLI",
+    "debugSection": "Debug",
+    "helpSection": "Help",
+    "primarySection": "Main",
+    "systemSection": "System"
+>>>>>>> Stashed changes
   },
   "themesPage": {
     "title": "Themes",
@@ -828,9 +848,13 @@
     "utilization": "Benutting",
     "utilizationDescription": "Trends in quotagebruik van de provider en bijhouden van snelheidslimieten",
     "comboHealth": "Combo-gezondheid",
+<<<<<<< Updated upstream
     "comboHealthDescription": "Quota op combo-niveau, gebruiksdistributie en prestatiegegevens",
     "compressionAnalyticsTitle": "Compression Analytics",
     "compressionAnalyticsDescription": "Compression analytics — token savings, mode breakdown, and provider stats."
+=======
+    "comboHealthDescription": "Quota op combo-niveau, gebruiksdistributie en prestatiegegevens"
+>>>>>>> Stashed changes
   },
   "apiManager": {
     "title": "API-sleutels",
@@ -937,7 +961,28 @@
     "permissionsTitle": "Machtigingen: {name}",
     "allowAllDesc": "Met deze sleutel heeft u toegang tot alle beschikbare modellen.",
     "restrictDesc": "Deze sleutel heeft toegang tot {selectedCount} van {totalModels} modellen.",
-    "selectedCount": "{count} geselecteerd"
+    "selectedCount": "{count} geselecteerd",
+    "autoResolve": "Auto-Resolve",
+    "autoResolveDesc": "Auto-resolve ambiguous model names to native provider for this API key.",
+    "keyActive": "Key Active",
+    "keyActiveDesc": "Enable or disable this API key. Disabled keys are immediately rejected with 403.",
+    "accessSchedule": "Access Schedule",
+    "accessScheduleDesc": "Restrict access to specific hours and days of the week.",
+    "scheduleFrom": "From",
+    "scheduleUntil": "Until",
+    "scheduleDays": "Days",
+    "scheduleTimezone": "Timezone",
+    "scheduleTimezoneHint": "Use IANA timezone names, e.g. America/New_York, Europe/Berlin",
+    "scheduleActive": "Schedule",
+    "disabled": "Disabled",
+    "daySun": "Sun",
+    "dayMon": "Mon",
+    "dayTue": "Tue",
+    "dayWed": "Wed",
+    "dayThu": "Thu",
+    "dayFri": "Fri",
+    "daySat": "Sat",
+    "keyOnlyAvailableAtCreation": "Full key available only at creation time — copy it when you first create the key"
   },
   "auditLog": {
     "title": "Auditlogboek",
@@ -1208,9 +1253,13 @@
       "opencode": "OpenCode AI coding agent (Terminal)",
       "kiro": "Amazon Kiro — AI-powered IDE",
       "windsurf": "Windsurf AI Code Editor",
+<<<<<<< Updated upstream
       "copilot": "GitHub Copilot AI Assistant",
       "qwen": "Alibaba Qwen Code CLI",
       "amp": "Sourcegraph Amp coding assistant CLI"
+=======
+      "copilot": "GitHub Copilot AI Assistant"
+>>>>>>> Stashed changes
     },
     "guides": {
       "cursor": {
@@ -1335,6 +1384,7 @@
         }
       }
     },
+<<<<<<< Updated upstream
     "autoConfiguredTab": "Auto Configured Tab",
     "toolCategoriesDesc": "Tool Categories Desc",
     "allToolsTab": "All Tools Tab",
@@ -1342,6 +1392,29 @@
     "mitmClientsTab": "Mitm Clients Tab",
     "toolCategories": "Tool Categories",
     "visibleToolsCount": "Visible Tools Count"
+=======
+    "mitmHowWorksDesc": "{toolName} sends requests to its provider endpoint. MITM intercepts and redirects them to OmniRoute.",
+    "mitmStep1": "1. Start MITM to route requests through OmniRoute.",
+    "mitmStep2Prefix": "2. Add",
+    "mitmStep2Suffix": "to your hosts file as 127.0.0.1.",
+    "mitmStep3": "3. Open {toolName} and requests will be proxied.",
+    "whenToUseLabel": "Wanneer te gebruiken",
+    "openToolDocs": "Gereedschapsdocumentatie openen",
+    "toolUseCases": {
+      "claude": "Gebruik deze optie als u krachtige planningsworkflows en lange refactoren van meerdere bestanden wilt met Claude Code.",
+      "codex": "Gebruik wanneer uw team is gestandaardiseerd op OpenAI Codex CLI-stromen en op profielen gebaseerde authenticatie.",
+      "droid": "Gebruik deze wanneer u een lichtgewicht terminalagent nodig heeft die zich richt op snelle codering en opdrachtuitvoeringslussen.",
+      "openclaw": "Gebruik dit wanneer u een codeeragent in Open Claw-stijl wilt, maar gerouteerd via OmniRoute-beleid.",
+      "cline": "Gebruik deze optie wanneer u codeeragenten in editors configureert en begeleide installatie wilt met OmniRoute-modellen.",
+      "kilo": "Gebruik dit wanneer uw workflow afhankelijk is van Kilo Code-opdrachten en snelle iteratieve bewerkingen.",
+      "cursor": "Gebruik dit bij het coderen in Cursor en u hebt aangepaste OpenAI-compatibele modellen nodig via OmniRoute.",
+      "continue": "Gebruik dit wanneer u Doorgaan in IDE's uitvoert en u een draagbare, op JSON gebaseerde providerconfiguratie nodig hebt.",
+      "opencode": "Gebruik dit wanneer u de voorkeur geeft aan terminal-native agentruns en scriptautomatisering via OpenCode.",
+      "kiro": "Te gebruiken bij het integreren van Kiro en het centraal beheren van modelrouting vanuit OmniRoute.",
+      "antigravity": "Gebruik wanneer Antigravity/Kiro-verkeer moet worden onderschept via MITM en naar OmniRoute moet worden gerouteerd.",
+      "copilot": "Gebruik wanneer u UX in Copilot-chatstijl wilt terwijl u OmniRoute-sleutels en routeringsregels afdwingt."
+    }
+>>>>>>> Stashed changes
   },
   "combos": {
     "title": "Combo's",
@@ -1452,6 +1525,7 @@
         "when": "Use when you want perfectly even spread — each model used once before repeating.",
         "avoid": "Avoid when models have different quality or latency and order matters.",
         "example": "Example: Multiple accounts of the same model to distribute usage evenly."
+<<<<<<< Updated upstream
       },
       "p2c": {
         "example": "Example: High-throughput inference across 4+ equivalent model endpoints.",
@@ -1462,6 +1536,8 @@
         "avoid": "Avoid when account switching is rare or when you do not want extra summarization requests.",
         "when": "Use when long sessions must survive account rotation without losing the working context.",
         "example": "Example: Codex sessions that rotate across multiple accounts near quota exhaustion."
+=======
+>>>>>>> Stashed changes
       }
     },
     "advancedHelp": {
@@ -1565,6 +1641,7 @@
       }
     },
     "templateFreeStack": "Free Stack ($0)",
+<<<<<<< Updated upstream
     "templateFreeStackDesc": "Round-robin across all free providers: Kiro (Claude), Qoder (5 models), Qwen (4 models), Gemini CLI. Zero cost, never stops coding.",
     "auto": "Auto Combo",
     "autoDesc": "Self-healing smart routing pool (Performance optimized)",
@@ -1692,6 +1769,9 @@
     "cooldownMinutes": "Cooldown: {minutes}m",
     "filterEmptyDeterministicDescription": "Only auto and LKGP combos exist right now. Switch back to All or create a deterministic combo.",
     "weightHealth": "Health"
+=======
+    "templateFreeStackDesc": "Round-robin across all free providers: Kiro (Claude), Qoder (5 models), Qwen (4 models), Gemini CLI. Zero cost, never stops coding."
+>>>>>>> Stashed changes
   },
   "costs": {
     "title": "Kosten",
@@ -1848,6 +1928,7 @@
     "a2aQuickStartStep3": "Track and control tasks using `tasks/get` and `tasks/cancel`.",
     "completionsLegacy": "Completions (Legacy)",
     "completionsLegacyDesc": "Legacy OpenAI text completions — accepts both prompt string and messages array format",
+<<<<<<< Updated upstream
     "musicGeneration": "Music Generation",
     "musicDesc": "Generate music and audio tracks via ComfyUI (Stable Audio, MusicGen)",
     "videoGeneration": "Video Generation",
@@ -1908,6 +1989,32 @@
     "featureWebhooks": "Webhook configuration and event subscriptions",
     "featureSwagger": "OpenAPI / Swagger spec auto-generation",
     "featureAuth": "API key and OAuth scope management per endpoint"
+=======
+    "categorySearch": "Search & Discovery",
+    "webSearch": "Web Search",
+    "webSearchDesc": "Unified web search across multiple providers with automatic failover and caching",
+    "searchProvider": "Search Provider",
+    "searchProviderDesc": "This provider is used for web search via POST /v1/search. No model configuration needed — search providers are ready to use once an API key is connected.",
+    "cloudflaredDescription": "Create a Cloudflare Quick Tunnel for this endpoint to make it accessible from the internet without configuring DNS.",
+    "cloudflaredDisable": "Stop Tunnel",
+    "cloudflaredEnable": "Enable Tunnel",
+    "cloudflaredError": "Error",
+    "cloudflaredIdleNote": "Create a temporary Cloudflare Quick Tunnel for this endpoint.",
+    "cloudflaredInstallAndEnable": "Install & Enable",
+    "cloudflaredLastError": "Last error: {error}",
+    "cloudflaredNotInstalled": "Not installed",
+    "cloudflaredRequestFailed": "Failed to update Cloudflare tunnel",
+    "cloudflaredRunning": "Running",
+    "cloudflaredStarted": "Cloudflare tunnel started",
+    "cloudflaredStarting": "Starting",
+    "cloudflaredStopped": "Cloudflare tunnel stopped",
+    "cloudflaredStoppedState": "Stopped",
+    "cloudflaredTemporaryNote": "Quick Tunnel URLs are temporary and will change after restart.",
+    "cloudflaredTitle": "Cloudflare Quick Tunnel",
+    "cloudflaredUnsupported": "Unsupported",
+    "cloudflaredUnsupportedNote": "This platform is not supported for managed installation.",
+    "cloudflaredUrlNotice": "Creates a temporary Cloudflare Quick Tunnel. URLs change after restart."
+>>>>>>> Stashed changes
   },
   "mcpDashboard": {
     "loading": "Loading MCP dashboard...",
@@ -2112,11 +2219,20 @@
     "resetting": "Resetten...",
     "resetAll": "Alles resetten",
     "until": "Tot {time}",
+<<<<<<< Updated upstream
     "limitExhausted": "Exhausted",
     "learnedFromHeaders": "Learned from headers",
     "remainingOfLimit": "{remaining}/{limit} remaining",
     "throttleStatus": "Throttle: {value}",
     "lastHeaderUpdate": "Header update: {age}"
+=======
+    "activeProviders": "{count} active",
+    "monitoredProviders": "{count} monitored",
+    "configuredProvidersLabel": "Geconfigureerd in dashboard",
+    "configuredProvidersHint": "Providers met inloggegevens opgeslagen in /dashboard/providers, ongeacht de runtimestatus.",
+    "activeProvidersHint": "Geconfigureerde providers die momenteel zijn ingeschakeld voor het routeren van verzoeken.",
+    "monitoredProvidersHint": "Providers worden momenteel gevolgd door gezondheidsmonitors van stroomonderbrekers."
+>>>>>>> Stashed changes
   },
   "limits": {
     "title": "Limieten en quota's",
@@ -2362,6 +2478,7 @@
     "chatCompletions": "Chat-voltooiingen",
     "importingModels": "Importeren...",
     "importFromModels": "Importeren uit /modellen",
+<<<<<<< Updated upstream
     "allModelsAlreadyImported": "Alle modellen zijn al geïmporteerd",
     "noNewModelsToImport": "Geen nieuwe modellen om te importeren — alle modellen staan al in het register of de lijst met aangepaste modellen",
     "skippingExistingModels": "{count} bestaande modellen overgeslagen",
@@ -2370,6 +2487,8 @@
     "autoSyncEnabled": "Automatische synchronisatie ingeschakeld: modellen worden periodiek vernieuwd",
     "autoSyncDisabled": "Automatische synchronisatie uitgeschakeld",
     "autoSyncToggleFailed": "Kan automatische synchronisatie niet in- of uitschakelen",
+=======
+>>>>>>> Stashed changes
     "clearAllModels": "Wis alle modellen",
     "clearAllModelsConfirm": "Weet u zeker dat u alle modellen voor deze aanbieder wilt verwijderen? Dit kan niet ongedaan worden gemaakt.",
     "clearAllModelsSuccess": "Alle modellen gewist",
@@ -2547,6 +2666,7 @@
     "modelsPathLabel": "Models Endpoint Path",
     "modelsPathPlaceholder": "/models",
     "modelsPathHint": "Custom models path for validation (e.g. /v4/models)",
+<<<<<<< Updated upstream
     "modelsImported": "{count} models imported",
     "close": "Close",
     "statusDeactivated": "Deactivated (Manual)",
@@ -2721,6 +2841,46 @@
     "perModelQuotaLabel": "Per Model Quota Label",
     "expiredBadge": "Expired",
     "expiringSoonBadge": "Expiring Soon"
+=======
+    "builtInModels": "Built-in models",
+    "builtInModelsHint": "Registry models for this provider. Use the pencil to set compatibility options.",
+    "normalizeToolCallIdLabel": "Normalize tool call IDs to 9 characters (e.g. Mistral)",
+    "preserveDeveloperRoleLabel": "Keep OpenAI Responses developer role (do not map to system)",
+    "compatAdjustmentsTitle": "Compatibility",
+    "compatButtonLabel": "Compatibility",
+    "compatToolIdShort": "Tool ID 9",
+    "compatDeveloperShort": "Developer role",
+    "compatDoNotPreserveDeveloper": "Do not preserve developer role",
+    "compatBadgeNoPreserve": "No preserve",
+    "compatProtocolLabel": "Client request protocol",
+    "compatProtocolHint": "These options apply when OmniRoute detects this request shape (OpenAI Chat, Responses API, or Anthropic Messages).",
+    "compatProtocolOpenAI": "OpenAI Chat Completions",
+    "compatProtocolOpenAIResponses": "OpenAI Responses API",
+    "compatProtocolClaude": "Anthropic Messages",
+    "tokenRefreshed": "Token refreshed successfully",
+    "tokenRefreshFailed": "Token refresh failed",
+    "compatBadgeUpstreamHeaders": "Headers",
+    "compatUpstreamAddRow": "Add header",
+    "compatUpstreamHeaderName": "Header name",
+    "compatUpstreamHeaderValue": "Value",
+    "compatUpstreamHeadersHint": "High-privilege setting — same trust level as editing provider API credentials; only trusted admins should use it. Merged after OmniRoute adds auth from the provider API key. If a custom header uses the same name as an existing one (e.g. Authorization), your value fully replaces the auto-generated header (including the Bearer token) — the upstream only sees what you typed, not the key from settings. Misconfiguration can cause 401 or broken upstream auth. One row per header (e.g. extra Authentication for some gateways). Hover or focus the value to preview. Saves on blur, outside click, or closing this panel.",
+    "compatUpstreamHeadersLabel": "Extra upstream headers",
+    "compatUpstreamRemoveRow": "Remove row",
+    "autoSync": "Automatische synchronisatie",
+    "autoSyncTooltip": "Modellijst automatisch elke 24 uur vernieuwen (configureerbaar via MODEL_SYNC_INTERVAL_HOURS)",
+    "autoSyncEnabled": "Automatische synchronisatie ingeschakeld: modellen worden periodiek vernieuwd",
+    "autoSyncDisabled": "Automatische synchronisatie uitgeschakeld",
+    "autoSyncToggleFailed": "Kan automatische synchronisatie niet in- of uitschakelen",
+    "allModelsAlreadyImported": "Alle modellen zijn al geïmporteerd",
+    "noNewModelsToImport": "Geen nieuwe modellen om te importeren — alle modellen staan al in het register of de lijst met aangepaste modellen",
+    "skippingExistingModels": "{count} bestaande modellen overgeslagen",
+    "applyCodexAuthLocal": "Apply auth",
+    "codexAuthAppliedLocal": "Codex auth.json applied locally",
+    "codexAuthApplyFailed": "Failed to apply Codex auth.json locally",
+    "codexAuthExportFailed": "Failed to export Codex auth.json",
+    "codexAuthExported": "Codex auth.json exported",
+    "exportCodexAuthFile": "Export auth"
+>>>>>>> Stashed changes
   },
   "settings": {
     "title": "Instellingen",
@@ -3178,6 +3338,7 @@
     "editPricing": "Prijzen bewerken",
     "viewFullDetails": "Bekijk volledige details",
     "themeCoral": "Koraal",
+<<<<<<< Updated upstream
     "modelsDevTitle": "Model Database",
     "modelsDevDesc": "Auto-sync pricing, capabilities & specs from models.dev",
     "modelsDevEnabled": "Enable models.dev Sync",
@@ -3394,6 +3555,37 @@
       "full": "Respond terse and compact. Preserve all technical substance.",
       "ultra": "Respond ultra terse with common technical abbreviations. Preserve exact symbols."
     }
+=======
+    "cliFingerprint": "CLI Fingerprint Matching",
+    "cliFingerprintDesc": "Match native CLI binary signatures when proxying requests. Reorders headers and body fields to look identical to the official CLI tools. Your proxy IP is preserved.",
+    "cliFingerprintEnabled": "{count} provider(s) with CLI fingerprint active",
+    "enableFingerprintTitle": "Enable fingerprint for {provider}",
+    "disableFingerprintTitle": "Disable fingerprint for {provider}",
+    "routingAdvancedGuideTitle": "Geavanceerde routebegeleiding",
+    "routingAdvancedGuideHint1": "Gebruik Fill First voor voorspelbare prioriteit, Round Robin voor eerlijkheid en P2C voor latency-veerkracht.",
+    "routingAdvancedGuideHint2": "Als aanbieders variëren in kwaliteit/kosten, begin dan met Kosten Opt voor achtergrondwerk en Minst Gebruikt voor evenwichtige slijtage.",
+    "comboDefaultsGuideTitle": "Combo-standaardinstellingen afstemmen",
+    "comboDefaultsGuideHint1": "Houd het aantal nieuwe pogingen laag bij stromen met lage latentie; verhoog de time-out alleen voor lange generatietaken.",
+    "comboDefaultsGuideHint2": "Gebruik provideroverschrijvingen wanneer een provider ander time-out/opnieuw gedrag nodig heeft dan de algemene standaardwaarden.",
+    "sidebarVisibility": "Hide sidebar items",
+    "sidebarVisibilityDesc": "Hide any sidebar navigation entry to reduce visual clutter.",
+    "sidebarVisibilityHint": "Any sidebar section is hidden automatically when a...",
+    "semanticCache": "Semantic Cache",
+    "autoDisableDescription": "Permanently mark provider connections as deactivated if they return specific terminal ban signals (e.g. HTTP 403 'verify your account'). This removes them from the combo rotation.",
+    "preserveClientCache": "Preserve Client Cache",
+    "cacheSettings": "Cache Settings",
+    "autoDisableThreshold": "Ban Threshold",
+    "autoDisableBannedAccounts": "Auto-Disable Banned Accounts",
+    "ttlMinutes": "TTL (minutes)",
+    "maxEntries": "Max Entries",
+    "loading": "Loading...",
+    "save": "Save",
+    "autoDisableThresholdDesc": "Consecutive ban signals required before permanent deactivation.",
+    "debugToggle": "Enable Debug Mode",
+    "sidebarVisibilityToggle": "Show Sidebar Items",
+    "enabled": "Enabled",
+    "strategy": "Strategy"
+>>>>>>> Stashed changes
   },
   "translator": {
     "title": "Vertaler",
@@ -3903,7 +4095,11 @@
     "restartServerWithNewPassword": "Start de server opnieuw op. Deze gebruikt het nieuwe wachtwoord",
     "backToLogin": "Terug naar Inloggen",
     "forgotPassword": "Wachtwoord vergeten?",
+<<<<<<< Updated upstream
     "defaultPasswordHint": "Default password: CHANGEME (unless INITIAL_PASSWORD was set)",
+=======
+    "defaultPasswordHint": "Default password: 123456 (unless INITIAL_PASSWORD was set)",
+>>>>>>> Stashed changes
     "Authorization": "Autorisatie",
     "Content-Disposition": "Inhoud-dispositie",
     "waitingForAuthorization": "Wachten op toestemming...",
@@ -3911,11 +4107,15 @@
     "waitingForOpenAIAuthorization": "Wachten op OpenAI-autorisatie...",
     "waitingForAntigravityAuthorization": "Wachten op toestemming voor anti-zwaartekracht...",
     "waitingForQoderAuthorization": "Wachten op Qoder-autorisatie...",
+<<<<<<< Updated upstream
     "exchangingCodeForTokens": "Code uitwisselen voor tokens...",
     "nodeIncompatibleHint": "OmniRoute requires Node.js 20.20.2+ (20.x LTS), 22.22.2+ (22.x LTS) or 24.0.0+ (24.x LTS). Node 24 LTS is recommended.",
     "nodeIncompatibleTitle": "Incompatible Node.js Version",
     "nodeIncompatibleDesc": "You are running Node.js {version}, which is outside OmniRoute's supported secure runtime policy. Use a patched Node.js 20.x or 22.x LTS release.",
     "nodeIncompatibleFixLabel": "Fix: install a patched Node.js 22 LTS release"
+=======
+    "exchangingCodeForTokens": "Code uitwisselen voor tokens..."
+>>>>>>> Stashed changes
   },
   "landing": {
     "brandName": "OmniRoute",
@@ -4125,8 +4325,22 @@
     "troubleshootingTestConnection": "Gebruik Dashboard > Providers > Verbinding testen voordat u gaat testen vanaf IDE's of externe clients.",
     "troubleshootingCircuitBreaker": "Als een provider aangeeft dat de stroomonderbreker open is, wacht dan op de cooldown of kijk op de Gezondheidspagina voor meer informatie.",
     "troubleshootingOAuth": "Voor OAuth-providers geldt dat u opnieuw moet verifiëren als tokens verlopen. Controleer de statusindicator van de providerkaart.",
+<<<<<<< Updated upstream
     "deployTermuxTitle": "Termux (Android)",
     "deployTermuxText": "Run OmniRoute headless on Android via Termux. Access the dashboard from your mobile browser."
+=======
+    "managementApiReference": "Management API Reference",
+    "managementApiDescription": "Automation endpoints for proxy registry, scope assignments, and legacy proxy migration.",
+    "mgmtProxiesListNote": "List saved proxy registry items (supports pagination).",
+    "mgmtProxiesCreateNote": "Create a reusable proxy item in the registry.",
+    "mgmtProxiesHealthNote": "Get 24h/rolling health metrics per saved proxy from proxy logs.",
+    "mgmtProxiesBulkAssignNote": "Assign or clear one proxy across many scope IDs in one request.",
+    "mgmtAssignmentsListNote": "List proxy assignments by scope, scope_id, or proxy_id.",
+    "mgmtAssignmentsUpdateNote": "Assign or clear proxy for global/provider/account/combo scope.",
+    "mgmtLegacyMigrationNote": "Import legacy proxyConfig maps into registry assignments.",
+    "endpointSpeechNote": "Tekst-naar-spraakgeneratie (ElevenLabs, OpenAI TTS).",
+    "endpointEmbeddingsNote": "Genereren van tekstinsluiting (OpenAI, Cohere, Voyage)."
+>>>>>>> Stashed changes
   },
   "legal": {
     "privacyPolicy": "Privacybeleid",
@@ -4217,6 +4431,7 @@
     "setupGuideCustomAgentTitle": "Register custom binary",
     "setupGuideCustomAgentDesc": "Use Add Custom Agent when your CLI is not in the built-in list. Provide binary name and version command.",
     "setupGuideCommandMissingTitle": "Fix 'command not found'",
+<<<<<<< Updated upstream
     "setupGuideCommandMissingDesc": "Ensure the CLI command exists in PATH, open a new terminal session, and rerun Refresh.",
     "cliToolsRedirectTitle": "Cli Tools Redirect Title",
     "cliToolsRedirectDesc": "Cli Tools Redirect Desc",
@@ -4232,6 +4447,84 @@
     "flowSpawn": "Flow Spawn",
     "cliToolsRedirectCta": "Cli Tools Redirect Cta"
   },
+=======
+    "setupGuideCommandMissingDesc": "Ensure the CLI command exists in PATH, open a new terminal session, and rerun Refresh."
+  },
+  "autoCombo": {
+    "title": "Auto-Combo Engine",
+    "statusNormal": "Normal",
+    "statusIncident": "Incident Mode",
+    "modePack": "Mode Pack",
+    "providerScores": "Provider Scores",
+    "noAutoCombo": "No auto-combo configured.",
+    "excludedProviders": "Excluded Providers",
+    "noExclusions": "No providers currently excluded.",
+    "factorQuota": "Quota",
+    "factorHealth": "Health",
+    "factorCost": "Cost",
+    "factorLatency": "Latency",
+    "factorTaskFit": "Task Fit",
+    "factorStability": "Stability",
+    "factorTierPriority": "Tier Priority",
+    "factorTierPriorityDesc": "Prefers accounts with higher quota tiers (Ultra/Pro over Free)",
+    "scoreFactorBreakdown": "Scoring Factors",
+    "modePackShipFast": "Ship Fast",
+    "modePackCostSaver": "Cost Saver",
+    "modePackQualityFirst": "Quality First",
+    "modePackOfflineFriendly": "Offline Friendly"
+  },
+  "search": {
+    "searchQuery": "Search Query",
+    "searchResults": "Search Results",
+    "cachedResult": "Cached",
+    "searchCost": "Cost",
+    "searchTools": "Search Tools",
+    "searchToolsDesc": "Advanced search testing with provider comparison",
+    "compareProviders": "Compare Providers",
+    "rerankResults": "Rerank Results",
+    "searchHistory": "Search History",
+    "urlOverlap": "URL Overlap",
+    "noSearchProviders": "No search providers configured. Add providers in Settings.",
+    "noRerankModels": "No rerank model available",
+    "webSearch": "Web Search",
+    "provider": "Provider",
+    "searchType": "Search Type",
+    "maxResults": "Max Results",
+    "filters": "Filters",
+    "country": "Country",
+    "language": "Language",
+    "timeRange": "Time Range",
+    "includeDomains": "Include Domains",
+    "excludeDomains": "Exclude Domains",
+    "safeSearch": "Safe Search",
+    "formatted": "Formatted",
+    "rawJson": "JSON",
+    "cacheMiss": "cache miss",
+    "cacheHit": "cache hit",
+    "latency": "Latency",
+    "cost": "Cost",
+    "results": "Results",
+    "rerank": "Rerank",
+    "rerankModel": "Rerank Model",
+    "positionDelta": "Position Change",
+    "emptyState": "Send a search query to see results",
+    "safeSearchOff": "Off",
+    "safeSearchModerate": "Moderate",
+    "safeSearchStrict": "Strict",
+    "queryPlaceholder": "Enter search query...",
+    "providerAuto": "auto (cheapest)",
+    "searchTypeWeb": "web",
+    "searchTypeNews": "news",
+    "optionAny": "any",
+    "timeRangeDay": "Past day",
+    "timeRangeWeek": "Past week",
+    "timeRangeMonth": "Past month",
+    "timeRangeYear": "Past year",
+    "domainPlaceholder": "example.com",
+    "requestTimedOut": "Request timed out ({seconds}s)",
+    "networkError": "Network error"
+  },
+>>>>>>> Stashed changes
   "templateNames": {
     "simple-chat": "Eenvoudig chatten",
     "streaming": "Streamen",
@@ -4281,6 +4574,7 @@
     "refresh": "Refresh",
     "clearAll": "Clear All",
     "memoryEntries": "Memory Entries",
+<<<<<<< Updated upstream
     "memoryEntriesSub": "In-memory LRU",
     "dbEntries": "DB Entries",
     "dbEntriesSub": "Persisted (SQLite)",
@@ -4302,10 +4596,20 @@
     "idempotency": "Idempotency Layer",
     "activeDedupKeys": "Active Dedup Keys",
     "dedupWindow": "Dedup Window",
+=======
+    "dbEntries": "DB Entries",
+    "cacheHits": "Cache Hits",
+    "tokensSaved": "Tokens Saved",
+    "hitRate": "Hit Rate",
+    "performance": "Cache Performance",
+    "behavior": "Cache Behavior",
+    "idempotency": "Idempotency Layer",
+>>>>>>> Stashed changes
     "clearSuccess": "Cache cleared. {count} expired entries removed.",
     "clearError": "Failed to clear cache.",
     "unavailable": "Cache unavailable",
     "unavailableDesc": "Could not fetch cache statistics. Make sure the server is running.",
+<<<<<<< Updated upstream
     "promptCache": "Prompt Cache (Provider-Side)",
     "cachedRequests": "Cached Requests",
     "cacheHitRate": "Cache Hit Rate",
@@ -4620,5 +4924,58 @@
     "noProxyLogs": "No proxy logs yet. Configure proxies and make API calls to see them here.",
     "noMatchingLogs": "No logs match the current filters.",
     "tlsFingerprint": "Chrome 124 TLS Fingerprint"
+=======
+    "memoryEntriesSub": "In-memory LRU",
+    "dbEntriesSub": "Persisted (SQLite)",
+    "cacheHitsSub": "of {total} total",
+    "tokensSavedSub": "Estimated from hits",
+    "autoRefresh": "Auto-refreshes every {seconds}s",
+    "hits": "Hits",
+    "misses": "Misses",
+    "total": "Total",
+    "behaviorDeterministic": "Only non-streaming requests with temperature=0 are cached.",
+    "behaviorBypass": "Bypass with header {header}.",
+    "behaviorTwoTier": "Two-tier storage: in-memory LRU (fast) + SQLite (persistent across restarts).",
+    "behaviorTtl": "Default TTL: 30 minutes. Configure via {envVar}.",
+    "activeDedupKeys": "Active Dedup Keys",
+    "dedupWindow": "Dedup Window",
+    "inputTokens": "Input Tokens",
+    "requestsShort": "reqs",
+    "inputShort": "In",
+    "resetting": "Resetting...",
+    "cachedTokensCol": "Cached",
+    "search": "Search",
+    "cacheReuseRatioDesc": "Cached tokens / Total input tokens",
+    "resetMetrics": "Reset Metrics",
+    "loading": "Loading...",
+    "cachedRequests": "Cached Requests",
+    "model": "Model",
+    "cached": "Cached",
+    "actions": "Actions",
+    "trend24h": "Cache Trend (24h)",
+    "cachedShort": "Cached",
+    "cacheCreation": "Creation",
+    "byProvider": "Breakdown by Provider",
+    "created": "Created",
+    "cacheCreationTokens": "Cache Creation Tokens",
+    "withCacheControl": "With Cache Control",
+    "searchEntries": "Search entries...",
+    "cacheReuseRatio": "Cache Reuse Ratio",
+    "estCostSaved": "Est. Cost Saved",
+    "cachedTokens": "Cached Tokens",
+    "requests": "Requests",
+    "signature": "Signature",
+    "cacheCreationWrite": "Cache Creation (Write)",
+    "expires": "Expires",
+    "writeShort": "Write",
+    "cacheHitRate": "Cache Hit Rate",
+    "cacheMetrics": "Prompt Cache Metrics",
+    "overview": "Overview",
+    "promptCache": "Prompt Cache (Provider-Side)",
+    "provider": "Provider",
+    "cachedTokensRead": "Cached Tokens (Read)",
+    "entries": "Entries",
+    "noEntries": "No cache entries found"
+>>>>>>> Stashed changes
   }
 }

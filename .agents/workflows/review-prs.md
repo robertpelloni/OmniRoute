@@ -28,7 +28,11 @@ description: Analyze open Pull Requests from the project's GitHub repository, ge
 This workflow fetches all open PRs from the project's GitHub repository, performs a critical analysis of each one, generates a detailed report, and waits for user approval before proceeding with implementation. **All improvements are committed on the current release branch** (`release/vX.Y.Z`).
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 > **BRANCH RULE**: PRs are ALWAYS merged into the current `release/vX.Y.Z` branch, NEVER directly into `main`. The release branch acts as a staging area — only after all PRs are integrated and tests pass does the release branch get merged into `main` via the `/generate-release` workflow.
+=======
+> **BRANCH RULE**: All work MUST happen on the current `release/vX.Y.Z` branch. Never create separate feature or fix branches. If no release branch exists yet, create one first using `/generate-release` Phase 1 steps 1–5.
+>>>>>>> Stashed changes
 =======
 > **BRANCH RULE**: All work MUST happen on the current `release/vX.Y.Z` branch. Never create separate feature or fix branches. If no release branch exists yet, create one first using `/generate-release` Phase 1 steps 1–5.
 >>>>>>> Stashed changes
@@ -77,7 +81,11 @@ If already on a `release/vX.Y.Z` branch, continue working there.
 
 - For each PR number from step 3a, run:
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   `gh pr view <NUMBER> --repo <owner>/<repo> --json number,title,author,headRefName,baseRefName,body,createdAt,additions,deletions,files`
+=======
+  `gh pr view <NUMBER> --repo <owner>/<repo> --json number,title,author,headRefName,body,createdAt,additions,deletions,files`
+>>>>>>> Stashed changes
 =======
   `gh pr view <NUMBER> --repo <owner>/<repo> --json number,title,author,headRefName,body,createdAt,additions,deletions,files`
 >>>>>>> Stashed changes
@@ -97,6 +105,7 @@ If already on a `release/vX.Y.Z` branch, continue working there.
 
 **Verification**: Confirm the count of PRs analyzed matches the count from step 3a before proceeding.
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 ### 3.5 Redirect PR Base Branches to Release Branch
 
@@ -122,6 +131,8 @@ This ensures:
 3. The release branch accumulates all changes before the final merge to `main`
 4. If the release branch doesn't exist on remote yet, push it first: `git push origin $RELEASE_BRANCH`
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 ### 4. Analyze Each PR — For each open PR, perform the following analysis:
@@ -194,9 +205,15 @@ Perform a **global impact assessment** to verify whether the PR changes are comp
 ### 7. Pre-Merge Fixes & CI Green-Lighting (if approved)
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 > **⚠️ Fixes and Conflict Resolutions MUST be pushed back to the PR branch before merging.** We want the PR itself to be green and fully valid before it integrates.
 
 - **Sync latest fixes & Resolve Conflicts:** Merge the current `release` branch into the PR branch. If there are merge conflicts, you MUST resolve them inside the author's PR branch. NEVER resolve conflicts by closing their PR and doing the work in a separate branch, as this steals credit from the original author.
+=======
+> **⚠️ Fixes should be pushed back to the PR branch before merging.** We want the PR itself to be green and fully valid before it integrates.
+
+- **Sync latest fixes:** Merge `main` or the current `release` branch into the PR branch so the PR inherits any latest CI or integration test fixes (preventing false-positive failures).
+>>>>>>> Stashed changes
 =======
 > **⚠️ Fixes should be pushed back to the PR branch before merging.** We want the PR itself to be green and fully valid before it integrates.
 
@@ -217,23 +234,30 @@ Perform a **global impact assessment** to verify whether the PR changes are comp
   ```
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - **Fallback (For external forks without maintainer edit access or severe conflicts):**
   If `git push` fails because the PR comes from an external fork without write access, or there are extreme conflicts, you MUST NOT CLOSE THE PR.
   Instead, use `git cherry-pick`, or a reverse merge to bring their changes into the release branch, fix the issues locally, and commit them. Ensure you preserve the contributor's authorship (`git commit --author="Contributor Name <email>"` if creating new commits).
   Once you have integrated their work into the release branch, DO NOT close their PR. Instead, leave it open or try to merge it using the CLI if possible. Under NO CIRCUMSTANCES should you use `gh pr close`. Leave it open so the contributor retains credit.
 =======
+=======
+>>>>>>> Stashed changes
 - **Fallback (For external forks without maintainer edit access):**
   If `git push` fails because the PR comes from an external fork without write access, you MUST:
   1. Create a new branch ending in `-fix` (e.g., `checkout -b fix-pr-<NUMBER>`).
   2. Push your branch to the main repo (`git push origin fix-pr-<NUMBER>`).
   3. Create a Pull Request targeting the contributor's repository and branch (use `gh pr create --repo <contributor-repo> --base <contributor-branch> --head diegosouzapw:fix-pr-<NUMBER>`).
   4. Once they accept our PR into their branch, their original PR to our `main` will automatically update and become green.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 - Run the project's test suite locally to verify nothing breaks:
   // turbo
 - Run: `npm test` or equivalent test command
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 ### 8. Merge into Release Branch (NEVER CLOSE!)
 
@@ -270,6 +294,12 @@ git pull origin release/vX.Y.Z
 
 - Once the PR is green (you can check with `gh pr status`), proceed to merge the PR into the current release branch (`release/vX.Y.Z`).
 
+=======
+### 8. Merge & Integrate
+
+- Once the PR is green (you can check with `gh pr status`), proceed to merge the PR into the current release branch (`release/vX.Y.Z`).
+
+>>>>>>> Stashed changes
   ```bash
   gh pr merge <NUMBER> --repo <owner>/<repo>
   ```
@@ -289,6 +319,9 @@ git pull origin release/vX.Y.Z
   gh pr close <NUMBER> --repo <owner>/<repo> --comment "Integrated into release/vX.Y.Z. Will be released as part of v3.X.Y. Thank you!"
   ```
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 ### 10. Continue or Finalize
 
@@ -297,6 +330,7 @@ After processing all approved PRs:
 - If more PRs remain, go back to step 7
 - When all PRs are processed, **update CHANGELOG.md** on the release branch with all new entries
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - Run **test coverage** to verify all metrics stay above 85%:
   ```bash
   npm run test:coverage
@@ -304,6 +338,9 @@ After processing all approved PRs:
 - Fix any test regressions introduced by merged PRs
 - Run `/generate-release` workflow Phase 1 steps 7–10 (tests → commit → push → open PR to main → wait for user)
 - The `/generate-release` workflow handles the final merge from `release/vX.Y.Z` → `main`
+=======
+- Run `/generate-release` workflow Phase 1 steps 7–10 (tests → commit → push → open PR to main → wait for user)
+>>>>>>> Stashed changes
 =======
 - Run `/generate-release` workflow Phase 1 steps 7–10 (tests → commit → push → open PR to main → wait for user)
 >>>>>>> Stashed changes

@@ -20,6 +20,7 @@ function toNumber(value: unknown, fallback = 0): number {
   return Number.isFinite(parsed) ? parsed : fallback;
 }
 
+<<<<<<< Updated upstream
 function firstPositiveNumber(...values: unknown[]): number {
   for (const value of values) {
     const parsed = toNumber(value, 0);
@@ -30,6 +31,8 @@ function firstPositiveNumber(...values: unknown[]): number {
   return 0;
 }
 
+=======
+>>>>>>> Stashed changes
 function extractMessageOutputText(item: JsonRecord): string {
   if (!Array.isArray(item.content)) return "";
   let text = "";
@@ -143,7 +146,13 @@ export function translateNonStreamingResponse(
         }
 
         const fnArgs =
+<<<<<<< Updated upstream
           typeof argsToEmit === "string" ? argsToEmit : JSON.stringify(argsToEmit || {});
+=======
+          typeof itemObj.arguments === "string"
+            ? itemObj.arguments
+            : JSON.stringify(itemObj.arguments || {});
+>>>>>>> Stashed changes
         const rawName = toString(itemObj.name);
         // Strip Claude OAuth proxy_ prefix using toolNameMap
         const resolvedName = toolNameMap?.get(rawName) ?? rawName;
@@ -260,13 +269,67 @@ export function translateNonStreamingResponse(
     const root = toRecord(responseBody);
     const response = toRecord(root.response ?? root);
     const candidates = Array.isArray(response.candidates) ? response.candidates : [];
+<<<<<<< Updated upstream
     const usage = toRecord(response.usageMetadata ?? root.usageMetadata);
     const promptFeedback = toRecord(response.promptFeedback ?? root.promptFeedback);
     if (candidates.length > 0 || Object.keys(promptFeedback).length > 0) {
+=======
+    if (candidates[0]) {
+      const candidate = toRecord(candidates[0]);
+      const content = toRecord(candidate.content);
+      const usage = toRecord(response.usageMetadata ?? root.usageMetadata);
+
+      let textContent = "";
+      const toolCalls: JsonRecord[] = [];
+      let reasoningContent = "";
+
+      if (Array.isArray(content.parts)) {
+        for (const part of content.parts) {
+          const partObj = toRecord(part);
+          if (partObj.thought === true && typeof partObj.text === "string") {
+            reasoningContent += partObj.text;
+          } else if (typeof partObj.text === "string") {
+            textContent += partObj.text;
+          }
+          if (partObj.functionCall) {
+            const fn = toRecord(partObj.functionCall);
+            toolCalls.push({
+              id: `call_${toString(fn.name, "unknown")}_${Date.now()}_${toolCalls.length}`,
+              type: "function",
+              function: {
+                name: toString(fn.name),
+                arguments: JSON.stringify(fn.args || {}),
+              },
+            });
+          }
+        }
+      }
+
+      const message: JsonRecord = { role: "assistant" };
+      if (textContent) {
+        message.content = textContent;
+      }
+      if (reasoningContent) {
+        message.reasoning_content = reasoningContent;
+      }
+      if (toolCalls.length > 0) {
+        message.tool_calls = toolCalls;
+      }
+      if (!message.content && !message.tool_calls) {
+        message.content = "";
+      }
+
+      let finishReason = toString(candidate.finishReason, "stop").toLowerCase();
+      if (finishReason === "stop" && toolCalls.length > 0) {
+        finishReason = "tool_calls";
+      }
+
+>>>>>>> Stashed changes
       const createdMs = Date.parse(toString(response.createTime));
       const created = Number.isFinite(createdMs)
         ? Math.floor(createdMs / 1000)
         : Math.floor(Date.now() / 1000);
+<<<<<<< Updated upstream
 
       const choices =
         candidates.length > 0
@@ -412,6 +475,50 @@ export function translateNonStreamingResponse(
       let thinkingContent = "";
       const toolCalls: JsonRecord[] = [];
 
+=======
+
+      const result: JsonRecord = {
+        id: `chatcmpl-${toString(response.responseId, String(Date.now()))}`,
+        object: "chat.completion",
+        created,
+        model: toString(response.modelVersion, "gemini"),
+        choices: [
+          {
+            index: 0,
+            message,
+            finish_reason: finishReason,
+          },
+        ],
+      };
+
+      if (Object.keys(usage).length > 0) {
+        result.usage = {
+          prompt_tokens:
+            toNumber(usage.promptTokenCount, 0) + toNumber(usage.thoughtsTokenCount, 0),
+          completion_tokens: toNumber(usage.candidatesTokenCount, 0),
+          total_tokens: toNumber(usage.totalTokenCount, 0),
+        };
+        if (toNumber(usage.thoughtsTokenCount, 0) > 0) {
+          (result.usage as JsonRecord).completion_tokens_details = {
+            reasoning_tokens: toNumber(usage.thoughtsTokenCount, 0),
+          };
+        }
+      }
+
+      intermediateOpenAI = result;
+    }
+  }
+
+  // Handle Claude format
+  else if (targetFormat === FORMATS.CLAUDE) {
+    const root = toRecord(responseBody);
+    const contentBlocks = Array.isArray(root.content) ? root.content : [];
+    if (contentBlocks.length > 0) {
+      let textContent = "";
+      let thinkingContent = "";
+      const toolCalls: JsonRecord[] = [];
+
+>>>>>>> Stashed changes
       for (const block of contentBlocks) {
         const blockObj = toRecord(block);
         if (blockObj.type === "text") {

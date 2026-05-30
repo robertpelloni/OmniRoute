@@ -11,12 +11,17 @@ import Input from "@/shared/components/Input";
 import Modal from "@/shared/components/Modal";
 import Toggle from "@/shared/components/Toggle";
 import Tooltip from "@/shared/components/Tooltip";
+<<<<<<< Updated upstream
 import EmailPrivacyToggle from "@/shared/components/EmailPrivacyToggle";
+=======
+import ModelRoutingSection from "@/shared/components/ModelRoutingSection";
+>>>>>>> Stashed changes
 import { useCopyToClipboard } from "@/shared/hooks/useCopyToClipboard";
 import { pickDisplayValue } from "@/shared/utils/maskEmail";
 import useEmailPrivacyStore from "@/store/emailPrivacyStore";
 import { useNotificationStore } from "@/store/notificationStore";
 import { ROUTING_STRATEGIES } from "@/shared/constants/routingStrategies";
+<<<<<<< Updated upstream
 import {
   COMBO_BUILDER_AUTO_CONNECTION,
   COMBO_BUILDER_STAGES,
@@ -43,6 +48,8 @@ import {
   normalizeIntelligentRoutingFilter,
   normalizeIntelligentRoutingConfig,
 } from "@/lib/combos/intelligentRouting";
+=======
+>>>>>>> Stashed changes
 import { useTranslations } from "next-intl";
 
 const ModelSelectModal = dynamic(() => import("@/shared/components/ModelSelectModal"), {
@@ -61,6 +68,7 @@ const STRATEGY_OPTIONS = ROUTING_STRATEGIES.map((strategy) => ({
   descKey: strategy.combosDescKey,
   icon: strategy.icon,
 }));
+<<<<<<< Updated upstream
 
 const STRATEGY_LABEL_FALLBACK = {
   "context-relay": "Context Relay",
@@ -70,6 +78,8 @@ const STRATEGY_DESC_FALLBACK = {
   "context-relay":
     "Priority-style routing with automatic context handoffs when account rotation happens.",
 };
+=======
+>>>>>>> Stashed changes
 
 const STRATEGY_GUIDANCE_FALLBACK = {
   priority: {
@@ -333,7 +343,11 @@ const COMBO_TEMPLATE_FALLBACK = {
   balancedDesc: "Least-used routing to spread demand over time.",
   freeStackTitle: "Free Stack ($0)",
   freeStackDesc:
+<<<<<<< Updated upstream
     "Round-robin across all free providers: Kiro, Qoder, Qwen, Gemini CLI. Zero cost, never stops.",
+=======
+    "Round-robin across all free providers: Kiro, iFlow, Qwen, Gemini CLI. Zero cost, never stops.",
+>>>>>>> Stashed changes
   paidPremiumTitle: "Paid Premium",
   paidPremiumDesc:
     "Round-robin across paid subscriptions: Cursor, Antigravity. Top-tier models, distributed load.",
@@ -409,6 +423,21 @@ const COMBO_TEMPLATES = [
     config: {
       maxRetries: 2,
       retryDelayMs: 1000,
+    },
+  },
+  {
+    id: "paid-premium",
+    icon: "workspace_premium",
+    titleKey: "templatePaidPremium",
+    descKey: "templatePaidPremiumDesc",
+    fallbackTitle: COMBO_TEMPLATE_FALLBACK.paidPremiumTitle,
+    fallbackDesc: COMBO_TEMPLATE_FALLBACK.paidPremiumDesc,
+    strategy: "round-robin",
+    suggestedName: "paid-premium",
+    config: {
+      maxRetries: 2,
+      retryDelayMs: 1000,
+      healthCheckEnabled: true,
     },
   },
   {
@@ -1092,6 +1121,9 @@ export default function CombosPage() {
           onComboUpdated={handleIntelligentComboUpdated}
         />
       )}
+
+      {/* Model Routing Rules (#563) */}
+      <ModelRoutingSection combos={combos} />
 
       {/* Model Routing Rules (#563) */}
       <ModelRoutingSection combos={combos} />

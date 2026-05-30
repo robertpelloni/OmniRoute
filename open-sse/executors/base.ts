@@ -78,6 +78,7 @@ export type ExecuteInput = {
   extendedContext?: boolean;
   /** Merged after auth + CLI fingerprint headers (values override same-named defaults). */
   upstreamExtraHeaders?: Record<string, string> | null;
+<<<<<<< Updated upstream
   /** Original client request headers (read-only). Executors may forward select headers upstream. */
   clientHeaders?: Record<string, string> | null;
   /** Callback to persist tokens that are proactively refreshed during execution. */
@@ -92,6 +93,10 @@ export type CountTokensInput = {
   signal?: AbortSignal | null;
 };
 
+=======
+};
+
+>>>>>>> Stashed changes
 /** Apply model-level extra upstream headers (e.g. Authentication, X-Custom-Auth). */
 export function mergeUpstreamExtraHeaders(
   headers: Record<string, string>,
@@ -100,15 +105,19 @@ export function mergeUpstreamExtraHeaders(
   if (!extra) return;
   for (const [k, v] of Object.entries(extra)) {
     if (typeof k === "string" && k.length > 0 && typeof v === "string") {
+<<<<<<< Updated upstream
       if (k.toLowerCase() === "user-agent") {
         setUserAgentHeader(headers, v);
         continue;
       }
+=======
+>>>>>>> Stashed changes
       headers[k] = v;
     }
   }
 }
 
+<<<<<<< Updated upstream
 export function getCustomUserAgent(providerSpecificData?: JsonRecord | null): string | null {
   const customUserAgent =
     typeof providerSpecificData?.customUserAgent === "string"
@@ -135,6 +144,9 @@ export function applyConfiguredUserAgent(
 }
 
 export function mergeAbortSignals(primary: AbortSignal, secondary: AbortSignal): AbortSignal {
+=======
+function mergeAbortSignals(primary: AbortSignal, secondary: AbortSignal): AbortSignal {
+>>>>>>> Stashed changes
   const controller = new AbortController();
 
   const abortFrom = (source: AbortSignal) => {
@@ -335,6 +347,7 @@ export class BaseExecutor {
     return { status: response.status, message: bodyText || `HTTP ${response.status}` };
   }
 
+<<<<<<< Updated upstream
   buildCountTokensUrl(model: string, credentials: ProviderCredentials | null = null) {
     void model;
     void credentials;
@@ -405,6 +418,8 @@ export class BaseExecutor {
     }
   }
 
+=======
+>>>>>>> Stashed changes
   async execute({
     model,
     body,
@@ -414,7 +429,10 @@ export class BaseExecutor {
     log,
     extendedContext,
     upstreamExtraHeaders,
+<<<<<<< Updated upstream
     clientHeaders,
+=======
+>>>>>>> Stashed changes
   }: ExecuteInput) {
     const fallbackCount = this.getFallbackCount();
     let lastError: unknown = null;
@@ -463,6 +481,7 @@ export class BaseExecutor {
         appendAnthropicBetaHeader(headers, CONTEXT_1M_BETA_HEADER);
       }
 
+<<<<<<< Updated upstream
       const transformedBody = await this.transformRequest(model, body, stream, activeCredentials);
 
       try {
@@ -486,6 +505,17 @@ export class BaseExecutor {
           signal && timeoutSignal
             ? mergeAbortSignals(signal, timeoutSignal)
             : signal || timeoutSignal;
+=======
+      const transformedBody = await this.transformRequest(model, body, stream, credentials);
+
+      try {
+        // Apply timeout to all requests. Non-streaming requests need this to prevent
+        // stalled connections. Streaming requests also need it for the initial fetch() call
+        // to prevent hanging on unresponsive providers (e.g. 300s TCP default timeout — #769).
+        // Stream idle detection (STREAM_IDLE_TIMEOUT_MS) handles stalls after data starts flowing.
+        const timeoutSignal = AbortSignal.timeout(FETCH_TIMEOUT_MS);
+        const combinedSignal = signal ? mergeAbortSignals(signal, timeoutSignal) : timeoutSignal;
+>>>>>>> Stashed changes
 
         const isClaudeCodeClient =
           clientHeaders?.["x-app"] === "cli" ||
@@ -640,12 +670,15 @@ export class BaseExecutor {
           bodyString = fingerprinted.bodyString;
         }
 
+<<<<<<< Updated upstream
         // CCH signing: Claude Code-compatible providers AND native claude provider
         // require an xxHash64 integrity token over the serialized body.
         if (isClaudeCodeCompatible(this.provider) || this.provider === "claude") {
           bodyString = await signRequestBody(bodyString);
         }
 
+=======
+>>>>>>> Stashed changes
         mergeUpstreamExtraHeaders(finalHeaders, upstreamExtraHeaders);
 
         const fetchOptions: RequestInit = {

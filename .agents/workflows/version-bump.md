@@ -21,7 +21,11 @@ Automatically bump the project version, generate CHANGELOG entries from git hist
 
 ```bash
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 cd /home/diegosouzapw/dev/proxys/OmniRoute
+=======
+cd /home/diegosouzapw/dev/proxys/9router
+>>>>>>> Stashed changes
 =======
 cd /home/diegosouzapw/dev/proxys/9router
 >>>>>>> Stashed changes
@@ -69,7 +73,11 @@ npm version "$VERSION" --no-git-tag-version
 
 ```bash
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 cd /home/diegosouzapw/dev/proxys/OmniRoute
+=======
+cd /home/diegosouzapw/dev/proxys/9router
+>>>>>>> Stashed changes
 =======
 cd /home/diegosouzapw/dev/proxys/9router
 >>>>>>> Stashed changes
@@ -142,7 +150,11 @@ The date must be today's date in `YYYY-MM-DD` format.
 
 ```bash
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 cd /home/diegosouzapw/dev/proxys/OmniRoute
+=======
+cd /home/diegosouzapw/dev/proxys/9router
+>>>>>>> Stashed changes
 =======
 cd /home/diegosouzapw/dev/proxys/9router
 >>>>>>> Stashed changes
@@ -169,7 +181,11 @@ echo "✓ All workspace packages synced to $VERSION"
 
 ```bash
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 cd /home/diegosouzapw/dev/proxys/OmniRoute
+=======
+cd /home/diegosouzapw/dev/proxys/9router
+>>>>>>> Stashed changes
 =======
 cd /home/diegosouzapw/dev/proxys/9router
 >>>>>>> Stashed changes
@@ -191,7 +207,11 @@ echo "✓ llm.txt → $VERSION"
 
 ```bash
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 cd /home/diegosouzapw/dev/proxys/OmniRoute
+=======
+cd /home/diegosouzapw/dev/proxys/9router
+>>>>>>> Stashed changes
 =======
 cd /home/diegosouzapw/dev/proxys/9router
 >>>>>>> Stashed changes
@@ -257,7 +277,11 @@ For each file in `docs/` (excluding `docs/i18n/`), review if CHANGELOG changes a
 
 ```bash
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 cd /home/diegosouzapw/dev/proxys/OmniRoute
+=======
+cd /home/diegosouzapw/dev/proxys/9router
+>>>>>>> Stashed changes
 =======
 cd /home/diegosouzapw/dev/proxys/9router
 >>>>>>> Stashed changes
@@ -270,7 +294,11 @@ npm run lint
 
 ```bash
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 cd /home/diegosouzapw/dev/proxys/OmniRoute
+=======
+cd /home/diegosouzapw/dev/proxys/9router
+>>>>>>> Stashed changes
 =======
 cd /home/diegosouzapw/dev/proxys/9router
 >>>>>>> Stashed changes
@@ -283,7 +311,11 @@ npm test
 
 ```bash
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 cd /home/diegosouzapw/dev/proxys/OmniRoute
+=======
+cd /home/diegosouzapw/dev/proxys/9router
+>>>>>>> Stashed changes
 =======
 cd /home/diegosouzapw/dev/proxys/9router
 >>>>>>> Stashed changes
@@ -332,7 +364,11 @@ grep "^## \[" CHANGELOG.md | head -2
 
 ```bash
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 cd /home/diegosouzapw/dev/proxys/OmniRoute
+=======
+cd /home/diegosouzapw/dev/proxys/9router
+>>>>>>> Stashed changes
 =======
 cd /home/diegosouzapw/dev/proxys/9router
 >>>>>>> Stashed changes

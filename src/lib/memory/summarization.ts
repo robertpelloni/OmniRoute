@@ -91,10 +91,14 @@ function estimateTokens(text: string): number {
 }
 
 function generateSummary(content: string): string {
+<<<<<<< Updated upstream
   const sentences = content
     .split(/[.!?]+/)
     .map((sentence) => sentence.trim())
     .filter((sentence) => sentence.length > 0);
+=======
+  const sentences = content.split(/[.!?]+/).filter((s) => s.trim().length > 0);
+>>>>>>> Stashed changes
   if (sentences.length <= 3) {
     return content;
   }

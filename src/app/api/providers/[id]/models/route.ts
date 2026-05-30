@@ -5,6 +5,7 @@ import {
   isOpenAICompatibleProvider,
   isSelfHostedChatProvider,
 } from "@/shared/constants/providers";
+<<<<<<< Updated upstream
 import { getRegistryEntry } from "@omniroute/open-sse/config/providerRegistry.ts";
 import { getModelsByProviderId } from "@/shared/constants/models";
 import {
@@ -63,6 +64,10 @@ import {
   isAutoFetchModelsEnabled,
   persistDiscoveredModels,
 } from "@/lib/providerModels/modelDiscovery";
+=======
+import { PROVIDER_MODELS } from "@/shared/constants/models";
+import { getModelIsHidden } from "@/lib/localDb";
+>>>>>>> Stashed changes
 
 type JsonRecord = Record<string, unknown>;
 type LocalCatalogModel = {
@@ -93,6 +98,7 @@ function getProviderBaseUrl(providerSpecificData: unknown): string | null {
   return typeof baseUrl === "string" && baseUrl.trim().length > 0 ? baseUrl : null;
 }
 
+<<<<<<< Updated upstream
 function normalizeAzureOpenAIBaseUrl(baseUrl: string) {
   return baseUrl
     .trim()
@@ -334,6 +340,16 @@ function normalizeSapModelsResponse(
       return { id, name, owned_by: ownedBy };
     })
     .filter((value): value is { id: string; name: string; owned_by: string } => Boolean(value));
+=======
+const GLM_MODELS_URLS = {
+  international: "https://api.z.ai/api/coding/paas/v4/models",
+  china: "https://open.bigmodel.cn/api/coding/paas/v4/models",
+} as const;
+
+function getGlmApiRegion(providerSpecificData: unknown): keyof typeof GLM_MODELS_URLS {
+  const data = asRecord(providerSpecificData);
+  return data.apiRegion === "china" ? "china" : "international";
+>>>>>>> Stashed changes
 }
 
 type ProviderModelsConfigEntry = {
@@ -373,9 +389,22 @@ const STATIC_MODEL_PROVIDERS: Record<string, () => Array<{ id: string; name: str
     { id: "nanobanana-flash", name: "NanoBanana Flash (Gemini 2.5 Flash)" },
     { id: "nanobanana-pro", name: "NanoBanana Pro (Gemini 3 Pro)" },
   ],
+<<<<<<< Updated upstream
   antigravity: () => ANTIGRAVITY_PUBLIC_MODELS.map((model) => ({ ...model })),
   claude: () => [
     { id: "claude-opus-4-7", name: "Claude Opus 4.7" },
+=======
+  antigravity: () => [
+    { id: "claude-opus-4-6-thinking", name: "Claude Opus 4.6 Thinking" },
+    { id: "claude-sonnet-4-6", name: "Claude Sonnet 4.6" },
+    { id: "gemini-3-flash", name: "Gemini 3 Flash" },
+    { id: "gemini-3.1-flash-image", name: "Gemini 3.1 Flash Image" },
+    { id: "gemini-3.1-pro-high", name: "Gemini 3.1 Pro (High)" },
+    { id: "gemini-3.1-pro-low", name: "Gemini 3.1 Pro (Low)" },
+    { id: "gpt-oss-120b-medium", name: "GPT OSS 120B Medium" },
+  ],
+  claude: () => [
+>>>>>>> Stashed changes
     { id: "claude-opus-4-6", name: "Claude Opus 4.6" },
     { id: "claude-sonnet-4-6", name: "Claude Sonnet 4.6" },
     { id: "claude-opus-4-5-20251101", name: "Claude Opus 4.5 (2025-11-01)" },
@@ -491,6 +520,7 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
     method: "GET",
     headers: { "Content-Type": "application/json" },
     authQuery: "key", // Use query param for API key
+<<<<<<< Updated upstream
     parseResponse: (data) => {
       const METHOD_TO_ENDPOINT: Record<string, string> = {
         generateContent: "chat",
@@ -535,6 +565,14 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
         };
       });
     },
+=======
+    parseResponse: (data) =>
+      (data.models || []).map((m) => ({
+        ...m,
+        id: (m.name || m.id || "").replace(/^models\//, ""),
+        name: m.displayName || (m.name || "").replace(/^models\//, ""),
+      })),
+>>>>>>> Stashed changes
   },
   // gemini-cli handled via retrieveUserQuota (see GET handler)
   qwen: {
@@ -779,6 +817,7 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
     authPrefix: "Bearer ",
     parseResponse: (data) => data.data || data.models || [],
   },
+<<<<<<< Updated upstream
   "opencode-go": {
     url: "https://opencode.ai/zen/go/v1/models",
     method: "GET",
@@ -795,6 +834,8 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
     authPrefix: "Bearer ",
     parseResponse: (data) => data.data || data.models || [],
   },
+=======
+>>>>>>> Stashed changes
 };
 
 /**
@@ -811,7 +852,10 @@ export async function GET(
     // Check if we should exclude hidden models (used by MCP tools to prevent hidden model leaks)
     const { searchParams } = new URL(request.url);
     const excludeHidden = searchParams.get("excludeHidden") === "true";
+<<<<<<< Updated upstream
     const refresh = searchParams.get("refresh") === "true";
+=======
+>>>>>>> Stashed changes
 
     const connection = await getProviderConnectionById(id);
 
@@ -827,9 +871,12 @@ export async function GET(
       return NextResponse.json({ error: "Invalid connection provider" }, { status: 400 });
     }
 
+<<<<<<< Updated upstream
     // Resolve proxy for this provider (provider-level → global → direct)
     const proxy = await resolveProxyForProvider(provider);
 
+=======
+>>>>>>> Stashed changes
     const buildResponse = (payload: any, statusConfig?: ResponseInit) => {
       if (excludeHidden && payload.models && Array.isArray(payload.models)) {
         payload.models = payload.models.filter((m: any) => !getModelIsHidden(provider, m.id));
@@ -1012,6 +1059,7 @@ export async function GET(
       const uniqueEndpoints = [...new Set(endpoints)];
       let models = null;
       let lastErrorStatus = null;
+<<<<<<< Updated upstream
       const token = apiKey || accessToken;
 
       for (const modelsUrl of uniqueEndpoints) {
@@ -1024,13 +1072,29 @@ export async function GET(
             headers: isNamedOpenAIStyleProvider(provider)
               ? buildNamedOpenAiStyleHeaders(provider, token)
               : buildOptionalBearerHeaders(token),
+=======
+
+      for (const modelsUrl of uniqueEndpoints) {
+        try {
+          const response = await fetch(modelsUrl, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${apiKey}`,
+            },
+            signal: AbortSignal.timeout(5000), // Quick timeout for fallbacks
+>>>>>>> Stashed changes
           });
 
           if (response.ok) {
             const data = await response.json();
+<<<<<<< Updated upstream
             models = isNamedOpenAIStyleProvider(provider)
               ? normalizeOpenAiLikeModelsResponse(data, provider)
               : data.data || data.models || [];
+=======
+            models = data.data || data.models || [];
+>>>>>>> Stashed changes
             break; // Success!
           }
 
@@ -1040,15 +1104,19 @@ export async function GET(
           }
         } catch (err: any) {
           if (err.message === "auth_failed") break; // Don't try other endpoints if auth failed
+<<<<<<< Updated upstream
           const status = getSafeOutboundFetchErrorStatus(err);
           if (status) {
             throw err;
           }
+=======
+>>>>>>> Stashed changes
         }
       }
 
       // If all endpoints failed (but not because of auth), fallback to local catalog
       if (!models) {
+<<<<<<< Updated upstream
         const fallback = buildDiscoveryFallbackResponse({
           cacheWarning:
             lastErrorStatus === 401 || lastErrorStatus === 403
@@ -1061,6 +1129,8 @@ export async function GET(
         });
         if (fallback) return fallback;
 
+=======
+>>>>>>> Stashed changes
         if (lastErrorStatus === 401 || lastErrorStatus === 403) {
           return NextResponse.json(
             { error: `Auth failed: ${lastErrorStatus}` },
@@ -1069,6 +1139,7 @@ export async function GET(
         }
 
         console.warn(`[models] All endpoints failed for ${provider}, using local catalog`);
+<<<<<<< Updated upstream
         models = toLocalCatalogModels();
         return buildResponse({
           provider,
@@ -1556,6 +1627,55 @@ export async function GET(
       if (!response.ok) {
         const fallback = buildDiscoveryFallbackResponse();
         if (fallback) return fallback;
+=======
+        const localModels = PROVIDER_MODELS[provider] || [];
+        models = localModels.map((m: any) => ({
+          id: m.id,
+          name: m.name || m.id,
+          owned_by: provider,
+        }));
+      }
+
+      // Track source for MCP tool T39 requirement
+      const source =
+        models === null || (models && models.length > 0 && models[0].owned_by === provider)
+          ? "local_catalog"
+          : "api";
+
+      return buildResponse({
+        provider,
+        connectionId,
+        models,
+        source,
+        ...(source === "local_catalog"
+          ? { warning: "API unavailable — using cached catalog" }
+          : {}),
+      });
+    }
+
+    if (provider === "claude") {
+      return buildResponse({
+        provider,
+        connectionId,
+        models: STATIC_MODEL_PROVIDERS.claude(),
+      });
+    }
+
+    if (provider === "glm") {
+      const region = getGlmApiRegion(connection.providerSpecificData);
+      const url = GLM_MODELS_URLS[region];
+      const token = apiKey || accessToken;
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+      });
+
+      if (!response.ok) {
+>>>>>>> Stashed changes
         return NextResponse.json(
           { error: `Failed to fetch models: ${response.status}` },
           { status: response.status }
@@ -1565,6 +1685,7 @@ export async function GET(
       const data = await response.json();
       const models = data.data || data.models || [];
 
+<<<<<<< Updated upstream
       return buildApiDiscoveryResponse(models);
     }
 
@@ -1575,6 +1696,12 @@ export async function GET(
       const autoFetchDisabledResponse = maybeReturnAutoFetchDisabled();
       if (autoFetchDisabledResponse) return autoFetchDisabledResponse;
 
+=======
+      return buildResponse({ provider, connectionId, models });
+    }
+
+    if (provider === "gemini-cli") {
+>>>>>>> Stashed changes
       // Gemini CLI doesn't have a /models endpoint. Instead, query the quota
       // endpoint to discover available models from the quota buckets.
       if (!accessToken) {
@@ -1595,26 +1722,39 @@ export async function GET(
       }
 
       try {
+<<<<<<< Updated upstream
         const quotaRes = await safeOutboundFetch(
           "https://cloudcode-pa.googleapis.com/v1internal:retrieveUserQuota",
           {
             ...SAFE_OUTBOUND_FETCH_PRESETS.modelsDiscovery,
             guard: getProviderOutboundGuard(),
             proxyConfig: proxy,
+=======
+        const quotaRes = await fetch(
+          "https://cloudcode-pa.googleapis.com/v1internal:retrieveUserQuota",
+          {
+>>>>>>> Stashed changes
             method: "POST",
             headers: {
               Authorization: `Bearer ${accessToken}`,
               "Content-Type": "application/json",
             },
             body: JSON.stringify({ project: projectId }),
+<<<<<<< Updated upstream
+=======
+            signal: AbortSignal.timeout(10000),
+>>>>>>> Stashed changes
           }
         );
 
         if (!quotaRes.ok) {
           const errText = await quotaRes.text();
           console.log(`[models] Gemini CLI quota fetch failed (${quotaRes.status}):`, errText);
+<<<<<<< Updated upstream
           const fallback = buildDiscoveryFallbackResponse();
           if (fallback) return fallback;
+=======
+>>>>>>> Stashed changes
           return NextResponse.json(
             { error: `Failed to fetch Gemini CLI models: ${quotaRes.status}` },
             { status: quotaRes.status }
@@ -1632,6 +1772,7 @@ export async function GET(
             owned_by: "google",
           }));
 
+<<<<<<< Updated upstream
         return buildApiDiscoveryResponse(models);
       } catch (err: unknown) {
         const msg = err instanceof Error ? err.message : String(err);
@@ -1685,6 +1826,14 @@ export async function GET(
         source: "local_catalog",
         warning: "API unavailable — using local catalog",
       });
+=======
+        return buildResponse({ provider, connectionId, models });
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : String(err);
+        console.log("[models] Gemini CLI model fetch error:", msg);
+        return NextResponse.json({ error: "Failed to fetch Gemini CLI models" }, { status: 500 });
+      }
+>>>>>>> Stashed changes
     }
 
     if (isAnthropicCompatibleProvider(provider)) {
@@ -1719,6 +1868,7 @@ export async function GET(
         baseUrl = baseUrl.slice(0, -9);
       }
 
+<<<<<<< Updated upstream
       // Use modelsPath from provider node if available, otherwise default to /models
       const psd = asRecord(connection.providerSpecificData);
       const modelsPath = toNonEmptyString(psd.modelsPath) || "/models";
@@ -1743,6 +1893,19 @@ export async function GET(
         if (fallback) return fallback;
         throw error;
       }
+=======
+      const url = `${baseUrl}/models`;
+      const token = accessToken || apiKey;
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          ...(apiKey ? { "x-api-key": apiKey } : {}),
+          "anthropic-version": "2023-06-01",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+      });
+>>>>>>> Stashed changes
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -1758,7 +1921,28 @@ export async function GET(
       const data = await response.json();
       const models = data.data || data.models || [];
 
+<<<<<<< Updated upstream
       return buildApiDiscoveryResponse(models);
+=======
+      return buildResponse({
+        provider,
+        connectionId,
+        models,
+      });
+    }
+
+    // Static model providers (no remote /models API)
+    const staticModelsFn =
+      provider in STATIC_MODEL_PROVIDERS
+        ? STATIC_MODEL_PROVIDERS[provider as keyof typeof STATIC_MODEL_PROVIDERS]
+        : undefined;
+    if (staticModelsFn) {
+      return buildResponse({
+        provider,
+        connectionId,
+        models: staticModelsFn(),
+      });
+>>>>>>> Stashed changes
     }
 
     const config =
@@ -1921,7 +2105,18 @@ export async function GET(
       );
     }
 
+<<<<<<< Updated upstream
     return buildApiDiscoveryResponse(allModels);
+=======
+    const data = await response.json();
+    const models = config.parseResponse(data);
+
+    return buildResponse({
+      provider,
+      connectionId,
+      models,
+    });
+>>>>>>> Stashed changes
   } catch (error) {
     if (error instanceof SafeOutboundFetchError && error.code === "URL_GUARD_BLOCKED") {
       return NextResponse.json({ error: error.message }, { status: 400 });

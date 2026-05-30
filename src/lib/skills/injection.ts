@@ -1,8 +1,11 @@
 import { skillRegistry } from "./registry";
 import { Skill } from "./types";
+<<<<<<< Updated upstream
 import { logger } from "../../../open-sse/utils/logger.ts";
 
 const log = logger("SKILLS_INJECTION");
+=======
+>>>>>>> Stashed changes
 
 interface OpenAITool {
   type: string;
@@ -56,6 +59,7 @@ export interface InjectionOptions {
   provider: "openai" | "anthropic" | "google" | "other";
   existingTools?: unknown[];
   apiKeyId: string;
+<<<<<<< Updated upstream
   model?: string;
   sourceFormat?: string;
   targetFormat?: string;
@@ -250,6 +254,17 @@ export function injectSkills(options: InjectionOptions): unknown[] {
     skillCount: skills.length,
   });
 
+=======
+}
+
+export function injectSkills(options: InjectionOptions): unknown[] {
+  const skills = skillRegistry.list(options.apiKeyId).filter((s) => s.enabled);
+
+  if (skills.length === 0) {
+    return options.existingTools || [];
+  }
+
+>>>>>>> Stashed changes
   const injectedTools = skills.map((skill) => {
     switch (options.provider) {
       case "openai":

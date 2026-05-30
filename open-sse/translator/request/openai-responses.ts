@@ -10,7 +10,10 @@ import { generateToolCallId } from "../helpers/toolCallHelper.ts";
 import { register } from "../registry.ts";
 
 type JsonRecord = Record<string, unknown>;
+<<<<<<< Updated upstream
 const RESPONSES_STORE_MARKER = "_omnirouteResponsesStore";
+=======
+>>>>>>> Stashed changes
 
 function toRecord(value: unknown): JsonRecord {
   return value && typeof value === "object" && !Array.isArray(value) ? (value as JsonRecord) : {};
@@ -60,6 +63,7 @@ export function openaiResponsesToOpenAIRequest(
     for (const toolValue of tools) {
       const tool = toRecord(toolValue);
       const toolType = toString(tool.type);
+<<<<<<< Updated upstream
       // Allow: function tools, tools already in Chat format (have .function property), CLI subagent tools,
       // and namespace tools (MCP tool groups used by Codex/OpenAI Responses API).
       if (
@@ -70,6 +74,10 @@ export function openaiResponsesToOpenAIRequest(
         toolType !== "namespace" &&
         !tool.function
       ) {
+=======
+      // Allow: function tools, and tools already in Chat format (have .function property)
+      if (toolType && toolType !== "function" && !tool.function) {
+>>>>>>> Stashed changes
         throw unsupportedFeature(
           `Unsupported Responses API feature: ${toolType} tool type is not supported by omniroute`
         );

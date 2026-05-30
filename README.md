@@ -5,7 +5,11 @@
 ### Never stop coding. Save 15-95% eligible tokens with RTK+Caveman compression + auto-fallback to **FREE & low-cost AI models**.
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 _The most complete open-source AI proxy — **one endpoint**, **160+ providers**, **13 routing strategies**, zero downtime. Multi-platform: **Web**, **Desktop (Electron)**, **Mobile (PWA + Termux)**. Fully extensible via **MCP Server (37 tools)**, **A2A Protocol**, and **Memory/Skills** systems. Available in **40+ languages**._
+=======
+_Your universal API proxy — one endpoint, 60+ providers, zero downtime. Now with **MCP Server (25 tools)**, **A2A Protocol**, **Memory/Skills Systems** & **Electron Desktop App**._
+>>>>>>> Stashed changes
 =======
 _Your universal API proxy — one endpoint, 60+ providers, zero downtime. Now with **MCP Server (25 tools)**, **A2A Protocol**, **Memory/Skills Systems** & **Electron Desktop App**._
 >>>>>>> Stashed changes
@@ -56,6 +60,54 @@ _Your universal API proxy — one endpoint, 60+ providers, zero downtime. Now wi
 [![WhatsApp](https://img.shields.io/badge/WhatsApp-Community-25D366?logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/JI7cDQ1GyaiDHhVBpLxf8b?mode=gi_t)
 
 </div>
+
+---
+
+## Breaking Change: Unified Logging Upgrade
+
+> [!WARNING]
+> **This release changes both the on-disk request log layout and the logging environment variables.**
+>
+> If you are upgrading an existing instance:
+>
+> - Request logs now live in `DATA_DIR/call_logs/YYYY-MM-DD/` as **one JSON artifact per request**.
+> - The old `DATA_DIR/logs/` session folders and `DATA_DIR/log.txt` summary file are removed.
+> - On the first startup after upgrading, OmniRoute creates a safety backup at `DATA_DIR/log_archives/*.zip` before removing the deprecated request log layout.
+> - Legacy logging env vars such as `LOG_TO_FILE`, `LOG_FILE_PATH`, `LOG_MAX_FILE_SIZE`, `LOG_RETENTION_DAYS`, `LOG_LEVEL`, `LOG_FORMAT`, `ENABLE_REQUEST_LOGS`, `CALL_LOGS_MAX`, `CALL_LOG_PAYLOAD_MODE`, and `PROXY_LOG_MAX_ENTRIES` are no longer supported.
+> - Use the new env model instead:
+>   - `APP_LOG_TO_FILE`
+>   - `APP_LOG_FILE_PATH`
+>   - `APP_LOG_MAX_FILE_SIZE`
+>   - `APP_LOG_RETENTION_DAYS`
+>   - `APP_LOG_MAX_FILES`
+>   - `APP_LOG_LEVEL`
+>   - `APP_LOG_FORMAT`
+>   - `CALL_LOG_RETENTION_DAYS`
+>   - `CALL_LOG_MAX_ENTRIES`
+>
+> For release details and upgrade notes, see the [CHANGELOG](CHANGELOG.md).
+
+---
+
+## 🆕 What's New
+
+> **Upgrading from v2.9.5?** — See the [full CHANGELOG](CHANGELOG.md#300--2026-03-22-release-candidate--not-yet-merged-to-main) for all changes.
+
+| Area                         | Change                                                                                                                                                                    |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 🔒 **CodeQL Security**       | Fixed 10+ CodeQL alerts: polynomial-redos, insecure-randomness, shell-injection remediation                                                                               |
+| ✅ **Route Validation**      | All 176 API routes now validated with Zod schemas + `validateBody()` — CI `check:route-validation:t06` passes                                                             |
+| 🐛 **omniModel Tag Leak**    | Internal `<omniModel>` tags no longer leak to clients in SSE streaming responses (#585)                                                                                   |
+| 🔑 **Registered Keys API**   | Auto-provision API keys via `POST /api/v1/registered-keys` with per-provider/account quota enforcement, idempotency, SHA-256 storage, and optional GitHub issue reporting |
+| 🎨 **Provider Icons**        | 130+ provider logos via `@lobehub/icons` (SVG) with PNG → generic fallback chain                                                                                          |
+| 🔄 **Model Auto-Sync**       | 24h scheduler and manual UI toggle to sync model lists for built-in and custom OpenAI-compatible providers                                                                |
+| 🌐 **OpenCode Zen/Go**       | Two new providers from @kang-heewon via PR #530: free tier + subscription tier via `OpencodeExecutor`                                                                     |
+| 🐛 **Gemini CLI OAuth**      | Actionable error when `GEMINI_OAUTH_CLIENT_SECRET` is missing in Docker (was cryptic Google error)                                                                        |
+| 🐛 **OpenCode config**       | `saveOpenCodeConfig()` now correctly writes TOML to `XDG_CONFIG_HOME`                                                                                                     |
+| 🐛 **Pinned model override** | `body.model` correctly set to `pinnedModel` on context-cache protection                                                                                                   |
+| 🐛 **Codex/Claude loop**     | `tool_result` blocks now converted to text to stop infinite loops                                                                                                         |
+| 🐛 **Login redirect**        | Login no longer freezes after skipping password setup                                                                                                                     |
+| 🐛 **Windows paths**         | MSYS2/Git-Bash paths (`/c/...`) normalized to `C:\...` automatically                                                                                                      |
 
 ---
 
@@ -352,6 +404,7 @@ npm run system-info
 
 This generates a `system-info.txt` with your Node.js version, OmniRoute version, OS details, installed CLI tools (qoder, gemini, claude, codex, antigravity, droid, etc.), Docker/PM2 status, and system packages — everything we need to reproduce your issue quickly. Attach the file directly to your GitHub issue.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
 ---
 
@@ -497,6 +550,8 @@ Alibaba · Amazon Q · AssemblyAI · Baidu Qianfan · Baseten · Black Forest La
     <td align="center" width="130"><b>SD WebUI</b></td>
   </tr>
 </table>
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 
@@ -1222,6 +1277,7 @@ PORT=20128 DASHBOARD_PORT=20129 NEXT_PUBLIC_BASE_URL=http://localhost:20129 npm 
 ```
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 **pnpm:** `pnpm install -g omniroute && pnpm approve-builds -g && omniroute`
 
 **Arch Linux (AUR):** `yay -S omniroute-bin && systemctl --user enable --now omniroute.service`
@@ -1236,6 +1292,8 @@ PORT=20128 DASHBOARD_PORT=20129 NEXT_PUBLIC_BASE_URL=http://localhost:20129 npm 
 
 📖 Full details: [Setup Guide](#-setup-guide) · [Docker](#-docker) · [Void Linux template](#-quick-start)
 =======
+=======
+>>>>>>> Stashed changes
 <details>
 <summary><b>Void Linux (`xbps-src` template)</b></summary>
 
@@ -1340,6 +1398,9 @@ post_install() {
 	vlicense LICENSE
 }
 ```
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 </details>
@@ -1389,7 +1450,11 @@ docker compose --profile cli up -d
 ```
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 Dashboard support for Docker deployments now includes a one-click **Cloudflare Quick Tunnel** on `Dashboard → Endpoints`. The first enable downloads `cloudflared` only when needed, starts a temporary tunnel to your current `/v1` endpoint, and shows the generated `https://*.trycloudflare.com/v1` URL directly below your normal public URL. Endpoint tunnel panels, including Cloudflare, Tailscale, and ngrok, can be shown or hidden from `Settings → Appearance` without changing active tunnel state.
+=======
+Dashboard support for Docker deployments now includes a one-click **Cloudflare Quick Tunnel** on `Dashboard → Endpoints`. The first enable downloads `cloudflared` only when needed, starts a temporary tunnel to your current `/v1` endpoint, and shows the generated `https://*.trycloudflare.com/v1` URL directly below your normal public URL.
+>>>>>>> Stashed changes
 =======
 Dashboard support for Docker deployments now includes a one-click **Cloudflare Quick Tunnel** on `Dashboard → Endpoints`. The first enable downloads `cloudflared` only when needed, starts a temporary tunnel to your current `/v1` endpoint, and shows the generated `https://*.trycloudflare.com/v1` URL directly below your normal public URL.
 >>>>>>> Stashed changes
@@ -1398,9 +1463,13 @@ Notes:
 
 - Quick Tunnel URLs are temporary and change after every restart.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - Quick Tunnels are not auto-restored after an OmniRoute or container restart. Re-enable them from the dashboard when needed.
 - Managed install currently supports Linux, macOS, and Windows on `x64` / `arm64`.
 - Managed Quick Tunnels default to HTTP/2 transport to avoid noisy QUIC UDP buffer warnings in constrained container environments. Set `CLOUDFLARED_PROTOCOL=quic` or `auto` if you want a different transport.
+=======
+- Managed install currently supports Linux, macOS, and Windows on `x64` / `arm64`.
+>>>>>>> Stashed changes
 =======
 - Managed install currently supports Linux, macOS, and Windows on `x64` / `arm64`.
 >>>>>>> Stashed changes
@@ -1811,10 +1880,13 @@ Then in `/dashboard/media` → **Transcription** tab: upload any audio or video 
 **Translation & Compatibility**
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - Auto token refresh (OAuth PKCE for 8 providers) · Multi-account round-robin
 - Responses API — full `/v1/responses` for Codex · Batch API with Files API
 - OpenAPI 3.0 live spec + Try-It UI
 =======
+=======
+>>>>>>> Stashed changes
 | Feature                               | What It Does                                                                                                                           |
 | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
 | 🔧 **MCP Server (25 tools)**          | IDE/agent tools via 3 transports: stdio, SSE (`/api/mcp/sse`), Streamable HTTP (`/api/mcp/stream`). 18 core + 3 memory + 4 skill tools |
@@ -1828,6 +1900,9 @@ Then in `/dashboard/media` → **Transcription** tab: upload any audio or video 
 | 📋 **Agent Card Discovery**           | `/.well-known/agent.json` for client auto-discovery                                                                                    |
 | 🧪 **Protocol E2E Test Harness**      | Real MCP SDK + A2A client flows in `test:protocols:e2e`                                                                                |
 | ⚙️ **Operational Controls**           | Switch combo, apply resilience profiles, reset breakers from one control surface                                                       |
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 **Protocols**
@@ -1895,8 +1970,11 @@ Grok-4 Fast · GLM-5 via Z.AI · MiniMax M2.5 · toolCalling flag ·
 Multilingual Intent Detection · Benchmark-Driven Fallbacks · Request Deduplication
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 **Architecture Examples:**
 =======
+=======
+>>>>>>> Stashed changes
 | Feature                          | What It Does                                          |
 | -------------------------------- | ----------------------------------------------------- |
 | 📝 **Request + Proxy Logging**   | Full request/response and proxy logging               |
@@ -2186,6 +2264,8 @@ OmniRoute just routes your requests to them — there's no "catch" or future bil
 
 **Dashboard behavior:** OpenRouter models are managed from **Available Models**. Manual add, import, and auto-sync all update the same list.
 
+**Dashboard behavior:** OpenRouter models are managed from **Available Models**. Manual add, import, and auto-sync all update the same list.
+
 </details>
 
 <details>
@@ -2206,12 +2286,15 @@ Code blocks, URLs, JSON, and structured data are **always protected** from compr
 <summary><b>🌍 Does OmniRoute work in countries where AI is blocked?</b></summary>
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 **Yes!** OmniRoute has a 3-level proxy system:
 
 1. **Global proxy** — all requests go through your proxy
 2. **Per-provider proxy** — different proxy per provider
 3. **Per-API-key proxy** — different proxy per key
 =======
+=======
+>>>>>>> Stashed changes
 ### Qoder (5 FREE models via OAuth)
 
 ```bash

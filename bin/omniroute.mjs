@@ -276,6 +276,10 @@ if (!existsSync(serverJs)) {
   console.error("  The package may not have been built correctly.");
   console.error("");
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+  // (#492) Detect common non-standard Node managers that cause this issue
+>>>>>>> Stashed changes
 =======
   // (#492) Detect common non-standard Node managers that cause this issue
 >>>>>>> Stashed changes
