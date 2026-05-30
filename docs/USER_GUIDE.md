@@ -516,7 +516,11 @@ do_install() {
 #!/bin/sh
 export PORT="${PORT:-20128}"
 export DATA_DIR="${DATA_DIR:-${XDG_DATA_HOME:-${HOME}/.local/share}/omniroute}"
+<<<<<<< Updated upstream
 export APP_LOG_TO_FILE="${APP_LOG_TO_FILE:-false}"
+=======
+export LOG_TO_FILE="${LOG_TO_FILE:-false}"
+>>>>>>> Stashed changes
 mkdir -p "${DATA_DIR}"
 exec node /usr/lib/omniroute/.next/standalone/server.js "$@"
 EOF
@@ -547,10 +551,16 @@ post_install() {
 | `ALLOW_API_KEY_REVEAL`                  | `false`                              | Allow Api Manager to copy full API keys on demand                                                         |
 | `PROVIDER_LIMITS_SYNC_INTERVAL_MINUTES` | `70`                                 | Server-side refresh cadence for cached Provider Limits data; UI refresh buttons still trigger manual sync |
 | `DISABLE_SQLITE_AUTO_BACKUP`            | `false`                              | Disable automatic SQLite snapshots before writes/import/restore; manual backups still work                |
+<<<<<<< Updated upstream
 | `APP_LOG_TO_FILE`                       | `true`                               | Enables application and audit log output to disk                                                          |
 | `AUTH_COOKIE_SECURE`                    | `false`                              | Force `Secure` auth cookie (behind HTTPS reverse proxy)                                                   |
 | `CLOUDFLARED_BIN`                       | unset                                | Use an existing `cloudflared` binary instead of managed download                                          |
 | `CLOUDFLARED_PROTOCOL`                  | `http2`                              | Transport for managed Quick Tunnels (`http2`, `quic`, or `auto`)                                          |
+=======
+| `ENABLE_REQUEST_LOGS`                   | `false`                              | Enables request/response logs                                                                             |
+| `AUTH_COOKIE_SECURE`                    | `false`                              | Force `Secure` auth cookie (behind HTTPS reverse proxy)                                                   |
+| `CLOUDFLARED_BIN`                       | unset                                | Use an existing `cloudflared` binary instead of managed download                                          |
+>>>>>>> Stashed changes
 | `OMNIROUTE_MEMORY_MB`                   | `512`                                | Node.js heap limit in MB                                                                                  |
 | `PROMPT_CACHE_MAX_SIZE`                 | `50`                                 | Max prompt cache entries                                                                                  |
 | `SEMANTIC_CACHE_MAX_SIZE`               | `100`                                | Max semantic cache entries                                                                                |
@@ -680,12 +690,17 @@ Returns models grouped by provider with types (`chat`, `embedding`, `image`).
 - Available in **Dashboard → Endpoints** for Docker and other self-hosted deployments
 - Creates a temporary `https://*.trycloudflare.com` URL that forwards to your current OpenAI-compatible `/v1` endpoint
 - First enable installs `cloudflared` only when needed; later restarts reuse the same managed binary
+<<<<<<< Updated upstream
 - Quick Tunnels are not auto-restored after an OmniRoute or container restart; re-enable them from the dashboard when needed
 - Tunnel URLs are ephemeral and change every time you stop/start the tunnel
 - Managed Quick Tunnels default to HTTP/2 transport to avoid noisy QUIC UDP buffer warnings in constrained containers
 - Set `CLOUDFLARED_PROTOCOL=quic` or `auto` if you want to override the managed transport choice
 - Set `CLOUDFLARED_BIN` if you prefer using a preinstalled `cloudflared` binary instead of the managed download
 - Cloudflare Quick Tunnel, Tailscale Funnel, and ngrok Tunnel panels can be shown or hidden in **Settings → Appearance**. Hiding a panel does not stop a running tunnel.
+=======
+- Tunnel URLs are ephemeral and change every time you stop/start the tunnel
+- Set `CLOUDFLARED_BIN` if you prefer using a preinstalled `cloudflared` binary instead of the managed download
+>>>>>>> Stashed changes
 
 ### LLM Gateway Intelligence (Phase 9)
 
@@ -838,6 +853,7 @@ curl -X POST http://localhost:20128/api/db-backups/import \
 
 The settings page is organized into 6 tabs for easy navigation:
 
+<<<<<<< Updated upstream
 | Tab            | Contents                                                                                                      |
 | -------------- | ------------------------------------------------------------------------------------------------------------- |
 | **General**    | System storage tools, appearance settings, theme controls, sidebar visibility, and Endpoint tunnel visibility |
@@ -846,6 +862,16 @@ The settings page is organized into 6 tabs for easy navigation:
 | **Resilience** | Request queue, connection cooldown, provider breaker config, and wait-for-cooldown behavior                   |
 | **AI**         | Thinking budget configuration, global system prompt injection, prompt cache stats                             |
 | **Advanced**   | Global proxy configuration (HTTP/SOCKS5)                                                                      |
+=======
+| Tab            | Contents                                                                                       |
+| -------------- | ---------------------------------------------------------------------------------------------- |
+| **General**    | System storage tools, appearance settings, theme controls, and per-item sidebar visibility     |
+| **Security**   | Login/Password settings, IP Access Control, API auth for `/models`, and Provider Blocking      |
+| **Routing**    | Global routing strategy (6 options), wildcard model aliases, fallback chains, combo defaults   |
+| **Resilience** | Provider profiles, editable rate limits, circuit breaker status, policies & locked identifiers |
+| **AI**         | Thinking budget configuration, global system prompt injection, prompt cache stats              |
+| **Advanced**   | Global proxy configuration (HTTP/SOCKS5)                                                       |
+>>>>>>> Stashed changes
 
 ---
 

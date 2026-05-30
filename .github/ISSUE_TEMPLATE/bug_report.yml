@@ -13,7 +13,11 @@ body:
     attributes:
       label: OmniRoute Version
       description: "Run `omniroute --version` or check the left sidebar in the dashboard."
+<<<<<<< Updated upstream
       placeholder: "e.g. 3.7.9"
+=======
+      placeholder: "e.g. 3.0.9"
+>>>>>>> Stashed changes
     validations:
       required: true
 
@@ -44,7 +48,11 @@ body:
     id: os-version
     attributes:
       label: OS Version
+<<<<<<< Updated upstream
       placeholder: "e.g. Windows 11 25H2, macOS 26.5, Ubuntu 26.04"
+=======
+      placeholder: "e.g. Windows 11 23H2, macOS 15.3, Ubuntu 24.04"
+>>>>>>> Stashed changes
     validations:
       required: false
 
@@ -53,7 +61,11 @@ body:
     attributes:
       label: Node.js Version
       description: "Run `node --version`. Skip if using Docker."
+<<<<<<< Updated upstream
       placeholder: "e.g. 24.15.0"
+=======
+      placeholder: "e.g. 22.12.0"
+>>>>>>> Stashed changes
     validations:
       required: false
 
@@ -70,7 +82,11 @@ body:
     id: model
     attributes:
       label: Model(s) Involved
+<<<<<<< Updated upstream
       placeholder: "e.g. claude-opus-4-7, gpt-5.5, gemini-3.1-pro"
+=======
+      placeholder: "e.g. claude-sonnet-4-20250514, gpt-4o, gemini-2.5-pro"
+>>>>>>> Stashed changes
     validations:
       required: false
 
@@ -119,6 +135,7 @@ body:
     validations:
       required: true
 
+<<<<<<< Updated upstream
   - type: dropdown
     id: test-impact
     attributes:
@@ -133,6 +150,8 @@ body:
     validations:
       required: true
 
+=======
+>>>>>>> Stashed changes
   - type: textarea
     id: logs
     attributes:
@@ -157,6 +176,7 @@ body:
       description: "Any other context about the problem (e.g. proxy config, number of accounts, network setup)."
     validations:
       required: false
+<<<<<<< Updated upstream
 
   - type: textarea
     id: validation-plan
@@ -169,3 +189,5 @@ body:
         - npm run test:coverage
     validations:
       required: false
+=======
+>>>>>>> Stashed changes

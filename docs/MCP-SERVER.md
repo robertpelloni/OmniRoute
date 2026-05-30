@@ -49,6 +49,7 @@ Cursor, Cline, and compatible MCP client setup.
 | `omniroute_best_combo_for_task`    | Task-fitness recommendation with alternatives               |
 | `omniroute_explain_route`          | Explain a past routing decision                             |
 | `omniroute_get_session_snapshot`   | Full session state: costs, tokens, errors                   |
+<<<<<<< Updated upstream
 
 ## Cache Tools (2)
 
@@ -79,6 +80,8 @@ the runtime compression model behind these tools.
 
 The remaining MCP surface includes 1proxy tools, memory tools, and skill tools. The live source of
 truth is `open-sse/mcp-server/tools/` and `open-sse/mcp-server/schemas/tools.ts`.
+=======
+>>>>>>> Stashed changes
 
 ## Authentication
 

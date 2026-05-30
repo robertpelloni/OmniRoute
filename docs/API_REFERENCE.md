@@ -216,6 +216,7 @@ Response example:
 
 ### Settings
 
+<<<<<<< Updated upstream
 | Endpoint                        | Method        | Description               |
 | ------------------------------- | ------------- | ------------------------- |
 | `/api/settings`                 | GET/PUT/PATCH | General settings          |
@@ -242,6 +243,16 @@ Response example:
 | `/api/context/combos/[id]`             | GET/PUT/DELETE | Compression combo detail/update/delete                                   |
 | `/api/context/combos/[id]/assignments` | GET/PUT        | Assign compression combos to routing combos                              |
 | `/api/context/analytics`               | GET            | Compression analytics alias                                              |
+=======
+| Endpoint                        | Method        | Description            |
+| ------------------------------- | ------------- | ---------------------- |
+| `/api/settings`                 | GET/PUT/PATCH | General settings       |
+| `/api/settings/proxy`           | GET/PUT       | Network proxy config   |
+| `/api/settings/proxy/test`      | POST          | Test proxy connection  |
+| `/api/settings/ip-filter`       | GET/PUT       | IP allowlist/blocklist |
+| `/api/settings/thinking-budget` | GET/PUT       | Reasoning token budget |
+| `/api/settings/system-prompt`   | GET/PUT       | Global system prompt   |
+>>>>>>> Stashed changes
 
 ### Monitoring
 
@@ -277,8 +288,11 @@ Response example:
 | -------------------------- | ------ | ----------------------------------------------------------------------- |
 | `/api/tunnels/cloudflared` | GET    | Read Cloudflare Quick Tunnel install/runtime status for the dashboard   |
 | `/api/tunnels/cloudflared` | POST   | Enable or disable the Cloudflare Quick Tunnel (`action=enable/disable`) |
+<<<<<<< Updated upstream
 | `/api/tunnels/ngrok`       | GET    | Read ngrok Tunnel runtime status for the dashboard                      |
 | `/api/tunnels/ngrok`       | POST   | Enable or disable the ngrok Tunnel (`action=enable/disable`)            |
+=======
+>>>>>>> Stashed changes
 
 ### CLI Tools
 
@@ -304,12 +318,21 @@ GET response includes `agents[]` (id, name, binary, version, installed, protocol
 
 ### Resilience & Rate Limits
 
+<<<<<<< Updated upstream
 | Endpoint                | Method    | Description                                                                        |
 | ----------------------- | --------- | ---------------------------------------------------------------------------------- |
 | `/api/resilience`       | GET/PATCH | Get/update request queue, connection cooldown, provider breaker, and wait settings |
 | `/api/resilience/reset` | POST      | Reset provider circuit breakers                                                    |
 | `/api/rate-limits`      | GET       | Per-account rate limit status                                                      |
 | `/api/rate-limit`       | GET       | Global rate limit configuration                                                    |
+=======
+| Endpoint                | Method    | Description                     |
+| ----------------------- | --------- | ------------------------------- |
+| `/api/resilience`       | GET/PATCH | Get/update resilience profiles  |
+| `/api/resilience/reset` | POST      | Reset circuit breakers          |
+| `/api/rate-limits`      | GET       | Per-account rate limit status   |
+| `/api/rate-limit`       | GET       | Global rate limit configuration |
+>>>>>>> Stashed changes
 
 ### Evals
 

@@ -217,13 +217,20 @@ Inform the user:
 
 > Run these steps only AFTER the user has merged the PR into `main` and all CI jobs have passed.
 
+<<<<<<< Updated upstream
 ### 11. Deploy to Local VPS for Final Validation (MANDATORY)
 
 Before cutting the official git tag and publishing to the world, deploy the `main` branch to the Local VPS for a final homologation test.
+=======
+### 11. Create Git Tag and GitHub Release (MANDATORY)
+
+// turbo
+>>>>>>> Stashed changes
 
 ```bash
 git checkout main
 git pull origin main
+<<<<<<< Updated upstream
 
 # Build and pack locally
 cd /home/diegosouzapw/dev/proxys/OmniRoute && rm -f omniroute-*.tgz && rm -rf .next/cache app/.next/cache && npm run build:cli && rm -rf app/logs app/coverage app/.git app/.app-build-backup* && npm pack --ignore-scripts
@@ -265,6 +272,12 @@ if [ -z "$NOTES" ]; then NOTES="OmniRoute v$VERSION Release"; fi
 git tag -a "v$VERSION" -m "Release v$VERSION"
 git push origin "v$VERSION"
 gh release create "v$VERSION" --repo diegosouzapw/OmniRoute --title "v$VERSION" --notes "$NOTES" --target main || gh release edit "v$VERSION" --repo diegosouzapw/OmniRoute --title "v$VERSION" --notes "$NOTES"
+=======
+VERSION=$(node -p "require('./package.json').version")
+git tag -a "v$VERSION" -m "Release v$VERSION"
+git push origin --tags
+gh release create "v$VERSION" --title "v$VERSION" --notes "OmniRoute v$VERSION Release" --target main
+>>>>>>> Stashed changes
 ```
 
 ### 14. 🐳 Trigger Docker Hub build (MANDATORY — keep npm and Docker in sync)

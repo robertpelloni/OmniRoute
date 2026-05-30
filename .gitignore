@@ -68,6 +68,42 @@ antigravity-manager-analysis/
 .sisyphus/
 .plans/
 
+<<<<<<< Updated upstream
+=======
+# docs (allow specific tracked files)
+docs/*
+!docs/ARCHITECTURE.md
+!docs/CODEBASE_DOCUMENTATION.md
+!docs/CONTRIBUTING.md
+!docs/USER_GUIDE.md
+!docs/API_REFERENCE.md
+!docs/TROUBLESHOOTING.md
+!docs/EXECUTION_CONTEXT_PROVIDER_SYNC.md
+!docs/TASK_NEBIUS_BACKEND_ENABLEMENT.md
+!docs/frontend-backend-provider-gap-report.md
+!docs/openapi.yaml
+!docs/RELEASE_CHECKLIST.md
+!docs/PLANO-IMPLANTACAO.md
+!docs/TASKS.md
+!docs/FASE-*.md
+!docs/adr/
+!docs/cli-tools/
+!docs/planning/
+!docs/improvement-plans/
+!docs/api/
+!docs/VM_DEPLOYMENT_GUIDE.md
+!docs/FEATURES.md
+!docs/screenshots/
+!docs/i18n/
+!docs/i18n/**
+!docs/A2A-SERVER.md
+!docs/AUTO-COMBO.md
+!docs/MCP-SERVER.md
+!docs/CLI-TOOLS.md
+!docs/COVERAGE_PLAN.md
+
+
+>>>>>>> Stashed changes
 # open-sse tests
 open-sse/test/*
 
@@ -125,6 +161,7 @@ vscode-extension/
 typescript
 
 # Gemini Antigravity agent data
+<<<<<<< Updated upstream
 .gemini/
 
 # Superpowers plans/specs (internal tooling, not project code)
@@ -142,3 +179,6 @@ bun.lock
 
 # Private environment variables for .http-client
 http-client.private.env.json
+=======
+.gemini/
+>>>>>>> Stashed changes

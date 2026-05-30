@@ -46,7 +46,10 @@ Current list (v3.0.0-rc.16):
 | **GitHub Copilot** | `copilot`     | extension  | custom     | VS Code        |
 | **OpenCode**       | `opencode`    | `opencode` | guide      | npm            |
 | **Kiro AI**        | `kiro`        | app/cli    | mitm       | desktop/CLI    |
+<<<<<<< Updated upstream
 | **Qwen Code**      | `qwen`        | `qwen`     | custom     | npm            |
+=======
+>>>>>>> Stashed changes
 
 ### CLI fingerprint sync (Agents + Settings)
 
@@ -374,7 +377,11 @@ OMNIROUTE_URL="http://localhost:20128/v1"
 OMNIROUTE_ANTHROPIC_URL="http://localhost:20128"
 OMNIROUTE_KEY="sk-your-omniroute-key"
 
+<<<<<<< Updated upstream
 npm install -g @anthropic-ai/claude-code @openai/codex opencode-ai cline kilocode @qwen-code/qwen-code
+=======
+npm install -g @anthropic-ai/claude-code @openai/codex opencode-ai cline kilocode
+>>>>>>> Stashed changes
 
 # Kiro CLI
 apt-get install -y unzip 2>/dev/null; curl -fsSL https://cli.kiro.dev/install | bash

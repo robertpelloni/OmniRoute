@@ -2,7 +2,11 @@
 
 🌐 **Languages:** 🇺🇸 [English](ARCHITECTURE.md) | 🇧🇷 [Português (Brasil)](i18n/pt-BR/ARCHITECTURE.md) | 🇪🇸 [Español](i18n/es/ARCHITECTURE.md) | 🇫🇷 [Français](i18n/fr/ARCHITECTURE.md) | 🇮🇹 [Italiano](i18n/it/ARCHITECTURE.md) | 🇷🇺 [Русский](i18n/ru/ARCHITECTURE.md) | 🇨🇳 [中文 (简体)](i18n/zh-CN/ARCHITECTURE.md) | 🇩🇪 [Deutsch](i18n/de/ARCHITECTURE.md) | 🇮🇳 [हिन्दी](i18n/in/ARCHITECTURE.md) | 🇹🇭 [ไทย](i18n/th/ARCHITECTURE.md) | 🇺🇦 [Українська](i18n/uk-UA/ARCHITECTURE.md) | 🇸🇦 [العربية](i18n/ar/ARCHITECTURE.md) | 🇯🇵 [日本語](i18n/ja/ARCHITECTURE.md) | 🇻🇳 [Tiếng Việt](i18n/vi/ARCHITECTURE.md) | 🇧🇬 [Български](i18n/bg/ARCHITECTURE.md) | 🇩🇰 [Dansk](i18n/da/ARCHITECTURE.md) | 🇫🇮 [Suomi](i18n/fi/ARCHITECTURE.md) | 🇮🇱 [עברית](i18n/he/ARCHITECTURE.md) | 🇭🇺 [Magyar](i18n/hu/ARCHITECTURE.md) | 🇮🇩 [Bahasa Indonesia](i18n/id/ARCHITECTURE.md) | 🇰🇷 [한국어](i18n/ko/ARCHITECTURE.md) | 🇲🇾 [Bahasa Melayu](i18n/ms/ARCHITECTURE.md) | 🇳🇱 [Nederlands](i18n/nl/ARCHITECTURE.md) | 🇳🇴 [Norsk](i18n/no/ARCHITECTURE.md) | 🇵🇹 [Português (Portugal)](i18n/pt/ARCHITECTURE.md) | 🇷🇴 [Română](i18n/ro/ARCHITECTURE.md) | 🇵🇱 [Polski](i18n/pl/ARCHITECTURE.md) | 🇸🇰 [Slovenčina](i18n/sk/ARCHITECTURE.md) | 🇸🇪 [Svenska](i18n/sv/ARCHITECTURE.md) | 🇵🇭 [Filipino](i18n/phi/ARCHITECTURE.md) | 🇨🇿 [Čeština](i18n/cs/ARCHITECTURE.md)
 
+<<<<<<< Updated upstream
 _Last updated: 2026-05-02_
+=======
+_Last updated: 2026-03-28_
+>>>>>>> Stashed changes
 
 ## Executive Summary
 
@@ -102,20 +106,32 @@ Main pages under `src/app/(dashboard)/dashboard/`:
 - `/dashboard` — quick start + provider overview
 - `/dashboard/endpoint` — endpoint proxy + MCP + A2A + API endpoint tabs
 - `/dashboard/providers` — provider connections and credentials
+<<<<<<< Updated upstream
 - `/dashboard/combos` — combo strategies, templates, step-based builder, model routing rules, manual persisted ordering
 - `/dashboard/costs` — cost aggregation and pricing visibility
 - `/dashboard/analytics` — usage analytics, evaluations, combo target health
+=======
+- `/dashboard/combos` — combo strategies, templates, model routing rules
+- `/dashboard/costs` — cost aggregation and pricing visibility
+- `/dashboard/analytics` — usage analytics and evaluations
+>>>>>>> Stashed changes
 - `/dashboard/limits` — quota/rate controls
 - `/dashboard/cli-tools` — CLI onboarding, runtime detection, config generation
 - `/dashboard/agents` — detected ACP agents + custom agent registration
 - `/dashboard/media` — image/video/music playground
 - `/dashboard/search-tools` — search provider testing and history
+<<<<<<< Updated upstream
 - `/dashboard/health` — uptime, circuit breakers, rate limits, quota-monitored sessions
 - `/dashboard/logs` — request/proxy/audit/console logs
 - `/dashboard/settings` — system settings tabs (general, routing, combo defaults, etc.)
 - `/dashboard/context/caveman` — Caveman compression rules, language packs, preview, and output mode
 - `/dashboard/context/rtk` — RTK command-output filters, preview, and runtime safety settings
 - `/dashboard/context/combos` — named compression pipelines assigned to routing combos
+=======
+- `/dashboard/health` — uptime, circuit breakers, rate limits
+- `/dashboard/logs` — request/proxy/audit/console logs
+- `/dashboard/settings` — system settings tabs (general, routing, combo defaults, etc.)
+>>>>>>> Stashed changes
 - `/dashboard/api-manager` — API key lifecycle and model permissions
 
 ## High-Level System Context
@@ -674,6 +690,7 @@ flowchart LR
 
 Each provider has a specialized executor extending `BaseExecutor` (in `open-sse/executors/base.ts`), which provides URL building, header construction, retry with exponential backoff, credential refresh hooks, and the `execute()` orchestration method.
 
+<<<<<<< Updated upstream
 | Executor               | Provider(s)                                                                                                                                                 | Special Handling                                                     |
 | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
 | `DefaultExecutor`      | OpenAI, Claude, Gemini, Qwen, OpenRouter, GLM, Kimi, MiniMax, DeepSeek, Groq, xAI, Mistral, Perplexity, Together, Fireworks, Cerebras, Cohere, NVIDIA, etc. | Dynamic URL/header config per provider                               |
@@ -690,6 +707,17 @@ Each provider has a specialized executor extending `BaseExecutor` (in `open-sse/
 | `PuterExecutor`        | Puter                                                                                                                                                       | Browser-based provider integration                                   |
 | `QoderExecutor`        | Qoder AI                                                                                                                                                    | PAT and OAuth support, multi-model free tier                         |
 | `VertexExecutor`       | Google Vertex AI                                                                                                                                            | Service account auth, region-based endpoints                         |
+=======
+| Executor              | Provider(s)                                                                                                                                                  | Special Handling                                                     |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------- |
+| `DefaultExecutor`     | OpenAI, Claude, Gemini, Qwen, Qoder, OpenRouter, GLM, Kimi, MiniMax, DeepSeek, Groq, xAI, Mistral, Perplexity, Together, Fireworks, Cerebras, Cohere, NVIDIA | Dynamic URL/header config per provider                               |
+| `AntigravityExecutor` | Google Antigravity                                                                                                                                           | Custom project/session IDs, Retry-After parsing                      |
+| `CodexExecutor`       | OpenAI Codex                                                                                                                                                 | Injects system instructions, forces reasoning effort                 |
+| `CursorExecutor`      | Cursor IDE                                                                                                                                                   | ConnectRPC protocol, Protobuf encoding, request signing via checksum |
+| `GithubExecutor`      | GitHub Copilot                                                                                                                                               | Copilot token refresh, VSCode-mimicking headers                      |
+| `KiroExecutor`        | AWS CodeWhisperer/Kiro                                                                                                                                       | AWS EventStream binary format → SSE conversion                       |
+| `GeminiCLIExecutor`   | Gemini CLI                                                                                                                                                   | Google OAuth token refresh cycle                                     |
+>>>>>>> Stashed changes
 
 All other providers (including custom compatible nodes) use the `DefaultExecutor`.
 
@@ -707,10 +735,14 @@ All other providers (including custom compatible nodes) use the `DefaultExecutor
 | Cursor           | cursor           | Custom checksum       | ✅               | ✅         | ❌            | ❌                 |
 | Kiro             | kiro             | AWS SSO OIDC          | ✅ (EventStream) | ❌         | ✅            | ✅ Usage limits    |
 | Qwen             | openai           | OAuth                 | ✅               | ✅         | ✅            | ⚠️ Per request     |
+<<<<<<< Updated upstream
 | Qoder            | openai           | OAuth / PAT           | ✅               | ✅         | ✅            | ⚠️ Per request     |
 | Kilo Code        | openai           | OAuth                 | ✅               | ✅         | ✅            | ❌                 |
 | Cline            | openai           | OAuth                 | ✅               | ✅         | ✅            | ❌                 |
 | Kimi Coding      | openai           | OAuth                 | ✅               | ✅         | ✅            | ❌                 |
+=======
+| Qoder            | openai           | OAuth (Basic)         | ✅               | ✅         | ✅            | ⚠️ Per request     |
+>>>>>>> Stashed changes
 | OpenRouter       | openai           | API Key               | ✅               | ✅         | ❌            | ❌                 |
 | GLM/Kimi/MiniMax | claude           | API Key               | ✅               | ✅         | ❌            | ❌                 |
 | DeepSeek         | openai           | API Key               | ✅               | ✅         | ❌            | ❌                 |

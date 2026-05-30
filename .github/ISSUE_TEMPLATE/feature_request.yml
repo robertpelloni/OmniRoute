@@ -33,6 +33,7 @@ body:
     validations:
       required: false
 
+<<<<<<< Updated upstream
   - type: textarea
     id: acceptance
     attributes:
@@ -46,6 +47,8 @@ body:
     validations:
       required: true
 
+=======
+>>>>>>> Stashed changes
   - type: dropdown
     id: area
     attributes:
@@ -81,6 +84,7 @@ body:
       description: "Any other context, mockups, or references."
     validations:
       required: false
+<<<<<<< Updated upstream
 
   - type: textarea
     id: test-plan
@@ -94,3 +98,5 @@ body:
         - Keep npm run test:coverage at 60%+
     validations:
       required: false
+=======
+>>>>>>> Stashed changes

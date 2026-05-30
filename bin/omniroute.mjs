@@ -275,6 +275,10 @@ if (!existsSync(serverJs)) {
   console.error("\x1b[31m✖ Server not found at:\x1b[0m", serverJs);
   console.error("  The package may not have been built correctly.");
   console.error("");
+<<<<<<< Updated upstream
+=======
+  // (#492) Detect common non-standard Node managers that cause this issue
+>>>>>>> Stashed changes
   const nodeExec = process.execPath || "";
   const isMise = nodeExec.includes("mise") || nodeExec.includes(".local/share/mise");
   const isNvm = nodeExec.includes(".nvm") || nodeExec.includes("nvm");

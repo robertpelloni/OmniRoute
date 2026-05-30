@@ -36,9 +36,12 @@ permissions:
   contents: read
   id-token: write
   packages: write
+<<<<<<< Updated upstream
 
 env:
   NPM_PUBLISH_NODE_VERSION: "24"
+=======
+>>>>>>> Stashed changes
 
 jobs:
   publish:

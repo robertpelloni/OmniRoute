@@ -1,10 +1,35 @@
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:docs/i18n/fi/docs/ARCHITECTURE.md
 # OmniRoute Architecture (Suomi)
 
 🌐 **Languages:** 🇺🇸 [English](../../../../docs/ARCHITECTURE.md) · 🇸🇦 [ar](../../ar/docs/ARCHITECTURE.md) · 🇧🇬 [bg](../../bg/docs/ARCHITECTURE.md) · 🇧🇩 [bn](../../bn/docs/ARCHITECTURE.md) · 🇨🇿 [cs](../../cs/docs/ARCHITECTURE.md) · 🇩🇰 [da](../../da/docs/ARCHITECTURE.md) · 🇩🇪 [de](../../de/docs/ARCHITECTURE.md) · 🇪🇸 [es](../../es/docs/ARCHITECTURE.md) · 🇮🇷 [fa](../../fa/docs/ARCHITECTURE.md) · 🇫🇮 [fi](../../fi/docs/ARCHITECTURE.md) · 🇫🇷 [fr](../../fr/docs/ARCHITECTURE.md) · 🇮🇳 [gu](../../gu/docs/ARCHITECTURE.md) · 🇮🇱 [he](../../he/docs/ARCHITECTURE.md) · 🇮🇳 [hi](../../hi/docs/ARCHITECTURE.md) · 🇭🇺 [hu](../../hu/docs/ARCHITECTURE.md) · 🇮🇩 [id](../../id/docs/ARCHITECTURE.md) · 🇮🇹 [it](../../it/docs/ARCHITECTURE.md) · 🇯🇵 [ja](../../ja/docs/ARCHITECTURE.md) · 🇰🇷 [ko](../../ko/docs/ARCHITECTURE.md) · 🇮🇳 [mr](../../mr/docs/ARCHITECTURE.md) · 🇲🇾 [ms](../../ms/docs/ARCHITECTURE.md) · 🇳🇱 [nl](../../nl/docs/ARCHITECTURE.md) · 🇳🇴 [no](../../no/docs/ARCHITECTURE.md) · 🇵🇭 [phi](../../phi/docs/ARCHITECTURE.md) · 🇵🇱 [pl](../../pl/docs/ARCHITECTURE.md) · 🇵🇹 [pt](../../pt/docs/ARCHITECTURE.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/ARCHITECTURE.md) · 🇷🇴 [ro](../../ro/docs/ARCHITECTURE.md) · 🇷🇺 [ru](../../ru/docs/ARCHITECTURE.md) · 🇸🇰 [sk](../../sk/docs/ARCHITECTURE.md) · 🇸🇪 [sv](../../sv/docs/ARCHITECTURE.md) · 🇰🇪 [sw](../../sw/docs/ARCHITECTURE.md) · 🇮🇳 [ta](../../ta/docs/ARCHITECTURE.md) · 🇮🇳 [te](../../te/docs/ARCHITECTURE.md) · 🇹🇭 [th](../../th/docs/ARCHITECTURE.md) · 🇹🇷 [tr](../../tr/docs/ARCHITECTURE.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/ARCHITECTURE.md) · 🇵🇰 [ur](../../ur/docs/ARCHITECTURE.md) · 🇻🇳 [vi](../../vi/docs/ARCHITECTURE.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/ARCHITECTURE.md)
+=======
+<<<<<<<< Updated upstream:docs/i18n/in/docs/ARCHITECTURE.md
+# OmniRoute Architecture (हिन्दी (IN))
+
+🌐 **Languages:** 🇺🇸 [English](../../../../docs/ARCHITECTURE.md) · 🇪🇸 [es](../../es/docs/ARCHITECTURE.md) · 🇫🇷 [fr](../../fr/docs/ARCHITECTURE.md) · 🇩🇪 [de](../../de/docs/ARCHITECTURE.md) · 🇮🇹 [it](../../it/docs/ARCHITECTURE.md) · 🇷🇺 [ru](../../ru/docs/ARCHITECTURE.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/ARCHITECTURE.md) · 🇯🇵 [ja](../../ja/docs/ARCHITECTURE.md) · 🇰🇷 [ko](../../ko/docs/ARCHITECTURE.md) · 🇸🇦 [ar](../../ar/docs/ARCHITECTURE.md) · 🇮🇳 [hi](../../hi/docs/ARCHITECTURE.md) · 🇮🇳 [in](../../in/docs/ARCHITECTURE.md) · 🇹🇭 [th](../../th/docs/ARCHITECTURE.md) · 🇻🇳 [vi](../../vi/docs/ARCHITECTURE.md) · 🇮🇩 [id](../../id/docs/ARCHITECTURE.md) · 🇲🇾 [ms](../../ms/docs/ARCHITECTURE.md) · 🇳🇱 [nl](../../nl/docs/ARCHITECTURE.md) · 🇵🇱 [pl](../../pl/docs/ARCHITECTURE.md) · 🇸🇪 [sv](../../sv/docs/ARCHITECTURE.md) · 🇳🇴 [no](../../no/docs/ARCHITECTURE.md) · 🇩🇰 [da](../../da/docs/ARCHITECTURE.md) · 🇫🇮 [fi](../../fi/docs/ARCHITECTURE.md) · 🇵🇹 [pt](../../pt/docs/ARCHITECTURE.md) · 🇷🇴 [ro](../../ro/docs/ARCHITECTURE.md) · 🇭🇺 [hu](../../hu/docs/ARCHITECTURE.md) · 🇧🇬 [bg](../../bg/docs/ARCHITECTURE.md) · 🇸🇰 [sk](../../sk/docs/ARCHITECTURE.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/ARCHITECTURE.md) · 🇮🇱 [he](../../he/docs/ARCHITECTURE.md) · 🇵🇭 [phi](../../phi/docs/ARCHITECTURE.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/ARCHITECTURE.md) · 🇨🇿 [cs](../../cs/docs/ARCHITECTURE.md) · 🇹🇷 [tr](../../tr/docs/ARCHITECTURE.md)
+>>>>>>> Stashed changes
 
 ---
 
 _Last updated: 2026-04-15_
+========
+<<<<<<< Updated upstream
+# OmniRoute Architecture (Magyar)
+=======
+# OmniRoute Architecture (Suomi)
+>>>>>>> Stashed changes
+
+🌐 **Languages:** 🇺🇸 [English](../../../../docs/ARCHITECTURE.md) · 🇪🇸 [es](../../es/docs/ARCHITECTURE.md) · 🇫🇷 [fr](../../fr/docs/ARCHITECTURE.md) · 🇩🇪 [de](../../de/docs/ARCHITECTURE.md) · 🇮🇹 [it](../../it/docs/ARCHITECTURE.md) · 🇷🇺 [ru](../../ru/docs/ARCHITECTURE.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/ARCHITECTURE.md) · 🇯🇵 [ja](../../ja/docs/ARCHITECTURE.md) · 🇰🇷 [ko](../../ko/docs/ARCHITECTURE.md) · 🇸🇦 [ar](../../ar/docs/ARCHITECTURE.md) · 🇮🇳 [in](../../in/docs/ARCHITECTURE.md) · 🇹🇭 [th](../../th/docs/ARCHITECTURE.md) · 🇻🇳 [vi](../../vi/docs/ARCHITECTURE.md) · 🇮🇩 [id](../../id/docs/ARCHITECTURE.md) · 🇲🇾 [ms](../../ms/docs/ARCHITECTURE.md) · 🇳🇱 [nl](../../nl/docs/ARCHITECTURE.md) · 🇵🇱 [pl](../../pl/docs/ARCHITECTURE.md) · 🇸🇪 [sv](../../sv/docs/ARCHITECTURE.md) · 🇳🇴 [no](../../no/docs/ARCHITECTURE.md) · 🇩🇰 [da](../../da/docs/ARCHITECTURE.md) · 🇫🇮 [fi](../../fi/docs/ARCHITECTURE.md) · 🇵🇹 [pt](../../pt/docs/ARCHITECTURE.md) · 🇷🇴 [ro](../../ro/docs/ARCHITECTURE.md) · 🇭🇺 [hu](../../hu/docs/ARCHITECTURE.md) · 🇧🇬 [bg](../../bg/docs/ARCHITECTURE.md) · 🇸🇰 [sk](../../sk/docs/ARCHITECTURE.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/ARCHITECTURE.md) · 🇮🇱 [he](../../he/docs/ARCHITECTURE.md) · 🇵🇭 [phi](../../phi/docs/ARCHITECTURE.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/ARCHITECTURE.md) · 🇨🇿 [cs](../../cs/docs/ARCHITECTURE.md)
+
+---
+
+_Last updated: 2026-03-28_
+<<<<<<< Updated upstream
+>>>>>>>> Stashed changes:docs/i18n/hu/docs/ARCHITECTURE.md
+=======
+>>>>>>>> Stashed changes:docs/i18n/fi/docs/ARCHITECTURE.md
+>>>>>>> Stashed changes
 
 ## Executive Summary
 
@@ -44,7 +69,11 @@ Core capabilities:
 - Circuit breaker pattern for provider resilience
 - Anti-thundering herd protection with mutex locking
 - Signature-based request deduplication cache
+<<<<<<< Updated upstream
 - Domain layer: cost rules, fallback policy, lockout policy
+=======
+- Domain layer: model availability, cost rules, fallback policy, lockout policy
+>>>>>>> Stashed changes
 - Context Relay: session handoff summaries for account rotation continuity
 - Domain state persistence (SQLite write-through cache for fallbacks, budgets, lockouts, circuit breakers)
 - Policy engine for centralized request evaluation (lockout → budget → fallback)
@@ -53,7 +82,11 @@ Core capabilities:
 - Correlation ID (X-Request-Id) for end-to-end tracing
 - Compliance audit logging with opt-out per API key
 - Eval framework for LLM quality assurance
+<<<<<<< Updated upstream
 - Health dashboard with real-time provider circuit breaker status
+=======
+- Resilience UI dashboard with real-time circuit breaker status
+>>>>>>> Stashed changes
 - MCP Server (25 tools) with 3 transports (stdio/SSE/Streamable HTTP)
 - A2A Server (JSON-RPC 2.0 + SSE) with skills and task lifecycle
 - Memory system (extraction, injection, retrieval, summarization)
@@ -103,15 +136,41 @@ Main pages under `src/app/(dashboard)/dashboard/`:
 - `/dashboard` — quick start + provider overview
 - `/dashboard/endpoint` — endpoint proxy + MCP + A2A + API endpoint tabs
 - `/dashboard/providers` — provider connections and credentials
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:docs/i18n/fi/docs/ARCHITECTURE.md
+=======
+<<<<<<<< Updated upstream:docs/i18n/in/docs/ARCHITECTURE.md
+>>>>>>> Stashed changes
 - `/dashboard/combos` — combo strategies, templates, step-based builder, model routing rules, manual persisted ordering
 - `/dashboard/costs` — cost aggregation and pricing visibility
 - `/dashboard/analytics` — usage analytics, evaluations, combo target health
+========
+- `/dashboard/combos` — combo strategies, templates, model routing rules
+- `/dashboard/costs` — cost aggregation and pricing visibility
+- `/dashboard/analytics` — usage analytics and evaluations
+<<<<<<< Updated upstream
+>>>>>>>> Stashed changes:docs/i18n/hu/docs/ARCHITECTURE.md
+=======
+>>>>>>>> Stashed changes:docs/i18n/fi/docs/ARCHITECTURE.md
+>>>>>>> Stashed changes
 - `/dashboard/limits` — quota/rate controls
 - `/dashboard/cli-tools` — CLI onboarding, runtime detection, config generation
 - `/dashboard/agents` — detected ACP agents + custom agent registration
 - `/dashboard/media` — image/video/music playground
 - `/dashboard/search-tools` — search provider testing and history
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:docs/i18n/fi/docs/ARCHITECTURE.md
 - `/dashboard/health` — uptime, circuit breakers, rate limits, quota-monitored sessions
+========
+- `/dashboard/health` — uptime, circuit breakers, rate limits
+>>>>>>>> Stashed changes:docs/i18n/hu/docs/ARCHITECTURE.md
+=======
+<<<<<<<< Updated upstream:docs/i18n/in/docs/ARCHITECTURE.md
+- `/dashboard/health` — uptime, circuit breakers, rate limits, quota-monitored sessions
+========
+- `/dashboard/health` — uptime, circuit breakers, rate limits
+>>>>>>>> Stashed changes:docs/i18n/fi/docs/ARCHITECTURE.md
+>>>>>>> Stashed changes
 - `/dashboard/logs` — request/proxy/audit/console logs
 - `/dashboard/settings` — system settings tabs (general, routing, combo defaults, etc.)
 - `/dashboard/api-manager` — API key lifecycle and model permissions
@@ -207,9 +266,16 @@ Management domains:
 - System prompt: `src/app/api/settings/system-prompt` (GET/PUT)
 - Sessions: `src/app/api/sessions` (GET)
 - Rate limits: `src/app/api/rate-limits` (GET)
+<<<<<<< Updated upstream
 - Resilience: `src/app/api/resilience` (GET/PATCH) — request queue, connection cooldown, provider breaker, wait-for-cooldown config
 - Resilience reset: `src/app/api/resilience/reset` (POST) — reset provider breakers
 - Cache stats: `src/app/api/cache/stats` (GET/DELETE)
+=======
+- Resilience: `src/app/api/resilience` (GET/PATCH) — provider profiles, circuit breaker, rate limit state
+- Resilience reset: `src/app/api/resilience/reset` (POST) — reset breakers + cooldowns
+- Cache stats: `src/app/api/cache/stats` (GET/DELETE)
+- Model availability: `src/app/api/models/availability` (GET/POST)
+>>>>>>> Stashed changes
 - Telemetry: `src/app/api/telemetry/summary` (GET)
 - Budget: `src/app/api/usage/budget` (GET/POST)
 - Fallback chains: `src/app/api/fallback/chains` (GET/POST/DELETE)
@@ -266,6 +332,10 @@ Services (business logic):
 
 Domain layer modules:
 
+<<<<<<< Updated upstream
+=======
+- Model availability: `src/lib/domain/modelAvailability.ts`
+>>>>>>> Stashed changes
 - Cost rules/budgets: `src/lib/domain/costRules.ts`
 - Fallback policy: `src/lib/domain/fallbackPolicy.ts`
 - Combo resolver: `src/lib/domain/comboResolver.ts`
@@ -662,6 +732,11 @@ flowchart LR
 
 Each provider has a specialized executor extending `BaseExecutor` (in `open-sse/executors/base.ts`), which provides URL building, header construction, retry with exponential backoff, credential refresh hooks, and the `execute()` orchestration method.
 
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:docs/i18n/fi/docs/ARCHITECTURE.md
+=======
+<<<<<<<< Updated upstream:docs/i18n/in/docs/ARCHITECTURE.md
+>>>>>>> Stashed changes
 | Executor               | Provider(s)                                                                                                                                                 | Special Handling                                                     |
 | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
 | `DefaultExecutor`      | OpenAI, Claude, Gemini, Qwen, OpenRouter, GLM, Kimi, MiniMax, DeepSeek, Groq, xAI, Mistral, Perplexity, Together, Fireworks, Cerebras, Cohere, NVIDIA, etc. | Dynamic URL/header config per provider                               |
@@ -678,6 +753,21 @@ Each provider has a specialized executor extending `BaseExecutor` (in `open-sse/
 | `PuterExecutor`        | Puter                                                                                                                                                       | Browser-based provider integration                                   |
 | `QoderExecutor`        | Qoder AI                                                                                                                                                    | PAT and OAuth support, multi-model free tier                         |
 | `VertexExecutor`       | Google Vertex AI                                                                                                                                            | Service account auth, region-based endpoints                         |
+========
+| Executor              | Provider(s)                                                                                                                                                  | Special Handling                                                     |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------- |
+| `DefaultExecutor`     | OpenAI, Claude, Gemini, Qwen, Qoder, OpenRouter, GLM, Kimi, MiniMax, DeepSeek, Groq, xAI, Mistral, Perplexity, Together, Fireworks, Cerebras, Cohere, NVIDIA | Dynamic URL/header config per provider                               |
+| `AntigravityExecutor` | Google Antigravity                                                                                                                                           | Custom project/session IDs, Retry-After parsing                      |
+| `CodexExecutor`       | OpenAI Codex                                                                                                                                                 | Injects system instructions, forces reasoning effort                 |
+| `CursorExecutor`      | Cursor IDE                                                                                                                                                   | ConnectRPC protocol, Protobuf encoding, request signing via checksum |
+| `GithubExecutor`      | GitHub Copilot                                                                                                                                               | Copilot token refresh, VSCode-mimicking headers                      |
+| `KiroExecutor`        | AWS CodeWhisperer/Kiro                                                                                                                                       | AWS EventStream binary format → SSE conversion                       |
+| `GeminiCLIExecutor`   | Gemini CLI                                                                                                                                                   | Google OAuth token refresh cycle                                     |
+<<<<<<< Updated upstream
+>>>>>>>> Stashed changes:docs/i18n/hu/docs/ARCHITECTURE.md
+=======
+>>>>>>>> Stashed changes:docs/i18n/fi/docs/ARCHITECTURE.md
+>>>>>>> Stashed changes
 
 All other providers (including custom compatible nodes) use the `DefaultExecutor`.
 
@@ -695,10 +785,22 @@ All other providers (including custom compatible nodes) use the `DefaultExecutor
 | Cursor           | cursor           | Custom checksum       | ✅               | ✅         | ❌            | ❌                 |
 | Kiro             | kiro             | AWS SSO OIDC          | ✅ (EventStream) | ❌         | ✅            | ✅ Usage limits    |
 | Qwen             | openai           | OAuth                 | ✅               | ✅         | ✅            | ⚠️ Per request     |
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:docs/i18n/fi/docs/ARCHITECTURE.md
+=======
+<<<<<<<< Updated upstream:docs/i18n/in/docs/ARCHITECTURE.md
+>>>>>>> Stashed changes
 | Qoder            | openai           | OAuth / PAT           | ✅               | ✅         | ✅            | ⚠️ Per request     |
 | Kilo Code        | openai           | OAuth                 | ✅               | ✅         | ✅            | ❌                 |
 | Cline            | openai           | OAuth                 | ✅               | ✅         | ✅            | ❌                 |
 | Kimi Coding      | openai           | OAuth                 | ✅               | ✅         | ✅            | ❌                 |
+========
+| Qoder            | openai           | OAuth (Basic)         | ✅               | ✅         | ✅            | ⚠️ Per request     |
+<<<<<<< Updated upstream
+>>>>>>>> Stashed changes:docs/i18n/hu/docs/ARCHITECTURE.md
+=======
+>>>>>>>> Stashed changes:docs/i18n/fi/docs/ARCHITECTURE.md
+>>>>>>> Stashed changes
 | OpenRouter       | openai           | API Key               | ✅               | ✅         | ❌            | ❌                 |
 | GLM/Kimi/MiniMax | claude           | API Key               | ✅               | ✅         | ❌            | ❌                 |
 | DeepSeek         | openai           | API Key               | ✅               | ✅         | ❌            | ❌                 |
@@ -794,7 +896,11 @@ legacy compatibility. The current runtime contract uses:
 
 ## 1) Account/Provider Availability
 
+<<<<<<< Updated upstream
 - connection cooldown on retryable upstream failures
+=======
+- provider account cooldown on transient/rate/auth errors
+>>>>>>> Stashed changes
 - account fallback before failing request
 - combo model fallback when current model/provider path is exhausted
 
@@ -876,7 +982,11 @@ Environment variables actively used by code:
 5. The `open-sse/` directory is published as the `@omniroute/open-sse` **npm workspace package**. Source code imports it via `@omniroute/open-sse/...` (resolved by Next.js `transpilePackages`). File paths in this document still use the directory name `open-sse/` for consistency.
 6. Charts in the dashboard use **Recharts** (SVG-based) for accessible, interactive analytics visualizations (model usage bar charts, provider breakdown tables with success rates).
 7. E2E tests use **Playwright** (`tests/e2e/`), run via `npm run test:e2e`. Unit tests use **Node.js test runner** (`tests/unit/`), run via `npm run test:unit`. Source code under `src/` is **TypeScript** (`.ts`/`.tsx`); the `open-sse/` workspace remains JavaScript (`.js`).
+<<<<<<< Updated upstream
 8. Settings page is organized into 7 tabs: General, Appearance, AI, Security, Routing, Resilience, Advanced. The Resilience page only configures request queue, connection cooldown, provider breaker, and wait-for-cooldown behavior; live breaker runtime state is shown on the Health page.
+=======
+8. Settings page is organized into 5 tabs: Security, Routing (6 global strategies: fill-first, round-robin, p2c, random, least-used, cost-optimized), Resilience (editable rate limits, circuit breaker, policies, **Context Relay** handoff config), AI (thinking budget, system prompt, prompt cache), Advanced (proxy).
+>>>>>>> Stashed changes
 9. **Context Relay** strategy (`context-relay`) is split across two layers: `combo.ts` decides if a handoff should be generated, `chat.ts` injects the handoff after account resolution. Handoff data lives in `context_handoffs` SQLite table. This split is intentional because only `chat.ts` knows whether the actual account changed.
 10. **Proxy enforcement** is now comprehensive: `tokenHealthCheck.ts` resolves proxy per connection, `/api/providers/validate` uses `runWithProxyContext`, and `proxyFetch.ts` uses `undici.fetch()` to maintain dispatcher compatibility on Node 22.
 11. **Node.js runtime policy detection**: `/api/settings/require-login` returns `nodeVersion` and `nodeCompatible` fields. The login page renders a warning banner when the runtime falls outside the supported secure Node.js lines.

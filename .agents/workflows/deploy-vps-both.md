@@ -22,7 +22,11 @@ Deploy OmniRoute to the production VPSs using `npm pack + scp` + PM2.
 // turbo
 
 ```bash
+<<<<<<< Updated upstream
 cd /home/diegosouzapw/dev/proxys/OmniRoute && rm -f omniroute-*.tgz && rm -rf .next/cache app/.next/cache && npm run build:cli && rm -rf app/logs app/coverage app/.git app/.app-build-backup* && npm pack --ignore-scripts
+=======
+cd /home/diegosouzapw/dev/proxys/9router && npm run build:cli && npm pack --ignore-scripts
+>>>>>>> Stashed changes
 ```
 
 ### 2. Copy to both VPS and install

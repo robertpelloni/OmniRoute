@@ -1,6 +1,10 @@
 # User Guide (한국어)
 
+<<<<<<< Updated upstream
 🌐 **Languages:** 🇺🇸 [English](../../../../docs/USER_GUIDE.md) · 🇸🇦 [ar](../../ar/docs/USER_GUIDE.md) · 🇧🇬 [bg](../../bg/docs/USER_GUIDE.md) · 🇧🇩 [bn](../../bn/docs/USER_GUIDE.md) · 🇨🇿 [cs](../../cs/docs/USER_GUIDE.md) · 🇩🇰 [da](../../da/docs/USER_GUIDE.md) · 🇩🇪 [de](../../de/docs/USER_GUIDE.md) · 🇪🇸 [es](../../es/docs/USER_GUIDE.md) · 🇮🇷 [fa](../../fa/docs/USER_GUIDE.md) · 🇫🇮 [fi](../../fi/docs/USER_GUIDE.md) · 🇫🇷 [fr](../../fr/docs/USER_GUIDE.md) · 🇮🇳 [gu](../../gu/docs/USER_GUIDE.md) · 🇮🇱 [he](../../he/docs/USER_GUIDE.md) · 🇮🇳 [hi](../../hi/docs/USER_GUIDE.md) · 🇭🇺 [hu](../../hu/docs/USER_GUIDE.md) · 🇮🇩 [id](../../id/docs/USER_GUIDE.md) · 🇮🇹 [it](../../it/docs/USER_GUIDE.md) · 🇯🇵 [ja](../../ja/docs/USER_GUIDE.md) · 🇰🇷 [ko](../../ko/docs/USER_GUIDE.md) · 🇮🇳 [mr](../../mr/docs/USER_GUIDE.md) · 🇲🇾 [ms](../../ms/docs/USER_GUIDE.md) · 🇳🇱 [nl](../../nl/docs/USER_GUIDE.md) · 🇳🇴 [no](../../no/docs/USER_GUIDE.md) · 🇵🇭 [phi](../../phi/docs/USER_GUIDE.md) · 🇵🇱 [pl](../../pl/docs/USER_GUIDE.md) · 🇵🇹 [pt](../../pt/docs/USER_GUIDE.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/USER_GUIDE.md) · 🇷🇴 [ro](../../ro/docs/USER_GUIDE.md) · 🇷🇺 [ru](../../ru/docs/USER_GUIDE.md) · 🇸🇰 [sk](../../sk/docs/USER_GUIDE.md) · 🇸🇪 [sv](../../sv/docs/USER_GUIDE.md) · 🇰🇪 [sw](../../sw/docs/USER_GUIDE.md) · 🇮🇳 [ta](../../ta/docs/USER_GUIDE.md) · 🇮🇳 [te](../../te/docs/USER_GUIDE.md) · 🇹🇭 [th](../../th/docs/USER_GUIDE.md) · 🇹🇷 [tr](../../tr/docs/USER_GUIDE.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/USER_GUIDE.md) · 🇵🇰 [ur](../../ur/docs/USER_GUIDE.md) · 🇻🇳 [vi](../../vi/docs/USER_GUIDE.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/USER_GUIDE.md)
+=======
+🌐 **Languages:** 🇺🇸 [English](../../../../docs/USER_GUIDE.md) · 🇪🇸 [es](../../es/docs/USER_GUIDE.md) · 🇫🇷 [fr](../../fr/docs/USER_GUIDE.md) · 🇩🇪 [de](../../de/docs/USER_GUIDE.md) · 🇮🇹 [it](../../it/docs/USER_GUIDE.md) · 🇷🇺 [ru](../../ru/docs/USER_GUIDE.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/USER_GUIDE.md) · 🇯🇵 [ja](../../ja/docs/USER_GUIDE.md) · 🇰🇷 [ko](../../ko/docs/USER_GUIDE.md) · 🇸🇦 [ar](../../ar/docs/USER_GUIDE.md) · 🇮🇳 [in](../../in/docs/USER_GUIDE.md) · 🇹🇭 [th](../../th/docs/USER_GUIDE.md) · 🇻🇳 [vi](../../vi/docs/USER_GUIDE.md) · 🇮🇩 [id](../../id/docs/USER_GUIDE.md) · 🇲🇾 [ms](../../ms/docs/USER_GUIDE.md) · 🇳🇱 [nl](../../nl/docs/USER_GUIDE.md) · 🇵🇱 [pl](../../pl/docs/USER_GUIDE.md) · 🇸🇪 [sv](../../sv/docs/USER_GUIDE.md) · 🇳🇴 [no](../../no/docs/USER_GUIDE.md) · 🇩🇰 [da](../../da/docs/USER_GUIDE.md) · 🇫🇮 [fi](../../fi/docs/USER_GUIDE.md) · 🇵🇹 [pt](../../pt/docs/USER_GUIDE.md) · 🇷🇴 [ro](../../ro/docs/USER_GUIDE.md) · 🇭🇺 [hu](../../hu/docs/USER_GUIDE.md) · 🇧🇬 [bg](../../bg/docs/USER_GUIDE.md) · 🇸🇰 [sk](../../sk/docs/USER_GUIDE.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/USER_GUIDE.md) · 🇮🇱 [he](../../he/docs/USER_GUIDE.md) · 🇵🇭 [phi](../../phi/docs/USER_GUIDE.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/USER_GUIDE.md) · 🇨🇿 [cs](../../cs/docs/USER_GUIDE.md)
+>>>>>>> Stashed changes
 
 ---
 
@@ -506,7 +510,11 @@ do_install() {
 #!/bin/sh
 export PORT="${PORT:-20128}"
 export DATA_DIR="${DATA_DIR:-${XDG_DATA_HOME:-${HOME}/.local/share}/omniroute}"
+<<<<<<< Updated upstream
 export APP_LOG_TO_FILE="${APP_LOG_TO_FILE:-false}"
+=======
+export LOG_TO_FILE="${LOG_TO_FILE:-false}"
+>>>>>>> Stashed changes
 mkdir -p "${DATA_DIR}"
 exec node /usr/lib/omniroute/.next/standalone/server.js "$@"
 EOF
@@ -522,6 +530,7 @@ post_install() {
 
 ### Environment Variables
 
+<<<<<<< Updated upstream
 | Variable                                | Default                              | Description                                                                                               |
 | --------------------------------------- | ------------------------------------ | --------------------------------------------------------------------------------------------------------- |
 | `JWT_SECRET`                            | `omniroute-default-secret-change-me` | JWT signing secret (**change in production**)                                                             |
@@ -544,6 +553,28 @@ post_install() {
 | `OMNIROUTE_MEMORY_MB`                   | `512`                                | Node.js heap limit in MB                                                                                  |
 | `PROMPT_CACHE_MAX_SIZE`                 | `50`                                 | Max prompt cache entries                                                                                  |
 | `SEMANTIC_CACHE_MAX_SIZE`               | `100`                                | Max semantic cache entries                                                                                |
+=======
+| Variable                     | Default                              | Description                                                                                |
+| ---------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------ |
+| `JWT_SECRET`                 | `omniroute-default-secret-change-me` | JWT signing secret (**change in production**)                                              |
+| `INITIAL_PASSWORD`           | `123456`                             | First login password                                                                       |
+| `DATA_DIR`                   | `~/.omniroute`                       | Data directory (db, usage, logs)                                                           |
+| `PORT`                       | framework default                    | Service port (`20128` in examples)                                                         |
+| `HOSTNAME`                   | framework default                    | Bind host (Docker defaults to `0.0.0.0`)                                                   |
+| `NODE_ENV`                   | runtime default                      | Set `production` for deploy                                                                |
+| `BASE_URL`                   | `http://localhost:20128`             | Server-side internal base URL                                                              |
+| `CLOUD_URL`                  | `https://omniroute.dev`              | Cloud sync endpoint base URL                                                               |
+| `API_KEY_SECRET`             | `endpoint-proxy-api-key-secret`      | HMAC secret for generated API keys                                                         |
+| `REQUIRE_API_KEY`            | `false`                              | Enforce Bearer API key on `/v1/*`                                                          |
+| `ALLOW_API_KEY_REVEAL`       | `false`                              | Allow Api Manager to copy full API keys on demand                                          |
+| `DISABLE_SQLITE_AUTO_BACKUP` | `false`                              | Disable automatic SQLite snapshots before writes/import/restore; manual backups still work |
+| `ENABLE_REQUEST_LOGS`        | `false`                              | Enables request/response logs                                                              |
+| `AUTH_COOKIE_SECURE`         | `false`                              | Force `Secure` auth cookie (behind HTTPS reverse proxy)                                    |
+| `CLOUDFLARED_BIN`            | unset                                | Use an existing `cloudflared` binary instead of managed download                           |
+| `OMNIROUTE_MEMORY_MB`        | `512`                                | Node.js heap limit in MB                                                                   |
+| `PROMPT_CACHE_MAX_SIZE`      | `50`                                 | Max prompt cache entries                                                                   |
+| `SEMANTIC_CACHE_MAX_SIZE`    | `100`                                | Max semantic cache entries                                                                 |
+>>>>>>> Stashed changes
 
 For the full environment variable reference, see the [README](../README.md).
 
@@ -668,10 +699,14 @@ Returns models grouped by provider with types (`chat`, `embedding`, `image`).
 - Available in **Dashboard → Endpoints** for Docker and other self-hosted deployments
 - Creates a temporary `https://*.trycloudflare.com` URL that forwards to your current OpenAI-compatible `/v1` endpoint
 - First enable installs `cloudflared` only when needed; later restarts reuse the same managed binary
+<<<<<<< Updated upstream
 - Quick Tunnels are not auto-restored after an OmniRoute or container restart; re-enable them from the dashboard when needed
 - Tunnel URLs are ephemeral and change every time you stop/start the tunnel
 - Managed Quick Tunnels default to HTTP/2 transport to avoid noisy QUIC UDP buffer warnings in constrained containers
 - Set `CLOUDFLARED_PROTOCOL=quic` or `auto` if you want to override the managed transport choice
+=======
+- Tunnel URLs are ephemeral and change every time you stop/start the tunnel
+>>>>>>> Stashed changes
 - Set `CLOUDFLARED_BIN` if you prefer using a preinstalled `cloudflared` binary instead of the managed download
 
 ### LLM Gateway Intelligence (Phase 9)
@@ -825,6 +860,7 @@ curl -X POST http://localhost:20128/api/db-backups/import \
 
 The settings page is organized into 6 tabs for easy navigation:
 
+<<<<<<< Updated upstream
 | Tab            | Contents                                                                                     |
 | -------------- | -------------------------------------------------------------------------------------------- |
 | **General**    | System storage tools, appearance settings, theme controls, and per-item sidebar visibility   |
@@ -833,6 +869,16 @@ The settings page is organized into 6 tabs for easy navigation:
 | **Resilience** | Request queue, connection cooldown, provider breaker config, and wait-for-cooldown behavior  |
 | **AI**         | Thinking budget configuration, global system prompt injection, prompt cache stats            |
 | **Advanced**   | Global proxy configuration (HTTP/SOCKS5)                                                     |
+=======
+| Tab            | Contents                                                                                       |
+| -------------- | ---------------------------------------------------------------------------------------------- |
+| **General**    | System storage tools, appearance settings, theme controls, and per-item sidebar visibility     |
+| **Security**   | Login/Password settings, IP Access Control, API auth for `/models`, and Provider Blocking      |
+| **Routing**    | Global routing strategy (6 options), wildcard model aliases, fallback chains, combo defaults   |
+| **Resilience** | Provider profiles, editable rate limits, circuit breaker status, policies & locked identifiers |
+| **AI**         | Thinking budget configuration, global system prompt injection, prompt cache stats              |
+| **Advanced**   | Global proxy configuration (HTTP/SOCKS5)                                                       |
+>>>>>>> Stashed changes
 
 ---
 

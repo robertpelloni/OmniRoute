@@ -8,7 +8,11 @@ Thank you for your interest in contributing! This guide covers everything you ne
 
 ### Prerequisites
 
+<<<<<<< Updated upstream
 - **Node.js** `>=20.20.2 <21`, `>=22.22.2 <23`, or `>=24.0.0 <25` (recommended: 24 LTS)
+=======
+- **Node.js** >= 18 < 24 (recommended: 22 LTS)
+>>>>>>> Stashed changes
 - **npm** 10+
 - **Git**
 
@@ -119,7 +123,11 @@ Scopes: `db`, `sse`, `oauth`, `dashboard`, `api`, `cli`, `docker`, `ci`, `mcp`, 
 npm run test:all
 
 # Single test file (Node.js native test runner — most tests use this)
+<<<<<<< Updated upstream
 node --import tsx/esm --test tests/unit/your-file.test.ts
+=======
+node --import tsx/esm --test tests/unit/your-file.test.mjs
+>>>>>>> Stashed changes
 
 # Vitest (MCP server, autoCombo, cache)
 npm run test:vitest
@@ -133,7 +141,11 @@ npm run test:protocols:e2e
 # Ecosystem compatibility tests
 npm run test:ecosystem
 
+<<<<<<< Updated upstream
 # Coverage (60% min statements/lines/functions/branches)
+=======
+# Coverage (55% min statements/lines/functions; 60% branches)
+>>>>>>> Stashed changes
 npm run test:coverage
 npm run coverage:report
 
@@ -145,12 +157,16 @@ npm run check
 Coverage notes:
 
 - `npm run test:coverage` measures source coverage for the main unit test suite, excludes `tests/**`, and includes `open-sse/**`
+<<<<<<< Updated upstream
 - Pull requests must keep the overall coverage gate at **60% or higher** for statements, lines, functions, and branches
 - If a PR changes production code in `src/`, `open-sse/`, `electron/`, or `bin/`, it must add or update automated tests in the same PR
+=======
+>>>>>>> Stashed changes
 - `npm run coverage:report` prints the detailed file-by-file report from the latest coverage run
 - `npm run test:coverage:legacy` preserves the older metric for historical comparison
 - See `docs/COVERAGE_PLAN.md` for the phased coverage improvement roadmap
 
+<<<<<<< Updated upstream
 ### Pull Request Requirements
 
 Before opening or merging a PR:
@@ -161,6 +177,8 @@ Before opening or merging a PR:
 - Include the changed or added test files in the PR description when production code changed
 - Check the SonarQube result on the PR when the project secrets are configured in CI
 
+=======
+>>>>>>> Stashed changes
 Current test status: **122 unit test files** covering:
 
 - Provider translators and format conversion

@@ -71,9 +71,17 @@ jobs:
             deb_ext: .deb
 
     steps:
+<<<<<<< Updated upstream
       - uses: actions/checkout@v6
       - name: Setup Node
         uses: actions/setup-node@v6
+=======
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+>>>>>>> Stashed changes
         with:
           node-version: 24
           cache: npm

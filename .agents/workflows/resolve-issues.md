@@ -6,11 +6,17 @@ description: Fetch all open GitHub issues, analyze bugs, resolve what's possible
 
 ## Overview
 
+<<<<<<< Updated upstream
 This workflow fetches all open issues from the project's GitHub repository, classifies them, analyzes bugs, proposes a resolution plan, waits for user validation, and ONLY THEN implements the fixes, commits, and closes the issues on the current release branch (`release/vX.Y.Z`). It does NOT merge or release automatically — the release branch is later merged via PR to main.
 
 > **BRANCH RULE**: All work MUST happen on the current `release/vX.Y.Z` branch. Never create separate `fix/` branches. If no release branch exists yet, create one first using `/generate-release` Phase 1 steps 1–5.
 
 > **⛔ PR PROHIBITION**: If a fix is associated with a contributor's PR, you MUST merge their PR — NEVER close it and re-implement the fix yourself. See `/review-prs` workflow for the full policy. The `gh pr close` command is FORBIDDEN unless the repository owner explicitly requests it.
+=======
+This workflow fetches all open issues from the project's GitHub repository, classifies them, analyzes bugs, resolves what can be fixed, and triages issues with insufficient information. **All fixes are committed on the current release branch** (`release/vX.Y.Z`). It does NOT merge or release automatically — the release branch is later merged via PR to main.
+
+> **BRANCH RULE**: All work MUST happen on the current `release/vX.Y.Z` branch. Never create separate `fix/` branches. If no release branch exists yet, create one first using `/generate-release` Phase 1 steps 1–5.
+>>>>>>> Stashed changes
 
 ## Steps
 
@@ -70,9 +76,15 @@ For each issue, determine its type:
 
 Focus ONLY on **Bugs** for resolution. Feature requests and questions should be skipped with a note in the final report.
 
+<<<<<<< Updated upstream
 ### 5. Deep-Read Each Bug Issue (One-by-One Analysis)
 
 **IMPORTANT**: Read each bug issue thoroughly, one at a time, before moving to the next. This is NOT a batch process — each issue needs focused attention.
+=======
+### 5. Analyze Each Bug — For each bug issue:
+
+#### 5a. Check Information Sufficiency
+>>>>>>> Stashed changes
 
 #### 5a. Understand the Problem
 
@@ -94,7 +106,11 @@ Verify the issue contains enough to act on:
 - [ ] Provider/model/version information
 - [ ] Expected vs actual behavior
 
+<<<<<<< Updated upstream
 #### 5c. Determine Issue Disposition
+=======
+#### 5b. If Information Is INSUFFICIENT
+>>>>>>> Stashed changes
 
 For each bug, classify into one of 5 actions:
 
@@ -107,6 +123,7 @@ For each bug, classify into one of 5 actions:
 | **📝 RESPOND — User Config** | Error is caused by unsupported env (Node version, wrong model path, missing API enablement)                            | Comment explaining the user-side fix                    |
 | **🔧 FIX — Code Change**     | Root cause is confirmed in the codebase                                                                                | Research, propose solution in report, wait for approval |
 
+<<<<<<< Updated upstream
 #### 5d. For "FIX — Code Change" Issues
 
 Before coding, perform deep source analysis to formulate a plan:
@@ -120,6 +137,21 @@ Before coding, perform deep source analysis to formulate a plan:
 7. **DO NOT modify the codebase yet** — wait for user approval on your report and plan first.
 
 #### 5e. For "RESPOND" Issues
+=======
+#### 5c. If Information Is SUFFICIENT
+
+Proceed with resolution **on the release branch**:
+
+1. **Research** — Search the codebase for files related to the issue
+2. **Root Cause** — Identify the root cause by reading the relevant source files
+3. **Implement Fix** — Apply the fix following existing code patterns and conventions
+4. **Test** — Build the project and run tests to verify the fix
+5. **Commit** — Commit with message format: `fix: <description> (#<issue_number>)`
+
+> **⚠️ Do NOT create a separate branch.** All commits go directly on the release branch.
+
+### 6. Generate Report & Wait for Validation
+>>>>>>> Stashed changes
 
 Post a substantive comment that:
 
@@ -130,9 +162,17 @@ Post a substantive comment that:
 
 **Do NOT post generic template responses.** Every comment should reference the user's specific error messages and environment.
 
+<<<<<<< Updated upstream
 ### 6. Generate Report & Wait for Validation
 
 Present a summary report to the user detailing your proposed actions. For any bugs that need fixing, explicitly explain your proposed solution (files to change and logic) and point out that it will be implemented on the release branch (`release/vX.Y.Z`) after approval.
+=======
+- If the user says **OK** or approves → Proceed to step 7
+- If the user requests changes → Apply the requested adjustments first, then present the report again
+- If the user rejects → Revert the changes and stop
+
+### 7. Commit & Push (only after user approval)
+>>>>>>> Stashed changes
 
 | Issue | Title | Status        | Proposed Action / Version                 |
 | ----- | ----- | ------------- | ----------------------------------------- |
@@ -142,16 +182,30 @@ Present a summary report to the user detailing your proposed actions. For any bu
 | #N    | Title | ❓ Needs Info | Triage comment to be posted               |
 | #N    | Title | ⏭️ Skip       | Feature request / not a bug               |
 
+<<<<<<< Updated upstream
 > **⚠️ IMPORTANT**: Do NOT implement code changes, commit, push, or close issues at this step.
 > Wait for the user to review the proposed fixes and respond with **OK** before proceeding.
 
 - If the user says **OK** or approves → Proceed to step 7
 - If the user requests changes → Adjust the proposed solution and present the report again
 - If the user rejects → Revert any accidental changes and stop
+=======
+- Commit each fix individually on the release branch with message format: `fix: <description> (#<issue_number>)`
+- Push the release branch: `git push origin release/vX.Y.Z`
+- **Update CHANGELOG.md** with all new bug fix entries
+
+### 8. 🛑 WAIT — Notify User & Await Verification
+>>>>>>> Stashed changes
 
 ### 7. Implement Fixes, Run Tests & Commit (only after user approval)
 
+<<<<<<< Updated upstream
 After the user validates and gives the OK:
+=======
+- Inform the user that fixes have been **committed and pushed to the release branch**
+- Include summary of fixes, test status, and files changed
+- **DO NOT merge, close issues, generate releases, or deploy until the user confirms**
+>>>>>>> Stashed changes
 
 1. **Implement the fixes** — modify the codebase according to the approved plan.
 2. **Run tests** — `npm run test:all` (or the specific test file) to ensure 100% pass.
@@ -163,4 +217,19 @@ After the user validates and gives the OK:
 7. Likewise, close `Duplicate` issues referencing the original, close `Needs Info` if stale, and post the required comments.
 8. If the project runs automatic releases or needs a PR, proceed to run `/generate-release` workflow Phase 1 steps 7–10 (tests → commit → push → open PR to main → wait for user).
 
+<<<<<<< Updated upstream
 If NO fixes were committed, skip closing and source control steps and just conclude the workflow.
+=======
+- **User confirms** → Proceed to step 9
+- **User requests changes** → Apply changes, push to the same branch, notify again
+- **User rejects** → Revert and stop
+
+### 9. Close Issues & Finalize (only after user confirms)
+
+After the user confirms:
+
+1. **Close** resolved issues with a comment: `gh issue close <NUMBER> --repo <owner>/<repo> --comment "Fixed in release/vX.Y.Z. The fix will be included in the next release."`
+2. Run `/generate-release` workflow Phase 1 steps 7–10 (tests → commit → push → open PR to main → wait for user)
+
+If NO fixes were committed, skip this step and just present the report.
+>>>>>>> Stashed changes

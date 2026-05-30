@@ -1,6 +1,24 @@
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:docs/i18n/da/docs/USER_GUIDE.md
 # User Guide (Dansk)
 
 🌐 **Languages:** 🇺🇸 [English](../../../../docs/USER_GUIDE.md) · 🇸🇦 [ar](../../ar/docs/USER_GUIDE.md) · 🇧🇬 [bg](../../bg/docs/USER_GUIDE.md) · 🇧🇩 [bn](../../bn/docs/USER_GUIDE.md) · 🇨🇿 [cs](../../cs/docs/USER_GUIDE.md) · 🇩🇰 [da](../../da/docs/USER_GUIDE.md) · 🇩🇪 [de](../../de/docs/USER_GUIDE.md) · 🇪🇸 [es](../../es/docs/USER_GUIDE.md) · 🇮🇷 [fa](../../fa/docs/USER_GUIDE.md) · 🇫🇮 [fi](../../fi/docs/USER_GUIDE.md) · 🇫🇷 [fr](../../fr/docs/USER_GUIDE.md) · 🇮🇳 [gu](../../gu/docs/USER_GUIDE.md) · 🇮🇱 [he](../../he/docs/USER_GUIDE.md) · 🇮🇳 [hi](../../hi/docs/USER_GUIDE.md) · 🇭🇺 [hu](../../hu/docs/USER_GUIDE.md) · 🇮🇩 [id](../../id/docs/USER_GUIDE.md) · 🇮🇹 [it](../../it/docs/USER_GUIDE.md) · 🇯🇵 [ja](../../ja/docs/USER_GUIDE.md) · 🇰🇷 [ko](../../ko/docs/USER_GUIDE.md) · 🇮🇳 [mr](../../mr/docs/USER_GUIDE.md) · 🇲🇾 [ms](../../ms/docs/USER_GUIDE.md) · 🇳🇱 [nl](../../nl/docs/USER_GUIDE.md) · 🇳🇴 [no](../../no/docs/USER_GUIDE.md) · 🇵🇭 [phi](../../phi/docs/USER_GUIDE.md) · 🇵🇱 [pl](../../pl/docs/USER_GUIDE.md) · 🇵🇹 [pt](../../pt/docs/USER_GUIDE.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/USER_GUIDE.md) · 🇷🇴 [ro](../../ro/docs/USER_GUIDE.md) · 🇷🇺 [ru](../../ru/docs/USER_GUIDE.md) · 🇸🇰 [sk](../../sk/docs/USER_GUIDE.md) · 🇸🇪 [sv](../../sv/docs/USER_GUIDE.md) · 🇰🇪 [sw](../../sw/docs/USER_GUIDE.md) · 🇮🇳 [ta](../../ta/docs/USER_GUIDE.md) · 🇮🇳 [te](../../te/docs/USER_GUIDE.md) · 🇹🇭 [th](../../th/docs/USER_GUIDE.md) · 🇹🇷 [tr](../../tr/docs/USER_GUIDE.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/USER_GUIDE.md) · 🇵🇰 [ur](../../ur/docs/USER_GUIDE.md) · 🇻🇳 [vi](../../vi/docs/USER_GUIDE.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/USER_GUIDE.md)
+========
+# User Guide (Norsk)
+
+🌐 **Languages:** 🇺🇸 [English](../../../../docs/USER_GUIDE.md) · 🇪🇸 [es](../../es/docs/USER_GUIDE.md) · 🇫🇷 [fr](../../fr/docs/USER_GUIDE.md) · 🇩🇪 [de](../../de/docs/USER_GUIDE.md) · 🇮🇹 [it](../../it/docs/USER_GUIDE.md) · 🇷🇺 [ru](../../ru/docs/USER_GUIDE.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/USER_GUIDE.md) · 🇯🇵 [ja](../../ja/docs/USER_GUIDE.md) · 🇰🇷 [ko](../../ko/docs/USER_GUIDE.md) · 🇸🇦 [ar](../../ar/docs/USER_GUIDE.md) · 🇮🇳 [in](../../in/docs/USER_GUIDE.md) · 🇹🇭 [th](../../th/docs/USER_GUIDE.md) · 🇻🇳 [vi](../../vi/docs/USER_GUIDE.md) · 🇮🇩 [id](../../id/docs/USER_GUIDE.md) · 🇲🇾 [ms](../../ms/docs/USER_GUIDE.md) · 🇳🇱 [nl](../../nl/docs/USER_GUIDE.md) · 🇵🇱 [pl](../../pl/docs/USER_GUIDE.md) · 🇸🇪 [sv](../../sv/docs/USER_GUIDE.md) · 🇳🇴 [no](../../no/docs/USER_GUIDE.md) · 🇩🇰 [da](../../da/docs/USER_GUIDE.md) · 🇫🇮 [fi](../../fi/docs/USER_GUIDE.md) · 🇵🇹 [pt](../../pt/docs/USER_GUIDE.md) · 🇷🇴 [ro](../../ro/docs/USER_GUIDE.md) · 🇭🇺 [hu](../../hu/docs/USER_GUIDE.md) · 🇧🇬 [bg](../../bg/docs/USER_GUIDE.md) · 🇸🇰 [sk](../../sk/docs/USER_GUIDE.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/USER_GUIDE.md) · 🇮🇱 [he](../../he/docs/USER_GUIDE.md) · 🇵🇭 [phi](../../phi/docs/USER_GUIDE.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/USER_GUIDE.md) · 🇨🇿 [cs](../../cs/docs/USER_GUIDE.md)
+>>>>>>>> Stashed changes:docs/i18n/no/docs/USER_GUIDE.md
+=======
+<<<<<<<< Updated upstream:docs/i18n/in/docs/USER_GUIDE.md
+# User Guide (हिन्दी (IN))
+
+🌐 **Languages:** 🇺🇸 [English](../../../../docs/USER_GUIDE.md) · 🇪🇸 [es](../../es/docs/USER_GUIDE.md) · 🇫🇷 [fr](../../fr/docs/USER_GUIDE.md) · 🇩🇪 [de](../../de/docs/USER_GUIDE.md) · 🇮🇹 [it](../../it/docs/USER_GUIDE.md) · 🇷🇺 [ru](../../ru/docs/USER_GUIDE.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/USER_GUIDE.md) · 🇯🇵 [ja](../../ja/docs/USER_GUIDE.md) · 🇰🇷 [ko](../../ko/docs/USER_GUIDE.md) · 🇸🇦 [ar](../../ar/docs/USER_GUIDE.md) · 🇮🇳 [hi](../../hi/docs/USER_GUIDE.md) · 🇮🇳 [in](../../in/docs/USER_GUIDE.md) · 🇹🇭 [th](../../th/docs/USER_GUIDE.md) · 🇻🇳 [vi](../../vi/docs/USER_GUIDE.md) · 🇮🇩 [id](../../id/docs/USER_GUIDE.md) · 🇲🇾 [ms](../../ms/docs/USER_GUIDE.md) · 🇳🇱 [nl](../../nl/docs/USER_GUIDE.md) · 🇵🇱 [pl](../../pl/docs/USER_GUIDE.md) · 🇸🇪 [sv](../../sv/docs/USER_GUIDE.md) · 🇳🇴 [no](../../no/docs/USER_GUIDE.md) · 🇩🇰 [da](../../da/docs/USER_GUIDE.md) · 🇫🇮 [fi](../../fi/docs/USER_GUIDE.md) · 🇵🇹 [pt](../../pt/docs/USER_GUIDE.md) · 🇷🇴 [ro](../../ro/docs/USER_GUIDE.md) · 🇭🇺 [hu](../../hu/docs/USER_GUIDE.md) · 🇧🇬 [bg](../../bg/docs/USER_GUIDE.md) · 🇸🇰 [sk](../../sk/docs/USER_GUIDE.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/USER_GUIDE.md) · 🇮🇱 [he](../../he/docs/USER_GUIDE.md) · 🇵🇭 [phi](../../phi/docs/USER_GUIDE.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/USER_GUIDE.md) · 🇨🇿 [cs](../../cs/docs/USER_GUIDE.md) · 🇹🇷 [tr](../../tr/docs/USER_GUIDE.md)
+========
+# User Guide (Dansk)
+
+🌐 **Languages:** 🇺🇸 [English](../../../../docs/USER_GUIDE.md) · 🇪🇸 [es](../../es/docs/USER_GUIDE.md) · 🇫🇷 [fr](../../fr/docs/USER_GUIDE.md) · 🇩🇪 [de](../../de/docs/USER_GUIDE.md) · 🇮🇹 [it](../../it/docs/USER_GUIDE.md) · 🇷🇺 [ru](../../ru/docs/USER_GUIDE.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/USER_GUIDE.md) · 🇯🇵 [ja](../../ja/docs/USER_GUIDE.md) · 🇰🇷 [ko](../../ko/docs/USER_GUIDE.md) · 🇸🇦 [ar](../../ar/docs/USER_GUIDE.md) · 🇮🇳 [in](../../in/docs/USER_GUIDE.md) · 🇹🇭 [th](../../th/docs/USER_GUIDE.md) · 🇻🇳 [vi](../../vi/docs/USER_GUIDE.md) · 🇮🇩 [id](../../id/docs/USER_GUIDE.md) · 🇲🇾 [ms](../../ms/docs/USER_GUIDE.md) · 🇳🇱 [nl](../../nl/docs/USER_GUIDE.md) · 🇵🇱 [pl](../../pl/docs/USER_GUIDE.md) · 🇸🇪 [sv](../../sv/docs/USER_GUIDE.md) · 🇳🇴 [no](../../no/docs/USER_GUIDE.md) · 🇩🇰 [da](../../da/docs/USER_GUIDE.md) · 🇫🇮 [fi](../../fi/docs/USER_GUIDE.md) · 🇵🇹 [pt](../../pt/docs/USER_GUIDE.md) · 🇷🇴 [ro](../../ro/docs/USER_GUIDE.md) · 🇭🇺 [hu](../../hu/docs/USER_GUIDE.md) · 🇧🇬 [bg](../../bg/docs/USER_GUIDE.md) · 🇸🇰 [sk](../../sk/docs/USER_GUIDE.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/USER_GUIDE.md) · 🇮🇱 [he](../../he/docs/USER_GUIDE.md) · 🇵🇭 [phi](../../phi/docs/USER_GUIDE.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/USER_GUIDE.md) · 🇨🇿 [cs](../../cs/docs/USER_GUIDE.md)
+>>>>>>>> Stashed changes:docs/i18n/da/docs/USER_GUIDE.md
+>>>>>>> Stashed changes
 
 ---
 
@@ -320,7 +338,19 @@ Model: cc/claude-opus-4-7
 
 ---
 
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:docs/i18n/da/docs/USER_GUIDE.md
 ## Udrulning
+========
+## Utrulling
+>>>>>>>> Stashed changes:docs/i18n/no/docs/USER_GUIDE.md
+=======
+<<<<<<<< Updated upstream:docs/i18n/in/docs/USER_GUIDE.md
+## तैनाती
+========
+## Udrulning
+>>>>>>>> Stashed changes:docs/i18n/da/docs/USER_GUIDE.md
+>>>>>>> Stashed changes
 
 ### Global npm install (Recommended)
 
@@ -506,7 +536,19 @@ do_install() {
 #!/bin/sh
 export PORT="${PORT:-20128}"
 export DATA_DIR="${DATA_DIR:-${XDG_DATA_HOME:-${HOME}/.local/share}/omniroute}"
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:docs/i18n/da/docs/USER_GUIDE.md
 export APP_LOG_TO_FILE="${APP_LOG_TO_FILE:-false}"
+========
+export LOG_TO_FILE="${LOG_TO_FILE:-false}"
+>>>>>>>> Stashed changes:docs/i18n/no/docs/USER_GUIDE.md
+=======
+<<<<<<<< Updated upstream:docs/i18n/in/docs/USER_GUIDE.md
+export APP_LOG_TO_FILE="${APP_LOG_TO_FILE:-false}"
+========
+export LOG_TO_FILE="${LOG_TO_FILE:-false}"
+>>>>>>>> Stashed changes:docs/i18n/da/docs/USER_GUIDE.md
+>>>>>>> Stashed changes
 mkdir -p "${DATA_DIR}"
 exec node /usr/lib/omniroute/.next/standalone/server.js "$@"
 EOF
@@ -522,6 +564,11 @@ post_install() {
 
 ### Environment Variables
 
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:docs/i18n/da/docs/USER_GUIDE.md
+=======
+<<<<<<<< Updated upstream:docs/i18n/in/docs/USER_GUIDE.md
+>>>>>>> Stashed changes
 | Variable                                | Default                              | Description                                                                                               |
 | --------------------------------------- | ------------------------------------ | --------------------------------------------------------------------------------------------------------- |
 | `JWT_SECRET`                            | `omniroute-default-secret-change-me` | JWT signing secret (**change in production**)                                                             |
@@ -544,6 +591,32 @@ post_install() {
 | `OMNIROUTE_MEMORY_MB`                   | `512`                                | Node.js heap limit in MB                                                                                  |
 | `PROMPT_CACHE_MAX_SIZE`                 | `50`                                 | Max prompt cache entries                                                                                  |
 | `SEMANTIC_CACHE_MAX_SIZE`               | `100`                                | Max semantic cache entries                                                                                |
+========
+| Variable                     | Default                              | Description                                                                                |
+| ---------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------ |
+| `JWT_SECRET`                 | `omniroute-default-secret-change-me` | JWT signing secret (**change in production**)                                              |
+| `INITIAL_PASSWORD`           | `123456`                             | First login password                                                                       |
+| `DATA_DIR`                   | `~/.omniroute`                       | Data directory (db, usage, logs)                                                           |
+| `PORT`                       | framework default                    | Service port (`20128` in examples)                                                         |
+| `HOSTNAME`                   | framework default                    | Bind host (Docker defaults to `0.0.0.0`)                                                   |
+| `NODE_ENV`                   | runtime default                      | Set `production` for deploy                                                                |
+| `BASE_URL`                   | `http://localhost:20128`             | Server-side internal base URL                                                              |
+| `CLOUD_URL`                  | `https://omniroute.dev`              | Cloud sync endpoint base URL                                                               |
+| `API_KEY_SECRET`             | `endpoint-proxy-api-key-secret`      | HMAC secret for generated API keys                                                         |
+| `REQUIRE_API_KEY`            | `false`                              | Enforce Bearer API key on `/v1/*`                                                          |
+| `ALLOW_API_KEY_REVEAL`       | `false`                              | Allow Api Manager to copy full API keys on demand                                          |
+| `DISABLE_SQLITE_AUTO_BACKUP` | `false`                              | Disable automatic SQLite snapshots before writes/import/restore; manual backups still work |
+| `ENABLE_REQUEST_LOGS`        | `false`                              | Enables request/response logs                                                              |
+| `AUTH_COOKIE_SECURE`         | `false`                              | Force `Secure` auth cookie (behind HTTPS reverse proxy)                                    |
+| `CLOUDFLARED_BIN`            | unset                                | Use an existing `cloudflared` binary instead of managed download                           |
+| `OMNIROUTE_MEMORY_MB`        | `512`                                | Node.js heap limit in MB                                                                   |
+| `PROMPT_CACHE_MAX_SIZE`      | `50`                                 | Max prompt cache entries                                                                   |
+| `SEMANTIC_CACHE_MAX_SIZE`    | `100`                                | Max semantic cache entries                                                                 |
+<<<<<<< Updated upstream
+>>>>>>>> Stashed changes:docs/i18n/no/docs/USER_GUIDE.md
+=======
+>>>>>>>> Stashed changes:docs/i18n/da/docs/USER_GUIDE.md
+>>>>>>> Stashed changes
 
 For the full environment variable reference, see the [README](../README.md).
 
@@ -668,10 +741,22 @@ Returns models grouped by provider with types (`chat`, `embedding`, `image`).
 - Available in **Dashboard → Endpoints** for Docker and other self-hosted deployments
 - Creates a temporary `https://*.trycloudflare.com` URL that forwards to your current OpenAI-compatible `/v1` endpoint
 - First enable installs `cloudflared` only when needed; later restarts reuse the same managed binary
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:docs/i18n/da/docs/USER_GUIDE.md
+=======
+<<<<<<<< Updated upstream:docs/i18n/in/docs/USER_GUIDE.md
+>>>>>>> Stashed changes
 - Quick Tunnels are not auto-restored after an OmniRoute or container restart; re-enable them from the dashboard when needed
 - Tunnel URLs are ephemeral and change every time you stop/start the tunnel
 - Managed Quick Tunnels default to HTTP/2 transport to avoid noisy QUIC UDP buffer warnings in constrained containers
 - Set `CLOUDFLARED_PROTOCOL=quic` or `auto` if you want to override the managed transport choice
+========
+- Tunnel URLs are ephemeral and change every time you stop/start the tunnel
+<<<<<<< Updated upstream
+>>>>>>>> Stashed changes:docs/i18n/no/docs/USER_GUIDE.md
+=======
+>>>>>>>> Stashed changes:docs/i18n/da/docs/USER_GUIDE.md
+>>>>>>> Stashed changes
 - Set `CLOUDFLARED_BIN` if you prefer using a preinstalled `cloudflared` binary instead of the managed download
 
 ### LLM Gateway Intelligence (Phase 9)
@@ -758,6 +843,7 @@ Chain: production-fallback
 
 Configure via **Dashboard → Settings → Resilience**.
 
+<<<<<<< Updated upstream
 OmniRoute implements provider-level resilience with five components:
 
 1. **Request Queue & Pacing** — System-level request shaping:
@@ -773,10 +859,29 @@ OmniRoute implements provider-level resilience with five components:
 3. **Provider Circuit Breaker** — Tracks end-to-end provider failures and automatically opens the breaker when the configured threshold is reached:
    - **Failure Threshold** — Consecutive provider failures before opening the breaker
    - **Reset Timeout** — Time window before the provider is tested again
+=======
+OmniRoute implements provider-level resilience with four components:
+
+1. **Provider Profiles** — Per-provider configuration for:
+   - **Transient Cooldown** — Base cooldown for transient upstream failures
+   - **Rate Limit Cooldown** — Base cooldown for `429`-driven lockouts
+   - **Max Backoff Level** — Maximum exponential backoff level for repeated failures
+   - **CB Threshold** — Failure count before model quarantine / provider circuit breaker escalates
+   - **CB Reset Time** — Failure counting window and breaker reset timer
+
+2. **Editable Rate Limits** — System-level defaults configurable in the dashboard:
+   - **Requests Per Minute (RPM)** — Maximum requests per minute per account
+   - **Min Time Between Requests** — Minimum gap in milliseconds between requests
+   - **Max Concurrent Requests** — Maximum simultaneous requests per account
+   - Click **Edit** to modify, then **Save** or **Cancel**. Values persist via the resilience API.
+
+3. **Circuit Breaker** — Tracks failures per provider and automatically opens the circuit when the configured threshold is reached:
+>>>>>>> Stashed changes
    - **CLOSED** (Healthy) — Requests flow normally
    - **OPEN** — Provider is temporarily blocked after repeated failures
    - **HALF_OPEN** — Testing if provider has recovered
 
+<<<<<<< Updated upstream
    Connection-scoped `429` rate limits stay in **Connection Cooldown** and do not count toward the provider breaker.
 
    The provider breaker runtime state is shown on **Dashboard → Health** only.
@@ -786,6 +891,17 @@ OmniRoute implements provider-level resilience with five components:
 5. **Rate Limit Auto-Detection** — When upstream providers return explicit wait windows, those hints override the local connection cooldown when the setting is enabled.
 
 **Pro Tip:** Use the **Health** page to inspect and reset live provider breakers after an outage. The Resilience page only changes configuration.
+=======
+   The same provider profile also drives model-scoped lockouts:
+   - Account/model lockouts react immediately to authoritative `429` / `404` signals and use the configured cooldown + backoff values
+   - Global provider/model quarantine only activates after repeated exhaustion hits the configured **CB Threshold** within **CB Reset Time**
+
+4. **Policies & Locked Identifiers** — Shows circuit breaker status and locked identifiers with force-unlock capability.
+
+5. **Rate Limit Auto-Detection** — Monitors `429` and `Retry-After` headers to proactively avoid hitting provider rate limits. When an upstream provider returns an explicit wait window, that authoritative `Retry-After` value overrides the base cooldown from the provider profile.
+
+**Pro Tip:** Use **Reset All** button to clear all circuit breakers and cooldowns when a provider recovers from an outage.
+>>>>>>> Stashed changes
 
 ---
 
@@ -825,6 +941,8 @@ curl -X POST http://localhost:20128/api/db-backups/import \
 
 The settings page is organized into 6 tabs for easy navigation:
 
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:docs/i18n/da/docs/USER_GUIDE.md
 | Tab            | Contents                                                                                     |
 | -------------- | -------------------------------------------------------------------------------------------- |
 | **General**    | System storage tools, appearance settings, theme controls, and per-item sidebar visibility   |
@@ -833,6 +951,21 @@ The settings page is organized into 6 tabs for easy navigation:
 | **Resilience** | Request queue, connection cooldown, provider breaker config, and wait-for-cooldown behavior  |
 | **AI**         | Thinking budget configuration, global system prompt injection, prompt cache stats            |
 | **Advanced**   | Global proxy configuration (HTTP/SOCKS5)                                                     |
+========
+=======
+>>>>>>> Stashed changes
+| Tab            | Contents                                                                                       |
+| -------------- | ---------------------------------------------------------------------------------------------- |
+| **General**    | System storage tools, appearance settings, theme controls, and per-item sidebar visibility     |
+| **Security**   | Login/Password settings, IP Access Control, API auth for `/models`, and Provider Blocking      |
+| **Routing**    | Global routing strategy (6 options), wildcard model aliases, fallback chains, combo defaults   |
+| **Resilience** | Provider profiles, editable rate limits, circuit breaker status, policies & locked identifiers |
+| **AI**         | Thinking budget configuration, global system prompt injection, prompt cache stats              |
+| **Advanced**   | Global proxy configuration (HTTP/SOCKS5)                                                       |
+<<<<<<< Updated upstream
+>>>>>>>> Stashed changes:docs/i18n/no/docs/USER_GUIDE.md
+=======
+>>>>>>> Stashed changes
 
 ---
 
@@ -905,9 +1038,15 @@ Access via **Dashboard → Health**. Real-time system health overview with 6 car
 | Card                  | What It Shows                                               |
 | --------------------- | ----------------------------------------------------------- |
 | **System Status**     | Uptime, version, memory usage, data directory               |
+<<<<<<< Updated upstream
 | **Provider Health**   | Global provider circuit breaker runtime state               |
 | **Rate Limits**       | Active connection cooldowns per account with remaining time |
 | **Active Lockouts**   | Active model-scoped lockouts and temporary exclusions       |
+=======
+| **Provider Health**   | Per-provider circuit breaker state (Closed/Open/Half-Open)  |
+| **Rate Limits**       | Active rate limit cooldowns per account with remaining time |
+| **Active Lockouts**   | Providers temporarily blocked by the lockout policy         |
+>>>>>>> Stashed changes
 | **Signature Cache**   | Deduplication cache stats (active keys, hit rate)           |
 | **Latency Telemetry** | p50/p95/p99 latency aggregation per provider                |
 
@@ -919,7 +1058,15 @@ Access via **Dashboard → Health**. Real-time system health overview with 6 car
 
 OmniRoute is available as a native desktop application for Windows, macOS, and Linux.
 
+<<<<<<< Updated upstream
 ### Installer
+=======
+<<<<<<<< Updated upstream:docs/i18n/in/docs/USER_GUIDE.md
+### स्थापित करें
+========
+### Installer
+>>>>>>>> Stashed changes:docs/i18n/da/docs/USER_GUIDE.md
+>>>>>>> Stashed changes
 
 ```bash
 # From the electron directory:
