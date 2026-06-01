@@ -109,6 +109,28 @@ export default function MemorySkillsTab() {
     }
   }, []);
 
+  const saveSkillsmpApiKey = useCallback(async () => {
+    setSkillsmpSaving(true);
+    setSkillsmpStatus("");
+    try {
+      const res = await fetch("/api/settings", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ skillsmpApiKey }),
+      });
+      if (res.ok) {
+        setSkillsmpStatus("saved");
+        setTimeout(() => setSkillsmpStatus(""), 2000);
+      } else {
+        setSkillsmpStatus("error");
+      }
+    } catch {
+      setSkillsmpStatus("error");
+    } finally {
+      setSkillsmpSaving(false);
+    }
+  }, [skillsmpApiKey]);
+
   const save = async (updates: Partial<MemoryConfig>) => {
     const previousConfig = config;
     const newConfig = { ...config, ...updates };

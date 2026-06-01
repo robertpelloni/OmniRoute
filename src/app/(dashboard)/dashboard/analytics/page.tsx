@@ -65,6 +65,7 @@ export default function AnalyticsPage() {
           <Suspense fallback={<CardSkeleton />}>
             <UsageAnalytics />
           </Suspense>
+          <DiversityScoreCard />
         </div>
 >>>>>>> Stashed changes
       )}

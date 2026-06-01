@@ -22,7 +22,10 @@ export async function GET(request: Request) {
     return NextResponse.json(buildPaginatedResponse(executions, total, params));
 =======
 
-export async function GET() {
+export async function GET(request: Request) {
+  if (!(await isAuthenticated(request))) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   try {
     const executions = skillExecutor.listExecutions();
     return NextResponse.json({ executions });

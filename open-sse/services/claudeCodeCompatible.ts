@@ -530,6 +530,12 @@ function buildClaudeCodeCompatibleSystemBlocks({
     Array.isArray(systemBlocks) && systemBlocks.length > 0
       ? systemBlocks.map((block) => ({ ...block }))
       : extractCustomSystemBlocks(messages);
+  const useLongSystemTtl =
+    !preserveCacheControl ||
+    customSystemBlocks.some((block) => readCacheControlTtl(block) === "1h");
+  const systemCacheControl = useLongSystemTtl
+    ? { type: "ephemeral", ttl: "1h" }
+    : { type: "ephemeral" };
 
   const preparedCustomSystemBlocks = customSystemBlocks.map((systemBlock) => {
     const preparedBlock = { ...systemBlock } as Record<string, unknown>;

@@ -22,10 +22,17 @@ describe("Memory + Skills Integration", () => {
 =======
 import { describe, it, expect, beforeEach } from "vitest";
 import { retrieveMemories } from "../../memory/retrieval";
-import { createMemory, deleteMemory } from "../../memory/store";
-import { injectSkills } from "../injection";
+import { createMemory } from "../../memory/store";
 import { skillRegistry } from "../registry";
 import { skillExecutor } from "../executor";
+
+vi.mock("../../db/settings", () => ({
+  getSettings: vi.fn().mockResolvedValue({ skillsEnabled: true }),
+  updateSettings: vi.fn().mockResolvedValue({}),
+}));
+
+import { getSettings } from "../../db/settings";
+const mockedGetSettings = vi.mocked(getSettings);
 
 describe("Memory + Skills Integration", () => {
   const apiKeyId = "test-api-key";
