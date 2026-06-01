@@ -413,6 +413,36 @@ export function shouldMarkAccountExhaustedFrom429(
 }
 
 /**
+ * Whether a provider should use per-model lockouts instead of connection-wide cooldowns.
+ * Gemini AI Studio has per-model quotas; passthrough providers have independent model limits.
+ */
+export function hasPerModelQuota(provider: string): boolean {
+  if (provider === "gemini") return true;
+  try {
+    const { getPassthroughProviders } = require("../config/providerRegistry.ts");
+    return getPassthroughProviders().has(provider);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Lock a model (not connection) for a provider with per-model quotas.
+ * No-ops for providers that don't use per-model lockouts.
+ */
+export function lockModelIfPerModelQuota(
+  provider: string,
+  connectionId: string,
+  model: string | null,
+  reason: string,
+  cooldownMs: number
+): boolean {
+  if (!hasPerModelQuota(provider) || !model) return false;
+  lockModel(provider, connectionId, model, reason, cooldownMs);
+  return true;
+}
+
+/**
  * Check if a specific model on a specific account is locked
  * @returns {boolean}
  */

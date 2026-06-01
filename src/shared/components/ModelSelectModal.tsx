@@ -200,6 +200,17 @@ export default function ModelSelectModal({
             source: "fallback",
           }));
 
+        const fallbackEntries = (
+          getCompatibleFallbackModels(providerId, providerCustomModels) || []
+        )
+          .filter((fm) => !nodeModels.some((nm) => nm.id === fm.id))
+          .map((fm) => ({
+            id: fm.id,
+            name: fm.name || fm.id,
+            value: `${nodePrefix}/${fm.id}`,
+            isFallback: true,
+          }));
+
         // Merge custom models for custom providers
         const customEntries = providerCustomModels
           .filter(

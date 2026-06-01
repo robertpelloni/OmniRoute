@@ -232,17 +232,6 @@ function openaiToGeminiBase(model, body, stream, toolNameOptions: GeminiToolName
         }
 
         if (msg.tool_calls && Array.isArray(msg.tool_calls)) {
-          // Gemini 3+ requires thoughtSignature as a sibling part in model content
-          // that contains functionCall parts. If no reasoning_content was present
-          // (which already injects the signature above), inject one now. (#927)
-          const hasSignatureAlready = parts.some((p) => p.thoughtSignature);
-          if (!hasSignatureAlready) {
-            parts.push({
-              thoughtSignature: DEFAULT_THINKING_GEMINI_SIGNATURE,
-              text: "",
-            });
-          }
-
           const toolCallIds = [];
           const firstPersistedSignature = msg.tool_calls
             .map((tc) => resolveGeminiThoughtSignature(tc.id, extractClientThoughtSignature(tc)))
