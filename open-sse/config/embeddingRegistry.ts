@@ -66,6 +66,7 @@ export const EMBEDDING_PROVIDERS: Record<string, EmbeddingProvider> = {
     ],
   },
 
+<<<<<<< HEAD
   upstage: {
     id: "upstage",
     baseUrl: "https://api.upstage.ai/v1/embeddings",
@@ -77,6 +78,8 @@ export const EMBEDDING_PROVIDERS: Record<string, EmbeddingProvider> = {
     ],
   },
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   mistral: {
     id: "mistral",
     baseUrl: "https://api.mistral.ai/v1/embeddings",
@@ -120,6 +123,7 @@ export const EMBEDDING_PROVIDERS: Record<string, EmbeddingProvider> = {
     authType: "apikey",
     authHeader: "bearer",
     models: [
+<<<<<<< HEAD
       {
         id: "openai/text-embedding-3-small",
         name: "Text Embedding 3 Small (OpenRouter)",
@@ -160,6 +164,11 @@ export const EMBEDDING_PROVIDERS: Record<string, EmbeddingProvider> = {
       { id: "voyage-large-2-instruct", name: "Voyage Large 2 Instruct", dimensions: 1024 },
       { id: "voyage-large-2", name: "Voyage Large 2", dimensions: 1536 },
       { id: "voyage-2", name: "Voyage 2", dimensions: 1024 },
+=======
+      { id: "openai/text-embedding-3-small", name: "Text Embedding 3 Small (OpenRouter)", dimensions: 1536 },
+      { id: "openai/text-embedding-3-large", name: "Text Embedding 3 Large (OpenRouter)", dimensions: 3072 },
+      { id: "openai/text-embedding-ada-002", name: "Text Embedding Ada 002 (OpenRouter)", dimensions: 1536 },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ],
   },
 
@@ -173,6 +182,7 @@ export const EMBEDDING_PROVIDERS: Record<string, EmbeddingProvider> = {
       { id: "text-embedding-3-large", name: "Text Embedding 3 Large (GitHub)", dimensions: 3072 },
     ],
   },
+<<<<<<< HEAD
 
   "jina-ai": {
     id: "jina-ai",
@@ -221,11 +231,19 @@ function toProviderScopedModelId(providerId: string, modelId: string): string {
   return modelId.startsWith(`${providerId}/`) ? modelId : `${providerId}/${modelId}`;
 }
 
+=======
+};
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Get embedding provider config by ID
  */
 export function getEmbeddingProvider(providerId: string): EmbeddingProvider | null {
+<<<<<<< HEAD
   return EMBEDDING_PROVIDERS[resolveEmbeddingProviderId(providerId)] || null;
+=======
+  return EMBEDDING_PROVIDERS[providerId] || null;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 /**
@@ -241,6 +259,7 @@ export function parseEmbeddingModel(
   // Check for "provider/model" format
   const slashIdx = modelStr.indexOf("/");
   if (slashIdx > 0) {
+<<<<<<< HEAD
     const rawProvider = modelStr.slice(0, slashIdx);
     const resolvedProvider = resolveEmbeddingProviderId(rawProvider);
 
@@ -258,6 +277,12 @@ export function parseEmbeddingModel(
           provider: providerId,
           model: normalizeProviderScopedModelId(providerId, modelStr.slice(providerId.length + 1)),
         };
+=======
+    // Phase 1: Try each hardcoded provider prefix
+    for (const [providerId] of Object.entries(EMBEDDING_PROVIDERS)) {
+      if (modelStr.startsWith(providerId + "/")) {
+        return { provider: providerId, model: modelStr.slice(providerId.length + 1) };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     }
     // Phase 2: Try dynamic provider_nodes prefix
@@ -292,7 +317,11 @@ export function getAllEmbeddingModels() {
   for (const [providerId, config] of Object.entries(EMBEDDING_PROVIDERS)) {
     for (const model of config.models) {
       models.push({
+<<<<<<< HEAD
         id: toProviderScopedModelId(providerId, model.id),
+=======
+        id: `${providerId}/${model.id}`,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         name: model.name,
         provider: providerId,
         dimensions: model.dimensions,

@@ -4,6 +4,7 @@
  * strict-random, auto, fill-first, p2c, lkgp, context-optimized, and context-relay strategies
  */
 
+<<<<<<< HEAD
 import {
   checkFallbackError,
   formatRetryAfter,
@@ -12,6 +13,10 @@ import {
   isProviderFailureCode,
 } from "./accountFallback.ts";
 import { errorResponse, unavailableResponse } from "../utils/error.ts";
+=======
+import { checkFallbackError, formatRetryAfter, getProviderProfile } from "./accountFallback.ts";
+import { unavailableResponse } from "../utils/error.ts";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { recordComboIntent, recordComboRequest, getComboMetrics } from "./comboMetrics.ts";
 import { resolveComboConfig, getDefaultComboConfig } from "./comboConfig.ts";
 import { maybeGenerateHandoff, resolveContextRelayConfig } from "./contextHandoff.ts";
@@ -24,6 +29,7 @@ import { applyComboAgentMiddleware, injectModelTag } from "./comboAgentMiddlewar
 import { classifyWithConfig, DEFAULT_INTENT_CONFIG } from "./intentClassifier.ts";
 import { selectProvider as selectAutoProvider } from "./autoCombo/engine.ts";
 import { selectWithStrategy } from "./autoCombo/routerStrategy.ts";
+<<<<<<< HEAD
 import { getTaskFitness } from "./autoCombo/taskFitness.ts";
 import {
   calculateFactors,
@@ -77,6 +83,13 @@ function isAllAccountsRateLimitedResponse(
   return ALL_ACCOUNTS_RATE_LIMITED_PATTERNS.some((p) => p.test(errorText));
 }
 =======
+=======
+import { DEFAULT_WEIGHTS, scorePool } from "./autoCombo/scoring.ts";
+import { supportsToolCalling } from "./modelCapabilities.ts";
+import { getSessionConnection } from "./sessionManager.ts";
+import { getModelContextLimit } from "../../src/lib/modelsDevSync";
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // Status codes that should mark semaphore + record circuit breaker failures
 const TRANSIENT_FOR_BREAKER = [429, 502, 503, 504];
 const COMBO_BAD_REQUEST_FALLBACK_PATTERNS = [
@@ -87,6 +100,7 @@ const COMBO_BAD_REQUEST_FALLBACK_PATTERNS = [
   /no such tool available/i,
   /unsupported content part type/i,
   /tool(?:_call|_use)? .* not (?:available|found)/i,
+<<<<<<< HEAD
 ];
 >>>>>>> Stashed changes
 
@@ -97,6 +111,12 @@ const MAX_GLOBAL_ATTEMPTS = 30;
 function comboModelNotFoundResponse(message: string) {
   return errorResponse(404, message);
 }
+=======
+  /third-party apps/i,
+];
+
+const MAX_COMBO_DEPTH = 3;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 // Bootstrap defaults from ClawRouter benchmark (used when no local latency history exists yet)
 const DEFAULT_MODEL_P95_MS = {
@@ -111,6 +131,7 @@ const DEFAULT_MODEL_P95_MS = {
 };
 const MIN_HISTORY_SAMPLES = 10;
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 type ResolvedComboTarget = {
   kind: "model";
@@ -145,6 +166,8 @@ function toTrimmedString(value): string | null {
 }
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Validate that a successful (HTTP 200) non-streaming response actually contains
  * meaningful content. Returns { valid: true } or { valid: false, reason }.
@@ -156,6 +179,10 @@ function toTrimmedString(value): string | null {
  * 1. Body is valid JSON
  * 2. Has at least one choice with non-empty content or tool_calls
  */
+<<<<<<< HEAD
+=======
+async function validateResponseQuality(
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   response: Response,
   isStreaming: boolean,
   log: { warn?: (...args: unknown[]) => void }
@@ -189,6 +216,10 @@ function toTrimmedString(value): string | null {
   try {
     json = JSON.parse(text);
   } catch {
+<<<<<<< HEAD
+=======
+    if (text.startsWith("data:")) return { valid: true };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return { valid: false, reason: "response is not valid JSON" };
   }
 
@@ -220,6 +251,10 @@ function toTrimmedString(value): string | null {
     return { valid: false, reason: "empty content and no tool_calls in response" };
   }
 
+<<<<<<< HEAD
+=======
+  return { valid: true };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 // In-memory atomic counter per combo for round-robin distribution
@@ -231,6 +266,7 @@ const rrCounters = new Map();
  * Supports both legacy string format and new object format
  */
 function normalizeModelEntry(entry) {
+<<<<<<< HEAD
   return {
     model: getComboStepTarget(entry) || "",
     weight: getComboStepWeight(entry),
@@ -434,6 +470,10 @@ export function resolveNestedComboTargets(
   }
 
   return resolved;
+=======
+  if (typeof entry === "string") return { model: entry, weight: 0 };
+  return { model: entry.model, weight: entry.weight || 0 };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 /**
@@ -524,6 +564,7 @@ export function resolveNestedComboModels(combo, allCombos, visited = new Set(), 
   return resolved;
 }
 
+<<<<<<< HEAD
 function selectWeightedTarget<T extends { weight?: number }>(targets: T[]) {
   if (targets.length === 0) return null;
 
@@ -552,6 +593,39 @@ function orderTargetsForWeightedFallback<T extends { executionKey: string; weigh
     rest.sort((a, b) => b.weight - a.weight);
   }
   return [selected, ...rest].filter(Boolean) as T[];
+=======
+/**
+ * Select a model using weighted random distribution
+ * @param {Array} models - Array of { model, weight } entries
+ * @returns {string} Selected model string
+ */
+function selectWeightedModel(models) {
+  const entries = models.map((m) => normalizeModelEntry(m));
+  const totalWeight = entries.reduce((sum, m) => sum + m.weight, 0);
+
+  if (totalWeight <= 0) {
+    // All weights are 0 → uniform random
+    return entries[Math.floor(Math.random() * entries.length)].model;
+  }
+
+  let random = Math.random() * totalWeight;
+  for (const entry of entries) {
+    random -= entry.weight;
+    if (random <= 0) return entry.model;
+  }
+  return entries[entries.length - 1].model; // safety fallback
+}
+
+/**
+ * Order models for weighted fallback (selected first, then by descending weight)
+ */
+function orderModelsForWeightedFallback(models, selectedModel) {
+  const entries = models.map((m) => normalizeModelEntry(m));
+  const selected = entries.find((e) => e.model === selectedModel);
+  const rest = entries.filter((e) => e.model !== selectedModel).sort((a, b) => b.weight - a.weight); // highest weight first for fallback
+
+  return [selected, ...rest].filter(Boolean).map((e) => e.model);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 // shuffleArray and getNextModelFromDeck moved to src/shared/utils/shuffleDeck.ts
@@ -586,6 +660,7 @@ async function sortModelsByCost(models) {
   }
 }
 
+<<<<<<< HEAD
 async function sortTargetsByCost(targets: ResolvedComboTarget[]) {
   const orderedModels = await sortModelsByCost(targets.map((target) => target.modelStr));
   const byModel = new Map<string, ResolvedComboTarget[]>();
@@ -602,6 +677,8 @@ async function sortTargetsByCost(targets: ResolvedComboTarget[]) {
     .filter((target): target is ResolvedComboTarget => target !== null);
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Sort models by usage count (least-used first) for least-used strategy
  * @param {Array<string>} models - Model strings
@@ -620,6 +697,7 @@ function sortModelsByUsage(models, comboName) {
   return withUsage.map((e) => e.modelStr);
 }
 
+<<<<<<< HEAD
 function sortTargetsByUsage(targets: ResolvedComboTarget[], comboName: string) {
   const orderedModels = sortModelsByUsage(
     targets.map((target) => target.modelStr),
@@ -639,6 +717,8 @@ function sortTargetsByUsage(targets: ResolvedComboTarget[], comboName: string) {
     .filter((target): target is ResolvedComboTarget => target !== null);
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Sort models by context window size (largest first) for context-optimized strategy.
  * Uses models.dev synced capabilities to get context limits.
@@ -647,12 +727,21 @@ function sortTargetsByUsage(targets: ResolvedComboTarget[], comboName: string) {
  */
 function sortModelsByContextSize(models) {
   const withContext = models.map((modelStr) => {
+<<<<<<< HEAD
     return { modelStr, context: getModelContextLimitForModelString(modelStr) ?? 0 };
+=======
+    const parsed = parseModel(modelStr);
+    const provider = parsed.provider || parsed.providerAlias || "unknown";
+    const model = parsed.model || modelStr;
+    const limit = getModelContextLimit(provider, model);
+    return { modelStr, context: limit ?? 0 };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   });
   withContext.sort((a, b) => b.context - a.context);
   return withContext.map((e) => e.modelStr);
 }
 
+<<<<<<< HEAD
 function getModelContextLimitForModelString(modelStr: string) {
   const parsed = parseModel(modelStr);
   const provider = parsed.provider || parsed.providerAlias || "unknown";
@@ -713,6 +802,8 @@ function orderTargetsByPowerOfTwoChoices(targets: ResolvedComboTarget[], comboNa
   return [targets[selectedIndex], ...targets.filter((_, index) => index !== selectedIndex)];
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function toTextContent(content) {
   if (typeof content === "string") return content;
   if (!Array.isArray(content)) return "";
@@ -817,7 +908,11 @@ function getBootstrapLatencyMs(modelId) {
   return DEFAULT_MODEL_P95_MS[normalized] ?? 1500;
 }
 
+<<<<<<< HEAD
 async function buildAutoCandidates(targets, comboName) {
+=======
+async function buildAutoCandidates(modelStrings, comboName) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const metrics = getComboMetrics(comboName);
   const { getPricingForModel } = await import("../../src/lib/localDb");
   let historicalLatencyStats = {};
@@ -833,10 +928,16 @@ async function buildAutoCandidates(targets, comboName) {
   }
 
   const candidates = await Promise.all(
+<<<<<<< HEAD
     targets.map(async (target) => {
       const modelStr = target.modelStr;
       const parsed = parseModel(modelStr);
       const provider = target.provider || parsed.provider || parsed.providerAlias || "unknown";
+=======
+    modelStrings.map(async (modelStr) => {
+      const parsed = parseModel(modelStr);
+      const provider = parsed.provider || parsed.providerAlias || "unknown";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       const model = parsed.model || modelStr;
       const historicalKey = `${provider}/${model}`;
       const historicalModelMetric = historicalLatencyStats[historicalKey] || null;
@@ -884,14 +985,21 @@ async function buildAutoCandidates(targets, comboName) {
           ? Math.max(10, historicalStdDev)
           : Math.max(10, p95LatencyMs * 0.1);
 
+<<<<<<< HEAD
       const breakerStateRaw = getCircuitBreaker(provider)?.getStatus?.()?.state;
+=======
+      const breakerStateRaw = getCircuitBreaker(`combo:${modelStr}`)?.getStatus?.()?.state;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       const circuitBreakerState =
         breakerStateRaw === "OPEN" || breakerStateRaw === "HALF_OPEN" ? breakerStateRaw : "CLOSED";
 
       return {
+<<<<<<< HEAD
         stepId: target.stepId,
         executionKey: target.executionKey,
         modelStr,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         provider,
         model,
         quotaRemaining: 100,
@@ -910,6 +1018,7 @@ async function buildAutoCandidates(targets, comboName) {
   return candidates;
 }
 
+<<<<<<< HEAD
 function dedupeTargetsByExecutionKey(targets: ResolvedComboTarget[]) {
   const seen = new Set<string>();
   return targets.filter((target) => {
@@ -1075,6 +1184,8 @@ function scoreAutoTargets(
     .sort((a, b) => b.score - a.score);
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Handle combo chat with fallback.
  * @param {Object} options
@@ -1095,9 +1206,15 @@ export async function handleComboChat({
   settings,
   allCombos,
   relayOptions,
+<<<<<<< HEAD
   signal,
 }) {
   const strategy = normalizeRoutingStrategy(combo.strategy || "priority");
+=======
+}) {
+  const strategy = combo.strategy || "priority";
+  const models = combo.models || [];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const relayConfig =
     strategy === "context-relay" ? resolveContextRelayConfig(relayOptions?.config || null) : null;
 
@@ -1113,11 +1230,18 @@ export async function handleComboChat({
   if (pinnedModel) {
     log.info("COMBO", `[#401] Context caching: pinned model=${pinnedModel}`);
   }
+<<<<<<< HEAD
   const clientRequestedStream = body?.stream === true;
   // Wrap handleSingleModel to inject context caching tag on response (#401)
   const handleSingleModelWrapped = combo.context_cache_protection
     ? async (b, modelStr, target) => {
         const res = await handleSingleModel(b, modelStr, target);
+=======
+  // Wrap handleSingleModel to inject context caching tag on response (#401)
+  const handleSingleModelWrapped = combo.context_cache_protection
+    ? async (b, modelStr) => {
+        const res = await handleSingleModel(b, modelStr);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         if (!res.ok) return res;
 
         // Non-streaming: inject tag into JSON response
@@ -1152,7 +1276,11 @@ export async function handleComboChat({
         // SDKs close the connection on finish_reason, so anything sent after
         // that marker is silently dropped.
         if (!res.body) return res;
+<<<<<<< HEAD
         const tagContent = `<omniModel>${modelStr}</omniModel>`;
+=======
+        const tagContent = `\\n<omniModel>${modelStr}</omniModel>\\n`;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         const encoder = new TextEncoder();
         const decoder = new TextDecoder();
         let tagInjected = false;
@@ -1238,6 +1366,10 @@ export async function handleComboChat({
             const text = sanitizeDecoder.decode(chunk, { stream: true });
             if (text) {
               if (text.includes("<omniModel>")) {
+<<<<<<< HEAD
+=======
+                const cleaned = text.replace(/\n?<omniModel>[^<]+<\/omniModel>\n?/g, "");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 if (cleaned) controller.enqueue(encoder.encode(cleaned));
               } else {
                 controller.enqueue(encoder.encode(text));
@@ -1248,6 +1380,10 @@ export async function handleComboChat({
             const tail = sanitizeDecoder.decode();
             if (tail) {
               if (tail.includes("<omniModel>")) {
+<<<<<<< HEAD
+=======
+                const cleaned = tail.replace(/\n?<omniModel>[^<]+<\/omniModel>\n?/g, "");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 if (cleaned) controller.enqueue(encoder.encode(cleaned));
               } else {
                 controller.enqueue(encoder.encode(tail));
@@ -1287,7 +1423,10 @@ export async function handleComboChat({
       log,
       settings,
       allCombos,
+<<<<<<< HEAD
       signal,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     });
   }
 
@@ -1298,6 +1437,7 @@ export async function handleComboChat({
   const maxRetries = config.maxRetries ?? 1;
   const retryDelayMs = config.retryDelayMs ?? 2000;
 
+<<<<<<< HEAD
   let orderedTargets =
     strategy === "weighted"
       ? resolveWeightedTargets(combo, allCombos)?.orderedTargets || []
@@ -1322,6 +1462,49 @@ export async function handleComboChat({
       const filtered = eligibleTargets.filter((target) => supportsToolCalling(target.modelStr));
       if (filtered.length > 0) {
         eligibleTargets = filtered;
+=======
+  let orderedModels;
+
+  // Resolve nested combos if allCombos provided
+  if (allCombos) {
+    const flatModels = resolveNestedComboModels(combo, allCombos);
+    if (strategy === "weighted") {
+      // For weighted + nested, select from original models then fallback sequentially
+      const selected = selectWeightedModel(models);
+      orderedModels = orderModelsForWeightedFallback(models, selected);
+      // If entries were nested, they are already resolved to flat
+      orderedModels = orderedModels.flatMap((m) => {
+        const combos = Array.isArray(allCombos) ? allCombos : allCombos?.combos || [];
+        const nested = combos.find((c) => c.name === m);
+        if (nested) return resolveNestedComboModels(nested, allCombos);
+        return [m];
+      });
+      log.info(
+        "COMBO",
+        `Weighted selection with nested resolution: ${orderedModels.length} total models`
+      );
+    } else {
+      orderedModels = flatModels;
+      log.info("COMBO", `${strategy} with nested resolution: ${orderedModels.length} total models`);
+    }
+  } else if (strategy === "weighted") {
+    const selected = selectWeightedModel(models);
+    orderedModels = orderModelsForWeightedFallback(models, selected);
+    log.info("COMBO", `Weighted selection: ${selected} (from ${models.length} models)`);
+  } else {
+    orderedModels = models.map((m) => normalizeModelEntry(m).model);
+  }
+
+  // Apply strategy-specific ordering
+  if (strategy === "auto") {
+    const requestHasTools = Array.isArray(body?.tools) && body.tools.length > 0;
+    let eligibleModels = [...orderedModels];
+
+    if (requestHasTools) {
+      const filtered = eligibleModels.filter((m) => supportsToolCalling(m));
+      if (filtered.length > 0) {
+        eligibleModels = filtered;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       } else {
         log.warn(
           "COMBO",
@@ -1348,7 +1531,18 @@ export async function handleComboChat({
 
     const candidatePool = Array.isArray(autoConfigSource.candidatePool)
       ? autoConfigSource.candidatePool
+<<<<<<< HEAD
       : [...new Set(eligibleTargets.map((target) => target.provider))];
+=======
+      : [
+          ...new Set(
+            eligibleModels.map((m) => {
+              const parsed = parseModel(m);
+              return parsed.provider || parsed.providerAlias || "unknown";
+            })
+          ),
+        ];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     const weights =
       autoConfigSource.weights && typeof autoConfigSource.weights === "object"
@@ -1363,6 +1557,10 @@ export async function handleComboChat({
     const modePack =
       typeof autoConfigSource.modePack === "string" ? autoConfigSource.modePack : undefined;
 
+<<<<<<< HEAD
+=======
+    // Retrieve last known good provider (LKGP) for this combo/model (#919)
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     let lastKnownGoodProvider: string | undefined;
     try {
       const { getLKGP } = await import("../../src/lib/localDb");
@@ -1372,7 +1570,11 @@ export async function handleComboChat({
       log.warn("COMBO", "Failed to retrieve Last Known Good Provider. This is non-fatal.", { err });
     }
 
+<<<<<<< HEAD
     const candidates = await buildAutoCandidates(eligibleTargets, combo.name);
+=======
+    const candidates = await buildAutoCandidates(eligibleModels, combo.name);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (candidates.length > 0) {
       let selectedProvider = null;
       let selectedModel = null;
@@ -1416,6 +1618,7 @@ export async function handleComboChat({
         selectionReason = `score=${selection.score.toFixed(3)}${selection.isExploration ? " (exploration)" : ""}`;
       }
 
+<<<<<<< HEAD
       const scoredTargets = scoreAutoTargets(eligibleTargets, candidates, taskType, weights);
       const rankedTargets = scoredTargets.map((entry) => entry.target);
       const selectedTarget =
@@ -1434,10 +1637,33 @@ export async function handleComboChat({
       log.info(
         "COMBO",
         `Auto selection: ${selectedTarget?.modelStr || `${selectedProvider}/${selectedModel}`} | intent=${intent} task=${taskType} | strategy=${routingStrategy} | ${selectionReason}`
+=======
+      const modelLookup = new Map();
+      for (const modelStr of eligibleModels) {
+        const parsed = parseModel(modelStr);
+        const provider = parsed.provider || parsed.providerAlias || "unknown";
+        const modelId = parsed.model || modelStr;
+        modelLookup.set(`${provider}/${modelId}`, modelStr);
+      }
+
+      const ranked = scorePool(candidates, taskType, weights)
+        .map((r) => modelLookup.get(`${r.provider}/${r.model}`) || `${r.provider}/${r.model}`)
+        .filter(Boolean);
+
+      const selectedModelStr =
+        modelLookup.get(`${selectedProvider}/${selectedModel}`) ||
+        `${selectedProvider}/${selectedModel}`;
+      orderedModels = [...new Set([selectedModelStr, ...ranked, ...eligibleModels])];
+
+      log.info(
+        "COMBO",
+        `Auto selection: ${selectedModelStr} | intent=${intent} task=${taskType} | strategy=${routingStrategy} | ${selectionReason}`
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       );
     } else {
       log.warn("COMBO", "Auto strategy has no candidates, keeping default ordering");
     }
+<<<<<<< HEAD
   } else if (strategy === "lkgp") {
     try {
       const { getLKGP } = await import("../../src/lib/localDb");
@@ -1503,12 +1729,36 @@ export async function handleComboChat({
 
   if (orderedTargets.length === 0) {
     return comboModelNotFoundResponse("Combo has no executable targets");
+=======
+  } else if (strategy === "strict-random") {
+    const selectedId = await getNextFromDeck(`combo:${combo.name}`, orderedModels);
+    // Put selected model first so the fallback loop tries it first
+    const rest = orderedModels.filter((m) => m !== selectedId);
+    orderedModels = [selectedId, ...rest];
+    log.info(
+      "COMBO",
+      `Strict-random deck: ${selectedId} selected (${orderedModels.length} models)`
+    );
+  } else if (strategy === "random") {
+    orderedModels = fisherYatesShuffle([...orderedModels]);
+    log.info("COMBO", `Random shuffle: ${orderedModels.length} models`);
+  } else if (strategy === "least-used") {
+    orderedModels = sortModelsByUsage(orderedModels, combo.name);
+    log.info("COMBO", `Least-used ordering: ${orderedModels[0]} has fewest requests`);
+  } else if (strategy === "cost-optimized") {
+    orderedModels = await sortModelsByCost(orderedModels);
+    log.info("COMBO", `Cost-optimized ordering: cheapest first (${orderedModels[0]})`);
+  } else if (strategy === "context-optimized") {
+    orderedModels = sortModelsByContextSize(orderedModels);
+    log.info("COMBO", `Context-optimized ordering: largest first (${orderedModels[0]})`);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   let lastError = null;
   let earliestRetryAfter = null;
   let lastStatus = null;
   const startTime = Date.now();
+<<<<<<< HEAD
   let globalAttempts = 0;
   let fallbackCount = 0;
   let recordedAttempts = 0;
@@ -1523,6 +1773,31 @@ export async function handleComboChat({
     // Pre-check: skip models where all accounts are in cooldown
     if (isModelAvailable) {
       const available = await isModelAvailable(modelStr, target);
+=======
+  let fallbackCount = 0;
+
+  for (let i = 0; i < orderedModels.length; i++) {
+    const modelStr = orderedModels[i];
+    const parsed = parseModel(modelStr);
+    const provider = parsed.provider || parsed.providerAlias || "unknown";
+    const profile = getProviderProfile(provider);
+    const breakerKey = `combo:${modelStr}`;
+    const breaker = getCircuitBreaker(breakerKey, {
+      failureThreshold: profile.circuitBreakerThreshold,
+      resetTimeout: profile.circuitBreakerReset,
+    });
+
+    // Skip model if circuit breaker is OPEN
+    if (!breaker.canExecute()) {
+      log.info("COMBO", `Skipping ${modelStr}: circuit breaker OPEN for ${provider}`);
+      if (i > 0) fallbackCount++;
+      continue;
+    }
+
+    // Pre-check: skip models where all accounts are in cooldown
+    if (isModelAvailable) {
+      const available = await isModelAvailable(modelStr);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       if (!available) {
         log.info("COMBO", `Skipping ${modelStr} (all accounts in cooldown)`);
         if (i > 0) fallbackCount++;
@@ -1532,6 +1807,7 @@ export async function handleComboChat({
 
     // Retry loop for transient errors
     for (let retry = 0; retry <= maxRetries; retry++) {
+<<<<<<< HEAD
       // Fix #1681: Bail out immediately if the client has disconnected
       if (signal?.aborted) {
         log.info("COMBO", `Client disconnected — aborting combo loop before model ${modelStr}`);
@@ -1545,11 +1821,14 @@ export async function handleComboChat({
         );
         return errorResponse(503, "Maximum combo retry limit reached");
       }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       if (retry > 0) {
         log.info(
           "COMBO",
           `Retrying ${modelStr} in ${retryDelayMs}ms (attempt ${retry + 1}/${maxRetries + 1})`
         );
+<<<<<<< HEAD
         await new Promise((resolve) => {
           const timer = setTimeout(resolve, retryDelayMs);
           signal?.addEventListener(
@@ -1565,10 +1844,14 @@ export async function handleComboChat({
           log.info("COMBO", `Client disconnected during retry delay — aborting`);
           return errorResponse(499, "Client disconnected");
         }
+=======
+        await new Promise((r) => setTimeout(r, retryDelayMs));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
 
       log.info(
         "COMBO",
+<<<<<<< HEAD
         `Trying model ${i + 1}/${orderedTargets.length}: ${modelStr}${retry > 0 ? ` (retry ${retry})` : ""}`
       );
 
@@ -1576,15 +1859,37 @@ export async function handleComboChat({
 
       // Success — validate response quality before returning
       if (result.ok) {
+=======
+        `Trying model ${i + 1}/${orderedModels.length}: ${modelStr}${retry > 0 ? ` (retry ${retry})` : ""}`
+      );
+
+      const result = await handleSingleModelWrapped(body, modelStr);
+
+      // Success — validate response quality before returning
+      if (result.ok) {
+        const quality = await validateResponseQuality(result, !!body.stream, log);
+        if (!quality.valid) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           log.warn(
             "COMBO",
             `Model ${modelStr} returned 200 but failed quality check: ${quality.reason}`
           );
+<<<<<<< HEAD
+=======
+          breaker._onFailure();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           recordComboRequest(combo.name, modelStr, {
             success: false,
             latencyMs: Date.now() - startTime,
             fallbackCount,
             strategy,
+<<<<<<< HEAD
+=======
+          });
+          if (i > 0) fallbackCount++;
+          break; // move to next model
+        }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         const latencyMs = Date.now() - startTime;
         log.info(
           "COMBO",
@@ -1596,9 +1901,13 @@ export async function handleComboChat({
           latencyMs,
           fallbackCount,
           strategy,
+<<<<<<< HEAD
           target: toRecordedTarget(target),
         });
         recordedAttempts++;
+=======
+        });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
         // Context-relay intentionally splits responsibilities:
         // combo.ts decides whether a successful turn should generate a handoff,
@@ -1641,6 +1950,7 @@ export async function handleComboChat({
 
         // Record last known good provider (LKGP) for this combo/model (#919)
         if (provider) {
+<<<<<<< HEAD
           try {
             const { setLKGP } = await import("../../src/lib/localDb");
             await Promise.all([
@@ -1655,11 +1965,26 @@ export async function handleComboChat({
         }
 
         return quality.clonedResponse ?? result;
+=======
+          import("../../src/lib/localDb")
+            .then(({ setLKGP }) => setLKGP(combo.name, combo.id || combo.name, provider))
+            .catch((err) =>
+              log.warn("COMBO", "Failed to record Last Known Good Provider. This is non-fatal.", {
+                err,
+              })
+            );
+        }
+
+        return result;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
 
       // Extract error info from response
       let errorText = result.statusText || "";
+<<<<<<< HEAD
       let errorBody = null;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       let retryAfter = null;
       try {
         const cloned = result.clone();
@@ -1667,7 +1992,11 @@ export async function handleComboChat({
           const text = await cloned.text();
           if (text) {
             errorText = text.substring(0, 500);
+<<<<<<< HEAD
             errorBody = JSON.parse(text);
+=======
+            const errorBody = JSON.parse(text);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             errorText =
               errorBody?.error?.message || errorBody?.error || errorBody?.message || errorText;
             retryAfter = errorBody?.retryAfter || null;
@@ -1696,6 +2025,7 @@ export async function handleComboChat({
         }
       }
 
+<<<<<<< HEAD
       const isStreamReadinessTimeout =
         result.status === 504 && isStreamReadinessTimeoutErrorBody(errorBody);
 
@@ -1719,11 +2049,15 @@ export async function handleComboChat({
       // Error classification is retained only for retry/cooldown pacing; it must
       // not decide whether fallback happens, including for generic 400 responses.
       const { cooldownMs } = checkFallbackError(
+=======
+      const { shouldFallback, cooldownMs } = checkFallbackError(
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         result.status,
         errorText,
         0,
         null,
         provider,
+<<<<<<< HEAD
       );
       const comboBadRequestFallback = shouldFallbackComboBadRequest(result.status, errorText);
 
@@ -1732,6 +2066,20 @@ export async function handleComboChat({
         recordProviderFailure(provider, log, target.connectionId, profile);
       }
 
+=======
+        result.headers
+      );
+      const comboBadRequestFallback = shouldFallbackComboBadRequest(result.status, errorText);
+
+      // Record failure in circuit breaker for transient errors
+      if (TRANSIENT_FOR_BREAKER.includes(result.status)) {
+        breaker._onFailure();
+      }
+
+      if (!shouldFallback && !comboBadRequestFallback) {
+        log.warn("COMBO", `Model ${modelStr} failed (no fallback)`, { status: result.status });
+        return result;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
 
       if (comboBadRequestFallback) {
@@ -1742,13 +2090,18 @@ export async function handleComboChat({
       }
 
       // Check if this is a transient error worth retrying on same model
+<<<<<<< HEAD
       const isTransient =
         !isStreamReadinessTimeout && [408, 429, 500, 502, 503, 504].includes(result.status);
+=======
+      const isTransient = [408, 429, 500, 502, 503, 504].includes(result.status);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       if (retry < maxRetries && isTransient) {
         continue; // Retry same model
       }
 
       // Done retrying this model
+<<<<<<< HEAD
       recordComboRequest(combo.name, modelStr, {
         success: false,
         latencyMs: Date.now() - startTime,
@@ -1757,21 +2110,47 @@ export async function handleComboChat({
         target: toRecordedTarget(target),
       });
       recordedAttempts++;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       lastError = errorText || String(result.status);
       if (!lastStatus) lastStatus = result.status;
       if (i > 0) fallbackCount++;
       log.warn("COMBO", `Model ${modelStr} failed, trying next`, { status: result.status });
 
+<<<<<<< HEAD
+=======
+      if ([502, 503, 504].includes(result.status) && cooldownMs > 0 && cooldownMs <= 5000) {
+        log.info("COMBO", `Waiting ${cooldownMs}ms before fallback to next model`);
+        await new Promise((r) => setTimeout(r, cooldownMs));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
 
       break; // Move to next model
     }
   }
 
+<<<<<<< HEAD
   // All models failed
   const latencyMs = Date.now() - startTime;
   if (recordedAttempts === 0) {
     recordComboRequest(combo.name, null, { success: false, latencyMs, fallbackCount, strategy });
+=======
+  // Early exit: check if all models have breaker OPEN
+  const allBreakersOpen = orderedModels.every((m) => {
+    return !getCircuitBreaker(`combo:${m}`).canExecute();
+  });
+
+  // All models failed
+  const latencyMs = Date.now() - startTime;
+  recordComboRequest(combo.name, null, { success: false, latencyMs, fallbackCount, strategy });
+
+  if (allBreakersOpen) {
+    log.warn("COMBO", "All models have circuit breaker OPEN — aborting");
+    return unavailableResponse(
+      503,
+      "All providers temporarily unavailable (circuit breakers open)"
+    );
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   if (!lastStatus) {
@@ -1822,8 +2201,13 @@ async function handleRoundRobinCombo({
   log,
   settings,
   allCombos,
+<<<<<<< HEAD
   signal,
 }) {
+=======
+}) {
+  const models = combo.models || [];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const config = settings
     ? resolveComboConfig(combo, settings)
     : { ...getDefaultComboConfig(), ...(combo.config || {}) };
@@ -1832,10 +2216,24 @@ async function handleRoundRobinCombo({
   const maxRetries = config.maxRetries ?? 1;
   const retryDelayMs = config.retryDelayMs ?? 2000;
 
+<<<<<<< HEAD
   const orderedTargets = resolveComboTargets(combo, allCombos);
   const filteredTargets = await applyRequestTagRouting(orderedTargets, body, log);
   const modelCount = filteredTargets.length;
   if (modelCount === 0) {
+=======
+  // Resolve models (support nested combos)
+  let orderedModels;
+  if (allCombos) {
+    orderedModels = resolveNestedComboModels(combo, allCombos);
+  } else {
+    orderedModels = models.map((m) => normalizeModelEntry(m).model);
+  }
+
+  const modelCount = orderedModels.length;
+  if (modelCount === 0) {
+    return unavailableResponse(503, "Round-robin combo has no models");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   // Get and increment atomic counter
@@ -1843,18 +2241,26 @@ async function handleRoundRobinCombo({
   rrCounters.set(combo.name, counter + 1);
   const startIndex = counter % modelCount;
 
+<<<<<<< HEAD
   const clientRequestedStream = body?.stream === true;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const startTime = Date.now();
   let lastError = null;
   let lastStatus = null;
   let earliestRetryAfter = null;
+<<<<<<< HEAD
   let globalAttempts = 0;
   let fallbackCount = 0;
   let recordedAttempts = 0;
+=======
+  let fallbackCount = 0;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Try each model starting from the round-robin target
   for (let offset = 0; offset < modelCount; offset++) {
     const modelIndex = (startIndex + offset) % modelCount;
+<<<<<<< HEAD
     const target = filteredTargets[modelIndex];
     const modelStr = target.modelStr;
     const provider = target.provider;
@@ -1865,6 +2271,28 @@ async function handleRoundRobinCombo({
     // Pre-check availability
     if (isModelAvailable) {
       const available = await isModelAvailable(modelStr, target);
+=======
+    const modelStr = orderedModels[modelIndex];
+    const parsed = parseModel(modelStr);
+    const provider = parsed.provider || parsed.providerAlias || "unknown";
+    const profile = getProviderProfile(provider);
+    const breakerKey = `combo:${modelStr}`;
+    const breaker = getCircuitBreaker(breakerKey, {
+      failureThreshold: profile.circuitBreakerThreshold,
+      resetTimeout: profile.circuitBreakerReset,
+    });
+
+    // Skip model if circuit breaker is OPEN
+    if (!breaker.canExecute()) {
+      log.info("COMBO-RR", `Skipping ${modelStr}: circuit breaker OPEN for ${provider}`);
+      if (offset > 0) fallbackCount++;
+      continue;
+    }
+
+    // Pre-check availability
+    if (isModelAvailable) {
+      const available = await isModelAvailable(modelStr);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       if (!available) {
         log.info("COMBO-RR", `Skipping ${modelStr} (all accounts in cooldown)`);
         if (offset > 0) fallbackCount++;
@@ -1875,16 +2303,25 @@ async function handleRoundRobinCombo({
     // Acquire semaphore slot (may wait in queue)
     let release;
     try {
+<<<<<<< HEAD
       release = await semaphore.acquire(semaphoreKey, {
+=======
+      release = await semaphore.acquire(modelStr, {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         maxConcurrency: concurrency,
         timeoutMs: queueTimeout,
       });
     } catch (err) {
+<<<<<<< HEAD
       if (err.code === "SEMAPHORE_TIMEOUT" || err.code === "SEMAPHORE_QUEUE_FULL") {
         log.warn(
           "COMBO-RR",
           `Semaphore ${err.code === "SEMAPHORE_QUEUE_FULL" ? "queue full" : "timeout"} for ${modelStr}, trying next model`
         );
+=======
+      if (err.code === "SEMAPHORE_TIMEOUT") {
+        log.warn("COMBO-RR", `Semaphore timeout for ${modelStr}, trying next model`);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         if (offset > 0) fallbackCount++;
         continue;
       }
@@ -1894,6 +2331,7 @@ async function handleRoundRobinCombo({
     // Retry loop within this model
     try {
       for (let retry = 0; retry <= maxRetries; retry++) {
+<<<<<<< HEAD
         globalAttempts++;
         if (globalAttempts > MAX_GLOBAL_ATTEMPTS) {
           log.warn(
@@ -1902,6 +2340,8 @@ async function handleRoundRobinCombo({
           );
           return errorResponse(503, "Maximum combo retry limit reached");
         }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         if (retry > 0) {
           log.info(
             "COMBO-RR",
@@ -1915,19 +2355,36 @@ async function handleRoundRobinCombo({
           `[RR #${counter}] → ${modelStr}${offset > 0 ? ` (fallback +${offset})` : ""}${retry > 0 ? ` (retry ${retry})` : ""}`
         );
 
+<<<<<<< HEAD
         const result = await handleSingleModel(body, modelStr, target);
 
         // Success — validate response quality before returning
         if (result.ok) {
+=======
+        const result = await handleSingleModel(body, modelStr);
+
+        // Success — validate response quality before returning
+        if (result.ok) {
+          const quality = await validateResponseQuality(result, !!body.stream, log);
+          if (!quality.valid) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             log.warn(
               "COMBO-RR",
               `${modelStr} returned 200 but failed quality check: ${quality.reason}`
             );
+<<<<<<< HEAD
+=======
+            breaker._onFailure();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             recordComboRequest(combo.name, modelStr, {
               success: false,
               latencyMs: Date.now() - startTime,
               fallbackCount,
               strategy: "round-robin",
+<<<<<<< HEAD
+=======
+            });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             if (offset > 0) fallbackCount++;
             break; // move to next model
           }
@@ -1942,6 +2399,7 @@ async function handleRoundRobinCombo({
             latencyMs,
             fallbackCount,
             strategy: "round-robin",
+<<<<<<< HEAD
             target: toRecordedTarget(target),
           });
           recordedAttempts++;
@@ -1962,24 +2420,34 @@ async function handleRoundRobinCombo({
               );
             }
           }
+=======
+          });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           return result;
         }
 
         // Extract error info
         let errorText = result.statusText || "";
         let retryAfter = null;
+<<<<<<< HEAD
         let errorBody: {
           error?: { code?: string | null; message?: string | null } | string;
           message?: string | null;
           retryAfter?: number | string | null;
         } | null = null;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         try {
           const cloned = result.clone();
           try {
             const text = await cloned.text();
             if (text) {
               errorText = text.substring(0, 500);
+<<<<<<< HEAD
               errorBody = JSON.parse(text);
+=======
+              const errorBody = JSON.parse(text);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               errorText =
                 errorBody?.error?.message || errorBody?.error || errorBody?.message || errorText;
               retryAfter = errorBody?.retryAfter || null;
@@ -1991,6 +2459,7 @@ async function handleRoundRobinCombo({
           /* Clone failed */
         }
 
+<<<<<<< HEAD
         if (result.status === 499) {
           log.info(
             "COMBO-RR",
@@ -2007,6 +2476,8 @@ async function handleRoundRobinCombo({
           return result;
         }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         if (
           retryAfter &&
           (!earliestRetryAfter || new Date(retryAfter) < new Date(earliestRetryAfter))
@@ -2022,6 +2493,7 @@ async function handleRoundRobinCombo({
           }
         }
 
+<<<<<<< HEAD
         const isStreamReadinessTimeout =
           result.status === 504 && isStreamReadinessTimeoutErrorBody(errorBody);
 
@@ -2030,11 +2502,15 @@ async function handleRoundRobinCombo({
         // Classification stays here only to support cooldown/semaphore pacing,
         // not to decide whether fallback is allowed.
         const { cooldownMs } = checkFallbackError(
+=======
+        const { shouldFallback, cooldownMs } = checkFallbackError(
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           result.status,
           errorText,
           0,
           null,
           provider,
+<<<<<<< HEAD
         );
         const comboBadRequestFallback = shouldFallbackComboBadRequest(result.status, errorText);
 
@@ -2048,17 +2524,47 @@ async function handleRoundRobinCombo({
           log.info(
             "COMBO-RR",
             `All accounts rate-limited for ${modelStr}, falling back to next model`
+=======
+          result.headers
+        );
+        const comboBadRequestFallback = shouldFallbackComboBadRequest(result.status, errorText);
+
+        // Transient errors → mark in semaphore AND record circuit breaker failure
+        if (TRANSIENT_FOR_BREAKER.includes(result.status) && cooldownMs > 0) {
+          semaphore.markRateLimited(modelStr, cooldownMs);
+          breaker._onFailure();
+          log.warn(
+            "COMBO-RR",
+            `${modelStr} error ${result.status}, cooldown ${cooldownMs}ms (breaker: ${breaker.getStatus().failureCount}/${profile.circuitBreakerThreshold})`
+          );
+        }
+
+        if (!shouldFallback && !comboBadRequestFallback) {
+          log.warn("COMBO-RR", `${modelStr} failed (no fallback)`, { status: result.status });
+          return result;
+        }
+
+        if (comboBadRequestFallback) {
+          log.info(
+            "COMBO-RR",
+            `Treating provider-scoped 400 from ${modelStr} as model-local failure; trying next model`
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           );
         }
 
         // Transient error → retry same model
+<<<<<<< HEAD
         const isTransient =
           !isStreamReadinessTimeout && [408, 429, 500, 502, 503, 504].includes(result.status);
+=======
+        const isTransient = [408, 429, 500, 502, 503, 504].includes(result.status);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         if (retry < maxRetries && isTransient) {
           continue;
         }
 
         // Done with this model
+<<<<<<< HEAD
         recordComboRequest(combo.name, modelStr, {
           success: false,
           latencyMs: Date.now() - startTime,
@@ -2067,11 +2573,19 @@ async function handleRoundRobinCombo({
           target: toRecordedTarget(target),
         });
         recordedAttempts++;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         lastError = errorText || String(result.status);
         if (!lastStatus) lastStatus = result.status;
         if (offset > 0) fallbackCount++;
         log.warn("COMBO-RR", `${modelStr} failed, trying next model`, { status: result.status });
 
+<<<<<<< HEAD
+=======
+        if ([502, 503, 504].includes(result.status) && cooldownMs > 0 && cooldownMs <= 5000) {
+          log.info("COMBO-RR", `Waiting ${cooldownMs}ms before fallback to next model`);
+          await new Promise((r) => setTimeout(r, cooldownMs));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         }
 
         break;
@@ -2084,6 +2598,7 @@ async function handleRoundRobinCombo({
 
   // All models exhausted
   const latencyMs = Date.now() - startTime;
+<<<<<<< HEAD
   if (recordedAttempts === 0) {
     recordComboRequest(combo.name, null, {
       success: false,
@@ -2091,6 +2606,26 @@ async function handleRoundRobinCombo({
       fallbackCount,
       strategy: "round-robin",
     });
+=======
+  recordComboRequest(combo.name, null, {
+    success: false,
+    latencyMs,
+    fallbackCount,
+    strategy: "round-robin",
+  });
+
+  // Early exit: check if all models have breaker OPEN
+  const allBreakersOpen = orderedModels.every((m) => {
+    return !getCircuitBreaker(`combo:${m}`).canExecute();
+  });
+
+  if (allBreakersOpen) {
+    log.warn("COMBO-RR", "All models have circuit breaker OPEN — aborting");
+    return unavailableResponse(
+      503,
+      "All providers temporarily unavailable (circuit breakers open)"
+    );
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   if (!lastStatus) {

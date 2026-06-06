@@ -11,6 +11,7 @@ import { getDbInstance } from "../db/core";
 import { getPendingRequests } from "./usageHistory";
 import { getAccountDisplayName } from "@/lib/display/names";
 import { calculateCost } from "./costCalculator";
+<<<<<<< HEAD
 import { getRawDataCutoffDate, isAggregationEnabled } from "./aggregateHistory";
 
 type JsonRecord = Record<string, unknown>;
@@ -37,6 +38,10 @@ type ActiveRequest = {
   account: string;
   count: number;
 };
+=======
+
+type JsonRecord = Record<string, unknown>;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 function asRecord(value: unknown): JsonRecord {
   return value && typeof value === "object" && !Array.isArray(value) ? (value as JsonRecord) : {};
@@ -57,6 +62,7 @@ function toStringOrEmpty(value: unknown): string {
 
 /**
  * Get aggregated usage stats.
+<<<<<<< HEAD
  * Uses UNION of recent raw data and older aggregated data when aggregation is enabled.
  */
 export async function getUsageStats() {
@@ -109,6 +115,12 @@ export async function getUsageStats() {
   } else {
     rows = db.prepare("SELECT * FROM usage_history ORDER BY timestamp ASC").all() as unknown[];
   }
+=======
+ */
+export async function getUsageStats() {
+  const db = getDbInstance();
+  const rows = db.prepare("SELECT * FROM usage_history ORDER BY timestamp ASC").all() as unknown[];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const { getProviderConnections } = await import("@/lib/localDb");
   let allConnections: unknown[] = [];
@@ -128,6 +140,7 @@ export async function getUsageStats() {
 
   const pendingRequests = getPendingRequests();
 
+<<<<<<< HEAD
   const stats: {
     totalRequests: number;
     totalPromptTokens: number;
@@ -141,6 +154,9 @@ export async function getUsageStats() {
     pending: ReturnType<typeof getPendingRequests>;
     activeRequests: ActiveRequest[];
   } = {
+=======
+  const stats = {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     totalRequests: rows.length,
     totalPromptTokens: 0,
     totalCompletionTokens: 0,
@@ -175,7 +191,11 @@ export async function getUsageStats() {
   const now = new Date();
   const currentMinuteStart = new Date(Math.floor(now.getTime() / 60000) * 60000);
 
+<<<<<<< HEAD
   const bucketMap: Record<number, UsageBucket> = {};
+=======
+  const bucketMap = {};
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   for (let i = 0; i < 10; i++) {
     const bucketTime = new Date(currentMinuteStart.getTime() - (9 - i) * 60 * 1000);
     const bucketKey = bucketTime.getTime();
@@ -253,7 +273,11 @@ export async function getUsageStats() {
     stats.byModel[modelKey].promptTokens += promptTokens;
     stats.byModel[modelKey].completionTokens += completionTokens;
     stats.byModel[modelKey].cost += entryCost;
+<<<<<<< HEAD
     if (new Date(timestamp) > new Date(stats.byModel[modelKey].lastUsed || timestamp)) {
+=======
+    if (new Date(timestamp) > new Date(stats.byModel[modelKey].lastUsed)) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       stats.byModel[modelKey].lastUsed = timestamp;
     }
 
@@ -279,7 +303,11 @@ export async function getUsageStats() {
       stats.byAccount[accountKey].promptTokens += promptTokens;
       stats.byAccount[accountKey].completionTokens += completionTokens;
       stats.byAccount[accountKey].cost += entryCost;
+<<<<<<< HEAD
       if (new Date(timestamp) > new Date(stats.byAccount[accountKey].lastUsed || timestamp)) {
+=======
+      if (new Date(timestamp) > new Date(stats.byAccount[accountKey].lastUsed)) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         stats.byAccount[accountKey].lastUsed = timestamp;
       }
     }
@@ -304,7 +332,11 @@ export async function getUsageStats() {
       stats.byApiKey[apiKey].promptTokens += promptTokens;
       stats.byApiKey[apiKey].completionTokens += completionTokens;
       stats.byApiKey[apiKey].cost += entryCost;
+<<<<<<< HEAD
       if (new Date(timestamp) > new Date(stats.byApiKey[apiKey].lastUsed || timestamp)) {
+=======
+      if (new Date(timestamp) > new Date(stats.byApiKey[apiKey].lastUsed)) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         stats.byApiKey[apiKey].lastUsed = timestamp;
       }
     }

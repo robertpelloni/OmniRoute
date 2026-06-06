@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { generatePKCE } from "@/lib/oauth/utils/pkce";
 import { KiroService } from "@/lib/oauth/services/kiro";
+<<<<<<< HEAD
 import { isAuthRequired, isAuthenticated } from "@/shared/utils/apiAuth";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * GET /api/oauth/kiro/social-authorize
@@ -9,10 +12,13 @@ import { isAuthRequired, isAuthenticated } from "@/shared/utils/apiAuth";
  * Uses kiro:// custom protocol as required by AWS Cognito
  */
 export async function GET(request) {
+<<<<<<< HEAD
   if ((await isAuthRequired(request)) && !(await isAuthenticated(request))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const { searchParams } = new URL(request.url);
     const provider = searchParams.get("provider"); // "google" or "github"

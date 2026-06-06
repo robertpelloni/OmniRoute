@@ -10,6 +10,7 @@
  * Header order and body field order were captured via mitmproxy traffic analysis.
  */
 import { isClaudeCodeCompatible } from "../services/provider.ts";
+<<<<<<< HEAD
 import {
   getAntigravityUserAgent,
   GITHUB_COPILOT_CHAT_USER_AGENT,
@@ -17,6 +18,8 @@ import {
 } from "./providerHeaderProfiles.ts";
 import { normalizeCliCompatProviderId } from "@/shared/utils/cliCompat";
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 export interface CliFingerprint {
   /** Ordered list of header names (case-sensitive). Unlisted headers are appended. */
@@ -24,7 +27,11 @@ export interface CliFingerprint {
   /** Ordered list of top-level JSON body fields. Unlisted fields are appended. */
   bodyFieldOrder: string[];
   /** User-Agent string to inject (overrides default) */
+<<<<<<< HEAD
   userAgent?: string | (() => string);
+=======
+  userAgent?: string;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   /** Extra headers to add */
   extraHeaders?: Record<string, string>;
 }
@@ -45,6 +52,7 @@ export const CLI_FINGERPRINTS: Record<string, CliFingerprint> = {
     ],
     bodyFieldOrder: [
       "model",
+<<<<<<< HEAD
       "stream",
       "input",
       "instructions",
@@ -62,6 +70,20 @@ export const CLI_FINGERPRINTS: Record<string, CliFingerprint> = {
     // Codex builds mode-specific client headers in its executor/config. The CLI fingerprint must
     // only preserve ordering here; overriding User-Agent with a generic value would erase the
     // executor-provided version or user override.
+=======
+      "messages",
+      "temperature",
+      "top_p",
+      "max_tokens",
+      "stream",
+      "tools",
+      "tool_choice",
+      "response_format",
+      "n",
+      "stop",
+    ],
+    userAgent: "codex-cli",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   },
   claude: {
     headerOrder: [
@@ -69,6 +91,7 @@ export const CLI_FINGERPRINTS: Record<string, CliFingerprint> = {
       "Content-Type",
       "x-api-key",
       "anthropic-version",
+<<<<<<< HEAD
       "anthropic-beta",
       "anthropic-dangerous-direct-browser-access",
       "x-app",
@@ -175,6 +198,26 @@ export const CLI_FINGERPRINTS: Record<string, CliFingerprint> = {
       "output_config",
       "stream",
     ],
+=======
+      "Accept",
+      "User-Agent",
+      "Accept-Encoding",
+    ],
+    bodyFieldOrder: [
+      "model",
+      "max_tokens",
+      "messages",
+      "system",
+      "temperature",
+      "top_p",
+      "top_k",
+      "stream",
+      "tools",
+      "tool_choice",
+      "metadata",
+    ],
+    userAgent: "claude-code",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   },
   "claude-code-compatible": {
     headerOrder: [
@@ -242,7 +285,11 @@ export const CLI_FINGERPRINTS: Record<string, CliFingerprint> = {
       "intent_threshold",
       "intent_content",
     ],
+<<<<<<< HEAD
     userAgent: GITHUB_COPILOT_CHAT_USER_AGENT,
+=======
+    userAgent: "GitHubCopilotChat",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   },
   antigravity: {
     headerOrder: [
@@ -253,6 +300,7 @@ export const CLI_FINGERPRINTS: Record<string, CliFingerprint> = {
       "Accept",
       "Accept-Encoding",
     ],
+<<<<<<< HEAD
     bodyFieldOrder: [
       "project",
       "model",
@@ -276,6 +324,10 @@ export const CLI_FINGERPRINTS: Record<string, CliFingerprint> = {
       "Authorization",
     ],
     bodyFieldOrder: ["model", "project", "user_prompt_id", "request"],
+=======
+    bodyFieldOrder: ["project", "model", "userAgent", "requestType", "requestId", "request"],
+    userAgent: "antigravity",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   },
   qwen: {
     headerOrder: [
@@ -312,8 +364,27 @@ export const CLI_FINGERPRINTS: Record<string, CliFingerprint> = {
       "n",
       "stop",
     ],
+<<<<<<< HEAD
     userAgent: getQwenOauthHeaders()["User-Agent"],
     extraHeaders: getQwenOauthHeaders(),
+=======
+    userAgent: "QwenCode/0.12.3 (linux; x64)",
+    extraHeaders: {
+      "X-Dashscope-AuthType": "qwen-oauth",
+      "X-Dashscope-CacheControl": "enable",
+      "X-Dashscope-UserAgent": "QwenCode/0.12.3 (linux; x64)",
+      "X-Stainless-Arch": "x64",
+      "X-Stainless-Lang": "js",
+      "X-Stainless-Os": "Linux",
+      "X-Stainless-Package-Version": "5.11.0",
+      "X-Stainless-Retry-Count": "1",
+      "X-Stainless-Runtime": "node",
+      "X-Stainless-Runtime-Version": "v18.19.1",
+      Connection: "keep-alive",
+      "Accept-Language": "*",
+      "Sec-Fetch-Mode": "cors",
+    },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   },
 };
 
@@ -388,6 +459,12 @@ export function applyFingerprint(
   headers: Record<string, string>,
   body: unknown
 ): { headers: Record<string, string>; bodyString: string } {
+<<<<<<< HEAD
+=======
+  const fingerprintKey = isClaudeCodeCompatible(provider)
+    ? "claude-code-compatible"
+    : provider?.toLowerCase();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const fingerprint = CLI_FINGERPRINTS[fingerprintKey];
 
   if (!fingerprint) {
@@ -396,8 +473,12 @@ export function applyFingerprint(
 
   // Apply user agent override
   if (fingerprint.userAgent) {
+<<<<<<< HEAD
     headers["User-Agent"] =
       typeof fingerprint.userAgent === "function" ? fingerprint.userAgent() : fingerprint.userAgent;
+=======
+    headers["User-Agent"] = fingerprint.userAgent;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   // Apply extra headers
@@ -431,11 +512,15 @@ let _cliCompatProviders: Set<string> = new Set();
  * Called from the settings API when cliCompatProviders is updated.
  */
 export function setCliCompatProviders(providers: string[]): void {
+<<<<<<< HEAD
   _cliCompatProviders = new Set(
     (providers || [])
       .map((p) => normalizeCliCompatProviderId(p))
       .filter((provider) => provider in CLI_FINGERPRINTS)
   );
+=======
+  _cliCompatProviders = new Set((providers || []).map((p) => p.toLowerCase()));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 /**
@@ -455,8 +540,12 @@ export function isCliCompatEnabled(provider: string): boolean {
   const key = provider?.toLowerCase().replace(/[^a-z0-9]/g, "_");
 
   // 1. Check runtime cache (set via Settings UI)
+<<<<<<< HEAD
   const normalizedProvider = normalizeCliCompatProviderId(provider || "");
   if (_cliCompatProviders.has(normalizedProvider)) return true;
+=======
+  if (_cliCompatProviders.has(provider?.toLowerCase())) return true;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // 2. Check environment variable: CLI_COMPAT_<PROVIDER>=1
   const envKey = `CLI_COMPAT_${key?.toUpperCase()}`;

@@ -29,8 +29,11 @@ describe("PATCH /api/settings", () => {
     (getSettings as any).mockResolvedValue({
       debugMode: false,
       hiddenSidebarItems: [],
+<<<<<<< HEAD
       comboConfigMode: "guided",
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     });
     // Mock updateSettings to merge updates into the original
     (updateSettings as any).mockImplementation(async (updates: Record<string, unknown>) => {
@@ -63,6 +66,7 @@ describe("PATCH /api/settings", () => {
     const calledWith = (updateSettings as any).mock.calls[0][0];
     expect(calledWith.hiddenSidebarItems).toEqual([]);
   });
+<<<<<<< HEAD
 
   it("updates comboConfigMode via PATCH", async () => {
     const req = createPatchRequest({ comboConfigMode: "expert" });
@@ -75,4 +79,6 @@ describe("PATCH /api/settings", () => {
     expect(calledWith.comboConfigMode).toBe("expert");
   });
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 });

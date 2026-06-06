@@ -2,12 +2,22 @@ import { register } from "../registry.ts";
 import { FORMATS } from "../formats.ts";
 import { DEFAULT_THINKING_GEMINI_SIGNATURE } from "../../config/defaultThinkingSignature.ts";
 import { ANTIGRAVITY_DEFAULT_SYSTEM } from "../../config/constants.ts";
+<<<<<<< HEAD
 import { resolveGeminiThoughtSignature } from "../../services/geminiThoughtSignatureStore.ts";
+=======
+import { getGeminiThoughtSignature } from "../../services/geminiThoughtSignatureStore.ts";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { openaiToClaudeRequestForAntigravity } from "./openai-to-claude.ts";
 import {
   capMaxOutputTokens,
   capThinkingBudget,
   getDefaultThinkingBudget,
+<<<<<<< HEAD
+=======
+} from "../../../src/shared/constants/modelSpecs.ts";
+
+import * as crypto from "crypto";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 function generateUUID() {
   return crypto.randomUUID();
@@ -18,6 +28,7 @@ import {
   convertOpenAIContentToParts,
   extractTextContent,
   tryParseJSON,
+<<<<<<< HEAD
   generateSessionId,
   cleanJSONSchemaForAntigravity,
 } from "../helpers/geminiHelper.ts";
@@ -28,6 +39,12 @@ import { buildGeminiTools, sanitizeGeminiToolName } from "../helpers/geminiTools
 // 8192 default for unknown Claude-family IDs, while Antigravity currently caps
 // visible output around 16K. See: https://github.com/keisksw/antigravity-output-analysis
 const ANTIGRAVITY_CLAUDE_MAX_OUTPUT_TOKENS = 16_384;
+=======
+  generateRequestId,
+  generateSessionId,
+  cleanJSONSchemaForAntigravity,
+} from "../helpers/geminiHelper.ts";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 type GeminiPart = Record<string, unknown>;
 type GeminiContent = { role: string; parts: GeminiPart[] };
@@ -43,7 +60,10 @@ type GeminiGenerationConfig = {
   };
   responseMimeType?: string;
   responseSchema?: unknown;
+<<<<<<< HEAD
   stopSequences?: string[] | unknown[];
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 };
 
 type GeminiFunctionDeclaration = {
@@ -54,16 +74,26 @@ type GeminiFunctionDeclaration = {
 
 type GeminiRequest = {
   model: string;
+<<<<<<< HEAD
   contents?: GeminiContent[];
   [key: string]: unknown;
   generationConfig: GeminiGenerationConfig;
   safetySettings: unknown;
   systemInstruction?: GeminiContent;
+=======
+  contents: GeminiContent[];
+  generationConfig: GeminiGenerationConfig;
+  safetySettings: unknown;
+  systemInstruction?: GeminiContent;
+  tools?: Array<{ functionDeclarations: GeminiFunctionDeclaration[] }>;
+  cachedContent?: string;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 };
 
 type CloudCodeEnvelope = {
   project: string;
   model: string;
+<<<<<<< HEAD
   user_prompt_id?: string;
   userAgent?: string;
   requestId?: string;
@@ -79,11 +109,23 @@ type CloudCodeEnvelope = {
       functionDeclarations?: GeminiFunctionDeclaration[];
       googleSearch?: Record<string, unknown>;
     }>;
+=======
+  userAgent: string;
+  requestId: string;
+  requestType?: string;
+  request: {
+    sessionId: string;
+    contents: GeminiContent[];
+    systemInstruction?: GeminiContent;
+    generationConfig: GeminiGenerationConfig;
+    tools?: Array<{ functionDeclarations: GeminiFunctionDeclaration[] }>;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     safetySettings?: unknown;
     toolConfig?: {
       functionCallingConfig: { mode: string };
     };
   };
+<<<<<<< HEAD
   _toolNameMap?: Map<string, string>;
 };
 
@@ -123,12 +165,28 @@ function extractClientThoughtSignature(toolCall: unknown): string | null {
 
 // Core: Convert OpenAI request to Gemini format (base for all variants)
 function openaiToGeminiBase(model, body, stream, toolNameOptions: GeminiToolNameOptions = {}) {
+=======
+};
+
+function normalizeAntigravityToolName(name: unknown) {
+  if (typeof name !== "string") return name;
+  const trimmed = name.trim();
+  if (!trimmed) return trimmed;
+
+  const namespaceIndex = trimmed.indexOf(":");
+  return namespaceIndex >= 0 ? trimmed.slice(namespaceIndex + 1) : trimmed;
+}
+
+// Core: Convert OpenAI request to Gemini format (base for all variants)
+function openaiToGeminiBase(model, body, stream) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const result: GeminiRequest = {
     model: model,
     contents: [],
     generationConfig: {},
     safetySettings: body.safetySettings || DEFAULT_SAFETY_SETTINGS,
   };
+<<<<<<< HEAD
   const toolNameMap = new Map<string, string>();
   const sanitizeToolName = (name: string) =>
     sanitizeGeminiToolName(name, {
@@ -145,6 +203,8 @@ function openaiToGeminiBase(model, body, stream, toolNameOptions: GeminiToolName
   if (body.cachedContent) {
     result.cachedContent = body.cachedContent;
   }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Preserve cachedContent if provided by client (for explicit Gemini caching)
   if (body.cachedContent) {
@@ -161,6 +221,15 @@ function openaiToGeminiBase(model, body, stream, toolNameOptions: GeminiToolName
   if (body.top_k !== undefined) {
     result.generationConfig.topK = body.top_k;
   }
+<<<<<<< HEAD
+=======
+  if (body.stop !== undefined) {
+    result.generationConfig.stopSequences = Array.isArray(body.stop) ? body.stop : [body.stop];
+  }
+  const requestedMaxOutputTokens = body.max_tokens ?? body.max_completion_tokens;
+  if (requestedMaxOutputTokens !== undefined) {
+    result.generationConfig.maxOutputTokens = capMaxOutputTokens(model, requestedMaxOutputTokens);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   } else {
     result.generationConfig.maxOutputTokens = capMaxOutputTokens(model);
   }
@@ -201,7 +270,11 @@ function openaiToGeminiBase(model, body, stream, toolNameOptions: GeminiToolName
         if (systemText) {
           if (!result.systemInstruction) {
             result.systemInstruction = {
+<<<<<<< HEAD
               role: "system",
+=======
+              role: "user",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               parts: [{ text: systemText }],
             };
           } else {
@@ -222,6 +295,12 @@ function openaiToGeminiBase(model, body, stream, toolNameOptions: GeminiToolName
             thought: true,
             text: msg.reasoning_content,
           });
+<<<<<<< HEAD
+=======
+          parts.push({
+            thoughtSignature: DEFAULT_THINKING_GEMINI_SIGNATURE,
+          });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         }
 
         if (content) {
@@ -234,22 +313,54 @@ function openaiToGeminiBase(model, body, stream, toolNameOptions: GeminiToolName
         if (msg.tool_calls && Array.isArray(msg.tool_calls)) {
           const toolCallIds = [];
           const firstPersistedSignature = msg.tool_calls
+<<<<<<< HEAD
             .map((tc) => resolveGeminiThoughtSignature(tc.id, extractClientThoughtSignature(tc)))
             .find((signature) => typeof signature === "string" && signature.length > 0);
 
           let shouldUseEmbeddedSignature = !parts.some((p) => p.thoughtSignature);
+=======
+            .map((tc) => getGeminiThoughtSignature(tc.id))
+            .find((signature) => typeof signature === "string" && signature.length > 0);
+
+          const shouldUseEmbeddedSignature = !parts.some((p) => p.thoughtSignature);
+          let embeddedSignatureUsed = false;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
           for (const tc of msg.tool_calls) {
             if (tc.type !== "function") continue;
 
             const args = tryParseJSON(tc.function?.arguments || "{}");
+<<<<<<< HEAD
               functionCall: {
                 id: tc.id,
                 name: sanitizeToolName(tc.function.name),
+=======
+            const signatureForToolCall = getGeminiThoughtSignature(tc.id);
+            const embeddedThoughtSignature =
+              shouldUseEmbeddedSignature && !embeddedSignatureUsed
+                ? firstPersistedSignature ||
+                  signatureForToolCall ||
+                  DEFAULT_THINKING_GEMINI_SIGNATURE
+                : undefined;
+
+            // Gemini expects the signature on the functionCall part itself. For
+            // parallel calls, only the first functionCall in the batch carries it.
+            parts.push({
+              ...(embeddedThoughtSignature ? { thoughtSignature: embeddedThoughtSignature } : {}),
+              functionCall: {
+                id: tc.id,
+                name: tc.function.name,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 args: args,
               },
             });
 
+<<<<<<< HEAD
+=======
+            if (embeddedThoughtSignature) {
+              embeddedSignatureUsed = true;
+            }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             toolCallIds.push(tc.id);
           }
 
@@ -274,7 +385,10 @@ function openaiToGeminiBase(model, body, stream, toolNameOptions: GeminiToolName
                   name = fid;
                 }
               }
+<<<<<<< HEAD
               name = sanitizeToolName(name);
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
               let resp = toolResponses[fid];
               let parsedResp = tryParseJSON(resp);
@@ -288,10 +402,14 @@ function openaiToGeminiBase(model, body, stream, toolNameOptions: GeminiToolName
                 functionResponse: {
                   id: fid,
                   name: name,
+<<<<<<< HEAD
                   response:
                     toolNameOptions.functionResponseShape === "output"
                       ? { output: typeof resp === "string" ? resp : JSON.stringify(resp) }
                       : { result: parsedResp },
+=======
+                  response: { result: parsedResp },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 },
               });
             }
@@ -307,12 +425,44 @@ function openaiToGeminiBase(model, body, stream, toolNameOptions: GeminiToolName
   }
 
   // Convert tools
+<<<<<<< HEAD
   const geminiTools = buildGeminiTools(body.tools, {
     ...toolNameOptions,
     toolNameMap,
   });
   if (geminiTools) {
     result.tools = geminiTools;
+=======
+  if (body.tools && Array.isArray(body.tools) && body.tools.length > 0) {
+    const functionDeclarations = [];
+    for (const t of body.tools) {
+      // Check if already in Anthropic/Claude format (no type field, direct name/description/input_schema)
+      if (t.name && t.input_schema) {
+        functionDeclarations.push({
+          name: t.name,
+          description: t.description || "",
+          parameters: cleanJSONSchemaForAntigravity(
+            t.input_schema || { type: "object", properties: {} }
+          ),
+        });
+      }
+      // OpenAI format
+      else if (t.type === "function" && t.function) {
+        const fn = t.function;
+        functionDeclarations.push({
+          name: fn.name,
+          description: fn.description || "",
+          parameters: cleanJSONSchemaForAntigravity(
+            fn.parameters || { type: "object", properties: {} }
+          ),
+        });
+      }
+    }
+
+    if (functionDeclarations.length > 0) {
+      result.tools = [{ functionDeclarations }];
+    }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   // Convert response_format to Gemini's responseMimeType/responseSchema
@@ -331,11 +481,14 @@ function openaiToGeminiBase(model, body, stream, toolNameOptions: GeminiToolName
     }
   }
 
+<<<<<<< HEAD
   const changedToolNameMap = buildChangedToolNameMap(toolNameMap);
   if (changedToolNameMap) {
     result._toolNameMap = changedToolNameMap;
   }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return result;
 }
 
@@ -345,6 +498,7 @@ export function openaiToGeminiRequest(model, body, stream) {
 }
 
 // OpenAI -> Gemini CLI (Cloud Code Assist)
+<<<<<<< HEAD
 export function openaiToGeminiCLIRequest(
   model,
   body,
@@ -355,6 +509,11 @@ export function openaiToGeminiCLIRequest(
     stripNamespace: true,
     functionResponseShape: options.functionResponseShape,
   });
+=======
+export function openaiToGeminiCLIRequest(model, body, stream) {
+  const gemini = openaiToGeminiBase(model, body, stream);
+  const isClaude = model.toLowerCase().includes("claude");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Add thinking config for CLI
   if (body.reasoning_effort) {
@@ -378,6 +537,40 @@ export function openaiToGeminiCLIRequest(
     };
   }
 
+<<<<<<< HEAD
+=======
+  // Clean schema for tools
+  if (gemini.tools?.[0]?.functionDeclarations) {
+    for (const fn of gemini.tools[0].functionDeclarations) {
+      fn.name = normalizeAntigravityToolName(fn.name);
+      if (fn.parameters) {
+        const cleanedSchema = cleanJSONSchemaForAntigravity(fn.parameters);
+        fn.parameters = cleanedSchema;
+        // if (isClaude) {
+        //   fn.parameters = cleanedSchema;
+        // } else {
+        //   fn.parametersJsonSchema = cleanedSchema;
+        //   delete fn.parameters;
+        // }
+      }
+    }
+  }
+
+  if (Array.isArray(gemini.contents)) {
+    for (const content of gemini.contents) {
+      if (!Array.isArray(content.parts)) continue;
+      for (const part of content.parts) {
+        if (part.functionCall?.name) {
+          part.functionCall.name = normalizeAntigravityToolName(part.functionCall.name);
+        }
+        if (part.functionResponse?.name) {
+          part.functionResponse.name = normalizeAntigravityToolName(part.functionResponse.name);
+        }
+      }
+    }
+  }
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return gemini;
 }
 
@@ -398,6 +591,7 @@ function wrapInCloudCodeEnvelope(model, geminiCLI, credentials = null, isAntigra
 
   const cleanModel = model.includes("/") ? model.split("/").pop()! : model;
 
+<<<<<<< HEAD
   const envelope: CloudCodeEnvelope = isAntigravity
     ? {
         project: projectId,
@@ -430,29 +624,62 @@ function wrapInCloudCodeEnvelope(model, geminiCLI, credentials = null, isAntigra
 
   // Antigravity specific fields
   if (isAntigravity) {
+=======
+  const envelope: CloudCodeEnvelope = {
+    project: projectId,
+    model: cleanModel,
+    userAgent: isAntigravity ? "antigravity" : "gemini-cli",
+    requestId: isAntigravity ? `agent-${generateUUID()}` : generateRequestId(),
+    request: {
+      sessionId: generateSessionId(),
+      contents: geminiCLI.contents,
+      systemInstruction: geminiCLI.systemInstruction,
+      generationConfig: geminiCLI.generationConfig,
+      tools: geminiCLI.tools,
+    },
+  };
+
+  // Antigravity specific fields
+  if (isAntigravity) {
+    envelope.requestType = "agent";
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     // Inject required default system prompt for Antigravity
     const defaultPart: GeminiPart = { text: ANTIGRAVITY_DEFAULT_SYSTEM };
     if (envelope.request.systemInstruction?.parts) {
       envelope.request.systemInstruction.parts.unshift(defaultPart);
     } else {
+<<<<<<< HEAD
       envelope.request.systemInstruction = { role: "system", parts: [defaultPart] };
     }
 
     // Add toolConfig for Antigravity
     if (geminiCLI.tools?.some((tool) => Array.isArray(tool.functionDeclarations))) {
+=======
+      envelope.request.systemInstruction = { role: "user", parts: [defaultPart] };
+    }
+
+    // Add toolConfig for Antigravity
+    if (geminiCLI.tools?.length > 0) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       envelope.request.toolConfig = {
         functionCallingConfig: { mode: "VALIDATED" },
       };
     }
   } else {
+<<<<<<< HEAD
     // Gemini CLI's native Cloud Code envelope uses snake_case identifiers.
     envelope.request.session_id = envelope.user_prompt_id;
+=======
+    // Keep safetySettings for Gemini CLI
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     envelope.request.safetySettings = geminiCLI.safetySettings;
   }
 
   return envelope;
 }
 
+<<<<<<< HEAD
 function getAntigravityClaudeOutputTokens(body: Record<string, unknown>): number {
   const requested = body.max_tokens ?? body.max_completion_tokens;
   if (typeof requested === "number" && Number.isFinite(requested) && requested >= 1) {
@@ -467,6 +694,9 @@ function wrapInCloudCodeEnvelopeForClaude(
   credentials = null,
   sourceBody = {}
 ) {
+=======
+function wrapInCloudCodeEnvelopeForClaude(model, claudeRequest, credentials = null) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let projectId = credentials?.projectId;
 
   if (!projectId) {
@@ -479,6 +709,7 @@ function wrapInCloudCodeEnvelopeForClaude(
 
   const cleanModel = model.includes("/") ? model.split("/").pop()! : model;
 
+<<<<<<< HEAD
   // Keep Antigravity's default and caller-provided system rules
   let systemText = ANTIGRAVITY_DEFAULT_SYSTEM;
   if (claudeRequest.system) {
@@ -490,6 +721,8 @@ function wrapInCloudCodeEnvelopeForClaude(
     }
   }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const envelope: CloudCodeEnvelope = {
     project: projectId,
     model: cleanModel,
@@ -497,6 +730,7 @@ function wrapInCloudCodeEnvelopeForClaude(
     requestId: `agent-${generateUUID()}`,
     requestType: "agent",
     request: {
+<<<<<<< HEAD
       ...claudeRequest,
       system: systemText,
       max_tokens: getAntigravityClaudeOutputTokens(sourceBody),
@@ -504,6 +738,107 @@ function wrapInCloudCodeEnvelopeForClaude(
     },
   };
 
+=======
+      sessionId: generateSessionId(),
+      contents: [],
+      generationConfig: {
+        temperature: claudeRequest.temperature || 1,
+        maxOutputTokens: claudeRequest.max_tokens || 4096,
+      },
+    },
+  };
+
+  // Convert Claude messages to Gemini contents
+  if (claudeRequest.messages && Array.isArray(claudeRequest.messages)) {
+    for (const msg of claudeRequest.messages) {
+      const parts = [];
+
+      if (Array.isArray(msg.content)) {
+        for (const block of msg.content) {
+          if (block.type === "text") {
+            parts.push({ text: block.text });
+          } else if (block.type === "image" && block.source) {
+            parts.push({
+              inlineData: {
+                mimeType: block.source.media_type,
+                data: block.source.data,
+              },
+            });
+          } else if (block.type === "tool_use") {
+            parts.push({
+              functionCall: {
+                id: block.id,
+                name: block.name,
+                args: block.input || {},
+              },
+            });
+          } else if (block.type === "tool_result") {
+            let content = block.content;
+            if (Array.isArray(content)) {
+              content = content
+                .map((c) => (c.type === "text" ? c.text : JSON.stringify(c)))
+                .join("\n");
+            }
+            parts.push({
+              functionResponse: {
+                id: block.tool_use_id,
+                name: "unknown",
+                response: { result: tryParseJSON(content) || content },
+              },
+            });
+          }
+        }
+      } else if (typeof msg.content === "string") {
+        parts.push({ text: msg.content });
+      }
+
+      if (parts.length > 0) {
+        envelope.request.contents.push({
+          role: msg.role === "assistant" ? "model" : "user",
+          parts,
+        });
+      }
+    }
+  }
+
+  // Convert Claude tools to Gemini functionDeclarations
+  if (claudeRequest.tools && Array.isArray(claudeRequest.tools)) {
+    const functionDeclarations = [];
+    for (const tool of claudeRequest.tools) {
+      if (tool.name && tool.input_schema) {
+        const cleanedSchema = cleanJSONSchemaForAntigravity(tool.input_schema);
+        functionDeclarations.push({
+          name: tool.name,
+          description: tool.description || "",
+          parameters: cleanedSchema,
+        });
+      }
+    }
+    if (functionDeclarations.length > 0) {
+      envelope.request.tools = [{ functionDeclarations }];
+      envelope.request.toolConfig = {
+        functionCallingConfig: { mode: "VALIDATED" },
+      };
+    }
+  }
+
+  // Add system instruction (Antigravity default)
+  const defaultPart = { text: ANTIGRAVITY_DEFAULT_SYSTEM };
+  const systemParts = [defaultPart];
+
+  if (claudeRequest.system) {
+    if (Array.isArray(claudeRequest.system)) {
+      for (const block of claudeRequest.system) {
+        if (block.text) systemParts.push({ text: block.text });
+      }
+    } else if (typeof claudeRequest.system === "string") {
+      systemParts.push({ text: claudeRequest.system });
+    }
+  }
+
+  envelope.request.systemInstruction = { role: "user", parts: systemParts };
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return envelope;
 }
 
@@ -513,7 +848,11 @@ export function openaiToAntigravityRequest(model, body, stream, credentials = nu
 
   if (isClaude) {
     const claudeRequest = openaiToClaudeRequestForAntigravity(model, body, stream);
+<<<<<<< HEAD
     return wrapInCloudCodeEnvelopeForClaude(model, claudeRequest, credentials, body);
+=======
+    return wrapInCloudCodeEnvelopeForClaude(model, claudeRequest, credentials);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   const geminiCLI = openaiToGeminiCLIRequest(model, body, stream);
@@ -526,11 +865,15 @@ register(
   FORMATS.OPENAI,
   FORMATS.GEMINI_CLI,
   (model, body, stream, credentials) =>
+<<<<<<< HEAD
     wrapInCloudCodeEnvelope(
       model,
       openaiToGeminiCLIRequest(model, body, stream, { functionResponseShape: "output" }),
       credentials
     ),
+=======
+    wrapInCloudCodeEnvelope(model, openaiToGeminiCLIRequest(model, body, stream), credentials),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   null
 );
 register(FORMATS.OPENAI, FORMATS.ANTIGRAVITY, openaiToAntigravityRequest, null);

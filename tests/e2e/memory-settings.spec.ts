@@ -1,5 +1,8 @@
 import { expect, test, type Page, type Route } from "@playwright/test";
+<<<<<<< HEAD
 import { gotoDashboardRoute } from "./helpers/dashboardAuth";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const NAVIGATION_TIMEOUT_MS = 300_000;
 
@@ -32,6 +35,32 @@ async function fulfillJson(route: Route, body: unknown, status = 200) {
   });
 }
 
+<<<<<<< HEAD
+=======
+async function gotoOrSkip(page: Page, url: string) {
+  let lastError: unknown;
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      await page.goto(url, { waitUntil: "commit", timeout: NAVIGATION_TIMEOUT_MS });
+    } catch (error) {
+      lastError = error;
+    }
+    try {
+      await page.waitForURL(/\/(login|dashboard)(\/.*)?$/, { timeout: NAVIGATION_TIMEOUT_MS });
+      await page.locator("body").waitFor({ state: "visible", timeout: NAVIGATION_TIMEOUT_MS });
+      lastError = null;
+      break;
+    } catch (error) {
+      lastError = error;
+    }
+    await page.waitForTimeout(1000);
+  }
+  if (lastError) throw lastError;
+  const redirectedToLogin = page.url().includes("/login");
+  test.skip(redirectedToLogin, "Authentication enabled without a login fixture.");
+}
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 async function setRangeValue(page: Page, testId: string, value: number) {
   await page.getByTestId(testId).evaluate((element, nextValue) => {
     const input = element as HTMLInputElement;
@@ -81,7 +110,11 @@ test.describe("Memory settings", () => {
       deleteCalls: 0,
     };
 
+<<<<<<< HEAD
     await page.route(/\/api\/settings$/, async (route) => {
+=======
+    await page.route("**/api/settings", async (route) => {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       const method = route.request().method();
       if (method === "GET") {
         await fulfillJson(route, state.settings);
@@ -101,7 +134,11 @@ test.describe("Memory settings", () => {
       await fulfillJson(route, { error: "Method not allowed in settings stub" }, 405);
     });
 
+<<<<<<< HEAD
     await page.route(/\/api\/settings\/memory$/, async (route) => {
+=======
+    await page.route("**/api/settings/memory", async (route) => {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       const method = route.request().method();
       if (method === "GET") {
         await fulfillJson(route, state.config);
@@ -120,6 +157,7 @@ test.describe("Memory settings", () => {
       await fulfillJson(route, { error: "Method not allowed in memory settings stub" }, 405);
     });
 
+<<<<<<< HEAD
     await page.route(/\/api\/memory(?:\?.*)?$/, async (route) => {
       await fulfillJson(route, {
         data: state.memories,
@@ -127,6 +165,13 @@ test.describe("Memory settings", () => {
         totalPages: 1,
         stats: {
           total: state.memories.length,
+=======
+    await page.route("**/api/memory", async (route) => {
+      await fulfillJson(route, {
+        memories: state.memories,
+        stats: {
+          totalEntries: state.memories.length,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           tokensUsed: state.memories.length * 24,
           hitRate: state.memories.length > 0 ? 0.75 : 0,
         },
@@ -140,16 +185,24 @@ test.describe("Memory settings", () => {
       await fulfillJson(route, { success: true });
     });
 
+<<<<<<< HEAD
     await gotoDashboardRoute(page, "/dashboard/settings?tab=ai", {
       timeoutMs: NAVIGATION_TIMEOUT_MS,
     });
+=======
+    await gotoOrSkip(page, "/dashboard/settings?tab=ai");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     let settingsHydrationRetries = 0;
     await expect(async () => {
       if (settingsHydrationRetries++ > 0) {
         await page.reload({ waitUntil: "commit" }).catch(() => {});
       }
+<<<<<<< HEAD
       await expect(page.getByTestId("memory-enabled-switch")).toBeVisible({ timeout: 15000 });
+=======
+      await expect(page.getByTestId("memory-settings-card")).toBeVisible({ timeout: 5000 });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }).toPass({ timeout: 45_000, intervals: [1000, 2500, 5000] });
     await expect(page.getByTestId("memory-enabled-switch")).toHaveAttribute(
       "aria-checked",
@@ -174,16 +227,24 @@ test.describe("Memory settings", () => {
     );
     await expect.poll(() => state.config.enabled).toBe(false);
 
+<<<<<<< HEAD
     await gotoDashboardRoute(page, "/dashboard/memory", {
       timeoutMs: NAVIGATION_TIMEOUT_MS,
     });
+=======
+    await gotoOrSkip(page, "/dashboard/memory");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     let memoryHydrationRetries = 0;
     await expect(async () => {
       if (memoryHydrationRetries++ > 0) {
         await page.reload({ waitUntil: "commit" }).catch(() => {});
       }
+<<<<<<< HEAD
       await expect(page.getByText("preferred_language")).toBeVisible({ timeout: 15000 });
+=======
+      await expect(page.getByText("preferred_language")).toBeVisible({ timeout: 5000 });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }).toPass({ timeout: 45_000, intervals: [1000, 2500, 5000] });
     await page.getByRole("button", { name: /delete/i }).click();
 

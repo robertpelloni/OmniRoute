@@ -1,6 +1,10 @@
 "use client";
 
+<<<<<<< HEAD
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+=======
+import { useState, useEffect, useCallback, useMemo } from "react";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import Card from "./Card";
 import { CardSkeleton } from "./Loading";
 import { fmtCompact as fmt, fmtFull, fmtCost } from "@/shared/utils/formatting";
@@ -18,8 +22,11 @@ import {
   ProviderCostDonut,
   ModelOverTimeChart,
   ProviderTable,
+<<<<<<< HEAD
   ApiKeyFilterDropdown,
   CustomRangePicker,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 } from "./analytics";
 
 // ============================================================================
@@ -32,6 +39,7 @@ export default function UsageAnalytics() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+<<<<<<< HEAD
   // Custom date range state
   const [customStart, setCustomStart] = useState("");
   const [customEnd, setCustomEnd] = useState("");
@@ -55,10 +63,17 @@ export default function UsageAnalytics() {
         params.set("apiKeyIds", selectedApiKeys.join(","));
       }
       const res = await fetch(`/api/usage/analytics?${params.toString()}`);
+=======
+  const fetchAnalytics = useCallback(async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(`/api/usage/analytics?range=${range}`);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       if (!res.ok) throw new Error("Failed to fetch");
       const data = await res.json();
       setAnalytics(data);
       setError(null);
+<<<<<<< HEAD
 
       // Update available keys from unfiltered data (only when no filter is active).
       // Use apiKeyName as the stable identifier — it is always populated
@@ -74,17 +89,24 @@ export default function UsageAnalytics() {
         }
         setAvailableApiKeys(keys);
       }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     } catch (err) {
       setError((err as any).message);
     } finally {
       setLoading(false);
     }
+<<<<<<< HEAD
   }, [range, customStart, customEnd, selectedApiKeys]);
+=======
+  }, [range]);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   useEffect(() => {
     fetchAnalytics();
   }, [fetchAnalytics]);
 
+<<<<<<< HEAD
   const handleRangeSelect = useCallback((value: string) => {
     if (value === "custom") {
       setShowCustomPicker(true);
@@ -116,6 +138,8 @@ export default function UsageAnalytics() {
     return `${fmt(customStart)} — ${fmt(customEnd)}`;
   }, [range, customStart, customEnd]);
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const ranges = [
     { value: "1d", label: "1D" },
     { value: "7d", label: "7D" },
@@ -178,12 +202,18 @@ export default function UsageAnalytics() {
 
   return (
     <div className="flex flex-col gap-5 min-w-0">
+<<<<<<< HEAD
       {/* Header + Filters */}
       <div className="flex items-center justify-between flex-wrap gap-3">
+=======
+      {/* Header + Time Range */}
+      <div className="flex items-center justify-between">
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         <h2 className="text-xl font-semibold flex items-center gap-2">
           <span className="material-symbols-outlined text-primary text-[22px]">analytics</span>
           Usage Analytics
         </h2>
+<<<<<<< HEAD
         <div className="flex items-center gap-2.5">
           {/* API Key Filter */}
           <ApiKeyFilterDropdown
@@ -214,10 +244,20 @@ export default function UsageAnalytics() {
               onClick={() => handleRangeSelect("custom")}
               className={`px-3 py-1 rounded-md text-xs font-semibold transition-all flex items-center gap-1 ${
                 range === "custom"
+=======
+        <div className="flex items-center gap-1 bg-black/[0.03] dark:bg-white/[0.03] rounded-lg p-1 border border-black/5 dark:border-white/5">
+          {ranges.map((r) => (
+            <button
+              key={r.value}
+              onClick={() => setRange(r.value)}
+              className={`px-3 py-1 rounded-md text-xs font-semibold transition-all ${
+                range === r.value
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   ? "bg-primary text-white shadow-sm"
                   : "text-text-muted hover:text-text-main hover:bg-black/5 dark:hover:bg-white/5"
               }`}
             >
+<<<<<<< HEAD
               <span className="material-symbols-outlined text-[13px]">date_range</span>
               {customRangeLabel || "Custom"}
               {range === "custom" && customRangeLabel && (
@@ -246,6 +286,11 @@ export default function UsageAnalytics() {
               />
             )}
           </div>
+=======
+              {r.label}
+            </button>
+          ))}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         </div>
       </div>
 

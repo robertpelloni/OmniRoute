@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { execFileSync, execSync } from "child_process";
+=======
+import { execSync, execFileSync } from "child_process";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { existsSync, readFileSync } from "fs";
 
 /**
@@ -18,7 +22,11 @@ function getMachineIdRaw(): string {
     }
     const sysRoot = process.env.SystemRoot || process.env.windir || "C:\\Windows";
     const regPath = `${sysRoot}\\System32\\REG.exe`;
+<<<<<<< HEAD
     if (existsSync(/* turbopackIgnore: true */ regPath)) {
+=======
+    if (existsSync(regPath)) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       const output = execFileSync(
         regPath,
         ["QUERY", "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Cryptography", "/v", "MachineGuid"],
@@ -58,6 +66,7 @@ function getMachineIdRaw(): string {
   // Strategy 3: Linux — read machine-id files directly (no `head` or pipe)
   try {
     for (const filePath of ["/etc/machine-id", "/var/lib/dbus/machine-id"]) {
+<<<<<<< HEAD
       try {
         const content = readFileSync(/* turbopackIgnore: true */ filePath, "utf8")
           .trim()
@@ -65,6 +74,11 @@ function getMachineIdRaw(): string {
         if (content.length > 8) return content;
       } catch {
         // Try the next candidate file
+=======
+      if (existsSync(filePath)) {
+        const content = readFileSync(filePath, "utf8").trim().toLowerCase();
+        if (content.length > 8) return content;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     }
   } catch {
@@ -117,6 +131,7 @@ export async function getConsistentMachineId(salt = null) {
       const cryptoFallback = await import("crypto");
       return cryptoFallback.randomUUID();
     } catch {
+<<<<<<< HEAD
       if (typeof globalThis !== "undefined" && globalThis.crypto && globalThis.crypto.randomUUID) {
         return globalThis.crypto.randomUUID();
       }
@@ -134,6 +149,11 @@ export async function getConsistentMachineId(salt = null) {
           r = (Date.now() % 16) | 0;
         }
         const v = c === "x" ? r : (r & 0x3) | 0x8;
+=======
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+        const r = (Math.random() * 16) | 0;
+        const v = c == "x" ? r : (r & 0x3) | 0x8;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         return v.toString(16);
       });
     }
@@ -154,6 +174,7 @@ export async function getRawMachineId() {
       const cryptoFallback = await import("crypto");
       return cryptoFallback.randomUUID();
     } catch {
+<<<<<<< HEAD
       if (typeof globalThis !== "undefined" && globalThis.crypto && globalThis.crypto.randomUUID) {
         return globalThis.crypto.randomUUID();
       }
@@ -171,6 +192,11 @@ export async function getRawMachineId() {
           r = (Date.now() % 16) | 0;
         }
         const v = c === "x" ? r : (r & 0x3) | 0x8;
+=======
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+        const r = (Math.random() * 16) | 0;
+        const v = c == "x" ? r : (r & 0x3) | 0x8;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         return v.toString(16);
       });
     }

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { PROVIDER_MODELS } from "@/shared/constants/models";
 import {
   getAllCustomModels,
@@ -6,6 +7,11 @@ import {
 } from "@/lib/db/models";
 import { getResolvedModelCapabilities } from "@/lib/modelCapabilities";
 import { getSyncedCapabilities } from "@/lib/modelsDevSync";
+=======
+import { CORS_ORIGIN } from "@/shared/utils/cors";
+import { PROVIDER_MODELS } from "@/shared/constants/models";
+import { getAllCustomModels, getSyncedAvailableModels } from "@/lib/db/models";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * Handle CORS preflight
@@ -13,6 +19,10 @@ import { getSyncedCapabilities } from "@/lib/modelsDevSync";
 export async function OPTIONS() {
   return new Response(null, {
     headers: {
+<<<<<<< HEAD
+=======
+      "Access-Control-Allow-Origin": CORS_ORIGIN,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       "Access-Control-Allow-Methods": "GET, OPTIONS",
       "Access-Control-Allow-Headers": "*",
     },
@@ -25,21 +35,32 @@ export async function OPTIONS() {
  */
 export async function GET() {
   try {
+<<<<<<< HEAD
     getSyncedCapabilities();
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const models = [];
 
     // Built-in models (hardcoded defaults)
     for (const [provider, providerModels] of Object.entries(PROVIDER_MODELS)) {
       for (const model of providerModels) {
+<<<<<<< HEAD
         const resolved = getResolvedModelCapabilities({ provider, model: model.id });
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         models.push({
           name: `models/${provider}/${model.id}`,
           displayName: model.name || model.id,
           description: `${provider} model: ${model.name || model.id}`,
           supportedGenerationMethods: ["generateContent"],
+<<<<<<< HEAD
           inputTokenLimit: resolved.maxInputTokens || resolved.contextWindow || 128000,
           outputTokenLimit: resolved.maxOutputTokens || 8192,
           ...(resolved.supportsThinking === true ? { thinking: true } : {}),
+=======
+          inputTokenLimit: 128000,
+          outputTokenLimit: 8192,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         });
       }
     }
@@ -71,6 +92,7 @@ export async function GET() {
       console.error("[v1beta/models] Error fetching synced Gemini models:", err);
     }
 
+<<<<<<< HEAD
     const existingNames = new Set(models.map((model) => (model as any).name));
 
     // Synced/imported models for non-Gemini providers
@@ -111,6 +133,8 @@ export async function GET() {
       // Synced models are optional — skip on error
     }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     // Custom models (use stored metadata from provider APIs)
     try {
       const customModelsMap = (await getAllCustomModels()) as Record<string, unknown>;
@@ -123,6 +147,7 @@ export async function GET() {
             continue;
           const m = model as Record<string, unknown>;
           if (m.isHidden === true) continue;
+<<<<<<< HEAD
           const resolved = getResolvedModelCapabilities({
             provider: providerId,
             model: String(m.id),
@@ -147,6 +172,17 @@ export async function GET() {
               : {}),
           });
           existingNames.add(name);
+=======
+          models.push({
+            name: `models/${providerId}/${m.id}`,
+            displayName: m.name || m.id,
+            ...(typeof m.description === "string" ? { description: m.description } : {}),
+            supportedGenerationMethods: ["generateContent"],
+            inputTokenLimit: typeof m.inputTokenLimit === "number" ? m.inputTokenLimit : 128000,
+            outputTokenLimit: typeof m.outputTokenLimit === "number" ? m.outputTokenLimit : 8192,
+            ...(m.supportsThinking === true ? { thinking: true } : {}),
+          });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         }
       }
     } catch {

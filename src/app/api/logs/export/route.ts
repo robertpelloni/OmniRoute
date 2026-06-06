@@ -1,6 +1,9 @@
 import { getDbInstance } from "@/lib/db/core";
+<<<<<<< HEAD
 import { exportCallLogsSince } from "@/lib/usage/callLogs";
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * GET /api/logs/export — export logs as JSON
@@ -8,9 +11,12 @@ import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
  *               &type=call-logs|request-logs|proxy-logs (default call-logs)
  */
 export async function GET(request: Request) {
+<<<<<<< HEAD
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const { searchParams } = new URL(request.url);
     const hours = Math.min(Math.max(parseInt(searchParams.get("hours") || "24") || 24, 1), 168);
@@ -24,6 +30,13 @@ export async function GET(request: Request) {
 
     if (logType === "call-logs" || logType === "request-logs") {
       tableName = "call_logs";
+<<<<<<< HEAD
+=======
+      const stmt = db.prepare(
+        "SELECT * FROM call_logs WHERE timestamp >= @since ORDER BY timestamp DESC"
+      );
+      rows = stmt.all({ since });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     } else if (logType === "proxy-logs") {
       tableName = "proxy_logs";
       const stmt = db.prepare(

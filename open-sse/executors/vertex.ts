@@ -13,6 +13,10 @@ interface ServiceAccount {
 
 const TOKEN_CACHE = new Map<string, { token: string; expiresAt: number }>();
 
+<<<<<<< HEAD
+=======
+function parseSAFromApiKey(apiKey: string): ServiceAccount {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     return JSON.parse(apiKey);
   } catch {
@@ -20,6 +24,10 @@ const TOKEN_CACHE = new Map<string, { token: string; expiresAt: number }>();
   }
 }
 
+<<<<<<< HEAD
+=======
+async function getAccessToken(sa: ServiceAccount): Promise<string> {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (!sa.client_email || !sa.private_key) {
     throw new Error(
       "Service Account JSON is missing required fields (client_email or private_key)"

@@ -11,11 +11,16 @@ import {
 } from "@omniroute/open-sse/services/ipFilter.ts";
 import { updateIpFilterSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
+<<<<<<< HEAD
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
 
 export async function GET(request: Request) {
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
+=======
+
+export async function GET() {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     return NextResponse.json(getIPFilterConfig());
   } catch (error) {
@@ -24,9 +29,13 @@ export async function GET(request: Request) {
   }
 }
 
+<<<<<<< HEAD
 export async function PUT(request: Request) {
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
+=======
+export async function PUT(request) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody;
   try {
     rawBody = await request.json();

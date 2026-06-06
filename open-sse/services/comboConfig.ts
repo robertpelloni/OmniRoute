@@ -9,8 +9,16 @@ const DEFAULT_COMBO_CONFIG = {
   strategy: "priority",
   maxRetries: 1,
   retryDelayMs: 2000,
+<<<<<<< HEAD
   concurrencyPerModel: 3, // max simultaneous requests per model (round-robin)
   queueTimeoutMs: 30000, // max wait time in semaphore queue (round-robin)
+=======
+  timeoutMs: 600000,
+  concurrencyPerModel: 3, // max simultaneous requests per model (round-robin)
+  queueTimeoutMs: 30000, // max wait time in semaphore queue (round-robin)
+  healthCheckEnabled: true,
+  healthCheckTimeoutMs: 3000,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   handoffThreshold: 0.85,
   handoffModel: "",
   handoffProviders: ["codex"],
@@ -19,12 +27,15 @@ const DEFAULT_COMBO_CONFIG = {
   trackMetrics: true,
 };
 
+<<<<<<< HEAD
 const LEGACY_COMBO_RESILIENCE_KEYS = new Set([
   "timeoutMs",
   "healthCheckEnabled",
   "healthCheckTimeoutMs",
 ]);
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Resolve effective config for a combo, applying cascade:
  *   DEFAULT_COMBO_CONFIG → settings.comboDefaults → settings.providerOverrides[provider] → combo.config
@@ -41,12 +52,16 @@ export function resolveComboConfig(combo, settings, provider?: string | null) {
 
   // Clean undefined values before spreading
   const clean = (obj) =>
+<<<<<<< HEAD
     Object.fromEntries(
       Object.entries(obj).filter(
         ([key, value]) =>
           value !== undefined && value !== null && !LEGACY_COMBO_RESILIENCE_KEYS.has(key)
       )
     );
+=======
+    Object.fromEntries(Object.entries(obj).filter(([, v]) => v !== undefined && v !== null));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   return {
     ...DEFAULT_COMBO_CONFIG,

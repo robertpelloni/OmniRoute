@@ -1,15 +1,21 @@
 const MAX_SIGNATURES = 1000;
 const TTL_MS = 1000 * 60 * 60;
 
+<<<<<<< HEAD
 export type SignatureCacheMode = "enabled" | "bypass" | "bypass-strict";
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 type Entry = {
   signature: string;
   expiresAt: number;
 };
 
 const signatures = new Map<string, Entry>();
+<<<<<<< HEAD
 let signatureCacheMode: SignatureCacheMode = "enabled";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 function pruneExpired() {
   const now = Date.now();
@@ -45,6 +51,7 @@ export function getGeminiThoughtSignature(toolCallId: unknown) {
   if (!entry) return null;
   return entry.signature;
 }
+<<<<<<< HEAD
 
 export function normalizeSignatureCacheMode(value: unknown): SignatureCacheMode {
   return value === "bypass" || value === "bypass-strict" ? value : "enabled";
@@ -162,3 +169,5 @@ export function clearGeminiThoughtSignatures() {
   signatures.clear();
   signatureCacheMode = "enabled";
 }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

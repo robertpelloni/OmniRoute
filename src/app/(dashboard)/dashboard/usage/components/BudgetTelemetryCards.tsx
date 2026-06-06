@@ -51,6 +51,7 @@ export default function BudgetTelemetryCards() {
               <span className="text-text-muted">{t("totalRequests")}</span>
               <span className="font-mono">{telemetry.totalRequests ?? 0}</span>
             </div>
+<<<<<<< HEAD
             <div className="flex justify-between">
               <span className="text-text-muted">Active sessions</span>
               <span className="font-mono">{telemetry.sessions?.activeCount ?? 0}</span>
@@ -59,6 +60,8 @@ export default function BudgetTelemetryCards() {
               <span className="text-text-muted">Quota alerts</span>
               <span className="font-mono">{telemetry.quotaMonitor?.alerting ?? 0}</span>
             </div>
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           </div>
         ) : (
           <p className="text-sm text-text-muted">{t("noDataYet")}</p>

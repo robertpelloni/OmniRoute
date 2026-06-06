@@ -6,7 +6,10 @@ import {
   getCombos,
   getApiKeys,
 } from "@/lib/localDb";
+<<<<<<< HEAD
 import { getDbInstance } from "@/lib/db/core";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { isAuthRequired, isAuthenticated } from "@/shared/utils/apiAuth";
 
 /**
@@ -14,7 +17,11 @@ import { isAuthRequired, isAuthenticated } from "@/shared/utils/apiAuth";
  * Exports a legacy 9router compatible JSON backup.
  */
 export async function GET(request: Request) {
+<<<<<<< HEAD
   if (await isAuthRequired(request)) {
+=======
+  if (await isAuthRequired()) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (!(await isAuthenticated(request))) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -33,17 +40,21 @@ export async function GET(request: Request) {
     const combos = await getCombos();
     const apiKeys = await getApiKeys();
 
+<<<<<<< HEAD
     const db = getDbInstance();
     const usageHistory = db.prepare("SELECT * FROM usage_history").all();
     const domainCostHistory = db.prepare("SELECT * FROM domain_cost_history").all();
     const domainBudgets = db.prepare("SELECT * FROM domain_budgets").all();
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const exportData = {
       settings: safeSettings,
       providerConnections,
       providerNodes,
       combos,
       apiKeys,
+<<<<<<< HEAD
       usageHistory,
       domainCostHistory,
       domainBudgets,
@@ -52,6 +63,13 @@ export async function GET(request: Request) {
         exportedAt: new Date().toISOString(),
         version: "omniroute-v3-legacy-export",
       },
+=======
+      // Metadata to identify export version
+      _meta: {
+        exportedAt: new Date().toISOString(),
+        version: "omniroute-v3-legacy-export"
+      }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     };
 
     return new NextResponse(JSON.stringify(exportData, null, 2), {

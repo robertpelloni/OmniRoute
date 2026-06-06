@@ -1,4 +1,21 @@
+<<<<<<< HEAD
 export { APP_CONFIG, THEME_CONFIG } from "./appConfig";
+=======
+import pkg from "../../../package.json" with { type: "json" };
+
+// App configuration
+export const APP_CONFIG = {
+  name: "OmniRoute",
+  description: "AI Gateway for Multi-Provider LLMs",
+  version: pkg.version,
+};
+
+// Theme configuration
+export const THEME_CONFIG = {
+  storageKey: "theme",
+  defaultTheme: "system", // "light" | "dark" | "system"
+};
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 // Subscription
 export const SUBSCRIPTION_CONFIG = {
@@ -18,17 +35,25 @@ export const API_ENDPOINTS = {
 
 // Provider API endpoints (for display only)
 export const PROVIDER_ENDPOINTS = {
+<<<<<<< HEAD
   agentrouter: "https://agentrouter.org/v1/chat/completions",
   openrouter: "https://openrouter.ai/api/v1/chat/completions",
   glm: "https://api.z.ai/api/anthropic/v1/messages",
   glmt: "https://api.z.ai/api/anthropic/v1/messages",
+=======
+  openrouter: "https://openrouter.ai/api/v1/chat/completions",
+  glm: "https://api.z.ai/api/anthropic/v1/messages",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   "bailian-coding-plan": "https://coding-intl.dashscope.aliyuncs.com/apps/anthropic/v1/messages",
   kimi: "https://api.moonshot.ai/v1/chat/completions",
   "kimi-coding": "https://api.kimi.com/coding/v1/messages",
   "kimi-coding-apikey": "https://api.kimi.com/coding/v1/messages",
   minimax: "https://api.minimax.io/anthropic/v1/messages",
   "minimax-cn": "https://api.minimaxi.com/anthropic/v1/messages",
+<<<<<<< HEAD
   crof: "https://crof.ai/v1/chat/completions",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   openai: "https://api.openai.com/v1/chat/completions",
   anthropic: "https://api.anthropic.com/v1/messages",
   gemini: "https://generativelanguage.googleapis.com/v1beta/models",
@@ -39,9 +64,12 @@ export {
   FREE_PROVIDERS,
   OAUTH_PROVIDERS,
   APIKEY_PROVIDERS,
+<<<<<<< HEAD
   WEB_COOKIE_PROVIDERS,
   SEARCH_PROVIDERS,
   AUDIO_ONLY_PROVIDERS,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   AI_PROVIDERS,
   AUTH_METHODS,
 } from "./providers";

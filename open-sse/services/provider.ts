@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // @ts-nocheck
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { PROVIDERS } from "../config/constants.ts";
 import { getRegistryEntry } from "../config/providerRegistry.ts";
 import {
@@ -30,6 +33,10 @@ export function isClaudeCodeCompatible(provider) {
   return typeof provider === "string" && provider.startsWith(CLAUDE_CODE_COMPATIBLE_PREFIX);
 }
 
+<<<<<<< HEAD
+=======
+export function getOpenAICompatibleType(provider, providerSpecificData = null) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (!isOpenAICompatible(provider)) return "chat";
   const configuredType =
     providerSpecificData &&
@@ -37,6 +44,7 @@ export function isClaudeCodeCompatible(provider) {
     typeof providerSpecificData.apiType === "string"
       ? providerSpecificData.apiType
       : null;
+<<<<<<< HEAD
   if (
     configuredType === "responses" ||
     configuredType === "chat" ||
@@ -53,10 +61,17 @@ export function isClaudeCodeCompatible(provider) {
   if (provider.includes("audio-speech")) return "audio-speech";
   if (provider.includes("images-generations")) return "images-generations";
   return "chat";
+=======
+  if (configuredType === "responses" || configuredType === "chat") {
+    return configuredType;
+  }
+  return provider.includes("responses") ? "responses" : "chat";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 function buildOpenAICompatibleUrl(baseUrl, apiType) {
   const normalized = baseUrl.replace(/\/$/, "");
+<<<<<<< HEAD
   let path = "/chat/completions";
   if (apiType === "responses") {
     path = "/responses";
@@ -69,6 +84,9 @@ function buildOpenAICompatibleUrl(baseUrl, apiType) {
   } else if (apiType === "images-generations") {
     path = "/images/generations";
   }
+=======
+  const path = apiType === "responses" ? "/responses" : "/chat/completions";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return `${normalized}${path}`;
 }
 
@@ -82,6 +100,20 @@ function buildAnthropicCompatibleUrl(baseUrl) {
 // contain max_tokens or Claude model names.
 export function detectFormatFromEndpoint(body, endpointPath = "") {
   const path = String(endpointPath || "");
+<<<<<<< HEAD
+=======
+  const hasInputField =
+    body &&
+    typeof body === "object" &&
+    Object.prototype.hasOwnProperty.call(body, "input") &&
+    body.input !== undefined;
+  const hasResponsesSpecificFields =
+    body &&
+    typeof body === "object" &&
+    (body.max_output_tokens !== undefined ||
+      body.previous_response_id !== undefined ||
+      body.reasoning !== undefined);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   if (/\/responses(?=\/|$)/i.test(path) || /^responses(?=\/|$)/i.test(path)) {
     return "openai-responses";
@@ -95,6 +127,12 @@ export function detectFormatFromEndpoint(body, endpointPath = "") {
     /\/(?:chat\/completions|completions)(?=\/|$)/i.test(path) ||
     /^(?:chat\/completions|completions)(?=\/|$)/i.test(path)
   ) {
+<<<<<<< HEAD
+=======
+    if (hasInputField || hasResponsesSpecificFields) {
+      return "openai-responses";
+    }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return "openai";
   }
 
@@ -263,10 +301,14 @@ export function buildProviderUrl(
     }
     // Custom URL builder (e.g. gemini, gemini-cli)
     if (entry.urlBuilder) {
+<<<<<<< HEAD
       const baseUrl = entry.baseUrl || config.baseUrl;
       if (baseUrl) {
         return entry.urlBuilder(baseUrl, model, stream);
       }
+=======
+      return entry.urlBuilder(entry.baseUrl, model, stream);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
     // URL suffix (e.g. claude: ?beta=true)
     if (entry.urlSuffix) {
@@ -328,11 +370,14 @@ export function buildProviderHeaders(provider, credentials, stream = true, body 
       if (token) {
         headers["x-api-key"] = token;
       }
+<<<<<<< HEAD
     } else if (authHeader === "key") {
       const token = credentials.apiKey || credentials.accessToken;
       if (token) {
         headers["Authorization"] = `Key ${token}`;
       }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     } else if (authHeader === "x-goog-api-key") {
       if (credentials.apiKey) {
         headers["x-goog-api-key"] = credentials.apiKey;
@@ -387,10 +432,18 @@ export function hasThinkingConfig(body) {
 }
 
 // Normalize thinking config based on last message role
+<<<<<<< HEAD
 // - If lastMessage is not user → remove Claude/Gemini-style thinking config
 // - Keep OpenAI Chat Completions reasoning_effort as a request-level option.
 export function normalizeThinkingConfig(body) {
   if (!isLastMessageFromUser(body)) {
+=======
+// - If lastMessage is not user → remove thinking config
+// - If lastMessage is user AND has thinking config → keep it (force enable)
+export function normalizeThinkingConfig(body) {
+  if (!isLastMessageFromUser(body)) {
+    delete body.reasoning_effort;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     delete body.thinking;
   }
   return body;

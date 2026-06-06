@@ -1,5 +1,8 @@
 import { expect, test, type Page, type Route } from "@playwright/test";
+<<<<<<< HEAD
 import { gotoDashboardRoute } from "./helpers/dashboardAuth";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const NAVIGATION_TIMEOUT_MS = 300_000;
 const UI_STABILITY_TIMEOUT_MS = 120_000;
@@ -48,6 +51,32 @@ async function readClipboard(page: Page) {
   return page.evaluate(() => (window as Window & { __clipboardValue?: string }).__clipboardValue);
 }
 
+<<<<<<< HEAD
+=======
+async function gotoOrSkip(page: Page, url: string) {
+  let lastError: unknown;
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      await page.goto(url, { waitUntil: "commit", timeout: NAVIGATION_TIMEOUT_MS });
+    } catch (error) {
+      lastError = error;
+    }
+    try {
+      await page.waitForURL(/\/(login|dashboard)(\/.*)?$/, { timeout: NAVIGATION_TIMEOUT_MS });
+      await page.locator("body").waitFor({ state: "visible", timeout: NAVIGATION_TIMEOUT_MS });
+      lastError = null;
+      break;
+    } catch (error) {
+      lastError = error;
+    }
+    await page.waitForTimeout(1000);
+  }
+  if (lastError) throw lastError;
+  const redirectedToLogin = page.url().includes("/login");
+  test.skip(redirectedToLogin, "Authentication enabled without a login fixture.");
+}
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 async function waitForPageToSettle(page: Page) {
   try {
     await page.waitForLoadState("networkidle", { timeout: 15_000 });
@@ -121,6 +150,7 @@ test.describe("API keys flow", () => {
         return;
       }
 
+<<<<<<< HEAD
       if (route.request().method() === "PATCH") {
         const keyId = route.request().url().split("/").pop() || "";
         const payload = (await route.request().postDataJSON()) as { name?: string };
@@ -136,6 +166,8 @@ test.describe("API keys flow", () => {
         return;
       }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       await fulfillJson(route, { error: "Method not allowed in api key detail stub" }, 405);
     });
 
@@ -173,9 +205,13 @@ test.describe("API keys flow", () => {
       await fulfillJson(route, { error: "Method not allowed in api keys stub" }, 405);
     });
 
+<<<<<<< HEAD
     await gotoDashboardRoute(page, "/dashboard/api-manager", {
       timeoutMs: NAVIGATION_TIMEOUT_MS,
     });
+=======
+    await gotoOrSkip(page, "/dashboard/api-manager");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     await waitForPageToSettle(page);
     await waitForNextDevCompileToFinish(page);
 
@@ -228,6 +264,7 @@ test.describe("API keys flow", () => {
     await expect(page.getByText("Team Key")).toHaveCount(0);
     await expect(createFirstKeyButton).toBeVisible();
   });
+<<<<<<< HEAD
 
   test("renames a key through the permissions modal", async ({ page }) => {
     const state: {
@@ -640,4 +677,6 @@ test.describe("API keys flow", () => {
     await expect(permissionsDialog).not.toBeVisible({ timeout: UI_STABILITY_TIMEOUT_MS });
     await expect(page.getByText("Renamed Key")).toBeVisible();
   });
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 });

@@ -96,6 +96,7 @@ async function waitForDrain(): Promise<void> {
  */
 async function cleanup(): Promise<void> {
   try {
+<<<<<<< HEAD
     }
     if (closeAuditDb()) {
       console.log("[Shutdown] MCP audit database checkpointed and closed.");
@@ -105,6 +106,12 @@ async function cleanup(): Promise<void> {
     }
     closeLogRotation();
     console.log("[Shutdown] Log rotation timer stopped.");
+=======
+    const { closeDbInstance } = await import("@/lib/db/core");
+    if (closeDbInstance()) {
+      console.log("[Shutdown] SQLite database checkpointed and closed.");
+    }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   } catch (err) {
     console.error("[Shutdown] Error during cleanup:", (err as Error).message);
   }

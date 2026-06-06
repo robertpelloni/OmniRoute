@@ -67,6 +67,7 @@ images
 clipr
 omnirouteCloud
 omnirouteSite
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 
@@ -112,3 +113,5 @@ cloud/
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

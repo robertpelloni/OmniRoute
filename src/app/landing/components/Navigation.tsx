@@ -1,6 +1,9 @@
 "use client";
 import { useState } from "react";
+<<<<<<< HEAD
 import Link from "next/link";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import OmniRouteLogo from "@/shared/components/OmniRouteLogo";
@@ -42,12 +45,20 @@ export default function Navigation() {
           >
             {t("howItWorks")}
           </a>
+<<<<<<< HEAD
           <Link
+=======
+          <a
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             className="text-gray-300 hover:text-white text-sm font-medium transition-colors"
             href="/docs"
           >
             {t("docsLink")}
+<<<<<<< HEAD
           </Link>
+=======
+          </a>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           <a
             className="text-gray-300 hover:text-white text-sm font-medium transition-colors flex items-center gap-1"
             href="https://github.com/diegosouzapw/OmniRoute"
@@ -99,6 +110,7 @@ export default function Navigation() {
             >
               {t("howItWorks")}
             </a>
+<<<<<<< HEAD
             <Link
               className="text-gray-300 hover:text-white text-sm font-medium transition-colors"
               href="/docs"
@@ -106,6 +118,14 @@ export default function Navigation() {
             >
               {t("docsLink")}
             </Link>
+=======
+            <a
+              className="text-gray-300 hover:text-white text-sm font-medium transition-colors"
+              href="/docs"
+            >
+              {t("docsLink")}
+            </a>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             <a
               className="text-gray-300 hover:text-white text-sm font-medium transition-colors"
               href="https://github.com/diegosouzapw/OmniRoute"

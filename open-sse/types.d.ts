@@ -17,8 +17,11 @@ export interface ProviderCredentials {
   refreshToken?: string;
   /** Internal connection ID */
   connectionId: string;
+<<<<<<< HEAD
   /** Optional per-account concurrency cap */
   maxConcurrent?: number | null;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   /** User email associated with the connection */
   email?: string;
   /** API key (for apikey auth type) */

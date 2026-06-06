@@ -5,6 +5,7 @@ import { getConsistentMachineId } from "@/shared/utils/machineId";
 import { syncToCloud } from "@/lib/cloudSync";
 import { cursorImportSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
+<<<<<<< HEAD
 import { isAuthRequired, isAuthenticated } from "@/shared/utils/apiAuth";
 import { runWithProxyContext } from "@omniroute/open-sse/utils/proxyFetch.ts";
 
@@ -14,6 +15,10 @@ async function requireOAuthImportAuth(request: Request) {
   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 }
 
+=======
+import { runWithProxyContext } from "@omniroute/open-sse/utils/proxyFetch.ts";
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * POST /api/oauth/cursor/import
  * Import and validate access token from Cursor IDE's local SQLite database
@@ -22,10 +27,14 @@ async function requireOAuthImportAuth(request: Request) {
  * - accessToken: string - Access token from cursorAuth/accessToken
  * - machineId: string - Machine ID from storage.serviceMachineId
  */
+<<<<<<< HEAD
 export async function POST(request: Request) {
   const authResponse = await requireOAuthImportAuth(request);
   if (authResponse) return authResponse;
 
+=======
+export async function POST(request: any) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody;
   try {
     rawBody = await request.json();
@@ -55,7 +64,11 @@ export async function POST(request: Request) {
 
     // Validate token by making API call (through proxy if configured)
     const tokenData = await runWithProxyContext(proxy, () =>
+<<<<<<< HEAD
       cursorService.validateImportToken(accessToken.trim(), machineId?.trim())
+=======
+      cursorService.validateImportToken(accessToken.trim(), machineId.trim())
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     );
 
     // Try to extract user info from token
@@ -99,10 +112,14 @@ export async function POST(request: Request) {
  * GET /api/oauth/cursor/import
  * Get instructions for importing Cursor token
  */
+<<<<<<< HEAD
 export async function GET(request: Request) {
   const authResponse = await requireOAuthImportAuth(request);
   if (authResponse) return authResponse;
 
+=======
+export async function GET() {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const cursorService = new CursorService();
   const instructions = cursorService.getTokenStorageInstructions();
 

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSettings, updateSettings } from "@/lib/localDb";
+<<<<<<< HEAD
 import {
   hasManagementPasswordConfigured,
   hashManagementPassword,
@@ -21,6 +22,17 @@ function hasConfiguredPassword(settings: Record<string, unknown>) {
 
 function isBootstrapSecurityWindow(settings: Record<string, unknown>) {
   return settings.setupComplete !== true && !hasConfiguredPassword(settings);
+=======
+import bcrypt from "bcryptjs";
+import { updateRequireLoginSchema } from "@/shared/validation/schemas";
+import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
+
+// Node.js compatibility check — better-sqlite3 requires Node <24
+function getNodeCompatibility() {
+  const nodeVersion = process.version;
+  const major = parseInt(nodeVersion.replace("v", "").split(".")[0], 10);
+  return { nodeVersion, nodeCompatible: major >= 18 && major < 24 };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 export async function GET() {
@@ -28,7 +40,11 @@ export async function GET() {
   try {
     const settings = await getSettings();
     const requireLogin = settings.requireLogin !== false;
+<<<<<<< HEAD
     const hasPassword = hasManagementPasswordConfigured(settings);
+=======
+    const hasPassword = !!settings.password || !!process.env.INITIAL_PASSWORD;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const setupComplete = !!settings.setupComplete;
     return NextResponse.json({ requireLogin, hasPassword, setupComplete, ...nodeInfo });
   } catch (error) {
@@ -42,6 +58,7 @@ export async function GET() {
 
 /**
  * POST /api/settings/require-login — Set password and/or toggle requireLogin.
+<<<<<<< HEAD
  * Unauthenticated writes are only allowed during the initial bootstrap window.
  */
 export async function POST(request: Request) {
@@ -50,6 +67,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+=======
+ * Used by the onboarding wizard security step.
+ */
+export async function POST(request: Request) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody;
   try {
     rawBody = await request.json();
@@ -80,7 +102,11 @@ export async function POST(request: Request) {
     }
 
     if (password) {
+<<<<<<< HEAD
       const hashedPassword = await hashManagementPassword(password);
+=======
+      const hashedPassword = await bcrypt.hash(password, 12);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       updates.password = hashedPassword;
     }
 

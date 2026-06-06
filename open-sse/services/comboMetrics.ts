@@ -1,7 +1,12 @@
 /**
  * In-memory combo metrics tracker
+<<<<<<< HEAD
  * Tracks per-combo, per-model, and per-target request counts, latency, success/failure rates.
  * Provides API for reading metrics from the dashboard.
+=======
+ * Tracks per-combo and per-model request counts, latency, success/failure rates
+ * Provides API for reading metrics from the dashboard
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  */
 
 interface ModelMetrics {
@@ -13,6 +18,7 @@ interface ModelMetrics {
   lastUsedAt: string | null;
 }
 
+<<<<<<< HEAD
 interface ComboTargetMetrics extends ModelMetrics {
   executionKey: string;
   stepId: string | null;
@@ -23,6 +29,8 @@ interface ComboTargetMetrics extends ModelMetrics {
   label: string | null;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 interface ComboMetricsEntry {
   totalRequests: number;
   totalSuccesses: number;
@@ -33,6 +41,7 @@ interface ComboMetricsEntry {
   lastUsedAt: string | null;
   intentCounts: Record<string, number>;
   byModel: Record<string, ModelMetrics>;
+<<<<<<< HEAD
   byTarget: Record<string, ComboTargetMetrics>;
 }
 
@@ -44,12 +53,15 @@ interface ModelMetricsView extends ModelMetrics {
 interface ComboTargetMetricsView extends ComboTargetMetrics {
   avgLatencyMs: number;
   successRate: number;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 interface ComboMetricsView extends ComboMetricsEntry {
   avgLatencyMs: number;
   successRate: number;
   fallbackRate: number;
+<<<<<<< HEAD
   byModel: Record<string, ModelMetricsView>;
   byTarget: Record<string, ComboTargetMetricsView>;
 }
@@ -152,21 +164,38 @@ function toMetricView<T extends ModelMetrics>(
     avgLatencyMs: metric.requests > 0 ? Math.round(metric.totalLatencyMs / metric.requests) : 0,
     successRate: metric.requests > 0 ? Math.round((metric.successes / metric.requests) * 100) : 0,
   };
+=======
+  byModel: Record<
+    string,
+    ModelMetrics & {
+      avgLatencyMs: number;
+      successRate: number;
+    }
+  >;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 // In-memory store
 const metrics = new Map<string, ComboMetricsEntry>();
 
 /**
+<<<<<<< HEAD
  * Record a combo request result.
+=======
+ * Record a combo request result
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  * @param {string} comboName
  * @param {string} modelStr - The model that handled the request (or null if all failed)
  * @param {Object} options
  * @param {boolean} options.success
  * @param {number} options.latencyMs
  * @param {number} options.fallbackCount - How many fallbacks occurred
+<<<<<<< HEAD
  * @param {string} [options.strategy] - Routing strategy name
  * @param {Object} [options.target] - Step/execution metadata for structured combos
+=======
+ * @param {string} [options.strategy] - "priority" or "weighted"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  */
 export function recordComboRequest(
   comboName: string,
@@ -176,6 +205,7 @@ export function recordComboRequest(
     latencyMs,
     fallbackCount = 0,
     strategy = "priority",
+<<<<<<< HEAD
     target,
   }: {
     success: boolean;
@@ -187,16 +217,39 @@ export function recordComboRequest(
 ): void {
   if (!metrics.has(comboName)) {
     metrics.set(comboName, createComboEntry(strategy));
+=======
+  }: { success: boolean; latencyMs: number; fallbackCount?: number; strategy?: string }
+): void {
+  if (!metrics.has(comboName)) {
+    metrics.set(comboName, {
+      totalRequests: 0,
+      totalSuccesses: 0,
+      totalFailures: 0,
+      totalFallbacks: 0,
+      totalLatencyMs: 0,
+      strategy,
+      lastUsedAt: null,
+      intentCounts: {},
+      byModel: {},
+    });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   const combo = metrics.get(comboName);
   if (!combo) return;
+<<<<<<< HEAD
 
   const usedAt = new Date().toISOString();
   combo.totalRequests++;
   combo.totalLatencyMs += latencyMs;
   combo.totalFallbacks += fallbackCount;
   combo.lastUsedAt = usedAt;
+=======
+  combo.totalRequests++;
+  combo.totalLatencyMs += latencyMs;
+  combo.totalFallbacks += fallbackCount;
+  combo.lastUsedAt = new Date().toISOString();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   combo.strategy = strategy;
 
   if (success) {
@@ -205,6 +258,7 @@ export function recordComboRequest(
     combo.totalFailures++;
   }
 
+<<<<<<< HEAD
   if (!modelStr) return;
 
   if (!combo.byModel[modelStr]) {
@@ -235,6 +289,37 @@ export function recordComboRequest(
 
 /**
  * Get metrics for a specific combo.
+=======
+  // Per-model tracking
+  if (modelStr) {
+    if (!combo.byModel[modelStr]) {
+      combo.byModel[modelStr] = {
+        requests: 0,
+        successes: 0,
+        failures: 0,
+        totalLatencyMs: 0,
+        lastStatus: null,
+        lastUsedAt: null,
+      };
+    }
+    const modelMetric = combo.byModel[modelStr];
+    modelMetric.requests++;
+    modelMetric.totalLatencyMs += latencyMs;
+    modelMetric.lastUsedAt = new Date().toISOString();
+
+    if (success) {
+      modelMetric.successes++;
+      modelMetric.lastStatus = "ok";
+    } else {
+      modelMetric.failures++;
+      modelMetric.lastStatus = "error";
+    }
+  }
+}
+
+/**
+ * Get metrics for a specific combo
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  * @param {string} comboName
  * @returns {Object|null}
  */
@@ -252,19 +337,33 @@ export function getComboMetrics(comboName: string): ComboMetricsView | null {
       combo.totalRequests > 0 ? Math.round((combo.totalFallbacks / combo.totalRequests) * 100) : 0,
     intentCounts: { ...combo.intentCounts },
     byModel: Object.fromEntries(
+<<<<<<< HEAD
       Object.entries(combo.byModel).map(([model, metric]) => [model, toMetricView(metric)])
     ),
     byTarget: Object.fromEntries(
       Object.entries(combo.byTarget).map(([executionKey, metric]) => [
         executionKey,
         toMetricView(metric),
+=======
+      Object.entries(combo.byModel).map(([model, m]) => [
+        model,
+        {
+          ...m,
+          avgLatencyMs: m.requests > 0 ? Math.round(m.totalLatencyMs / m.requests) : 0,
+          successRate: m.requests > 0 ? Math.round((m.successes / m.requests) * 100) : 0,
+        },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       ])
     ),
   };
 }
 
 /**
+<<<<<<< HEAD
  * Get metrics for all combos.
+=======
+ * Get metrics for all combos
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  * @returns {Object} Map of comboName → metrics
  */
 export function getAllComboMetrics(): Record<string, ComboMetricsView | null> {
@@ -280,7 +379,21 @@ export function getAllComboMetrics(): Record<string, ComboMetricsView | null> {
  */
 export function recordComboIntent(comboName: string, intent: string): void {
   if (!metrics.has(comboName)) {
+<<<<<<< HEAD
     metrics.set(comboName, createComboEntry("priority"));
+=======
+    metrics.set(comboName, {
+      totalRequests: 0,
+      totalSuccesses: 0,
+      totalFailures: 0,
+      totalFallbacks: 0,
+      totalLatencyMs: 0,
+      strategy: "priority",
+      lastUsedAt: null,
+      intentCounts: {},
+      byModel: {},
+    });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   const combo = metrics.get(comboName);
@@ -290,14 +403,22 @@ export function recordComboIntent(comboName: string, intent: string): void {
 }
 
 /**
+<<<<<<< HEAD
  * Reset metrics for a specific combo.
+=======
+ * Reset metrics for a specific combo
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  */
 export function resetComboMetrics(comboName: string): void {
   metrics.delete(comboName);
 }
 
 /**
+<<<<<<< HEAD
  * Reset all combo metrics.
+=======
+ * Reset all combo metrics
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  */
 export function resetAllComboMetrics(): void {
   metrics.clear();

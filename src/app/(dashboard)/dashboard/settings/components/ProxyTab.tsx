@@ -4,8 +4,11 @@ import { useState, useEffect, useRef } from "react";
 import { Card, Button, ProxyConfigModal, Toggle } from "@/shared/components";
 import { useTranslations } from "next-intl";
 import ProxyRegistryManager from "./ProxyRegistryManager";
+<<<<<<< HEAD
 import OneproxyTab from "./OneproxyTab";
 import RequestLimitsTab from "./RequestLimitsTab";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 export default function ProxyTab() {
   const [proxyModalOpen, setProxyModalOpen] = useState(false);
@@ -17,7 +20,10 @@ export default function ProxyTab() {
   const [usageTokenBuffer, setUsageTokenBuffer] = useState<number | null>(null);
   const [bufferInput, setBufferInput] = useState("");
   const [bufferSaving, setBufferSaving] = useState(false);
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [loading, setLoading] = useState(true);
 
   const loadGlobalProxy = async () => {
@@ -31,26 +37,35 @@ export default function ProxyTab() {
   };
 
   const updateDebugMode = async (value: boolean) => {
+<<<<<<< HEAD
     const previousValue = debugMode;
     setDebugMode(value);
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     try {
       const res = await fetch("/api/settings", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ debugMode: value }),
       });
+<<<<<<< HEAD
       if (!res.ok) {
         setDebugMode(previousValue);
       }
     } catch (err) {
       setDebugMode(previousValue);
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       if (res.ok) {
         setDebugMode(value);
       }
     } catch (err) {
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       console.error("Failed to update debugMode:", err);
     }
   };
@@ -75,17 +90,46 @@ export default function ProxyTab() {
     }
   };
 
+<<<<<<< HEAD
+=======
+  useEffect(() => {
+    mountedRef.current = true;
+    async function init() {
+      try {
+        const res = await fetch("/api/settings/proxy?level=global");
+        if (!mountedRef.current) return;
+        if (res.ok) {
+          const data = await res.json();
+          if (mountedRef.current) setGlobalProxy(data.proxy || null);
+        }
+      } catch {}
+    }
+    init();
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/settings")
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP error ${res.status}`);
         return res.json();
       })
       .then((data) => {
         setDebugMode(data.debugMode === true);
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         const buf = typeof data.usageTokenBuffer === "number" ? data.usageTokenBuffer : 2000;
         setUsageTokenBuffer(buf);
         setBufferInput(String(buf));
 =======
+=======
+        const buf = typeof data.usageTokenBuffer === "number" ? data.usageTokenBuffer : 2000;
+        setUsageTokenBuffer(buf);
+        setBufferInput(String(buf));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -129,13 +173,69 @@ export default function ProxyTab() {
         </Card>
 
         <ProxyRegistryManager />
+<<<<<<< HEAD
         <OneproxyTab />
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         <Card className="p-6 mt-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="font-medium">{t("debugToggle")}</p>
             </div>
+<<<<<<< HEAD
+=======
+            <Toggle
+              checked={debugMode}
+              onChange={() => updateDebugMode(!debugMode)}
+              disabled={loading}
+            />
+          </div>
+        </Card>
+        <Card className="p-6 mt-4">
+          <div className="flex flex-col gap-3">
+            <div>
+              <p className="font-medium">Usage Token Buffer</p>
+              <p className="text-sm text-text-muted mt-1">
+                Extra tokens added to reported usage to account for system prompt overhead. Set to 0
+                to report raw provider token counts. Default: 2000. Changes take effect within 30
+                seconds.
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <input
+                type="number"
+                min={0}
+                max={50000}
+                value={bufferInput}
+                onChange={(e) => setBufferInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") updateUsageTokenBuffer();
+                }}
+                className="w-32 px-3 py-1.5 rounded bg-surface-2 border border-border text-sm text-text-primary"
+                disabled={loading}
+              />
+              <Button
+                size="sm"
+                variant="primary"
+                onClick={updateUsageTokenBuffer}
+                disabled={
+                  bufferSaving ||
+                  loading ||
+                  parseInt(bufferInput, 10) === usageTokenBuffer
+                }
+              >
+                {bufferSaving ? tc("saving") : tc("save")}
+              </Button>
+              {usageTokenBuffer !== null && parseInt(bufferInput, 10) !== usageTokenBuffer && (
+                <span className="text-xs text-text-muted">
+                  Current: {usageTokenBuffer}
+                </span>
+              )}
+            </div>
+          </div>
+        </Card>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       </div>
 
       <ProxyConfigModal

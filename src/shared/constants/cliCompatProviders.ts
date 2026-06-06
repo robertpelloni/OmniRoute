@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { normalizeCliCompatProviderId } from "../utils/cliCompat";
 
 export { normalizeCliCompatProviderId };
@@ -49,11 +50,15 @@ export const CLI_COMPAT_OMITTED_PROVIDER_IDS = [
   "opencode",
   "kimi-coding",
 ] as const;
+=======
+import { CLI_TOOLS } from "./cliTools";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * Provider IDs toggled in Settings -> CLI Fingerprint.
  *
  * Source of truth:
+<<<<<<< HEAD
  * - expose only providers with an implemented `CLI_FINGERPRINTS` entry
  * - keep legacy-compatible display IDs such as `copilot` while persisting normalized provider IDs
  */
@@ -92,3 +97,28 @@ export const CLI_COMPAT_PROVIDER_DISPLAY: Record<
     description: "Qwen Code and Qoder CLI compatibility",
   },
 };
+=======
+ * - derive from visible CLI tools when a provider mapping exists
+ * - keep legacy-compatible IDs that are still used by existing setups
+ */
+const TOOL_ID_TO_PROVIDER_ID: Record<string, string> = {
+  kilo: "kilocode",
+  copilot: "github",
+};
+
+const DERIVED_PROVIDER_IDS = Object.values(CLI_TOOLS)
+  .map((tool: any) => TOOL_ID_TO_PROVIDER_ID[tool.id] ?? tool.id)
+  // "continue" currently has no provider id in AI_PROVIDERS
+  .filter((providerId) => providerId !== "continue");
+
+const LEGACY_PROVIDER_IDS = [
+  // Keep to avoid breaking setups that saved old IDs
+  "copilot",
+  "kimi-coding",
+  "qwen",
+];
+
+export const CLI_COMPAT_PROVIDER_IDS = Array.from(
+  new Set([...DERIVED_PROVIDER_IDS, ...LEGACY_PROVIDER_IDS])
+);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

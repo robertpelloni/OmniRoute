@@ -19,6 +19,7 @@ export function saveQuotaSnapshot(snapshot: Omit<QuotaSnapshotRow, "id" | "creat
   const db = getDbInstance() as unknown as DbLike;
   const now = new Date().toISOString();
 
+<<<<<<< HEAD
   try {
     db.prepare(
       `INSERT INTO quota_snapshots
@@ -46,6 +47,8 @@ export function saveQuotaSnapshot(snapshot: Omit<QuotaSnapshotRow, "id" | "creat
     throw err;
   }
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   db.prepare(
     `INSERT INTO quota_snapshots 
      (provider, connection_id, window_key, remaining_percentage, is_exhausted, 
@@ -62,7 +65,10 @@ export function saveQuotaSnapshot(snapshot: Omit<QuotaSnapshotRow, "id" | "creat
     snapshot.raw_data,
     now
   );
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 export function getQuotaSnapshots(opts: {
@@ -90,6 +96,7 @@ export function getQuotaSnapshots(opts: {
     params.push(opts.until);
   }
 
+<<<<<<< HEAD
   try {
     const sql = `SELECT * FROM quota_snapshots WHERE ${conditions.join(" AND ")} ORDER BY created_at ASC`;
     const rows = db.prepare(sql).all(...params);
@@ -100,6 +107,11 @@ export function getQuotaSnapshots(opts: {
     }
     throw err;
   }
+=======
+  const sql = `SELECT * FROM quota_snapshots WHERE ${conditions.join(" AND ")} ORDER BY created_at ASC`;
+  const rows = db.prepare(sql).all(...params);
+  return rows.map((r) => rowToCamel(r) as unknown as QuotaSnapshotRow);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 export function getAggregatedSnapshots(opts: {
@@ -107,9 +119,13 @@ export function getAggregatedSnapshots(opts: {
   since: string;
   until?: string;
   bucketMinutes: number;
+<<<<<<< HEAD
 <<<<<<< Updated upstream
   aggregateBy?: "provider" | "connection";
 =======
+=======
+  aggregateBy?: "provider" | "connection";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }): ProviderUtilizationPoint[] {
   const db = getDbInstance() as unknown as DbLike;
   const conditions: string[] = ["created_at >= ?"];
@@ -130,6 +146,44 @@ export function getAggregatedSnapshots(opts: {
     throw new Error("Invalid bucket size");
   }
 
+<<<<<<< HEAD
+=======
+  const groupFields =
+    opts.aggregateBy === "connection"
+      ? "bucket, provider, connection_id, window_key"
+      : "bucket, provider, window_key";
+  const selectKey =
+    opts.aggregateBy === "connection" ? "provider || ':' || connection_id as provider" : "provider";
+
+  const sql = `
+    SELECT 
+      datetime((strftime('%s', created_at) / ${bucketSeconds}) * ${bucketSeconds}, 'unixepoch') as bucket,
+      ${selectKey},
+      AVG(remaining_percentage) as remainingPct,
+      MAX(is_exhausted) as isExhausted,
+      window_key
+    FROM quota_snapshots 
+    WHERE ${conditions.join(" AND ")}
+    GROUP BY ${groupFields}
+    ORDER BY bucket ASC
+  `;
+
+  const rows = db.prepare(sql).all(...params) as Array<{
+    bucket: string;
+    provider: string;
+    remainingPct: number | null;
+    isExhausted: number;
+    windowKey: string;
+  }>;
+
+  return rows.map((r) => ({
+    timestamp: r.bucket,
+    provider: r.provider,
+    remainingPct: r.remainingPct ?? 0,
+    isExhausted: r.isExhausted === 1,
+    windowKey: r.windowKey,
+  }));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 export function cleanupOldSnapshots(retentionDays = 90): number {
@@ -143,4 +197,11 @@ export function cleanupOldSnapshots(retentionDays = 90): number {
   const db = getDbInstance() as unknown as DbLike;
   const cutoffDate = new Date(Date.now() - retentionDays * 24 * 60 * 60 * 1000).toISOString();
 
+<<<<<<< HEAD
+=======
+  const result = db.prepare("DELETE FROM quota_snapshots WHERE created_at < ?").run(cutoffDate);
+  lastCleanupAt = now;
+
+  return result.changes;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }

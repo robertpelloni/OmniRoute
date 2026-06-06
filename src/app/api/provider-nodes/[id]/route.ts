@@ -62,6 +62,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     }
 
     // Only validate apiType for OpenAI Compatible nodes
+<<<<<<< HEAD
     const validApiTypes = [
       "chat",
       "responses",
@@ -71,6 +72,12 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       "images-generations",
     ];
     if (node.type === "openai-compatible" && (!apiType || !validApiTypes.includes(apiType))) {
+=======
+    if (
+      node.type === "openai-compatible" &&
+      (!apiType || !["chat", "responses"].includes(apiType))
+    ) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       return NextResponse.json({ error: "Invalid OpenAI compatible API type" }, { status: 400 });
     }
 

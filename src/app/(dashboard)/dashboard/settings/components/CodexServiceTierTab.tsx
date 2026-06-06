@@ -57,7 +57,11 @@ export default function CodexServiceTierTab() {
         <div className="flex-1">
           <h3 className="text-lg font-semibold">Codex Fast Service Tier</h3>
           <p className="text-sm text-text-muted">
+<<<<<<< HEAD
             Inject `service_tier=fast` into Codex requests when the client leaves it unset.
+=======
+            Inject `service_tier=priority` into Codex requests when the client leaves it unset.
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           </p>
         </div>
         {status === "saved" && (
@@ -79,6 +83,10 @@ export default function CodexServiceTierTab() {
           <p className="text-sm font-medium">Force fast tier for Codex</p>
           <p className="text-xs text-text-muted mt-0.5">
             Off by default. Applies only to Codex requests and does not override an explicit tier.
+<<<<<<< HEAD
+=======
+            Codex fast mode is sent upstream as `service_tier=priority`.
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           </p>
         </div>
         <button

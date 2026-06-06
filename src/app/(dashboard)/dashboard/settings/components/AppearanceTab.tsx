@@ -7,12 +7,15 @@ import useThemeStore, { COLOR_THEMES } from "@/store/themeStore";
 import { cn } from "@/shared/utils/cn";
 import { useTranslations } from "next-intl";
 import {
+<<<<<<< HEAD
   COMBO_CONFIG_MODE_SETTING_KEY,
   normalizeComboConfigMode,
   type ComboConfigMode,
 } from "@/shared/constants/comboConfigMode";
 import {
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   HIDDEN_SIDEBAR_ITEMS_SETTING_KEY,
   SIDEBAR_SECTIONS,
   SIDEBAR_SETTINGS_UPDATED_EVENT,
@@ -36,11 +39,14 @@ export default function AppearanceTab() {
     settings[HIDDEN_SIDEBAR_ITEMS_SETTING_KEY]
   );
   const hiddenSidebarSet = new Set(hiddenSidebarItems);
+<<<<<<< HEAD
   const comboConfigMode = normalizeComboConfigMode(settings[COMBO_CONFIG_MODE_SETTING_KEY]);
   const showCloudflaredTunnel = settings.hideEndpointCloudflaredTunnel !== true;
   const showTailscaleFunnel = settings.hideEndpointTailscaleFunnel !== true;
   const showNgrokTunnel = settings.hideEndpointNgrokTunnel !== true;
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const getSettingsLabel = (key: string, fallback: string) =>
     typeof t.has === "function" && t.has(key) ? t(key) : fallback;
@@ -118,6 +124,7 @@ export default function AppearanceTab() {
     { id: "cyan", color: COLOR_THEMES.cyan, label: t("themeCyan") },
   ];
 
+<<<<<<< HEAD
   const comboConfigModeOptions: Array<{
     id: ComboConfigMode;
     icon: string;
@@ -145,6 +152,8 @@ export default function AppearanceTab() {
   ];
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const showDebug = settings.debugMode === true;
   const sidebarSections = SIDEBAR_SECTIONS.filter(
     (section) => section.visibility !== "debug" || showDebug
@@ -263,6 +272,7 @@ export default function AppearanceTab() {
 
         <div className="pt-4 border-t border-border">
           <div className="mb-3">
+<<<<<<< HEAD
             <p className="font-medium">
               {getSettingsLabel("endpointTunnelVisibility", "Endpoint tunnel visibility")}
             </p>
@@ -390,6 +400,8 @@ export default function AppearanceTab() {
         <div className="pt-4 border-t border-border">
           <div className="mb-3">
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             <p className="font-medium">{t("sidebarVisibilityToggle")}</p>
             <p className="text-sm text-text-muted">
               {getSettingsLabel(

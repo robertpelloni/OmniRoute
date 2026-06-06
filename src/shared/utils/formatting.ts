@@ -10,9 +10,14 @@
  * @param {string} isoString - ISO 8601 date string
  * @returns {string}
  */
+<<<<<<< HEAD
 export function formatTime(isoString: string | null | undefined) {
   try {
     if (!isoString) return "-";
+=======
+export function formatTime(isoString) {
+  try {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const d = new Date(isoString);
     return d.toLocaleTimeString("en-US", {
       hour12: false,
@@ -30,7 +35,11 @@ export function formatTime(isoString: string | null | undefined) {
  * @param {number} ms - Duration in milliseconds
  * @returns {string} e.g., "42ms", "1.2s", "-"
  */
+<<<<<<< HEAD
 export function formatDuration(ms: number | null | undefined) {
+=======
+export function formatDuration(ms) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (!ms) return "-";
   if (ms < 1000) return `${ms}ms`;
   return `${(ms / 1000).toFixed(1)}s`;
@@ -41,9 +50,14 @@ export function formatDuration(ms: number | null | undefined) {
  * @param {string} iso - ISO 8601 date string
  * @returns {string}
  */
+<<<<<<< HEAD
 export function formatDateTime(iso: string | null | undefined) {
   try {
     if (!iso) return "-";
+=======
+export function formatDateTime(iso) {
+  try {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const d = new Date(iso);
     return d.toLocaleDateString("pt-BR") + ", " + d.toLocaleTimeString("en-US", { hour12: false });
   } catch {
@@ -58,7 +72,11 @@ export function formatDateTime(iso: string | null | undefined) {
  * @param {number} end - Number of characters to show at end (default: 2)
  * @returns {string}
  */
+<<<<<<< HEAD
 export function maskSegment(value: string | null | undefined, start = 2, end = 2) {
+=======
+export function maskSegment(value, start = 2, end = 2) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (!value) return "";
   if (value.length <= start + end) return `${value.slice(0, 1)}***`;
   return `${value.slice(0, start)}***${value.slice(-end)}`;
@@ -67,6 +85,7 @@ export function maskSegment(value: string | null | undefined, start = 2, end = 2
 /**
  * Mask an email or account string for display.
  * @param {string} account - Account identifier (email or username)
+<<<<<<< HEAD
  * @param {boolean} emailsVisible - Whether to show full email (true) or mask it (false)
  * @returns {string}
  */
@@ -75,6 +94,14 @@ export function maskAccount(account: string | null | undefined, emailsVisible: b
   const atIdx = account.indexOf("@");
   if (atIdx > 3) {
     if (emailsVisible) return account;
+=======
+ * @returns {string}
+ */
+export function maskAccount(account) {
+  if (!account || account === "-") return "-";
+  const atIdx = account.indexOf("@");
+  if (atIdx > 3) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return account.slice(0, 3) + "***" + account.slice(atIdx);
   }
   if (account.length > 8) {
@@ -89,10 +116,14 @@ export function maskAccount(account: string | null | undefined, emailsVisible: b
  * @param {string} apiKeyId - Unique ID of the key
  * @returns {string}
  */
+<<<<<<< HEAD
 export function formatApiKeyLabel(
   apiKeyName: string | null | undefined,
   apiKeyId: string | null | undefined
 ) {
+=======
+export function formatApiKeyLabel(apiKeyName, apiKeyId) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (!apiKeyName && !apiKeyId) return "—";
   const displayName = apiKeyName || "key";
   if (!apiKeyId) return displayName;
@@ -104,7 +135,11 @@ export function formatApiKeyLabel(
  * @param {string} key - API key or token to mask
  * @returns {string}
  */
+<<<<<<< HEAD
 export function maskKey(key: string | null | undefined) {
+=======
+export function maskKey(key) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (!key || key.length < 8) return "***";
   return `${key.slice(0, 4)}...${key.slice(-4)}`;
 }
@@ -114,10 +149,17 @@ export function maskKey(key: string | null | undefined) {
  * @param {number} n - Number to format
  * @returns {string}
  */
+<<<<<<< HEAD
 export function fmtCompact(n: number | null | undefined) {
   if (n && n >= 1_000_000_000) return `${(n / 1_000_000_000).toFixed(1)}B`;
   if (n && n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
   if (n && n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
+=======
+export function fmtCompact(n) {
+  if (n >= 1_000_000_000) return `${(n / 1_000_000_000).toFixed(1)}B`;
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return new Intl.NumberFormat().format(n || 0);
 }
 
@@ -126,11 +168,16 @@ export function fmtCompact(n: number | null | undefined) {
  * @param {number} n - Number to format
  * @returns {string}
  */
+<<<<<<< HEAD
 export function fmtFull(n: number | null | undefined) {
+=======
+export function fmtFull(n) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return new Intl.NumberFormat().format(n || 0);
 }
 
 /**
+<<<<<<< HEAD
  * Format a USD cost for display.
  * Sub-cent values show additional precision.
  * @param {number} usd - Cost in USD
@@ -193,6 +240,14 @@ export function formatCostAbbreviated(usd: number | null | undefined): string {
   }
   const sign = value < 0 ? "-" : "";
   return `${sign}$${formatted}${suffix}`;
+=======
+ * Format a cost value with dollar sign.
+ * @param {number} n - Cost value
+ * @returns {string}
+ */
+export function fmtCost(n) {
+  return `$${(n || 0).toFixed(2)}`;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 /**
@@ -201,7 +256,11 @@ export function formatCostAbbreviated(usd: number | null | undefined): string {
  * @param {number} max - Maximum characters (default: 50)
  * @returns {string}
  */
+<<<<<<< HEAD
 export function truncateUrl(url: string | null | undefined, max = 50) {
+=======
+export function truncateUrl(url, max = 50) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (!url) return "-";
   try {
     const parsed = new URL(url);

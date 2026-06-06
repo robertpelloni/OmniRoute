@@ -2,19 +2,25 @@ import { Skill, SkillSchema } from "./types";
 import { SkillCreateInputSchema } from "./schemas";
 import { getDbInstance } from "../db/core";
 import { randomUUID } from "crypto";
+<<<<<<< HEAD
 import { logger } from "../../../open-sse/utils/logger.ts";
 
 const log = logger("SKILLS");
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 class SkillRegistry {
   private static instance: SkillRegistry;
   private registeredSkills: Map<string, Skill> = new Map();
   private versionCache: Map<string, Map<string, Skill>> = new Map();
+<<<<<<< HEAD
   private lastLoaded: number = 0;
   private readonly cacheTTL: number = 60_000; // 60 seconds
   private pendingLoad: Promise<void> | null = null; // dedupes concurrent cache fills
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   private constructor() {}
 
@@ -25,6 +31,7 @@ class SkillRegistry {
     return SkillRegistry.instance;
   }
 
+<<<<<<< HEAD
   private isCacheStale(): boolean {
     return Date.now() - this.lastLoaded > this.cacheTTL;
   }
@@ -34,6 +41,8 @@ class SkillRegistry {
   }
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   async register(skillData: {
     name: string;
     version?: string;
@@ -42,6 +51,7 @@ class SkillRegistry {
     handler: string;
     enabled?: boolean;
     apiKeyId: string;
+<<<<<<< HEAD
     mode?: "on" | "off" | "auto";
     sourceProvider?: "skillsmp" | "skillssh" | "local";
     tags?: string[];
@@ -60,13 +70,23 @@ class SkillRegistry {
   }): Promise<Skill> {
     const parsed = SkillCreateInputSchema.parse(skillData);
 >>>>>>> Stashed changes
+=======
+  }): Promise<Skill> {
+    const { apiKeyId: _apiKeyId, ...parseableData } = skillData;
+    const parsed = SkillCreateInputSchema.parse(parseableData);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const db = getDbInstance();
     const id = randomUUID();
     const now = new Date();
 
     db.prepare(
+<<<<<<< HEAD
       `INSERT INTO skills (id, api_key_id, name, version, description, schema, handler, enabled, mode, source_provider, tags, install_count, created_at, updated_at)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+=======
+      `INSERT INTO skills (id, api_key_id, name, version, description, schema, handler, enabled, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ).run(
       id,
       skillData.apiKeyId,
@@ -76,12 +96,15 @@ class SkillRegistry {
       JSON.stringify(parsed.schema),
       parsed.handler,
       parsed.enabled ? 1 : 0,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
       skillData.mode || (parsed.enabled ? "on" : "off"),
       skillData.sourceProvider || null,
       JSON.stringify(skillData.tags || []),
       typeof skillData.installCount === "number" ? Math.max(0, skillData.installCount) : 0,
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       now.toISOString(),
       now.toISOString()
     );
@@ -95,20 +118,26 @@ class SkillRegistry {
       schema: parsed.schema,
       handler: parsed.handler,
       enabled: parsed.enabled,
+<<<<<<< HEAD
       mode: skillData.mode || (parsed.enabled ? "on" : "off"),
       sourceProvider: skillData.sourceProvider,
       tags: skillData.tags || [],
       installCount:
         typeof skillData.installCount === "number" ? Math.max(0, skillData.installCount) : 0,
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       createdAt: now,
       updatedAt: now,
     };
 
     this.registeredSkills.set(`${parsed.name}@${parsed.version}`, skill);
     this.updateVersionCache(skill);
+<<<<<<< HEAD
     this.invalidateCache();
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     return skill;
   }
@@ -122,6 +151,10 @@ class SkillRegistry {
       if (skill && (!apiKeyId || skill.apiKeyId === apiKeyId)) {
         db.prepare("DELETE FROM skills WHERE id = ?").run(skill.id);
         this.registeredSkills.delete(key);
+<<<<<<< HEAD
+=======
+        this.rebuildVersionCache(name);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         return true;
       }
     } else {
@@ -130,6 +163,14 @@ class SkillRegistry {
         .run(name, apiKeyId || null, apiKeyId || null);
 
       if (deleted.changes > 0) {
+<<<<<<< HEAD
+=======
+        const keysToDelete = Array.from(this.registeredSkills.entries())
+          .filter(([, skill]) => skill.name === name && (!apiKeyId || skill.apiKeyId === apiKeyId))
+          .map(([key]) => key);
+        keysToDelete.forEach((k) => this.registeredSkills.delete(k));
+        this.rebuildVersionCache(name);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         return true;
       }
     }
@@ -137,12 +178,38 @@ class SkillRegistry {
     return false;
   }
 
+<<<<<<< HEAD
+=======
+  async unregisterById(id: string): Promise<boolean> {
+    const db = getDbInstance();
+    const deleted = db.prepare("DELETE FROM skills WHERE id = ?").run(id);
+    if (deleted.changes > 0) {
+      const affectedNames = new Set<string>();
+      const keysToDelete = Array.from(this.registeredSkills.entries())
+        .filter(([, skill]) => skill.id === id)
+        .map(([key, skill]) => {
+          affectedNames.add(skill.name);
+          return key;
+        });
+      keysToDelete.forEach((k) => this.registeredSkills.delete(k));
+      affectedNames.forEach((name) => this.rebuildVersionCache(name));
+      return true;
+    }
+    return false;
+  }
+
+  list(apiKeyId?: string): Skill[] {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (apiKeyId) {
       return Array.from(this.registeredSkills.values()).filter((s) => s.apiKeyId === apiKeyId);
     }
     return Array.from(this.registeredSkills.values());
   }
 
+<<<<<<< HEAD
+=======
+  getSkill(name: string, _apiKeyId?: string): Skill | undefined {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return this.registeredSkills.get(name);
   }
 
@@ -152,6 +219,10 @@ class SkillRegistry {
     return Array.from(cached.values()).sort((a, b) => this.compareVersions(b.version, a.version));
   }
 
+<<<<<<< HEAD
+=======
+  resolveVersion(name: string, constraint: string, _apiKeyId?: string): Skill | undefined {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const versions = this.getSkillVersions(name);
     if (versions.length === 0) return undefined;
 
@@ -221,6 +292,39 @@ class SkillRegistry {
     this.versionCache.delete(name);
   }
 
+<<<<<<< HEAD
+=======
+  private rebuildVersionCache(name: string): void {
+    this.clearVersionCache(name);
+    for (const skill of this.registeredSkills.values()) {
+      if (skill.name === name) {
+        this.updateVersionCache(skill);
+      }
+    }
+  }
+
+  async loadFromDatabase(apiKeyId?: string): Promise<void> {
+    const db = getDbInstance();
+    const rows = apiKeyId
+      ? db.prepare("SELECT * FROM skills WHERE api_key_id = ?").all(apiKeyId)
+      : db.prepare("SELECT * FROM skills").all();
+
+    for (const row of rows as any[]) {
+      const skill: Skill = {
+        id: row.id,
+        apiKeyId: row.api_key_id,
+        name: row.name,
+        version: row.version,
+        description: row.description || "",
+        schema: JSON.parse(row.schema),
+        handler: row.handler,
+        enabled: row.enabled === 1,
+        createdAt: new Date(row.created_at),
+        updatedAt: new Date(row.updated_at),
+      };
+      this.registeredSkills.set(`${skill.name}@${skill.version}`, skill);
+      this.updateVersionCache(skill);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
   }
 }

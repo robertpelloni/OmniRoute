@@ -15,7 +15,10 @@ const CLI_TOOLS: Record<string, any> = {
     healthcheckTimeoutMs: 4000,
     paths: {
       settings: ".claude/settings.json",
+<<<<<<< HEAD
       auth: [".claude/.credentials.json", ".config/claude/credentials.json"],
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     },
   },
   codex: {
@@ -110,6 +113,7 @@ const CLI_TOOLS: Record<string, any> = {
       config: ".config/opencode/opencode.json",
     },
   },
+<<<<<<< HEAD
   hermes: {
     defaultCommand: "hermes",
     envBinKey: "CLI_HERMES_BIN",
@@ -126,6 +130,8 @@ const CLI_TOOLS: Record<string, any> = {
     healthcheckTimeoutMs: 12000,
     paths: {},
   },
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   qoder: {
     defaultCommand: "qodercli",
     envBinKey: "CLI_QODER_BIN",
@@ -136,6 +142,7 @@ const CLI_TOOLS: Record<string, any> = {
       auth: ".qoder/auth.json",
     },
   },
+<<<<<<< HEAD
   qwen: {
     defaultCommand: "qwen",
     envBinKey: "CLI_QWEN_BIN",
@@ -146,6 +153,8 @@ const CLI_TOOLS: Record<string, any> = {
       env: ".qwen/.env",
     },
   },
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 };
 
 const isWindows = () => process.platform === "win32";
@@ -176,6 +185,7 @@ const parseBoolean = (value: unknown, defaultValue = true) => {
 const runProcess = (
   command: string,
   args: string[],
+<<<<<<< HEAD
   {
     env,
     timeoutMs = 3000,
@@ -185,6 +195,9 @@ const runProcess = (
     timeoutMs?: number;
     useShell?: boolean;
   } = {}
+=======
+  { env, timeoutMs = 3000 }: { env?: Record<string, string | undefined>; timeoutMs?: number } = {}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 ): Promise<any> =>
   new Promise((resolve) => {
     let stdout = "";
@@ -198,7 +211,11 @@ const runProcess = (
       // On Windows, npm installs CLI wrappers as .cmd scripts (e.g. claude.cmd).
       // Without shell:true, spawn cannot resolve them via PATHEXT and the
       // healthcheck fails even when the CLI is correctly installed (#447).
+<<<<<<< HEAD
       ...(useShell ? { shell: true } : {}),
+=======
+      ...(isWindows() ? { shell: true } : {}),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     });
     const timer = setTimeout(() => {
       timedOut = true;
@@ -435,10 +452,14 @@ const getKnownToolPaths = (toolId: string): string[] => {
     cline: [["cline.cmd", "cline"]],
     kilo: [["kilocode.cmd", "kilocode"]],
     opencode: [["opencode.cmd", "opencode"]],
+<<<<<<< HEAD
     qoder: [
       ["qodercli.cmd", "qodercli"],
       ["qodercli.exe", "qodercli"],
     ],
+=======
+    qoder: [["qodercli.exe", "qodercli"]],
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 
   const bins = toolBins[toolId] || [];
@@ -523,11 +544,15 @@ const getNvmNodePath = (): string | null => {
 const getLookupEnv = () => {
   const env = { ...process.env };
   const extraPaths = getExtraPaths();
+<<<<<<< HEAD
   const currentPath = env.PATH || env.Path || "";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Only add user-specified extra paths, NOT generic user directories
   // This is more secure - user explicitly opts in via CLI_EXTRA_PATHS
   if (extraPaths.length > 0) {
+<<<<<<< HEAD
     const mergedPath = [...extraPaths, currentPath].filter(Boolean).join(path.delimiter);
     env.PATH = mergedPath;
     if (isWindows()) {
@@ -536,6 +561,9 @@ const getLookupEnv = () => {
   } else if (isWindows() && currentPath) {
     env.PATH = currentPath;
     env.Path = currentPath;
+=======
+    env.PATH = [...extraPaths, env.PATH || ""].filter(Boolean).join(path.delimiter);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
   return env;
 };
@@ -581,11 +609,15 @@ const locateCommand = async (command: string, env: Record<string, string | undef
   }
 
   if (isWindows()) {
+<<<<<<< HEAD
     const located = await runProcess("where.exe", [command], {
       env,
       timeoutMs: 3000,
       useShell: false,
     });
+=======
+    const located = await runProcess("where", [command], { env, timeoutMs: 3000 });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (located.ok && located.stdout) {
       // `where` may return multiple matches (e.g. `opencode` + `opencode.cmd`).
       // npm global installs on Windows create both a Unix shell script (no extension)
@@ -599,7 +631,11 @@ const locateCommand = async (command: string, env: Record<string, string | undef
       }
       const winExt = /\.(cmd|exe|bat|com)$/i;
       const preferred = lines.find((l) => winExt.test(l)) || lines[0];
+<<<<<<< HEAD
       return { installed: true, commandPath: normalizeMsys2Path(preferred), reason: null };
+=======
+      return { installed: true, commandPath: preferred, reason: null };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
     return { installed: false, commandPath: null, reason: "not_found" };
   }
@@ -717,6 +753,7 @@ const locateCommandCandidate = async (
           reason: null,
         };
       }
+<<<<<<< HEAD
 
       if (result.installed && result.reason === "not_executable") {
         return {
@@ -730,6 +767,8 @@ const locateCommandCandidate = async (
       if (result.reason && result.reason !== "not_found") {
         return { command: commands[0], ...result };
       }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
   }
 
@@ -751,7 +790,11 @@ const checkRunnable = async (
 ) => {
   // Minimal environment to prevent credential leakage to potentially malicious binaries
   const minimalEnv: Record<string, string | undefined> = {
+<<<<<<< HEAD
     PATH: env.PATH || env.Path,
+=======
+    PATH: env.PATH,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     HOME: env.HOME || env.USERPROFILE,
     USERPROFILE: env.USERPROFILE, // Windows needs this for os.homedir()
     APPDATA: env.APPDATA, // Many npm CLI tools rely on APPDATA
@@ -763,10 +806,13 @@ const checkRunnable = async (
     PATHEXT: env.PATHEXT, // Windows cmd.exe needs this to resolve .cmd/.bat/.exe extensions
   };
 
+<<<<<<< HEAD
   if (isWindows() && minimalEnv.PATH) {
     minimalEnv.Path = minimalEnv.PATH;
   }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   for (const args of [["--version"], ["-v"]]) {
     const result = await runProcess(commandPath, args, { env: minimalEnv, timeoutMs });
     // Validate output: must be non-empty and reasonable length (< 4KB)
@@ -843,6 +889,7 @@ export const getCliConfigPaths = (toolId: string) => {
 
   const home = getCliConfigHome();
   return Object.fromEntries(
+<<<<<<< HEAD
     Object.entries(tool.paths).map(([key, relativePath]) => {
       let resolvedPath = "";
       if (Array.isArray(relativePath)) {
@@ -860,6 +907,12 @@ export const getCliConfigPaths = (toolId: string) => {
       }
       return [key, resolvedPath];
     })
+=======
+    Object.entries(tool.paths).map(([key, relativePath]) => [
+      key,
+      path.join(home, relativePath as string),
+    ])
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   );
 };
 

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+<<<<<<< HEAD
 import { getAuditRequestContext, logAuditEvent } from "@/lib/compliance/index";
 import { cookies } from "next/headers";
 
@@ -19,5 +20,12 @@ export async function POST(request) {
     ipAddress: auditContext.ipAddress || undefined,
     requestId: auditContext.requestId,
   });
+=======
+import { cookies } from "next/headers";
+
+export async function POST() {
+  const cookieStore = await cookies();
+  cookieStore.delete("auth_token");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return NextResponse.json({ success: true });
 }

@@ -3,12 +3,15 @@
 import { useState, useEffect, useRef } from "react";
 import { Card } from "@/shared/components";
 import { useTranslations } from "next-intl";
+<<<<<<< HEAD
 import type { SkillsProvider } from "@/lib/skills/providerSettings";
 =======
 import { useState, useEffect } from "react";
 import { Card } from "@/shared/components";
 import { useTranslations } from "next-intl";
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 interface Skill {
   id: string;
@@ -16,20 +19,211 @@ interface Skill {
   version: string;
   description: string;
   enabled: boolean;
+<<<<<<< HEAD
   mode?: "on" | "off" | "auto";
   sourceProvider?: "skillsmp" | "skillssh" | "local";
   tags?: string[];
   installCount?: number;
+=======
+  createdAt: string;
+}
+
+interface Execution {
+  id: string;
+  skillId: string;
+  skillName: string;
+  status: string;
+  duration: number;
+  createdAt: string;
+}
+
+export default function SkillsPage() {
+  const [skills, setSkills] = useState<Skill[]>([]);
+  const [executions, setExecutions] = useState<Execution[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<"skills" | "executions" | "sandbox" | "marketplace">(
+    "skills"
+  );
+  const [showInstallModal, setShowInstallModal] = useState(false);
+  const [installJson, setInstallJson] = useState("");
+  const [installStatus, setInstallStatus] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
+  const [installing, setInstalling] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [mpQuery, setMpQuery] = useState("");
+  const [mpResults, setMpResults] = useState<
+    {
+      name: string;
+      description: string;
+      skillMdContent?: string;
+      version?: string;
+      sourceUrl?: string;
+    }[]
+  >([]);
+  const [mpLoading, setMpLoading] = useState(false);
+  const [mpError, setMpError] = useState("");
+  const [mpInstallingId, setMpInstallingId] = useState<string | null>(null);
+  const t = useTranslations("skills");
+
+  useEffect(() => {
+    Promise.all([
+      fetch("/api/skills").then((r) => r.json()),
+      fetch("/api/skills/executions").then((r) => r.json()),
+    ])
+      .then(([skillsData, executionsData]) => {
+        setSkills(skillsData.skills || []);
+        setExecutions(executionsData.executions || []);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         setLoading(false);
       })
       .catch(() => setLoading(false));
   }, []);
 
   const refreshSkills = async () => {
+<<<<<<< HEAD
     setSkillsPage(1);
     await fetchSkills(1);
   };
 
+=======
+    const res = await fetch("/api/skills").then((r) => r.json());
+    setSkills(res.skills || []);
+  };
+
+  const toggleSkill = async (skillId: string, enabled: boolean) => {
+    await fetch(`/api/skills/${skillId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ enabled: !enabled }),
+    });
+    setSkills(skills.map((s) => (s.id === skillId ? { ...s, enabled: !enabled } : s)));
+  };
+
+  const deleteSkill = async (skillId: string) => {
+    const res = await fetch(`/api/skills/${skillId}`, { method: "DELETE" });
+    if (res.ok) {
+      setSkills(skills.filter((s) => s.id !== skillId));
+    }
+  };
+
+  const handleInstall = async () => {
+    setInstalling(true);
+    setInstallStatus(null);
+    try {
+      const manifest = JSON.parse(installJson);
+      const res = await fetch("/api/skills/install", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(manifest),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setInstallStatus({ type: "success", message: `Skill installed (${data.id})` });
+        setInstallJson("");
+        await refreshSkills();
+      } else {
+        setInstallStatus({
+          type: "error",
+          message: data.error || data.message || "Install failed",
+        });
+      }
+    } catch (err) {
+      setInstallStatus({
+        type: "error",
+        message: err instanceof Error ? err.message : "Invalid JSON",
+      });
+    } finally {
+      setInstalling(false);
+    }
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      setInstallJson((ev.target?.result as string) || "");
+    };
+    reader.readAsText(file);
+  };
+
+  const searchMarketplace = async () => {
+    setMpLoading(true);
+    setMpError("");
+    setMpResults([]);
+    try {
+      const res = await fetch(`/api/skills/marketplace?q=${encodeURIComponent(mpQuery)}`);
+      const data = await res.json();
+      if (!res.ok) {
+        setMpError(data.error || "Search failed");
+      } else {
+        setMpResults(Array.isArray(data) ? data : data.skills || []);
+      }
+    } catch (err) {
+      setMpError(err instanceof Error ? err.message : "Search failed");
+    } finally {
+      setMpLoading(false);
+    }
+  };
+
+  const installFromMarketplace = async (skill: {
+    name: string;
+    description: string;
+    skillMdContent?: string;
+    version?: string;
+    sourceUrl?: string;
+  }) => {
+    setMpInstallingId(skill.name);
+    try {
+      const res = await fetch("/api/skills/marketplace/install", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: skill.name,
+          description: skill.description,
+          skillMdContent: skill.skillMdContent || skill.description,
+          version: skill.version || "1.0.0",
+          sourceUrl: skill.sourceUrl,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        await refreshSkills();
+        setMpInstallingId(null);
+      } else {
+        setMpError(data.error || "Install failed");
+        setMpInstallingId(null);
+      }
+    } catch (err) {
+      setMpError(err instanceof Error ? err.message : "Install failed");
+      setMpInstallingId(null);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-text-muted">{t("loading")}...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">{t("title")}</h1>
+          <p className="text-text-muted mt-1">{t("description")}</p>
+        </div>
+        <button
+          onClick={() => setShowInstallModal(true)}
+          className="px-4 py-2 text-sm font-medium rounded-lg bg-violet-500 text-white hover:bg-violet-600 transition-colors"
+        >
+          Install Skill
+        </button>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       </div>
 
       <div className="flex gap-2 border-b border-border">
@@ -73,10 +267,57 @@ interface Skill {
         >
           Marketplace
         </button>
+<<<<<<< HEAD
+=======
+      </div>
+
+      {activeTab === "skills" && (
+        <div className="grid gap-4">
+          {skills.length === 0 ? (
+            <Card>
+              <div className="text-center py-8 text-text-muted">{t("noSkills")}</div>
+            </Card>
+          ) : (
+            skills.map((skill) => (
+              <Card key={skill.id}>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-semibold">{skill.name}</h3>
+                      <span className="text-xs px-2 py-0.5 rounded bg-surface/50 text-text-muted">
+                        v{skill.version}
+                      </span>
+                    </div>
+                    <p className="text-sm text-text-muted mt-1">{skill.description}</p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => deleteSkill(skill.id)}
+                      className="text-xs px-2 py-1 rounded text-red-400 hover:bg-red-500/10 transition-colors"
+                    >
+                      Delete
+                    </button>
+                    <button
+                      onClick={() => toggleSkill(skill.id, skill.enabled)}
+                      className={`relative w-11 h-6 rounded-full transition-colors ${
+                        skill.enabled ? "bg-violet-500" : "bg-border"
+                      }`}
+                      role="switch"
+                      aria-checked={skill.enabled}
+                    >
+                      <span
+                        className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${
+                          skill.enabled ? "translate-x-5" : "translate-x-0"
+                        }`}
+                      />
+                    </button>
+                  </div>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 </div>
               </Card>
             ))
           )}
+<<<<<<< HEAD
 <<<<<<< Updated upstream
           <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
             <span className="text-sm text-text-muted">
@@ -108,6 +349,8 @@ interface Skill {
             </div>
           </div>
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         </div>
       )}
 
@@ -157,6 +400,7 @@ interface Skill {
               </tbody>
             </table>
           </div>
+<<<<<<< HEAD
           <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
             <span className="text-sm text-text-muted">
               Page {execPage} of {execTotalPages} ({execTotal} total)
@@ -187,6 +431,8 @@ interface Skill {
             </div>
           </div>
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         </Card>
       )}
 
@@ -231,6 +477,7 @@ interface Skill {
       {activeTab === "marketplace" && (
         <div className="grid gap-4">
           <Card>
+<<<<<<< HEAD
             <h3 className="font-semibold mb-2">Skills Marketplace</h3>
             <p className="text-sm text-text-muted mb-4">
               Active provider:{" "}
@@ -281,6 +528,33 @@ interface Skill {
           </Card>
 
           {skillsProvider === "skillsmp" && mpResults.length > 0 && (
+=======
+            <h3 className="font-semibold mb-4">SkillsMP Marketplace</h3>
+            <div className="flex gap-2 mb-4">
+              <input
+                type="text"
+                value={mpQuery}
+                onChange={(e) => setMpQuery(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && searchMarketplace()}
+                placeholder="Search skills..."
+                className="flex-1 px-3 py-2 rounded-lg bg-background border border-border text-sm focus:outline-none focus:ring-1 focus:ring-violet-500"
+              />
+              <button
+                onClick={searchMarketplace}
+                disabled={mpLoading}
+                className="px-4 py-2 text-sm font-medium rounded-lg bg-violet-500 text-white hover:bg-violet-600 disabled:opacity-50 transition-colors"
+              >
+                {mpLoading ? "Searching..." : "Search SkillsMP"}
+              </button>
+            </div>
+            {mpError && (
+              <div className="p-3 rounded-lg bg-red-500/10 text-red-400 text-sm mb-4">
+                {mpError}
+              </div>
+            )}
+          </Card>
+          {mpResults.length > 0 && (
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             <div className="grid gap-3">
               {mpResults.map((skill) => (
                 <Card key={skill.name}>
@@ -301,6 +575,7 @@ interface Skill {
               ))}
             </div>
           )}
+<<<<<<< HEAD
 
           {skillsProvider === "skillssh" && shResults.length > 0 && (
             <div className="grid gap-3">
@@ -327,12 +602,16 @@ interface Skill {
           )}
 
           {skillsProvider === "skillsmp" && !mpLoading && mpResults.length === 0 && !mpError && (
+=======
+          {!mpLoading && mpResults.length === 0 && !mpError && (
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             <Card>
               <div className="text-center py-8 text-text-muted">
                 Configure your SkillsMP API key in Settings to browse the marketplace.
               </div>
             </Card>
           )}
+<<<<<<< HEAD
           {skillsProvider === "skillssh" && !shLoading && shResults.length === 0 && !shError && (
             <Card>
               <div className="text-center py-8 text-text-muted">
@@ -340,6 +619,8 @@ interface Skill {
               </div>
             </Card>
           )}
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         </div>
       )}
 
@@ -415,7 +696,10 @@ interface Skill {
           </div>
         </div>
       )}
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     </div>
   );
 }

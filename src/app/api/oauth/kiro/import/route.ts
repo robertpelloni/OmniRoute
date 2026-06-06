@@ -5,6 +5,7 @@ import { getConsistentMachineId } from "@/shared/utils/machineId";
 import { syncToCloud } from "@/lib/cloudSync";
 import { kiroImportSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
+<<<<<<< HEAD
 import { isAuthRequired, isAuthenticated } from "@/shared/utils/apiAuth";
 import { runWithProxyContext } from "@omniroute/open-sse/utils/proxyFetch.ts";
 
@@ -14,14 +15,22 @@ async function requireOAuthImportAuth(request: Request) {
   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 }
 
+=======
+import { runWithProxyContext } from "@omniroute/open-sse/utils/proxyFetch.ts";
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * POST /api/oauth/kiro/import
  * Import and validate refresh token from Kiro IDE
  */
+<<<<<<< HEAD
 export async function POST(request: Request) {
   const authResponse = await requireOAuthImportAuth(request);
   if (authResponse) return authResponse;
 
+=======
+export async function POST(request: any) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody;
   try {
     rawBody = await request.json();
@@ -38,8 +47,11 @@ export async function POST(request: Request) {
   }
 
   try {
+<<<<<<< HEAD
     const { searchParams } = new URL(request.url);
     const targetProvider = searchParams.get("targetProvider") === "amazon-q" ? "amazon-q" : "kiro";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const validation = validateBody(kiroImportSchema, rawBody);
     if (isValidationFailure(validation)) {
       return NextResponse.json({ error: validation.error }, { status: 400 });
@@ -49,7 +61,11 @@ export async function POST(request: Request) {
     const kiroService = new KiroService();
 
     // Resolve proxy for this provider (provider-level → global → direct)
+<<<<<<< HEAD
     const proxy = await resolveProxyForProvider(targetProvider);
+=======
+    const proxy = await resolveProxyForProvider("kiro");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     // Validate and refresh token (through proxy if configured)
     const tokenData = await runWithProxyContext(proxy, () =>
@@ -61,7 +77,11 @@ export async function POST(request: Request) {
 
     // Save to database
     const connection: any = await createProviderConnection({
+<<<<<<< HEAD
       provider: targetProvider,
+=======
+      provider: "kiro",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       authType: "oauth",
       accessToken: tokenData.accessToken,
       refreshToken: tokenData.refreshToken,
@@ -87,7 +107,11 @@ export async function POST(request: Request) {
       },
     });
   } catch (error: any) {
+<<<<<<< HEAD
     console.log("Kiro-compatible import token error:", error);
+=======
+    console.log("Kiro import token error:", error);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

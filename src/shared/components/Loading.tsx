@@ -1,7 +1,10 @@
 "use client";
 
 import type { HTMLAttributes } from "react";
+<<<<<<< HEAD
 import { useTranslations } from "next-intl";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { cn } from "@/shared/utils/cn";
 
 type SpinnerSize = "sm" | "md" | "lg" | "xl";
@@ -38,17 +41,28 @@ interface LoadingProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 // Spinner loading
+<<<<<<< HEAD
 export function Spinner({ size = "md", className, label }: SpinnerProps) {
   const t = useTranslations("common");
   const ariaLabel = label ?? t("loading");
+=======
+export function Spinner({ size = "md", className, label = "Loading" }: SpinnerProps) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return (
     <span
       role="status"
       aria-live="polite"
+<<<<<<< HEAD
       aria-label={ariaLabel}
       className={cn("inline-flex", className)}
     >
       <span className="sr-only">{ariaLabel}</span>
+=======
+      aria-label={label}
+      className={cn("inline-flex", className)}
+    >
+      <span className="sr-only">{label}</span>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       <span
         aria-hidden="true"
         className={cn(
@@ -63,8 +77,12 @@ export function Spinner({ size = "md", className, label }: SpinnerProps) {
 }
 
 // Full page loading
+<<<<<<< HEAD
 export function PageLoading({ message, className }: PageLoadingProps) {
   const t = useTranslations("common");
+=======
+export function PageLoading({ message = "Loading...", className }: PageLoadingProps) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return (
     <div
       className={cn(
@@ -76,7 +94,11 @@ export function PageLoading({ message, className }: PageLoadingProps) {
       aria-busy="true"
     >
       <Spinner size="xl" />
+<<<<<<< HEAD
       <p className="mt-4 text-text-muted text-center">{message ?? t("loading")}</p>
+=======
+      <p className="mt-4 text-text-muted text-center">{message}</p>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     </div>
   );
 }

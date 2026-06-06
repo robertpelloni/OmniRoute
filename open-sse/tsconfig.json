@@ -12,7 +12,10 @@
     "strict": false,
     "jsx": "react-jsx",
     "lib": ["dom", "esnext"],
+<<<<<<< HEAD
     "ignoreDeprecations": "5.0",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     "baseUrl": "..",
     "paths": {
       "@/*": ["./src/*"],

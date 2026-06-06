@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import path from "path";
 import fs from "fs";
 import { resolveDataDir } from "@/lib/dataPaths";
+<<<<<<< HEAD
 import {
   getAppLogRetentionDays,
   getCallLogRetentionDays,
@@ -12,6 +13,9 @@ import { getDbBackupMaxFiles, getDbBackupRetentionDays } from "@/lib/db/backup";
 =======
 import { getAppLogRetentionDays, getCallLogRetentionDays } from "@/lib/logEnv";
 >>>>>>> Stashed changes
+=======
+import { getAppLogRetentionDays, getCallLogRetentionDays } from "@/lib/logEnv";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * GET /api/storage/health — Return database storage information.
@@ -70,6 +74,7 @@ export async function GET() {
         app: getAppLogRetentionDays(),
         call: getCallLogRetentionDays(),
       },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
       tableMaxRows: {
         callLogs: getCallLogsTableMaxRows(),
@@ -80,6 +85,8 @@ export async function GET() {
         days: getDbBackupRetentionDays(),
       },
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       dataDir: dataDir.startsWith(homeDir) ? "~" + dataDir.slice(homeDir.length) : dataDir,
     });
   } catch (error) {

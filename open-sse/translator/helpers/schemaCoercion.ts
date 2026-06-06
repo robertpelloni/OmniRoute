@@ -52,12 +52,15 @@ export function coerceSchemaNumericFields(schema: unknown): unknown {
 
   const result: JsonRecord = { ...schema };
 
+<<<<<<< HEAD
   // Fix #1782: Strip 'default' property to prevent upstream models from eagerly injecting optional fields
   if ("default" in result) {
     delete result.default;
   }
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   for (const field of NUMERIC_SCHEMA_FIELDS) {
     if (field in result) {
       result[field] = coerceNumericString(result[field]);
@@ -195,7 +198,10 @@ export function sanitizeToolId(id: string | undefined): string {
   return sanitized || `tool_${crypto.randomUUID().replace(/-/g, "_")}`;
 }
 
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export function injectEmptyReasoningContentForToolCalls(
   messages: unknown,
   provider: unknown

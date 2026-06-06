@@ -11,6 +11,7 @@ export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const limit = searchParams.get("limit");
     const { events, total } = getTranslationEvents(limit ? Number(limit) : undefined);
+<<<<<<< HEAD
     const normalizedEvents = events.map((event) => {
       const connectionId =
         typeof event.connectionId === "string" && event.connectionId.trim().length > 0
@@ -41,6 +42,10 @@ export async function GET(request) {
     });
 
     return NextResponse.json({ success: true, events: normalizedEvents, total });
+=======
+
+    return NextResponse.json({ success: true, events, total });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   } catch (error) {
     console.error("Error fetching history:", error);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });

@@ -1,8 +1,11 @@
 // Default instructions for Codex models
 // Source: CLIProxyAPI internal/misc/codex_instructions/
 
+<<<<<<< HEAD
 export const CODEX_CHAT_DEFAULT_INSTRUCTIONS = "You are a ChatGPT agent.";
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export const CODEX_DEFAULT_INSTRUCTIONS = `You are Codex, based on GPT-5. You are running as a coding agent in the Codex CLI on a user's computer.
 
 ## General

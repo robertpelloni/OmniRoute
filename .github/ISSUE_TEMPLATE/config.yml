@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 blank_issues_enabled: false
@@ -7,6 +8,9 @@ blank_issues_enabled: true
 =======
 blank_issues_enabled: true
 >>>>>>> Stashed changes
+=======
+blank_issues_enabled: false
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 contact_links:
   - name: Question / Help
     url: https://github.com/diegosouzapw/OmniRoute/discussions

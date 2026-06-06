@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // @ts-nocheck
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Wildcard Model Routing — Phase 8
  *
@@ -64,6 +67,7 @@ export function getSpecificity(pattern) {
  * @param {Array<{ pattern: string, target: string, [key: string]: unknown }>} aliases - Alias entries
  * @returns {{ pattern: string, target: string, specificity: number } | null}
  */
+<<<<<<< HEAD
 export function resolveWildcardAlias(
   model: string,
   aliases: WildcardAliasEntry[]
@@ -71,6 +75,12 @@ export function resolveWildcardAlias(
   if (!model || !aliases || !Array.isArray(aliases)) return null;
 
   const matches: ResolvedWildcardAlias[] = [];
+=======
+export function resolveWildcardAlias(model, aliases) {
+  if (!model || !aliases || !Array.isArray(aliases)) return null;
+
+  const matches = [];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   for (const alias of aliases) {
     const pattern = alias.pattern || alias.alias || alias.from;
     const target = alias.target || alias.model || alias.to;
@@ -119,6 +129,7 @@ export function resolveModel(model, exactAliases = {}, wildcardAliases = []) {
   // 3. Return original
   return model;
 }
+<<<<<<< HEAD
 type WildcardAliasEntry = {
   pattern?: string;
   alias?: string;
@@ -134,3 +145,5 @@ type ResolvedWildcardAlias = WildcardAliasEntry & {
   target: string;
   specificity: number;
 };
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

@@ -3,9 +3,14 @@ import { randomUUID } from "crypto";
  * Search Handler
  *
  * Handles POST /v1/search requests.
+<<<<<<< HEAD
  * Routes to 10 search providers with automatic failover:
  *   serper-search, brave-search, perplexity-search, exa-search, tavily-search,
  *   google-pse-search, linkup-search, searchapi-search, youcom-search, searxng-search
+=======
+ * Routes to 5 search providers with automatic failover:
+ *   serper-search, brave-search, perplexity-search, exa-search, tavily-search
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  *
  * Request format:
  * {
@@ -232,6 +237,7 @@ function parseDomainFilter(domainFilter?: string[]): {
   return { includes, excludes };
 }
 
+<<<<<<< HEAD
 function getProviderSettingString(
   params: Pick<SearchRequestParams, "providerOptions" | "providerSpecificData">,
   key: string
@@ -259,12 +265,15 @@ function toSearchPageNumber(offset: number | undefined, maxResults: number): num
   return Math.floor(offset / maxResults) + 1;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // ── Provider Request Builders ───────────────────────────────────────────
 
 interface SearchRequestParams {
   query: string;
   searchType: string;
   maxResults: number;
+<<<<<<< HEAD
   token?: string;
   country?: string;
   language?: string;
@@ -279,6 +288,12 @@ interface SearchRequestParams {
   };
   providerOptions?: Record<string, unknown>;
   providerSpecificData?: Record<string, unknown>;
+=======
+  token: string;
+  country?: string;
+  language?: string;
+  domainFilter?: string[];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 function buildSerperRequest(
@@ -382,6 +397,7 @@ function buildTavilyRequest(
   };
 }
 
+<<<<<<< HEAD
 function buildGooglePseRequest(
   config: SearchProviderConfig,
   params: SearchRequestParams
@@ -582,6 +598,8 @@ function buildSearxngRequest(
   };
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function buildRequest(
   config: SearchProviderConfig,
   params: SearchRequestParams
@@ -591,6 +609,7 @@ function buildRequest(
   if (config.id === "perplexity-search") return buildPerplexityRequest(config, params);
   if (config.id === "exa-search") return buildExaRequest(config, params);
   if (config.id === "tavily-search") return buildTavilyRequest(config, params);
+<<<<<<< HEAD
   if (config.id === "google-pse-search") return buildGooglePseRequest(config, params);
   if (config.id === "linkup-search") return buildLinkupRequest(config, params);
   if (config.id === "searchapi-search") return buildSearchApiRequest(config, params);
@@ -605,6 +624,14 @@ function buildRequest(
         "Content-Type": "application/json",
         ...(params.token ? { Authorization: `Bearer ${params.token}` } : {}),
       },
+=======
+  // Fallback for future providers: POST with bearer auth
+  return {
+    url: config.baseUrl,
+    init: {
+      method: config.method,
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${params.token}` },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       body: JSON.stringify({
         query: params.query,
         max_results: params.maxResults,
@@ -698,6 +725,7 @@ function normalizeTavilyResponse(
   return { results, totalResults: results.length };
 }
 
+<<<<<<< HEAD
 function normalizeGooglePseResponse(
   data: any,
   _query: string,
@@ -881,6 +909,8 @@ function normalizeSearxngResponse(
   return { results, totalResults: results.length };
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function normalizeResponse(
   providerId: string,
   data: any,
@@ -893,12 +923,15 @@ function normalizeResponse(
     return normalizePerplexityResponse(data, query, searchType);
   if (providerId === "exa-search") return normalizeExaResponse(data, query, searchType);
   if (providerId === "tavily-search") return normalizeTavilyResponse(data, query, searchType);
+<<<<<<< HEAD
   if (providerId === "google-pse-search")
     return normalizeGooglePseResponse(data, query, searchType);
   if (providerId === "linkup-search") return normalizeLinkupResponse(data, query, searchType);
   if (providerId === "searchapi-search") return normalizeSearchApiResponse(data, query, searchType);
   if (providerId === "youcom-search") return normalizeYouComResponse(data, query, searchType);
   if (providerId === "searxng-search") return normalizeSearxngResponse(data, query, searchType);
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return { results: [], totalResults: null };
 }
 
@@ -912,11 +945,15 @@ export async function handleSearch(options: SearchHandlerOptions): Promise<Searc
     searchType,
     country,
     language,
+<<<<<<< HEAD
     timeRange,
     offset,
     domainFilter,
     contentOptions,
     providerOptions,
+=======
+    domainFilter,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     credentials,
     alternateProvider,
     alternateCredentials,
@@ -949,11 +986,15 @@ export async function handleSearch(options: SearchHandlerOptions): Promise<Searc
     maxResults,
     country,
     language,
+<<<<<<< HEAD
     timeRange,
     offset,
     domainFilter,
     contentOptions,
     providerOptions,
+=======
+    domainFilter,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 
   // 4. Try primary provider
@@ -997,6 +1038,7 @@ async function tryProvider(
   log?: any
 ): Promise<SearchHandlerResult> {
   const startTime = Date.now();
+<<<<<<< HEAD
   const providerSpecificData =
     credentials?.providerSpecificData && typeof credentials.providerSpecificData === "object"
       ? credentials.providerSpecificData
@@ -1004,6 +1046,11 @@ async function tryProvider(
   const token = credentials.apiKey || credentials.accessToken || undefined;
 
   if (config.authType !== "none" && !token) {
+=======
+  const token = credentials.apiKey || credentials.accessToken;
+
+  if (!token) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return {
       success: false,
       status: 401,
@@ -1012,6 +1059,7 @@ async function tryProvider(
   }
 
   const { query, searchType, maxResults } = params;
+<<<<<<< HEAD
   let url = "";
   let init: RequestInit = {};
   try {
@@ -1023,6 +1071,9 @@ async function tryProvider(
       error: err?.message || `Invalid search configuration for provider: ${config.id}`,
     };
   }
+=======
+  const { url, init } = buildRequest(config, { ...params, token });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Timeout: min of provider timeout and remaining global timeout
   const remainingGlobal = GLOBAL_TIMEOUT_MS - (Date.now() - globalStartTime);

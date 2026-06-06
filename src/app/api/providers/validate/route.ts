@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
+<<<<<<< HEAD
 import { getAuditRequestContext, logAuditEvent } from "@/lib/compliance/index";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { getProviderNodeById } from "@/models";
 import {
   isClaudeCodeCompatibleProvider,
@@ -7,11 +10,16 @@ import {
   isAnthropicCompatibleProvider,
 } from "@/shared/constants/providers";
 import { validateProviderApiKey } from "@/lib/providers/validation";
+<<<<<<< HEAD
 import { getProxyForLevel, resolveProxyForProvider } from "@/lib/localDb";
+=======
+import { getProxyForLevel } from "@/lib/localDb";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { validateProviderApiKeySchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
 import { runWithProxyContext } from "@omniroute/open-sse/utils/proxyFetch.ts";
 
+<<<<<<< HEAD
 function sanitizeAuditUrl(url: string | null | undefined) {
   if (!url) return null;
   try {
@@ -25,6 +33,10 @@ function sanitizeAuditUrl(url: string | null | undefined) {
 // POST /api/providers/validate - Validate API key with provider
 export async function POST(request) {
   const auditContext = getAuditRequestContext(request);
+=======
+// POST /api/providers/validate - Validate API key with provider
+export async function POST(request) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody;
   try {
     rawBody = await request.json();
@@ -45,6 +57,15 @@ export async function POST(request) {
     if (isValidationFailure(validation)) {
       return NextResponse.json({ error: validation.error }, { status: 400 });
     }
+<<<<<<< HEAD
+=======
+    const { provider, apiKey, validationModelId, customUserAgent, baseUrl: bodyBaseUrl } = validation.data;
+
+    let providerSpecificData: any = { validationModelId };
+    if (customUserAgent) {
+      providerSpecificData.customUserAgent = customUserAgent;
+    }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     if (isOpenAICompatibleProvider(provider) || isAnthropicCompatibleProvider(provider)) {
       const node: any = await getProviderNodeById(provider);
@@ -61,12 +82,17 @@ export async function POST(request) {
       }
       providerSpecificData = {
         ...providerSpecificData,
+<<<<<<< HEAD
+=======
+        baseUrl: bodyBaseUrl || node.baseUrl,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         apiType: node.apiType,
         chatPath: node.chatPath,
         modelsPath: node.modelsPath,
       };
     }
 
+<<<<<<< HEAD
     const registryProxy = await resolveProxyForProvider(provider);
     let proxyToUse = registryProxy;
 
@@ -77,6 +103,12 @@ export async function POST(request) {
     }
 
     const result = await runWithProxyContext(proxyToUse || null, () =>
+=======
+    const providerProxy = await getProxyForLevel("provider", provider);
+    const globalProxy = providerProxy ? null : await getProxyForLevel("global");
+
+    const result = await runWithProxyContext(providerProxy || globalProxy || null, () =>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       validateProviderApiKey({
         provider,
         apiKey,
@@ -88,6 +120,7 @@ export async function POST(request) {
       return NextResponse.json({ error: "Provider validation not supported" }, { status: 400 });
     }
 
+<<<<<<< HEAD
     if (!result.valid && typeof result.statusCode === "number") {
       if (result.securityBlocked) {
         logAuditEvent({
@@ -112,6 +145,8 @@ export async function POST(request) {
       );
     }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return NextResponse.json({
       valid: !!result.valid,
       error: result.valid ? null : result.error || "Invalid API key",

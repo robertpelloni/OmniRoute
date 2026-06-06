@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSettings, updateSettings } from "@/lib/localDb";
+<<<<<<< HEAD
 import {
   buildLegacyResilienceCompat,
   mergeResilienceSettings,
@@ -7,6 +8,8 @@ import {
   type ResilienceSettings,
   type ResilienceSettingsPatch,
 } from "@/lib/resilience/settings";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { updateResilienceSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
 
@@ -20,6 +23,7 @@ function getErrorMessage(error: unknown, fallback: string): string {
   return error instanceof Error && error.message ? error.message : fallback;
 }
 
+<<<<<<< HEAD
 function normalizeLegacyPatch(body: JsonRecord): ResilienceSettingsPatch {
   const profiles = asRecord(body.profiles);
   const defaults = asRecord(body.defaults);
@@ -132,18 +136,51 @@ export async function GET() {
         maxRetryWaitSec: resilience.waitForCooldown.maxRetryWaitSec,
       },
       legacy: buildLegacyResilienceCompat(resilience),
+=======
+/**
+ * GET /api/resilience — Get current resilience configuration and status
+ */
+export async function GET() {
+  try {
+    // Dynamic imports for open-sse modules
+    const { getAllCircuitBreakerStatuses } = await import("@/shared/utils/circuitBreaker");
+    const { getAllRateLimitStatus } = await import("@omniroute/open-sse/services/rateLimitManager");
+    const { PROVIDER_PROFILES, DEFAULT_API_LIMITS } =
+      await import("@omniroute/open-sse/config/constants");
+
+    const settings = await getSettings();
+    const circuitBreakers = getAllCircuitBreakerStatuses();
+    const rateLimitStatus = getAllRateLimitStatus();
+
+    return NextResponse.json({
+      profiles: settings.providerProfiles || PROVIDER_PROFILES,
+      defaults: {
+        ...DEFAULT_API_LIMITS,
+        ...asRecord(settings.rateLimitDefaults),
+      },
+      circuitBreakers,
+      rateLimitStatus,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     });
   } catch (err: unknown) {
     console.error("[API] GET /api/resilience error:", err);
     return NextResponse.json(
+<<<<<<< HEAD
       { error: getErrorMessage(err, "Failed to load resilience settings") },
+=======
+      { error: getErrorMessage(err, "Failed to load resilience status") },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       { status: 500 }
     );
   }
 }
 
 /**
+<<<<<<< HEAD
  * PATCH /api/resilience — Update resilience configuration
+=======
+ * PATCH /api/resilience — Update provider resilience profiles and/or rate limit defaults
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  */
 export async function PATCH(request) {
   let rawBody;
@@ -166,6 +203,7 @@ export async function PATCH(request) {
     if (isValidationFailure(validation)) {
       return NextResponse.json({ error: validation.error }, { status: 400 });
     }
+<<<<<<< HEAD
 
     const body = validation.data as JsonRecord;
     const currentSettings = await getSettings();
@@ -207,6 +245,20 @@ export async function PATCH(request) {
         maxRetryWaitSec: nextResilience.waitForCooldown.maxRetryWaitSec,
       },
       legacy: buildLegacyResilienceCompat(nextResilience),
+=======
+    const { profiles, defaults } = validation.data;
+
+    const updates: Record<string, any> = {};
+    if (profiles) updates.providerProfiles = profiles;
+    if (defaults) updates.rateLimitDefaults = defaults;
+
+    await updateSettings(updates);
+
+    return NextResponse.json({
+      ok: true,
+      ...(profiles ? { profiles } : {}),
+      ...(defaults ? { defaults } : {}),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     });
   } catch (err: unknown) {
     console.error("[API] PATCH /api/resilience error:", err);

@@ -45,11 +45,16 @@ export default function BudgetTab() {
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
     dailyLimitUsd: "",
+<<<<<<< HEAD
     weeklyLimitUsd: "",
     monthlyLimitUsd: "",
     warningThreshold: "80",
     resetInterval: "daily",
     resetTime: "00:00",
+=======
+    monthlyLimitUsd: "",
+    warningThreshold: "80",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   });
   const notify = useNotificationStore();
   const formatCurrency = (value) =>
@@ -59,6 +64,7 @@ export default function BudgetTab() {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(Number(value || 0));
+<<<<<<< HEAD
   const formatDateTime = (value) =>
     value
       ? new Intl.DateTimeFormat(locale, {
@@ -81,6 +87,8 @@ export default function BudgetTab() {
     }
     return daily;
   };
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Load API keys
   useEffect(() => {
@@ -105,8 +113,11 @@ export default function BudgetTab() {
         setBudget(data);
         if (data.dailyLimitUsd)
           setForm((f) => ({ ...f, dailyLimitUsd: String(data.dailyLimitUsd) }));
+<<<<<<< HEAD
         if (data.weeklyLimitUsd)
           setForm((f) => ({ ...f, weeklyLimitUsd: String(data.weeklyLimitUsd) }));
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         if (data.monthlyLimitUsd)
           setForm((f) => ({ ...f, monthlyLimitUsd: String(data.monthlyLimitUsd) }));
         if (data.warningThreshold)
@@ -115,12 +126,15 @@ export default function BudgetTab() {
             ...f,
             warningThreshold: String(Math.round(data.warningThreshold * 100)),
           }));
+<<<<<<< HEAD
         if (data.resetInterval) {
           setForm((f) => ({ ...f, resetInterval: data.resetInterval }));
         }
         if (data.resetTime) {
           setForm((f) => ({ ...f, resetTime: data.resetTime }));
         }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     } catch {
       // silent
@@ -139,6 +153,7 @@ export default function BudgetTab() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           apiKeyId: selectedKey,
+<<<<<<< HEAD
           dailyLimitUsd: form.dailyLimitUsd ? parseFloat(form.dailyLimitUsd) : undefined,
           weeklyLimitUsd: form.weeklyLimitUsd ? parseFloat(form.weeklyLimitUsd) : undefined,
           monthlyLimitUsd: form.monthlyLimitUsd ? parseFloat(form.monthlyLimitUsd) : undefined,
@@ -146,6 +161,12 @@ export default function BudgetTab() {
           warningThreshold: (parseInt(form.warningThreshold) || 80) / 100,
           resetInterval: form.resetInterval,
           resetTime: form.resetTime || "00:00",
+=======
+          dailyLimitUsd: form.dailyLimitUsd ? parseFloat(form.dailyLimitUsd) : null,
+          monthlyLimitUsd: form.monthlyLimitUsd ? parseFloat(form.monthlyLimitUsd) : null,
+          // schema expects a fraction (0–1); UI shows percentage (0–100)
+          warningThreshold: (parseInt(form.warningThreshold) || 80) / 100,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         }),
       });
       if (res.ok) {
@@ -183,12 +204,18 @@ export default function BudgetTab() {
   }
 
   const dailyLimit = budget?.dailyLimitUsd || parseFloat(form.dailyLimitUsd) || 0;
+<<<<<<< HEAD
   const weeklyLimit = budget?.weeklyLimitUsd || parseFloat(form.weeklyLimitUsd) || 0;
   const monthlyLimit = budget?.monthlyLimitUsd || parseFloat(form.monthlyLimitUsd) || 0;
   const dailyCost = budget?.totalCostToday || 0;
   const monthlyCost = budget?.totalCostMonth || 0;
   const activeLimit = budget?.activeLimitUsd || getActiveLimitFromForm();
   const activeCost = budget?.totalCostPeriod || 0;
+=======
+  const monthlyLimit = budget?.monthlyLimitUsd || parseFloat(form.monthlyLimitUsd) || 0;
+  const dailyCost = budget?.totalCostToday || 0;
+  const monthlyCost = budget?.totalCostMonth || 0;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const warnPct = (parseInt(form.warningThreshold) || 80) / 100;
 
   return (
@@ -220,7 +247,11 @@ export default function BudgetTab() {
         </div>
 
         {/* Current Spend */}
+<<<<<<< HEAD
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+=======
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           <div className="p-4 rounded-lg border border-border/30 bg-surface/20">
             <p className="text-sm text-text-muted mb-2">{t("todaysSpend")}</p>
             <p className="text-2xl font-bold text-text-main">{formatCurrency(dailyCost)}</p>
@@ -245,6 +276,7 @@ export default function BudgetTab() {
               />
             )}
           </div>
+<<<<<<< HEAD
           <div className="p-4 rounded-lg border border-border/30 bg-surface/20">
             <p className="text-sm text-text-muted mb-2">{t("activePeriodSpend")}</p>
             <p className="text-2xl font-bold text-text-main">{formatCurrency(activeCost)}</p>
@@ -264,6 +296,8 @@ export default function BudgetTab() {
               <p>{t("nextResetUtc", { value: formatDateTime(budget?.budgetResetAt) })}</p>
             </div>
           </div>
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         </div>
 
         {/* Budget Form */}
@@ -280,6 +314,7 @@ export default function BudgetTab() {
               onChange={(e) => setForm({ ...form, dailyLimitUsd: e.target.value })}
             />
             <Input
+<<<<<<< HEAD
               label={t("weeklyLimitUsd")}
               type="number"
               step="0.01"
@@ -289,6 +324,8 @@ export default function BudgetTab() {
               onChange={(e) => setForm({ ...form, weeklyLimitUsd: e.target.value })}
             />
             <Input
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               label={t("monthlyLimitUsd")}
               type="number"
               step="0.01"
@@ -307,6 +344,7 @@ export default function BudgetTab() {
               onChange={(e) => setForm({ ...form, warningThreshold: e.target.value })}
             />
           </div>
+<<<<<<< HEAD
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div className="space-y-1">
               <label className="text-sm text-text-muted block">{t("resetInterval")}</label>
@@ -335,6 +373,8 @@ export default function BudgetTab() {
             </p>
             <p>{t("nextResetUtc", { value: formatDateTime(budget?.budgetResetAt) })}</p>
           </div>
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           <Button variant="primary" onClick={handleSave} loading={saving}>
             {t("saveLimits")}
           </Button>

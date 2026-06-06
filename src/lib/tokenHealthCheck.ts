@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // @ts-nocheck
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Proactive Token Health Check Scheduler
  *
@@ -13,7 +16,10 @@
 
 import {
   getProviderConnections,
+<<<<<<< HEAD
   getProviderConnectionById,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   updateProviderConnection,
   getSettings,
   resolveProxyForConnection,
@@ -23,7 +29,10 @@ import {
   supportsTokenRefresh,
   isUnrecoverableRefreshError,
 } from "@omniroute/open-sse/services/tokenRefresh.ts";
+<<<<<<< HEAD
 import { pickMaskedDisplayValue } from "@/shared/utils/maskEmail";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 // ── Constants ────────────────────────────────────────────────────────────────
 const TICK_MS = 60 * 1000; // sweep interval: every 60 seconds
@@ -33,6 +42,7 @@ const EXPIRED_RETRY_BACKOFF_MIN = 5; // backoff between expired retries (minutes
 const LOG_PREFIX = "[HealthCheck]";
 const TRUE_ENV_VALUES = new Set(["1", "true", "yes", "on"]);
 
+<<<<<<< HEAD
 function isBuildProcess(): boolean {
   return typeof process !== "undefined" && process.env.NEXT_PHASE === "phase-production-build";
 }
@@ -75,6 +85,8 @@ function getEffectiveTokenExpiryMs(conn: any): number {
   return Number.isFinite(expiryMs) ? expiryMs : 0;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export function buildRefreshFailureUpdate(conn: any, now: string) {
   const wasExpired = conn.testStatus === "expired";
   const retryCount = (conn.expiredRetryCount ?? 0) + (wasExpired ? 1 : 0);
@@ -101,11 +113,15 @@ function isEnvFlagEnabled(name: string): boolean {
 }
 
 function isHealthCheckDisabled(): boolean {
+<<<<<<< HEAD
   return (
     isEnvFlagEnabled("OMNIROUTE_DISABLE_TOKEN_HEALTHCHECK") ||
     isBuildProcess() ||
     isAutomatedTestProcess()
   );
+=======
+  return isEnvFlagEnabled("OMNIROUTE_DISABLE_TOKEN_HEALTHCHECK") || process.env.NODE_ENV === "test";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 // ── Logging helper ───────────────────────────────────────────────────────────
@@ -115,11 +131,15 @@ let pendingHideLogs: Promise<boolean> | null = null;
 const CACHE_TTL = 30_000; // Cache settings for 30 seconds
 
 async function shouldHideLogs(): Promise<boolean> {
+<<<<<<< HEAD
   if (
     isEnvFlagEnabled("OMNIROUTE_HIDE_HEALTHCHECK_LOGS") ||
     isBuildProcess() ||
     isAutomatedTestProcess()
   ) {
+=======
+  if (isEnvFlagEnabled("OMNIROUTE_HIDE_HEALTHCHECK_LOGS") || process.env.NODE_ENV === "test") {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return true;
   }
 
@@ -234,21 +254,28 @@ async function sweep() {
 
     if (!connections || connections.length === 0) return;
 
+<<<<<<< HEAD
     const staggerMs = parseInt(process.env.HEALTHCHECK_STAGGER_MS || "3000", 10);
 
     for (let i = 0; i < connections.length; i++) {
       const conn = connections[i];
+=======
+    for (const conn of connections) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       try {
         await checkConnection(conn);
       } catch (err) {
         // Per-connection isolation: one failure never blocks others
         logError(`${LOG_PREFIX} Error checking ${conn.name || conn.id}:`, err.message);
       }
+<<<<<<< HEAD
 
       // Stagger delay between checks to prevent bursting (Issue #1220)
       if (staggerMs > 0 && i < connections.length - 1) {
         await new Promise((resolve) => setTimeout(resolve, staggerMs));
       }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
   } catch (err) {
     logError(`${LOG_PREFIX} Sweep error:`, err.message);
@@ -258,12 +285,16 @@ async function sweep() {
 /**
  * Check a single connection and refresh if due.
  */
+<<<<<<< HEAD
 export async function checkConnection(conn) {
   if (!conn?.id) return;
 
   const latestConnection = (await getProviderConnectionById(conn.id)) || conn;
   conn = latestConnection;
 
+=======
+async function checkConnection(conn) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Determine interval (0 = disabled)
   const intervalMin = conn.healthCheckInterval ?? DEFAULT_HEALTH_CHECK_INTERVAL_MIN;
   if (intervalMin <= 0) return;
@@ -280,6 +311,10 @@ export async function checkConnection(conn) {
     if (Date.now() - lastRetry < backoffMs) return;
 
     log(
+<<<<<<< HEAD
+=======
+      `${LOG_PREFIX} Retrying expired ${conn.provider}/${conn.name || conn.email || conn.id} (attempt ${retryCount + 1}/${EXPIRED_RETRY_MAX})`
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     );
   }
 
@@ -287,7 +322,11 @@ export async function checkConnection(conn) {
     const now = new Date().toISOString();
     await updateProviderConnection(conn.id, { lastHealthCheckAt: now });
     log(
+<<<<<<< HEAD
       `${LOG_PREFIX} Skipping ${conn.provider}/${getConnectionLogLabel(conn)} (refresh unsupported)`
+=======
+      `${LOG_PREFIX} Skipping ${conn.provider}/${conn.name || conn.email || conn.id} (refresh unsupported)`
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     );
     return;
   }
@@ -295,6 +334,7 @@ export async function checkConnection(conn) {
   const intervalMs = intervalMin * 60 * 1000;
   const lastCheck = conn.lastHealthCheckAt ? new Date(conn.lastHealthCheckAt).getTime() : 0;
 
+<<<<<<< HEAD
 
   const reason = isAboutToExpire ? "token expiring soon" : `interval: ${intervalMin}min`;
   log(`${LOG_PREFIX} Refreshing ${conn.provider}/${getConnectionLogLabel(conn)} (${reason})`);
@@ -305,12 +345,36 @@ export async function checkConnection(conn) {
     refreshToken: attemptedRefreshToken,
     accessToken: attemptedAccessToken,
     expiresAt: getEffectiveTokenExpiryIso(conn),
+=======
+  // Proactive pre-expiry check (#631): if token is about to expire, refresh immediately
+  // regardless of the health check interval — prevents request failures between checks
+  const TOKEN_EXPIRY_BUFFER = 5 * 60 * 1000; // 5 minutes
+  const tokenExpiresAt = conn.tokenExpiresAt ? new Date(conn.tokenExpiresAt).getTime() : 0;
+  const isAboutToExpire = tokenExpiresAt > 0 && tokenExpiresAt - Date.now() < TOKEN_EXPIRY_BUFFER;
+
+  // Not yet due: skip if (a) interval hasn't elapsed AND (b) token is not about to expire
+  if (Date.now() - lastCheck < intervalMs && !isAboutToExpire) return;
+
+  const reason = isAboutToExpire ? "token expiring soon" : `interval: ${intervalMin}min`;
+  log(
+    `${LOG_PREFIX} Refreshing ${conn.provider}/${conn.name || conn.email || conn.id} (${reason})`
+  );
+
+  const credentials = {
+    refreshToken: conn.refreshToken,
+    accessToken: conn.accessToken,
+    expiresAt: conn.tokenExpiresAt,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     providerSpecificData: conn.providerSpecificData,
   };
 
   const hideLogs = await shouldHideLogs();
+<<<<<<< HEAD
   const proxyResolution = await resolveProxyForConnection(conn.id);
   const proxyConfig = extractResolvedProxyConfig(proxyResolution);
+=======
+  const proxyConfig = await resolveProxyForConnection(conn.id);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const result = await getAccessToken(
     conn.provider,
     credentials,
@@ -335,6 +399,7 @@ export async function checkConnection(conn) {
   // Once used, the old token is permanently invalidated.
   // Retrying will never succeed → deactivate and stop the loop.
   if (isUnrecoverableRefreshError(result)) {
+<<<<<<< HEAD
     const currentConnection = await getProviderConnectionById(conn.id);
     const credentialsChangedSinceSweep =
       !!currentConnection &&
@@ -370,6 +435,8 @@ export async function checkConnection(conn) {
       return;
     }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     await updateProviderConnection(conn.id, {
       lastHealthCheckAt: now,
       testStatus: "expired",
@@ -382,7 +449,11 @@ export async function checkConnection(conn) {
       refreshToken: null,
     });
     logError(
+<<<<<<< HEAD
       `${LOG_PREFIX} ✗ ${conn.provider}/${getConnectionLogLabel(conn)} — ` +
+=======
+      `${LOG_PREFIX} ✗ ${conn.provider}/${conn.name || conn.email || conn.id} — ` +
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         `Refresh token is permanently invalid (${result.error}). ` +
         `Connection deactivated. Re-authenticate to restore.`
     );
@@ -408,6 +479,7 @@ export async function checkConnection(conn) {
     }
 
     if (result.expiresIn) {
+<<<<<<< HEAD
       const expiresAt = new Date(Date.now() + result.expiresIn * 1000).toISOString();
       updateData.expiresAt = expiresAt;
       updateData.tokenExpiresAt = expiresAt;
@@ -421,6 +493,9 @@ export async function checkConnection(conn) {
         ...(conn.providerSpecificData || {}),
         ...result.providerSpecificData,
       };
+=======
+      updateData.tokenExpiresAt = new Date(Date.now() + result.expiresIn * 1000).toISOString();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
 
     if (result.providerSpecificData) {
@@ -431,8 +506,20 @@ export async function checkConnection(conn) {
     }
 
     await updateProviderConnection(conn.id, updateData);
+<<<<<<< HEAD
     log(`${LOG_PREFIX} ✓ ${conn.provider}/${getConnectionLogLabel(conn)} refreshed`);
   } else {
+=======
+    log(`${LOG_PREFIX} ✓ ${conn.provider}/${conn.name || conn.email || conn.id} refreshed`);
+  } else {
+    const updateData = buildRefreshFailureUpdate(conn, now);
+    await updateProviderConnection(conn.id, updateData);
+    logWarn(
+      `${LOG_PREFIX} ✗ ${conn.provider}/${conn.name || conn.email || conn.id} refresh failed` +
+        (conn.testStatus === "expired"
+          ? ` (${updateData.expiredRetryCount}/${EXPIRED_RETRY_MAX} expired retries used)`
+          : "")
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     );
   }
 }

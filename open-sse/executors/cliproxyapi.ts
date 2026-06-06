@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /**
  * CLIProxyAPI Executor — routes requests to a local CLIProxyAPI instance.
  *
@@ -21,11 +22,17 @@ import {
   mergeAbortSignals,
   type ProviderCredentials,
 } from "./base.ts";
+=======
+import { BaseExecutor, mergeUpstreamExtraHeaders, mergeAbortSignals } from "./base.ts";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { HTTP_STATUS, FETCH_TIMEOUT_MS } from "../config/constants.ts";
 
 const DEFAULT_PORT = 8317;
 const DEFAULT_HOST = "127.0.0.1";
+<<<<<<< HEAD
 const HEALTH_CHECK_TIMEOUT_MS = 5000;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 function resolveCliproxyapiBaseUrl(): string {
   const host = process.env.CLIPROXYAPI_HOST || DEFAULT_HOST;
@@ -35,6 +42,7 @@ function resolveCliproxyapiBaseUrl(): string {
 
 export { resolveCliproxyapiBaseUrl };
 
+<<<<<<< HEAD
 /**
  * Check if a connection has CLIProxyAPI deep mode enabled via UI toggle.
  * Used by chatCore's resolveExecutorWithProxy to decide routing.
@@ -45,6 +53,8 @@ export function isCliproxyapiDeepModeEnabled(
   return providerSpecificData?.cliproxyapiMode === "claude-native";
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export class CliproxyapiExecutor extends BaseExecutor {
   private readonly upstreamBaseUrl: string;
 
@@ -58,6 +68,7 @@ export class CliproxyapiExecutor extends BaseExecutor {
     this.upstreamBaseUrl = effectiveBase;
   }
 
+<<<<<<< HEAD
   buildUrl(
     _model: string,
     _stream: boolean,
@@ -72,13 +83,28 @@ export class CliproxyapiExecutor extends BaseExecutor {
   buildHeaders(credentials: ProviderCredentials | null, stream = true): Record<string, string> {
     const key = credentials?.apiKey || credentials?.accessToken;
 
+=======
+  buildUrl(_model: string, _stream: boolean, _urlIndex = 0): string {
+    return `${this.upstreamBaseUrl}/v1/chat/completions`;
+  }
+
+  buildHeaders(credentials: any, stream = true): Record<string, string> {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
     };
 
+<<<<<<< HEAD
     if (key) {
       headers["Authorization"] = `Bearer ${key}`;
     }
+=======
+    const key = credentials?.apiKey || credentials?.accessToken;
+    if (key) {
+      headers["Authorization"] = `Bearer ${key}`;
+    }
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (stream) {
       headers["Accept"] = "text/event-stream";
     }
@@ -86,6 +112,7 @@ export class CliproxyapiExecutor extends BaseExecutor {
     return headers;
   }
 
+<<<<<<< HEAD
   transformRequest(
     model: string,
     body: unknown,
@@ -100,18 +127,33 @@ export class CliproxyapiExecutor extends BaseExecutor {
     }
 
     return transformed;
+=======
+  transformRequest(model: string, body: any, _stream: boolean, _credentials: any): any {
+    if (body && typeof body === "object" && body.model !== model) {
+      return { ...body, model };
+    }
+    return body;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   async execute(input: {
     model: string;
     body: unknown;
     stream: boolean;
+<<<<<<< HEAD
     credentials: ProviderCredentials;
+=======
+    credentials: any;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     signal?: AbortSignal | null;
     log?: any;
     upstreamExtraHeaders?: Record<string, string> | null;
   }) {
+<<<<<<< HEAD
     const url = this.buildUrl(input.model, input.stream, 0, input.credentials);
+=======
+    const url = this.buildUrl(input.model, input.stream);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const headers = this.buildHeaders(input.credentials, input.stream);
     const transformedBody = this.transformRequest(
       input.model,
@@ -126,8 +168,11 @@ export class CliproxyapiExecutor extends BaseExecutor {
       ? mergeAbortSignals(input.signal, timeoutSignal)
       : timeoutSignal;
 
+<<<<<<< HEAD
     input.log?.info?.("CPA", `CLIProxyAPI → ${url} (model: ${input.model})`);
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const response = await fetch(url, {
       method: "POST",
       headers,
@@ -141,6 +186,7 @@ export class CliproxyapiExecutor extends BaseExecutor {
 
     return { response, url, headers, transformedBody };
   }
+<<<<<<< HEAD
 
   /**
    * Health check — verifies CLIProxyAPI is reachable.
@@ -164,6 +210,8 @@ export class CliproxyapiExecutor extends BaseExecutor {
       };
     }
   }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 export default CliproxyapiExecutor;

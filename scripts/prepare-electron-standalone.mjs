@@ -8,7 +8,10 @@ import {
   readFileSync,
   rmSync,
   writeFileSync,
+<<<<<<< HEAD
   readdirSync,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 } from "node:fs";
 import { basename, dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -85,7 +88,13 @@ function ensurePackage(pkgPath, sourcePath) {
 }
 
 function removeGeneratedElectronArtifacts() {
+<<<<<<< HEAD
   const generatedDirs = [join(ELECTRON_STANDALONE_DIR, "electron", "dist-electron")];
+=======
+  const generatedDirs = [
+    join(ELECTRON_STANDALONE_DIR, "electron", "dist-electron"),
+  ];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   for (const dir of generatedDirs) {
     rmSync(dir, { recursive: true, force: true });
@@ -147,6 +156,7 @@ ensurePackage(
   join(ROOT, "node_modules", "@swc", "helpers")
 );
 
+<<<<<<< HEAD
 // Remove native modules to ensure ABI compatibility via electron-builder
 function removeNativeModules(baseDir) {
   if (!existsSync(baseDir)) return;
@@ -161,6 +171,12 @@ function removeNativeModules(baseDir) {
 
 removeNativeModules(join(ELECTRON_STANDALONE_DIR, "node_modules"));
 removeNativeModules(join(ELECTRON_STANDALONE_DIR, ".next", "node_modules"));
+=======
+ensurePackage(
+  join(ELECTRON_STANDALONE_DIR, "node_modules", "better-sqlite3"),
+  join(ROOT, "node_modules", "better-sqlite3")
+);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 console.log(
   `[electron] prepared standalone bundle: ${relative(ROOT, ELECTRON_STANDALONE_DIR) || "."}`

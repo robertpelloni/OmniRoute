@@ -9,6 +9,7 @@ import dynamic from "next/dynamic";
 
 const Editor = dynamic(() => import("@monaco-editor/react"), { ssr: false });
 
+<<<<<<< HEAD
 interface CompressionPreviewResult {
   originalTokens: number;
   compressedTokens: number;
@@ -18,6 +19,8 @@ interface CompressionPreviewResult {
   durationMs: number;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export default function PlaygroundMode() {
   const t = useTranslations("translator");
   const tc = useTranslations("common");
@@ -25,12 +28,16 @@ export default function PlaygroundMode() {
   const [targetFormat, setTargetFormat] = useState("openai");
   const [inputContent, setInputContent] = useState("");
   const [outputContent, setOutputContent] = useState("");
+<<<<<<< HEAD
   const [intermediateContent, setIntermediateContent] = useState("");
   const [translationPath, setTranslationPath] = useState("");
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [detectedFormat, setDetectedFormat] = useState(null);
   const [translating, setTranslating] = useState(false);
   const [detecting, setDetecting] = useState(false);
   const [activeTemplate, setActiveTemplate] = useState(null);
+<<<<<<< HEAD
 
   // Compression preview state
   const [compressionMode, setCompressionMode] = useState<string>("standard");
@@ -39,6 +46,8 @@ export default function PlaygroundMode() {
   const [compressionError, setCompressionError] = useState<string | null>(null);
   const [showCompressionPanel, setShowCompressionPanel] = useState(false);
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const templates = useMemo(() => getExampleTemplates(t), [t]);
 
   // Auto-detect format when input changes
@@ -80,6 +89,7 @@ export default function PlaygroundMode() {
 
     setTranslating(true);
     setOutputContent("");
+<<<<<<< HEAD
     setIntermediateContent("");
     setTranslationPath("");
     try {
@@ -116,30 +126,49 @@ export default function PlaygroundMode() {
         hasIntermediate = true;
       }
 
+=======
+    try {
+      const parsed = JSON.parse(inputContent);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       const res = await fetch("/api/translator/translate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           step: "direct",
+<<<<<<< HEAD
           sourceFormat: hasIntermediate ? "openai" : sourceFormat,
           targetFormat,
           body: hasIntermediate ? intermediate : parsed,
+=======
+          sourceFormat,
+          targetFormat,
+          body: parsed,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         }),
       });
       const data = await res.json();
       if (data.success) {
         setOutputContent(JSON.stringify(data.result, null, 2));
+<<<<<<< HEAD
         setTranslationPath(hasIntermediate ? "hub-and-spoke" : "direct");
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       } else {
         setOutputContent(JSON.stringify({ error: data.error }, null, 2));
       }
     } catch (err) {
+<<<<<<< HEAD
       setOutputContent(
         JSON.stringify({ error: err instanceof Error ? err.message : String(err) }, null, 2)
       );
     } finally {
       setTranslating(false);
     }
+=======
+      setOutputContent(JSON.stringify({ error: err.message }, null, 2));
+    }
+    setTranslating(false);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 
   const loadTemplate = (template) => {
@@ -147,8 +176,11 @@ export default function PlaygroundMode() {
     setInputContent(JSON.stringify(formatData, null, 2));
     setActiveTemplate(template.id);
     setOutputContent("");
+<<<<<<< HEAD
     setIntermediateContent("");
     setTranslationPath("");
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 
   const handleCopy = async (text) => {
@@ -164,6 +196,7 @@ export default function PlaygroundMode() {
     setTargetFormat(sourceFormat);
     setInputContent(outputContent);
     setOutputContent("");
+<<<<<<< HEAD
     setIntermediateContent("");
     setTranslationPath("");
     setDetectedFormat(null);
@@ -196,6 +229,11 @@ export default function PlaygroundMode() {
     }
   };
 
+=======
+    setDetectedFormat(null);
+  };
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const srcMeta = FORMAT_META[sourceFormat] || FORMAT_META.openai;
   const tgtMeta = FORMAT_META[targetFormat] || FORMAT_META.openai;
 
@@ -282,6 +320,7 @@ export default function PlaygroundMode() {
         </div>
       </Card>
 
+<<<<<<< HEAD
       {translationPath && (
         <div className="flex items-center gap-2 text-xs text-text-muted">
           <span className="material-symbols-outlined text-[14px]">route</span>
@@ -311,6 +350,10 @@ export default function PlaygroundMode() {
           intermediateContent ? "xl:grid-cols-3" : "lg:grid-cols-2"
         }`}
       >
+=======
+      {/* Split Editor View */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         {/* Input Panel */}
         <Card>
           <div className="p-4 space-y-3">
@@ -373,6 +416,7 @@ export default function PlaygroundMode() {
           </div>
         </Card>
 
+<<<<<<< HEAD
         {/* Intermediate Panel */}
         {intermediateContent && (
           <Card>
@@ -416,6 +460,8 @@ export default function PlaygroundMode() {
           </Card>
         )}
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         {/* Output Panel */}
         <Card>
           <div className="p-4 space-y-3">
@@ -505,6 +551,7 @@ export default function PlaygroundMode() {
           )}
         </div>
       </Card>
+<<<<<<< HEAD
 
       {/* Compression Preview Panel */}
       <Card>
@@ -584,6 +631,8 @@ export default function PlaygroundMode() {
           </div>
         )}
       </Card>
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     </div>
   );
 }

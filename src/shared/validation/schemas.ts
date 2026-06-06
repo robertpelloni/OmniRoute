@@ -1,4 +1,5 @@
 import { z } from "zod";
+<<<<<<< HEAD
 import {
   ACCOUNT_FALLBACK_STRATEGY_VALUES,
   ROUTING_STRATEGY_VALUES,
@@ -7,6 +8,8 @@ import { SUPPORTED_BATCH_ENDPOINTS } from "@/shared/constants/batchEndpoints";
 import { MAX_REQUEST_BODY_LIMIT_MB, MIN_REQUEST_BODY_LIMIT_MB } from "@/shared/constants/bodySize";
 import { COMBO_CONFIG_MODES } from "@/shared/constants/comboConfigMode";
 import { isLocalProvider } from "@/shared/constants/providers";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { HIDEABLE_SIDEBAR_ITEM_IDS } from "@/shared/constants/sidebarVisibility";
 import { isForbiddenUpstreamHeaderName } from "@/shared/constants/upstreamHeaders";
 
@@ -19,6 +22,7 @@ function isHttpUrl(value: string): boolean {
   }
 }
 
+<<<<<<< HEAD
 const CODEX_REASONING_EFFORT_VALUES = new Set(["none", "low", "medium", "high", "xhigh"]);
 const REQUEST_DEFAULT_SERVICE_TIER_VALUES = new Set(["priority", "fast"]);
 
@@ -234,6 +238,8 @@ function validateProviderSpecificData(
   }
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // Re-export validation helpers from dedicated module to avoid webpack barrel-file
 // optimization bug that truncates exports from large files.
 export { validateBody, isValidationFailure } from "./helpers";
@@ -241,6 +247,7 @@ export type { ValidationResult } from "./helpers";
 
 // ──── Provider Schemas ────
 
+<<<<<<< HEAD
 export const createProviderSchema = z
   .object({
     provider: z.string().min(1).max(100),
@@ -286,6 +293,43 @@ export const createProviderSchema = z
       });
     }
   });
+=======
+export const createProviderSchema = z.object({
+  provider: z.string().min(1).max(100),
+  apiKey: z.string().min(1).max(10000),
+  name: z.string().min(1).max(200),
+  priority: z.number().int().min(1).max(100).optional(),
+  globalPriority: z.number().int().min(1).max(100).nullable().optional(),
+  defaultModel: z.string().max(200).nullable().optional(),
+  testStatus: z.string().max(50).optional(),
+  providerSpecificData: z
+    .record(z.string(), z.unknown())
+    .optional()
+    .superRefine((data, ctx) => {
+      if (!data) return;
+      const baseUrl = data.baseUrl;
+      if (baseUrl !== undefined && (typeof baseUrl !== "string" || !isHttpUrl(baseUrl))) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "providerSpecificData.baseUrl must be a valid http(s) URL",
+          path: ["baseUrl"],
+        });
+      }
+      const customUserAgent = data.customUserAgent;
+      if (
+        customUserAgent !== undefined &&
+        customUserAgent !== null &&
+        (typeof customUserAgent !== "string" || customUserAgent.length > 500)
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "providerSpecificData.customUserAgent must be a string up to 500 chars",
+          path: ["customUserAgent"],
+        });
+      }
+    }),
+});
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 // ──── API Key Schemas ────
 
@@ -294,6 +338,7 @@ export const createKeySchema = z.object({
   noLog: z.boolean().optional(),
 });
 
+<<<<<<< HEAD
 export const createSyncTokenSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(200),
 });
@@ -330,6 +375,36 @@ const comboModelEntry = z.union([
 ]);
 
 export const comboStrategySchema = z.enum(ROUTING_STRATEGY_VALUES);
+=======
+// ──── Combo Schemas ────
+
+// A model entry can be a plain string (legacy) or an object with weight
+const comboModelEntry = z.union([
+  z.string(),
+  z.object({
+    model: z.string().min(1),
+    weight: z.number().min(0).max(100).default(0),
+  }),
+]);
+
+const comboStrategySchema = z.enum([
+  "priority",
+  "weighted",
+  "round-robin",
+  "context-relay",
+  "random",
+  "least-used",
+  "cost-optimized",
+  "strict-random",
+  "auto",
+  "fill-first",
+  // #729 schema fixes for combo edit/save
+  "p2c",
+  "auto",
+  "lkgp",
+  "context-optimized",
+]);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const scoringWeightsSchema = z
   .object({
@@ -343,6 +418,7 @@ const scoringWeightsSchema = z
   })
   .optional();
 
+<<<<<<< HEAD
 const compositeTierEntrySchema = z
   .object({
     stepId: z.string().trim().min(1).max(200),
@@ -370,12 +446,18 @@ const compressionModeSchema = z.enum([
 ]);
 const comboCompressionOverrideSchema = z.union([z.literal(""), compressionModeSchema]);
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 const comboRuntimeConfigSchema = z
   .object({
     strategy: comboStrategySchema.optional(),
     maxRetries: z.coerce.number().int().min(0).max(10).optional(),
     retryDelayMs: z.coerce.number().int().min(0).max(60000).optional(),
+<<<<<<< HEAD
     timeoutMs: z.coerce.number().int().min(1000).optional(),
+=======
+    timeoutMs: z.coerce.number().int().min(1000).max(600000).optional(),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     concurrencyPerModel: z.coerce.number().int().min(1).max(20).optional(),
     queueTimeoutMs: z.coerce.number().int().min(1000).max(120000).optional(),
     healthCheckEnabled: z.boolean().optional(),
@@ -386,7 +468,10 @@ const comboRuntimeConfigSchema = z
     maxMessagesForSummary: z.coerce.number().int().min(5).max(100).optional(),
     maxComboDepth: z.coerce.number().int().min(1).max(10).optional(),
     trackMetrics: z.boolean().optional(),
+<<<<<<< HEAD
     compressionMode: compressionModeSchema.optional(),
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     // Auto-Combo / LKGP Extensions
     candidatePool: z.array(z.string().min(1)).optional(),
     weights: scoringWeightsSchema.optional(),
@@ -394,7 +479,10 @@ const comboRuntimeConfigSchema = z
     budgetCap: z.number().positive().optional(),
     explorationRate: z.number().min(0).max(1).optional(),
     routerStrategy: z.string().optional(),
+<<<<<<< HEAD
     compositeTiers: compositeTiersSchema.optional(),
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   })
   .strict();
 
@@ -414,11 +502,29 @@ export const createComboSchema = z.object({
   context_length: z.number().int().min(1000).max(2000000).optional(),
 });
 
+<<<<<<< HEAD
 // ──── Settings Schemas ────
 // FASE-01: Removed .passthrough() — only explicitly listed fields are accepted
 
 const settingsFallbackStrategySchema = z.enum(ACCOUNT_FALLBACK_STRATEGY_VALUES);
 
+=======
+// ──── Auto-Combo Schemas ────
+
+export const createAutoComboSchema = z.object({
+  id: z.string().trim().min(1, "id is required").max(100),
+  name: z.string().trim().min(1, "name is required").max(200),
+  candidatePool: z.array(z.string().min(1)).optional().default([]),
+  weights: scoringWeightsSchema,
+  modePack: z.string().max(100).optional(),
+  budgetCap: z.number().positive().optional(),
+  explorationRate: z.number().min(0).max(1).optional().default(0.05),
+});
+
+// ──── Settings Schemas ────
+// FASE-01: Removed .passthrough() — only explicitly listed fields are accepted
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export const updateSettingsSchema = z.object({
   newPassword: z.string().min(1).max(200).optional(),
   currentPassword: z.string().max(200).optional(),
@@ -431,6 +537,7 @@ export const updateSettingsSchema = z.object({
   cloudUrl: z.string().max(500).optional(),
   baseUrl: z.string().max(500).optional(),
   setupComplete: z.boolean().optional(),
+<<<<<<< HEAD
   blockedProviders: z.array(z.string().max(100)).optional(),
   hideHealthCheckLogs: z.boolean().optional(),
   hideEndpointCloudflaredTunnel: z.boolean().optional(),
@@ -451,6 +558,26 @@ export const updateSettingsSchema = z.object({
     .min(MIN_REQUEST_BODY_LIMIT_MB)
     .max(MAX_REQUEST_BODY_LIMIT_MB)
     .optional(),
+=======
+  requireAuthForModels: z.boolean().optional(),
+  blockedProviders: z.array(z.string().max(100)).optional(),
+  hideHealthCheckLogs: z.boolean().optional(),
+  hiddenSidebarItems: z.array(z.enum(HIDEABLE_SIDEBAR_ITEM_IDS)).optional(),
+  // Routing settings (#134)
+  fallbackStrategy: z
+    .enum([
+      "fill-first",
+      "round-robin",
+      "p2c",
+      "random",
+      "least-used",
+      "cost-optimized",
+      "strict-random",
+    ])
+    .optional(),
+  wildcardAliases: z.array(z.object({ pattern: z.string(), target: z.string() })).optional(),
+  stickyRoundRobinLimit: z.number().int().min(0).max(1000).optional(),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Auto intent classifier settings (multilingual routing)
   intentDetectionEnabled: z.boolean().optional(),
   intentSimpleMaxWords: z.number().int().min(1).max(500).optional(),
@@ -460,7 +587,10 @@ export const updateSettingsSchema = z.object({
   // Protocol toggles (default: disabled)
   mcpEnabled: z.boolean().optional(),
   a2aEnabled: z.boolean().optional(),
+<<<<<<< HEAD
   wsAuth: z.boolean().optional(),
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 });
 
 // ──── Auth Schemas ────
@@ -469,11 +599,14 @@ export const loginSchema = z.object({
   password: z.string().min(1, "Password is required").max(200),
 });
 
+<<<<<<< HEAD
 export const dbBackupCleanupSchema = z.object({
   keepLatest: z.number().int().min(1).max(200).optional(),
   retentionDays: z.number().int().min(0).max(3650).optional(),
 });
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // ──── API Route Payload Schemas (T06) ────
 
 const modelIdSchema = z.string().trim().min(1, "Model is required").max(200);
@@ -523,7 +656,11 @@ export const v1EmbeddingsSchema = z
 export const v1ImageGenerationSchema = z
   .object({
     model: modelIdSchema,
+<<<<<<< HEAD
     prompt: nonEmptyStringSchema.optional(),
+=======
+    prompt: nonEmptyStringSchema,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   })
   .catchall(z.unknown());
 
@@ -578,6 +715,7 @@ export const v1CountTokensSchema = z
   })
   .catchall(z.unknown());
 
+<<<<<<< HEAD
 export const setBudgetSchema = z
   .object({
     apiKeyId: z.string().trim().min(1, "apiKeyId is required"),
@@ -610,6 +748,17 @@ export const setBudgetSchema = z
       });
     }
   });
+=======
+export const setBudgetSchema = z.object({
+  apiKeyId: z.string().trim().min(1, "apiKeyId is required"),
+  dailyLimitUsd: z.coerce.number().positive("dailyLimitUsd must be greater than zero"),
+  monthlyLimitUsd: z.coerce
+    .number()
+    .positive("monthlyLimitUsd must be greater than zero")
+    .optional(),
+  warningThreshold: z.coerce.number().min(0).max(1).optional(),
+});
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 export const policyActionSchema = z
   .object({
@@ -648,6 +797,14 @@ export const updateModelAliasSchema = z.object({
   alias: z.string().trim().min(1, "Alias is required").max(200),
 });
 
+<<<<<<< HEAD
+=======
+export const clearModelAvailabilitySchema = z.object({
+  provider: z.string().trim().min(1, "provider is required").max(120),
+  model: modelIdSchema,
+});
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /** Align with `sanitizeUpstreamHeadersMap` — allow non-ASCII names; reject Host / hop-by-hop / whitespace / ":". */
 const upstreamHeaderNameSchema = z
   .string()
@@ -684,6 +841,7 @@ export const providerModelMutationSchema = z.object({
   modelId: z.string().trim().min(1, "modelId is required").max(240),
   modelName: z.string().trim().max(240).optional(),
   source: z.string().trim().max(80).optional(),
+<<<<<<< HEAD
   apiFormat: z
     .enum([
       "chat-completions",
@@ -709,6 +867,10 @@ export const providerModelMutationSchema = z.object({
       ])
     )
     .default(["chat"]),
+=======
+  apiFormat: z.enum(["chat-completions", "responses"]).default("chat-completions"),
+  supportedEndpoints: z.array(z.enum(["chat", "embeddings", "images", "audio"])).default(["chat"]),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   normalizeToolCallId: z.boolean().optional(),
   preserveOpenAIDeveloperRole: z.boolean().nullable().optional(),
   upstreamHeaders: upstreamHeadersRecordSchema.nullable().optional(),
@@ -738,7 +900,11 @@ export const toggleRateLimitSchema = z.object({
   enabled: z.boolean(),
 });
 
+<<<<<<< HEAD
 const legacyResilienceProfileSchema = z.object({
+=======
+const resilienceProfileSchema = z.object({
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   transientCooldown: z.number().min(0),
   rateLimitCooldown: z.number().min(0),
   maxBackoffLevel: z.number().int().min(0),
@@ -746,14 +912,22 @@ const legacyResilienceProfileSchema = z.object({
   circuitBreakerReset: z.number().min(0),
 });
 
+<<<<<<< HEAD
 const legacyResilienceDefaultsSchema = z
   .object({
     requestsPerMinute: z.number().int().min(1).optional(),
     minTimeBetweenRequests: z.number().int().min(0).optional(),
+=======
+const resilienceDefaultsSchema = z
+  .object({
+    requestsPerMinute: z.number().int().min(1).optional(),
+    minTimeBetweenRequests: z.number().int().min(1).optional(),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     concurrentRequests: z.number().int().min(1).optional(),
   })
   .strict();
 
+<<<<<<< HEAD
 const requestQueueSettingsSchema = z
   .object({
     autoEnableApiKeyProviders: z.boolean().optional(),
@@ -827,6 +1001,24 @@ export const updateResilienceSchema = z
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "Must provide resilience settings to update",
+=======
+export const updateResilienceSchema = z
+  .object({
+    profiles: z
+      .object({
+        oauth: resilienceProfileSchema.optional(),
+        apikey: resilienceProfileSchema.optional(),
+      })
+      .strict()
+      .optional(),
+    defaults: resilienceDefaultsSchema.optional(),
+  })
+  .superRefine((value, ctx) => {
+    if (!value.profiles && !value.defaults) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Must provide profiles or defaults",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         path: [],
       });
     }
@@ -903,6 +1095,7 @@ export const updateComboDefaultsSchema = z
         path: [],
       });
     }
+<<<<<<< HEAD
 
     if (value.comboDefaults?.compositeTiers) {
       ctx.addIssue({
@@ -921,6 +1114,8 @@ export const updateComboDefaultsSchema = z
         });
       }
     }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   });
 
 export const updateRequireLoginSchema = z
@@ -979,6 +1174,7 @@ export const updateThinkingBudgetSchema = z
     }
   });
 
+<<<<<<< HEAD
 const payloadRuleModelSpecSchema = z
   .object({
     name: z.string().trim().min(1),
@@ -1027,6 +1223,14 @@ export const updatePayloadRulesSchema = z
     }
   });
 
+=======
+export const updateCodexServiceTierSchema = z
+  .object({
+    enabled: z.boolean(),
+  })
+  .strict();
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 const ipFilterModeSchema = z.enum(["blacklist", "whitelist"]);
 const tempBanSchema = z.object({
   ip: z.string().trim().min(1),
@@ -1165,6 +1369,7 @@ export const updateProxyRegistrySchema = createProxyRegistrySchema.partial().ext
   id: z.string().trim().min(1, "id is required"),
 });
 
+<<<<<<< HEAD
 export const bulkImportProxiesSchema = z
   .object({
     items: z
@@ -1174,6 +1379,8 @@ export const bulkImportProxiesSchema = z
   })
   .strict();
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export const proxyAssignmentSchema = z
   .object({
     scope: z.enum(["global", "provider", "account", "combo", "key"]),
@@ -1217,10 +1424,28 @@ const nonEmptyJsonRecordSchema = jsonRecordSchema.refine(
   "Body must be a non-empty object"
 );
 
+<<<<<<< HEAD
+=======
+const translatorLogFileSchema = z.enum([
+  "1_req_client.json",
+  "3_req_openai.json",
+  "4_req_target.json",
+  "5_res_provider.txt",
+]);
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export const translatorDetectSchema = z.object({
   body: nonEmptyJsonRecordSchema,
 });
 
+<<<<<<< HEAD
+=======
+export const translatorSaveSchema = z.object({
+  file: translatorLogFileSchema,
+  content: z.string().min(1, "Content is required").max(1_000_000, "Content is too large"),
+});
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export const translatorSendSchema = z.object({
   provider: z.string().trim().min(1, "Provider is required"),
   body: nonEmptyJsonRecordSchema,
@@ -1259,7 +1484,11 @@ export const oauthPollSchema = z.object({
 
 export const cursorImportSchema = z.object({
   accessToken: z.string().trim().min(1, "Access token is required"),
+<<<<<<< HEAD
   machineId: z.string().trim().optional(),
+=======
+  machineId: z.string().trim().min(1, "Machine ID is required"),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 });
 
 export const kiroImportSchema = z.object({
@@ -1326,7 +1555,10 @@ export const updateComboSchema = z
     tool_filter_regex: z.string().max(1000).optional(),
     context_cache_protection: z.boolean().optional(),
     context_length: z.number().int().min(1000).max(2000000).optional(),
+<<<<<<< HEAD
     compressionOverride: comboCompressionOverrideSchema.optional(),
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   })
   .superRefine((value, ctx) => {
     if (
@@ -1339,8 +1571,12 @@ export const updateComboSchema = z
       value.system_message === undefined &&
       value.tool_filter_regex === undefined &&
       value.context_cache_protection === undefined &&
+<<<<<<< HEAD
       value.context_length === undefined &&
       value.compressionOverride === undefined
+=======
+      value.context_length === undefined
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -1372,6 +1608,7 @@ export const dbBackupRestoreSchema = z.object({
   backupId: z.string().trim().min(1, "backupId is required"),
 });
 
+<<<<<<< HEAD
 const evalTargetSchema = z
   .object({
     type: z.enum(["suite-default", "model", "combo"]),
@@ -1440,6 +1677,11 @@ export const evalSuiteSaveSchema = z.object({
   name: z.string().trim().min(1, "name is required").max(200),
   description: z.string().trim().max(2000).optional(),
   cases: z.array(evalCaseBuilderSchema).min(1, "At least one case is required").max(200),
+=======
+export const evalRunSuiteSchema = z.object({
+  suiteId: z.string().trim().min(1, "suiteId is required"),
+  outputs: z.record(z.string(), z.string()),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 });
 
 const accessScheduleSchema = z.object({
@@ -1484,6 +1726,7 @@ export const createProviderNodeSchema = z
   .object({
     name: z.string().trim().min(1, "Name is required"),
     prefix: z.string().trim().min(1, "Prefix is required"),
+<<<<<<< HEAD
     apiType: z
       .enum([
         "chat",
@@ -1494,6 +1737,9 @@ export const createProviderNodeSchema = z
         "images-generations",
       ])
       .optional(),
+=======
+    apiType: z.enum(["chat", "responses"]).optional(),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     baseUrl: z.string().trim().min(1).optional(),
     type: z.enum(["openai-compatible", "anthropic-compatible"]).optional(),
     compatMode: z.enum(["cc"]).optional(),
@@ -1514,6 +1760,7 @@ export const createProviderNodeSchema = z
 export const updateProviderNodeSchema = z.object({
   name: z.string().trim().min(1, "Name is required"),
   prefix: z.string().trim().min(1, "Prefix is required"),
+<<<<<<< HEAD
   apiType: z
     .enum([
       "chat",
@@ -1524,6 +1771,9 @@ export const updateProviderNodeSchema = z.object({
       "images-generations",
     ])
     .optional(),
+=======
+  apiType: z.enum(["chat", "responses"]).optional(),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   baseUrl: z.string().trim().min(1, "Base URL is required"),
   chatPath: z.string().trim().startsWith("/").max(500).optional().or(z.literal("")),
   modelsPath: z.string().trim().startsWith("/").max(500).optional().or(z.literal("")),
@@ -1531,7 +1781,11 @@ export const updateProviderNodeSchema = z.object({
 
 export const providerNodeValidateSchema = z.object({
   baseUrl: z.string().trim().min(1, "Base URL and API key required"),
+<<<<<<< HEAD
   apiKey: z.string().trim().optional(),
+=======
+  apiKey: z.string().trim().min(1, "Base URL and API key required"),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   type: z.enum(["openai-compatible", "anthropic-compatible"]).optional(),
   compatMode: z.enum(["cc"]).optional(),
   chatPath: z.string().trim().startsWith("/").max(500).optional().or(z.literal("")),
@@ -1556,13 +1810,40 @@ export const updateProviderConnectionSchema = z
     lastTested: z.union([z.string(), z.null()]).optional(),
     healthCheckInterval: z.coerce.number().int().min(0).optional(),
     group: z.union([z.string().max(100), z.null()]).optional(),
+<<<<<<< HEAD
     maxConcurrent: z.union([z.null(), z.coerce.number().int().min(0)]).optional(),
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     // Partial patch of per-connection provider-specific settings (e.g. quota toggles)
     providerSpecificData: z
       .record(z.string(), z.unknown())
       .optional()
       .superRefine((data, ctx) => {
+<<<<<<< HEAD
         validateProviderSpecificData(data, ctx);
+=======
+        if (!data) return;
+        const baseUrl = data.baseUrl;
+        if (baseUrl !== undefined && (typeof baseUrl !== "string" || !isHttpUrl(baseUrl))) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "providerSpecificData.baseUrl must be a valid http(s) URL",
+            path: ["baseUrl"],
+          });
+        }
+        const customUserAgent = data.customUserAgent;
+        if (
+          customUserAgent !== undefined &&
+          customUserAgent !== null &&
+          (typeof customUserAgent !== "string" || customUserAgent.length > 500)
+        ) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "providerSpecificData.customUserAgent must be a string up to 500 chars",
+            path: ["customUserAgent"],
+          });
+        }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }),
   })
   .superRefine((value, ctx) => {
@@ -1577,6 +1858,7 @@ export const updateProviderConnectionSchema = z
 
 export const providersBatchTestSchema = z
   .object({
+<<<<<<< HEAD
     mode: z.enum([
       "provider",
       "oauth",
@@ -1590,6 +1872,9 @@ export const providersBatchTestSchema = z
       "local",
       "upstream-proxy",
     ]),
+=======
+    mode: z.enum(["provider", "oauth", "free", "apikey", "compatible", "all"]),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     // Frontend may send null when mode != 'provider' — accept and treat as missing
     providerId: z.string().trim().min(1).nullable().optional(),
   })
@@ -1605,6 +1890,7 @@ export const providersBatchTestSchema = z
     }
   });
 
+<<<<<<< HEAD
 export const validateProviderApiKeySchema = z
   .object({
     provider: z.string().trim().min(1, "Provider and API key required"),
@@ -1623,6 +1909,15 @@ export const validateProviderApiKeySchema = z
       });
     }
   });
+=======
+export const validateProviderApiKeySchema = z.object({
+  provider: z.string().trim().min(1, "Provider and API key required"),
+  apiKey: z.string().trim().min(1, "Provider and API key required"),
+  validationModelId: z.string().trim().optional(),
+  customUserAgent: z.string().trim().max(500).optional(),
+  baseUrl: z.string().trim().url().optional(),
+});
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const geminiPartSchema = z
   .object({
@@ -1717,11 +2012,16 @@ export const cliSettingsEnvSchema = z.object({
 
 export const cliModelConfigSchema = z.object({
   baseUrl: z.string().trim().min(1, "baseUrl and model are required"),
+<<<<<<< HEAD
   apiKey: z.string().nullable().optional(),
   model: z.string().trim().min(1, "baseUrl and model are required"),
   reasoningEffort: z.enum(["none", "low", "medium", "high", "xhigh"]).optional(),
   wireApi: z.enum(["chat", "responses"]).optional(),
   modelMappings: z.record(z.string().trim().min(1), z.string().trim().min(1)).optional(),
+=======
+  apiKey: z.string().optional(),
+  model: z.string().trim().min(1, "baseUrl and model are required"),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 });
 
 export const codexProfileNameSchema = z.object({
@@ -1732,6 +2032,7 @@ export const codexProfileIdSchema = z.object({
   profileId: z.string().trim().min(1, "profileId is required"),
 });
 
+<<<<<<< HEAD
 export const guideSettingsSaveSchema = z
   .object({
     baseUrl: z.string().trim().min(1).optional(),
@@ -1744,6 +2045,13 @@ export const guideSettingsSaveSchema = z
     message: "Model is required",
     path: ["model"],
   });
+=======
+export const guideSettingsSaveSchema = z.object({
+  baseUrl: z.string().trim().min(1).optional(),
+  apiKey: z.string().optional(),
+  model: z.string().trim().min(1, "Model is required"),
+});
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 // ── Search Schemas ─────────────────────────────────────────────────────
 // Unified search request/response schemas. Final contract — all fields optional
@@ -1759,6 +2067,7 @@ export const v1SearchSchema = z
       .min(1, "Query is required")
       .max(500, "Query must be 500 characters or fewer"),
     provider: z
+<<<<<<< HEAD
       .enum([
         "serper-search",
         "brave-search",
@@ -1771,6 +2080,9 @@ export const v1SearchSchema = z
         "youcom-search",
         "searxng-search",
       ])
+=======
+      .enum(["serper-search", "brave-search", "perplexity-search", "exa-search", "tavily-search"])
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       .optional(),
     max_results: z.coerce.number().int().min(1).max(100).default(5),
     search_type: z.enum(["web", "news"]).default("web"),
@@ -1905,6 +2217,7 @@ export const versionManagerToolSchema = z.object({
 export const versionManagerInstallSchema = versionManagerToolSchema.extend({
   version: z.string().trim().optional(),
 });
+<<<<<<< HEAD
 
 export const v1BatchCreateSchema = z.object({
   input_file_id: z.string().min(1),
@@ -1921,3 +2234,5 @@ export const v1BatchCreateSchema = z.object({
     })
     .optional(),
 });
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

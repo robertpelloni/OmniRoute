@@ -85,7 +85,11 @@ function evictIfNeeded(): void {
  * or execute the fetch function and cache the result.
  *
  * @param key - Cache key from computeCacheKey()
+<<<<<<< HEAD
  * @param ttlMs - TTL in milliseconds (0 to bypass cache AND coalescing)
+=======
+ * @param ttlMs - TTL in milliseconds (0 to bypass cache)
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  * @param fetchFn - Function to execute on cache miss
  * @returns The cached or freshly fetched data
  */
@@ -94,6 +98,7 @@ export async function getOrCoalesce<T>(
   ttlMs: number,
   fetchFn: () => Promise<T>
 ): Promise<{ data: T; cached: boolean }> {
+<<<<<<< HEAD
   // When ttlMs === 0 the caller explicitly wants to bypass the cache.
   // Skip both the cache lookup AND the inflight-coalescing step so every
   // concurrent call gets its own independent upstream fetch.  Without this
@@ -105,6 +110,8 @@ export async function getOrCoalesce<T>(
     return { data, cached: false };
   }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // 1. Check cache
   const cached = cache.get(key) as CacheEntry<T> | undefined;
   if (cached && cached.expiresAt > Date.now()) {
@@ -128,8 +135,16 @@ export async function getOrCoalesce<T>(
   try {
     const data = await promise;
 
+<<<<<<< HEAD
     evictIfNeeded();
     cache.set(key, { data, expiresAt: Date.now() + ttlMs });
+=======
+    // Store in cache
+    if (ttlMs > 0) {
+      evictIfNeeded();
+      cache.set(key, { data, expiresAt: Date.now() + ttlMs });
+    }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     return { data, cached: false };
   } finally {

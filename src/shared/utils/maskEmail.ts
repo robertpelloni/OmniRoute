@@ -1,6 +1,7 @@
 /**
  * maskEmail — Privacy display utility for email addresses.
  *
+<<<<<<< HEAD
  * Masks both username and domain portions of an email address.
  * - Username: keep the first `visibleChars`, mask the rest
  * - Domain: mask everything except the final `visibleChars`
@@ -11,16 +12,35 @@
  *   maskEmail("a@b.com")                     // "a@b.com"  (too short to mask)
  */
 export function maskEmail(email: string | null | undefined, visibleChars = 3): string {
+=======
+ * Masks the username and domain name portions of an email address
+ * to prevent identity exposure in dashboards and logs.
+ *
+ * @example
+ *   maskEmail("diego.souza@gmail.com")  // "di*********@g****.com"
+ *   maskEmail("a@b.com")                // "a@b.com"  (too short to mask)
+ */
+export function maskEmail(email: string | null | undefined, visibleChars = 2): string {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (!email) return "";
   if (!email.includes("@")) return email;
 
   const atIndex = email.lastIndexOf("@");
   const username = email.slice(0, atIndex);
+<<<<<<< HEAD
   const domain = email.slice(atIndex + 1);
+=======
+  const rest = email.slice(atIndex + 1); // "gmail.com", "co.uk", etc.
+
+  const dotIndex = rest.indexOf(".");
+  const domainName = dotIndex !== -1 ? rest.slice(0, dotIndex) : rest;
+  const tld = dotIndex !== -1 ? rest.slice(dotIndex) : ""; // ".com", ".co.uk"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // If username is too short to mask meaningfully, return as-is
   if (username.length <= visibleChars) return email;
 
+<<<<<<< HEAD
   const maskedUser = username.slice(0, visibleChars) + "*".repeat(username.length - visibleChars);
   if (domain.length <= visibleChars) {
     return `${maskedUser}@${domain}`;
@@ -74,4 +94,16 @@ export function pickDisplayValue(
     return fallback;
   }
   return pickMaskedDisplayValue(values, fallback);
+=======
+  const maskedUser =
+    username.slice(0, visibleChars) + "*".repeat(username.length - visibleChars);
+
+  // Mask domain name: keep first char, mask the rest
+  const maskedDomain =
+    domainName.length > 1
+      ? domainName.slice(0, 1) + "*".repeat(domainName.length - 1)
+      : domainName;
+
+  return `${maskedUser}@${maskedDomain}${tld}`;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }

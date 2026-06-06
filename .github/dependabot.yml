@@ -29,6 +29,7 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+<<<<<<< HEAD
 
   - package-ecosystem: "npm"
     directory: "/electron"
@@ -45,3 +46,5 @@ updates:
       day: "monday"
     commit-message:
       prefix: "deps"
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

@@ -12,10 +12,25 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { getTaskManager } from "@/lib/a2a/taskManager";
+<<<<<<< HEAD
 import { logRoutingDecision } from "@/lib/a2a/routingLogger";
 import { createA2AStream, SSE_HEADERS } from "@/lib/a2a/streaming";
 import { A2A_SKILL_HANDLERS, executeA2ATaskWithState } from "@/lib/a2a/taskExecution";
 import { getSettings } from "@/lib/db/settings";
+=======
+import { executeSmartRouting } from "@/lib/a2a/skills/smartRouting";
+import { executeQuotaManagement } from "@/lib/a2a/skills/quotaManagement";
+import { logRoutingDecision } from "@/lib/a2a/routingLogger";
+import { createA2AStream, SSE_HEADERS } from "@/lib/a2a/streaming";
+import { executeA2ATaskWithState } from "@/lib/a2a/taskExecution";
+
+// ============ Skill Registry ============
+
+const SKILL_HANDLERS: Record<string, (task: any) => Promise<any>> = {
+  "smart-routing": executeSmartRouting,
+  "quota-management": executeQuotaManagement,
+};
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 type A2AMessage = { role: string; content: string };
 
@@ -87,6 +102,7 @@ function jsonRpcResult(id: string | number | null, result: unknown) {
   return NextResponse.json({ jsonrpc: "2.0", id, result });
 }
 
+<<<<<<< HEAD
 async function rejectIfA2ADisabled(id: string | number | null) {
   const settings = await getSettings();
   if (settings.a2aEnabled === true) return null;
@@ -107,6 +123,11 @@ async function rejectIfA2ADisabled(id: string | number | null) {
 
 export async function POST(req: NextRequest) {
   console.log("==> HIT A2A ROUTER:", req.url);
+=======
+// ============ Route Handler ============
+
+export async function POST(req: NextRequest) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Auth check
   if (!authenticate(req)) {
     return jsonRpcError(null, -32600, "Unauthorized: missing or invalid API key");
@@ -125,9 +146,12 @@ export async function POST(req: NextRequest) {
     return jsonRpcError(id || null, -32600, "Invalid request: missing jsonrpc or method");
   }
 
+<<<<<<< HEAD
   const disabledResponse = await rejectIfA2ADisabled(id ?? null);
   if (disabledResponse) return disabledResponse;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const tm = getTaskManager();
 
   switch (method) {
@@ -143,7 +167,11 @@ export async function POST(req: NextRequest) {
         );
       }
 
+<<<<<<< HEAD
       const handler = A2A_SKILL_HANDLERS[skill];
+=======
+      const handler = SKILL_HANDLERS[skill];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       if (!handler) {
         return jsonRpcError(id, -32601, `Unknown skill: ${skill}`);
       }
@@ -156,22 +184,33 @@ export async function POST(req: NextRequest) {
 
         // Log routing decision
         if (skill === "smart-routing" && result.metadata) {
+<<<<<<< HEAD
           const smartMetadata = result.metadata as {
             routing_explanation?: string;
             cost_envelope?: { actual?: number };
           };
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           logRoutingDecision({
             taskType: (params?.metadata?.role as string) || "general",
             comboId: (params?.metadata?.combo as string) || "default",
             providerSelected:
+<<<<<<< HEAD
               smartMetadata.routing_explanation?.match(/"([^"]+)"/)?.[1] || "unknown",
+=======
+              result.metadata?.routing_explanation?.match(/"([^"]+)"/)?.[1] || "unknown",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             modelUsed: (params?.metadata?.model as string) || "auto",
             score: 1,
             factors: [],
             fallbacksTriggered: [],
             success: true,
             latencyMs: 0,
+<<<<<<< HEAD
             cost: smartMetadata.cost_envelope?.actual || 0,
+=======
+            cost: result.metadata?.cost_envelope?.actual || 0,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           });
         }
 
@@ -181,7 +220,10 @@ export async function POST(req: NextRequest) {
           metadata: result.metadata,
         });
       } catch (err) {
+<<<<<<< HEAD
         console.error("A2A ERROR TRACE:", err);
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         const msg = err instanceof Error ? err.message : String(err);
         tm.updateTask(task.id, "failed", [{ type: "error", content: msg }], msg);
         return jsonRpcError(id, -32603, `Skill execution failed: ${msg}`);
@@ -200,7 +242,11 @@ export async function POST(req: NextRequest) {
         );
       }
 
+<<<<<<< HEAD
       const handler = A2A_SKILL_HANDLERS[skill];
+=======
+      const handler = SKILL_HANDLERS[skill];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       if (!handler) {
         return jsonRpcError(id, -32601, `Unknown skill: ${skill}`);
       }

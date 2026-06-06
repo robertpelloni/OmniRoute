@@ -56,6 +56,7 @@ export function filterToOpenAIFormat(body) {
         if (VALID_OPENAI_CONTENT_TYPES.includes(block.type)) {
           // Remove signature and cache_control fields
           const { signature, cache_control, ...cleanBlock } = block;
+<<<<<<< HEAD
           if (
             cleanBlock.type === "text" &&
             typeof cleanBlock.text === "string" &&
@@ -80,11 +81,14 @@ export function filterToOpenAIFormat(body) {
               continue;
             }
           }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           filteredContent.push(cleanBlock);
         } else if (block.type === "tool_use") {
           // Convert tool_use to tool_calls format (handled separately)
           continue;
         } else if (block.type === "tool_result") {
+<<<<<<< HEAD
           const resultContent = block.content ?? block.text ?? block.output ?? "";
           const resultText =
             typeof resultContent === "string"
@@ -101,6 +105,11 @@ export function filterToOpenAIFormat(body) {
               text: `[Tool Result: ${block.tool_use_id ?? block.id ?? "unknown"}]\n${resultText}`,
             });
           }
+=======
+          // Keep tool_result but clean it
+          const { signature, cache_control, ...cleanBlock } = block;
+          filteredContent.push(cleanBlock);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         }
       }
 

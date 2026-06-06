@@ -184,6 +184,7 @@ export default function SecurityTab() {
           <h3 className="text-lg font-semibold">{t("apiEndpointProtection")}</h3>
         </div>
         <div className="flex flex-col gap-4">
+<<<<<<< HEAD
           <div className="rounded-lg border border-border/50 bg-black/[0.02] dark:bg-white/[0.02] p-3 text-sm text-text-muted">
             <p className="font-medium text-text">{t("authModelHeading")}</p>
             <ul className="list-disc pl-5 mt-1 space-y-1">
@@ -203,10 +204,22 @@ export default function SecurityTab() {
               onChange={() =>
                 updateSetting("bruteForceProtection", !(settings.bruteForceProtection !== false))
               }
+=======
+          {/* Require auth for /models */}
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-medium">{t("requireAuthModels")}</p>
+              <p className="text-sm text-text-muted">{t("requireAuthModelsDesc")}</p>
+            </div>
+            <Toggle
+              checked={settings.requireAuthForModels === true}
+              onChange={() => updateSetting("requireAuthForModels", !settings.requireAuthForModels)}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               disabled={loading}
             />
           </div>
 
+<<<<<<< HEAD
           <div>
             <div className="mb-2">
               <p className="font-medium">{t("corsAllowedOrigins")}</p>
@@ -223,6 +236,10 @@ export default function SecurityTab() {
 
           {/* Blocked Providers */}
           <div>
+=======
+          {/* Blocked Providers */}
+          <div className="pt-4 border-t border-border/50">
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             <div className="mb-3">
               <p className="font-medium">{t("blockedProviders")}</p>
               <p className="text-sm text-text-muted">{t("blockedProvidersDesc")}</p>

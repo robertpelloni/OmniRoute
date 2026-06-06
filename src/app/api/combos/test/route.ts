@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { buildComboTestRequestBody, extractComboTestResponseText } from "@/lib/combos/testHealth";
+<<<<<<< HEAD
 import { testComboSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
@@ -190,6 +191,11 @@ async function testComboModel(modelStr, internalUrl) {
     };
   }
 }
+=======
+import { getComboByName } from "@/lib/localDb";
+import { testComboSchema } from "@/shared/validation/schemas";
+import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 async function testComboModel(modelStr, internalUrl) {
   const startTime = Date.now();
@@ -278,9 +284,12 @@ async function testComboModel(modelStr, internalUrl) {
  * and only reports success when the model returns usable text content.
  */
 export async function POST(request) {
+<<<<<<< HEAD
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody;
   try {
     rawBody = await request.json();
@@ -308,6 +317,7 @@ export async function POST(request) {
       return NextResponse.json({ error: "Combo not found" }, { status: 404 });
     }
 
+<<<<<<< HEAD
     const allCombos = await getCombos();
     const targets = resolveNestedComboTargets(combo, allCombos);
 
@@ -315,11 +325,25 @@ export async function POST(request) {
       return NextResponse.json({ error: "Combo has no models" }, { status: 400 });
     }
 
+=======
+    const models = (combo.models || []).map((m) => (typeof m === "string" ? m : m.model));
+
+    if (models.length === 0) {
+      return NextResponse.json({ error: "Combo has no models" }, { status: 400 });
+    }
+
+    const internalUrl = `${getBaseUrl(request)}/v1/chat/completions`;
+    const results = await Promise.all(
+      models.map((modelStr) => testComboModel(modelStr, internalUrl))
+    );
+    const resolvedBy = results.find((result) => result.status === "ok")?.model || null;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     return NextResponse.json({
       comboName,
       strategy: combo.strategy || "priority",
       resolvedBy,
+<<<<<<< HEAD
       resolvedByExecutionKey: resolvedResult?.executionKey || null,
       resolvedByTarget: resolvedResult
         ? {
@@ -331,6 +355,8 @@ export async function POST(request) {
             label: resolvedResult.label,
           }
         : null,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       results,
       testedAt: new Date().toISOString(),
     });
@@ -340,7 +366,19 @@ export async function POST(request) {
   }
 }
 
+<<<<<<< HEAD
 function getInternalBaseUrl(): string {
   const { apiPort } = getRuntimePorts();
   return `http://127.0.0.1:${apiPort}`;
+=======
+/**
+ * Get the base URL for internal requests (VPS-safe: respects reverse proxy headers)
+ */
+function getBaseUrl(request) {
+  const fwdHost = request.headers.get("x-forwarded-host");
+  const fwdProto = request.headers.get("x-forwarded-proto") || "https";
+  if (fwdHost) return `${fwdProto}://${fwdHost}`;
+  const url = new URL(request.url);
+  return `${url.protocol}//${url.host}`;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }

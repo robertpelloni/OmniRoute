@@ -13,6 +13,7 @@ interface AuditEntry {
   timestamp: string;
   action: string;
   actor: string;
+<<<<<<< HEAD
   target?: string | null;
   details?: unknown;
   metadata?: unknown;
@@ -20,6 +21,11 @@ interface AuditEntry {
   resourceType?: string | null;
   status?: string | null;
   requestId?: string | null;
+=======
+  target: string | null;
+  details: any;
+  ip_address: string | null;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 const PAGE_SIZE = 25;
@@ -32,8 +38,11 @@ export default function AuditLogTab() {
   const [actorFilter, setActorFilter] = useState("");
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(false);
+<<<<<<< HEAD
   const [totalCount, setTotalCount] = useState(0);
   const [selectedEntry, setSelectedEntry] = useState<AuditEntry | null>(null);
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const t = useTranslations("logs");
 
   const fetchEntries = useCallback(async () => {
@@ -48,12 +57,19 @@ export default function AuditLogTab() {
 
       const res = await fetch(`/api/compliance/audit-log?${params.toString()}`);
       if (!res.ok) throw new Error(t("failedFetchAuditLog"));
+<<<<<<< HEAD
       const data = (await res.json()) as AuditEntry[];
       const total = Number(res.headers.get("x-total-count") || "0");
 
       setHasMore(data.length > PAGE_SIZE);
       setEntries(data.slice(0, PAGE_SIZE));
       setTotalCount(Number.isFinite(total) ? total : 0);
+=======
+      const data: AuditEntry[] = await res.json();
+
+      setHasMore(data.length > PAGE_SIZE);
+      setEntries(data.slice(0, PAGE_SIZE));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     } catch (err: any) {
       setError(err.message || t("failedFetchAuditLog"));
     } finally {
@@ -66,11 +82,16 @@ export default function AuditLogTab() {
   }, [fetchEntries]);
 
   const handleSearch = () => {
+<<<<<<< HEAD
     if (offset === 0) {
       fetchEntries();
       return;
     }
     setOffset(0);
+=======
+    setOffset(0);
+    fetchEntries();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 
   const formatTimestamp = (ts: string) => {
@@ -82,7 +103,10 @@ export default function AuditLogTab() {
   };
 
   const actionBadgeColor = (action: string) => {
+<<<<<<< HEAD
     if (action === "provider.warning") return "bg-amber-500/15 text-amber-300 border-amber-500/20";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (action.includes("delete") || action.includes("remove"))
       return "bg-red-500/15 text-red-400 border-red-500/20";
     if (action.includes("create") || action.includes("add"))
@@ -94,6 +118,7 @@ export default function AuditLogTab() {
     return "bg-gray-500/15 text-gray-400 border-gray-500/20";
   };
 
+<<<<<<< HEAD
   const statusBadgeColor = (status?: string | null) => {
     if (!status) return "bg-gray-500/15 text-gray-400 border-gray-500/20";
     if (status === "success") return "bg-green-500/15 text-green-400 border-green-500/20";
@@ -106,13 +131,21 @@ export default function AuditLogTab() {
 
   return (
     <div className="space-y-6">
+=======
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-bold text-[var(--color-text-main)]">{t("auditLog")}</h2>
           <p className="text-sm text-[var(--color-text-muted)] mt-1">{t("auditLogDesc")}</p>
+<<<<<<< HEAD
           <p className="mt-2 text-xs text-[var(--color-text-muted)]">
             {t("totalEntries", { count: totalCount })}
           </p>
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         </div>
         <button
           onClick={fetchEntries}
@@ -124,6 +157,10 @@ export default function AuditLogTab() {
         </button>
       </div>
 
+<<<<<<< HEAD
+=======
+      {/* Filters */}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       <div
         className="flex flex-wrap gap-3 p-4 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)]"
         role="search"
@@ -165,6 +202,10 @@ export default function AuditLogTab() {
         </div>
       )}
 
+<<<<<<< HEAD
+=======
+      {/* Table */}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       <div className="overflow-x-auto rounded-xl border border-[var(--color-border)]">
         <table className="w-full text-sm" role="table" aria-label={t("tableAria")}>
           <thead>
@@ -176,32 +217,46 @@ export default function AuditLogTab() {
                 {t("action")}
               </th>
               <th className="text-left px-4 py-3 font-medium text-[var(--color-text-muted)]">
+<<<<<<< HEAD
                 {t("status")}
               </th>
               <th className="text-left px-4 py-3 font-medium text-[var(--color-text-muted)]">
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 {t("actor")}
               </th>
               <th className="text-left px-4 py-3 font-medium text-[var(--color-text-muted)]">
                 {t("target")}
               </th>
               <th className="text-left px-4 py-3 font-medium text-[var(--color-text-muted)]">
+<<<<<<< HEAD
                 {t("resourceType")}
+=======
+                {t("details")}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               </th>
               <th className="text-left px-4 py-3 font-medium text-[var(--color-text-muted)]">
                 {t("ipAddress")}
               </th>
+<<<<<<< HEAD
               <th className="text-left px-4 py-3 font-medium text-[var(--color-text-muted)]">
                 {t("requestId")}
               </th>
               <th className="text-left px-4 py-3 font-medium text-[var(--color-text-muted)]">
                 {t("details")}
               </th>
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             </tr>
           </thead>
           <tbody>
             {entries.length === 0 && !loading ? (
               <tr>
+<<<<<<< HEAD
                 <td colSpan={9} className="px-4 py-8 text-center text-[var(--color-text-muted)]">
+=======
+                <td colSpan={6} className="px-4 py-8 text-center text-[var(--color-text-muted)]">
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   {t("noEntries")}
                 </td>
               </tr>
@@ -218,6 +273,7 @@ export default function AuditLogTab() {
                     <span
                       className={`inline-block px-2 py-0.5 rounded-md text-xs font-medium border ${actionBadgeColor(entry.action)}`}
                     >
+<<<<<<< HEAD
                       <span className="inline-flex items-center gap-1">
                         {entry.action === "provider.warning" && (
                           <span className="material-symbols-outlined text-[14px]">warning</span>
@@ -231,18 +287,27 @@ export default function AuditLogTab() {
                       className={`inline-block px-2 py-0.5 rounded-md text-xs font-medium border ${statusBadgeColor(entry.status)}`}
                     >
                       {entry.status || t("notAvailable")}
+=======
+                      {entry.action}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     </span>
                   </td>
                   <td className="px-4 py-3 text-[var(--color-text-main)]">{entry.actor}</td>
                   <td className="px-4 py-3 text-[var(--color-text-muted)] max-w-[200px] truncate">
                     {entry.target || t("notAvailable")}
                   </td>
+<<<<<<< HEAD
                   <td className="px-4 py-3 text-[var(--color-text-muted)] whitespace-nowrap">
                     {entry.resourceType || t("notAvailable")}
+=======
+                  <td className="px-4 py-3 text-[var(--color-text-muted)] max-w-[300px] truncate font-mono text-xs">
+                    {entry.details ? JSON.stringify(entry.details) : t("notAvailable")}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   </td>
                   <td className="px-4 py-3 text-[var(--color-text-muted)] font-mono text-xs whitespace-nowrap">
                     {entry.ip_address || t("notAvailable")}
                   </td>
+<<<<<<< HEAD
                   <td className="px-4 py-3 text-[var(--color-text-muted)] font-mono text-xs whitespace-nowrap">
                     {entry.requestId || t("notAvailable")}
                   </td>
@@ -255,6 +320,8 @@ export default function AuditLogTab() {
                       {t("viewDetails")}
                     </button>
                   </td>
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 </tr>
               ))
             )}
@@ -262,6 +329,10 @@ export default function AuditLogTab() {
         </table>
       </div>
 
+<<<<<<< HEAD
+=======
+      {/* Pagination */}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       <div className="flex items-center justify-between">
         <p className="text-xs text-[var(--color-text-muted)]">
           {t("showing", { count: entries.length, offset })}
@@ -283,6 +354,7 @@ export default function AuditLogTab() {
           </button>
         </div>
       </div>
+<<<<<<< HEAD
 
       {selectedEntry && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 py-6">
@@ -374,6 +446,8 @@ export default function AuditLogTab() {
           </div>
         </div>
       )}
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     </div>
   );
 }

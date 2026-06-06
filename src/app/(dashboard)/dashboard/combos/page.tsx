@@ -1,5 +1,6 @@
 "use client";
 
+<<<<<<< HEAD
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -57,6 +58,27 @@ const ProxyConfigModal = dynamic(() => import("@/shared/components/ProxyConfigMo
   ssr: false,
 });
 
+=======
+import { useState, useEffect, useCallback, useRef } from "react";
+import {
+  Card,
+  Button,
+  Modal,
+  Input,
+  Toggle,
+  CardSkeleton,
+  ModelSelectModal,
+  ProxyConfigModal,
+  EmptyState,
+} from "@/shared/components";
+import Tooltip from "@/shared/components/Tooltip";
+import ModelRoutingSection from "@/shared/components/ModelRoutingSection";
+import { useCopyToClipboard } from "@/shared/hooks/useCopyToClipboard";
+import { useNotificationStore } from "@/store/notificationStore";
+import { ROUTING_STRATEGIES } from "@/shared/constants/routingStrategies";
+import { useTranslations } from "next-intl";
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // Validate combo name: letters, numbers, -, _, /, .
 const VALID_NAME_REGEX = /^[a-zA-Z0-9_/.-]+$/;
 
@@ -75,7 +97,10 @@ const STRATEGY_DESC_FALLBACK = {
   "context-relay":
     "Priority-style routing with automatic context handoffs when account rotation happens.",
 };
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const STRATEGY_GUIDANCE_FALLBACK = {
   priority: {
@@ -129,6 +154,7 @@ const STRATEGY_GUIDANCE_FALLBACK = {
     avoid: "Avoid when models have different quality or latency and order matters.",
     example: "Example: Multiple accounts of the same model to distribute usage evenly.",
   },
+<<<<<<< HEAD
   auto: {
     when: "Use when you want multi-factor scoring based on cost, latency, and quality.",
     avoid: "Avoid when you need strict priority ordering or historical persistence.",
@@ -144,11 +170,14 @@ const STRATEGY_GUIDANCE_FALLBACK = {
     avoid: "Avoid when models have similar context lengths or simple tasks.",
     example: "Example: Distribute long conversations across models with large context windows.",
   },
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 };
 
 const ADVANCED_FIELD_HELP_FALLBACK = {
   maxRetries: "How many retries are attempted before failing the request.",
   retryDelay: "Initial delay between retries. Higher values reduce burst pressure.",
+<<<<<<< HEAD
   concurrencyPerModel:
     "Round-robin combo/model limit: max simultaneous requests sent to each model target. This is separate from any provider account-only cap.",
   queueTimeout:
@@ -171,6 +200,14 @@ function sanitizeComboRuntimeConfig(config) {
   );
 }
 
+=======
+  timeout: "Maximum request time before aborting. Set higher for long generations.",
+  healthcheck: "Skips unhealthy models/providers from routing decisions when enabled.",
+  concurrencyPerModel: "Max simultaneous requests sent to each model in round-robin.",
+  queueTimeout: "How long a request can wait in queue before timeout in round-robin.",
+};
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 const STRATEGY_RECOMMENDATIONS_FALLBACK = {
   priority: {
     title: "Fail-safe baseline",
@@ -264,6 +301,7 @@ const STRATEGY_RECOMMENDATIONS_FALLBACK = {
       "Guarantees no model is skipped or repeated within a cycle.",
     ],
   },
+<<<<<<< HEAD
   auto: {
     title: "Multi-factor optimization",
     description: "Routes based on real-time scoring of cost, latency, quality, and health.",
@@ -326,6 +364,11 @@ const COMBO_FORM_STAGE_META = [
     icon: "fact_check",
   },
 ];
+=======
+};
+
+const COMBO_USAGE_GUIDE_STORAGE_KEY = "omniroute:combos:hide-usage-guide";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const COMBO_TEMPLATE_FALLBACK = {
   title: "Quick templates",
@@ -339,6 +382,10 @@ const COMBO_TEMPLATE_FALLBACK = {
   balancedDesc: "Least-used routing to spread demand over time.",
   freeStackTitle: "Free Stack ($0)",
   freeStackDesc:
+<<<<<<< HEAD
+=======
+    "Round-robin across all free providers: Kiro, iFlow, Qwen, Gemini CLI. Zero cost, never stops.",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   paidPremiumTitle: "Paid Premium",
   paidPremiumDesc:
     "Round-robin across paid subscriptions: Cursor, Antigravity. Top-tier models, distributed load.",
@@ -358,6 +405,10 @@ const COMBO_TEMPLATES = [
     config: {
       maxRetries: 3,
       retryDelayMs: 500,
+<<<<<<< HEAD
+=======
+      healthCheckEnabled: true,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     },
   },
   {
@@ -372,6 +423,10 @@ const COMBO_TEMPLATES = [
     config: {
       maxRetries: 2,
       retryDelayMs: 1500,
+<<<<<<< HEAD
+=======
+      healthCheckEnabled: true,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     },
   },
   {
@@ -386,6 +441,10 @@ const COMBO_TEMPLATES = [
     config: {
       maxRetries: 1,
       retryDelayMs: 500,
+<<<<<<< HEAD
+=======
+      healthCheckEnabled: true,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     },
   },
   {
@@ -400,6 +459,7 @@ const COMBO_TEMPLATES = [
     config: {
       maxRetries: 1,
       retryDelayMs: 1000,
+<<<<<<< HEAD
     },
   },
   {
@@ -428,6 +488,8 @@ const COMBO_TEMPLATES = [
     config: {
       maxRetries: 2,
       retryDelayMs: 1000,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       healthCheckEnabled: true,
     },
   },
@@ -480,11 +542,15 @@ function getStrategyBadgeClass(strategy) {
 }
 
 function getI18nOrFallback(t, key, fallback) {
+<<<<<<< HEAD
   try {
     if (typeof t.has === "function" && t.has(key)) return t(key);
   } catch {
     // Some translations require ICU variables; fallback keeps optional helper text safe.
   }
+=======
+  if (typeof t.has === "function" && t.has(key)) return t(key);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return fallback;
 }
 
@@ -524,6 +590,7 @@ function getStrategyRecommendationText(t, strategy, field) {
 // ─────────────────────────────────────────────
 function normalizeModelEntry(entry) {
   if (typeof entry === "string") return { model: entry, weight: 0 };
+<<<<<<< HEAD
   if (entry?.kind === "combo-ref") {
     return {
       ...entry,
@@ -611,6 +678,13 @@ function formatComboEntryDisplay(
   }
 
   return `${providerLabel}/${modelLabel}`;
+=======
+  return { model: entry.model, weight: entry.weight || 0 };
+}
+
+function getModelString(entry) {
+  return typeof entry === "string" ? entry : entry.model;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 // ─────────────────────────────────────────────
@@ -619,9 +693,12 @@ function formatComboEntryDisplay(
 export default function CombosPage() {
   const t = useTranslations("combos");
   const tc = useTranslations("common");
+<<<<<<< HEAD
   const emailsVisible = useEmailPrivacyStore((s) => s.emailsVisible);
   const router = useRouter();
   const searchParams = useSearchParams();
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [combos, setCombos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -640,6 +717,7 @@ export default function CombosPage() {
   const [comboDragIndex, setComboDragIndex] = useState(null);
   const [comboDragOverIndex, setComboDragOverIndex] = useState(null);
   const [savingComboOrder, setSavingComboOrder] = useState(false);
+<<<<<<< HEAD
   const [comboConfigMode, setComboConfigMode] = useState("guided");
   const [promptCompressionEnabled, setPromptCompressionEnabled] = useState(false);
   const [selectedIntelligentComboId, setSelectedIntelligentComboId] = useState<string | null>(null);
@@ -690,6 +768,11 @@ export default function CombosPage() {
       .then((r) => (r.ok ? r.json() : null))
       .then((settings) => setPromptCompressionEnabled(settings?.enabled === true))
       .catch(() => setPromptCompressionEnabled(false));
+=======
+
+  useEffect(() => {
+    fetchData();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     fetch("/api/settings/proxy")
       .then((r) => (r.ok ? r.json() : null))
       .then((c) => setProxyConfig(c))
@@ -803,7 +886,11 @@ export default function CombosPage() {
       name: newName,
       models: combo.models,
       strategy: combo.strategy || "priority",
+<<<<<<< HEAD
       config: sanitizeComboRuntimeConfig(combo.config),
+=======
+      config: combo.config || {},
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     };
 
     await handleCreate(data);
@@ -859,6 +946,7 @@ export default function CombosPage() {
     } catch {}
   };
 
+<<<<<<< HEAD
   const handleFilterChange = (nextFilter) => {
     const params = new URLSearchParams(searchParams.toString());
 
@@ -880,16 +968,26 @@ export default function CombosPage() {
 
   const resetComboDragState = () => {
     comboDragIndexRef.current = null;
+=======
+  const resetComboDragState = () => {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     setComboDragIndex(null);
     setComboDragOverIndex(null);
   };
 
   const handleComboDragStart = (e, index) => {
+<<<<<<< HEAD
     if (savingComboOrder || activeFilter !== "all" || combos.length < 2) {
       e.preventDefault();
       return;
     }
     comboDragIndexRef.current = index;
+=======
+    if (savingComboOrder || combos.length < 2) {
+      e.preventDefault();
+      return;
+    }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     setComboDragIndex(index);
     e.dataTransfer.effectAllowed = "move";
     e.dataTransfer.setData("text/plain", combos[index]?.id || `${index}`);
@@ -909,15 +1007,23 @@ export default function CombosPage() {
 
   const handleComboDragOver = (e, index) => {
     e.preventDefault();
+<<<<<<< HEAD
     const activeDragIndex = comboDragIndexRef.current ?? comboDragIndex;
     if (activeDragIndex === null || activeDragIndex === index) return;
+=======
+    if (comboDragIndex === null || comboDragIndex === index) return;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     e.dataTransfer.dropEffect = "move";
     setComboDragOverIndex(index);
   };
 
   const handleComboDrop = async (e, dropIndex) => {
     e.preventDefault();
+<<<<<<< HEAD
     const fromIndex = comboDragIndexRef.current ?? comboDragIndex;
+=======
+    const fromIndex = comboDragIndex;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     resetComboDragState();
 
     if (fromIndex === null || fromIndex === dropIndex) return;
@@ -962,11 +1068,16 @@ export default function CombosPage() {
   return (
     <div className="flex flex-col gap-6">
       {/* Header */}
+<<<<<<< HEAD
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+=======
+      <div className="flex items-center justify-between">
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         <div>
           <h1 className="text-2xl font-semibold">{t("title")}</h1>
           <p className="text-sm text-text-muted mt-1">{t("description")}</p>
         </div>
+<<<<<<< HEAD
         <div className="flex flex-wrap items-center gap-2">
           <div className="inline-flex items-center gap-2 rounded-lg border border-black/8 dark:border-white/8 bg-black/[0.02] dark:bg-white/[0.02] px-2.5 py-1.5">
             <span className="hidden lg:inline text-xs text-text-muted">
@@ -994,6 +1105,9 @@ export default function CombosPage() {
                 : getI18nOrFallback(t, "emailVisibilityStateOff", "Emails masked globally")}
             </span>
           </div>
+=======
+        <div className="flex items-center gap-2">
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           {!showUsageGuide && (
             <Button size="sm" variant="ghost" onClick={handleShowUsageGuide}>
               {getI18nOrFallback(t, "usageGuideShow", "Show guide")}
@@ -1009,7 +1123,10 @@ export default function CombosPage() {
         <ComboUsageGuide
           onHide={() => setShowUsageGuide(false)}
           onHideForever={handleHideUsageGuideForever}
+<<<<<<< HEAD
           onCreateCombo={() => setShowCreateModal(true)}
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         />
       )}
 
@@ -1057,6 +1174,7 @@ export default function CombosPage() {
           </div>
         </Card>
       )}
+<<<<<<< HEAD
       <div className="flex flex-wrap items-center gap-2 rounded-xl border border-black/8 dark:border-white/8 bg-black/[0.02] dark:bg-white/[0.02] p-1">
         {[
           {
@@ -1115,6 +1233,8 @@ export default function CombosPage() {
 
       {/* Model Routing Rules (#563) */}
       <ModelRoutingSection combos={combos} />
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
       {/* Model Routing Rules (#563) */}
       <ModelRoutingSection combos={combos} />
@@ -1128,6 +1248,7 @@ export default function CombosPage() {
           actionLabel={t("createCombo")}
           onAction={() => setShowCreateModal(true)}
         />
+<<<<<<< HEAD
       ) : filteredCombos.length === 0 ? (
         <Card padding="sm">
           <div className="flex flex-col gap-2">
@@ -1168,13 +1289,24 @@ export default function CombosPage() {
                   setSelectedIntelligentComboId(combo.id);
                 }
               }}
+=======
+      ) : (
+        <div className="flex flex-col gap-4">
+          {combos.map((combo, index) => (
+            <div
+              key={combo.id}
+              data-testid={`combo-card-${combo.id}`}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               onDragOver={(e) => handleComboDragOver(e, index)}
               onDrop={(e) => handleComboDrop(e, index)}
             >
               <ComboCard
                 combo={combo}
                 metrics={metrics[combo.name]}
+<<<<<<< HEAD
                 compressionEnabled={promptCompressionEnabled}
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 providerNodes={providerNodes}
                 copied={copied}
                 onCopy={copy}
@@ -1186,10 +1318,16 @@ export default function CombosPage() {
                 onProxy={() => setProxyTargetCombo(combo)}
                 hasProxy={!!proxyConfig?.combos?.[combo.id]}
                 onToggle={() => handleToggleCombo(combo)}
+<<<<<<< HEAD
                 dragDisabled={savingComboOrder || activeFilter !== "all" || combos.length < 2}
                 isDragged={comboDragIndex === index}
                 isDropTarget={comboDragOverIndex === index && comboDragIndex !== index}
                 isSelected={selectedIntelligentCombo?.id === combo.id}
+=======
+                dragDisabled={savingComboOrder || combos.length < 2}
+                isDragged={comboDragIndex === index}
+                isDropTarget={comboDragOverIndex === index && comboDragIndex !== index}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 onDragStart={(e) => handleComboDragStart(e, index)}
                 onDragEnd={handleComboDragEnd}
               />
@@ -1220,7 +1358,10 @@ export default function CombosPage() {
         onSave={handleCreate}
         activeProviders={activeProviders}
         combo={null}
+<<<<<<< HEAD
         comboConfigMode={comboConfigMode}
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       />
 
       {/* Edit Modal */}
@@ -1231,7 +1372,10 @@ export default function CombosPage() {
         onClose={() => setEditingCombo(null)}
         onSave={(data) => handleUpdate(editingCombo.id, data)}
         activeProviders={activeProviders}
+<<<<<<< HEAD
         comboConfigMode={comboConfigMode}
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       />
 
       {/* Proxy Config Modal */}
@@ -1248,6 +1392,7 @@ export default function CombosPage() {
   );
 }
 
+<<<<<<< HEAD
 const COMBO_WIZARD_STEPS = [
   {
     step: 1,
@@ -1277,6 +1422,11 @@ const COMBO_WIZARD_STEPS = [
 
 function ComboUsageGuide({ onHide, onHideForever, onCreateCombo }) {
   const t = useTranslations("combos");
+=======
+function ComboUsageGuide({ onHide, onHideForever }) {
+  const t = useTranslations("combos");
+  const guideStrategies = ["priority", "cost-optimized", "least-used"];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   return (
     <Card padding="sm">
@@ -1288,6 +1438,7 @@ function ComboUsageGuide({ onHide, onHideForever, onCreateCombo }) {
             </span>
           </div>
           <div className="min-w-0">
+<<<<<<< HEAD
             <h2 className="text-sm font-semibold">
               {getI18nOrFallback(t, "wizardGuideTitle", "Getting Started with Combos")}
             </h2>
@@ -1298,6 +1449,10 @@ function ComboUsageGuide({ onHide, onHideForever, onCreateCombo }) {
                 "Create model combos to route AI traffic intelligently"
               )}
             </p>
+=======
+            <h2 className="text-sm font-semibold">{t("routingStrategy")}</h2>
+            <p className="text-xs text-text-muted mt-0.5">{t("description")}</p>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           </div>
         </div>
         <div className="flex items-center gap-1 shrink-0">
@@ -1315,6 +1470,7 @@ function ComboUsageGuide({ onHide, onHideForever, onCreateCombo }) {
         </div>
       </div>
 
+<<<<<<< HEAD
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3">
         {COMBO_WIZARD_STEPS.map((step, index) => {
           return (
@@ -1341,10 +1497,30 @@ function ComboUsageGuide({ onHide, onHideForever, onCreateCombo }) {
                   <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
                 </span>
               )}
+=======
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mt-3">
+        {guideStrategies.map((strategyValue) => {
+          const strategyMeta = getStrategyMeta(strategyValue);
+          return (
+            <div
+              key={strategyValue}
+              className="rounded-lg border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02] p-2.5"
+            >
+              <div className="flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[14px] text-primary">
+                  {strategyMeta.icon}
+                </span>
+                <span className="text-xs font-medium">{getStrategyLabel(t, strategyValue)}</span>
+              </div>
+              <p className="text-[11px] leading-4 text-text-muted mt-1.5">
+                {getStrategyDescription(t, strategyValue)}
+              </p>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             </div>
           );
         })}
       </div>
+<<<<<<< HEAD
 
       <div className="mt-3 flex items-center gap-2">
         <Button size="sm" icon="add" onClick={onCreateCombo}>
@@ -1354,6 +1530,8 @@ function ComboUsageGuide({ onHide, onHideForever, onCreateCombo }) {
           {getI18nOrFallback(t, "wizardGuideHint", "or click + Create Combo above")}
         </span>
       </div>
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     </Card>
   );
 }
@@ -1441,6 +1619,7 @@ function StrategyRecommendationsPanel({ strategy, onApply, showNudge }) {
   );
 }
 
+<<<<<<< HEAD
 function FieldLabelWithHelp({ label, help, showHelp = true }) {
   return (
     <div className="flex items-center gap-1 mb-0.5">
@@ -1452,11 +1631,26 @@ function FieldLabelWithHelp({ label, help, showHelp = true }) {
           </span>
         </Tooltip>
       )}
+=======
+function FieldLabelWithHelp({ label, help }) {
+  return (
+    <div className="flex items-center gap-1 mb-0.5">
+      <label className="text-[10px] text-text-muted">{label}</label>
+      <Tooltip content={help}>
+        <span className="material-symbols-outlined text-[12px] text-text-muted cursor-help">
+          help
+        </span>
+      </Tooltip>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     </div>
   );
 }
 
+<<<<<<< HEAD
 function ComboReadinessPanel({ checks, blockers, showDescription = true }) {
+=======
+function ComboReadinessPanel({ checks, blockers }) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const t = useTranslations("combos");
   const hasBlockers = blockers.length > 0;
 
@@ -1484,6 +1678,7 @@ function ComboReadinessPanel({ checks, blockers, showDescription = true }) {
         </p>
       </div>
 
+<<<<<<< HEAD
       {showDescription && (
         <p className="text-[10px] text-text-muted mt-0.5">
           {getI18nOrFallback(
@@ -1493,6 +1688,15 @@ function ComboReadinessPanel({ checks, blockers, showDescription = true }) {
           )}
         </p>
       )}
+=======
+      <p className="text-[10px] text-text-muted mt-0.5">
+        {getI18nOrFallback(
+          t,
+          "readinessDescription",
+          "Review the checklist before creating or updating this combo."
+        )}
+      </p>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 mt-2">
         {checks.map((check) => (
@@ -1546,7 +1750,10 @@ function ComboReadinessPanel({ checks, blockers, showDescription = true }) {
 function ComboCard({
   combo,
   metrics,
+<<<<<<< HEAD
   compressionEnabled,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   copied,
   onCopy,
   onEdit,
@@ -1561,7 +1768,10 @@ function ComboCard({
   dragDisabled,
   isDragged,
   isDropTarget,
+<<<<<<< HEAD
   isSelected,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   onDragStart,
   onDragEnd,
 }) {
@@ -1570,6 +1780,7 @@ function ComboCard({
   const isDisabled = combo.isActive === false;
   const t = useTranslations("combos");
   const tc = useTranslations("common");
+<<<<<<< HEAD
   const emailsVisible = useEmailPrivacyStore((s) => s.emailsVisible);
   const strategyDescription = getStrategyDescription(t, strategy);
   const hasRuntimeConfig = combo?.config && typeof combo.config === "object";
@@ -1611,6 +1822,19 @@ function ComboCard({
     } finally {
       setIsSavingCompression(false);
     }
+=======
+  const strategyDescription = getStrategyDescription(t, strategy);
+
+  // Resolve provider UUID to user-defined name
+  const formatModelDisplay = (modelValue) => {
+    const parts = modelValue.split("/");
+    if (parts.length !== 2) return modelValue;
+    const [providerIdentifier, modelId] = parts;
+    const matchedNode = (providerNodes || []).find(
+      (node) => node.id === providerIdentifier || node.prefix === providerIdentifier
+    );
+    return matchedNode ? `${matchedNode.name}/${modelId}` : modelValue;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 
   return (
@@ -1620,10 +1844,17 @@ function ComboCard({
         isDisabled ? "opacity-50" : ""
       } ${isDropTarget ? "border border-primary/30 bg-primary/5" : ""} ${
         isDragged ? "opacity-60" : ""
+<<<<<<< HEAD
       } ${isSelected ? "border-primary/30 bg-primary/[0.04]" : ""}`}
     >
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-0">
         <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0 w-full">
+=======
+      }`}
+    >
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3 flex-1 min-w-0">
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           <button
             type="button"
             draggable={!dragDisabled}
@@ -1687,17 +1918,25 @@ function ComboCard({
                 <span className="text-xs text-text-muted italic">{t("noModels")}</span>
               ) : (
                 models.slice(0, 3).map((entry, index) => {
+<<<<<<< HEAD
                   const { weight } = normalizeModelEntry(entry);
+=======
+                  const { model, weight } = normalizeModelEntry(entry);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   return (
                     <code
                       key={index}
                       className="text-[10px] font-mono bg-black/5 dark:bg-white/5 px-1.5 py-0.5 rounded text-text-muted"
                     >
+<<<<<<< HEAD
                       {formatComboEntryDisplay(entry, {
                         providerNodes,
                         includeConnection: true,
                         showFullEmails: emailsVisible,
                       })}
+=======
+                      {formatModelDisplay(model)}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                       {strategy === "weighted" && weight > 0 ? ` (${weight}%)` : ""}
                     </code>
                   );
@@ -1732,6 +1971,7 @@ function ComboCard({
         </div>
 
         {/* Actions */}
+<<<<<<< HEAD
         <div className="flex items-center justify-between md:justify-end gap-1.5 shrink-0 ml-0 md:ml-2 w-full md:w-auto mt-2 md:mt-0 pt-2 md:pt-0 border-t border-black/5 dark:border-white/5 md:border-t-0">
           <div className="flex items-center gap-2">
             <Toggle
@@ -1761,6 +2001,16 @@ function ComboCard({
                 <option value="ultra">Ultra</option>
               </select>
             )}
+=======
+        <div className="flex items-center gap-1.5 shrink-0 ml-2">
+          <Toggle
+            size="sm"
+            checked={!isDisabled}
+            onChange={onToggle}
+            title={isDisabled ? t("enableCombo") : t("disableCombo")}
+          />
+          <div className="flex items-center gap-1 transition-opacity">
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             <button
               onClick={onTest}
               disabled={testing}
@@ -1812,8 +2062,11 @@ function ComboCard({
 // Test Results View
 // ─────────────────────────────────────────────
 function TestResultsView({ results }) {
+<<<<<<< HEAD
   const emailsVisible = useEmailPrivacyStore((s) => s.emailsVisible);
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (results.error) {
     return (
       <div className="flex items-center gap-2 text-red-500 text-sm">
@@ -1830,6 +2083,7 @@ function TestResultsView({ results }) {
           <span className="material-symbols-outlined text-emerald-500 text-[18px]">
             check_circle
           </span>
+<<<<<<< HEAD
           <div className="min-w-0">
             <div>
               Resolved by:{" "}
@@ -1848,6 +2102,14 @@ function TestResultsView({ results }) {
               </div>
             ) : null}
           </div>
+=======
+          <span>
+            Resolved by:{" "}
+            <code className="text-xs bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-1.5 py-0.5 rounded">
+              {results.resolvedBy}
+            </code>
+          </span>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         </div>
       )}
       {results.results?.map((r, i) => (
@@ -1867,6 +2129,7 @@ function TestResultsView({ results }) {
           >
             {r.status === "ok" ? "check_circle" : r.status === "skipped" ? "skip_next" : "error"}
           </span>
+<<<<<<< HEAD
           <div className="min-w-0 flex-1">
             <code className="font-mono block truncate">
               {pickDisplayValue([r.label], emailsVisible, r.model)}
@@ -1878,6 +2141,9 @@ function TestResultsView({ results }) {
               </div>
             ) : null}
           </div>
+=======
+          <code className="font-mono flex-1">{r.model}</code>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           {r.latencyMs !== undefined && <span className="text-text-muted">{r.latencyMs}ms</span>}
           <span
             className={`text-[10px] uppercase font-medium ${
@@ -1899,7 +2165,11 @@ function TestResultsView({ results }) {
 // ─────────────────────────────────────────────
 // Combo Form Modal
 // ─────────────────────────────────────────────
+<<<<<<< HEAD
 function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, comboConfigMode }) {
+=======
+function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders }) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   type CreateDraftSnapshot = {
     name: string;
     models: unknown[];
@@ -1929,9 +2199,13 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
 
   const t = useTranslations("combos");
   const tc = useTranslations("common");
+<<<<<<< HEAD
   const emailsVisible = useEmailPrivacyStore((s) => s.emailsVisible);
   const notify = useNotificationStore();
   const isExpertMode = normalizeComboConfigMode(comboConfigMode) === "expert";
+=======
+  const notify = useNotificationStore();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const createDraftStateRef = useRef<CreateDraftSnapshot>(getEmptyCreateDraftSnapshot());
   const [name, setName] = useState(combo?.name || "");
   const [models, setModels] = useState(() => {
@@ -1944,6 +2218,7 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
   const [pricingByProvider, setPricingByProvider] = useState({});
   const [modelAliases, setModelAliases] = useState({});
   const [providerNodes, setProviderNodes] = useState([]);
+<<<<<<< HEAD
   const [builderOptions, setBuilderOptions] = useState({ providers: [], comboRefs: [] });
   const [builderLoading, setBuilderLoading] = useState(false);
   const [builderProviderId, setBuilderProviderId] = useState("");
@@ -1956,6 +2231,10 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
   const [builderStage, setBuilderStage] = useState<string>(COMBO_BUILDER_STAGES[0]);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [config, setConfig] = useState(sanitizeComboRuntimeConfig(combo?.config));
+=======
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [config, setConfig] = useState(combo?.config || {});
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [showStrategyNudge, setShowStrategyNudge] = useState(false);
   const strategyChangeMountedRef = useRef(false);
   // Agent features (#399 / #401 / #454)
@@ -1964,6 +2243,7 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
   const [agentContextCache, setAgentContextCache] = useState<boolean>(
     !!combo?.context_cache_protection
   );
+<<<<<<< HEAD
   const comboBuilderStages = useMemo(() => getComboBuilderStages({ strategy }), [strategy]);
   const visibleStageMeta = useMemo(
     () => COMBO_FORM_STAGE_META.filter((stageMeta) => comboBuilderStages.includes(stageMeta.id)),
@@ -1971,6 +2251,8 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
   );
   const usesIntelligentBuilderStage = isIntelligentBuilderStrategy(strategy);
   const intelligentConfig = useMemo(() => normalizeIntelligentRoutingConfig(config), [config]);
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const resetFormForCombo = useCallback(
     (nextCombo, comboDefaults = null) => {
@@ -1981,22 +2263,35 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
             }
           : {};
       const nextConfig = nextCombo?.config
+<<<<<<< HEAD
         ? sanitizeComboRuntimeConfig(nextCombo.config)
         : sanitizeComboRuntimeConfig(
             Object.fromEntries(Object.entries(nextDefaults).filter(([key]) => key !== "strategy"))
           );
+=======
+        ? { ...nextCombo.config }
+        : Object.fromEntries(Object.entries(nextDefaults).filter(([key]) => key !== "strategy"));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
       setName(nextCombo?.name || "");
       setModels((nextCombo?.models || []).map((m) => normalizeModelEntry(m)));
       setStrategy(nextCombo?.strategy || comboDefaults?.strategy || "priority");
       setConfig(nextConfig);
+<<<<<<< HEAD
       setShowAdvanced(isExpertMode);
+=======
+      setShowAdvanced(false);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       setNameError("");
       setAgentSystemMessage(nextCombo?.system_message || "");
       setAgentToolFilter(nextCombo?.tool_filter_regex || "");
       setAgentContextCache(!!nextCombo?.context_cache_protection);
     },
+<<<<<<< HEAD
     [isExpertMode, setAgentContextCache]
+=======
+    [setAgentContextCache]
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   );
 
   useEffect(() => {
@@ -2023,6 +2318,7 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
     agentContextCache,
   ]);
 
+<<<<<<< HEAD
   useEffect(() => {
     if (!comboBuilderStages.includes(builderStage)) {
       setBuilderStage("strategy");
@@ -2037,6 +2333,18 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
 
       const { providerId: providerIdentifier, modelId } = parsed;
       const matchedNode = findProviderNodeByIdentifier(providerNodes, providerIdentifier);
+=======
+  // DnD state
+  const hasPricingForModel = useCallback(
+    (modelValue) => {
+      const parts = modelValue.split("/");
+      if (parts.length !== 2) return false;
+
+      const [providerIdentifier, modelId] = parts;
+      const matchedNode = providerNodes.find(
+        (node) => node.id === providerIdentifier || node.prefix === providerIdentifier
+      );
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
       const providerCandidates = [providerIdentifier];
       if (matchedNode?.apiType) providerCandidates.push(matchedNode.apiType);
@@ -2049,6 +2357,7 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
 
   const [dragIndex, setDragIndex] = useState(null);
   const [dragOverIndex, setDragOverIndex] = useState(null);
+<<<<<<< HEAD
   const builderProviders = useMemo(
     () => builderOptions.providers || [],
     [builderOptions.providers]
@@ -2084,6 +2393,8 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
   });
   const manualModelHasDuplicate =
     manualModelStep && hasExactModelStepDuplicate(models, manualModelStep);
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const weightTotal = models.reduce((sum, modelEntry) => sum + (modelEntry.weight || 0), 0);
   const pricedModelCount = models.reduce(
     (count, modelEntry) => count + (hasPricingForModel(modelEntry.model) ? 1 : 0),
@@ -2102,6 +2413,7 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
     pricedModelCount < models.length;
   const hasInvalidWeightedTotal =
     strategy === "weighted" && models.length > 0 && weightTotal !== 100;
+<<<<<<< HEAD
   const builderStageChecks = getComboBuilderStageChecks({
     name,
     nameError,
@@ -2131,6 +2443,8 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
       })
       .filter(Boolean)
   ).size;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const saveBlocked =
     !name.trim() ||
     !!nameError ||
@@ -2191,6 +2505,7 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
       )
     );
   }
+<<<<<<< HEAD
   const showInlineReadinessPanel = !isExpertMode || saveBlockers.length > 0;
 
   const fetchModalData = async () => {
@@ -2201,6 +2516,15 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
         fetch("/api/provider-nodes"),
         fetch("/api/pricing"),
         fetch("/api/combos/builder/options"),
+=======
+
+  const fetchModalData = async () => {
+    try {
+      const [aliasesRes, nodesRes, pricingRes] = await Promise.all([
+        fetch("/api/models/alias"),
+        fetch("/api/provider-nodes"),
+        fetch("/api/pricing"),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       ]);
 
       if (!aliasesRes.ok || !nodesRes.ok) {
@@ -2209,7 +2533,10 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
         );
       }
       const pricingData = pricingRes.ok ? await pricingRes.json() : {};
+<<<<<<< HEAD
       const builderData = builderRes.ok ? await builderRes.json() : {};
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
       const [aliasesData, nodesData] = await Promise.all([aliasesRes.json(), nodesRes.json()]);
       setPricingByProvider(
@@ -2219,6 +2546,7 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
       );
       setModelAliases(aliasesData.aliases || {});
       setProviderNodes(nodesData.nodes || []);
+<<<<<<< HEAD
       setBuilderOptions({
         providers: builderData.providers || [],
         comboRefs: builderData.comboRefs || [],
@@ -2228,6 +2556,10 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
       setBuilderOptions({ providers: [], comboRefs: [] });
     } finally {
       setBuilderLoading(false);
+=======
+    } catch (error) {
+      console.error("Error fetching modal data:", error);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
   };
 
@@ -2237,6 +2569,7 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
 
   useEffect(() => {
     if (!isOpen) return;
+<<<<<<< HEAD
     setBuilderProviderId("");
     setBuilderModelId("");
     setBuilderConnectionId(COMBO_BUILDER_AUTO_CONNECTION);
@@ -2249,6 +2582,8 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
 
   useEffect(() => {
     if (!isOpen) return;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     let cancelled = false;
 
@@ -2272,7 +2607,11 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
           draft.models.length === 0 &&
           draft.strategy === "priority" &&
           Object.keys(draft.config || {}).length === 0 &&
+<<<<<<< HEAD
           (draft.showAdvanced === false || (isExpertMode && draft.showAdvanced === true)) &&
+=======
+          draft.showAdvanced === false &&
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           draft.nameError.length === 0 &&
           draft.agentSystemMessage.length === 0 &&
           draft.agentToolFilter.length === 0 &&
@@ -2291,6 +2630,7 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
     return () => {
       cancelled = true;
     };
+<<<<<<< HEAD
   }, [combo, getEmptyCreateDraftSnapshot, isExpertMode, isOpen, resetFormForCombo]);
 
   useEffect(() => {
@@ -2300,6 +2640,9 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
       setBuilderProviderId(builderProviders[0].providerId);
     }
   }, [builderProviderId, builderProviders, isOpen]);
+=======
+  }, [combo, getEmptyCreateDraftSnapshot, isOpen, resetFormForCombo]);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   useEffect(() => {
     if (!strategyChangeMountedRef.current) {
@@ -2332,6 +2675,7 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
     else setNameError("");
   };
 
+<<<<<<< HEAD
   const handleBuilderProviderChange = (e) => {
     const nextProviderId = e.target.value;
     setBuilderProviderId(nextProviderId);
@@ -2487,6 +2831,12 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
     }
     setModels([...models, nextEntry]);
     setBuilderError("");
+=======
+  const handleAddModel = (model) => {
+    if (!models.find((m) => m.model === model.value)) {
+      setModels([...models, { model: model.value, weight: 0 }]);
+    }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 
   const handleRemoveModel = (index) => {
@@ -2517,23 +2867,42 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
 
   const applyStrategyRecommendations = () => {
     const strategyDefaults = {
+<<<<<<< HEAD
       priority: { maxRetries: 2, retryDelayMs: 1500 },
       weighted: { maxRetries: 1, retryDelayMs: 1000 },
       "round-robin": {
         maxRetries: 1,
         retryDelayMs: 750,
+=======
+      priority: { maxRetries: 2, retryDelayMs: 1500, healthCheckEnabled: true },
+      weighted: { maxRetries: 1, retryDelayMs: 1000, healthCheckEnabled: true },
+      "round-robin": {
+        maxRetries: 1,
+        retryDelayMs: 750,
+        healthCheckEnabled: true,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         concurrencyPerModel: 3,
         queueTimeoutMs: 30000,
       },
       "context-relay": {
         maxRetries: 1,
         retryDelayMs: 750,
+<<<<<<< HEAD
         handoffThreshold: 0.85,
         maxMessagesForSummary: 30,
       },
       random: { maxRetries: 1, retryDelayMs: 1000 },
       "least-used": { maxRetries: 1, retryDelayMs: 1000 },
       "cost-optimized": { maxRetries: 1, retryDelayMs: 500 },
+=======
+        healthCheckEnabled: true,
+        handoffThreshold: 0.85,
+        maxMessagesForSummary: 30,
+      },
+      random: { maxRetries: 1, retryDelayMs: 1000, healthCheckEnabled: true },
+      "least-used": { maxRetries: 1, retryDelayMs: 1000, healthCheckEnabled: true },
+      "cost-optimized": { maxRetries: 1, retryDelayMs: 500, healthCheckEnabled: true },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     };
 
     const defaults = strategyDefaults[strategy] || strategyDefaults.priority;
@@ -2591,6 +2960,7 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
 
   // Format model display name with readable provider name
   const formatModelDisplay = useCallback(
+<<<<<<< HEAD
     (entry) => {
       return formatComboEntryDisplay(entry, {
         providerNodes,
@@ -2600,6 +2970,25 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
       });
     },
     [builderProviders, emailsVisible, providerNodes]
+=======
+    (modelValue) => {
+      const parts = modelValue.split("/");
+      if (parts.length !== 2) return modelValue;
+
+      const [providerIdentifier, modelId] = parts;
+      // Match by node ID or prefix
+      const matchedNode = providerNodes.find(
+        (node) => node.id === providerIdentifier || node.prefix === providerIdentifier
+      );
+
+      if (matchedNode) {
+        return `${matchedNode.name}/${modelId}`;
+      }
+
+      return modelValue;
+    },
+    [providerNodes]
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   );
 
   const handleMoveUp = (index) => {
@@ -2659,12 +3048,20 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
 
     const saveData: any = {
       name: name.trim(),
+<<<<<<< HEAD
       models,
+=======
+      models: strategy === "weighted" ? models : models.map((m) => m.model),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       strategy,
     };
 
     // Include config only if any values are set
+<<<<<<< HEAD
     const configToSave = sanitizeComboRuntimeConfig(config);
+=======
+    const configToSave = { ...config };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     // Add round-robin specific fields to config
     if (strategy === "round-robin") {
       if (config.concurrencyPerModel !== undefined)
@@ -2688,6 +3085,7 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
   };
 
   const isEdit = !!combo;
+<<<<<<< HEAD
   const showBasicsSection = isExpertMode || builderStage === "basics";
   const showStepsSection = isExpertMode || builderStage === "steps";
   const showStrategySection = isExpertMode || builderStage === "strategy";
@@ -2695,6 +3093,8 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
     usesIntelligentBuilderStage && (isExpertMode || builderStage === "intelligent");
   const showReviewSection = !isExpertMode && builderStage === "review";
   const advancedConfigVisible = isExpertMode || showAdvanced;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   return (
     <>
@@ -2705,6 +3105,7 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
         size="full"
       >
         <div className="flex flex-col gap-3">
+<<<<<<< HEAD
           {!isExpertMode && (
             <div className="rounded-lg border border-black/8 dark:border-white/8 bg-black/[0.02] dark:bg-white/[0.02] p-3">
               <div className="flex items-center justify-between gap-2 mb-2">
@@ -3305,6 +3706,212 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
                       )}
 
                       {/* Reorder arrows (Mobile friendly) */}
+=======
+          {/* Name */}
+          <div>
+            <Input
+              label={t("comboName")}
+              value={name}
+              onChange={handleNameChange}
+              placeholder={t("comboNamePlaceholder")}
+              error={nameError}
+            />
+            <p className="text-[10px] text-text-muted mt-0.5">{t("nameHint")}</p>
+          </div>
+
+          {!isEdit && (
+            <div className="rounded-lg border border-black/8 dark:border-white/8 bg-black/[0.02] dark:bg-white/[0.02] p-3">
+              <div className="mb-2">
+                <p className="text-xs font-medium">
+                  {getI18nOrFallback(t, "templatesTitle", COMBO_TEMPLATE_FALLBACK.title)}
+                </p>
+                <p className="text-[10px] text-text-muted mt-0.5">
+                  {getI18nOrFallback(
+                    t,
+                    "templatesDescription",
+                    COMBO_TEMPLATE_FALLBACK.description
+                  )}
+                </p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1">
+                {COMBO_TEMPLATES.map((template) => (
+                  <button
+                    type="button"
+                    key={template.id}
+                    onClick={() => applyTemplate(template)}
+                    className={`text-left rounded-md border px-3 py-2 transition-all ${
+                      template.isFeatured
+                        ? "border-emerald-500/50 bg-emerald-500/5 hover:border-emerald-500/80 hover:bg-emerald-500/10 ring-1 ring-emerald-500/20"
+                        : "border-black/10 dark:border-white/10 bg-white/70 dark:bg-white/[0.03] hover:border-primary/40 hover:bg-primary/5"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`material-symbols-outlined text-[16px] ${template.isFeatured ? "text-emerald-500" : "text-primary"}`}
+                      >
+                        {template.icon}
+                      </span>
+                      <span className="text-[12px] font-semibold text-text-main">
+                        {getI18nOrFallback(t, template.titleKey, template.fallbackTitle)}
+                      </span>
+                      {template.isFeatured && (
+                        <span className="ml-auto text-[9px] font-bold uppercase tracking-wide bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-1.5 py-0.5 rounded">
+                          FREE
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-[10px] text-text-muted mt-1.5 leading-[1.5]">
+                      {getI18nOrFallback(t, template.descKey, template.fallbackDesc)}
+                    </p>
+                    <p
+                      className={`text-[10px] mt-1.5 font-medium ${template.isFeatured ? "text-emerald-500" : "text-primary"}`}
+                    >
+                      {getI18nOrFallback(t, "templateApply", COMBO_TEMPLATE_FALLBACK.apply)} →
+                    </p>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Strategy Toggle */}
+          <div>
+            <div className="flex items-center gap-1 mb-1.5">
+              <label className="text-sm font-medium">{t("routingStrategy")}</label>
+              <Tooltip content={getStrategyDescription(t, strategy)}>
+                <span className="material-symbols-outlined text-[13px] text-text-muted cursor-help">
+                  help
+                </span>
+              </Tooltip>
+            </div>
+            <div className="grid grid-cols-3 gap-1 p-0.5 bg-black/5 dark:bg-white/5 rounded-lg">
+              {STRATEGY_OPTIONS.map((s) => (
+                <button
+                  key={s.value}
+                  onClick={() => setStrategy(s.value)}
+                  data-testid={`strategy-option-${s.value}`}
+                  title={getStrategyDescription(t, s.value)}
+                  aria-label={`${getStrategyLabel(t, s.value)}. ${getStrategyDescription(
+                    t,
+                    s.value
+                  )}`}
+                  className={`py-1.5 px-2 rounded-md text-xs font-medium transition-all ${
+                    strategy === s.value
+                      ? "bg-white dark:bg-bg-main shadow-sm text-primary"
+                      : "text-text-muted hover:text-text-main"
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-[14px] align-middle mr-0.5">
+                    {s.icon}
+                  </span>
+                  {getStrategyLabel(t, s.value)}
+                </button>
+              ))}
+            </div>
+            <p className="text-[10px] text-text-muted mt-0.5">
+              {getStrategyDescription(t, strategy)}
+            </p>
+            <div className="mt-2">
+              <StrategyGuidanceCard strategy={strategy} />
+            </div>
+            <div className="mt-2">
+              <StrategyRecommendationsPanel
+                strategy={strategy}
+                onApply={applyStrategyRecommendations}
+                showNudge={showStrategyNudge}
+              />
+            </div>
+          </div>
+
+          {/* Models */}
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-sm font-medium">{t("models")}</label>
+              {strategy === "weighted" && models.length > 1 && (
+                <button
+                  onClick={handleAutoBalance}
+                  className="text-[10px] text-primary hover:text-primary/80 transition-colors"
+                >
+                  {t("autoBalance")}
+                </button>
+              )}
+            </div>
+
+            {models.length === 0 ? (
+              <div className="text-center py-4 border border-dashed border-black/10 dark:border-white/10 rounded-lg bg-black/[0.01] dark:bg-white/[0.01]">
+                <span className="material-symbols-outlined text-text-muted text-xl mb-1">
+                  layers
+                </span>
+                <p className="text-xs text-text-muted">{t("noModelsYet")}</p>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-1 max-h-[240px] overflow-y-auto">
+                {models.map((entry, index) => (
+                  <div
+                    key={`${entry.model}-${index}`}
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, index)}
+                    onDragEnd={handleDragEnd}
+                    onDragOver={(e) => handleDragOver(e, index)}
+                    onDrop={(e) => handleDrop(e, index)}
+                    className={`group/item flex items-center gap-1.5 px-2 py-1.5 rounded-md transition-all cursor-grab active:cursor-grabbing ${
+                      dragOverIndex === index && dragIndex !== index
+                        ? "bg-primary/10 border border-primary/30"
+                        : "bg-black/[0.02] dark:bg-white/[0.02] hover:bg-black/[0.04] dark:hover:bg-white/[0.04] border border-transparent"
+                    } ${dragIndex === index ? "opacity-50" : ""}`}
+                  >
+                    {/* Drag handle */}
+                    <span className="material-symbols-outlined text-[14px] text-text-muted/40 cursor-grab shrink-0">
+                      drag_indicator
+                    </span>
+
+                    {/* Index badge */}
+                    <span className="text-[10px] font-medium text-text-muted w-3 text-center shrink-0">
+                      {index + 1}
+                    </span>
+
+                    {/* Model display */}
+                    <div className="flex-1 min-w-0 px-1 text-xs text-text-main truncate">
+                      {formatModelDisplay(entry.model)}
+                    </div>
+
+                    {strategy === "cost-optimized" && (
+                      <span
+                        className={`text-[9px] px-1.5 py-0.5 rounded-full uppercase font-semibold ${
+                          hasPricingForModel(entry.model)
+                            ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
+                            : "bg-amber-500/15 text-amber-600 dark:text-amber-400"
+                        }`}
+                        title={
+                          hasPricingForModel(entry.model)
+                            ? getI18nOrFallback(t, "pricingAvailable", "Pricing available")
+                            : getI18nOrFallback(t, "pricingMissing", "No pricing")
+                        }
+                      >
+                        {hasPricingForModel(entry.model)
+                          ? getI18nOrFallback(t, "pricingAvailableShort", "priced")
+                          : getI18nOrFallback(t, "pricingMissingShort", "no-price")}
+                      </span>
+                    )}
+
+                    {/* Weight input (weighted mode only) */}
+                    {strategy === "weighted" && (
+                      <div className="flex items-center gap-0.5 shrink-0">
+                        <input
+                          type="number"
+                          min="0"
+                          max="100"
+                          value={entry.weight}
+                          onChange={(e) => handleWeightChange(index, e.target.value)}
+                          className="w-10 text-[11px] text-center py-0.5 rounded border border-black/10 dark:border-white/10 bg-transparent focus:border-primary focus:outline-none"
+                        />
+                        <span className="text-[10px] text-text-muted">%</span>
+                      </div>
+                    )}
+
+                    {/* Priority arrows (priority mode) */}
+                    {strategy === "priority" && (
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                       <div className="flex items-center gap-0.5">
                         <button
                           onClick={() => handleMoveUp(index)}
@@ -3327,6 +3934,7 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
                           </span>
                         </button>
                       </div>
+<<<<<<< HEAD
 
                       {/* Remove */}
                       <button
@@ -4032,6 +4640,459 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
                   )}
             </div>
           )}
+=======
+                    )}
+
+                    {/* Remove */}
+                    <button
+                      onClick={() => handleRemoveModel(index)}
+                      className="p-0.5 hover:bg-red-500/10 rounded text-text-muted hover:text-red-500 transition-all"
+                      title={t("removeModel")}
+                    >
+                      <span className="material-symbols-outlined text-[12px]">close</span>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Weight total indicator */}
+            {strategy === "weighted" && models.length > 0 && <WeightTotalBar models={models} />}
+
+            {strategy === "cost-optimized" && models.length > 0 && (
+              <div className="mt-2 rounded-md border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02] px-2 py-1.5">
+                <div className="flex items-center justify-between text-[10px]">
+                  <span className="text-text-muted">
+                    {getI18nOrFallback(t, "pricingCoverage", "Pricing coverage")}
+                  </span>
+                  <span className="font-medium text-text-main">
+                    {pricedModelCount}/{models.length} ({pricingCoveragePercent}%)
+                  </span>
+                </div>
+                <div className="h-1.5 mt-1 rounded-full bg-black/10 dark:bg-white/10 overflow-hidden">
+                  <div
+                    className={`h-full transition-all duration-300 ${
+                      pricingCoveragePercent === 100
+                        ? "bg-emerald-500"
+                        : pricingCoveragePercent > 0
+                          ? "bg-amber-500"
+                          : "bg-red-500"
+                    }`}
+                    style={{ width: `${pricingCoveragePercent}%` }}
+                  />
+                </div>
+                <p className="text-[10px] text-text-muted mt-1">
+                  {getI18nOrFallback(
+                    t,
+                    "pricingCoverageHint",
+                    "Cost-optimized works best when all combo models have pricing."
+                  )}
+                </p>
+              </div>
+            )}
+
+            {hasNoModels && (
+              <div className="mt-2 rounded-md border border-amber-500/20 bg-amber-500/10 px-2 py-1.5 text-[10px] text-amber-700 dark:text-amber-300 flex items-center gap-1">
+                <span className="material-symbols-outlined text-[12px]">warning</span>
+                <span>{t("noModelsYet")}</span>
+              </div>
+            )}
+
+            {hasInvalidWeightedTotal && (
+              <div className="mt-2 rounded-md border border-amber-500/20 bg-amber-500/10 px-2 py-1.5 text-[10px] text-amber-700 dark:text-amber-300 flex items-center gap-1">
+                <span className="material-symbols-outlined text-[12px]">warning</span>
+                <span>
+                  {t("weighted")} {weightTotal}% {"\u2260"} 100%. {t("autoBalance")}
+                </span>
+              </div>
+            )}
+
+            {hasRoundRobinSingleModel && (
+              <div className="mt-2 rounded-md border border-blue-500/20 bg-blue-500/10 px-2 py-1.5 text-[10px] text-blue-700 dark:text-blue-300 flex items-center gap-1">
+                <span className="material-symbols-outlined text-[12px]">info</span>
+                <span>
+                  {getI18nOrFallback(
+                    t,
+                    "warningRoundRobinSingleModel",
+                    "Round-robin is most useful with at least 2 models."
+                  )}
+                </span>
+              </div>
+            )}
+
+            {hasCostOptimizedPartialPricing && (
+              <div className="mt-2 rounded-md border border-amber-500/20 bg-amber-500/10 px-2 py-1.5 text-[10px] text-amber-700 dark:text-amber-300 flex items-center gap-1">
+                <span className="material-symbols-outlined text-[12px]">warning</span>
+                <span>
+                  {typeof t.has === "function" && t.has("warningCostOptimizedPartialPricing")
+                    ? t("warningCostOptimizedPartialPricing", {
+                        priced: pricedModelCount,
+                        total: models.length,
+                      })
+                    : `Only ${pricedModelCount} of ${models.length} models have pricing. Routing may be partially cost-aware.`}
+                </span>
+              </div>
+            )}
+
+            {hasCostOptimizedWithoutPricing && (
+              <div className="mt-2 rounded-md border border-amber-500/20 bg-amber-500/10 px-2 py-1.5 text-[10px] text-amber-700 dark:text-amber-300 flex items-center gap-1">
+                <span className="material-symbols-outlined text-[12px]">warning</span>
+                <span>
+                  {getI18nOrFallback(
+                    t,
+                    "warningCostOptimizedNoPricing",
+                    "No pricing data found for this combo. Cost-optimized may route unexpectedly."
+                  )}
+                </span>
+              </div>
+            )}
+
+            <div className="mt-2">
+              <ComboReadinessPanel checks={readinessChecks} blockers={saveBlockers} />
+            </div>
+
+            {/* Add Model button */}
+            <button
+              onClick={() => setShowModelSelect(true)}
+              className="w-full mt-2 py-2 border border-dashed border-black/10 dark:border-white/10 rounded-lg text-xs text-text-muted hover:text-primary hover:border-primary/30 transition-colors flex items-center justify-center gap-1"
+            >
+              <span className="material-symbols-outlined text-[16px]">add</span>
+              {t("addModel")}
+            </button>
+          </div>
+
+          {/* Advanced Config Toggle */}
+          <button
+            onClick={() => setShowAdvanced(!showAdvanced)}
+            className="flex items-center gap-1 text-xs text-text-muted hover:text-text-main transition-colors self-start"
+          >
+            <span className="material-symbols-outlined text-[14px]">
+              {showAdvanced ? "expand_less" : "expand_more"}
+            </span>
+            {t("advancedSettings")}
+          </button>
+
+          {showAdvanced && (
+            <div className="flex flex-col gap-2 p-3 bg-black/[0.02] dark:bg-white/[0.02] rounded-lg border border-black/5 dark:border-white/5">
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <FieldLabelWithHelp
+                    label={t("maxRetries")}
+                    help={getI18nOrFallback(
+                      t,
+                      "advancedHelp.maxRetries",
+                      ADVANCED_FIELD_HELP_FALLBACK.maxRetries
+                    )}
+                  />
+                  <input
+                    type="number"
+                    min="0"
+                    max="10"
+                    value={config.maxRetries ?? ""}
+                    placeholder="1"
+                    onChange={(e) =>
+                      setConfig({
+                        ...config,
+                        maxRetries: e.target.value ? Number(e.target.value) : undefined,
+                      })
+                    }
+                    className="w-full text-xs py-1.5 px-2 rounded border border-black/10 dark:border-white/10 bg-transparent focus:border-primary focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <FieldLabelWithHelp
+                    label={t("retryDelay")}
+                    help={getI18nOrFallback(
+                      t,
+                      "advancedHelp.retryDelay",
+                      ADVANCED_FIELD_HELP_FALLBACK.retryDelay
+                    )}
+                  />
+                  <input
+                    type="number"
+                    min="0"
+                    max="60000"
+                    step="500"
+                    value={config.retryDelayMs ?? ""}
+                    placeholder="2000"
+                    onChange={(e) =>
+                      setConfig({
+                        ...config,
+                        retryDelayMs: e.target.value ? Number(e.target.value) : undefined,
+                      })
+                    }
+                    className="w-full text-xs py-1.5 px-2 rounded border border-black/10 dark:border-white/10 bg-transparent focus:border-primary focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <FieldLabelWithHelp
+                    label={t("timeout")}
+                    help={getI18nOrFallback(
+                      t,
+                      "advancedHelp.timeout",
+                      ADVANCED_FIELD_HELP_FALLBACK.timeout
+                    )}
+                  />
+                  <input
+                    type="number"
+                    min="1000"
+                    max="600000"
+                    step="1000"
+                    value={config.timeoutMs ?? ""}
+                    placeholder="120000"
+                    onChange={(e) =>
+                      setConfig({
+                        ...config,
+                        timeoutMs: e.target.value ? Number(e.target.value) : undefined,
+                      })
+                    }
+                    className="w-full text-xs py-1.5 px-2 rounded border border-black/10 dark:border-white/10 bg-transparent focus:border-primary focus:outline-none"
+                  />
+                </div>
+                <div className="flex items-center justify-between gap-2">
+                  <FieldLabelWithHelp
+                    label={t("healthcheck")}
+                    help={getI18nOrFallback(
+                      t,
+                      "advancedHelp.healthcheck",
+                      ADVANCED_FIELD_HELP_FALLBACK.healthcheck
+                    )}
+                  />
+                  <input
+                    type="checkbox"
+                    checked={config.healthCheckEnabled !== false}
+                    onChange={(e) => setConfig({ ...config, healthCheckEnabled: e.target.checked })}
+                    className="accent-primary"
+                  />
+                </div>
+              </div>
+              {strategy === "round-robin" && (
+                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-black/5 dark:border-white/5">
+                  <div>
+                    <FieldLabelWithHelp
+                      label={t("concurrencyPerModel")}
+                      help={getI18nOrFallback(
+                        t,
+                        "advancedHelp.concurrencyPerModel",
+                        ADVANCED_FIELD_HELP_FALLBACK.concurrencyPerModel
+                      )}
+                    />
+                    <input
+                      type="number"
+                      min="1"
+                      max="20"
+                      value={config.concurrencyPerModel ?? ""}
+                      placeholder="3"
+                      onChange={(e) =>
+                        setConfig({
+                          ...config,
+                          concurrencyPerModel: e.target.value ? Number(e.target.value) : undefined,
+                        })
+                      }
+                      className="w-full text-xs py-1.5 px-2 rounded border border-black/10 dark:border-white/10 bg-transparent focus:border-primary focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <FieldLabelWithHelp
+                      label={t("queueTimeout")}
+                      help={getI18nOrFallback(
+                        t,
+                        "advancedHelp.queueTimeout",
+                        ADVANCED_FIELD_HELP_FALLBACK.queueTimeout
+                      )}
+                    />
+                    <input
+                      type="number"
+                      min="1000"
+                      max="120000"
+                      step="1000"
+                      value={config.queueTimeoutMs ?? ""}
+                      placeholder="30000"
+                      onChange={(e) =>
+                        setConfig({
+                          ...config,
+                          queueTimeoutMs: e.target.value ? Number(e.target.value) : undefined,
+                        })
+                      }
+                      className="w-full text-xs py-1.5 px-2 rounded border border-black/10 dark:border-white/10 bg-transparent focus:border-primary focus:outline-none"
+                    />
+                  </div>
+                </div>
+              )}
+              {strategy === "context-relay" && (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-2 pt-2 border-t border-black/5 dark:border-white/5">
+                  <div>
+                    <FieldLabelWithHelp
+                      label={getI18nOrFallback(
+                        t,
+                        "contextRelayHandoffThreshold",
+                        "Handoff Threshold"
+                      )}
+                      help={getI18nOrFallback(
+                        t,
+                        "contextRelayHandoffThresholdHelp",
+                        "When quota usage reaches this threshold, OmniRoute generates a structured handoff summary before the account is exhausted."
+                      )}
+                    />
+                    <input
+                      type="number"
+                      min="0.5"
+                      max="0.94"
+                      step="0.01"
+                      value={config.handoffThreshold ?? ""}
+                      placeholder="0.85"
+                      onChange={(e) =>
+                        setConfig({
+                          ...config,
+                          handoffThreshold: e.target.value ? Number(e.target.value) : undefined,
+                        })
+                      }
+                      className="w-full text-xs py-1.5 px-2 rounded border border-black/10 dark:border-white/10 bg-transparent focus:border-primary focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <FieldLabelWithHelp
+                      label={getI18nOrFallback(
+                        t,
+                        "contextRelayMaxMessages",
+                        "Max Messages For Summary"
+                      )}
+                      help={getI18nOrFallback(
+                        t,
+                        "contextRelayMaxMessagesHelp",
+                        "Limits how much recent history is condensed into the relay summary."
+                      )}
+                    />
+                    <input
+                      type="number"
+                      min="5"
+                      max="100"
+                      value={config.maxMessagesForSummary ?? ""}
+                      placeholder="30"
+                      onChange={(e) =>
+                        setConfig({
+                          ...config,
+                          maxMessagesForSummary: e.target.value
+                            ? Number(e.target.value)
+                            : undefined,
+                        })
+                      }
+                      className="w-full text-xs py-1.5 px-2 rounded border border-black/10 dark:border-white/10 bg-transparent focus:border-primary focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <FieldLabelWithHelp
+                      label={getI18nOrFallback(t, "contextRelaySummaryModel", "Summary Model")}
+                      help={getI18nOrFallback(
+                        t,
+                        "contextRelaySummaryModelHelp",
+                        "Optional override model used only for generating the handoff summary. Leave empty to reuse the active combo model."
+                      )}
+                    />
+                    <input
+                      type="text"
+                      value={config.handoffModel ?? ""}
+                      placeholder="codex/gpt-5.4"
+                      onChange={(e) =>
+                        setConfig({
+                          ...config,
+                          handoffModel: e.target.value || undefined,
+                        })
+                      }
+                      className="w-full text-xs py-1.5 px-2 rounded border border-black/10 dark:border-white/10 bg-transparent focus:border-primary focus:outline-none"
+                    />
+                  </div>
+                  <div className="md:col-span-3 rounded-md border border-fuchsia-500/20 bg-fuchsia-500/5 px-2 py-1.5">
+                    <p className="text-[10px] text-fuchsia-700 dark:text-fuchsia-300">
+                      {getI18nOrFallback(
+                        t,
+                        "contextRelayProviderNote",
+                        "Context Relay currently generates handoffs for Codex account rotation. Pair it with multiple accounts of the same provider for the best continuity."
+                      )}
+                    </p>
+                  </div>
+                </div>
+              )}
+              <p className="text-[10px] text-text-muted">{t("advancedHint")}</p>
+            </div>
+          )}
+
+          {/* Agent Features (#399 / #401 / #454) */}
+          <div className="flex flex-col gap-2 p-3 bg-black/[0.02] dark:bg-white/[0.02] rounded-lg border border-black/5 dark:border-white/5">
+            <div className="flex items-center gap-1.5 mb-1">
+              <span className="material-symbols-outlined text-[14px] text-primary">smart_toy</span>
+              <p className="text-xs font-medium">Agent Features</p>
+              <span className="text-[10px] text-text-muted">
+                — optional, for agent/tool workflows
+              </span>
+            </div>
+
+            {/* System Message Override */}
+            <div>
+              <label className="text-[11px] font-medium text-text-muted block mb-0.5">
+                System Message Override
+              </label>
+              <textarea
+                rows={2}
+                value={agentSystemMessage}
+                onChange={(e) => setAgentSystemMessage(e.target.value)}
+                placeholder="Override the system prompt for all requests routed through this combo…"
+                className="w-full text-xs py-1.5 px-2 rounded border border-black/10 dark:border-white/10 bg-transparent focus:border-primary focus:outline-none resize-none"
+              />
+              <p className="text-[10px] text-text-muted mt-0.5">
+                Replaces any system message sent by the client. Leave empty to pass through client
+                system messages.
+              </p>
+            </div>
+
+            {/* Tool Filter Regex */}
+            <div>
+              <label className="text-[11px] font-medium text-text-muted block mb-0.5">
+                Tool Filter Regex
+              </label>
+              <input
+                type="text"
+                value={agentToolFilter}
+                onChange={(e) => setAgentToolFilter(e.target.value)}
+                placeholder="e.g. ^(bash|computer)$"
+                className="w-full text-xs py-1.5 px-2 rounded border border-black/10 dark:border-white/10 bg-transparent focus:border-primary focus:outline-none font-mono"
+              />
+              <p className="text-[10px] text-text-muted mt-0.5">
+                Only tools whose name matches this regex are forwarded to the provider. Leave empty
+                to forward all tools.
+              </p>
+            </div>
+
+            {/* Context Cache Protection */}
+            <div className="flex items-center justify-between gap-2">
+              <div>
+                <label className="text-[11px] font-medium text-text-muted block">
+                  Context Cache Protection
+                </label>
+                <p className="text-[10px] text-text-muted">
+                  Pins the provider/model across turns to preserve cache sessions. Internal tags are
+                  stripped before forwarding to the provider.
+                </p>
+              </div>
+              <input
+                type="checkbox"
+                checked={agentContextCache}
+                onChange={(e) => setAgentContextCache(e.target.checked)}
+                className="accent-primary shrink-0"
+              />
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="flex gap-2 pt-1">
+            <Button onClick={onClose} variant="ghost" fullWidth size="sm">
+              {tc("cancel")}
+            </Button>
+            <Button onClick={handleSave} fullWidth size="sm" disabled={saveBlocked}>
+              {saving ? t("saving") : isEdit ? tc("save") : t("createCombo")}
+            </Button>
+          </div>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         </div>
       </Modal>
 

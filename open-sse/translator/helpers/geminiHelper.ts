@@ -1,8 +1,14 @@
 // Gemini helper functions for translator
 
+<<<<<<< HEAD
 // Unsupported JSON Schema constraints that should be removed for Antigravity.
 // `additionalProperties` is handled separately so `true` can be preserved.
 export const GEMINI_UNSUPPORTED_SCHEMA_KEYS = new Set([
+=======
+// Unsupported JSON Schema constraints that should be removed for Antigravity
+// Reference: CLIProxyAPI/internal/util/gemini_schema.go (removeUnsupportedKeywords)
+export const UNSUPPORTED_SCHEMA_CONSTRAINTS = [
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Basic constraints (not supported by Gemini API)
   "minLength",
   "maxLength",
@@ -17,16 +23,20 @@ export const GEMINI_UNSUPPORTED_SCHEMA_KEYS = new Set([
   "examples",
   // JSON Schema meta keywords
   "$schema",
+<<<<<<< HEAD
   "$id",
   "$anchor",
   "$dynamicRef",
   "$dynamicAnchor",
   "$vocabulary",
   "$comment",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   "$defs",
   "definitions",
   "const",
   "$ref",
+<<<<<<< HEAD
   "ref",
   // Object validation keywords (not supported)
   "propertyNames",
@@ -36,6 +46,12 @@ export const GEMINI_UNSUPPORTED_SCHEMA_KEYS = new Set([
   "contains",
   "minContains",
   "maxContains",
+=======
+  // Object validation keywords (not supported)
+  "additionalProperties",
+  "propertyNames",
+  "patternProperties",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Complex schema keywords (handled by flattenAnyOfOneOf/mergeAllOf)
   "anyOf",
   "oneOf",
@@ -52,6 +68,7 @@ export const GEMINI_UNSUPPORTED_SCHEMA_KEYS = new Set([
   "else",
   "contentMediaType",
   "contentEncoding",
+<<<<<<< HEAD
   "contentSchema",
   "readOnly",
   "writeOnly",
@@ -64,6 +81,10 @@ export const GEMINI_UNSUPPORTED_SCHEMA_KEYS = new Set([
   "markdownEnumDescriptions",
   "enumItemLabels",
   "tags",
+=======
+  // Non-standard schema fields (not recognized by Gemini API)
+  "optional",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // UI/Styling properties (from Cursor tools - NOT JSON Schema standard)
   "cornerRadius",
   "fillColor",
@@ -75,9 +96,13 @@ export const GEMINI_UNSUPPORTED_SCHEMA_KEYS = new Set([
   "strokeColor",
   "strokeThickness",
   "textColor",
+<<<<<<< HEAD
 ]);
 
 export const UNSUPPORTED_SCHEMA_CONSTRAINTS = [...GEMINI_UNSUPPORTED_SCHEMA_KEYS];
+=======
+];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 // Default safety settings
 export const DEFAULT_SAFETY_SETTINGS = [
@@ -123,6 +148,7 @@ export function convertOpenAIContentToParts(content) {
         }
 
         // 3. Handle raw data strings (e.g. {"type": "file", "data": "JVBER...", "mime_type": "..."})
+<<<<<<< HEAD
         const rawDataStr = item.data || item.file?.data || item.document?.data;
         const mimeTypeFallback =
           item.mime_type ||
@@ -135,6 +161,13 @@ export function convertOpenAIContentToParts(content) {
           parts.push({
             inlineData: {
               mimeType: mimeTypeFallback,
+=======
+        if (typeof item.data === "string" && !item.data.startsWith("http")) {
+          const rawData = item.data.replace(/^data:[a-zA-Z0-9/+-]+;base64,/, "");
+          parts.push({
+            inlineData: {
+              mimeType: item.mime_type || item.media_type || "application/octet-stream",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               data: rawData,
             },
           });
@@ -198,6 +231,7 @@ export function generateSessionId() {
   return `-${num.toString()}`;
 }
 
+<<<<<<< HEAD
 function cloneSchemaValue(value) {
   if (Array.isArray(value)) {
     return value.map((item) => cloneSchemaValue(item));
@@ -279,6 +313,8 @@ function inlineLocalSchemaRefs(node, root, activeRefs = new Set()) {
   );
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // Helper: Remove unsupported keywords recursively from object/array
 function removeUnsupportedKeywords(obj, keywords) {
   if (!obj || typeof obj !== "object") return;
@@ -289,9 +325,15 @@ function removeUnsupportedKeywords(obj, keywords) {
     }
   } else {
     // Delete unsupported keys at current level
+<<<<<<< HEAD
     for (const key of Object.keys(obj)) {
       if (keywords.has(key) || key.startsWith("x-")) {
         delete obj[key];
+=======
+    for (const keyword of keywords) {
+      if (keyword in obj) {
+        delete obj[keyword];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     }
     // Recurse into remaining values
@@ -303,6 +345,7 @@ function removeUnsupportedKeywords(obj, keywords) {
   }
 }
 
+<<<<<<< HEAD
 function normalizeAdditionalProperties(obj) {
   if (!obj || typeof obj !== "object") return;
 
@@ -327,6 +370,8 @@ function normalizeAdditionalProperties(obj) {
   }
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // Convert const to enum
 function convertConstToEnum(obj) {
   if (!obj || typeof obj !== "object") return;
@@ -480,8 +525,13 @@ function flattenTypeArrays(obj) {
 export function cleanJSONSchemaForAntigravity(schema) {
   if (!schema || typeof schema !== "object") return schema;
 
+<<<<<<< HEAD
   const root = cloneSchemaValue(schema);
   let cleaned = inlineLocalSchemaRefs(root, root);
+=======
+  // Mutate directly (schema is only used once per request)
+  let cleaned = schema;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Phase 1: Convert and prepare
   convertConstToEnum(cleaned);
@@ -492,6 +542,7 @@ export function cleanJSONSchemaForAntigravity(schema) {
   flattenAnyOfOneOf(cleaned);
   flattenTypeArrays(cleaned);
 
+<<<<<<< HEAD
   // Phase 3: Preserve the only supported additionalProperties shape before keyword cleanup.
   normalizeAdditionalProperties(cleaned);
 
@@ -499,6 +550,12 @@ export function cleanJSONSchemaForAntigravity(schema) {
   removeUnsupportedKeywords(cleaned, GEMINI_UNSUPPORTED_SCHEMA_KEYS);
 
   // Phase 5: Cleanup required fields recursively.
+=======
+  // Phase 3: Remove all unsupported keywords at ALL levels (including inside arrays)
+  removeUnsupportedKeywords(cleaned, UNSUPPORTED_SCHEMA_CONSTRAINTS);
+
+  // Phase 4: Cleanup required fields recursively
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   function cleanupRequired(obj) {
     if (!obj || typeof obj !== "object") return;
 
@@ -523,7 +580,11 @@ export function cleanJSONSchemaForAntigravity(schema) {
 
   cleanupRequired(cleaned);
 
+<<<<<<< HEAD
   // Phase 6: Add placeholder for empty object schemas (Antigravity requirement).
+=======
+  // Phase 5: Add placeholder for empty object schemas (Antigravity requirement)
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   function addPlaceholders(obj) {
     if (!obj || typeof obj !== "object") return;
 

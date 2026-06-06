@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {
   getStaticProviderCatalogGroup,
   resolveProviderCatalogEntry,
@@ -8,6 +9,8 @@ import {
   type StaticProviderCatalogCategory,
 } from "@/lib/providers/catalog";
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export interface ProviderStatsSnapshot {
   total?: number;
   [key: string]: unknown;
@@ -54,6 +57,7 @@ export function buildMergedOAuthProviderEntries<TProvider = Record<string, unkno
   ];
 }
 
+<<<<<<< HEAD
 export function buildStaticProviderEntries(
   category: StaticProviderCatalogCategory,
   getProviderStats: GetProviderStats
@@ -99,4 +103,13 @@ export function resolveDashboardProviderInfo(
   }
 ): ResolvedProviderCatalogEntry | null {
   return resolveProviderCatalogEntry(providerId, options);
+=======
+export function filterConfiguredProviderEntries<TProvider>(
+  entries: ProviderEntry<TProvider>[],
+  showConfiguredOnly: boolean
+): ProviderEntry<TProvider>[] {
+  if (!showConfiguredOnly) return entries;
+
+  return entries.filter((entry) => Number(entry.stats?.total || 0) > 0);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }

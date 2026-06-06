@@ -2,6 +2,7 @@ interface MemoryCache {
   key: string;
   value: unknown;
   expiresAt: number;
+<<<<<<< HEAD
 =======
 import { getDbInstance } from "../db/core";
 
@@ -11,6 +12,8 @@ interface MemoryCache {
   timestamp: number;
   ttl: number;
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 class MemoryCachingLayer {
@@ -68,10 +71,15 @@ class MemoryCachingLayer {
 
   async clear(): Promise<void> {
     this.cache.clear();
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     this.hits = 0;
     this.misses = 0;
 =======
+=======
+    this.hits = 0;
+    this.misses = 0;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   stats() {
@@ -80,7 +88,10 @@ class MemoryCachingLayer {
       maxSize: this.maxSize,
       hits: this.hits,
       misses: this.misses,
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     };
   }
 }

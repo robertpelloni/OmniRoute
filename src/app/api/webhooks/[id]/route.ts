@@ -9,8 +9,11 @@ import { z } from "zod";
 import { NextResponse } from "next/server";
 import { getWebhook, updateWebhookRecord, deleteWebhook } from "@/lib/localDb";
 import { validateBody, isValidationFailure } from "@/shared/validation/helpers";
+<<<<<<< HEAD
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const updateWebhookSchema = z
   .object({
@@ -23,10 +26,13 @@ const updateWebhookSchema = z
   .passthrough();
 
 export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
+<<<<<<< HEAD
   const authError = await requireManagementAuth(_);
   if (authError) return authError;
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const { id } = await params;
     const webhook = getWebhook(id);
@@ -40,10 +46,13 @@ export async function GET(_: Request, { params }: { params: Promise<{ id: string
 }
 
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
+<<<<<<< HEAD
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const { id } = await params;
     const rawBody = await request.json();
@@ -63,10 +72,13 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 }
 
 export async function DELETE(_: Request, { params }: { params: Promise<{ id: string }> }) {
+<<<<<<< HEAD
   const authError = await requireManagementAuth(_);
   if (authError) return authError;
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const { id } = await params;
     const deleted = deleteWebhook(id);

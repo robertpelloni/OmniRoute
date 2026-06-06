@@ -123,6 +123,7 @@ export class CircuitBreaker {
    * @throws {Error} If circuit is OPEN
    */
   async execute(fn) {
+<<<<<<< HEAD
     this._refreshOpenState();
 
     if (this.state === STATE.OPEN) {
@@ -131,6 +132,18 @@ export class CircuitBreaker {
         this.name,
         this._timeUntilReset()
       );
+=======
+    if (this.state === STATE.OPEN) {
+      if (this._shouldAttemptReset()) {
+        this._transition(STATE.HALF_OPEN);
+      } else {
+        throw new CircuitBreakerOpenError(
+          `Circuit breaker "${this.name}" is OPEN. Try again later.`,
+          this.name,
+          this._timeUntilReset()
+        );
+      }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
 
     if (this.state === STATE.HALF_OPEN && this.halfOpenAllowed <= 0) {
@@ -162,10 +175,15 @@ export class CircuitBreaker {
    * @returns {boolean}
    */
   canExecute() {
+<<<<<<< HEAD
     this._refreshOpenState();
 
     if (this.state === STATE.CLOSED) return true;
     if (this.state === STATE.OPEN) return false;
+=======
+    if (this.state === STATE.CLOSED) return true;
+    if (this.state === STATE.OPEN) return this._shouldAttemptReset();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (this.state === STATE.HALF_OPEN) return this.halfOpenAllowed > 0;
     return false;
   }
@@ -175,18 +193,25 @@ export class CircuitBreaker {
    * @returns {{ name: string, state: string, failureCount: number, lastFailureTime: number|null }}
    */
   getStatus() {
+<<<<<<< HEAD
     this._refreshOpenState();
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return {
       name: this.name,
       state: this.state,
       failureCount: this.failureCount,
       lastFailureTime: this.lastFailureTime,
+<<<<<<< HEAD
       retryAfterMs: this.getRetryAfterMs(),
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     };
   }
 
   /**
+<<<<<<< HEAD
    * Get remaining wait time before the breaker allows execution again.
    * @returns {number}
    */
@@ -198,6 +223,8 @@ export class CircuitBreaker {
   }
 
   /**
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
    * Force reset the circuit breaker to CLOSED state.
    */
   reset() {
@@ -253,6 +280,7 @@ export class CircuitBreaker {
     return Math.max(0, this.resetTimeout - (Date.now() - this.lastFailureTime));
   }
 
+<<<<<<< HEAD
   _refreshOpenState() {
     if (this.state === STATE.OPEN && this._shouldAttemptReset()) {
       this._transition(STATE.HALF_OPEN);
@@ -260,6 +288,8 @@ export class CircuitBreaker {
     }
   }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   _transition(newState) {
     const oldState = this.state;
     this.state = newState;
@@ -295,6 +325,7 @@ export function getCircuitBreaker(name: string, options?: CircuitBreakerOptions)
   if (!registry.has(name)) {
     registry.set(name, new CircuitBreaker(name, options));
   }
+<<<<<<< HEAD
   const breaker = registry.get(name)!;
   if (options) {
     if (typeof options.failureThreshold === "number") {
@@ -318,6 +349,9 @@ export function getCircuitBreaker(name: string, options?: CircuitBreakerOptions)
     breaker._persistToDb();
   }
   return breaker;
+=======
+  return registry.get(name)!;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 /**

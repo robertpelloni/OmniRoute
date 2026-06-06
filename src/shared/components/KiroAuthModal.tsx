@@ -1,10 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
+<<<<<<< HEAD
+=======
+import PropTypes from "prop-types";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import Modal from "./Modal";
 import Button from "./Button";
 import Input from "./Input";
 
+<<<<<<< HEAD
 type KiroAuthModalProps = {
   isOpen: boolean;
   providerId?: string;
@@ -13,10 +18,13 @@ type KiroAuthModalProps = {
   onClose: () => void;
 };
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Kiro Auth Method Selection Modal
  * Auto-detects token from AWS SSO cache or allows manual import
  */
+<<<<<<< HEAD
 export default function KiroAuthModal({
   isOpen,
   providerId = "kiro",
@@ -24,6 +32,9 @@ export default function KiroAuthModal({
   onMethodSelect,
   onClose,
 }: KiroAuthModalProps) {
+=======
+export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [selectedMethod, setSelectedMethod] = useState(null);
   const [idcStartUrl, setIdcStartUrl] = useState("");
   const [idcRegion, setIdcRegion] = useState("us-east-1");
@@ -43,9 +54,13 @@ export default function KiroAuthModal({
       setAutoDetected(false);
 
       try {
+<<<<<<< HEAD
         const res = await fetch(
           `/api/oauth/kiro/auto-import?targetProvider=${encodeURIComponent(providerId)}`
         );
+=======
+        const res = await fetch("/api/oauth/kiro/auto-import");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         const data = await res.json();
 
         if (data.found) {
@@ -62,7 +77,11 @@ export default function KiroAuthModal({
     };
 
     autoDetect();
+<<<<<<< HEAD
   }, [providerId, selectedMethod, isOpen]);
+=======
+  }, [selectedMethod, isOpen]);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const handleMethodSelect = (method) => {
     setSelectedMethod(method);
@@ -84,6 +103,7 @@ export default function KiroAuthModal({
     setError(null);
 
     try {
+<<<<<<< HEAD
       const res = await fetch(
         `/api/oauth/kiro/import?targetProvider=${encodeURIComponent(providerId)}`,
         {
@@ -92,6 +112,13 @@ export default function KiroAuthModal({
           body: JSON.stringify({ refreshToken: refreshToken.trim() }),
         }
       );
+=======
+      const res = await fetch("/api/oauth/kiro/import", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refreshToken: refreshToken.trim() }),
+      });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
       const data = await res.json();
 
@@ -121,7 +148,11 @@ export default function KiroAuthModal({
   };
 
   return (
+<<<<<<< HEAD
     <Modal isOpen={isOpen} title={`Connect ${providerLabel}`} onClose={onClose} size="lg">
+=======
+    <Modal isOpen={isOpen} title="Connect Kiro" onClose={onClose} size="lg">
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       <div className="flex flex-col gap-4">
         {/* Method Selection */}
         {!selectedMethod && (
@@ -138,26 +169,43 @@ export default function KiroAuthModal({
                 <div className="flex-1">
                   <h3 className="font-semibold mb-1">AWS Builder ID</h3>
                   <p className="text-sm text-text-muted">
+<<<<<<< HEAD
                     Recommended for most users. Sign in with the AWS account linked to{" "}
                     {providerLabel}.
+=======
+                    Recommended for most users. Free AWS account required.
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   </p>
                 </div>
               </div>
             </button>
 
+<<<<<<< HEAD
             {/* AWS IAM Identity Center (IDC) */}
             <button
               onClick={() => handleMethodSelect("idc")}
               className="w-full p-4 text-left border border-border rounded-lg hover:bg-sidebar transition-colors"
+=======
+            {/* AWS IAM Identity Center (IDC) - HIDDEN */}
+            <button
+              onClick={() => handleMethodSelect("idc")}
+              className="hidden w-full p-4 text-left border border-border rounded-lg hover:bg-sidebar transition-colors"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             >
               <div className="flex items-start gap-3">
                 <span className="material-symbols-outlined text-primary mt-0.5">business</span>
                 <div className="flex-1">
+<<<<<<< HEAD
                   <h3 className="font-semibold mb-1">
                     Your Organization (AWS IAM Identity Center)
                   </h3>
                   <p className="text-sm text-text-muted">
                     Use your company SSO start URL (example: https://your-org.awsapps.com/start).
+=======
+                  <h3 className="font-semibold mb-1">AWS IAM Identity Center</h3>
+                  <p className="text-sm text-text-muted">
+                    For enterprise users with custom AWS IAM Identity Center.
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   </p>
                 </div>
               </div>
@@ -206,9 +254,13 @@ export default function KiroAuthModal({
                 <span className="material-symbols-outlined text-primary mt-0.5">file_upload</span>
                 <div className="flex-1">
                   <h3 className="font-semibold mb-1">Import Token</h3>
+<<<<<<< HEAD
                   <p className="text-sm text-text-muted">
                     Paste a refresh token exported from {providerLabel}.
                   </p>
+=======
+                  <p className="text-sm text-text-muted">Paste refresh token from Kiro IDE.</p>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 </div>
               </div>
             </button>
@@ -333,9 +385,13 @@ export default function KiroAuthModal({
                   </span>
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Auto-detecting token...</h3>
+<<<<<<< HEAD
                 <p className="text-sm text-text-muted">
                   Reading {providerLabel} credentials from AWS SSO cache
                 </p>
+=======
+                <p className="text-sm text-text-muted">Reading from AWS SSO cache</p>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               </div>
             )}
 
@@ -350,7 +406,11 @@ export default function KiroAuthModal({
                         check_circle
                       </span>
                       <p className="text-sm text-green-800 dark:text-green-200">
+<<<<<<< HEAD
                         Token auto-detected from {providerLabel} successfully!
+=======
+                        Token auto-detected from Kiro IDE successfully!
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                       </p>
                     </div>
                   </div>
@@ -364,8 +424,12 @@ export default function KiroAuthModal({
                         info
                       </span>
                       <p className="text-sm text-blue-800 dark:text-blue-200">
+<<<<<<< HEAD
                         {providerLabel} token was not auto-detected. Please paste your refresh token
                         manually.
+=======
+                        Kiro IDE not detected. Please paste your refresh token manually.
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                       </p>
                     </div>
                   </div>
@@ -409,3 +473,12 @@ export default function KiroAuthModal({
     </Modal>
   );
 }
+<<<<<<< HEAD
+=======
+
+KiroAuthModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onMethodSelect: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+};
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

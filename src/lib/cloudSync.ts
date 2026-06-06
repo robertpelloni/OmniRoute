@@ -1,5 +1,15 @@
+<<<<<<< HEAD
 import { getProviderConnections, updateProviderConnection } from "@/lib/localDb";
 import { buildConfigSyncEnvelope, toLegacyCloudSyncPayload } from "@/lib/sync/bundle";
+=======
+import {
+  getProviderConnections,
+  getModelAliases,
+  getCombos,
+  getApiKeys,
+  updateProviderConnection,
+} from "@/lib/localDb";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const CLOUD_URL = process.env.CLOUD_URL || process.env.NEXT_PUBLIC_CLOUD_URL;
 const CLOUD_SYNC_TIMEOUT_MS = Number(process.env.CLOUD_SYNC_TIMEOUT_MS || 12000);
@@ -42,10 +52,18 @@ export async function syncToCloud(machineId, createdKey = null) {
     return { error: "NEXT_PUBLIC_CLOUD_URL is not configured" };
   }
 
+<<<<<<< HEAD
   // Keep legacy field names for upstream compatibility, but derive them
   // from a canonical sync bundle with deterministic version hashing.
   const { version, bundle } = await buildConfigSyncEnvelope();
   const legacyPayload = toLegacyCloudSyncPayload(bundle);
+=======
+  // Get current data from db
+  const providers = await getProviderConnections();
+  const modelAliases = await getModelAliases();
+  const combos = await getCombos();
+  const apiKeys = await getApiKeys();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   let response;
   try {
@@ -54,8 +72,15 @@ export async function syncToCloud(machineId, createdKey = null) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+<<<<<<< HEAD
         ...legacyPayload,
         version,
+=======
+        providers,
+        modelAliases,
+        combos,
+        apiKeys,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }),
     });
   } catch (error) {
@@ -81,7 +106,10 @@ export async function syncToCloud(machineId, createdKey = null) {
     success: true,
     message: "Synced successfully",
     changes: result.changes,
+<<<<<<< HEAD
     version,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 
   if (createdKey) {

@@ -4,6 +4,7 @@ export const HIDEABLE_SIDEBAR_ITEM_IDS = [
   "api-manager",
   "providers",
   "combos",
+<<<<<<< HEAD
   "batch",
   "costs",
   "analytics",
@@ -11,6 +12,12 @@ export const HIDEABLE_SIDEBAR_ITEM_IDS = [
   "context-caveman",
   "context-rtk",
   "context-combos",
+=======
+  "auto-combo",
+  "costs",
+  "analytics",
+  "cache",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   "limits",
   "cli-tools",
   "agents",
@@ -21,6 +28,7 @@ export const HIDEABLE_SIDEBAR_ITEM_IDS = [
   "media",
   "search-tools",
   "logs",
+<<<<<<< HEAD
   "audit",
   "webhooks",
   "health",
@@ -33,6 +41,17 @@ export const HIDEABLE_SIDEBAR_ITEM_IDS = [
 
 export type HideableSidebarItemId = (typeof HIDEABLE_SIDEBAR_ITEM_IDS)[number];
 export type SidebarSectionId = "primary" | "context" | "cli" | "debug" | "system" | "help";
+=======
+  "health",
+  "audit",
+  "settings",
+  "docs",
+  "issues",
+] as const;
+
+export type HideableSidebarItemId = (typeof HIDEABLE_SIDEBAR_ITEM_IDS)[number];
+export type SidebarSectionId = "primary" | "cli" | "debug" | "system" | "help";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 export interface SidebarItemDefinition {
   id: HideableSidebarItemId;
@@ -58,7 +77,11 @@ const PRIMARY_SIDEBAR_ITEMS: readonly SidebarItemDefinition[] = [
   { id: "api-manager", href: "/dashboard/api-manager", i18nKey: "apiManager", icon: "vpn_key" },
   { id: "providers", href: "/dashboard/providers", i18nKey: "providers", icon: "dns" },
   { id: "combos", href: "/dashboard/combos", i18nKey: "combos", icon: "layers" },
+<<<<<<< HEAD
   { id: "batch", href: "/dashboard/batch", i18nKey: "batch", icon: "view_list" },
+=======
+  { id: "auto-combo", href: "/dashboard/auto-combo", i18nKey: "autoCombo", icon: "auto_awesome" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   { id: "costs", href: "/dashboard/costs", i18nKey: "costs", icon: "account_balance_wallet" },
   { id: "analytics", href: "/dashboard/analytics", i18nKey: "analytics", icon: "analytics" },
   { id: "cache", href: "/dashboard/cache", i18nKey: "cache", icon: "cached" },
@@ -73,6 +96,7 @@ const CLI_SIDEBAR_ITEMS: readonly SidebarItemDefinition[] = [
   { id: "skills", href: "/dashboard/skills", i18nKey: "skills", icon: "auto_fix_high" },
 ];
 
+<<<<<<< HEAD
 const CONTEXT_SIDEBAR_ITEMS: readonly SidebarItemDefinition[] = [
   {
     id: "context-caveman",
@@ -94,6 +118,8 @@ const CONTEXT_SIDEBAR_ITEMS: readonly SidebarItemDefinition[] = [
   },
 ];
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 const DEBUG_SIDEBAR_ITEMS: readonly SidebarItemDefinition[] = [
   { id: "translator", href: "/dashboard/translator", i18nKey: "translator", icon: "translate" },
   { id: "playground", href: "/dashboard/playground", i18nKey: "playground", icon: "science" },
@@ -107,10 +133,15 @@ const DEBUG_SIDEBAR_ITEMS: readonly SidebarItemDefinition[] = [
 
 const SYSTEM_SIDEBAR_ITEMS: readonly SidebarItemDefinition[] = [
   { id: "logs", href: "/dashboard/logs", i18nKey: "logs", icon: "description" },
+<<<<<<< HEAD
   { id: "audit", href: "/dashboard/audit", i18nKey: "auditLog", icon: "policy" },
   { id: "webhooks", href: "/dashboard/webhooks", i18nKey: "webhooks", icon: "webhook" },
   { id: "health", href: "/dashboard/health", i18nKey: "health", icon: "health_and_safety" },
   { id: "proxy", href: "/dashboard/system/proxy", i18nKey: "proxy", icon: "dns" },
+=======
+  { id: "health", href: "/dashboard/health", i18nKey: "health", icon: "health_and_safety" },
+  { id: "audit", href: "/dashboard/audit", i18nKey: "auditLog", icon: "history" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   { id: "settings", href: "/dashboard/settings", i18nKey: "settings", icon: "settings" },
 ];
 
@@ -123,7 +154,10 @@ const HELP_SIDEBAR_ITEMS: readonly SidebarItemDefinition[] = [
     icon: "bug_report",
     external: true,
   },
+<<<<<<< HEAD
   { id: "changelog", href: "/dashboard/changelog", i18nKey: "changelog", icon: "campaign" },
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 ];
 
 export const SIDEBAR_SECTIONS: readonly SidebarSectionDefinition[] = [
@@ -135,12 +169,15 @@ export const SIDEBAR_SECTIONS: readonly SidebarSectionDefinition[] = [
     showTitleInSidebar: false,
   },
   {
+<<<<<<< HEAD
     id: "context",
     titleKey: "contextSection",
     titleFallback: "Context & Cache",
     items: CONTEXT_SIDEBAR_ITEMS,
   },
   {
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     id: "cli",
     titleKey: "cliSection",
     titleFallback: "CLI",

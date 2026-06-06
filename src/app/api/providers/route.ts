@@ -1,15 +1,22 @@
 import { NextResponse } from "next/server";
+<<<<<<< HEAD
 import { getAuditRequestContext, logAuditEvent } from "@/lib/compliance/index";
 import {
   getProviderAuditTarget,
   summarizeProviderConnectionForAudit,
 } from "@/lib/compliance/providerAudit";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import {
   getProviderConnections,
   createProviderConnection,
   getProviderNodeById,
   isCloudEnabled,
 } from "@/models";
+<<<<<<< HEAD
+=======
+import { APIKEY_PROVIDERS } from "@/shared/constants/config";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import {
   isClaudeCodeCompatibleProvider,
   isOpenAICompatibleProvider,
@@ -20,6 +27,7 @@ import { syncToCloud } from "@/lib/cloudSync";
 import { createProviderSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
 import { normalizeQoderPatProviderData } from "@omniroute/open-sse/services/qoderCli";
+<<<<<<< HEAD
 import {
   normalizeProviderSpecificData,
   sanitizeProviderSpecificDataForResponse,
@@ -32,6 +40,11 @@ export async function GET(request: Request) {
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
 
+=======
+
+// GET /api/providers - List all connections
+export async function GET() {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const connections = await getProviderConnections();
 
@@ -42,9 +55,12 @@ export async function GET(request: Request) {
       accessToken: undefined,
       refreshToken: undefined,
       idToken: undefined,
+<<<<<<< HEAD
       providerSpecificData: c.providerSpecificData
         ? sanitizeProviderSpecificDataForResponse(c.providerSpecificData)
         : undefined,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }));
 
     return NextResponse.json({ connections: safeConnections });
@@ -56,11 +72,14 @@ export async function GET(request: Request) {
 
 // POST /api/providers - Create new connection (API Key only, OAuth via separate flow)
 export async function POST(request: Request) {
+<<<<<<< HEAD
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
 
   const auditContext = getAuditRequestContext(request);
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const body = await request.json();
 
@@ -82,7 +101,12 @@ export async function POST(request: Request) {
 
     // Business validation
     const isValidProvider =
+<<<<<<< HEAD
       isManagedProviderConnectionId(provider) ||
+=======
+      APIKEY_PROVIDERS[provider] ||
+      provider === "qoder" ||
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       isOpenAICompatibleProvider(provider) ||
       isAnthropicCompatibleProvider(provider);
 
@@ -105,7 +129,16 @@ export async function POST(request: Request) {
       }
 
       const existingConnections = await getProviderConnections({ provider });
+<<<<<<< HEAD
       // Allow multiple connections for compatible nodes exactly like first-party providers
+=======
+      if (!allowMultipleCompatibleConnections && existingConnections.length > 0) {
+        return NextResponse.json(
+          { error: "Only one connection is allowed for this OpenAI Compatible node" },
+          { status: 400 }
+        );
+      }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
       providerSpecificData = {
         ...(providerSpecificData || {}),
@@ -130,7 +163,16 @@ export async function POST(request: Request) {
       }
 
       const existingConnections = await getProviderConnections({ provider });
+<<<<<<< HEAD
       // Allow multiple connections for compatible nodes exactly like first-party providers
+=======
+      if (!allowMultipleCompatibleConnections && existingConnections.length > 0) {
+        return NextResponse.json(
+          { error: "Only one connection is allowed for this Anthropic Compatible node" },
+          { status: 400 }
+        );
+      }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
       providerSpecificData = {
         ...(providerSpecificData || {}),
@@ -142,8 +184,11 @@ export async function POST(request: Request) {
       };
     }
 
+<<<<<<< HEAD
     providerSpecificData = normalizeProviderSpecificData(provider, providerSpecificData) || null;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const newConnection = await createProviderConnection({
       provider,
       authType: "apikey",
@@ -162,15 +207,19 @@ export async function POST(request: Request) {
     // Hide sensitive fields
     const result: Record<string, any> = { ...newConnection };
     delete result.apiKey;
+<<<<<<< HEAD
     if (result.providerSpecificData) {
       result.providerSpecificData = sanitizeProviderSpecificDataForResponse(
         result.providerSpecificData
       );
     }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     // Auto sync to Cloud if enabled
     await syncToCloudIfEnabled();
 
+<<<<<<< HEAD
     logAuditEvent({
       action: "provider.credentials.created",
       actor: "admin",
@@ -185,6 +234,8 @@ export async function POST(request: Request) {
       },
     });
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return NextResponse.json({ connection: result }, { status: 201 });
   } catch (error) {
     console.log("Error creating provider:", error);

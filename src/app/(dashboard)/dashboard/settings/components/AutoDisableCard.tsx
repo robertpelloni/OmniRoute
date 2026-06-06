@@ -116,6 +116,13 @@ export default function AutoDisableCard() {
                 onChange={(e) =>
                   setDraft((prev) => ({ ...prev, threshold: parseInt(e.target.value) || 1 }))
                 }
+<<<<<<< HEAD
+=======
+              />
+            ) : (
+              <span className={`text-sm font-mono ${!data.enabled && "opacity-50"}`}>
+                {t("failures", { count: data.threshold })}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               </span>
             )}
             <p className="text-xs text-text-muted mt-2">{t("autoDisableThresholdDesc")}</p>

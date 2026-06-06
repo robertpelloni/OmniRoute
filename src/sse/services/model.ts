@@ -1,7 +1,10 @@
 // Re-export from open-sse with localDb integration
 import { getModelAliases, getComboByName, getProviderNodes, getCustomModels } from "@/lib/localDb";
 import { getSettings } from "@/lib/localDb";
+<<<<<<< HEAD
 import { getComboStepTarget } from "@/lib/combos/steps";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import {
   parseModel,
   resolveModelAliasFromMap,
@@ -105,6 +108,7 @@ export async function getModelInfo(modelStr) {
  * @returns {Promise<Object|null>} Full combo object or null if not a combo
  */
 export async function getCombo(modelStr) {
+<<<<<<< HEAD
   // Try exact match first (supports combos actually named "combo/ANY")
   let combo = await getComboByName(modelStr);
   if (combo && combo.models && combo.models.length > 0) {
@@ -120,6 +124,13 @@ export async function getCombo(modelStr) {
     }
   }
 
+=======
+  // Check combo DB first (supports names with /)
+  const combo = await getComboByName(modelStr);
+  if (combo && combo.models && combo.models.length > 0) {
+    return combo;
+  }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return null;
 }
 
@@ -158,7 +169,11 @@ export async function getComboForModel(modelStr) {
 export async function getComboModels(modelStr) {
   const combo = await getCombo(modelStr);
   if (!combo) return null;
+<<<<<<< HEAD
   return (combo.models || [])
     .map((entry) => getComboStepTarget(entry))
     .filter((entry): entry is string => typeof entry === "string" && entry.length > 0);
+=======
+  return combo.models.map((m) => (typeof m === "string" ? m : m.model));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }

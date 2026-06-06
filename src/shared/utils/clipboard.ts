@@ -11,10 +11,20 @@
  * @returns true if copy succeeded, false otherwise
  */
 export async function copyToClipboard(text: string): Promise<boolean> {
+<<<<<<< HEAD
   // Method 1: Clipboard API
   // Works on HTTPS, localhost (treated as secure context), and some browsers
   // even on HTTP. Try unconditionally — the catch handles failures.
   if (typeof navigator !== "undefined" && navigator.clipboard) {
+=======
+  // Method 1: Clipboard API (requires HTTPS / secure context)
+  if (
+    typeof navigator !== "undefined" &&
+    navigator.clipboard &&
+    typeof window !== "undefined" &&
+    window.isSecureContext
+  ) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     try {
       await navigator.clipboard.writeText(text);
       return true;

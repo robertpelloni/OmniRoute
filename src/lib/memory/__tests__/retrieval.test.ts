@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { describe, test, expect, beforeEach, afterEach } from "vitest";
 import Database from "better-sqlite3";
 import { retrieveMemories, estimateTokens } from "../retrieval";
@@ -5,6 +6,9 @@ import { retrieveMemories, estimateTokens } from "../retrieval";
 // ────────────────────────────────────────────────────────────
 // Existing tests (pure-logic, no DB required)
 // ────────────────────────────────────────────────────────────
+=======
+import { describe, test, expect } from "vitest";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * Test that corrupt metadata in retrieval doesn't throw (returns {} instead).
@@ -60,6 +64,7 @@ describe("Memory API - response shape", () => {
     expect(stats.byType).toEqual({ factual: 2, procedural: 1 });
   });
 });
+<<<<<<< HEAD
 
 // ────────────────────────────────────────────────────────────
 // FTS5-specific tests (real in-memory SQLite DB)
@@ -345,3 +350,5 @@ describe("Memory Retrieval — FTS5 integration", () => {
     expect(estimateTokens(undefined as unknown as string)).toBe(0);
   });
 });
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

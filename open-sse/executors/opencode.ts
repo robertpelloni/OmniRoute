@@ -62,6 +62,7 @@ export class OpencodeExecutor extends BaseExecutor {
 
     return headers;
   }
+<<<<<<< HEAD
 
   transformRequest(
     model: string,
@@ -80,4 +81,6 @@ export class OpencodeExecutor extends BaseExecutor {
     }
     return modifiedBody;
   }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }

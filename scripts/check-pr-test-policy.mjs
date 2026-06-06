@@ -6,6 +6,7 @@ const SOURCE_ROOTS = ["src/", "open-sse/", "electron/", "bin/"];
 const TEST_PATTERNS = [/^tests\//, /(?:^|\/)__tests__\//, /\.(?:test|spec)\.[cm]?[jt]sx?$/];
 // Test files for specific source types (e.g., Python validation scripts for i18n)
 const TEST_FILE_PATTERNS = {
+<<<<<<< HEAD
   "src/i18n/messages/": [
     /\/scripts\/validate_translation\.py$/,
     /\/scripts\/check_translations\.py$/,
@@ -17,6 +18,16 @@ const EXCLUDED_PATTERNS = [
   /\.md$/, // Documentation
   /\.yaml$/, // Config files
   /\.yml$/, // Config files
+=======
+  "src/i18n/messages/": [/\/scripts\/validate_translation\.py$/, /\/scripts\/check_translations\.py$/],
+};
+// Exclude directories that don't require tests (i18n has Python validation, docs, config)
+const EXCLUDED_PATTERNS = [
+  /\/i18n\/messages\//,  // i18n files have their own Python test scripts
+  /\.md$/,              // Documentation
+  /\.yaml$/,           // Config files
+  /\.yml$/,            // Config files
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 ];
 
 function getArg(name, fallbackValue = "") {
@@ -33,7 +44,11 @@ function runGit(args) {
 
 function isSourceFile(filePath) {
   // Exclude patterns that don't require tests
+<<<<<<< HEAD
   if (EXCLUDED_PATTERNS.some((pattern) => pattern.test(filePath))) {
+=======
+  if (EXCLUDED_PATTERNS.some(pattern => pattern.test(filePath))) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return false;
   }
   return SOURCE_ROOTS.some((root) => filePath.startsWith(root));

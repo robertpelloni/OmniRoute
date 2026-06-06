@@ -1,5 +1,6 @@
 # Contributing to OmniRoute (Türkçe)
 
+<<<<<<< HEAD
 🌐 **Languages:** 🇺🇸 [English](../../../CONTRIBUTING.md) · 🇸🇦 [ar](../ar/CONTRIBUTING.md) · 🇧🇬 [bg](../bg/CONTRIBUTING.md) · 🇧🇩 [bn](../bn/CONTRIBUTING.md) · 🇨🇿 [cs](../cs/CONTRIBUTING.md) · 🇩🇰 [da](../da/CONTRIBUTING.md) · 🇩🇪 [de](../de/CONTRIBUTING.md) · 🇪🇸 [es](../es/CONTRIBUTING.md) · 🇮🇷 [fa](../fa/CONTRIBUTING.md) · 🇫🇮 [fi](../fi/CONTRIBUTING.md) · 🇫🇷 [fr](../fr/CONTRIBUTING.md) · 🇮🇳 [gu](../gu/CONTRIBUTING.md) · 🇮🇱 [he](../he/CONTRIBUTING.md) · 🇮🇳 [hi](../hi/CONTRIBUTING.md) · 🇭🇺 [hu](../hu/CONTRIBUTING.md) · 🇮🇩 [id](../id/CONTRIBUTING.md) · 🇮🇹 [it](../it/CONTRIBUTING.md) · 🇯🇵 [ja](../ja/CONTRIBUTING.md) · 🇰🇷 [ko](../ko/CONTRIBUTING.md) · 🇮🇳 [mr](../mr/CONTRIBUTING.md) · 🇲🇾 [ms](../ms/CONTRIBUTING.md) · 🇳🇱 [nl](../nl/CONTRIBUTING.md) · 🇳🇴 [no](../no/CONTRIBUTING.md) · 🇵🇭 [phi](../phi/CONTRIBUTING.md) · 🇵🇱 [pl](../pl/CONTRIBUTING.md) · 🇵🇹 [pt](../pt/CONTRIBUTING.md) · 🇧🇷 [pt-BR](../pt-BR/CONTRIBUTING.md) · 🇷🇴 [ro](../ro/CONTRIBUTING.md) · 🇷🇺 [ru](../ru/CONTRIBUTING.md) · 🇸🇰 [sk](../sk/CONTRIBUTING.md) · 🇸🇪 [sv](../sv/CONTRIBUTING.md) · 🇰🇪 [sw](../sw/CONTRIBUTING.md) · 🇮🇳 [ta](../ta/CONTRIBUTING.md) · 🇮🇳 [te](../te/CONTRIBUTING.md) · 🇹🇭 [th](../th/CONTRIBUTING.md) · 🇹🇷 [tr](../tr/CONTRIBUTING.md) · 🇺🇦 [uk-UA](../uk-UA/CONTRIBUTING.md) · 🇵🇰 [ur](../ur/CONTRIBUTING.md) · 🇻🇳 [vi](../vi/CONTRIBUTING.md) · 🇨🇳 [zh-CN](../zh-CN/CONTRIBUTING.md)
 
 ---
@@ -7,16 +8,27 @@
 Thank you for your interest in contributing! This guide covers everything you need to get started.
 
 ---
+=======
+🌐 **Languages:** 🇺🇸 [English](../../../CONTRIBUTING.md) · 🇪🇸 [es](../es/CONTRIBUTING.md) · 🇫🇷 [fr](../fr/CONTRIBUTING.md) · 🇩🇪 [de](../de/CONTRIBUTING.md) · 🇮🇹 [it](../it/CONTRIBUTING.md) · 🇷🇺 [ru](../ru/CONTRIBUTING.md) · 🇨🇳 [zh-CN](../zh-CN/CONTRIBUTING.md) · 🇯🇵 [ja](../ja/CONTRIBUTING.md) · 🇰🇷 [ko](../ko/CONTRIBUTING.md) · 🇸🇦 [ar](../ar/CONTRIBUTING.md) · 🇮🇳 [hi](../hi/CONTRIBUTING.md) · 🇮🇳 [in](../in/CONTRIBUTING.md) · 🇹🇭 [th](../th/CONTRIBUTING.md) · 🇻🇳 [vi](../vi/CONTRIBUTING.md) · 🇮🇩 [id](../id/CONTRIBUTING.md) · 🇲🇾 [ms](../ms/CONTRIBUTING.md) · 🇳🇱 [nl](../nl/CONTRIBUTING.md) · 🇵🇱 [pl](../pl/CONTRIBUTING.md) · 🇸🇪 [sv](../sv/CONTRIBUTING.md) · 🇳🇴 [no](../no/CONTRIBUTING.md) · 🇩🇰 [da](../da/CONTRIBUTING.md) · 🇫🇮 [fi](../fi/CONTRIBUTING.md) · 🇵🇹 [pt](../pt/CONTRIBUTING.md) · 🇷🇴 [ro](../ro/CONTRIBUTING.md) · 🇭🇺 [hu](../hu/CONTRIBUTING.md) · 🇧🇬 [bg](../bg/CONTRIBUTING.md) · 🇸🇰 [sk](../sk/CONTRIBUTING.md) · 🇺🇦 [uk-UA](../uk-UA/CONTRIBUTING.md) · 🇮🇱 [he](../he/CONTRIBUTING.md) · 🇵🇭 [phi](../phi/CONTRIBUTING.md) · 🇧🇷 [pt-BR](../pt-BR/CONTRIBUTING.md) · 🇨🇿 [cs](../cs/CONTRIBUTING.md) · 🇹🇷 [tr](../tr/CONTRIBUTING.md)
+
+---
+
+Katkıda bulunmaya gösterdiğiniz ilgi için teşekkür ederiz! Bu kılavuz, başlamak için ihtiyacınız olan her şeyi kapsar.---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## Development Setup
 
 ### Prerequisites
 
+<<<<<<< HEAD
 - **Node.js** >= 18 < 24 (recommended: 22 LTS)
 - **npm** 10+
 - **Git**
 
 ### Clone & Install
+=======
+-**Node.js**>= 18 < 24 (önerilen: 22 LTS) -**npm**10+ -**Git**### Clone & Install
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ```bash
 git clone https://github.com/diegosouzapw/OmniRoute.git
@@ -35,6 +47,7 @@ echo "JWT_SECRET=$(openssl rand -base64 48)" >> .env
 echo "API_KEY_SECRET=$(openssl rand -hex 32)" >> .env
 ```
 
+<<<<<<< HEAD
 Key variables for development:
 
 | Variable               | Development Default      | Description           |
@@ -57,6 +70,26 @@ The dashboard provides UI toggles for features that can also be configured via e
 These settings are stored in the database and persist across restarts, overriding env var defaults when set.
 
 ### Running Locally
+=======
+Gelişim için temel değişkenler:
+
+| Değişken               | Geliştirme Varsayılanı   | Açıklama                |
+| ---------------------- | ------------------------ | ----------------------- | ---------------------- |
+| 'LİMAN'                | '20128'                  | Sunucu bağlantı noktası |
+| 'NEXT_PUBLIC_BASE_URL' | 'http://localhost:20128' | Ön uç için temel URL    |
+| 'JWT_SECRET'           | (yukarıda oluşturun)     | JWT imzalama sırrı      |
+| `INITIAL_PASSWORD`     | 'DEĞİŞTİR'               | İlk giriş şifresi       |
+| 'APP_LOG_LEVEL'        | 'bilgi'                  | Günlük ayrıntı düzeyi   | ### Dashboard Settings |
+
+Kontrol paneli, ortam değişkenleri yoluyla da yapılandırılabilen özellikler için kullanıcı arayüzü geçişleri sağlar:
+
+| Konum Ayarlama     | Değiştir                 | Açıklama                                             |
+| ------------------ | ------------------------ | ---------------------------------------------------- |
+| Ayarlar → Gelişmiş | Hata Ayıklama Modu       | Hata ayıklama isteği günlüklerini etkinleştirin (UI) |
+| Ayarlar → Genel    | Kenar Çubuğu Görünürlüğü | Kenar çubuğu bölümlerini göster/gizle                |
+
+Bu ayarlar veritabanında saklanır ve ayarlandığında env var varsayılanlarını geçersiz kılarak yeniden başlatmalarda kalıcı olur.### Running Locally
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ```bash
 # Development mode (hot reload)
@@ -70,6 +103,7 @@ npm run start
 PORT=20128 NEXT_PUBLIC_BASE_URL=http://localhost:20128 npm run dev
 ```
 
+<<<<<<< HEAD
 Default URLs:
 
 - **Dashboard**: `http://localhost:20128/dashboard`
@@ -105,16 +139,54 @@ git push -u origin feat/your-feature-name
 Follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```
+=======
+Varsayılan URL'ler:
+
+-**Kontrol Paneli**: `http://localhost:20128/dashboard` -**API**: `http://localhost:20128/v1`---
+
+## Git Workflow
+
+> ⚠️**ASLA doğrudan "ana"ya bağlanma.**Her zaman özellik dallarını kullanın.```bash
+> git checkout -b feat/your-feature-name
+
+# ... make changes ...
+
+git commit -m "feat: describe your change"
+git push -u origin feat/your-feature-name
+
+# Open a Pull Request on GitHub
+
+````
+
+### Branch Naming
+
+| Önek | Amaç |
+| ----------- | ------------------------- |
+| `feat/` | Yeni özellikler |
+| 'düzelt/' | Hata düzeltmeleri |
+| 'yeniden düzenleyen/' | Kodun yeniden yapılandırılması |
+| 'dokümanlar/' | Dokümantasyon değişiklikleri |
+| 'deneme/' | Eklemeleri/düzeltmeleri test edin |
+| `angarya/' | Araçlar, CI, bağımlılıklar |### Commit Messages
+
+[Geleneksel Taahhütleri](https://www.conventionalcommits.org/) takip edin:```
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 feat: add circuit breaker for provider calls
 fix: resolve JWT secret validation edge case
 docs: update SECURITY.md with PII protection
 test: add observability unit tests
 refactor(db): consolidate rate limit tables
+<<<<<<< HEAD
 ```
 
 Scopes: `db`, `sse`, `oauth`, `dashboard`, `api`, `cli`, `docker`, `ci`, `mcp`, `a2a`, `memory`, `skills`.
 
 ---
+=======
+````
+
+Kapsamlar: 'db', 'sse', 'oauth', 'dashboard', 'api', 'cli', 'docker', 'ci', 'mcp', 'a2a', 'bellek', 'beceriler'.---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## Running Tests
 
@@ -123,7 +195,11 @@ Scopes: `db`, `sse`, `oauth`, `dashboard`, `api`, `cli`, `docker`, `ci`, `mcp`, 
 npm run test:all
 
 # Single test file (Node.js native test runner — most tests use this)
+<<<<<<< HEAD
 node --import tsx/esm --test tests/unit/your-file.test.ts
+=======
+node --import tsx/esm --test tests/unit/your-file.test.mjs
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 # Vitest (MCP server, autoCombo, cache)
 npm run test:vitest
@@ -146,6 +222,7 @@ npm run lint
 npm run check
 ```
 
+<<<<<<< HEAD
 Coverage notes:
 
 - `npm run test:coverage` measures source coverage for the main unit test suite, excludes `tests/**`, and includes `open-sse/**`
@@ -188,6 +265,41 @@ Current test status: **122 unit test files** covering:
 - **Naming**: Files = camelCase/kebab-case, components = PascalCase, constants = UPPER_SNAKE
 
 ---
+=======
+Kapsam notları:
+
+- "npm çalıştırma testi:kapsam", ana ünite test takımı için kaynak kapsamını ölçer, "testler/**"i hariç tutar ve "açık-sse/**"yi içerir
+- Çekme istekleri, ekstreler, satırlar, işlevler ve dallar için genel kapsam kapısını**%60 veya daha yüksek**olarak tutmalıdır
+- Bir PR, "src/", "open-sse/", "electron/" veya "bin/" üretim kodunu değiştirirse, aynı PR'ye otomatik testler eklemeli veya güncellemelidir
+- `npm çalıştırma kapsamı:rapor`, en son kapsama çalıştırmasından dosya bazında ayrıntılı raporu yazdırır
+- `npm çalıştırma testi:kapsam:eski`, geçmiş karşılaştırma için eski ölçümü korur
+- Aşamalı kapsamı iyileştirme yol haritası için `docs/COVERAGE_PLAN.md`ye bakın### Pull Request Requirements
+
+Bir PR'yi açmadan veya birleştirmeden önce:
+
+- 'npm run test:unit'i çalıştırın
+- 'npm çalıştırma testi:kapsam'ı çalıştırın
+- Tüm metrikler için kapsama kapısının**%60+**'da kalmasını sağlayın
+- Üretim kodu değiştiğinde değiştirilen veya eklenen test dosyalarını PR açıklamasına ekleyin
+- Proje gizli dizileri CI'da yapılandırıldığında PR'deki SonarQube sonucunu kontrol edin
+
+Mevcut test durumu:**122 birim test dosyası**şunları kapsar:
+
+- Sağlayıcı çevirmenleri ve format dönüştürme
+- Hız sınırlama, devre kesici ve esneklik
+- Anlamsal önbellek, yetersizlik, ilerleme takibi
+- Veritabanı işlemleri ve şeması (21 DB modülü)
+- OAuth akışları ve kimlik doğrulama
+- API uç nokta doğrulaması (Zod v4)
+- MCP sunucu araçları ve kapsam uygulaması
+- Hafıza ve Beceri sistemleri---
+
+## Code Style
+
+-**ESLint**— İşlemden önce `npm run lint'i çalıştırın
+-**Daha güzel**— İşleme sırasında "lint-staged" aracılığıyla otomatik biçimlendirilmiş (2 boşluk, noktalı virgül, çift tırnak, 100 karakter genişliği, es5 sondaki virgüller)
+-**TypeScript**— Tüm `src/`kodları`.ts`/`.tsx`kullanır;`open-sse/`, `.ts`/`.js`yi kullanır; TSDoc içeren belge ("@param`, `@returns`, `@throws`) -**'eval()' yok**— ESLint, "değerlendirme yok", "ima edilen değerlendirme yok", "yeni-işlev yok" özelliklerini uygular -**Zod doğrulama**— Tüm API giriş doğrulaması için Zod v4 şemalarını kullanın -**Adlandırma**: Dosyalar = camelCase/kebab-case, bileşenler = PascalCase, sabitler = UPPER_SNAKE---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## Project Structure
 
@@ -256,6 +368,7 @@ docs/                       # Documentation
 
 ### Step 1: Register Provider Constants
 
+<<<<<<< HEAD
 Add to `src/shared/constants/providers.ts` — Zod-validated at module load.
 
 ### Step 2: Add Executor (if custom logic needed)
@@ -309,3 +422,39 @@ Releases are managed via the `/generate-release` workflow. When a new GitHub Rel
 - **API Reference**: See [`docs/API_REFERENCE.md`](docs/API_REFERENCE.md)
 - **Issues**: [github.com/diegosouzapw/OmniRoute/issues](https://github.com/diegosouzapw/OmniRoute/issues)
 - **ADRs**: See `docs/adr/` for architectural decision records
+=======
+'src/shared/constants/providers.ts' dosyasına ekleyin — Modül yükünde Zod tarafından doğrulandı.### Step 2: Add Executor (if custom logic needed)
+
+'open-sse/executors/your-provider.ts' dosyasında temel yürütücüyü genişleterek yürütücü oluşturun.### Step 3: Add Translator (if non-OpenAI format)
+
+'Open-sse/translator/'da istek/yanıt çevirmenleri oluşturun.### Step 4: Add OAuth Config (if OAuth-based)
+
+OAuth kimlik bilgilerini "src/lib/oauth/constants/oauth.ts" içine ve hizmeti "src/lib/oauth/services/" içine ekleyin.### Step 5: Register Models
+
+'open-sse/config/providerRegistry.ts' dosyasına model tanımlarını ekleyin.### Step 6: Add Tests
+
+Birim testlerini en azından aşağıdakileri kapsayacak şekilde "testler/birim/" olarak yazın:
+
+- Sağlayıcı kaydı
+- İstek/yanıt çevirisi
+- Hata işleme---
+
+## Pull Request Checklist
+
+- [ ] Testler başarılı (`npm testi`)
+- [ ] Linting geçişleri (`npm run lint`)
+- [ ] Derleme başarılı ('npm run build')
+- [ ] Yeni genel işlevler ve arayüzler için TypeScript türleri eklendi
+- [ ] Sabit kodlanmış sırlar veya geri dönüş değerleri yok
+- [ ] Tüm girişler Zod şemalarıyla doğrulandı
+- [ ] CHANGELOG güncellendi (kullanıcının karşılaştığı bir değişiklik varsa)
+- [ ] Belgeler güncellendi (varsa)---
+
+## Releasing
+
+Sürümler, '/generate-release' iş akışı aracılığıyla yönetilir. Yeni bir GitHub Sürümü oluşturulduğunda, paket GitHub Eylemleri aracılığıyla**otomatik olarak npm'ye yayınlanır**.---
+
+## Getting Help
+
+-**Mimarlık**: Bkz. [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) -**API Referansı**: Bkz. [`docs/API_REFERENCE.md`](docs/API_REFERENCE.md) -**Sorunlar**: [github.com/diegosouzapw/OmniRoute/issues](https://github.com/diegosouzapw/OmniRoute/issues) -**ADR'ler**: Mimari karar kayıtları için bkz. "belgeler/adr/"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

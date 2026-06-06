@@ -4,11 +4,17 @@
 
 ---
 
+<<<<<<< HEAD
 > **Agent-to-Agent Protocol v0.3** — Enables any AI agent to use OmniRoute as an intelligent routing agent via JSON-RPC 2.0.
 
 The A2A Server exposes OmniRoute as a **first-class agent** that other agents can discover, delegate tasks to, and collaborate with using the [A2A Protocol](https://google.github.io/A2A/).
 
 ---
+=======
+> **Протокол «агент-агент» версии 0.3**— позволяет любому AI-агенту использовать OmniRoute в качестве интеллектуального агента маршрутизации через JSON-RPC 2.0.
+
+Сервер A2A представляет OmniRoute как**первоклассного агента**, который другие агенты могут обнаруживать, делегировать задачи и сотрудничать с ним с помощью [Протокол A2A](https://google.github.io/A2A/).---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## Архитектура
 
@@ -43,6 +49,7 @@ The A2A Server exposes OmniRoute as a **first-class agent** that other agents ca
 
 ### Agent Discovery
 
+<<<<<<< HEAD
 Every A2A-compatible agent exposes an **Agent Card** at `/.well-known/agent.json`:
 
 ```bash
@@ -52,6 +59,14 @@ curl http://localhost:20128/.well-known/agent.json
 **Response:**
 
 ```json
+=======
+Каждый A2A-совместимый агент предоставляет**Карточку агента**в `/.well-known/agent.json`:```bash
+curl http://localhost:20128/.well-known/agent.json
+
+````
+
+**Ответ:**```json
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 {
   "name": "OmniRoute",
   "description": "Intelligent AI gateway with auto-routing across 50+ providers",
@@ -88,7 +103,11 @@ curl http://localhost:20128/.well-known/agent.json
     "apiKeyHeader": "Authorization"
   }
 }
+<<<<<<< HEAD
 ```
+=======
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ---
 
@@ -96,6 +115,7 @@ curl http://localhost:20128/.well-known/agent.json
 
 ### `message/send` — Synchronous Execution
 
+<<<<<<< HEAD
 Send a message to a skill and receive the complete response.
 
 ```bash
@@ -117,6 +137,26 @@ curl -X POST http://localhost:20128/a2a \
 **Response:**
 
 ```json
+=======
+Отправьте сообщение навыку и получите полный ответ.```bash
+curl -X POST http://localhost:20128/a2a \
+ -H "Content-Type: application/json" \
+ -H "Authorization: Bearer YOUR_KEY" \
+ -d '{
+"jsonrpc": "2.0",
+"id": "1",
+"method": "message/send",
+"params": {
+"skill": "smart-routing",
+"messages": [{"role": "user", "content": "Write a Python hello world"}],
+"metadata": {"model": "auto", "combo": "fast-coding"}
+}
+}'
+
+````
+
+**Ответ:**```json
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 {
   "jsonrpc": "2.0",
   "id": "1",
@@ -133,6 +173,7 @@ curl -X POST http://localhost:20128/a2a \
     }
   }
 }
+<<<<<<< HEAD
 ```
 
 ### `message/stream` — SSE Streaming
@@ -157,12 +198,39 @@ curl -N -X POST http://localhost:20128/a2a \
 **SSE Events:**
 
 ```
+=======
+````
+
+### `message/stream` — SSE Streaming
+
+То же, что и `message/send`, но возвращает события, отправленные сервером, для потоковой передачи в реальном времени.```bash
+curl -N -X POST http://localhost:20128/a2a \
+ -H "Content-Type: application/json" \
+ -H "Authorization: Bearer YOUR_KEY" \
+ -d '{
+"jsonrpc": "2.0",
+"id": "1",
+"method": "message/stream",
+"params": {
+"skill": "smart-routing",
+"messages": [{"role": "user", "content": "Explain quantum computing"}]
+}
+}'
+
+````
+
+**Мероприятия SSE:**```
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 data: {"jsonrpc":"2.0","method":"message/stream","params":{"task":{"id":"...","state":"working"},"chunk":{"type":"text","content":"Quantum computing..."}}}
 
 : heartbeat 2026-03-04T21:00:00Z
 
 data: {"jsonrpc":"2.0","method":"message/stream","params":{"task":{"id":"...","state":"completed"},"metadata":{...}}}
+<<<<<<< HEAD
 ```
+=======
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ### `tasks/get` — Query Task Status
 
@@ -188,6 +256,7 @@ curl -X POST http://localhost:20128/a2a \
 
 ### `smart-routing`
 
+<<<<<<< HEAD
 Routes prompts through OmniRoute's intelligent pipeline with full observability.
 
 **Parameters (in `metadata`):**
@@ -222,6 +291,38 @@ Answers natural-language queries about provider quotas.
 | Default                                        | Full quota summary with warnings for low-quota providers |
 
 ---
+=======
+Подсказки о маршрутах проходят через интеллектуальный конвейер OmniRoute с полной возможностью наблюдения.
+
+**Параметры (в метаданных):**
+
+| Параметр | Тип      | По умолчанию   | Описание                                                                                              |
+| -------- | -------- | -------------- | ----------------------------------------------------------------------------------------------------- |
+| `модель` | `строка` | `"авто"`       | Целевая модель (например, `claude-sonnet-4`, `gpt-4o`, `auto`)                                        |
+| `комбо`  | `строка` | активный комбо | Специальная комбинация для маршрутизации                                                              |
+| `бюджет` | `число`  | нет            | Максимальная стоимость в долларах США по этому запросу                                                |
+| `роль`   | `строка` | нет            | Подсказка по роли задачи: `кодирование`, `обзор`, `планирование`, `анализ`, `отладка`, `документация` |
+
+**Возвраты:**
+
+| Поле                           | Описание                                                   |
+| ------------------------------ | ---------------------------------------------------------- | ---------------------- |
+| `артефакты[].content`          | Текст ответа LLM                                           |
+| `metadata.routing_explanation` | Понятное объяснение решения о маршрутизации                |
+| `metadata.cost_envelope`       | Расчетная и фактическая стоимость в валюте                 |
+| `metadata.resilience_trace`    | Массив событий (primary_selected, Fallback_needed и т. д.) |
+| `metadata.policy_verdict`      | Был ли разрешен запрос и почему                            | ### `quota-management` |
+
+Отвечает на вопросы на естественном языке о квотах поставщиков.
+
+**Типы запросов (выводятся из содержания сообщения):**
+
+| Шаблон запроса                                   | Тип ответа                                                                      |
+| ------------------------------------------------ | ------------------------------------------------------------------------------- | --- |
+| Содержит «рейтинг», «наибольшую квоту», «лучший» | Провайдеры ранжированы по оставшейся квоте                                      |
+| Содержит `"бесплатно"`, `"предложить"`           | Перечисляет бесплатные комбинации или предлагает поставщиков бесплатного уровня |
+| По умолчанию                                     | Полная сводка квот с предупреждениями для поставщиков с низкой квотой           | --- |
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## Task Lifecycle
 
@@ -231,6 +332,7 @@ submitted ──→ working ──→ completed
               ──────────→ cancelled
 ```
 
+<<<<<<< HEAD
 | State       | Description                                           |
 | ----------- | ----------------------------------------------------- |
 | `submitted` | Task created, queued for execution                    |
@@ -244,6 +346,19 @@ submitted ──→ working ──→ completed
 - Tasks are garbage-collected after 2× TTL
 
 ---
+=======
+| Государство  | Описание                                                                                   |
+| ------------ | ------------------------------------------------------------------------------------------ |
+| `отправлено` | Задача создана, поставлена ​​в очередь на выполнение                                       |
+| `работает`   | Обработчик навыков выполняет                                                               |
+| `завершен`   | Выполнение выполнено успешно, артефакты доступны                                           |
+| `не удалось` | Не удалось выполнить выполнение или срок действия задачи истек (TTL: по умолчанию 5 минут) |
+| `отменено`   | Отменено клиентом через «задачи/отмена»                                                    |
+
+- Состояния терминала: «завершено», «не удалось», «отменено» (без дальнейших переходов).
+- Задачи с истекшим сроком выполнения в списках «отправлено» или «рабочие» автоматически помечаются как «неудачные».
+- Задачи удаляются после 2 × TTL.---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## Client Examples
 
@@ -541,6 +656,7 @@ func main() {
 
 ### 🤖 Use Case 1: Multi-Agent Coding Pipeline
 
+<<<<<<< HEAD
 An orchestrator agent delegates code generation to OmniRoute, then passes the output to a review agent.
 
 ```python
@@ -550,6 +666,14 @@ def coding_pipeline(task: str):
         {"role": "user", "content": f"Write production-quality code: {task}"}
     ], metadata={"model": "auto", "role": "coding"})
     code = code_result["artifacts"][0]["content"]
+=======
+Агент оркестратора делегирует создание кода OmniRoute, а затем передает выходные данные агенту проверки.```python
+def coding_pipeline(task: str): # Step 1: Generate code via OmniRoute A2A
+code_result = a2a_send("smart-routing", [
+{"role": "user", "content": f"Write production-quality code: {task}"}
+], metadata={"model": "auto", "role": "coding"})
+code = code_result["artifacts"][0]["content"]
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     # Step 2: Review the code via OmniRoute A2A (different model)
     review_result = a2a_send("smart-routing", [
@@ -562,6 +686,7 @@ def coding_pipeline(task: str):
     print(f"Review cost: ${review_result['metadata']['cost_envelope']['actual']}")
 
     return {"code": code, "review": review}
+<<<<<<< HEAD
 ```
 
 ### 💡 Use Case 2: Quota-Aware Agent Swarm
@@ -569,6 +694,14 @@ def coding_pipeline(task: str):
 Multiple agents share quota through OmniRoute, using the quota skill to coordinate.
 
 ```python
+=======
+
+````
+
+### 💡 Use Case 2: Quota-Aware Agent Swarm
+
+Несколько агентов совместно используют квоту через OmniRoute, используя для координации навык квотирования.```python
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 async def quota_aware_agent(agent_name: str, task: str):
     # Check quota before starting
     quota = a2a_send("quota-management", [
@@ -591,6 +724,7 @@ async def quota_aware_agent(agent_name: str, task: str):
         print(f"[{agent_name}] Free alternatives: {quota['artifacts'][0]['content']}")
 
     return result
+<<<<<<< HEAD
 ```
 
 ### 📊 Use Case 3: Real-Time Streaming Dashboard
@@ -598,10 +732,18 @@ async def quota_aware_agent(agent_name: str, task: str):
 A monitoring agent streams responses and displays progress in real-time.
 
 ```typescript
+=======
+````
+
+### 📊 Use Case 3: Real-Time Streaming Dashboard
+
+Агент мониторинга передает ответы и отображает прогресс в режиме реального времени.```typescript
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 async function streamingDashboard(prompt: string) {
   const response = await fetch(`${BASE_URL}/a2a`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${API_KEY}` },
+<<<<<<< HEAD
     body: JSON.stringify({
       jsonrpc: "2.0",
       id: "dash-1",
@@ -617,6 +759,23 @@ async function streamingDashboard(prompt: string) {
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
+=======
+body: JSON.stringify({
+jsonrpc: "2.0",
+id: "dash-1",
+method: "message/stream",
+params: { skill: "smart-routing", messages: [{ role: "user", content: prompt }] },
+}),
+});
+
+let totalChunks = 0;
+const reader = response.body!.getReader();
+const decoder = new TextDecoder();
+
+while (true) {
+const { done, value } = await reader.read();
+if (done) break;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     for (const line of decoder.decode(value).split("\n")) {
       if (line.startsWith("data: ")) {
@@ -640,6 +799,7 @@ async function streamingDashboard(prompt: string) {
         }
       }
     }
+<<<<<<< HEAD
   }
 }
 ```
@@ -649,6 +809,17 @@ async function streamingDashboard(prompt: string) {
 For long-running tasks, poll the task status instead of waiting synchronously.
 
 ```python
+=======
+
+}
+}
+
+````
+
+### 🔁 Use Case 4: Task Polling Pattern
+
+Для длительно выполняющихся задач опрашивайте состояние задачи вместо синхронного ожидания.```python
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import time
 
 def poll_task(task_id: str, timeout: int = 60):
@@ -678,12 +849,17 @@ def poll_task(task_id: str, timeout: int = 60):
         "params": {"taskId": task_id},
     })
     raise TimeoutError(f"Task {task_id} timed out after {timeout}s")
+<<<<<<< HEAD
 ```
+=======
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ---
 
 ## Error Codes
 
+<<<<<<< HEAD
 | Code   | Constant                 | Meaning                                  |
 | ------ | ------------------------ | ---------------------------------------- |
 | -32700 | —                        | Parse error (invalid JSON)               |
@@ -710,10 +886,34 @@ Authorization: Bearer YOUR_OMNIROUTE_API_KEY
 If no API key is configured on the server (`OMNIROUTE_API_KEY` is empty), authentication is bypassed.
 
 ---
+=======
+| Код    | Константа                | Значение                                      |
+| ------ | ------------------------ | --------------------------------------------- | --- |
+| -32700 | —                        | Ошибка анализа (неверный JSON)                |
+| -32600 | `INVALID_REQUEST`        | Неверный или неавторизованный запрос JSON-RPC |
+| -32601 | `METHOD_NOT_FOUND`       | Неизвестный метод или навык                   |
+| -32602 | `INVALID_PARAMS`         | Отсутствующие или неверные параметры          |
+| -32603 | `ВНУТРЕННЯ_ОШИБКА`       | Не удалось выполнить навык                    |
+| -32001 | `TASK_NOT_FOUND`         | Идентификатор задачи не найден                |
+| -32002 | `TASK_ALREADY_COMPLETED` | Невозможно изменить выполненную задачу        |
+| -32003 | `НЕСАНКЦИОНИРОВАНО`      | Неверный или отсутствующий ключ API           |
+| -32004 | `BUDGET_EXCEEDED`        | Запрос превышает настроенный бюджет           |
+| -32005 | `PROVIDER_UNAVAILABLE`   | Нет доступных поставщиков                     | --- |
+
+## Authentication
+
+Для всех запросов `/a2a` требуется токен носителя через заголовок `Authorization`:```
+Authorization: Bearer YOUR_OMNIROUTE_API_KEY
+
+```
+
+Если на сервере не настроен ключ API (OMNIROUTE_API_KEY пуст), аутентификация обходится.---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## File Structure
 
 ```
+<<<<<<< HEAD
 src/lib/a2a/
 ├── taskManager.ts         # Task lifecycle (create/update/cancel/list), TTL, cleanup
 ├── taskExecution.ts       # Generic task executor with state management
@@ -728,12 +928,31 @@ src/app/a2a/
 
 open-sse/mcp-server/
 └── schemas/a2a.ts         # Zod schemas (AgentCard, Task, JSON-RPC, SSE events)
+=======
+
+src/lib/a2a/
+├── taskManager.ts # Task lifecycle (create/update/cancel/list), TTL, cleanup
+├── taskExecution.ts # Generic task executor with state management
+├── streaming.ts # SSE stream formatting, heartbeat, chunk/completion events
+├── routingLogger.ts # Routing decision logger (stats, history, retention)
+└── skills/
+├── smartRouting.ts # Smart routing skill (routes via /v1/chat/completions)
+└── quotaManagement.ts # Quota management skill (natural-language quota queries)
+
+src/app/a2a/
+└── route.ts # Next.js API route handler (JSON-RPC 2.0 dispatch)
+
+open-sse/mcp-server/
+└── schemas/a2a.ts # Zod schemas (AgentCard, Task, JSON-RPC, SSE events)
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 ```
 
 ---
 
 ## Comparison: MCP vs A2A
 
+<<<<<<< HEAD
 | Feature           | MCP Server                   | A2A Server                                        |
 | ----------------- | ---------------------------- | ------------------------------------------------- |
 | **Protocol**      | Model Context Protocol       | Agent-to-Agent Protocol v0.3                      |
@@ -750,3 +969,20 @@ open-sse/mcp-server/
 ## Лицензия
 
 Part of [OmniRoute](https://github.com/diegosouzapw/OmniRoute) — MIT License.
+=======
+| Особенность | MCP-сервер | A2A-сервер |
+| ----------------- | ---------------------------- | ------------------------------------------------- |
+|**Протокол**| Протокол контекста модели | Протокол агент-агент v0.3 |
+|**Транспорт**| стандартное/HTTP | HTTP (JSON-RPC 2.0) |
+|**Открытие**| Список инструментов через MCP | `/.well-known/agent.json` |
+|**Детализация**| 16 индивидуальных инструментов | 2 навыка высокого уровня |
+|**Лучший вариант**| Агенты IDE (курсор, код VS) | Мультиагентные системы (LangChain, CrewAI) |
+|**Потоковая передача**| Не поддерживается | SSE через `сообщение/поток` |
+|**Отслеживание задач**| Нет | Полный жизненный цикл (отправлено → завершено) |
+|**Наблюдаемость**| Журнал аудита каждого вызова инструмента | Конверт затрат + трассировка устойчивости + вердикт политики |---
+
+## Лицензия
+
+Часть [OmniRoute](https://github.com/diegosouzapw/OmniRoute) — лицензия MIT.
+```
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

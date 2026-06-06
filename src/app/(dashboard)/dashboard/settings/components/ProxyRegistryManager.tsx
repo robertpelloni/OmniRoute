@@ -1,7 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+<<<<<<< HEAD
 import { useTranslations } from "next-intl";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { Button, Card, Modal } from "@/shared/components";
 
 type ProxyItem = {
@@ -38,6 +41,7 @@ type TestResult = {
   error?: string;
 };
 
+<<<<<<< HEAD
 type ParsedProxyEntry = {
   name: string;
   host: string;
@@ -56,6 +60,8 @@ type ParseError = {
 };
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 const EMPTY_FORM = {
   id: "",
   name: "",
@@ -69,6 +75,7 @@ const EMPTY_FORM = {
   status: "active",
 };
 
+<<<<<<< HEAD
 const BULK_IMPORT_TEMPLATE = `# Proxy Bulk Import
 # Format: NAME|HOST|PORT|USERNAME|PASSWORD|TYPE|REGION|STATUS|NOTES
 # Required: NAME, HOST, PORT
@@ -150,6 +157,9 @@ function parseBulkImportText(text: string): {
 
 export default function ProxyRegistryManager() {
   const t = useTranslations("proxyRegistry");
+=======
+export default function ProxyRegistryManager() {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [items, setItems] = useState<ProxyItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -169,6 +179,7 @@ export default function ProxyRegistryManager() {
   const [bulkScopeIds, setBulkScopeIds] = useState("");
   const [bulkProxyId, setBulkProxyId] = useState("");
 
+<<<<<<< HEAD
   // Bulk Import state
   const [bulkImportOpen, setBulkImportOpen] = useState(false);
   const [bulkImportText, setBulkImportText] = useState(BULK_IMPORT_TEMPLATE);
@@ -183,6 +194,8 @@ export default function ProxyRegistryManager() {
     failed: number;
   } | null>(null);
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const editingId = useMemo(() => form.id || "", [form.id]);
 
   const loadHealth = useCallback(async () => {
@@ -237,7 +250,11 @@ export default function ProxyRegistryManager() {
       const res = await fetch("/api/settings/proxies");
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
+<<<<<<< HEAD
         setError(data?.error?.message || t("errorLoadFailed"));
+=======
+        setError(data?.error?.message || "Failed to load proxy registry");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         setItems([]);
         return;
       }
@@ -247,7 +264,11 @@ export default function ProxyRegistryManager() {
       void loadHealth();
       void loadAllUsage(ids);
     } catch (e: any) {
+<<<<<<< HEAD
       setError(e?.message || t("errorLoadFailed"));
+=======
+      setError(e?.message || "Failed to load proxy registry");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       setItems([]);
     } finally {
       setLoading(false);
@@ -334,6 +355,10 @@ export default function ProxyRegistryManager() {
       if (!res.ok) {
         setTestById((prev) => ({
           ...prev,
+<<<<<<< HEAD
+=======
+          [item.id]: { success: false, error: data?.error?.message || "Test failed" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         }));
         return;
       }
@@ -346,14 +371,20 @@ export default function ProxyRegistryManager() {
   };
 
   const handleSave = async () => {
+<<<<<<< HEAD
     if (!(form.name || "").trim() || !(form.host || "").trim()) {
       setError(t("errorNameHostRequired"));
+=======
+    if (!form.name.trim() || !form.host.trim()) {
+      setError("Name and host are required");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       return;
     }
 
     setSaving(true);
     setError(null);
 
+<<<<<<< HEAD
     const normalizedUsername = (form.username || "").trim();
     const normalizedPassword = (form.password || "").trim();
 
@@ -365,6 +396,19 @@ export default function ProxyRegistryManager() {
       port: Number(form.port || 8080),
       region: (form.region || "").trim() || null,
       notes: (form.notes || "").trim() || null,
+=======
+    const normalizedUsername = form.username.trim();
+    const normalizedPassword = form.password.trim();
+
+    const payload: Record<string, unknown> = {
+      ...(editingId ? { id: editingId } : {}),
+      name: form.name.trim(),
+      type: form.type,
+      host: form.host.trim(),
+      port: Number(form.port || 8080),
+      region: form.region.trim() || null,
+      notes: form.notes.trim() || null,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       status: form.status,
     };
     if (!editingId || normalizedUsername.length > 0) {
@@ -382,7 +426,11 @@ export default function ProxyRegistryManager() {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
+<<<<<<< HEAD
         setError(data?.error?.message || t("errorSaveFailed"));
+=======
+        setError(data?.error?.message || "Failed to save proxy");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         return;
       }
 
@@ -390,7 +438,11 @@ export default function ProxyRegistryManager() {
       setForm(EMPTY_FORM);
       await load();
     } catch (e: any) {
+<<<<<<< HEAD
       setError(e?.message || t("errorSaveFailed"));
+=======
+      setError(e?.message || "Failed to save proxy");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     } finally {
       setSaving(false);
     }
@@ -410,7 +462,13 @@ export default function ProxyRegistryManager() {
       const payload = await res.json().catch(() => ({}));
       const inUse = res.status === 409;
       if (inUse) {
+<<<<<<< HEAD
         const ok = window.confirm(t("errorForceDeleteConfirm"));
+=======
+        const ok = window.confirm(
+          "This proxy is still assigned. Force delete and remove all assignments?"
+        );
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         if (!ok) return;
 
         const forceRes = await fetch(`/api/settings/proxies?id=${encodeURIComponent(id)}&force=1`, {
@@ -419,7 +477,11 @@ export default function ProxyRegistryManager() {
 
         if (!forceRes.ok) {
           const forcePayload = await forceRes.json().catch(() => ({}));
+<<<<<<< HEAD
           setError(forcePayload?.error?.message || t("errorDeleteFailed"));
+=======
+          setError(forcePayload?.error?.message || "Failed to force delete proxy");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           return;
         }
 
@@ -427,9 +489,15 @@ export default function ProxyRegistryManager() {
         return;
       }
 
+<<<<<<< HEAD
       setError(payload?.error?.message || t("errorDeleteFailed"));
     } catch (e: any) {
       setError(e?.message || t("errorDeleteFailed"));
+=======
+      setError(payload?.error?.message || "Failed to delete proxy");
+    } catch (e: any) {
+      setError(e?.message || "Failed to delete proxy");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
   };
 
@@ -444,12 +512,20 @@ export default function ProxyRegistryManager() {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
+<<<<<<< HEAD
         setError(data?.error?.message || t("errorMigrateFailed"));
+=======
+        setError(data?.error?.message || "Failed to migrate legacy proxy config");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         return;
       }
       await load();
     } catch (e: any) {
+<<<<<<< HEAD
       setError(e?.message || t("errorMigrateFailed"));
+=======
+      setError(e?.message || "Failed to migrate legacy proxy config");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     } finally {
       setMigrating(false);
     }
@@ -478,7 +554,11 @@ export default function ProxyRegistryManager() {
       });
       const payload = await res.json().catch(() => ({}));
       if (!res.ok) {
+<<<<<<< HEAD
         setError(payload?.error?.message || t("errorBulkFailed"));
+=======
+        setError(payload?.error?.message || "Failed to run bulk assignment");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         return;
       }
 
@@ -486,12 +566,17 @@ export default function ProxyRegistryManager() {
       setBulkScopeIds("");
       await load();
     } catch (e: any) {
+<<<<<<< HEAD
       setError(e?.message || t("errorBulkFailed"));
+=======
+      setError(e?.message || "Failed to run bulk assignment");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     } finally {
       setBulkSaving(false);
     }
   };
 
+<<<<<<< HEAD
   const handleBulkImportParse = () => {
     const { entries, errors, skipped } = parseBulkImportText(bulkImportText);
     setBulkImportParsed(entries);
@@ -563,13 +648,20 @@ export default function ProxyRegistryManager() {
     setBulkImportOpen(true);
   };
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return (
     <>
       <Card className="p-6">
         <div className="flex items-center justify-between gap-3 mb-4">
           <div>
+<<<<<<< HEAD
             <h3 className="text-lg font-semibold">{t("title")}</h3>
             <p className="text-sm text-text-muted">{t("description")}</p>
+=======
+            <h3 className="text-lg font-semibold">Proxy Registry</h3>
+            <p className="text-sm text-text-muted">Store reusable proxies and track assignments.</p>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           </div>
           <div className="flex items-center gap-2">
             <Button
@@ -580,6 +672,7 @@ export default function ProxyRegistryManager() {
               loading={migrating}
               data-testid="proxy-registry-import-legacy"
             >
+<<<<<<< HEAD
               {t("importLegacy")}
             </Button>
             <Button
@@ -590,6 +683,9 @@ export default function ProxyRegistryManager() {
               data-testid="proxy-registry-open-bulk-import"
             >
               {t("bulkImport")}
+=======
+              Import Legacy
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             </Button>
             <Button
               size="sm"
@@ -598,7 +694,11 @@ export default function ProxyRegistryManager() {
               onClick={() => setBulkOpen(true)}
               data-testid="proxy-registry-open-bulk"
             >
+<<<<<<< HEAD
               {t("bulkAssign")}
+=======
+              Bulk Assign
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             </Button>
             <Button
               size="sm"
@@ -606,7 +706,11 @@ export default function ProxyRegistryManager() {
               onClick={openCreate}
               data-testid="proxy-registry-open-create"
             >
+<<<<<<< HEAD
               {t("addProxy")}
+=======
+              Add Proxy
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             </Button>
           </div>
         </div>
@@ -618,20 +722,35 @@ export default function ProxyRegistryManager() {
         )}
 
         {loading ? (
+<<<<<<< HEAD
           <div className="text-sm text-text-muted">{t("loading")}</div>
         ) : items.length === 0 ? (
           <div className="text-sm text-text-muted">{t("noProxies")}</div>
+=======
+          <div className="text-sm text-text-muted">Loading proxies...</div>
+        ) : items.length === 0 ? (
+          <div className="text-sm text-text-muted">No saved proxies yet.</div>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-text-muted border-b border-border">
+<<<<<<< HEAD
                   <th className="py-2 pr-3">{t("tableName")}</th>
                   <th className="py-2 pr-3">{t("tableEndpoint")}</th>
                   <th className="py-2 pr-3">{t("tableStatus")}</th>
                   <th className="py-2 pr-3">{t("tableHealth")}</th>
                   <th className="py-2 pr-3">{t("tableUsage")}</th>
                   <th className="py-2">{t("tableActions")}</th>
+=======
+                  <th className="py-2 pr-3">Name</th>
+                  <th className="py-2 pr-3">Endpoint</th>
+                  <th className="py-2 pr-3">Status</th>
+                  <th className="py-2 pr-3">Health (24h)</th>
+                  <th className="py-2 pr-3">Usage</th>
+                  <th className="py-2">Actions</th>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 </tr>
               </thead>
               <tbody>
@@ -673,6 +792,11 @@ export default function ProxyRegistryManager() {
                             )
                           ) : health ? (
                             <>
+<<<<<<< HEAD
+=======
+                              <span>{health.successRate ?? 0}% success</span>
+                              <span>{health.avgLatencyMs ?? "-"} ms avg</span>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                             </>
                           ) : (
                             <span>—</span>
@@ -681,6 +805,11 @@ export default function ProxyRegistryManager() {
                       </td>
                       <td className="py-2 pr-3 text-xs text-text-muted">
                         {usageById[item.id] != null
+<<<<<<< HEAD
+=======
+                          ? `${usageById[item.id].count} assignment(s)`
+                          : "—"}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                       </td>
                       <td className="py-2">
                         <div className="flex items-center gap-1">
@@ -691,6 +820,10 @@ export default function ProxyRegistryManager() {
                             onClick={() => void handleTestProxy(item)}
                             loading={testingId === item.id}
                           >
+<<<<<<< HEAD
+=======
+                            Test
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                           </Button>
                           <Button
                             size="sm"
@@ -698,7 +831,11 @@ export default function ProxyRegistryManager() {
                             icon="edit"
                             onClick={() => openEdit(item)}
                           >
+<<<<<<< HEAD
                             {t("edit")}
+=======
+                            Edit
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                           </Button>
                           <Button
                             size="sm"
@@ -707,7 +844,11 @@ export default function ProxyRegistryManager() {
                             onClick={() => void handleDelete(item.id)}
                             className="!text-red-400"
                           >
+<<<<<<< HEAD
                             {t("delete")}
+=======
+                            Delete
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                           </Button>
                         </div>
                       </td>
@@ -725,6 +866,7 @@ export default function ProxyRegistryManager() {
         onClose={() => {
           if (!saving) setModalOpen(false);
         }}
+<<<<<<< HEAD
         title={editingId ? t("modalEditTitle") : t("modalCreateTitle")}
         maxWidth="lg"
       >
@@ -740,6 +882,15 @@ export default function ProxyRegistryManager() {
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="text-xs text-text-muted mb-1 block">{t("labelName")}</label>
+=======
+        title={editingId ? "Edit Proxy" : "Create Proxy"}
+        maxWidth="lg"
+      >
+        <div className="flex flex-col gap-3">
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-xs text-text-muted mb-1 block">Name</label>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               <input
                 data-testid="proxy-registry-name-input"
                 className="w-full px-3 py-2 rounded bg-bg-subtle border border-border"
@@ -834,7 +985,11 @@ export default function ProxyRegistryManager() {
               Save
             </Button>
           </div>
+<<<<<<< HEAD
         </form>
+=======
+        </div>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       </Modal>
 
       <Modal
@@ -909,6 +1064,7 @@ export default function ProxyRegistryManager() {
           </div>
         </div>
       </Modal>
+<<<<<<< HEAD
 
       {/* Bulk Import Modal */}
       <Modal
@@ -1061,6 +1217,8 @@ export default function ProxyRegistryManager() {
           </div>
         </div>
       </Modal>
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     </>
   );
 }

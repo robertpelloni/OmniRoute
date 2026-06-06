@@ -1,5 +1,6 @@
 "use client";
 
+<<<<<<< HEAD
 import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Card, SegmentedControl } from "@/shared/components";
@@ -213,6 +214,8 @@ function McpAuditTab() {
           {t("next")}
         </button>
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { useState, useEffect } from "react";
 import ConfigAuditViewer from "./ConfigAuditViewer";
 
@@ -251,11 +254,15 @@ export default function ConfigAuditPage() {
 
       <div className="bg-[var(--card-bg,#1e1e2e)] border border-[var(--border,#333)] rounded-xl overflow-hidden shadow-sm">
         <ConfigAuditViewer />
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       </div>
     </div>
   );
 }
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 
 export default function AuditPage() {
@@ -286,3 +293,5 @@ export default function AuditPage() {
   );
 }
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

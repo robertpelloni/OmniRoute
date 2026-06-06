@@ -1,12 +1,16 @@
 "use server";
 
 import { NextResponse } from "next/server";
+<<<<<<< HEAD
 import { requireCliToolsAuth } from "@/lib/api/requireCliToolsAuth";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { listBackups, restoreBackup, deleteBackup } from "@/shared/services/backupService";
 import { ensureCliConfigWriteAllowed } from "@/shared/services/cliRuntime";
 import { cliBackupMutationSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
 
+<<<<<<< HEAD
 const VALID_TOOLS = ["claude", "codex", "droid", "openclaw", "cline", "kilo", "qwen"];
 
 // GET /api/cli-tools/backups?tool=claude — list backups
@@ -14,6 +18,12 @@ export async function GET(request) {
   const authError = await requireCliToolsAuth(request);
   if (authError) return authError;
 
+=======
+const VALID_TOOLS = ["claude", "codex", "droid", "openclaw", "cline", "kilo"];
+
+// GET /api/cli-tools/backups?tool=claude — list backups
+export async function GET(request) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const { searchParams } = new URL(request.url);
     const tool = searchParams.get("tool") || searchParams.get("toolId");
@@ -41,9 +51,12 @@ export async function GET(request) {
 
 // POST /api/cli-tools/backups { tool, backupId } — restore a backup
 export async function POST(request) {
+<<<<<<< HEAD
   const authError = await requireCliToolsAuth(request);
   if (authError) return authError;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody;
   try {
     rawBody = await request.json();
@@ -93,9 +106,12 @@ export async function POST(request) {
 
 // DELETE /api/cli-tools/backups { tool, backupId } — delete a backup
 export async function DELETE(request) {
+<<<<<<< HEAD
   const authError = await requireCliToolsAuth(request);
   if (authError) return authError;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody;
   try {
     rawBody = await request.json();

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import fs from "fs/promises";
 import path from "path";
 import os from "os";
+<<<<<<< HEAD
 import { requireCliToolsAuth } from "@/lib/api/requireCliToolsAuth";
 import { getRuntimePorts } from "@/lib/runtime/ports";
 import { getOpenCodeConfigPath } from "@/shared/services/cliRuntime";
@@ -12,6 +13,13 @@ import { mergeOpenCodeConfig } from "@/shared/services/opencodeConfig";
 import { guideSettingsSaveSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
 import { resolveApiKey, getOrCreateApiKey } from "@/shared/services/apiKeyResolver";
+=======
+import { getRuntimePorts } from "@/lib/runtime/ports";
+import { getOpenCodeConfigPath } from "@/shared/services/cliRuntime";
+import { mergeOpenCodeConfig } from "@/shared/services/opencodeConfig";
+import { guideSettingsSaveSchema } from "@/shared/validation/schemas";
+import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * POST /api/cli-tools/guide-settings/:toolId
@@ -20,9 +28,12 @@ import { resolveApiKey, getOrCreateApiKey } from "@/shared/services/apiKeyResolv
  * Currently supports: continue, opencode
  */
 export async function POST(request, { params }) {
+<<<<<<< HEAD
   const authError = await requireCliToolsAuth(request);
   if (authError) return authError;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody;
   try {
     rawBody = await request.json();
@@ -43,6 +54,7 @@ export async function POST(request, { params }) {
   if (isValidationFailure(validation)) {
     return NextResponse.json({ error: validation.error }, { status: 400 });
   }
+<<<<<<< HEAD
   const { baseUrl, model, models, modelLabels } = validation.data;
   // (#523) Extract keyId BEFORE validation — Zod strips unknown fields!
   const apiKeyId = typeof rawBody?.keyId === "string" ? rawBody.keyId.trim() : null;
@@ -50,6 +62,9 @@ export async function POST(request, { params }) {
   const apiKey = apiKeyId
     ? await resolveApiKey(apiKeyId, validation.data.apiKey)
     : await getOrCreateApiKey();
+=======
+  const { baseUrl, apiKey, model } = validation.data;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   try {
     switch (toolId) {
@@ -57,10 +72,15 @@ export async function POST(request, { params }) {
         return await saveContinueConfig({ baseUrl, apiKey, model });
       case "opencode":
         // (#524) OpenCode config was never saved because only 'continue' was handled here.
+<<<<<<< HEAD
         // OpenCode reads ~/.config/opencode/opencode.json — write the OmniRoute settings there.
         return await saveOpenCodeConfig({ baseUrl, apiKey, model, models, modelLabels });
       case "qwen":
         return await saveQwenConfig({ baseUrl, apiKey, model });
+=======
+        // opencode reads ~/.config/opencode/config.toml — write the OmniRoute settings there.
+        return await saveOpenCodeConfig({ baseUrl, apiKey, model });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       default:
         return NextResponse.json(
           { error: `Direct config save not supported for: ${toolId}` },
@@ -155,7 +175,11 @@ async function saveContinueConfig({ baseUrl, apiKey, model }) {
  *
  * (#524) OpenCode was silently failing because this handler was missing.
  */
+<<<<<<< HEAD
 async function saveOpenCodeConfig({ baseUrl, apiKey, model, models, modelLabels }) {
+=======
+async function saveOpenCodeConfig({ baseUrl, apiKey, model }) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const configPath = getOpenCodeConfigPath();
   const configDir = path.dirname(configPath);
 
@@ -166,6 +190,7 @@ async function saveOpenCodeConfig({ baseUrl, apiKey, model, models, modelLabels 
     .trim()
     .replace(/\/+$/, "");
 
+<<<<<<< HEAD
   // Read existing JSONC/JSON text to preserve unrelated config formatting and fields.
   let existingConfigText = "";
   try {
@@ -183,6 +208,24 @@ async function saveOpenCodeConfig({ baseUrl, apiKey, model, models, modelLabels 
   });
 
   await fs.writeFile(configPath, nextConfigText, "utf-8");
+=======
+  // Read existing JSON to preserve other provider entries
+  let existingConfig: Record<string, any> = {};
+  try {
+    const raw = await fs.readFile(configPath, "utf-8");
+    existingConfig = JSON.parse(raw);
+  } catch {
+    // File doesn't exist or invalid JSON — start fresh
+  }
+
+  const nextConfig = mergeOpenCodeConfig(existingConfig, {
+    baseUrl: normalizedBaseUrl,
+    apiKey,
+    model,
+  });
+
+  await fs.writeFile(configPath, JSON.stringify(nextConfig, null, 2), "utf-8");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   return NextResponse.json({
     success: true,
@@ -190,6 +233,7 @@ async function saveOpenCodeConfig({ baseUrl, apiKey, model, models, modelLabels 
     configPath,
   });
 }
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 
 /**
@@ -246,3 +290,5 @@ async function saveQwenConfig({ baseUrl, apiKey, model }) {
   });
 }
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

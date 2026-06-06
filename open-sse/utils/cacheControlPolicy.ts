@@ -83,9 +83,12 @@ export function isClaudeCodeClient(userAgent: string | null | undefined): boolea
 
   // Claude Code user agents
   if (ua.includes("claude-code") || ua.includes("claude_code")) return true;
+<<<<<<< HEAD
   if (ua.includes("claude-cli/")) return true;
   if (ua.includes("sdk-cli")) return true;
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (ua.includes("anthropic") && ua.includes("cli")) return true;
 
   return false;
@@ -151,6 +154,7 @@ export function shouldPreserveCacheControl({
     return false;
   }
 
+<<<<<<< HEAD
   // CC-compatible bridges should default to OmniRoute-managed cache markers.
   // Their request shape differs from native Claude Messages payloads, so
   // preserving client markers in auto mode weakens cache coverage.
@@ -158,6 +162,8 @@ export function shouldPreserveCacheControl({
     return false;
   }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Auto mode: use automatic detection (existing logic)
   // Must be a caching-aware client
   if (!isClaudeCodeClient(userAgent)) {

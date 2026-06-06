@@ -4,11 +4,17 @@
 
 ---
 
+<<<<<<< HEAD
 > **Agent-to-Agent Protocol v0.3** — Enables any AI agent to use OmniRoute as an intelligent routing agent via JSON-RPC 2.0.
 
 The A2A Server exposes OmniRoute as a **first-class agent** that other agents can discover, delegate tasks to, and collaborate with using the [A2A Protocol](https://google.github.io/A2A/).
 
 ---
+=======
+> **Agent-to-Agent Protocol v0.3**— Memungkinkan agen AI mana pun menggunakan OmniRoute sebagai agen perutean cerdas melalui JSON-RPC 2.0.
+
+Server A2A menampilkan OmniRoute sebagai**agen kelas satu**yang dapat ditemukan, didelegasikan tugas, dan dikolaborasikan oleh agen lain menggunakan [Protokol A2A](https://google.github.io/A2A/).---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## Arsitektur
 
@@ -43,6 +49,7 @@ The A2A Server exposes OmniRoute as a **first-class agent** that other agents ca
 
 ### Agent Discovery
 
+<<<<<<< HEAD
 Every A2A-compatible agent exposes an **Agent Card** at `/.well-known/agent.json`:
 
 ```bash
@@ -52,6 +59,14 @@ curl http://localhost:20128/.well-known/agent.json
 **Response:**
 
 ```json
+=======
+Setiap agen yang kompatibel dengan A2A menampilkan**Kartu Agen**di `/.well-known/agent.json`:```bash
+curl http://localhost:20128/.well-known/agent.json
+
+````
+
+**Tanggapan:**```json
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 {
   "name": "OmniRoute",
   "description": "Intelligent AI gateway with auto-routing across 50+ providers",
@@ -88,7 +103,11 @@ curl http://localhost:20128/.well-known/agent.json
     "apiKeyHeader": "Authorization"
   }
 }
+<<<<<<< HEAD
 ```
+=======
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ---
 
@@ -96,6 +115,7 @@ curl http://localhost:20128/.well-known/agent.json
 
 ### `message/send` — Synchronous Execution
 
+<<<<<<< HEAD
 Send a message to a skill and receive the complete response.
 
 ```bash
@@ -117,6 +137,26 @@ curl -X POST http://localhost:20128/a2a \
 **Response:**
 
 ```json
+=======
+Kirim pesan ke suatu keterampilan dan terima respons lengkap.```bash
+curl -X POST http://localhost:20128/a2a \
+ -H "Content-Type: application/json" \
+ -H "Authorization: Bearer YOUR_KEY" \
+ -d '{
+"jsonrpc": "2.0",
+"id": "1",
+"method": "message/send",
+"params": {
+"skill": "smart-routing",
+"messages": [{"role": "user", "content": "Write a Python hello world"}],
+"metadata": {"model": "auto", "combo": "fast-coding"}
+}
+}'
+
+````
+
+**Tanggapan:**```json
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 {
   "jsonrpc": "2.0",
   "id": "1",
@@ -133,6 +173,7 @@ curl -X POST http://localhost:20128/a2a \
     }
   }
 }
+<<<<<<< HEAD
 ```
 
 ### `message/stream` — SSE Streaming
@@ -157,12 +198,39 @@ curl -N -X POST http://localhost:20128/a2a \
 **SSE Events:**
 
 ```
+=======
+````
+
+### `message/stream` — SSE Streaming
+
+Sama seperti `pesan/kirim` tetapi mengembalikan Acara Terkirim Server untuk streaming waktu nyata.```bash
+curl -N -X POST http://localhost:20128/a2a \
+ -H "Content-Type: application/json" \
+ -H "Authorization: Bearer YOUR_KEY" \
+ -d '{
+"jsonrpc": "2.0",
+"id": "1",
+"method": "message/stream",
+"params": {
+"skill": "smart-routing",
+"messages": [{"role": "user", "content": "Explain quantum computing"}]
+}
+}'
+
+````
+
+**Acara SSE:**```
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 data: {"jsonrpc":"2.0","method":"message/stream","params":{"task":{"id":"...","state":"working"},"chunk":{"type":"text","content":"Quantum computing..."}}}
 
 : heartbeat 2026-03-04T21:00:00Z
 
 data: {"jsonrpc":"2.0","method":"message/stream","params":{"task":{"id":"...","state":"completed"},"metadata":{...}}}
+<<<<<<< HEAD
 ```
+=======
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ### `tasks/get` — Query Task Status
 
@@ -188,6 +256,7 @@ curl -X POST http://localhost:20128/a2a \
 
 ### `smart-routing`
 
+<<<<<<< HEAD
 Routes prompts through OmniRoute's intelligent pipeline with full observability.
 
 **Parameters (in `metadata`):**
@@ -222,6 +291,38 @@ Answers natural-language queries about provider quotas.
 | Default                                        | Full quota summary with warnings for low-quota providers |
 
 ---
+=======
+Rute diarahkan melalui jalur pipa cerdas OmniRoute dengan kemampuan pengamatan penuh.
+
+**Parameter (dalam `metadata`):**
+
+| Parameter  | Ketik   | Bawaan       | Deskripsi                                                                                       |
+| ---------- | ------- | ------------ | ----------------------------------------------------------------------------------------------- |
+| `model`    | `tali`  | `"otomatis"` | Model target (misalnya, `claude-sonnet-4`, `gpt-4o`, `auto`)                                    |
+| `kombo`    | `tali`  | kombo aktif  | Kombo khusus untuk merutekan                                                                    |
+| `anggaran` | `angka` | tidak ada    | Biaya maksimum dalam USD untuk permintaan ini                                                   |
+| `peran`    | `tali`  | tidak ada    | Petunjuk peran tugas: `coding`, `review`, `planning`, ` analysis`, `debugging`, `documentation` |
+
+**Returns:**
+
+| Bidang                         | Deskripsi                                                     |
+| ------------------------------ | ------------------------------------------------------------- | ---------------------- |
+| `artefak[].konten`             | Teks tanggapan LLM                                            |
+| `metadata.routing_explanation` | Penjelasan keputusan perutean yang dapat dibaca manusia       |
+| `metadata.biaya_amplop`        | Perkiraan vs biaya aktual dengan mata uang                    |
+| `metadata.ketahanan_jejak`     | Rangkaian peristiwa (primary_selected, fallback_needed, dll.) |
+| `metadata.policy_verdict`      | Apakah permintaan tersebut diizinkan dan mengapa              | ### `quota-management` |
+
+Menjawab pertanyaan bahasa alami tentang kuota penyedia.
+
+**Jenis kueri (disimpulkan dari konten pesan):**
+
+| Pola Kueri                                             | Jenis Respons                                                         |
+| ------------------------------------------------------ | --------------------------------------------------------------------- | --- |
+| Berisi `"peringkat"`, `"kuota terbanyak"`, `"terbaik"` | Penyedia diberi peringkat berdasarkan sisa kuota                      |
+| Berisi `"gratis"`, `"sarankan"`                        | Mencantumkan kombo gratis atau menyarankan penyedia tingkat gratis    |
+| Bawaan                                                 | Ringkasan kuota lengkap dengan peringatan untuk penyedia kuota rendah | --- |
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## Task Lifecycle
 
@@ -231,6 +332,7 @@ submitted ──→ working ──→ completed
               ──────────→ cancelled
 ```
 
+<<<<<<< HEAD
 | State       | Description                                           |
 | ----------- | ----------------------------------------------------- |
 | `submitted` | Task created, queued for execution                    |
@@ -244,6 +346,19 @@ submitted ──→ working ──→ completed
 - Tasks are garbage-collected after 2× TTL
 
 ---
+=======
+| Negara       | Deskripsi                                             |
+| ------------ | ----------------------------------------------------- |
+| `dikirim`    | Tugas dibuat, antri untuk dieksekusi                  |
+| `bekerja`    | Penangan keterampilan sedang mengeksekusi             |
+| `selesai`    | Eksekusi berhasil, artefak tersedia                   |
+| `gagal`      | Execution failed or task expired (TTL: 5 min default) |
+| `dibatalkan` | Dibatalkan oleh klien melalui `tugas/batal`           |
+
+- Status terminal: `selesai`, `gagal`, `dibatalkan` (tidak ada transisi lebih lanjut)
+- Tugas yang kedaluwarsa di `dikirim` atau `berfungsi` ditandai secara otomatis sebagai `gagal`
+- Tugas dikumpulkan dari sampah setelah 2× TTL---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## Client Examples
 
@@ -541,6 +656,7 @@ func main() {
 
 ### 🤖 Use Case 1: Multi-Agent Coding Pipeline
 
+<<<<<<< HEAD
 An orchestrator agent delegates code generation to OmniRoute, then passes the output to a review agent.
 
 ```python
@@ -550,6 +666,14 @@ def coding_pipeline(task: str):
         {"role": "user", "content": f"Write production-quality code: {task}"}
     ], metadata={"model": "auto", "role": "coding"})
     code = code_result["artifacts"][0]["content"]
+=======
+Agen orkestrator mendelegasikan pembuatan kode ke OmniRoute, lalu meneruskan hasilnya ke agen peninjau.```python
+def coding_pipeline(task: str): # Step 1: Generate code via OmniRoute A2A
+code_result = a2a_send("smart-routing", [
+{"role": "user", "content": f"Write production-quality code: {task}"}
+], metadata={"model": "auto", "role": "coding"})
+code = code_result["artifacts"][0]["content"]
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     # Step 2: Review the code via OmniRoute A2A (different model)
     review_result = a2a_send("smart-routing", [
@@ -562,6 +686,7 @@ def coding_pipeline(task: str):
     print(f"Review cost: ${review_result['metadata']['cost_envelope']['actual']}")
 
     return {"code": code, "review": review}
+<<<<<<< HEAD
 ```
 
 ### 💡 Use Case 2: Quota-Aware Agent Swarm
@@ -569,6 +694,14 @@ def coding_pipeline(task: str):
 Multiple agents share quota through OmniRoute, using the quota skill to coordinate.
 
 ```python
+=======
+
+````
+
+### 💡 Use Case 2: Quota-Aware Agent Swarm
+
+Beberapa agen berbagi kuota melalui OmniRoute, menggunakan keahlian kuota untuk berkoordinasi.```python
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 async def quota_aware_agent(agent_name: str, task: str):
     # Check quota before starting
     quota = a2a_send("quota-management", [
@@ -591,6 +724,7 @@ async def quota_aware_agent(agent_name: str, task: str):
         print(f"[{agent_name}] Free alternatives: {quota['artifacts'][0]['content']}")
 
     return result
+<<<<<<< HEAD
 ```
 
 ### 📊 Use Case 3: Real-Time Streaming Dashboard
@@ -598,10 +732,18 @@ async def quota_aware_agent(agent_name: str, task: str):
 A monitoring agent streams responses and displays progress in real-time.
 
 ```typescript
+=======
+````
+
+### 📊 Use Case 3: Real-Time Streaming Dashboard
+
+Agen pemantauan mengalirkan respons dan menampilkan kemajuan secara real-time.```typescript
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 async function streamingDashboard(prompt: string) {
   const response = await fetch(`${BASE_URL}/a2a`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${API_KEY}` },
+<<<<<<< HEAD
     body: JSON.stringify({
       jsonrpc: "2.0",
       id: "dash-1",
@@ -617,6 +759,23 @@ async function streamingDashboard(prompt: string) {
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
+=======
+body: JSON.stringify({
+jsonrpc: "2.0",
+id: "dash-1",
+method: "message/stream",
+params: { skill: "smart-routing", messages: [{ role: "user", content: prompt }] },
+}),
+});
+
+let totalChunks = 0;
+const reader = response.body!.getReader();
+const decoder = new TextDecoder();
+
+while (true) {
+const { done, value } = await reader.read();
+if (done) break;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     for (const line of decoder.decode(value).split("\n")) {
       if (line.startsWith("data: ")) {
@@ -640,6 +799,7 @@ async function streamingDashboard(prompt: string) {
         }
       }
     }
+<<<<<<< HEAD
   }
 }
 ```
@@ -649,6 +809,17 @@ async function streamingDashboard(prompt: string) {
 For long-running tasks, poll the task status instead of waiting synchronously.
 
 ```python
+=======
+
+}
+}
+
+````
+
+### 🔁 Use Case 4: Task Polling Pattern
+
+Untuk tugas yang berjalan lama, lakukan polling status tugas alih-alih menunggu secara sinkron.```python
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import time
 
 def poll_task(task_id: str, timeout: int = 60):
@@ -678,12 +849,17 @@ def poll_task(task_id: str, timeout: int = 60):
         "params": {"taskId": task_id},
     })
     raise TimeoutError(f"Task {task_id} timed out after {timeout}s")
+<<<<<<< HEAD
 ```
+=======
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ---
 
 ## Error Codes
 
+<<<<<<< HEAD
 | Code   | Constant                 | Meaning                                  |
 | ------ | ------------------------ | ---------------------------------------- |
 | -32700 | —                        | Parse error (invalid JSON)               |
@@ -710,10 +886,34 @@ Authorization: Bearer YOUR_OMNIROUTE_API_KEY
 If no API key is configured on the server (`OMNIROUTE_API_KEY` is empty), authentication is bypassed.
 
 ---
+=======
+| Kode   | Konstan                  | Arti                                            |
+| ------ | ------------------------ | ----------------------------------------------- | --- |
+| -32700 | —                        | Kesalahan penguraian (JSON tidak valid)         |
+| -32600 | `INVALID_REQUEST`        | Permintaan JSON-RPC tidak valid atau tidak sah  |
+| -32601 | `METHOD_NOT_FOUND`       | Metode atau keterampilan tidak diketahui        |
+| -32602 | `INVALID_PARAMS`         | Parameter tidak ada atau tidak valid            |
+| -32603 | `INTERNAL_ERROR`         | Eksekusi keterampilan gagal                     |
+| -32001 | `TASK_NOT_FOUND`         | ID Tugas tidak ditemukan                        |
+| -32002 | `TASK_ALREADY_COMPLETED` | Tidak dapat mengubah tugas yang telah selesai   |
+| -32003 | `TIDAK SAH`              | Kunci API tidak valid atau hilang               |
+| -32004 | `BUDGET_EXCEEDED`        | Permintaan melebihi anggaran yang dikonfigurasi |
+| -32005 | `PROVIDER_UNAVAILABLE`   | Tidak ada penyedia yang tersedia                | --- |
+
+## Authentication
+
+Semua permintaan `/a2a` memerlukan token Pembawa melalui header `Otorisasi`:```
+Authorization: Bearer YOUR_OMNIROUTE_API_KEY
+
+```
+
+Jika tidak ada kunci API yang dikonfigurasi di server (`OMNIROUTE_API_KEY` kosong), autentikasi akan dilewati.---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## File Structure
 
 ```
+<<<<<<< HEAD
 src/lib/a2a/
 ├── taskManager.ts         # Task lifecycle (create/update/cancel/list), TTL, cleanup
 ├── taskExecution.ts       # Generic task executor with state management
@@ -728,12 +928,31 @@ src/app/a2a/
 
 open-sse/mcp-server/
 └── schemas/a2a.ts         # Zod schemas (AgentCard, Task, JSON-RPC, SSE events)
+=======
+
+src/lib/a2a/
+├── taskManager.ts # Task lifecycle (create/update/cancel/list), TTL, cleanup
+├── taskExecution.ts # Generic task executor with state management
+├── streaming.ts # SSE stream formatting, heartbeat, chunk/completion events
+├── routingLogger.ts # Routing decision logger (stats, history, retention)
+└── skills/
+├── smartRouting.ts # Smart routing skill (routes via /v1/chat/completions)
+└── quotaManagement.ts # Quota management skill (natural-language quota queries)
+
+src/app/a2a/
+└── route.ts # Next.js API route handler (JSON-RPC 2.0 dispatch)
+
+open-sse/mcp-server/
+└── schemas/a2a.ts # Zod schemas (AgentCard, Task, JSON-RPC, SSE events)
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 ```
 
 ---
 
 ## Comparison: MCP vs A2A
 
+<<<<<<< HEAD
 | Feature           | MCP Server                   | A2A Server                                        |
 | ----------------- | ---------------------------- | ------------------------------------------------- |
 | **Protocol**      | Model Context Protocol       | Agent-to-Agent Protocol v0.3                      |
@@ -750,3 +969,20 @@ open-sse/mcp-server/
 ## Lisensi
 
 Part of [OmniRoute](https://github.com/diegosouzapw/OmniRoute) — MIT License.
+=======
+| Fitur | Server MCP | Server A2A |
+| ----------------- | ---------------------------- | ---------------------------------- |
+|**Protokol**| Protokol Konteks Model | Protokol Agen-ke-Agen v0.3 |
+|**Transportasi**| stdio / HTTP | HTTP (JSON-RPC 2.0) |
+|**Penemuan**| Daftar alat melalui MCP | `/.well-known/agent.json` |
+|**Perincian**| 16 alat individu | 2 keterampilan tingkat tinggi |
+|**Terbaik untuk**| Agen IDE (Kursor, Kode VS) | Sistem multi-agen (LangChain, CrewAI) |
+|**Streaming**| Tidak didukung | SSE melalui `pesan/aliran` |
+|**Pelacakan tugas**| Tidak | Siklus hidup penuh (dikirim → selesai) |
+|**Kemampuan Observasi**| Log audit per panggilan alat | Cakupan biaya + jejak ketahanan + keputusan kebijakan |---
+
+## Lisensi
+
+Bagian dari [OmniRoute](https://github.com/diegosouzapw/OmniRoute) — Lisensi MIT.
+```
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

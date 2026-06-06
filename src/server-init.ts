@@ -1,5 +1,6 @@
 // Server startup script
 import initializeCloudSync from "./shared/services/initializeCloudSync";
+<<<<<<< HEAD
 import { enforceWebRuntimeEnv } from "./lib/env/runtimeEnv";
 import { enforceSecrets } from "./shared/utils/secretsValidator";
 import { initAuditLog, cleanupExpiredLogs, logAuditEvent } from "./lib/compliance/index";
@@ -21,6 +22,11 @@ const startupLog = createLogger("server-init");
 function getErrorMessage(error: unknown) {
   return error instanceof Error ? error.message : String(error);
 }
+=======
+import { enforceSecrets } from "./shared/utils/secretsValidator";
+import { initAuditLog, cleanupExpiredLogs, logAuditEvent } from "./lib/compliance/index";
+import { initConsoleInterceptor } from "./lib/consoleInterceptor";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 async function startServer() {
   // Trigger request-log layout migration during startup, before serving requests.
@@ -31,14 +37,23 @@ async function startServer() {
 
   // FASE-01: Validate required secrets before anything else (fail-fast)
   enforceSecrets();
+<<<<<<< HEAD
   enforceWebRuntimeEnv();
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Compliance: Initialize audit_log table
   try {
     initAuditLog();
+<<<<<<< HEAD
     startupLog.info("Audit log table initialized");
   } catch (err) {
     startupLog.warn({ err }, "Could not initialize audit log");
+=======
+    console.log("[COMPLIANCE] Audit log table initialized");
+  } catch (err) {
+    console.warn("[COMPLIANCE] Could not initialize audit log:", err.message);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   // Compliance: One-time cleanup of expired logs
@@ -52,6 +67,7 @@ async function startServer() {
       cleanup.deletedAuditLogs ||
       cleanup.deletedMcpAuditLogs
     ) {
+<<<<<<< HEAD
       startupLog.info({ cleanup }, "Expired log cleanup completed");
     }
   } catch (err) {
@@ -100,6 +116,25 @@ async function startServer() {
     });
   } catch (error) {
     startupLog.error({ err: error }, "Error initializing cloud sync");
+=======
+      console.log("[COMPLIANCE] Expired log cleanup:", cleanup);
+    }
+  } catch (err) {
+    console.warn("[COMPLIANCE] Log cleanup failed:", err.message);
+  }
+
+  console.log("Starting server with cloud sync...");
+
+  try {
+    // Initialize cloud sync
+    await initializeCloudSync();
+    console.log("Server started with cloud sync initialized");
+
+    // Log server start event to audit log
+    logAuditEvent({ action: "server.start", details: { timestamp: new Date().toISOString() } });
+  } catch (error) {
+    console.error("[FATAL] Error initializing cloud sync:", error);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     process.exit(1);
   }
 
@@ -109,14 +144,25 @@ async function startServer() {
       const { initPricingSync } = await import("./lib/pricingSync");
       await initPricingSync();
     } catch (err) {
+<<<<<<< HEAD
       startupLog.warn({ error: getErrorMessage(err) }, "Pricing sync could not initialize");
+=======
+      console.warn(
+        "[PRICING_SYNC] Could not initialize:",
+        err instanceof Error ? err.message : err
+      );
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
   }
 }
 
 // Start the server initialization
 startServer().catch((err) => {
+<<<<<<< HEAD
   startupLog.error({ err }, "Server initialization failed");
+=======
+  console.error("[FATAL] Server initialization failed:", err);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   process.exit(1);
 });
 

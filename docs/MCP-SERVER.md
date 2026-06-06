@@ -1,6 +1,10 @@
 # OmniRoute MCP Server Documentation
 
+<<<<<<< HEAD
 > Model Context Protocol server with 37 tools across routing, cache, compression, memory, skills, and proxy operations
+=======
+> Model Context Protocol server with 16 intelligent tools
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## Installation
 
@@ -19,8 +23,12 @@ omniroute --dev  # MCP auto-starts on /mcp endpoint
 
 ## IDE Configuration
 
+<<<<<<< HEAD
 See [MCP Client Configuration](SETUP_GUIDE.md#mcp-client-configuration) for Claude Desktop,
 Cursor, Cline, and compatible MCP client setup.
+=======
+See [IDE Configs](integrations/ide-configs.md) for Antigravity, Cursor, Copilot, and Claude Desktop setup.
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ---
 
@@ -50,6 +58,7 @@ Cursor, Cline, and compatible MCP client setup.
 | `omniroute_explain_route`          | Explain a past routing decision                             |
 | `omniroute_get_session_snapshot`   | Full session state: costs, tokens, errors                   |
 
+<<<<<<< HEAD
 ## Cache Tools (2)
 
 | Tool                    | Description                                         |
@@ -80,10 +89,13 @@ the runtime compression model behind these tools.
 The remaining MCP surface includes 1proxy tools, memory tools, and skill tools. The live source of
 truth is `open-sse/mcp-server/tools/` and `open-sse/mcp-server/schemas/tools.ts`.
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 ## Authentication
 
 MCP tools are authenticated via API key scopes. Each tool requires specific scopes:
 
+<<<<<<< HEAD
 | Scope                 | Tools                                                                |
 | :-------------------- | :------------------------------------------------------------------- |
 | `read:health`         | get_health, get_provider_metrics                                     |
@@ -99,6 +111,18 @@ MCP tools are authenticated via API key scopes. Each tool requires specific scop
 | `read:compression`    | compression_status, list_compression_combos, compression_combo_stats |
 | `write:compression`   | compression_configure, set_compression_engine                        |
 | `execute:completions` | route_request, test_combo                                            |
+=======
+| Scope          | Tools                                            |
+| :------------- | :----------------------------------------------- |
+| `read:health`  | get_health, get_provider_metrics                 |
+| `read:combos`  | list_combos, get_combo_metrics                   |
+| `write:combos` | switch_combo                                     |
+| `read:quota`   | check_quota                                      |
+| `write:route`  | route_request, simulate_route, test_combo        |
+| `read:usage`   | cost_report, get_session_snapshot, explain_route |
+| `write:config` | set_budget_guard, set_resilience_profile         |
+| `read:models`  | list_models_catalog, best_combo_for_task         |
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## Audit Logging
 
@@ -110,6 +134,7 @@ Every tool call is logged to `mcp_tool_audit` with:
 
 ## Files
 
+<<<<<<< HEAD
 | File                                         | Purpose                                           |
 | :------------------------------------------- | :------------------------------------------------ |
 | `open-sse/mcp-server/server.ts`              | MCP server creation and scoped tool registrations |
@@ -117,3 +142,12 @@ Every tool call is logged to `mcp_tool_audit` with:
 | `open-sse/mcp-server/auth.ts`                | API key + scope validation                        |
 | `open-sse/mcp-server/audit.ts`               | Tool call audit logging                           |
 | `open-sse/mcp-server/tools/advancedTools.ts` | 8 advanced tool handlers                          |
+=======
+| File                                         | Purpose                                     |
+| :------------------------------------------- | :------------------------------------------ |
+| `open-sse/mcp-server/server.ts`              | MCP server creation + 16 tool registrations |
+| `open-sse/mcp-server/transport.ts`           | Stdio + HTTP transport                      |
+| `open-sse/mcp-server/auth.ts`                | API key + scope validation                  |
+| `open-sse/mcp-server/audit.ts`               | Tool call audit logging                     |
+| `open-sse/mcp-server/tools/advancedTools.ts` | 8 advanced tool handlers                    |
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

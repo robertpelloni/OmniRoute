@@ -1,12 +1,15 @@
 import { NextResponse } from "next/server";
 import { getSettings } from "@/lib/db/settings";
 import { isAuthenticated } from "@/shared/utils/apiAuth";
+<<<<<<< HEAD
 import { getSkillsProviderSetting } from "@/lib/skills/providerSettings";
 
 const POPULAR_BY_PROVIDER = {
   skillsmp: ["web-search", "file-reader", "sql-assistant", "devops-helper", "docs-assistant"],
   skillssh: ["git", "terminal", "postgres", "kubernetes", "playwright"],
 } as const;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 export async function GET(request: Request) {
   if (!(await isAuthenticated(request))) {
@@ -14,6 +17,7 @@ export async function GET(request: Request) {
   }
   try {
     const { searchParams } = new URL(request.url);
+<<<<<<< HEAD
     const q = searchParams.get("q")?.trim() || "";
     const provider = await getSkillsProviderSetting();
 
@@ -29,6 +33,9 @@ export async function GET(request: Request) {
     }
 
     // Search SkillsMP for non-empty queries
+=======
+    const q = searchParams.get("q") || "";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const settings = await getSettings();
     const apiKey = (settings as Record<string, unknown>).skillsmpApiKey;
 
@@ -53,7 +60,11 @@ export async function GET(request: Request) {
     }
 
     const data = await res.json();
+<<<<<<< HEAD
     return NextResponse.json({ skills: data.data?.skills || data.skills || [] });
+=======
+    return NextResponse.json({ skills: data.skills || [] });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   } catch (err: unknown) {
     const error = err instanceof Error ? err.message : String(err);
     return NextResponse.json({ error }, { status: 500 });

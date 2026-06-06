@@ -42,12 +42,15 @@ interface ApiKeyMetadata {
   maxRequestsPerMinute: number | null;
   // T08: Per-key max concurrent sticky sessions (0 = unlimited)
   maxSessions: number;
+<<<<<<< HEAD
   // Phase 3 lifecycle/policy fields
   revokedAt: string | null;
   expiresAt: string | null;
   ipAllowlist: string[];
   scopes: string[];
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 interface ApiKeyRow extends JsonRecord {
@@ -103,14 +106,19 @@ interface ApiKeyView extends JsonRecord {
 // LRU cache for API key validation (valid keys only)
 const _keyValidationCache = new Map<string, { valid: boolean; timestamp: number }>();
 const _keyMetadataCache = new Map<string, CacheEntry<ApiKeyMetadata>>();
+<<<<<<< HEAD
 const _lastUsedUpdateCache = new Map<string, number>();
 const CACHE_TTL = 60 * 1000; // 1 minute TTL
 const LAST_USED_UPDATE_TTL = 5 * 60 * 1000;
+=======
+const CACHE_TTL = 60 * 1000; // 1 minute TTL
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 const MAX_CACHE_SIZE = 1000;
 
 // Compiled regex cache for wildcard patterns
 const _regexCache = new Map<string, RegExp>();
 
+<<<<<<< HEAD
 const API_KEY_COLUMN_FALLBACKS = [
   { name: "allowed_models", definition: "allowed_models TEXT" },
   { name: "no_log", definition: "no_log INTEGER NOT NULL DEFAULT 0" },
@@ -129,6 +137,8 @@ const API_KEY_COLUMN_FALLBACKS = [
   { name: "scopes", definition: "scopes TEXT" },
 ] as const;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // Cache for model permission checks
 const _modelPermissionCache = new Map<string, { allowed: boolean; timestamp: number }>();
 
@@ -147,13 +157,17 @@ function invalidateCaches() {
   _keyValidationCache.clear();
   _keyMetadataCache.clear();
   _modelPermissionCache.clear();
+<<<<<<< HEAD
   _lastUsedUpdateCache.clear();
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 function toRecord(value: unknown): JsonRecord {
   return value && typeof value === "object" ? (value as JsonRecord) : {};
 }
 
+<<<<<<< HEAD
 function isConfiguredEnvApiKey(key: string): boolean {
   const envKey = process.env.OMNIROUTE_API_KEY || process.env.ROUTER_API_KEY;
   return Boolean(envKey && key === envKey);
@@ -172,6 +186,8 @@ function markApiKeyUsed(db: ApiKeysDbLike, id: unknown, now: number): void {
   _lastUsedUpdateCache.set(id, now);
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * LRU eviction for cache
  */
@@ -205,6 +221,7 @@ function getWildcardRegex(pattern: string): RegExp {
   return regex;
 }
 
+<<<<<<< HEAD
 function ensureApiKeyColumn(
   db: ApiKeysDbLike,
   columnNames: Set<string>,
@@ -215,6 +232,8 @@ function ensureApiKeyColumn(
   console.log(`[DB] Added api_keys.${column.name} column`);
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // Ensure api_keys extension columns exist (memoized)
 function ensureApiKeysColumns(db: ApiKeysDbLike) {
   if (_schemaChecked) return;
@@ -222,6 +241,7 @@ function ensureApiKeysColumns(db: ApiKeysDbLike) {
   try {
     const columns = db.prepare<ApiKeyRow>("PRAGMA table_info(api_keys)").all();
     const columnNames = new Set(columns.map((column) => String(column.name ?? "")));
+<<<<<<< HEAD
     for (const column of API_KEY_COLUMN_FALLBACKS) {
       ensureApiKeyColumn(db, columnNames, column);
     }
@@ -229,6 +249,39 @@ function ensureApiKeysColumns(db: ApiKeysDbLike) {
     if (!columnNames.has("max_sessions")) {
       db.exec("ALTER TABLE api_keys ADD COLUMN max_sessions INTEGER NOT NULL DEFAULT 0");
       console.log("[DB] Added api_keys.max_sessions column");
+=======
+    if (!columnNames.has("allowed_models")) {
+      db.exec("ALTER TABLE api_keys ADD COLUMN allowed_models TEXT");
+      console.log("[DB] Added api_keys.allowed_models column");
+    }
+    if (!columnNames.has("no_log")) {
+      db.exec("ALTER TABLE api_keys ADD COLUMN no_log INTEGER NOT NULL DEFAULT 0");
+      console.log("[DB] Added api_keys.no_log column");
+    }
+    if (!columnNames.has("allowed_connections")) {
+      db.exec("ALTER TABLE api_keys ADD COLUMN allowed_connections TEXT");
+      console.log("[DB] Added api_keys.allowed_connections column");
+    }
+    if (!columnNames.has("auto_resolve")) {
+      db.exec("ALTER TABLE api_keys ADD COLUMN auto_resolve INTEGER NOT NULL DEFAULT 0");
+      console.log("[DB] Added api_keys.auto_resolve column");
+    }
+    if (!columnNames.has("is_active")) {
+      db.exec("ALTER TABLE api_keys ADD COLUMN is_active INTEGER NOT NULL DEFAULT 1");
+      console.log("[DB] Added api_keys.is_active column");
+    }
+    if (!columnNames.has("access_schedule")) {
+      db.exec("ALTER TABLE api_keys ADD COLUMN access_schedule TEXT");
+      console.log("[DB] Added api_keys.access_schedule column");
+    }
+    if (!columnNames.has("max_requests_per_day")) {
+      db.exec("ALTER TABLE api_keys ADD COLUMN max_requests_per_day INTEGER");
+      console.log("[DB] Added api_keys.max_requests_per_day column");
+    }
+    if (!columnNames.has("max_requests_per_minute")) {
+      db.exec("ALTER TABLE api_keys ADD COLUMN max_requests_per_minute INTEGER");
+      console.log("[DB] Added api_keys.max_requests_per_minute column");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
     // T08: max concurrent sticky sessions per key (0 = unlimited)
     if (!columnNames.has("max_sessions")) {
@@ -258,6 +311,7 @@ function getPreparedStatements(db: ApiKeysDbLike): ApiKeysStatements {
   ) {
     _stmtGetAllKeys = db.prepare<ApiKeyRow>("SELECT * FROM api_keys ORDER BY created_at");
     _stmtGetKeyById = db.prepare<ApiKeyRow>("SELECT * FROM api_keys WHERE id = ?");
+<<<<<<< HEAD
     _stmtValidateKey = db.prepare<JsonRecord>(
       "SELECT id, expires_at, revoked_at, is_active FROM api_keys WHERE key = ?"
     );
@@ -269,6 +323,14 @@ function getPreparedStatements(db: ApiKeysDbLike): ApiKeysStatements {
     );
     _stmtInsertKey = db.prepare(
       "INSERT INTO api_keys (id, name, key, machine_id, allowed_models, no_log, created_at, key_prefix) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+=======
+    _stmtValidateKey = db.prepare<JsonRecord>("SELECT 1 FROM api_keys WHERE key = ?");
+    _stmtGetKeyMetadata = db.prepare<ApiKeyRow>(
+      "SELECT id, name, machine_id, allowed_models, allowed_connections, no_log, auto_resolve, is_active, access_schedule, max_requests_per_day, max_requests_per_minute, max_sessions FROM api_keys WHERE key = ?"
+    );
+    _stmtInsertKey = db.prepare(
+      "INSERT INTO api_keys (id, name, key, machine_id, allowed_models, no_log, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     );
     _stmtDeleteKey = db.prepare("DELETE FROM api_keys WHERE id = ?");
   }
@@ -409,6 +471,7 @@ function parseAllowedConnections(value: unknown): string[] {
   }
 }
 
+<<<<<<< HEAD
 function parseStringList(value: unknown): string[] {
   if (!value || typeof value !== "string" || value.trim() === "") return [];
   try {
@@ -427,6 +490,8 @@ function parseNullableTimestamp(value: unknown): string | null {
   return trimmed === "" ? null : trimmed;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export async function createApiKey(name: string, machineId: string) {
   if (!machineId) {
     throw new Error("machineId is required");
@@ -457,8 +522,12 @@ export async function createApiKey(name: string, machineId: string) {
     apiKey.machineId,
     "[]",
     0,
+<<<<<<< HEAD
     apiKey.createdAt,
     apiKey.key.slice(0, 12)
+=======
+    apiKey.createdAt
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   );
   setNoLog(apiKey.id, false);
 
@@ -609,8 +678,11 @@ export async function deleteApiKey(id: string) {
 
   if (result.changes === 0) return false;
 
+<<<<<<< HEAD
   db.prepare("DELETE FROM domain_budgets WHERE api_key_id = ?").run(id);
   db.prepare("DELETE FROM domain_cost_history WHERE api_key_id = ?").run(id);
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   setNoLog(id, false);
 
   // Invalidate caches since a key was removed
@@ -621,6 +693,7 @@ export async function deleteApiKey(id: string) {
 }
 
 /**
+<<<<<<< HEAD
  * Revoke an API key by id. Logical, not destructive: the row stays so it can
  * be audited, but validateApiKey() rejects it immediately after caches expire
  * (or sooner because invalidateCaches() runs here).
@@ -673,14 +746,24 @@ export async function setApiKeyExpiry(id: string, expiresAt: string | null): Pro
  * by revokeApiKey/updateApiKeyPermissions/deleteApiKey, so a revoke takes
  * effect within at most CACHE_TTL even without an explicit clear in the
  * caller.
+=======
+ * Validate API key with caching for performance
+ * Cached valid keys reduce DB hits on every request
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  */
 export async function validateApiKey(key: string | null | undefined) {
   if (!key || typeof key !== "string") return false;
 
+<<<<<<< HEAD
   if (isConfiguredEnvApiKey(key)) return true;
 
   const now = Date.now();
 
+=======
+  const now = Date.now();
+
+  // Check cache first
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const cached = _keyValidationCache.get(key);
   if (cached && now - cached.timestamp < CACHE_TTL) {
     return cached.valid;
@@ -688,6 +771,7 @@ export async function validateApiKey(key: string | null | undefined) {
 
   const db = getDbInstance() as ApiKeysDbLike;
   const stmt = getPreparedStatements(db);
+<<<<<<< HEAD
   const row = stmt.validateKey.get(key) as JsonRecord | undefined;
 
   if (!row) return false;
@@ -709,6 +793,18 @@ export async function validateApiKey(key: string | null | undefined) {
   markApiKeyUsed(db, row.id, now);
 
   return true;
+=======
+  const row = stmt.validateKey.get(key);
+  const valid = !!row;
+
+  // Only cache valid keys to prevent cache pollution
+  if (valid) {
+    evictIfNeeded(_keyValidationCache);
+    _keyValidationCache.set(key, { valid: true, timestamp: now });
+  }
+
+  return valid;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 /**
@@ -721,6 +817,7 @@ export async function getApiKeyMetadata(
 
   const now = Date.now();
 
+<<<<<<< HEAD
   // persistent env-var key support (persistent passthrough keys) (#1350)
   if (isConfiguredEnvApiKey(key)) {
     return {
@@ -743,6 +840,8 @@ export async function getApiKeyMetadata(
     };
   }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Check cache first
   const cached = _keyMetadataCache.get(key);
   if (cached && now - cached.timestamp < CACHE_TTL) {
@@ -782,12 +881,15 @@ export async function getApiKeyMetadata(
     maxRequestsPerMinute: typeof rawMaxRPM === "number" && rawMaxRPM > 0 ? rawMaxRPM : null,
     // T08: max concurrent sessions; 0 = unlimited (default & backward-compatible)
     maxSessions: typeof rawMaxSessions === "number" && rawMaxSessions > 0 ? rawMaxSessions : 0,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     revokedAt: parseNullableTimestamp(record.revoked_at ?? (record as JsonRecord).revokedAt),
     expiresAt: parseNullableTimestamp(record.expires_at ?? (record as JsonRecord).expiresAt),
     ipAllowlist: parseStringList(record.ip_allowlist ?? (record as JsonRecord).ipAllowlist),
     scopes: parseStringList((record as JsonRecord).scopes),
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 
   if (!metadata.id) {
@@ -892,7 +994,10 @@ function clearPreparedStatementCache() {
  */
 export function clearApiKeyCaches() {
   invalidateCaches();
+<<<<<<< HEAD
   _lastUsedUpdateCache.clear();
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   _modelPermissionCache.clear();
   _regexCache.clear();
 }

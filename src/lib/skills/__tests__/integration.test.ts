@@ -19,6 +19,7 @@ describe("Memory + Skills Integration", () => {
     mockedGetSettings.mockResolvedValue({ skillsEnabled: true } as any);
   });
 
+<<<<<<< HEAD
 =======
 import { describe, it, expect, beforeEach } from "vitest";
 import { retrieveMemories } from "../../memory/retrieval";
@@ -38,6 +39,8 @@ describe("Memory + Skills Integration", () => {
   const apiKeyId = "test-api-key";
 
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   it("should retrieve and inject memories", async () => {
     await createMemory({
       apiKeyId,
@@ -47,6 +50,28 @@ describe("Memory + Skills Integration", () => {
       sessionId: "",
       metadata: {},
       expiresAt: null,
+<<<<<<< HEAD
+=======
+    });
+
+    const config = {
+      enabled: true,
+      maxTokens: 2000,
+      retrievalStrategy: "exact" as const,
+      autoSummarize: false,
+      persistAcrossModels: false,
+      retentionDays: 30,
+      scope: "apiKey" as const,
+    };
+
+    const memories = await retrieveMemories(apiKeyId, config);
+    expect(memories).toBeDefined();
+    expect(Array.isArray(memories)).toBe(true);
+  });
+
+  it("should register and list skills", async () => {
+    const _skill = await skillRegistry.register({
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       name: "test-skill",
       version: "1.0.0",
       description: "Test skill",
@@ -58,7 +83,10 @@ describe("Memory + Skills Integration", () => {
     const skills = skillRegistry.list(apiKeyId);
     expect(skills.length).toBeGreaterThan(0);
   });
+<<<<<<< HEAD
 <<<<<<< Updated upstream
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   it("blocks execution when skillsEnabled=false", async () => {
     mockedGetSettings.mockResolvedValue({ skillsEnabled: false } as any);
@@ -137,5 +165,8 @@ describe("SkillsMP Marketplace Integration", () => {
     // Cleanup
     await skillRegistry.unregisterById(skill.id);
   });
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 });

@@ -1,5 +1,6 @@
 import { KIMI_CODING_CONFIG } from "../constants/oauth";
 import { randomUUID } from "crypto";
+<<<<<<< HEAD
 import fs from "fs";
 import { arch, hostname, release, type as osType, version as osVersion } from "os";
 import path from "path";
@@ -47,6 +48,16 @@ function getKimiDeviceId() {
     return generateDeviceId();
   }
 }
+=======
+import { hostname } from "os";
+
+// Generate device ID (persistent per installation)
+const DEVICE_ID = randomUUID();
+const PLATFORM = "omniroute";
+const VERSION = "2.1.2";
+const DEVICE_NAME = hostname();
+const DEVICE_MODEL = `${process.platform} ${process.arch}`;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 // Custom headers required by Kimi OAuth
 function getKimiOAuthHeaders() {
@@ -55,10 +66,16 @@ function getKimiOAuthHeaders() {
     Accept: "application/json",
     "X-Msh-Platform": PLATFORM,
     "X-Msh-Version": VERSION,
+<<<<<<< HEAD
     "X-Msh-Device-Name": sanitizeHeaderValue(hostname()),
     "X-Msh-Device-Model": sanitizeHeaderValue(getDeviceModel()),
     "X-Msh-Os-Version": sanitizeHeaderValue(osVersion()),
     "X-Msh-Device-Id": sanitizeHeaderValue(getKimiDeviceId()),
+=======
+    "X-Msh-Device-Name": DEVICE_NAME,
+    "X-Msh-Device-Model": DEVICE_MODEL,
+    "X-Msh-Device-Id": DEVICE_ID,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 }
 
@@ -80,12 +97,22 @@ export const kimiCoding = {
     }
 
     const data = await response.json();
+<<<<<<< HEAD
     const verificationUri = data.verification_uri || "https://www.kimi.com/code/authorize_device";
     return {
       device_code: data.device_code,
       user_code: data.user_code,
       verification_uri: verificationUri,
       verification_uri_complete: data.verification_uri_complete || verificationUri,
+=======
+    return {
+      device_code: data.device_code,
+      user_code: data.user_code,
+      verification_uri: data.verification_uri || `https://auth.kimi.com/activate`,
+      verification_uri_complete:
+        data.verification_uri_complete ||
+        `https://auth.kimi.com/activate?user_code=${data.user_code}`,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       expires_in: data.expires_in,
       interval: data.interval || 5,
     };

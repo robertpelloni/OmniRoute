@@ -5,7 +5,10 @@ import { Card, Button, ModelSelectModal, ManualConfigModal } from "@/shared/comp
 import Image from "next/image";
 import CliStatusBadge from "./CliStatusBadge";
 import { useTranslations } from "next-intl";
+<<<<<<< HEAD
 import { DEFAULT_DISPLAY_BASE_URL } from "@/shared/hooks";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const CLOUD_URL = process.env.NEXT_PUBLIC_CLOUD_URL;
 
@@ -27,7 +30,11 @@ export default function KiloToolCard({
   const [applying, setApplying] = useState(false);
   const [restoring, setRestoring] = useState(false);
   const [message, setMessage] = useState(null);
+<<<<<<< HEAD
   const [selectedApiKeyId, setSelectedApiKeyId] = useState("");
+=======
+  const [selectedApiKey, setSelectedApiKey] = useState("");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [selectedModel, setSelectedModel] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [modelAliases, setModelAliases] = useState({});
@@ -51,6 +58,7 @@ export default function KiloToolCard({
   // Use batch status as fallback when card hasn't been expanded yet
   const effectiveConfigStatus = configStatus || batchStatus?.configStatus || null;
 
+<<<<<<< HEAD
   // (#523) Store the key *id* (not the masked string) so the backend can
   // resolve the real secret from DB before writing to config files.
   useEffect(() => {
@@ -58,6 +66,13 @@ export default function KiloToolCard({
       setSelectedApiKeyId(apiKeys[0].id);
     }
   }, [apiKeys, selectedApiKeyId]);
+=======
+  useEffect(() => {
+    if (apiKeys?.length > 0 && !selectedApiKey) {
+      setSelectedApiKey(apiKeys[0].key);
+    }
+  }, [apiKeys, selectedApiKey]);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   useEffect(() => {
     if (isExpanded && !kiloStatus) {
@@ -105,12 +120,16 @@ export default function KiloToolCard({
         await fetchBackups();
       } else {
         const data = await res.json();
+<<<<<<< HEAD
         setMessage({
           type: "error",
           text:
             (typeof data.error === "string" ? data.error : data.error?.message) ||
             t("failedRestoreBackup"),
         });
+=======
+        setMessage({ type: "error", text: data.error || t("failedRestoreBackup") });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     } catch (e) {
       setMessage({ type: "error", text: e.message });
@@ -134,7 +153,11 @@ export default function KiloToolCard({
 
   const getEffectiveBaseUrl = () => {
     if (customBaseUrl) return customBaseUrl;
+<<<<<<< HEAD
     return baseUrl || DEFAULT_DISPLAY_BASE_URL;
+=======
+    return baseUrl || "http://localhost:20128";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 
   const handleApply = async () => {
@@ -146,16 +169,23 @@ export default function KiloToolCard({
         ? effectiveBaseUrl
         : `${effectiveBaseUrl}/v1`;
 
+<<<<<<< HEAD
       // (#523) Prefer keyId lookup so the backend writes the real key to disk.
       const selectedKeyId = selectedApiKeyId?.trim() || null;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       const res = await fetch("/api/cli-tools/kilo-settings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           baseUrl: normalizedBaseUrl,
+<<<<<<< HEAD
           apiKey: !cloudEnabled ? "sk_omniroute" : null,
           keyId: selectedKeyId,
+=======
+          apiKey: selectedApiKey || "sk_omniroute",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           model: selectedModel,
         }),
       });
@@ -165,10 +195,14 @@ export default function KiloToolCard({
         await checkKiloStatus();
         await fetchBackups();
       } else {
+<<<<<<< HEAD
         setMessage({
           type: "error",
           text: (typeof data.error === "string" ? data.error : data.error?.message) || t("failed"),
         });
+=======
+        setMessage({ type: "error", text: data.error || t("failed") });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     } catch (error) {
       setMessage({ type: "error", text: error.message });
@@ -190,10 +224,14 @@ export default function KiloToolCard({
         await checkKiloStatus();
         await fetchBackups();
       } else {
+<<<<<<< HEAD
         setMessage({
           type: "error",
           text: (typeof data.error === "string" ? data.error : data.error?.message) || t("failed"),
         });
+=======
+        setMessage({ type: "error", text: data.error || t("failed") });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     } catch (error) {
       setMessage({ type: "error", text: error.message });
@@ -209,6 +247,7 @@ export default function KiloToolCard({
 
   const handleManualConfig = (config) => {
     if (config.model) setSelectedModel(config.model);
+<<<<<<< HEAD
     // (#523) Match apiKey string to key id if possible
     if (config.apiKey && apiKeys?.length > 0) {
       const prefix = config.apiKey.slice(0, 8);
@@ -218,6 +257,9 @@ export default function KiloToolCard({
       );
       if (matchedKey) setSelectedApiKeyId(matchedKey.id);
     }
+=======
+    if (config.apiKey) setSelectedApiKey(config.apiKey);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (config.baseUrl) setCustomBaseUrl(config.baseUrl);
     setShowManualConfigModal(false);
   };
@@ -365,12 +407,21 @@ export default function KiloToolCard({
                     <label className="text-sm text-text-muted">{t("apiKey")}</label>
                     {apiKeys && apiKeys.length > 0 ? (
                       <select
+<<<<<<< HEAD
                         value={selectedApiKeyId}
                         onChange={(e) => setSelectedApiKeyId(e.target.value)}
                         className="px-3 py-2 bg-bg-secondary rounded-lg text-sm border border-border focus:outline-none focus:ring-1 focus:ring-primary/50"
                       >
                         {apiKeys.map((key) => (
                           <option key={key.id} value={key.id}>
+=======
+                        value={selectedApiKey}
+                        onChange={(e) => setSelectedApiKey(e.target.value)}
+                        className="px-3 py-2 bg-bg-secondary rounded-lg text-sm border border-border focus:outline-none focus:ring-1 focus:ring-primary/50"
+                      >
+                        {apiKeys.map((key) => (
+                          <option key={key.id} value={key.key}>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                             {key.key}
                           </option>
                         ))}
@@ -483,7 +534,11 @@ export default function KiloToolCard({
             onApply: handleManualConfig,
             currentConfig: {
               model: selectedModel,
+<<<<<<< HEAD
               apiKey: apiKeys?.find((k) => k.id === selectedApiKeyId)?.key || "",
+=======
+              apiKey: selectedApiKey,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               baseUrl: customBaseUrl || baseUrl,
             },
           } as any)}

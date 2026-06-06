@@ -6,6 +6,7 @@ import { register } from "../registry.ts";
 import { FORMATS } from "../formats.ts";
 import { v4 as uuidv4, v5 as uuidv5 } from "uuid";
 
+<<<<<<< HEAD
 function parseToolInput(value: unknown) {
   if (value && typeof value === "object" && !Array.isArray(value)) {
     return value;
@@ -27,6 +28,8 @@ function parseToolInput(value: unknown) {
   }
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Convert OpenAI messages to Kiro format
  * Rules: system/tool/user -> user role, merge consecutive same roles
@@ -144,7 +147,11 @@ function convertMessages(messages, tools, model) {
 
             pendingToolResults.push({
               toolUseId: block.tool_use_id,
+<<<<<<< HEAD
               status: "SUCCESS",
+=======
+              status: "success",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               content: [{ text: text }],
             });
           });
@@ -156,7 +163,11 @@ function convertMessages(messages, tools, model) {
         const toolContent = typeof msg.content === "string" ? msg.content : "";
         pendingToolResults.push({
           toolUseId: msg.tool_call_id,
+<<<<<<< HEAD
           status: "SUCCESS",
+=======
+          status: "success",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           content: [{ text: toolContent }],
         });
       } else if (content) {
@@ -204,13 +215,24 @@ function convertMessages(messages, tools, model) {
               return {
                 toolUseId: tc.id || uuidv4(),
                 name: tc.function.name,
+<<<<<<< HEAD
                 input: parseToolInput(tc.function.arguments),
+=======
+                input:
+                  typeof tc.function.arguments === "string"
+                    ? JSON.parse(tc.function.arguments)
+                    : tc.function.arguments || {},
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               };
             } else {
               return {
                 toolUseId: tc.id || uuidv4(),
                 name: tc.name,
+<<<<<<< HEAD
                 input: parseToolInput(tc.input),
+=======
+                input: tc.input || {},
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               };
             }
           });
@@ -229,6 +251,7 @@ function convertMessages(messages, tools, model) {
   // If last message in history is userInputMessage, use it as currentMessage
   if (history.length > 0 && history[history.length - 1].userInputMessage) {
     currentMessage = history.pop();
+<<<<<<< HEAD
   } else if (!currentMessage) {
     currentMessage = {
       userInputMessage: {
@@ -236,6 +259,8 @@ function convertMessages(messages, tools, model) {
         modelId: model,
       },
     };
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   const firstHistoryItem = history[0];

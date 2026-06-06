@@ -18,6 +18,10 @@ export function openaiToOpenAIResponsesResponse(chunk, state) {
     return flushEvents(state);
   }
 
+<<<<<<< HEAD
+=======
+  // Capture usage from all chunks that carry it (usage-only chunks OR final chunks with finish_reason)
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Normalize Chat Completions format (prompt_tokens/completion_tokens) to Responses API format
   // (input_tokens/output_tokens) so response.completed always has the fields Codex expects.
   if (chunk.usage) {
@@ -29,6 +33,11 @@ export function openaiToOpenAIResponsesResponse(chunk, state) {
       output_tokens,
       total_tokens: u.total_tokens ?? input_tokens + output_tokens,
     };
+<<<<<<< HEAD
+=======
+    if (u.prompt_tokens_details?.cached_tokens) {
+      state.usage.input_tokens_details = { cached_tokens: u.prompt_tokens_details.cached_tokens };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
   }
 
@@ -621,6 +630,7 @@ export function openaiResponsesToOpenAIResponse(chunk, state) {
 
       state.toolCallIndex++;
 
+<<<<<<< HEAD
       let argsToEmit = item.arguments;
       if (argsToEmit != null && typeof argsToEmit === "object" && !Array.isArray(argsToEmit)) {
         // Fix #1674 & #1852: Strip empty string and array placeholders emitted by GPT-5.5 for optional fields
@@ -636,6 +646,13 @@ export function openaiResponsesToOpenAIResponse(chunk, state) {
           ? typeof argsToEmit === "string"
             ? argsToEmit
             : JSON.stringify(argsToEmit)
+=======
+      const argsStr =
+        item.arguments != null
+          ? typeof item.arguments === "string"
+            ? item.arguments
+            : JSON.stringify(item.arguments)
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           : buffered;
 
       return {
@@ -671,6 +688,7 @@ export function openaiResponsesToOpenAIResponse(chunk, state) {
 
     // Only emit if arguments exist in the done event AND they weren't already streamed via deltas
     if (item.arguments != null && !buffered) {
+<<<<<<< HEAD
       let argsToEmit = item.arguments;
       if (argsToEmit != null && typeof argsToEmit === "object" && !Array.isArray(argsToEmit)) {
         const cleaned = { ...argsToEmit };
@@ -681,6 +699,10 @@ export function openaiResponsesToOpenAIResponse(chunk, state) {
       }
 
       const argsStr = typeof argsToEmit === "string" ? argsToEmit : JSON.stringify(argsToEmit);
+=======
+      const argsStr =
+        typeof item.arguments === "string" ? item.arguments : JSON.stringify(item.arguments);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       if (argsStr) {
         return {
           id: state.chatId,
@@ -715,6 +737,7 @@ export function openaiResponsesToOpenAIResponse(chunk, state) {
     if (responseUsage && typeof responseUsage === "object") {
       const inputTokens = responseUsage.input_tokens || responseUsage.prompt_tokens || 0;
       const outputTokens = responseUsage.output_tokens || responseUsage.completion_tokens || 0;
+<<<<<<< HEAD
       const cacheReadTokens =
         responseUsage.cache_read_input_tokens ||
         responseUsage.input_tokens_details?.cached_tokens ||
@@ -726,6 +749,10 @@ export function openaiResponsesToOpenAIResponse(chunk, state) {
         responseUsage.completion_tokens_details?.reasoning_tokens ||
         responseUsage.reasoning_tokens ||
         0;
+=======
+      const cacheReadTokens = responseUsage.cache_read_input_tokens || 0;
+      const cacheCreationTokens = responseUsage.cache_creation_input_tokens || 0;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
       // prompt_tokens = input_tokens + cache_read + cache_creation (all prompt-side tokens)
       const promptTokens = inputTokens + cacheReadTokens + cacheCreationTokens;
@@ -746,6 +773,7 @@ export function openaiResponsesToOpenAIResponse(chunk, state) {
           state.usage.prompt_tokens_details.cache_creation_tokens = cacheCreationTokens;
         }
       }
+<<<<<<< HEAD
 
       // Add completion_tokens_details if reasoning tokens exist
       if (reasoningTokens > 0) {
@@ -753,6 +781,8 @@ export function openaiResponsesToOpenAIResponse(chunk, state) {
           reasoning_tokens: reasoningTokens,
         };
       }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
 
     if (!state.finishReasonSent) {
@@ -785,6 +815,7 @@ export function openaiResponsesToOpenAIResponse(chunk, state) {
     return null;
   }
 
+<<<<<<< HEAD
   }
 
   // Reasoning events — emit as reasoning_content in Chat format
@@ -792,6 +823,16 @@ export function openaiResponsesToOpenAIResponse(chunk, state) {
     eventType === "response.reasoning_content_text.delta" ||
     eventType === "response.reasoning_text.delta"
   ) {
+=======
+  if (eventType === "response.failed" || eventType === "error") {
+    state.upstreamError = normalizeUpstreamFailure(data);
+    state.finishReasonSent = true;
+    return null;
+  }
+
+  // Reasoning events — emit as reasoning_content in Chat format
+  if (eventType === "response.reasoning_summary_text.delta") {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const reasoningDelta = data.delta || "";
     if (!reasoningDelta) return null;
     return {
@@ -809,6 +850,7 @@ export function openaiResponsesToOpenAIResponse(chunk, state) {
     };
   }
 
+<<<<<<< HEAD
   // Handle true reasoning summary ("Thought for 15s")
   if (eventType === "response.reasoning_summary_text.delta") {
     const reasoningDelta = data.delta || "";
@@ -831,6 +873,8 @@ export function openaiResponsesToOpenAIResponse(chunk, state) {
     };
   }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Ignore other events
   return null;
 }

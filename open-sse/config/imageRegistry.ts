@@ -5,6 +5,7 @@
  * Each provider has its own request format and endpoint.
  */
 
+<<<<<<< HEAD
 interface ImageModelEntry {
   id: string;
   name: string;
@@ -106,6 +107,9 @@ function findImageModelConfig(providerId, modelId) {
 }
 
 export const IMAGE_PROVIDERS: Record<string, ImageProviderConfig> = {
+=======
+export const IMAGE_PROVIDERS = {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   openai: {
     id: "openai",
     baseUrl: "https://api.openai.com/v1/images/generations",
@@ -113,6 +117,7 @@ export const IMAGE_PROVIDERS: Record<string, ImageProviderConfig> = {
     authHeader: "bearer",
     format: "openai", // native OpenAI format
     models: [
+<<<<<<< HEAD
       { id: "gpt-image-2", name: "GPT Image 2" },
       { id: "gpt-image-1.5", name: "GPT Image 1.5" },
       { id: "gpt-image-1-mini", name: "GPT Image 1 Mini" },
@@ -144,6 +149,13 @@ export const IMAGE_PROVIDERS: Record<string, ImageProviderConfig> = {
     format: "chatgpt-web",
     models: [{ id: "gpt-5.3-instant", name: "GPT-5.3 Instant (ChatGPT Web Image)" }],
     supportedSizes: ["1024x1024", "1024x1536", "1536x1024"],
+=======
+      { id: "gpt-image-1", name: "GPT Image 1" },
+      { id: "dall-e-3", name: "DALL-E 3" },
+      { id: "dall-e-2", name: "DALL-E 2" },
+    ],
+    supportedSizes: ["1024x1024", "1024x1792", "1792x1024", "256x256", "512x512"],
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   },
 
   xai: {
@@ -152,10 +164,14 @@ export const IMAGE_PROVIDERS: Record<string, ImageProviderConfig> = {
     authType: "apikey",
     authHeader: "bearer",
     format: "openai",
+<<<<<<< HEAD
     models: [
       { id: "grok-imagine-image-pro", name: "Grok Imagine Image Pro" },
       { id: "grok-imagine-image", name: "Grok Imagine Image" },
     ],
+=======
+    models: [{ id: "grok-2-image-1212", name: "Grok 2 Image" }],
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     supportedSizes: ["1024x1024"],
   },
 
@@ -166,6 +182,7 @@ export const IMAGE_PROVIDERS: Record<string, ImageProviderConfig> = {
     authHeader: "bearer",
     format: "openai",
     models: [
+<<<<<<< HEAD
       {
         id: "black-forest-labs/FLUX.2-max",
         name: "FLUX.2 Max",
@@ -200,6 +217,11 @@ export const IMAGE_PROVIDERS: Record<string, ImageProviderConfig> = {
         name: "NanoBanana Pro",
         inputModalities: ["text", "image"],
       },
+=======
+      { id: "black-forest-labs/FLUX.1.1-pro", name: "FLUX 1.1 Pro" },
+      { id: "black-forest-labs/FLUX.1-schnell-Free", name: "FLUX 1 Schnell (Free)" },
+      { id: "stabilityai/stable-diffusion-xl-base-1.0", name: "SDXL Base 1.0" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ],
     supportedSizes: ["1024x1024", "512x512"],
   },
@@ -211,9 +233,12 @@ export const IMAGE_PROVIDERS: Record<string, ImageProviderConfig> = {
     authHeader: "bearer",
     format: "openai",
     models: [
+<<<<<<< HEAD
       { id: "accounts/fireworks/flux-kontext-max", name: "FLUX Kontext Max" },
       { id: "accounts/fireworks/flux-kontext-pro", name: "FLUX Kontext Pro" },
       { id: "accounts/fireworks/flux-1-schnell-fp8", name: "FLUX.1 schnell" },
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       { id: "accounts/fireworks/models/flux-1-dev-fp8", name: "FLUX 1 Dev FP8" },
       { id: "accounts/fireworks/models/stable-diffusion-xl-1024-v1-0", name: "SDXL 1024 v1.0" },
     ],
@@ -230,7 +255,10 @@ export const IMAGE_PROVIDERS: Record<string, ImageProviderConfig> = {
     supportedSizes: ["1024x1024"],
   },
 
+<<<<<<< HEAD
   //Curruntly no models serving
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   nebius: {
     id: "nebius",
     baseUrl: "https://api.tokenfactory.nebius.com/v1/images/generations",
@@ -238,8 +266,16 @@ export const IMAGE_PROVIDERS: Record<string, ImageProviderConfig> = {
     authType: "apikey",
     authHeader: "bearer",
     format: "openai",
+<<<<<<< HEAD
     models: [{ id: "black-forest-labs/flux-schnell", name: "No Model yet" }],
     supportedSizes: ["1024x1024"],
+=======
+    models: [
+      { id: "black-forest-labs/flux-schnell", name: "FLUX.1 Schnell" },
+      { id: "black-forest-labs/flux-dev", name: "FLUX.1 Dev" },
+    ],
+    supportedSizes: ["1024x1024", "512x512"],
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   },
 
   hyperbolic: {
@@ -248,10 +284,20 @@ export const IMAGE_PROVIDERS: Record<string, ImageProviderConfig> = {
     authType: "apikey",
     authHeader: "bearer",
     format: "hyperbolic", // custom: uses model_name, returns base64 images
+<<<<<<< HEAD
     models: [{ id: "SDXL1.0-base", name: "No Model yet" }],
     supportedSizes: ["1024x1024"],
   },
   //Curruntly no models serving
+=======
+    models: [
+      { id: "SDXL1.0-base", name: "SDXL 1.0 Base" },
+      { id: "SD2", name: "Stable Diffusion 2" },
+      { id: "FLUX.1-dev", name: "FLUX.1 Dev" },
+    ],
+    supportedSizes: ["1024x1024", "512x512"],
+  },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   nanobanana: {
     id: "nanobanana",
@@ -301,6 +347,7 @@ export const IMAGE_PROVIDERS: Record<string, ImageProviderConfig> = {
     authHeader: "bearer",
     format: "openai",
     models: [
+<<<<<<< HEAD
       { id: "openai/gpt-5.4-image-2", name: "GPT Image 2 (via OpenRouter)" },
       { id: "openai/gpt-5-image-mini", name: "GPT Image 1 Mini (via OpenRouter)" },
       { id: "google/gemini-3.1-flash-image-preview", name: "Nano Banana 2 (via OpenRouter)" },
@@ -449,6 +496,14 @@ export const IMAGE_PROVIDERS: Record<string, ImageProviderConfig> = {
       { id: "hidream", name: "Hidream I1 Full" },
     ],
     supportedSizes: ["1024x1024", "1024x1280", "1280x1024"],
+=======
+      { id: "openai/dall-e-3", name: "DALL-E 3 (via OpenRouter)" },
+      { id: "openai/gpt-image-1", name: "GPT Image 1 (via OpenRouter)" },
+      { id: "google/imagen-3.0-generate-002", name: "Imagen 3 (via OpenRouter)" },
+      { id: "black-forest-labs/FLUX.1-schnell", name: "FLUX.1 Schnell (via OpenRouter)" },
+    ],
+    supportedSizes: ["1024x1024", "1024x1792", "1792x1024", "256x256", "512x512"],
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   },
 };
 
@@ -466,6 +521,7 @@ export function getImageProvider(providerId) {
 export function parseImageModel(modelStr) {
   if (!modelStr) return { provider: null, model: null };
 
+<<<<<<< HEAD
   const directAlias = resolveImageModelAlias(modelStr);
   if (directAlias) {
     return directAlias;
@@ -485,6 +541,12 @@ export function parseImageModel(modelStr) {
       const aliased =
         resolveImageModelAlias(`${providerId}/${model}`) || resolveImageModelAlias(model);
       return aliased || { provider: providerId, model };
+=======
+  // Try each provider prefix
+  for (const [providerId, config] of Object.entries(IMAGE_PROVIDERS)) {
+    if (modelStr.startsWith(providerId + "/")) {
+      return { provider: providerId, model: modelStr.slice(providerId.length + 1) };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
   }
 
@@ -510,6 +572,7 @@ export function getAllImageModels() {
         name: model.name,
         provider: providerId,
         supportedSizes: config.supportedSizes,
+<<<<<<< HEAD
         inputModalities: model.inputModalities || ["text"],
         description: model.description || undefined,
       });
@@ -562,3 +625,10 @@ export function getImageModelEntry(modelStr) {
     description: modelConfig.description || undefined,
   };
 }
+=======
+      });
+    }
+  }
+  return models;
+}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

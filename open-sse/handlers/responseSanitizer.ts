@@ -16,6 +16,7 @@ const ALLOWED_USAGE_FIELDS = new Set([
   "prompt_tokens_details",
   "completion_tokens_details",
 ]);
+<<<<<<< HEAD
 const ALLOWED_RESPONSES_USAGE_FIELDS = new Set([
   "input_tokens",
   "output_tokens",
@@ -24,6 +25,8 @@ const ALLOWED_RESPONSES_USAGE_FIELDS = new Set([
   "output_tokens_details",
   "estimated",
 ]);
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 type JsonRecord = Record<string, unknown>;
 
@@ -40,6 +43,7 @@ function toNumber(value: unknown): number | undefined {
   return typeof value === "number" && Number.isFinite(value) ? value : undefined;
 }
 
+<<<<<<< HEAD
 function hasVisibleMessageContent(content: unknown): boolean {
   if (typeof content === "string") {
     return content.trim().length > 0;
@@ -58,6 +62,8 @@ function hasVisibleMessageContent(content: unknown): boolean {
 }
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // Matches <think>...</think> blocks and <thinking>...</thinking> (greedy, dotAll)
 const THINK_TAG_REGEX = /<(?:think|thinking)>([\s\S]*?)<\/(?:think|thinking)>/gi;
 
@@ -139,6 +145,7 @@ export function sanitizeOpenAIResponse(body: unknown): unknown {
   return sanitized;
 }
 
+<<<<<<< HEAD
 export function sanitizeResponsesApiResponse(body: unknown): unknown {
   const bodyRecord = toRecord(body);
   if (!bodyRecord) return body;
@@ -180,6 +187,8 @@ export function sanitizeResponsesApiResponse(body: unknown): unknown {
   return sanitized;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Sanitize a single choice object.
  */
@@ -283,6 +292,7 @@ function sanitizeMessage(msg: unknown): unknown {
     }
   }
 
+<<<<<<< HEAD
   // Non-streaming responses should not expose both visible content and reasoning_content.
   // Some clients drop the visible assistant text or render duplicated panels when both fields
   // are present in the final payload. Keep reasoning_content only for reasoning-only messages.
@@ -291,6 +301,8 @@ function sanitizeMessage(msg: unknown): unknown {
   }
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Preserve tool_calls
   if (msgRecord.tool_calls) {
     sanitized.tool_calls = msgRecord.tool_calls;
@@ -341,6 +353,7 @@ function sanitizeUsage(usage: unknown): unknown {
   return sanitized;
 }
 
+<<<<<<< HEAD
 function sanitizeResponsesUsage(usage: unknown): unknown {
   const usageRecord = toRecord(usage);
   if (!usageRecord) return usage;
@@ -409,6 +422,8 @@ function sanitizeResponsesUsage(usage: unknown): unknown {
   return sanitized;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Normalize response ID to use chatcmpl- prefix.
  */
@@ -422,6 +437,7 @@ function normalizeResponseId(id: unknown): string {
   return id;
 }
 
+<<<<<<< HEAD
 function normalizeResponsesId(id: unknown): string {
   if (!id || typeof id !== "string") {
     return `resp_${crypto.randomUUID().replace(/-/g, "").slice(0, 24)}`;
@@ -654,6 +670,8 @@ function convertOpenAIResponseToResponses(openaiResponse: JsonRecord): JsonRecor
   return sanitized;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Sanitize a streaming SSE chunk for passthrough mode.
  * Lighter than full sanitization — only strips problematic extra fields.
@@ -714,6 +732,7 @@ export function sanitizeStreamingChunk(parsed: unknown): unknown {
               delta.reasoning_content = parts.join("");
             }
           }
+<<<<<<< HEAD
           if (deltaRecord.reasoning_text !== undefined) {
             delta.reasoning_text = deltaRecord.reasoning_text;
           } else if (typeof deltaRecord.reasoning === "string" && deltaRecord.reasoning) {
@@ -738,6 +757,8 @@ export function sanitizeStreamingChunk(parsed: unknown): unknown {
             }
 =======
           }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           if (deltaRecord.tool_calls !== undefined) delta.tool_calls = deltaRecord.tool_calls;
           if (deltaRecord.function_call !== undefined)
             delta.function_call = deltaRecord.function_call;

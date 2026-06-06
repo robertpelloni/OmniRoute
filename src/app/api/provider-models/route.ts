@@ -18,6 +18,7 @@ import { isAuthenticated } from "@/shared/utils/apiAuth";
 import { providerModelMutationSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
 
+<<<<<<< HEAD
 function normalizeRequestedModelIds(
   searchParams: URLSearchParams,
   body: Record<string, unknown>
@@ -33,6 +34,8 @@ function normalizeRequestedModelIds(
   return Array.from(new Set(allModelIds)).filter(Boolean);
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * GET /api/provider-models?provider=<id>
  * List custom models (all providers if no provider param)
@@ -242,6 +245,7 @@ export async function PUT(request) {
 }
 
 /**
+<<<<<<< HEAD
  * PATCH /api/provider-models?provider=<id>&modelId=<modelId>
  * Body: { isHidden: boolean, modelIds?: string[] }
  */
@@ -321,6 +325,8 @@ export async function PATCH(request) {
 }
 
 /**
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  * DELETE /api/provider-models?provider=<id>&model=<modelId>
  */
 export async function DELETE(request) {

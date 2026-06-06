@@ -20,12 +20,17 @@ export default function AntigravityToolCard({
   const [loading, setLoading] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [sudoPassword, setSudoPassword] = useState("");
+<<<<<<< HEAD
   const [selectedApiKeyId, setSelectedApiKeyId] = useState("");
+=======
+  const [selectedApiKey, setSelectedApiKey] = useState("");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [message, setMessage] = useState(null);
   const [modelMappings, setModelMappings] = useState({});
   const [modalOpen, setModalOpen] = useState(false);
   const [currentEditingAlias, setCurrentEditingAlias] = useState(null);
 
+<<<<<<< HEAD
   // (#523) Store the key *id* (not the masked string) so the backend can
   // resolve the real secret from DB before writing to config files.
   useEffect(() => {
@@ -33,6 +38,13 @@ export default function AntigravityToolCard({
       setSelectedApiKeyId(apiKeys[0].id);
     }
   }, [apiKeys, selectedApiKeyId]);
+=======
+  useEffect(() => {
+    if (apiKeys?.length > 0 && !selectedApiKey) {
+      setSelectedApiKey(apiKeys[0].key);
+    }
+  }, [apiKeys, selectedApiKey]);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   useEffect(() => {
     if (isExpanded && !status) {
@@ -95,18 +107,29 @@ export default function AntigravityToolCard({
     setLoading(true);
     setMessage(null);
     try {
+<<<<<<< HEAD
       // (#523) Prefer keyId lookup so the backend writes the real key to disk.
       const selectedKeyId =
         selectedApiKeyId?.trim() || (apiKeys?.length > 0 ? apiKeys[0].id : null);
+=======
+      const keyToUse =
+        selectedApiKey?.trim() ||
+        (apiKeys?.length > 0 ? apiKeys[0].key : null) ||
+        (!cloudEnabled ? "sk_omniroute" : null);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
       const res = await fetch("/api/cli-tools/antigravity-mitm", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+<<<<<<< HEAD
         body: JSON.stringify({
           apiKey: !cloudEnabled ? "sk_omniroute" : null,
           keyId: selectedKeyId,
           sudoPassword: password,
         }),
+=======
+        body: JSON.stringify({ apiKey: keyToUse, sudoPassword: password }),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       });
 
       const data = await res.json();
@@ -116,11 +139,15 @@ export default function AntigravityToolCard({
         setSudoPassword("");
         fetchStatus();
       } else {
+<<<<<<< HEAD
         setMessage({
           type: "error",
           text:
             (typeof data.error === "string" ? data.error : data.error?.message) || t("failedStart"),
         });
+=======
+        setMessage({ type: "error", text: data.error || t("failedStart") });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     } catch (error) {
       setMessage({ type: "error", text: error.message });
@@ -146,11 +173,15 @@ export default function AntigravityToolCard({
         setSudoPassword("");
         fetchStatus();
       } else {
+<<<<<<< HEAD
         setMessage({
           type: "error",
           text:
             (typeof data.error === "string" ? data.error : data.error?.message) || t("failedStop"),
         });
+=======
+        setMessage({ type: "error", text: data.error || t("failedStop") });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     } catch (error) {
       setMessage({ type: "error", text: error.message });
@@ -205,10 +236,14 @@ export default function AntigravityToolCard({
 
       if (!res.ok) {
         const data = await res.json();
+<<<<<<< HEAD
         throw new Error(
           (typeof data.error === "string" ? data.error : data.error?.message) ||
             t("failedSaveMappings")
         );
+=======
+        throw new Error(data.error || t("failedSaveMappings"));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
 
       setMessage({ type: "success", text: t("mappingsSaved") });
@@ -305,12 +340,21 @@ export default function AntigravityToolCard({
                 </span>
                 {apiKeys.length > 0 ? (
                   <select
+<<<<<<< HEAD
                     value={selectedApiKeyId}
                     onChange={(e) => setSelectedApiKeyId(e.target.value)}
                     className="flex-1 px-2 py-1.5 bg-surface rounded text-xs border border-border focus:outline-none focus:ring-1 focus:ring-primary/50"
                   >
                     {apiKeys.map((key) => (
                       <option key={key.id} value={key.id}>
+=======
+                    value={selectedApiKey}
+                    onChange={(e) => setSelectedApiKey(e.target.value)}
+                    className="flex-1 px-2 py-1.5 bg-surface rounded text-xs border border-border focus:outline-none focus:ring-1 focus:ring-primary/50"
+                  >
+                    {apiKeys.map((key) => (
+                      <option key={key.id} value={key.key}>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                         {key.key}
                       </option>
                     ))}

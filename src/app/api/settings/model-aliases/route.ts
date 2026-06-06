@@ -14,15 +14,22 @@ import {
   updateModelAliasesSchema,
 } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
+<<<<<<< HEAD
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * GET /api/settings/model-aliases
  * Returns the full alias map, separated into built-in and custom.
  */
+<<<<<<< HEAD
 export async function GET(request: Request) {
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
+=======
+export async function GET() {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     return NextResponse.json({
       builtIn: getBuiltInAliases(),
@@ -40,9 +47,13 @@ export async function GET(request: Request) {
  * Update the custom aliases map.
  * Body: { aliases: { "old-model": "new-model", ... } }
  */
+<<<<<<< HEAD
 export async function PUT(request: Request) {
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
+=======
+export async function PUT(request) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody;
   try {
     rawBody = await request.json();
@@ -78,9 +89,13 @@ export async function PUT(request: Request) {
  * Add a single custom alias.
  * Body: { from: "old-model", to: "new-model" }
  */
+<<<<<<< HEAD
 export async function POST(request: Request) {
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
+=======
+export async function POST(request) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody;
   try {
     rawBody = await request.json();
@@ -116,9 +131,13 @@ export async function POST(request: Request) {
  * Remove a custom alias.
  * Body: { from: "old-model" }
  */
+<<<<<<< HEAD
 export async function DELETE(request: Request) {
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
+=======
+export async function DELETE(request) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody;
   try {
     rawBody = await request.json();

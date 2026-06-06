@@ -75,12 +75,16 @@ export default function CliproxyapiToolCard({ isExpanded, onToggle }) {
         await fetchStatus();
         if (action === "install" || action === "restart") await fetchUpdateInfo();
       } else {
+<<<<<<< HEAD
         setMessage({
           type: "error",
           text:
             (typeof data.error === "string" ? data.error : data.error?.message) ||
             `${action} failed`,
         });
+=======
+        setMessage({ type: "error", text: data.error || `${action} failed` });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     } catch (err) {
       setMessage({ type: "error", text: err instanceof Error ? err.message : "Request failed" });

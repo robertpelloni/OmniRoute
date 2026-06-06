@@ -1,11 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
+<<<<<<< HEAD
+=======
+import PropTypes from "prop-types";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import Modal from "./Modal";
 import Button from "./Button";
 import Input from "./Input";
 import { useCopyToClipboard } from "@/shared/hooks/useCopyToClipboard";
 
+<<<<<<< HEAD
 type KiroSocialOAuthModalProps = {
   isOpen: boolean;
   provider: "google" | "github";
@@ -14,10 +19,13 @@ type KiroSocialOAuthModalProps = {
   onClose: () => void;
 };
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Kiro Social OAuth Modal (Google/GitHub)
  * Handles manual callback URL flow for social login
  */
+<<<<<<< HEAD
 export default function KiroSocialOAuthModal({
   isOpen,
   provider,
@@ -25,6 +33,9 @@ export default function KiroSocialOAuthModal({
   onSuccess,
   onClose,
 }: KiroSocialOAuthModalProps) {
+=======
+export default function KiroSocialOAuthModal({ isOpen, provider, onSuccess, onClose }) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [step, setStep] = useState("loading"); // loading | input | success | error
   const [authUrl, setAuthUrl] = useState("");
   const [authData, setAuthData] = useState(null);
@@ -113,12 +124,16 @@ export default function KiroSocialOAuthModal({
   const providerName = provider === "google" ? "Google" : "GitHub";
 
   return (
+<<<<<<< HEAD
     <Modal
       isOpen={isOpen}
       title={`Connect ${providerLabel} via ${providerName}`}
       onClose={onClose}
       size="lg"
     >
+=======
+    <Modal isOpen={isOpen} title={`Connect Kiro via ${providerName}`} onClose={onClose} size="lg">
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       <div className="flex flex-col gap-4">
         {/* Loading */}
         {step === "loading" && (
@@ -186,7 +201,11 @@ export default function KiroSocialOAuthModal({
             </div>
             <h3 className="text-lg font-semibold mb-2">Connected Successfully!</h3>
             <p className="text-sm text-text-muted mb-4">
+<<<<<<< HEAD
               Your {providerLabel} account via {providerName} has been connected.
+=======
+              Your Kiro account via {providerName} has been connected.
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             </p>
             <Button onClick={onClose} fullWidth>
               Done
@@ -216,3 +235,13 @@ export default function KiroSocialOAuthModal({
     </Modal>
   );
 }
+<<<<<<< HEAD
+=======
+
+KiroSocialOAuthModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  provider: PropTypes.oneOf(["google", "github"]).isRequired,
+  onSuccess: PropTypes.func,
+  onClose: PropTypes.func.isRequired,
+};
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

@@ -7,10 +7,13 @@
  * @module shared/utils/costEstimator
  */
 
+<<<<<<< HEAD
 import { formatCost } from "./formatting";
 
 export { formatCost };
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Default pricing per 1M tokens (fallback when no pricing config exists).
  * Values in USD.
@@ -107,6 +110,19 @@ export function estimateCost({ model, inputTokens, maxOutputTokens = 1000, prici
 }
 
 /**
+<<<<<<< HEAD
+=======
+ * Format a cost value for display.
+ * @param {number} usd
+ * @returns {string}
+ */
+export function formatCost(usd) {
+  if (usd < 0.01) return `$${(usd * 100).toFixed(4)}¢`;
+  return `$${usd.toFixed(4)}`;
+}
+
+/**
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  * Quick pre-flight estimate: given a request body and model, return estimated cost.
  *
  * @param {Object} body - Chat completion request body

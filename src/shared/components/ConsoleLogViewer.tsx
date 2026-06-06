@@ -46,7 +46,10 @@ const POLL_INTERVAL = 5000; // 5 seconds
 
 export default function ConsoleLogViewer() {
   const t = useTranslations("loggers");
+<<<<<<< HEAD
   const tv = useTranslations("logs.consoleViewer");
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -71,11 +74,19 @@ export default function ConsoleLogViewer() {
       setLastUpdated(new Date());
       setError(null);
     } catch (err: any) {
+<<<<<<< HEAD
       setError(err.message || tv("fetchFailed"));
     } finally {
       setLoading(false);
     }
   }, [levelFilter, tv]);
+=======
+      setError(err.message || "Failed to fetch logs");
+    } finally {
+      setLoading(false);
+    }
+  }, [levelFilter]);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Initial fetch + polling
   useEffect(() => {
@@ -95,7 +106,11 @@ export default function ConsoleLogViewer() {
     const text = JSON.stringify(entry, null, 2);
     const success = await copyToClipboard(text);
     if (!success) {
+<<<<<<< HEAD
       setError(tv("copyFailed"));
+=======
+      setError("Failed to copy log entry");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       return;
     }
 
@@ -285,7 +300,11 @@ export default function ConsoleLogViewer() {
                   {/* Copy button */}
                   <button
                     onClick={() => handleCopy(entry, idx)}
+<<<<<<< HEAD
                     title={tv("copyLogEntry")}
+=======
+                    title="Copy log entry"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0 text-[#8b949e] hover:text-white"
                   >
                     <span className="material-symbols-outlined text-[14px]">

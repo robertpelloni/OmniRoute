@@ -36,6 +36,7 @@ interface CacheMetrics {
 const REFRESH_INTERVAL_MS = 10_000;
 const REFRESH_INTERVAL_SECONDS = REFRESH_INTERVAL_MS / 1000;
 
+<<<<<<< HEAD
 function formatNumberCompact(num: number): string {
   return Intl.NumberFormat("en-US", {
     notation: "compact",
@@ -44,6 +45,8 @@ function formatNumberCompact(num: number): string {
 }
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export default function CacheStatsCard() {
   const [metrics, setMetrics] = useState<CacheMetrics | null>(null);
   const [resetting, setResetting] = useState(false);
@@ -125,16 +128,28 @@ export default function CacheStatsCard() {
               <div>
                 <p className="text-text-muted">{t("inputTokens")}</p>
                 <p className="font-mono text-lg text-text-main">
+<<<<<<< HEAD
+=======
+                  {metrics.totalInputTokens.toLocaleString()}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 </p>
               </div>
               <div>
                 <p className="text-text-muted">{t("cachedTokensRead")}</p>
                 <p className="font-mono text-lg text-green-400">
+<<<<<<< HEAD
+=======
+                  {metrics.totalCachedTokens.toLocaleString()}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 </p>
               </div>
               <div>
                 <p className="text-text-muted">{t("cacheCreationWrite")}</p>
                 <p className="font-mono text-lg text-blue-400">
+<<<<<<< HEAD
+=======
+                  {metrics.totalCacheCreationTokens.toLocaleString()}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 </p>
               </div>
             </div>
@@ -162,6 +177,10 @@ export default function CacheStatsCard() {
               <div>
                 <p className="text-text-muted">{t("tokensSaved")}</p>
                 <p className="font-mono text-lg text-green-400">
+<<<<<<< HEAD
+=======
+                  {metrics.tokensSaved.toLocaleString()}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 </p>
               </div>
               <div>
@@ -193,6 +212,16 @@ export default function CacheStatsCard() {
                         </div>
                         <div className="flex items-center gap-4 font-mono">
                           <span className="text-text-muted" title={t("inputTokens")}>
+<<<<<<< HEAD
+=======
+                            {t("inputShort")}: {stats.inputTokens.toLocaleString()}
+                          </span>
+                          <span className="text-green-400" title={t("cachedTokensRead")}>
+                            {t("cachedShort")}: {stats.cachedTokens.toLocaleString()}
+                          </span>
+                          <span className="text-blue-400" title={t("cacheCreationWrite")}>
+                            {t("writeShort")}: {stats.cacheCreationTokens.toLocaleString()}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                           </span>
                           <span className="text-green-400 w-12 text-right">
                             {providerCacheRate.toFixed(0)}%

@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
 import { getCacheMetrics, resetCacheMetrics } from "@/lib/db/settings";
+<<<<<<< HEAD
+=======
+
+export async function GET() {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const metrics = await getCacheMetrics();
     return NextResponse.json(metrics);
@@ -9,6 +14,10 @@ import { getCacheMetrics, resetCacheMetrics } from "@/lib/db/settings";
   }
 }
 
+<<<<<<< HEAD
+=======
+export async function DELETE() {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const metrics = await resetCacheMetrics();
     return NextResponse.json(metrics);

@@ -2,12 +2,15 @@ import { register } from "../registry.ts";
 import { FORMATS } from "../formats.ts";
 import { storeGeminiThoughtSignature } from "../../services/geminiThoughtSignatureStore.ts";
 
+<<<<<<< HEAD
 function buildToolCallId(functionCall, toolName, toolCallIndex) {
   return typeof functionCall?.id === "string" && functionCall.id.length > 0
     ? functionCall.id
     : `${toolName}-${Date.now()}-${toolCallIndex}`;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // Convert Gemini response chunk to OpenAI format
 export function geminiToOpenAIResponse(chunk, state) {
   if (!chunk) return null;
@@ -34,7 +37,11 @@ export function geminiToOpenAIResponse(chunk, state) {
         choices: [
           {
             index: 0,
+<<<<<<< HEAD
             delta: { role: "assistant", content: "" },
+=======
+            delta: { role: "assistant" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             finish_reason: null,
           },
         ],
@@ -89,8 +96,13 @@ export function geminiToOpenAIResponse(chunk, state) {
         state.pendingThoughtSignature = hasThoughtSig;
       }
 
+<<<<<<< HEAD
       // Handle thought signature (thinking mode) or native gemini thought flag
       if (hasThoughtSig || isThought) {
+=======
+      // Handle thought signature (thinking mode)
+      if (hasThoughtSig) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         const hasTextContent = part.text !== undefined && part.text !== "";
         const hasFunctionCall = !!part.functionCall;
 
@@ -111,13 +123,21 @@ export function geminiToOpenAIResponse(chunk, state) {
         }
 
         if (hasFunctionCall) {
+<<<<<<< HEAD
           const rawToolName = part.functionCall.name;
           const fcName = state.toolNameMap?.get(rawToolName) || rawToolName;
+=======
+          const fcName = part.functionCall.name;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           const fcArgs = part.functionCall.args || {};
           const toolCallIndex = state.functionIndex++;
 
           const toolCall = {
+<<<<<<< HEAD
             id: buildToolCallId(part.functionCall, fcName, toolCallIndex),
+=======
+            id: `${fcName}-${Date.now()}-${toolCallIndex}`,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             index: toolCallIndex,
             type: "function",
             function: {
@@ -169,13 +189,21 @@ export function geminiToOpenAIResponse(chunk, state) {
 
       // Function call
       if (part.functionCall) {
+<<<<<<< HEAD
         const rawToolName = part.functionCall.name;
         const fcName = state.toolNameMap?.get(rawToolName) || rawToolName;
+=======
+        const fcName = part.functionCall.name;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         const fcArgs = part.functionCall.args || {};
         const toolCallIndex = state.functionIndex++;
 
         const toolCall = {
+<<<<<<< HEAD
           id: buildToolCallId(part.functionCall, fcName, toolCallIndex),
+=======
+          id: `${fcName}-${Date.now()}-${toolCallIndex}`,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           index: toolCallIndex,
           type: "function",
           function: {
@@ -298,6 +326,7 @@ export function geminiToOpenAIResponse(chunk, state) {
     ) {
       finishReason = "content_filter";
     }
+<<<<<<< HEAD
     // Content blocked by Gemini safety filters — pass through as "content_filter"
     // so downstream clients can distinguish from normal completion.
     if (
@@ -307,6 +336,8 @@ export function geminiToOpenAIResponse(chunk, state) {
     ) {
       finishReason = "content_filter";
     }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     const finalChunk: Record<string, unknown> = {
       id: `chatcmpl-${state.messageId}`,

@@ -11,11 +11,15 @@ export const getMitmStatus = async () => ({
   dnsConfigured: false,
   certExists: false,
 });
+<<<<<<< HEAD
 export const startMitm = async (
   _apiKey: string,
   _sudoPassword: string,
   _options: { port?: number } = {}
 ) => ({
+=======
+export const startMitm = async (_apiKey: string, _sudoPassword: string) => ({
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   running: false,
   pid: null,
 });

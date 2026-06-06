@@ -1,5 +1,8 @@
 import Link from "next/link";
+<<<<<<< HEAD
 import { useTranslations } from "next-intl";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 interface PageAction {
   href: string;
@@ -12,8 +15,13 @@ interface ErrorPageScaffoldProps {
   description: string;
   icon?: string;
   suggestions?: string[];
+<<<<<<< HEAD
   primaryAction?: PageAction | null;
   secondaryAction?: PageAction | null;
+=======
+  primaryAction?: PageAction;
+  secondaryAction?: PageAction;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 export default function ErrorPageScaffold({
@@ -22,6 +30,7 @@ export default function ErrorPageScaffold({
   description,
   icon = "error",
   suggestions = [],
+<<<<<<< HEAD
   primaryAction,
   secondaryAction,
 }: ErrorPageScaffoldProps) {
@@ -29,6 +38,11 @@ export default function ErrorPageScaffold({
   const resolvedPrimary = primaryAction ?? { href: "/dashboard", label: t("goToDashboard") };
   const resolvedSecondary = secondaryAction ?? { href: "/status", label: t("checkSystemStatus") };
 
+=======
+  primaryAction = { href: "/dashboard", label: "Go to Dashboard" },
+  secondaryAction = { href: "/status", label: "Check System Status" },
+}: ErrorPageScaffoldProps) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return (
     <main
       className="min-h-screen bg-bg text-text-main flex items-center justify-center px-6 py-12"
@@ -73,6 +87,7 @@ export default function ErrorPageScaffold({
 
         <div className="mt-8 flex flex-col sm:flex-row gap-3">
           <Link
+<<<<<<< HEAD
             href={resolvedPrimary.href}
             className="inline-flex items-center justify-center px-6 py-3 rounded-lg text-white text-sm font-semibold bg-gradient-to-br from-primary to-primary-hover hover:shadow-elevated transition-all duration-200 motion-reduce:transition-none"
           >
@@ -83,6 +98,18 @@ export default function ErrorPageScaffold({
             className="inline-flex items-center justify-center px-6 py-3 rounded-lg text-sm font-semibold border border-border hover:bg-bg-alt transition-colors duration-200 motion-reduce:transition-none"
           >
             {resolvedSecondary.label}
+=======
+            href={primaryAction.href}
+            className="inline-flex items-center justify-center px-6 py-3 rounded-lg text-white text-sm font-semibold bg-gradient-to-br from-primary to-primary-hover hover:shadow-elevated transition-all duration-200 motion-reduce:transition-none"
+          >
+            {primaryAction.label}
+          </Link>
+          <Link
+            href={secondaryAction.href}
+            className="inline-flex items-center justify-center px-6 py-3 rounded-lg text-sm font-semibold border border-border hover:bg-bg-alt transition-colors duration-200 motion-reduce:transition-none"
+          >
+            {secondaryAction.label}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           </Link>
         </div>
       </section>

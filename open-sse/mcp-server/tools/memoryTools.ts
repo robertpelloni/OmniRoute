@@ -41,7 +41,10 @@ export const memoryTools = {
         retentionDays: 30,
         scope: "apiKey" as const,
         query: args.query,
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       };
 
       const memories = await retrieveMemories(args.apiKeyId, config);
@@ -91,6 +94,18 @@ export const memoryTools = {
     description: "Clear memories for an API key, optionally filtered by type or age",
     inputSchema: MemoryClearSchema,
     handler: async (args: z.infer<typeof MemoryClearSchema>) => {
+<<<<<<< HEAD
+=======
+      const memories = await listMemories({
+        apiKeyId: args.apiKeyId,
+        type: args.type as MemoryType | undefined,
+      });
+
+      let toDelete = memories;
+      if (args.olderThan) {
+        const cutoff = new Date(args.olderThan);
+        toDelete = memories.filter((m) => new Date(m.createdAt) < cutoff);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
 
       let deletedCount = 0;

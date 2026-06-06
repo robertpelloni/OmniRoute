@@ -23,6 +23,7 @@ export function toJsonErrorPayload(rawError, fallbackMessage = "Upstream provide
       };
     }
     if (errorObj && typeof errorObj === "object") {
+<<<<<<< HEAD
       const nestedMessage = extractErrorMessage(errorObj);
       if (!("message" in errorObj) && nestedMessage) {
         return {
@@ -49,6 +50,10 @@ export function toJsonErrorPayload(rawError, fallbackMessage = "Upstream provide
         };
       }
     }
+=======
+      return rawError;
+    }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return { error: rawError };
   }
 
@@ -74,6 +79,7 @@ export function toJsonErrorPayload(rawError, fallbackMessage = "Upstream provide
 
   return fallback;
 }
+<<<<<<< HEAD
 
 function extractErrorMessage(value) {
   if (!value || typeof value !== "object") return null;
@@ -105,3 +111,5 @@ function extractErrorMessage(value) {
 
   return null;
 }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

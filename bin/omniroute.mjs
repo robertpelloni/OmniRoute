@@ -4,6 +4,7 @@
  * OmniRoute CLI — Smart AI Router with Auto Fallback
  *
  * Usage:
+<<<<<<< HEAD
  *   omniroute                          Start the server (default port 20128)
  *   omniroute --port 3000              Start on custom port
  *   omniroute --no-open                Start without opening browser
@@ -11,28 +12,54 @@
  *   omniroute reset-encrypted-columns  Reset broken encrypted credentials
  *   omniroute --help                   Show help
  *   omniroute --version                Show version
+=======
+ *   omniroute              Start the server (default port 20128)
+ *   omniroute --port 3000  Start on custom port
+ *   omniroute --no-open    Start without opening browser
+ *   omniroute --mcp        Start MCP server (stdio transport for IDEs)
+ *   omniroute --help       Show help
+ *   omniroute --version    Show version
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  */
 
 import { spawn } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
+<<<<<<< HEAD
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { homedir, platform } from "node:os";
 import { isNativeBinaryCompatible } from "../scripts/native-binary-compat.mjs";
 import { getNodeRuntimeSupport, getNodeRuntimeWarning } from "./nodeRuntimeSupport.mjs";
+=======
+import { fileURLToPath } from "node:url";
+import { homedir, platform } from "node:os";
+import { isNativeBinaryCompatible } from "../scripts/native-binary-compat.mjs";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const ROOT = join(__dirname, "..");
 const APP_DIR = join(ROOT, "app");
 
+<<<<<<< HEAD
 function loadEnvFile() {
   const envPaths = [];
 
+=======
+// ── Load .env file (for global npm install) ─────────────────
+function loadEnvFile() {
+  const envPaths = [];
+
+  // 1. DATA_DIR/.env if set
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (process.env.DATA_DIR) {
     envPaths.push(join(process.env.DATA_DIR, ".env"));
   }
 
+<<<<<<< HEAD
+=======
+  // 2. ~/.omniroute/.env (default data dir)
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const home = homedir();
   if (home) {
     if (platform() === "win32") {
@@ -43,6 +70,10 @@ function loadEnvFile() {
     }
   }
 
+<<<<<<< HEAD
+=======
+  // 3. ./.env (current working directory)
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   envPaths.push(join(process.cwd(), ".env"));
 
   for (const envPath of envPaths) {
@@ -51,12 +82,22 @@ function loadEnvFile() {
         const content = readFileSync(envPath, "utf-8");
         for (const line of content.split("\n")) {
           const trimmed = line.trim();
+<<<<<<< HEAD
+=======
+          // Skip empty lines and comments
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           if (!trimmed || trimmed.startsWith("#")) continue;
           const eqIdx = trimmed.indexOf("=");
           if (eqIdx > 0) {
             const key = trimmed.slice(0, eqIdx).trim();
             const value = trimmed.slice(eqIdx + 1).trim();
+<<<<<<< HEAD
             if (process.env[key] === undefined) {
+=======
+            // Don't override existing env vars
+            if (process.env[key] === undefined) {
+              // Remove surrounding quotes
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               process.env[key] = value.replace(/^["']|["']$/g, "");
             }
           }
@@ -65,13 +106,21 @@ function loadEnvFile() {
         return;
       }
     } catch {
+<<<<<<< HEAD
       // Ignore errors reading env files.
+=======
+      // Ignore errors reading env files
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
   }
 }
 
 loadEnvFile();
 
+<<<<<<< HEAD
+=======
+// ── Parse args ─────────────────────────────────────────────
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 const args = process.argv.slice(2);
 
 if (args.includes("--help") || args.includes("-h")) {
@@ -83,7 +132,10 @@ if (args.includes("--help") || args.includes("-h")) {
     omniroute --port <port>   Use custom API port (default: 20128)
     omniroute --no-open       Don't open browser automatically
     omniroute --mcp           Start MCP server (stdio transport for IDEs)
+<<<<<<< HEAD
     omniroute reset-encrypted-columns  Reset encrypted credentials (recovery)
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     omniroute --help          Show this help
     omniroute --version       Show version
 
@@ -119,6 +171,7 @@ if (args.includes("--version") || args.includes("-v")) {
   process.exit(0);
 }
 
+<<<<<<< HEAD
 // ── reset-encrypted-columns subcommand ──────────────────────────────────────
 // Recovery tool for users who lost STORAGE_ENCRYPTION_KEY after upgrade (#1622)
 if (args.includes("reset-encrypted-columns")) {
@@ -219,6 +272,12 @@ if (args.includes("reset-encrypted-columns")) {
 if (args.includes("--mcp")) {
   try {
     const { startMcpCli } = await import(pathToFileURL(join(ROOT, "bin", "mcp-server.mjs")).href);
+=======
+// ── MCP Server Mode ───────────────────────────────────────
+if (args.includes("--mcp")) {
+  try {
+    const { startMcpCli } = await import(join(ROOT, "bin", "mcp-server.mjs"));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     await startMcpCli(ROOT);
   } catch (err) {
     console.error("\x1b[31m✖ Failed to start MCP server:\x1b[0m", err.message || err);
@@ -232,6 +291,10 @@ function parsePort(value, fallback) {
   return Number.isFinite(parsed) && parsed > 0 && parsed <= 65535 ? parsed : fallback;
 }
 
+<<<<<<< HEAD
+=======
+// Parse --port (canonical/base port)
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 let port = parsePort(process.env.PORT || "20128", 20128);
 const portIdx = args.indexOf("--port");
 if (portIdx !== -1 && args[portIdx + 1]) {
@@ -245,6 +308,7 @@ if (portIdx !== -1 && args[portIdx + 1]) {
 
 const apiPort = parsePort(process.env.API_PORT || String(port), port);
 const dashboardPort = parsePort(process.env.DASHBOARD_PORT || String(port), port);
+<<<<<<< HEAD
 const noOpen = args.includes("--no-open");
 
 console.log(`
@@ -264,17 +328,48 @@ if (!nodeSupport.nodeCompatible) {
 
      Supported secure runtimes: ${nodeSupport.supportedDisplay}
      Recommended: use Node.js ${nodeSupport.recommendedVersion} or newer on the 22.x LTS line.
+=======
+
+const noOpen = args.includes("--no-open");
+
+// ── Banner ─────────────────────────────────────────────────
+console.log(`
+\x1b[36m   ____                  _ ____              _
+   / __ \\                (_) __ \\            | |
+  | |  | |_ __ ___  _ __ _| |__) |___  _   _| |_ ___
+  | |  | | '_ \` _ \\| '_ \\ |  _  // _ \\| | | | __/ _ \\
+  | |__| | | | | | | | | | | | \\ \\ (_) | |_| | ||  __/
+   \\____/|_| |_| |_|_| |_|_|_|  \\_\\___/ \\__,_|\\__\\___|
+\x1b[0m`);
+
+// ── Node.js version check ──────────────────────────────────
+const nodeMajor = parseInt(process.versions.node.split(".")[0], 10);
+if (nodeMajor >= 24) {
+  console.warn(`\x1b[33m  ⚠  Warning: You are running Node.js ${process.versions.node}.
+     OmniRoute uses better-sqlite3, a native addon that does not yet
+     have compatible prebuilt binaries for Node.js 24+.
+     You may experience errors like "is not a valid Win32 application"
+     or "NODE_MODULE_VERSION mismatch".
+
+     Recommended: use Node.js 22 LTS (or 20 LTS).
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
      Workaround:  npm rebuild better-sqlite3\x1b[0m
 `);
 }
 
+<<<<<<< HEAD
 const serverWsJs = join(APP_DIR, "server-ws.mjs");
 const serverJs = existsSync(serverWsJs) ? serverWsJs : join(APP_DIR, "server.js");
+=======
+// ── Resolve server entry ───────────────────────────────────
+const serverJs = join(APP_DIR, "server.js");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 if (!existsSync(serverJs)) {
   console.error("\x1b[31m✖ Server not found at:\x1b[0m", serverJs);
   console.error("  The package may not have been built correctly.");
   console.error("");
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 =======
@@ -283,6 +378,9 @@ if (!existsSync(serverJs)) {
 =======
   // (#492) Detect common non-standard Node managers that cause this issue
 >>>>>>> Stashed changes
+=======
+  // (#492) Detect common non-standard Node managers that cause this issue
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const nodeExec = process.execPath || "";
   const isMise = nodeExec.includes("mise") || nodeExec.includes(".local/share/mise");
   const isNvm = nodeExec.includes(".nvm") || nodeExec.includes("nvm");
@@ -304,6 +402,13 @@ if (!existsSync(serverJs)) {
   process.exit(1);
 }
 
+<<<<<<< HEAD
+=======
+// ── Pre-flight: verify better-sqlite3 native binary ───────
+// Verify the binary's actual target platform/arch before trusting dlopen.
+// This avoids the macOS false positive where a bundled linux-x64 addon can
+// appear to load even though the runtime will fail when better-sqlite3 starts.
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 const sqliteBinary = join(
   APP_DIR,
   "node_modules",
@@ -323,8 +428,15 @@ if (existsSync(sqliteBinary) && !isNativeBinaryCompatible(sqliteBinary)) {
   process.exit(1);
 }
 
+<<<<<<< HEAD
 console.log(`  \x1b[2m⏳ Starting server...\x1b[0m\n`);
 
+=======
+// ── Start server ───────────────────────────────────────────
+console.log(`  \x1b[2m⏳ Starting server...\x1b[0m\n`);
+
+// Sanitize memory limit — parseInt to prevent command injection (#150)
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 const rawMemory = parseInt(process.env.OMNIROUTE_MEMORY_MB || "512", 10);
 const memoryLimit =
   Number.isFinite(rawMemory) && rawMemory >= 64 && rawMemory <= 16384 ? rawMemory : 512;
@@ -352,6 +464,10 @@ server.stdout.on("data", (data) => {
   const text = data.toString();
   process.stdout.write(text);
 
+<<<<<<< HEAD
+=======
+  // Detect server ready
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (
     !started &&
     (text.includes("Ready") || text.includes("started") || text.includes("listening"))
@@ -377,6 +493,10 @@ server.on("exit", (code) => {
   process.exit(code ?? 0);
 });
 
+<<<<<<< HEAD
+=======
+// ── Graceful shutdown ──────────────────────────────────────
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function shutdown() {
   console.log("\n\x1b[33m⏹ Shutting down OmniRoute...\x1b[0m");
   server.kill("SIGTERM");
@@ -389,6 +509,10 @@ function shutdown() {
 process.on("SIGINT", shutdown);
 process.on("SIGTERM", shutdown);
 
+<<<<<<< HEAD
+=======
+// ── On ready ───────────────────────────────────────────────
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 async function onReady() {
   const dashboardUrl = `http://localhost:${dashboardPort}`;
   const apiUrl = `http://localhost:${apiPort}`;
@@ -410,11 +534,19 @@ async function onReady() {
       const open = await import("open");
       await open.default(dashboardUrl);
     } catch {
+<<<<<<< HEAD
       // open is optional — if not available, just skip.
+=======
+      // open is optional — if not available, just skip
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
   }
 }
 
+<<<<<<< HEAD
+=======
+// Fallback: if no "Ready" message detected in 15s, assume server is up
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 setTimeout(() => {
   if (!started) {
     started = true;

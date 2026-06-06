@@ -1,6 +1,10 @@
 import { randomUUID } from "crypto";
+<<<<<<< HEAD
 import { CORS_HEADERS } from "../utils/cors.ts";
 import { stripTrailingSlashes } from "../utils/urlSanitize.ts";
+=======
+import { getCorsOrigin } from "../utils/cors.ts";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Audio Speech Handler (TTS)
  *
@@ -21,7 +25,10 @@ import { stripTrailingSlashes } from "../utils/urlSanitize.ts";
 import { getSpeechProvider, parseSpeechModel } from "../config/audioRegistry.ts";
 import { buildAuthHeaders } from "../config/registryUtils.ts";
 import { errorResponse } from "../utils/error.ts";
+<<<<<<< HEAD
 import { signAwsRequest } from "../utils/awsSigV4.ts";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * Return a CORS error response from an upstream fetch failure
@@ -50,7 +57,11 @@ function upstreamErrorResponse(res, errText) {
     { error: { message: errorMessage, code: res.status } },
     {
       status: res.status,
+<<<<<<< HEAD
       headers: { ...CORS_HEADERS },
+=======
+      headers: { "Access-Control-Allow-Origin": getCorsOrigin() },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
   );
 }
@@ -63,8 +74,13 @@ function audioStreamResponse(res, defaultContentType = "audio/mpeg") {
   return new Response(res.body, {
     status: 200,
     headers: {
+<<<<<<< HEAD
       ...CORS_HEADERS,
       "Content-Type": contentType,
+=======
+      "Content-Type": contentType,
+      "Access-Control-Allow-Origin": getCorsOrigin(),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       "Transfer-Encoding": "chunked",
     },
   });
@@ -78,6 +94,7 @@ function isValidPathSegment(segment: string): boolean {
   return !segment.includes("..") && !segment.includes("//");
 }
 
+<<<<<<< HEAD
 function getStringValue(value): string | null {
   return typeof value === "string" && value.trim().length > 0 ? value.trim() : null;
 }
@@ -197,6 +214,8 @@ function getAwsPollySampleRate(responseFormat, sampleRate) {
   return undefined;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Handle Hyperbolic TTS (returns base64 audio in JSON)
  */
@@ -222,6 +241,10 @@ async function handleHyperbolicSpeech(providerConfig, body, token) {
     status: 200,
     headers: {
       "Content-Type": "audio/mpeg",
+<<<<<<< HEAD
+=======
+      "Access-Control-Allow-Origin": getCorsOrigin(),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     },
   });
 }
@@ -367,6 +390,10 @@ async function handleInworldSpeech(providerConfig, body, modelId, token) {
     status: 200,
     headers: {
       "Content-Type": mimeType,
+<<<<<<< HEAD
+=======
+      "Access-Control-Allow-Origin": getCorsOrigin(),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     },
   });
 }
@@ -441,6 +468,7 @@ async function handlePlayHtSpeech(providerConfig, body, modelId, token) {
 }
 
 /**
+<<<<<<< HEAD
  * Handle AWS Polly TTS
  * POST /v1/speech signed with AWS SigV4.
  * The configured apiKey stores AWS Secret Access Key; providerSpecificData.accessKeyId stores
@@ -568,6 +596,8 @@ async function handleXiaomiMimoSpeech(providerConfig, body, modelId, token, cred
 }
 
 /**
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  * Handle Coqui TTS (local, no auth)
  * POST {baseUrl} with { text, speaker_id } → WAV audio
  */
@@ -590,6 +620,10 @@ async function handleCoquiSpeech(providerConfig, body) {
     status: 200,
     headers: {
       "Content-Type": contentType,
+<<<<<<< HEAD
+=======
+      "Access-Control-Allow-Origin": getCorsOrigin(),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     },
   });
 }
@@ -617,6 +651,10 @@ async function handleTortoiseSpeech(providerConfig, body) {
     status: 200,
     headers: {
       "Content-Type": contentType,
+<<<<<<< HEAD
+=======
+      "Access-Control-Allow-Origin": getCorsOrigin(),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     },
   });
 }
@@ -656,7 +694,11 @@ export async function handleAudioSpeech({
   if (!providerConfig) {
     return errorResponse(
       400,
+<<<<<<< HEAD
       `No speech provider found for model "${body.model}". Use format provider/model. Available: openai, hyperbolic, deepgram, nvidia, elevenlabs, huggingface, inworld, cartesia, playht, aws-polly, xiaomi-mimo, coqui, tortoise, qwen`
+=======
+      `No speech provider found for model "${body.model}". Use format provider/model. Available: openai, hyperbolic, deepgram, nvidia, elevenlabs, huggingface, inworld, cartesia, playht, coqui, tortoise, qwen`
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     );
   }
 
@@ -701,6 +743,7 @@ export async function handleAudioSpeech({
       return handlePlayHtSpeech(providerConfig, body, modelId, token);
     }
 
+<<<<<<< HEAD
     if (providerConfig.format === "aws-polly") {
       return handleAwsPollySpeech(providerConfig, body, modelId, token, credentials);
     }
@@ -709,6 +752,8 @@ export async function handleAudioSpeech({
       return handleXiaomiMimoSpeech(providerConfig, body, modelId, token, credentials);
     }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (providerConfig.format === "coqui") {
       return handleCoquiSpeech(providerConfig, body);
     }

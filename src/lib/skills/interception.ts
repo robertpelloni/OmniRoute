@@ -1,4 +1,5 @@
 import { skillExecutor } from "./executor";
+<<<<<<< HEAD
 import { builtinSkills } from "./builtins";
 import { detectProvider } from "./injection";
 import { OMNIROUTE_WEB_SEARCH_FALLBACK_TOOL_NAME } from "@omniroute/open-sse/services/webSearchFallback.ts";
@@ -8,6 +9,9 @@ const log = logger("SKILLS_INTERCEPTION");
 =======
 import { detectProvider } from "./injection";
 >>>>>>> Stashed changes
+=======
+import { detectProvider } from "./injection";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 interface ToolCall {
   id: string;
@@ -19,6 +23,7 @@ interface ExecutionContext {
   apiKeyId: string;
   sessionId: string;
   requestId: string;
+<<<<<<< HEAD
   builtinToolNames?: string[];
   customSkillExecutionEnabled?: boolean;
 }
@@ -73,6 +78,39 @@ function getResponsesOutputContainer(response: Record<string, unknown> | null | 
   }
 
   return null;
+=======
+}
+
+export async function interceptToolCalls(
+  toolCalls: ToolCall[],
+  context: ExecutionContext
+): Promise<{ id: string; result: unknown }[]> {
+  const results = await Promise.all(
+    toolCalls.map(async (call) => {
+      try {
+        const [name, version] = call.name.includes("@")
+          ? call.name.split("@")
+          : [call.name, "latest"];
+
+        const skillName = version === "latest" ? name : `${name}@${version}`;
+
+        const execution = await skillExecutor.execute(skillName, call.arguments, {
+          apiKeyId: context.apiKeyId,
+          sessionId: context.sessionId,
+        });
+
+        const result =
+          execution.output ??
+          (execution.errorMessage
+            ? { error: execution.errorMessage }
+            : { error: "Skill execution returned no output" });
+
+        return {
+          id: call.id,
+          result,
+        };
+      } catch (err) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         return {
           id: call.id,
           result: { error: err instanceof Error ? err.message : String(err) },
@@ -95,6 +133,7 @@ export function extractToolCalls(response: any, modelId: string): ToolCall[] {
             Array.isArray(choice?.message?.tool_calls) ? choice.message.tool_calls : []
           )
         : [];
+<<<<<<< HEAD
       const responsesOutput = getResponsesOutputContainer(response);
       const responsesToolCalls = responsesOutput
         ? responsesOutput.output
@@ -112,6 +151,14 @@ export function extractToolCalls(response: any, modelId: string): ToolCall[] {
         id: tc.call_id || tc.id || `call_${Date.now()}`,
         name: tc.function?.name || tc.name || "",
         arguments: parseArguments(tc.function?.arguments || tc.arguments || "{}"),
+=======
+      const toolCalls = rootToolCalls.length > 0 ? rootToolCalls : choiceToolCalls;
+
+      return toolCalls.map((tc: any) => ({
+        id: tc.id || `call_${Date.now()}`,
+        name: tc.function?.name || "",
+        arguments: parseArguments(tc.function?.arguments || "{}"),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }));
     }
 
@@ -153,6 +200,7 @@ export async function handleToolCallExecution(
   modelId: string,
   context: ExecutionContext
 ): Promise<any> {
+<<<<<<< HEAD
   const toolCalls = extractToolCalls(response, modelId).filter((call) => {
     const builtinHandlerName = resolveBuiltinHandlerName(call.name, context);
     if (builtinHandlerName) {
@@ -160,6 +208,9 @@ export async function handleToolCallExecution(
     }
     return context.customSkillExecutionEnabled !== false;
   });
+=======
+  const toolCalls = extractToolCalls(response, modelId);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   if (toolCalls.length === 0) {
     return response;
@@ -170,6 +221,7 @@ export async function handleToolCallExecution(
   const provider = detectProvider(modelId);
 
   switch (provider) {
+<<<<<<< HEAD
     case "openai": {
       const responsesOutput = getResponsesOutputContainer(response);
       if (responsesOutput) {
@@ -195,6 +247,9 @@ export async function handleToolCallExecution(
         };
       }
 
+=======
+    case "openai":
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       return {
         ...response,
         tool_results: results.map((r) => ({
@@ -202,9 +257,12 @@ export async function handleToolCallExecution(
           output: JSON.stringify(r.result),
         })),
       };
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     }
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     case "anthropic":
       return {

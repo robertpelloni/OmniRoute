@@ -7,4 +7,7 @@ export { default as KiloToolCard } from "./KiloToolCard";
 export { default as DefaultToolCard } from "./DefaultToolCard";
 export { default as AntigravityToolCard } from "./AntigravityToolCard";
 export { default as CopilotToolCard } from "./CopilotToolCard";
+<<<<<<< HEAD
 export { default as CustomCliCard } from "./CustomCliCard";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

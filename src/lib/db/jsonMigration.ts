@@ -12,7 +12,10 @@
  */
 
 import type Database from "better-sqlite3";
+<<<<<<< HEAD
 import { normalizeRoutingStrategy } from "@/shared/constants/routingStrategies";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 type SqliteDatabase = InstanceType<typeof Database>;
 
@@ -32,9 +35,12 @@ export interface LegacyJsonData {
     combos?: unknown;
     keys?: unknown;
   };
+<<<<<<< HEAD
   usageHistory?: Record<string, unknown>[];
   domainCostHistory?: Record<string, unknown>[];
   domainBudgets?: Record<string, unknown>[];
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 /**
@@ -46,6 +52,7 @@ export interface LegacyJsonData {
 export function runJsonMigration(
   db: SqliteDatabase,
   data: LegacyJsonData
+<<<<<<< HEAD
 ): {
   connections: number;
   nodes: number;
@@ -55,6 +62,9 @@ export function runJsonMigration(
   domainCostHistory: number;
   domainBudgets: number;
 } {
+=======
+): { connections: number; nodes: number; combos: number; apiKeys: number } {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const insertConn = db.prepare(`
     INSERT OR REPLACE INTO provider_connections (
       id, provider, auth_type, name, email, priority, is_active,
@@ -184,6 +194,7 @@ export function runJsonMigration(
 
     // 5. Combos
     for (const [index, combo] of (data.combos ?? []).entries()) {
+<<<<<<< HEAD
       const config =
         combo.config && typeof combo.config === "object" && !Array.isArray(combo.config)
           ? { ...(combo.config as Record<string, unknown>) }
@@ -197,6 +208,10 @@ export function runJsonMigration(
         ...combo,
         strategy: normalizeRoutingStrategy(combo.strategy),
         config,
+=======
+      const normalizedCombo = {
+        ...combo,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         sortOrder: typeof combo.sortOrder === "number" ? combo.sortOrder : index + 1,
       };
       insertCombo.run({
@@ -221,6 +236,7 @@ export function runJsonMigration(
         createdAt: apiKey.createdAt ?? new Date().toISOString(),
       });
     }
+<<<<<<< HEAD
     // 7. Usage History
     if (data.usageHistory && data.usageHistory.length > 0) {
       const insertUsageHistory = db.prepare(`
@@ -304,6 +320,8 @@ export function runJsonMigration(
         });
       }
     }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   });
 
   migrate();
@@ -313,8 +331,11 @@ export function runJsonMigration(
     nodes: (data.providerNodes ?? []).length,
     combos: (data.combos ?? []).length,
     apiKeys: (data.apiKeys ?? []).length,
+<<<<<<< HEAD
     usageHistory: (data.usageHistory ?? []).length,
     domainCostHistory: (data.domainCostHistory ?? []).length,
     domainBudgets: (data.domainBudgets ?? []).length,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 }

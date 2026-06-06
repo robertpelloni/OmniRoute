@@ -10,8 +10,12 @@
  * Reference: https://github.com/iOfficeAI/AionUi (auto-detects CLI agents)
  */
 
+<<<<<<< HEAD
 import { execFileSync } from "child_process";
 import path from "path";
+=======
+import { execSync } from "child_process";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 export interface CliAgentInfo {
   /** Agent identifier (e.g., "codex", "claude", "goose") */
@@ -189,8 +193,11 @@ const CACHE_TTL_MS = 60_000;
 /** Custom agents loaded from settings */
 let _customAgentDefs: CustomAgentDef[] = [];
 
+<<<<<<< HEAD
 const DISALLOWED_VERSION_COMMAND_CHARS = /[;&|<>`$\r\n]/;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Set custom agent definitions from settings.
  */
@@ -206,6 +213,7 @@ export function getCustomAgentDefs(): CustomAgentDef[] {
   return _customAgentDefs;
 }
 
+<<<<<<< HEAD
 function tokenizeVersionCommand(command: string): string[] | null {
   if (!command || DISALLOWED_VERSION_COMMAND_CHARS.test(command)) {
     return null;
@@ -310,6 +318,8 @@ export function shouldUseShellForVersionProbe(
   );
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Detect a single agent by running its version command.
  */
@@ -321,6 +331,7 @@ function detectAgent(
   let installed = false;
 
   try {
+<<<<<<< HEAD
     const probe = resolveVersionProbe(def.binary, def.versionCommand, isCustom);
     if (!probe) {
       return { ...def, version, installed, isCustom };
@@ -331,6 +342,12 @@ function detectAgent(
       encoding: "utf-8",
       stdio: ["pipe", "pipe", "pipe"],
       ...(shouldUseShellForVersionProbe(probe.command) ? { shell: true } : {}),
+=======
+    const output = execSync(def.versionCommand, {
+      timeout: 5000,
+      encoding: "utf-8",
+      stdio: ["pipe", "pipe", "pipe"],
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }).trim();
 
     // Extract version number from output

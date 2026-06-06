@@ -3,7 +3,11 @@
 import { useTranslations } from "next-intl";
 
 import Link from "next/link";
+<<<<<<< HEAD
 import { APP_CONFIG } from "@/shared/constants/appConfig";
+=======
+import { APP_CONFIG } from "@/shared/constants/config";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const footerLinks = {
   product: [
@@ -144,9 +148,15 @@ export default function Footer() {
             © {new Date().getFullYear()} {APP_CONFIG.name} Inc. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm text-text-muted">
+<<<<<<< HEAD
             <Link href="/docs" className="hover:text-primary transition-colors">
               Documentation
             </Link>
+=======
+            <a href="/docs" className="hover:text-primary transition-colors">
+              Documentation
+            </a>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             <Link href="/terms" className="hover:text-primary transition-colors">
               Terms
             </Link>

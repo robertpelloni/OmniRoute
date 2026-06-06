@@ -3,12 +3,17 @@
 import { useState, useEffect } from "react";
 import { Card, Button, Input, Toggle } from "@/shared/components";
 import { cn } from "@/shared/utils/cn";
+<<<<<<< HEAD
+=======
+import { ROUTING_STRATEGIES } from "@/shared/constants/routingStrategies";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { useTranslations } from "next-intl";
 
 const STRATEGY_LABEL_FALLBACKS: Record<string, string> = {
   "context-relay": "Context Relay",
 };
 
+<<<<<<< HEAD
 const LEGACY_COMBO_RESILIENCE_KEYS = new Set([
   "timeoutMs",
   "healthCheckEnabled",
@@ -16,6 +21,8 @@ const LEGACY_COMBO_RESILIENCE_KEYS = new Set([
 ]);
 const ACCOUNT_FALLBACK_STRATEGIES = new Set<string>(SETTINGS_FALLBACK_STRATEGY_VALUES);
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function translateOrFallback(
   t: ReturnType<typeof useTranslations>,
   key: string,
@@ -24,6 +31,7 @@ function translateOrFallback(
   return typeof t.has === "function" && t.has(key) ? t(key) : fallback;
 }
 
+<<<<<<< HEAD
 function sanitizeComboRuntimeConfig(config?: Record<string, any> | null) {
   if (!config || typeof config !== "object") return {};
   return Object.fromEntries(
@@ -55,38 +63,65 @@ function toGlobalRoutingPatch(strategy: string | undefined, stickyRoundRobinLimi
   return patch;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export default function ComboDefaultsTab() {
   const [comboDefaults, setComboDefaults] = useState<any>({
     strategy: "priority",
     maxRetries: 1,
     retryDelayMs: 2000,
+<<<<<<< HEAD
+=======
+    timeoutMs: 120000,
+    healthCheckEnabled: true,
+    healthCheckTimeoutMs: 3000,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     maxComboDepth: 3,
     trackMetrics: true,
     handoffThreshold: 0.85,
     handoffModel: "",
     maxMessagesForSummary: 30,
+<<<<<<< HEAD
     stickyRoundRobinLimit: 3,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   });
   const [providerOverrides, setProviderOverrides] = useState<any>({});
   const [newOverrideProvider, setNewOverrideProvider] = useState("");
   const [saving, setSaving] = useState(false);
+<<<<<<< HEAD
   const [status, setStatus] = useState<{ type: "success" | "error" | ""; message: string }>({
     type: "",
     message: "",
   });
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const t = useTranslations("settings");
   const tc = useTranslations("common");
   const strategyOptions = ROUTING_STRATEGIES.map((strategy) => ({
     value: strategy.value,
+<<<<<<< HEAD
+=======
+    label: translateOrFallback(
+      t,
+      strategy.labelKey,
+      STRATEGY_LABEL_FALLBACKS[strategy.value] || strategy.value
+    ),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     icon: strategy.icon,
   }));
   const numericSettings = [
     { key: "maxRetries", label: t("maxRetriesLabel"), min: 0, max: 5 },
     { key: "retryDelayMs", label: t("retryDelayLabel"), min: 500, max: 10000, step: 500 },
+<<<<<<< HEAD
+=======
+    { key: "timeoutMs", label: t("timeoutLabel"), min: 5000, max: 300000, step: 5000 },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     { key: "maxComboDepth", label: t("maxNestingDepth"), min: 1, max: 10 },
   ];
 
   useEffect(() => {
+<<<<<<< HEAD
     Promise.all([
       fetch("/api/settings/combo-defaults").then((res) => res.json()),
       fetch("/api/settings").then((res) => res.json()),
@@ -105,10 +140,20 @@ export default function ComboDefaultsTab() {
         if (comboData.providerOverrides) {
           setProviderOverrides(sanitizeProviderOverrides(comboData.providerOverrides));
         }
+=======
+    fetch("/api/settings/combo-defaults")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.comboDefaults) {
+          setComboDefaults((prev) => ({ ...prev, ...data.comboDefaults }));
+        }
+        if (data.providerOverrides) setProviderOverrides(data.providerOverrides);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       })
       .catch((err) => console.error("Failed to fetch combo defaults:", err));
   }, []);
 
+<<<<<<< HEAD
   const showStatus = (type: "success" | "error", message: string) => {
     setStatus({ type, message });
     setTimeout(() => setStatus({ type: "", message: "" }), 2500);
@@ -152,6 +197,18 @@ export default function ComboDefaultsTab() {
     } catch (err) {
       console.error("Failed to save combo defaults:", err);
       showStatus("error", t("errorOccurred"));
+=======
+  const saveComboDefaults = async () => {
+    setSaving(true);
+    try {
+      await fetch("/api/settings/combo-defaults", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ comboDefaults, providerOverrides }),
+      });
+    } catch (err) {
+      console.error("Failed to save combo defaults:", err);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     } finally {
       setSaving(false);
     }
@@ -160,7 +217,11 @@ export default function ComboDefaultsTab() {
   const addProviderOverride = () => {
     const name = newOverrideProvider.trim().toLowerCase();
     if (!name || providerOverrides[name]) return;
+<<<<<<< HEAD
     setProviderOverrides((prev) => ({ ...prev, [name]: { maxRetries: 1 } }));
+=======
+    setProviderOverrides((prev) => ({ ...prev, [name]: { maxRetries: 1, timeoutMs: 120000 } }));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     setNewOverrideProvider("");
   };
 
@@ -180,6 +241,7 @@ export default function ComboDefaultsTab() {
             tune
           </span>
         </div>
+<<<<<<< HEAD
         <h3 className="text-lg font-semibold">
           {translateOrFallback(t, "comboDefaultsTitle", "Default Routing & Combo Settings")}
         </h3>
@@ -226,6 +288,10 @@ export default function ComboDefaultsTab() {
         </p>
         <p className="text-xs text-text-muted mt-1">{t("comboDefaultsGuideHint1")}</p>
         <p className="text-xs text-text-muted">{t("comboDefaultsGuideHint2")}</p>
+=======
+        <h3 className="text-lg font-semibold">{t("comboDefaultsTitle")}</h3>
+        <span className="text-xs text-text-muted ml-auto">{t("globalComboConfig")}</span>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       </div>
       <div className="mb-4 rounded-lg border border-amber-500/20 bg-amber-500/5 p-3">
         <p className="text-xs font-medium text-amber-700 dark:text-amber-300">
@@ -251,6 +317,7 @@ export default function ComboDefaultsTab() {
                 key={s.value}
                 role="tab"
                 aria-selected={comboDefaults.strategy === s.value}
+<<<<<<< HEAD
                 onClick={async () => {
                   setComboDefaults((prev) => ({ ...prev, strategy: s.value }));
                   try {
@@ -260,6 +327,9 @@ export default function ComboDefaultsTab() {
                     showStatus("error", t("errorOccurred"));
                   }
                 }}
+=======
+                onClick={() => setComboDefaults((prev) => ({ ...prev, strategy: s.value }))}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 className={cn(
                   "px-2 py-1 rounded text-xs font-medium transition-all flex items-center justify-center gap-0.5",
                   comboDefaults.strategy === s.value
@@ -274,6 +344,7 @@ export default function ComboDefaultsTab() {
           </div>
         </div>
 
+<<<<<<< HEAD
         {comboDefaults.strategy === "round-robin" && (
           <div className="flex items-center justify-between pt-3 border-t border-border/30">
             <div>
@@ -303,6 +374,8 @@ export default function ComboDefaultsTab() {
           </div>
         )}
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         {/* Numeric settings */}
         <div className="grid grid-cols-2 gap-3 pt-3 border-t border-border/50">
           {numericSettings.map(({ key, label, min, max, step }) => (
@@ -421,6 +494,24 @@ export default function ComboDefaultsTab() {
         <div className="flex flex-col gap-3 pt-3 border-t border-border/50">
           <div className="flex items-center justify-between">
             <div>
+<<<<<<< HEAD
+=======
+              <p className="font-medium text-sm">{t("healthCheck")}</p>
+              <p className="text-xs text-text-muted">{t("healthCheckDesc")}</p>
+            </div>
+            <Toggle
+              checked={comboDefaults.healthCheckEnabled !== false}
+              onChange={() =>
+                setComboDefaults((prev) => ({
+                  ...prev,
+                  healthCheckEnabled: !prev.healthCheckEnabled,
+                }))
+              }
+            />
+          </div>
+          <div className="flex items-center justify-between">
+            <div>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               <p className="font-medium text-sm">{t("trackMetrics")}</p>
               <p className="text-xs text-text-muted">{t("trackMetricsDesc")}</p>
             </div>
@@ -459,6 +550,28 @@ export default function ComboDefaultsTab() {
                 aria-label={t("providerMaxRetriesAria", { provider })}
               />
               <span className="text-[10px] text-text-muted">{t("retries")}</span>
+<<<<<<< HEAD
+=======
+              <Input
+                type="number"
+                min="5000"
+                max="300000"
+                step="5000"
+                value={config.timeoutMs ?? 120000}
+                onChange={(e) =>
+                  setProviderOverrides((prev) => ({
+                    ...prev,
+                    [provider]: {
+                      ...prev[provider],
+                      timeoutMs: parseInt(e.target.value) || 120000,
+                    },
+                  }))
+                }
+                className="text-xs w-24"
+                aria-label={t("providerTimeoutAria", { provider })}
+              />
+              <span className="text-[10px] text-text-muted">{t("ms")}</span>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               <button
                 onClick={() => removeProviderOverride(provider)}
                 className="ml-auto text-red-400 hover:text-red-500 transition-colors"

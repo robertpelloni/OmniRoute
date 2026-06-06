@@ -24,7 +24,11 @@ jobs:
       version: ${{ steps.validate.outputs.version }}
     steps:
       - name: Checkout code
+<<<<<<< HEAD
         uses: actions/checkout@v4
+=======
+        uses: actions/checkout@v6
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         with:
           fetch-depth: 0
 
@@ -71,6 +75,7 @@ jobs:
             deb_ext: .deb
 
     steps:
+<<<<<<< HEAD
 <<<<<<< Updated upstream
       - uses: actions/checkout@v6
       - name: Setup Node
@@ -87,6 +92,15 @@ jobs:
 >>>>>>> Stashed changes
         with:
           node-version: 24
+=======
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           cache: npm
 
       - name: Cache node_modules
@@ -99,6 +113,7 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+<<<<<<< HEAD
         env:
           NPM_CONFIG_LEGACY_PEER_DEPS: true
 
@@ -111,6 +126,8 @@ jobs:
           # Create a clean temp profile directory to avoid this.
           mkdir -p "$RUNNER_TEMP/home"
           echo "USERPROFILE=$RUNNER_TEMP/home" >> $GITHUB_ENV
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
       - name: Build Next.js standalone
         env:
@@ -144,6 +161,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run build:${{ matrix.target }}
 
+<<<<<<< HEAD
       - name: Smoke packaged Electron app
         if: matrix.platform != 'linux'
         # Windows CI: requestSingleInstanceLock() fails due to USERPROFILE
@@ -161,6 +179,8 @@ jobs:
           ELECTRON_SMOKE_STREAM_LOGS: "1"
         run: xvfb-run -a npm run electron:smoke:packaged
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       - name: Collect installers
         shell: bash
         run: |
@@ -197,12 +217,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
+<<<<<<< HEAD
         uses: actions/checkout@v4
+=======
+        uses: actions/checkout@v6
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         with:
           fetch-depth: 0
 
       - name: Download all artifacts
+<<<<<<< HEAD
         uses: actions/download-artifact@v4
+=======
+        uses: actions/download-artifact@v8
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         with:
           path: release-assets
           merge-multiple: true
@@ -224,7 +252,11 @@ jobs:
         run: ls -la release-assets/
 
       - name: Create Release
+<<<<<<< HEAD
         uses: softprops/action-gh-release@v3
+=======
+        uses: softprops/action-gh-release@v2
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         with:
           tag_name: ${{ needs.validate.outputs.version }}
           draft: false

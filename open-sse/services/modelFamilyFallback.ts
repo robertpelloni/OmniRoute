@@ -11,7 +11,11 @@
  * (commit 6cea566, Mar 8 2026).
  */
 
+<<<<<<< HEAD
 import { getModelContextLimit } from "../../src/lib/modelCapabilities";
+=======
+import { getModelContextLimit } from "../../src/lib/modelsDevSync";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { parseModel } from "./model.ts";
 import { CONTEXT_OVERFLOW_REGEX } from "./errorClassifier.ts";
 
@@ -73,7 +77,10 @@ const MODEL_FAMILIES: Record<string, string[]> = {
   "gemini-2.5-pro-preview-06-05": ["gemini-2.5-pro", "gemini-2.5-pro-exp-03-25"],
 
   // Claude Opus family
+<<<<<<< HEAD
   "claude-opus-4-7": ["claude-opus-4-6", "claude-opus-4-5-20251101", "claude-sonnet-4-6"],
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   "claude-opus-4-6": ["claude-opus-4-6-thinking", "claude-opus-4-5-20251101", "claude-sonnet-4-6"],
   "claude-opus-4-6-thinking": ["claude-opus-4-6", "claude-opus-4-5-20251101"],
 
@@ -139,6 +146,7 @@ export function getNextFamilyFallback(
   currentModel: string,
   triedModels: Set<string>
 ): string | null {
+<<<<<<< HEAD
   const parsed = parseModel(currentModel);
   const bareModel = parsed.model || currentModel;
   const prefix =
@@ -151,6 +159,14 @@ export function getNextFamilyFallback(
     const fullCandidate = `${prefix}${candidate}`;
     if (!triedModels.has(fullCandidate)) {
       return fullCandidate;
+=======
+  const family = MODEL_FAMILIES[currentModel];
+  if (!family) return null;
+
+  for (const candidate of family) {
+    if (!triedModels.has(candidate)) {
+      return candidate;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
   }
 
@@ -161,15 +177,20 @@ export function getNextFamilyFallback(
  * Check if a model belongs to any registered family.
  */
 export function isInModelFamily(model: string): boolean {
+<<<<<<< HEAD
   const parsed = parseModel(model);
   const bareModel = parsed.model || model;
   return bareModel in MODEL_FAMILIES;
+=======
+  return model in MODEL_FAMILIES;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 /**
  * Get all members of a model's family (including itself).
  */
 export function getModelFamily(model: string): string[] {
+<<<<<<< HEAD
   const parsed = parseModel(model);
   const bareModel = parsed.model || model;
   const prefix =
@@ -178,6 +199,11 @@ export function getModelFamily(model: string): string[] {
   const family = MODEL_FAMILIES[bareModel];
   if (!family) return [model];
   return [model, ...family.map((c) => `${prefix}${c}`)];
+=======
+  const family = MODEL_FAMILIES[model];
+  if (!family) return [model];
+  return [model, ...family];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 /**

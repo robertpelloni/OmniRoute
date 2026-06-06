@@ -13,6 +13,11 @@ export const ThinkingMode = {
   ADAPTIVE: "adaptive", // Scale based on request complexity
 };
 
+<<<<<<< HEAD
+=======
+import { capThinkingBudget, getDefaultThinkingBudget } from "@/shared/constants/modelSpecs";
+import { supportsReasoning } from "./modelCapabilities.ts";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 // Effort → budget token mapping
 export const EFFORT_BUDGETS = {
@@ -151,6 +156,10 @@ export function applyThinkingBudget(body, config = null) {
   if (!body || typeof body !== "object") return body;
 
   // Early exit: strip ALL reasoning/thinking params for models that don't support them.
+<<<<<<< HEAD
+=======
+  // Sending thinking params to unsupported models (e.g. AG claude-sonnet-4-6) causes 400 errors.
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const modelStr = typeof body.model === "string" ? body.model : "";
   if (modelStr && !supportsReasoning(modelStr)) {
     return stripThinkingConfig(body);
@@ -217,6 +226,10 @@ function setCustomBudget(body, budget) {
     };
   }
 
+<<<<<<< HEAD
+=======
+  // OpenAI reasoning_effort mapping (T11: add 'max' tier for full budget)
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (result.reasoning_effort !== undefined || result.reasoning !== undefined) {
     if (budget <= 0) {
       delete result.reasoning_effort;
@@ -228,6 +241,10 @@ function setCustomBudget(body, budget) {
     } else if (budget < 131072) {
       result.reasoning_effort = "high";
     } else {
+<<<<<<< HEAD
+=======
+      result.reasoning_effort = "max"; // T11: full budget → "max"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
   }
 
@@ -284,9 +301,12 @@ function applyAdaptiveBudget(body, cfg) {
  */
 export function hasThinkingCapableModel(body) {
   const model = body.model || "";
+<<<<<<< HEAD
   const resolved = getResolvedModelCapabilities(model);
   if (resolved.supportsThinking === true) return true;
   if (resolved.supportsThinking === false) return false;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return (
     model.includes("claude") ||
     model.includes("o1") ||

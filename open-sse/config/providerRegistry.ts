@@ -6,6 +6,10 @@
  * is auto-generated from this registry.
  */
 
+<<<<<<< HEAD
+=======
+import { platform, arch } from "os";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 // ── Types ─────────────────────────────────────────────────────────────────
 
@@ -13,11 +17,15 @@ export interface RegistryModel {
   id: string;
   name: string;
   toolCalling?: boolean;
+<<<<<<< HEAD
   supportsReasoning?: boolean;
   supportsVision?: boolean;
   supportsXHighEffort?: boolean;
   targetFormat?: string;
   strip?: readonly string[];
+=======
+  targetFormat?: string;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   unsupportedParams?: readonly string[];
   /** Maximum context window in tokens */
   contextLength?: number;
@@ -64,13 +72,19 @@ export interface RegistryEntry {
   authPrefix?: string;
   headers?: Record<string, string>;
   extraHeaders?: Record<string, string>;
+<<<<<<< HEAD
   requestDefaults?: ProviderRequestDefaults;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   oauth?: RegistryOAuth;
   models: RegistryModel[];
   modelsUrl?: string;
   chatPath?: string;
   clientVersion?: string;
+<<<<<<< HEAD
   timeoutMs?: number;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   passthroughModels?: boolean;
   /** Default context window for all models in this provider (can be overridden per-model) */
   defaultContextLength?: number;
@@ -82,7 +96,10 @@ interface LegacyProvider {
   baseUrls?: string[];
   responsesBaseUrl?: string;
   headers?: Record<string, string>;
+<<<<<<< HEAD
   requestDefaults?: ProviderRequestDefaults;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   clientId?: string;
   clientSecret?: string;
   tokenUrl?: string;
@@ -90,7 +107,10 @@ interface LegacyProvider {
   authUrl?: string;
   chatPath?: string;
   clientVersion?: string;
+<<<<<<< HEAD
   timeoutMs?: number;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 const KIMI_CODING_SHARED = {
@@ -99,6 +119,7 @@ const KIMI_CODING_SHARED = {
   baseUrl: "https://api.kimi.com/coding/v1/messages",
   authHeader: "x-api-key",
   headers: {
+<<<<<<< HEAD
     "Anthropic-Version": ANTHROPIC_VERSION_HEADER,
     "Anthropic-Beta": ANTHROPIC_BETA_API_KEY,
   },
@@ -108,6 +129,20 @@ const KIMI_CODING_SHARED = {
   ] as RegistryModel[],
 } as const;
 
+=======
+    "Anthropic-Version": "2023-06-01",
+    "Anthropic-Beta": "claude-code-20250219,interleaved-thinking-2025-05-14",
+  },
+  models: [
+    { id: "kimi-k2.5", name: "Kimi K2.5" },
+    { id: "kimi-k2.5-thinking", name: "Kimi K2.5 Thinking" },
+    { id: "kimi-latest", name: "Kimi Latest" },
+  ] as RegistryModel[],
+} as const;
+
+function mapStainlessOs() {
+  switch (platform()) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     case "darwin":
       return "MacOS";
     case "win32":
@@ -115,10 +150,18 @@ const KIMI_CODING_SHARED = {
     case "linux":
       return "Linux";
     default:
+<<<<<<< HEAD
+=======
+      return `Other::${platform()}`;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 }
 
 function mapStainlessArch() {
+<<<<<<< HEAD
+=======
+  switch (arch()) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     case "x64":
       return "x64";
     case "arm64":
@@ -126,6 +169,10 @@ function mapStainlessArch() {
     case "ia32":
       return "x86";
     default:
+<<<<<<< HEAD
+=======
+      return `other::${arch()}`;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 }
 
@@ -144,6 +191,19 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     authHeader: "x-api-key",
     defaultContextLength: 200000,
     headers: {
+<<<<<<< HEAD
+=======
+      "Anthropic-Version": "2023-06-01",
+      "Anthropic-Beta":
+        "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,fine-grained-tool-streaming-2025-05-14,context-management-2025-06-27,prompt-caching-scope-2026-01-05",
+      "Anthropic-Dangerous-Direct-Browser-Access": "true",
+      "User-Agent": "claude-cli/2.1.63 (external, cli)",
+      "X-App": "cli",
+      "X-Stainless-Helper-Method": "stream",
+      "X-Stainless-Retry-Count": "0",
+      "X-Stainless-Runtime-Version": "v24.3.0",
+      "X-Stainless-Package-Version": "0.74.0",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       "X-Stainless-Runtime": "node",
       "X-Stainless-Lang": "js",
       "X-Stainless-Arch": mapStainlessArch(),
@@ -152,6 +212,7 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     },
     oauth: {
       clientIdEnv: "CLAUDE_OAUTH_CLIENT_ID",
+<<<<<<< HEAD
       clientIdDefault: "9d1c250a-e61b-44d9-88ed-5944d1962f5e",
       tokenUrl: "https://console.anthropic.com/v1/oauth/token",
     },
@@ -161,6 +222,17 @@ export const REGISTRY: Record<string, RegistryEntry> = {
       { id: "claude-sonnet-4-6", name: "Claude 4.6 Sonnet", supportsXHighEffort: false },
       { id: "claude-sonnet-4-5-20250929", name: "Claude 4.5 Sonnet", supportsXHighEffort: false },
       { id: "claude-haiku-4-5-20251001", name: "Claude 4.5 Haiku", supportsXHighEffort: false },
+=======
+      clientIdDefault: "",
+      tokenUrl: "https://console.anthropic.com/v1/oauth/token",
+    },
+    models: [
+      { id: "claude-opus-4-6", name: "Claude Opus 4.6" },
+      { id: "claude-sonnet-4-6", name: "Claude 4.6 Sonnet" },
+      { id: "claude-opus-4-5-20251101", name: "Claude 4.5 Opus" },
+      { id: "claude-sonnet-4-5-20250929", name: "Claude 4.5 Sonnet" },
+      { id: "claude-haiku-4-5-20251001", name: "Claude 4.5 Haiku" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ],
   },
 
@@ -176,12 +248,25 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     },
     authType: "apikey",
     authHeader: "x-goog-api-key",
+<<<<<<< HEAD
     oauth: {
       clientIdEnv: "GEMINI_OAUTH_CLIENT_ID",
       clientIdDefault: "681255809395-oo8ft2oprdrnp9e3aqf6av3hmdib135j.apps.googleusercontent.com",
       clientSecretEnv: "GEMINI_OAUTH_CLIENT_SECRET",
       clientSecretDefault: "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",
     },
+=======
+    defaultContextLength: 1048576,
+    oauth: {
+      clientIdEnv: "GEMINI_OAUTH_CLIENT_ID",
+      clientIdDefault: "",
+      clientSecretEnv: "GEMINI_OAUTH_CLIENT_SECRET",
+      clientSecretDefault: "",
+    },
+    models: [],
+    // Models are populated from Google's API via sync-models (per API key).
+    // No hardcoded fallback — show nothing until a key is added.
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   },
 
   "gemini-cli": {
@@ -196,10 +281,28 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     },
     authType: "oauth",
     authHeader: "bearer",
+<<<<<<< HEAD
+=======
+    defaultContextLength: 1048576,
+    oauth: {
+      clientIdEnv: "GEMINI_CLI_OAUTH_CLIENT_ID",
+      clientIdDefault: "",
+      clientSecretEnv: "GEMINI_CLI_OAUTH_CLIENT_SECRET",
+      clientSecretDefault: "",
+    },
+    models: [
+      { id: "gemini-3-pro-preview", name: "Gemini 3 Pro Preview" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       { id: "gemini-3.1-pro-preview", name: "Gemini 3.1 Pro Preview" },
       { id: "gemini-3.1-pro-preview-customtools", name: "Gemini 3.1 Pro Preview Custom Tools" },
       { id: "gemini-3-flash-preview", name: "Gemini 3 Flash Preview" },
       { id: "gemini-3.1-flash-lite-preview", name: "Gemini 3.1 Flash Lite Preview" },
+<<<<<<< HEAD
+=======
+      { id: "gemini-2.5-pro", name: "Gemini 2.5 Pro" },
+      { id: "gemini-2.5-flash", name: "Gemini 2.5 Flash" },
+      { id: "gemini-2.5-flash-lite", name: "Gemini 2.5 Flash Lite" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ],
   },
 
@@ -212,16 +315,46 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     authType: "oauth",
     authHeader: "bearer",
     defaultContextLength: 400000,
+<<<<<<< HEAD
     oauth: {
       clientIdEnv: "CODEX_OAUTH_CLIENT_ID",
       clientIdDefault: "app_EMoamEEZ73f0CkXaXp7hrann",
+=======
+    headers: {
+      Version: "0.92.0",
+      "Openai-Beta": "responses=experimental",
+      "User-Agent": "codex-cli/0.92.0 (Windows 10.0.26100; x64)",
+    },
+    oauth: {
+      clientIdEnv: "CODEX_OAUTH_CLIENT_ID",
+      clientIdDefault: "",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       clientSecretEnv: "CODEX_OAUTH_CLIENT_SECRET",
       clientSecretDefault: "",
       tokenUrl: "https://auth.openai.com/oauth/token",
     },
     models: [
+<<<<<<< HEAD
       { id: "gpt-5.3-codex", name: "GPT 5.3 Codex" },
       { id: "gpt-5.2", name: "GPT 5.2" },
+=======
+      { id: "gpt-5.4", name: "GPT 5.4" },
+      { id: "gpt-5.4-mini", name: "GPT 5.4 Mini" },
+      { id: "gpt-5.3-codex", name: "GPT 5.3 Codex" },
+      { id: "gpt-5.3-codex-xhigh", name: "GPT 5.3 Codex (xHigh)" },
+      { id: "gpt-5.3-codex-high", name: "GPT 5.3 Codex (High)" },
+      { id: "gpt-5.3-codex-low", name: "GPT 5.3 Codex (Low)" },
+      { id: "gpt-5.3-codex-none", name: "GPT 5.3 Codex (None)" },
+      { id: "gpt-5.1-codex-mini", name: "GPT 5.1 Codex Mini" },
+      { id: "gpt-5.1-codex-mini-high", name: "GPT 5.1 Codex Mini (High)" },
+      { id: "gpt-5.2-codex", name: "GPT 5.2 Codex" },
+      { id: "gpt-5.2", name: "GPT 5.2" },
+      { id: "gpt-5.1-codex-max", name: "GPT 5.1 Codex Max" },
+      { id: "gpt-5.1-codex", name: "GPT 5.1 Codex" },
+      { id: "gpt-5.1", name: "GPT 5.1" },
+      { id: "gpt-5-codex", name: "GPT 5 Codex" },
+      { id: "gpt-5-codex-mini", name: "GPT 5 Codex Mini" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ],
   },
 
@@ -233,10 +366,32 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     baseUrl: "https://chat.qwen.ai/api/v1/services/aigc/text-generation/generation",
     authType: "oauth",
     authHeader: "bearer",
+<<<<<<< HEAD
     headers: getQwenOauthHeaders(),
     oauth: {
       clientIdEnv: "QWEN_OAUTH_CLIENT_ID",
       clientIdDefault: "f0304373b74a44d2b584a3fb70ca9e56",
+=======
+    headers: {
+      "User-Agent": "QwenCode/0.12.3 (linux; x64)",
+      "X-Dashscope-AuthType": "qwen-oauth",
+      "X-Dashscope-CacheControl": "enable",
+      "X-Dashscope-UserAgent": "QwenCode/0.12.3 (linux; x64)",
+      "X-Stainless-Arch": "x64",
+      "X-Stainless-Lang": "js",
+      "X-Stainless-Os": "Linux",
+      "X-Stainless-Package-Version": "5.11.0",
+      "X-Stainless-Retry-Count": "1",
+      "X-Stainless-Runtime": "node",
+      "X-Stainless-Runtime-Version": "v18.19.1",
+      Connection: "keep-alive",
+      "Accept-Language": "*",
+      "Sec-Fetch-Mode": "cors",
+    },
+    oauth: {
+      clientIdEnv: "QWEN_OAUTH_CLIENT_ID",
+      clientIdDefault: "",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       tokenUrl: "https://chat.qwen.ai/api/v1/oauth2/token",
       authUrl: "https://chat.qwen.ai/api/v1/oauth2/device/code",
     },
@@ -244,7 +399,11 @@ export const REGISTRY: Record<string, RegistryEntry> = {
       { id: "qwen3-coder-plus", name: "Qwen3 Coder Plus" },
       { id: "qwen3-coder-flash", name: "Qwen3 Coder Flash" },
       { id: "vision-model", name: "Qwen3 Vision Model" },
+<<<<<<< HEAD
       { id: "coder-model", name: "Qwen3.6 (Coder Model)" },
+=======
+      { id: "coder-model", name: "Qwen3.5 (Coder Model)" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ],
   },
 
@@ -253,6 +412,20 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     alias: "if",
     format: "openai",
     executor: "qoder",
+<<<<<<< HEAD
+=======
+    baseUrl: "https://api.qoder.com/v1/chat/completions",
+    authType: "apikey",
+    authHeader: "bearer",
+    headers: {
+      "User-Agent": "Qoder-Cli",
+    },
+    oauth: {
+      clientIdEnv: "QODER_OAUTH_CLIENT_ID",
+      clientSecretEnv: "QODER_OAUTH_CLIENT_SECRET",
+      tokenUrl: process.env.QODER_OAUTH_TOKEN_URL || "",
+      authUrl: process.env.QODER_OAUTH_AUTHORIZE_URL || "",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     },
     models: [
       { id: "qoder-rome-30ba3b", name: "Qoder ROME" },
@@ -277,6 +450,14 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     alias: undefined,
     format: "antigravity",
     executor: "antigravity",
+<<<<<<< HEAD
+=======
+    baseUrls: [
+      "https://daily-cloudcode-pa.googleapis.com",
+      "https://daily-cloudcode-pa.sandbox.googleapis.com",
+      "https://cloudcode-pa.googleapis.com",
+    ],
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     urlBuilder: (base, model, stream) => {
       const path = stream
         ? "/v1internal:streamGenerateContent?alt=sse"
@@ -285,12 +466,33 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     },
     authType: "oauth",
     authHeader: "bearer",
+<<<<<<< HEAD
     oauth: {
       clientIdEnv: "ANTIGRAVITY_OAUTH_CLIENT_ID",
       clientIdDefault: "1071006060591-tmhssin2h21lcre235vtolojh4g403ep.apps.googleusercontent.com",
       clientSecretEnv: "ANTIGRAVITY_OAUTH_CLIENT_SECRET",
       clientSecretDefault: "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",
     },
+=======
+    headers: {
+      "User-Agent": `antigravity/1.107.0 ${platform()}/${arch()}`,
+    },
+    oauth: {
+      clientIdEnv: "ANTIGRAVITY_OAUTH_CLIENT_ID",
+      clientIdDefault: "",
+      clientSecretEnv: "ANTIGRAVITY_OAUTH_CLIENT_SECRET",
+      clientSecretDefault: "",
+    },
+    models: [
+      { id: "claude-opus-4-6-thinking", name: "Claude Opus 4.6 Thinking" },
+      { id: "claude-sonnet-4-6", name: "Claude Sonnet 4.6" },
+      { id: "gemini-3-flash", name: "Gemini 3 Flash" },
+      { id: "gemini-3.1-flash-image", name: "Gemini 3.1 Flash Image" },
+      { id: "gemini-3.1-pro-high", name: "Gemini 3.1 Pro (High)" },
+      { id: "gemini-3.1-pro-low", name: "Gemini 3.1 Pro (Low)" },
+      { id: "gpt-oss-120b-medium", name: "GPT OSS 120B Medium" },
+    ],
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     passthroughModels: true,
   },
 
@@ -304,6 +506,7 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     authType: "oauth",
     authHeader: "bearer",
     defaultContextLength: 128000,
+<<<<<<< HEAD
     models: [
       { id: "gpt-4.1", name: "GPT-4.1" },
       { id: "gpt-5-mini", name: "GPT-5 Mini" },
@@ -322,6 +525,46 @@ export const REGISTRY: Record<string, RegistryEntry> = {
       { id: "grok-code-fast-1", name: "Grok Code Fast 1" },
       { id: "oswe-vscode-prime", name: "Raptor Mini" },
       //{ id: "?", name: "Goldeneye" },
+=======
+    headers: {
+      "copilot-integration-id": "vscode-chat",
+      "editor-version": "vscode/1.110.0",
+      "editor-plugin-version": "copilot-chat/0.38.0",
+      "user-agent": "GitHubCopilotChat/0.38.0",
+      "openai-intent": "conversation-panel",
+      "x-github-api-version": "2025-04-01",
+      "x-vscode-user-agent-library-version": "electron-fetch",
+      "X-Initiator": "user",
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    models: [
+      { id: "gpt-4.1", name: "GPT-4.1" },
+      { id: "gpt-4o", name: "GPT-4o" },
+      { id: "gpt-4o-mini", name: "GPT-4o Mini" },
+      { id: "gpt-4", name: "GPT-4" },
+      { id: "gpt-3.5-turbo", name: "GPT-3.5 Turbo" },
+      { id: "gpt-5", name: "GPT-5" },
+      { id: "gpt-5-mini", name: "GPT-5 Mini" },
+      { id: "gpt-5-codex", name: "GPT-5 Codex", targetFormat: "openai-responses" },
+      { id: "gpt-5.1", name: "GPT-5.1" },
+      { id: "gpt-5.1-codex", name: "GPT-5.1 Codex", targetFormat: "openai-responses" },
+      { id: "gpt-5.1-codex-mini", name: "GPT-5.1 Codex Mini", targetFormat: "openai-responses" },
+      { id: "gpt-5.1-codex-max", name: "GPT-5.1 Codex Max", targetFormat: "openai-responses" },
+      { id: "gpt-5.2", name: "GPT-5.2" },
+      { id: "gpt-5.2-codex", name: "GPT-5.2 Codex", targetFormat: "openai-responses" },
+      { id: "claude-haiku-4.5", name: "Claude Haiku 4.5" },
+      { id: "claude-opus-4.1", name: "Claude Opus 4.1" },
+      { id: "claude-opus-4.6", name: "Claude Opus 4.6" },
+      { id: "claude-opus-4-5-20251101", name: "Claude Opus 4.5 (Full ID)" },
+      { id: "claude-sonnet-4", name: "Claude Sonnet 4" },
+      { id: "claude-sonnet-4.5", name: "Claude Sonnet 4.5" },
+      { id: "gemini-3.1-pro-preview", name: "Gemini 3.1 Pro Preview" },
+      { id: "gemini-2.5-pro", name: "Gemini 2.5 Pro" },
+      { id: "gemini-2.5-flash", name: "Gemini 2.5 Flash" },
+      { id: "grok-code-fast-1", name: "Grok Code Fast 1" },
+      { id: "oswe-vscode-prime", name: "Raptor Mini" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ],
   },
 
@@ -334,11 +577,22 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     authType: "oauth",
     authHeader: "bearer",
     defaultContextLength: 200000,
+<<<<<<< HEAD
+=======
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/vnd.amazon.eventstream",
+      "X-Amz-Target": "AmazonCodeWhispererStreamingService.GenerateAssistantResponse",
+      "User-Agent": "AWS-SDK-JS/3.0.0 kiro-ide/1.0.0",
+      "X-Amz-User-Agent": "aws-sdk-js/3.0.0 kiro-ide/1.0.0",
+    },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     oauth: {
       tokenUrl: "https://prod.us-east-1.auth.desktop.kiro.dev/refreshToken",
       authUrl: "https://prod.us-east-1.auth.desktop.kiro.dev",
     },
     models: [
+<<<<<<< HEAD
       { id: "claude-opus-4.7", name: "Claude Opus 4.7" },
       { id: "claude-opus-4.6", name: "Claude Opus 4.6" },
       { id: "claude-sonnet-4.6", name: "Claude Sonnet 4.6" },
@@ -347,6 +601,10 @@ export const REGISTRY: Record<string, RegistryEntry> = {
       //{ id: "?", name: "DeepSeek V3.2" },
       //{ id: "?", name: "MiniMax M2.5" },
       //{ id: "?", name: "GLM-5" },
+=======
+      { id: "claude-sonnet-4.5", name: "Claude Sonnet 4.5" },
+      { id: "claude-haiku-4.5", name: "Claude Haiku 4.5" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ],
   },
 
@@ -360,6 +618,16 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     authType: "oauth",
     authHeader: "bearer",
     defaultContextLength: 200000,
+<<<<<<< HEAD
+=======
+    headers: {
+      "connect-accept-encoding": "gzip",
+      "connect-protocol-version": "1",
+      "Content-Type": "application/connect+proto",
+      "User-Agent": "connect-es/1.6.1",
+    },
+    clientVersion: "1.1.3",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     models: [
       { id: "default", name: "Auto (Server Picks)" },
       { id: "claude-4.6-opus-high-thinking", name: "Claude 4.6 Opus High Thinking" },
@@ -389,6 +657,7 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     authHeader: "bearer",
     defaultContextLength: 128000,
     models: [
+<<<<<<< HEAD
       { id: "gpt-5.5", name: "GPT-5.5" },
       { id: "gpt-5.4", name: "GPT-5.4" },
       { id: "gpt-5.4-mini", name: "GPT-5.4 Mini" },
@@ -397,6 +666,16 @@ export const REGISTRY: Record<string, RegistryEntry> = {
       { id: "gpt-4o", name: "GPT-4o" },
       { id: "o4-mini", name: "O4 mini", unsupportedParams: REASONING_UNSUPPORTED },
       { id: "o3", name: "O3", unsupportedParams: REASONING_UNSUPPORTED },
+=======
+      { id: "gpt-4o", name: "GPT-4o" },
+      { id: "gpt-4o-mini", name: "GPT-4o Mini" },
+      { id: "gpt-4-turbo", name: "GPT-4 Turbo" },
+      { id: "o1", name: "O1", unsupportedParams: REASONING_UNSUPPORTED },
+      { id: "o1-mini", name: "O1 Mini", unsupportedParams: REASONING_UNSUPPORTED },
+      { id: "o1-pro", name: "O1 Pro", unsupportedParams: REASONING_UNSUPPORTED },
+      { id: "o3", name: "O3", unsupportedParams: REASONING_UNSUPPORTED },
+      { id: "o3-mini", name: "O3 Mini", unsupportedParams: REASONING_UNSUPPORTED },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ],
   },
 
@@ -411,6 +690,7 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     authHeader: "x-api-key",
     defaultContextLength: 200000,
     headers: {
+<<<<<<< HEAD
       "Anthropic-Version": ANTHROPIC_VERSION_HEADER,
       "Anthropic-Beta": ANTHROPIC_BETA_API_KEY,
     },
@@ -420,6 +700,19 @@ export const REGISTRY: Record<string, RegistryEntry> = {
       { id: "claude-sonnet-4.6", name: "Claude Sonnet 4.6" },
       { id: "claude-sonnet-4.5", name: "Claude Sonnet 4.6" },
       { id: "claude-haiku-4.5", name: "Claude Haiku 4.5" },
+=======
+      "Anthropic-Version": "2023-06-01",
+    },
+    models: [
+      { id: "claude-haiku-4.5", name: "Claude Haiku 4.5" },
+      { id: "claude-sonnet-4-20250514", name: "Claude Sonnet 4" },
+      { id: "claude-sonnet-4-6-20251031", name: "Claude Sonnet 4.6 (Dated)" },
+      { id: "claude-sonnet-4.6", name: "Claude Sonnet 4.6" },
+      { id: "claude-opus-4-20250514", name: "Claude Opus 4" },
+      { id: "claude-opus-4-6-20251031", name: "Claude Opus 4.6 (Dated)" },
+      { id: "claude-opus-4.6", name: "Claude Opus 4.6" },
+      { id: "claude-3-5-sonnet-20241022", name: "Claude 3.5 Sonnet" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ],
   },
 
@@ -436,6 +729,7 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     authPrefix: "Bearer",
     defaultContextLength: 200000,
     models: [
+<<<<<<< HEAD
       { id: "glm-5.1", name: "GLM-5.1" },
       { id: "glm-5", name: "GLM-5" },
       { id: "kimi-k2.6", name: "Kimi K2.6" },
@@ -448,6 +742,12 @@ export const REGISTRY: Record<string, RegistryEntry> = {
       { id: "qwen3.5-plus", name: "Qwen3.5 Plus" },
       { id: "deepseek-v4-pro", name: "DeepSeek V4 Pro" },
       { id: "deepseek-v4-flash", name: "DeepSeek V4 Flash" },
+=======
+      { id: "glm-5", name: "GLM-5" },
+      { id: "kimi-k2.5", name: "Kimi K2.5" },
+      { id: "minimax-m2.7", name: "MiniMax M2.7", targetFormat: "claude" },
+      { id: "minimax-m2.5", name: "MiniMax M2.5", targetFormat: "claude" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ],
   },
 
@@ -463,6 +763,7 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     authPrefix: "Bearer",
     defaultContextLength: 200000,
     models: [
+<<<<<<< HEAD
     ],
   },
 
@@ -504,6 +805,18 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     passthroughModels: true,
   },
 
+=======
+      { id: "minimax-m2.5-free", name: "MiniMax M2.5 Free", contextLength: 204800 },
+      { id: "big-pickle", name: "Big Pickle", contextLength: 200000 },
+      { id: "gpt-5-nano", name: "GPT 5 Nano", contextLength: 400000 },
+      { id: "mimo-v2-omni-free", name: "MiMo V2 Omni Free", contextLength: 262144 },
+      { id: "mimo-v2-pro-free", name: "MiMo V2 Pro Free", contextLength: 1048576 },
+      { id: "nemotron-3-super-free", name: "Nemotron 3 Super Free", contextLength: 1000000 },
+      { id: "qwen3.6-plus-free", name: "Qwen 3.6 Plus Free", contextLength: 1048576 },
+    ],
+  },
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   openrouter: {
     id: "openrouter",
     alias: "openrouter",
@@ -520,6 +833,7 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     models: [{ id: "auto", name: "Auto (Best Available)" }],
   },
 
+<<<<<<< HEAD
   qianfan: {
     id: "qianfan",
     alias: "qianfan",
@@ -541,6 +855,8 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     passthroughModels: true,
   },
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   glm: {
     id: "glm",
     alias: "glm",
@@ -551,6 +867,25 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     urlSuffix: "?beta=true",
     authType: "apikey",
     authHeader: "x-api-key",
+<<<<<<< HEAD
+=======
+    headers: {
+      "Anthropic-Version": "2023-06-01",
+      "Anthropic-Beta": "claude-code-20250219,interleaved-thinking-2025-05-14",
+    },
+    models: [
+      { id: "glm-5.1", name: "GLM 5.1", contextLength: 204800 },
+      { id: "glm-5", name: "GLM 5" },
+      { id: "glm-5-turbo", name: "GLM 5 Turbo" },
+      { id: "glm-4.7-flash", name: "GLM 4.7 Flash" },
+      { id: "glm-4.7", name: "GLM 4.7" },
+      { id: "glm-4.6v", name: "GLM 4.6V (Vision)", contextLength: 128000 },
+      { id: "glm-4.6", name: "GLM 4.6" },
+      { id: "glm-4.5v", name: "GLM 4.5V (Vision)", contextLength: 16000 },
+      { id: "glm-4.5", name: "GLM 4.5", contextLength: 128000 },
+      { id: "glm-4.5-air", name: "GLM 4.5 Air", contextLength: 128000 },
+    ],
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   },
 
   "bailian-coding-plan": {
@@ -564,8 +899,13 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     authType: "apikey",
     authHeader: "x-api-key",
     headers: {
+<<<<<<< HEAD
       "Anthropic-Version": ANTHROPIC_VERSION_HEADER,
       "Anthropic-Beta": ANTHROPIC_BETA_API_KEY,
+=======
+      "Anthropic-Version": "2023-06-01",
+      "Anthropic-Beta": "claude-code-20250219,interleaved-thinking-2025-05-14",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     },
     models: [
       { id: "qwen3.5-plus", name: "Qwen3.5 Plus" },
@@ -589,11 +929,18 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     authType: "apikey",
     authHeader: "x-api-key",
     headers: {
+<<<<<<< HEAD
       "Anthropic-Version": ANTHROPIC_VERSION_HEADER,
       "Anthropic-Beta": ANTHROPIC_BETA_API_KEY,
     },
     models: [
       { id: "glm-5.1", name: "GLM 5.1" },
+=======
+      "Anthropic-Version": "2023-06-01",
+      "Anthropic-Beta": "claude-code-20250219,interleaved-thinking-2025-05-14",
+    },
+    models: [
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       { id: "glm-5", name: "GLM 5" },
       { id: "glm-5-turbo", name: "GLM 5 Turbo" },
     ],
@@ -608,8 +955,15 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     authType: "apikey",
     authHeader: "bearer",
     models: [
+<<<<<<< HEAD
       { id: "kimi-k2.6", name: "Kimi K2.6" },
       { id: "kimi-k2.5", name: "Kimi K2.5" },
+=======
+      { id: "kimi-k2.5", name: "Kimi K2.5" },
+      { id: "kimi-k2.5-thinking", name: "Kimi K2.5 Thinking" },
+      { id: "kimi-latest", name: "Kimi Latest" },
+      { id: "kimi-for-coding", name: "Kimi For Coding" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ],
   },
 
@@ -621,7 +975,11 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     authType: "oauth",
     oauth: {
       clientIdEnv: "KIMI_CODING_OAUTH_CLIENT_ID",
+<<<<<<< HEAD
       clientIdDefault: "17e5f671-d194-4dfb-9706-5516cb48c098",
+=======
+      clientIdDefault: "",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       tokenUrl: "https://auth.kimi.com/api/oauth/token",
       refreshUrl: "https://auth.kimi.com/api/oauth/token",
       authUrl: "https://auth.kimi.com/api/oauth/device_authorization",
@@ -651,6 +1009,7 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     },
     models: [
       { id: "openrouter/free", name: "Free Models Router" },
+<<<<<<< HEAD
       { id: "qwen/qwen3.6-plus", name: "Qwen3.6 Plus" },
       { id: "qwen/qwen3.5-397b-a17b", name: "Qwen3.5 397B A17B" },
       { id: "openai/gpt-5.5", name: "GPT-5.5" },
@@ -665,6 +1024,33 @@ export const REGISTRY: Record<string, RegistryEntry> = {
       { id: "deepseek/deepseek-v4-flash", name: "DeepSeek V4 Flash" },
       { id: "x-ai/grok-code-fast-1", name: "Grok Code Fast 1" },
       { id: "moonshotai/kimi-k2.6", name: "Kimi K2.6" },
+=======
+      { id: "qwen/qwen3-vl-235b-a22b-thinking", name: "Qwen3 VL 235B A22B Thinking" },
+      { id: "qwen/qwen3-235b-a22b-thinking-2507", name: "Qwen3 235B A22B Thinking 2507" },
+      { id: "qwen/qwen3-vl-30b-a3b-thinking", name: "Qwen3 VL 30B A3B Thinking" },
+      { id: "stepfun/step-3.5-flash:free", name: "StepFun Step 3.5 Flash" },
+      { id: "arcee-ai/trinity-large-preview:free", name: "Arcee AI Trinity Large Preview" },
+      { id: "openai/gpt-4o-mini", name: "GPT-4o Mini" },
+      { id: "openai/gpt-4.1-nano", name: "GPT-4.1 Nano" },
+      { id: "openai/gpt-5-nano", name: "GPT-5 Nano" },
+      { id: "openai/gpt-5-mini", name: "GPT-5 Mini" },
+      { id: "anthropic/claude-3-haiku", name: "Claude 3 Haiku" },
+      { id: "google/gemini-2.0-flash", name: "Gemini 2.0 Flash" },
+      { id: "google/gemini-2.5-flash-lite", name: "Gemini 2.5 Flash Lite" },
+      { id: "deepseek/deepseek-chat-v3.1", name: "DeepSeek V3.1" },
+      { id: "deepseek/deepseek-v3.2", name: "DeepSeek V3.2" },
+      { id: "meta-llama/llama-3.3-70b-instruct", name: "Llama 3.3 70B" },
+      { id: "meta-llama/llama-4-scout", name: "Llama 4 Scout" },
+      { id: "meta-llama/llama-4-maverick", name: "Llama 4 Maverick" },
+      { id: "qwen/qwen3-8b", name: "Qwen3 8B" },
+      { id: "qwen/qwen3-32b", name: "Qwen3 32B" },
+      { id: "qwen/qwen3-coder", name: "Qwen3 Coder 480B" },
+      { id: "qwen/qwq-32b", name: "QwQ 32B" },
+      { id: "mistralai/mistral-small-24b-instruct-2501", name: "Mistral Small 3" },
+      { id: "mistralai/mistral-7b-instruct", name: "Mistral 7B" },
+      { id: "x-ai/grok-code-fast-1", name: "Grok Code Fast 1" },
+      { id: "moonshotai/kimi-k2.5", name: "Kimi K2.5" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ],
     passthroughModels: true,
   },
@@ -688,6 +1074,7 @@ export const REGISTRY: Record<string, RegistryEntry> = {
       "X-Title": "Cline",
     },
     models: [
+<<<<<<< HEAD
       { id: "moonshotai/kimi-k2.6", name: "Kimi K2.6 (Free)" },
       { id: "anthropic/claude-sonnet-4.6", name: "Claude Sonnet 4.6" },
       { id: "anthropic/claude-opus-4.7", name: "Claude Opus 4.7" },
@@ -696,6 +1083,15 @@ export const REGISTRY: Record<string, RegistryEntry> = {
       { id: "openai/gpt-5.5", name: "GPT-5.5" },
       { id: "deepseek/deepseek-v4-flash", name: "DeepSeek V4 Flash" },
       { id: "deepseek/deepseek-v4-pro", name: "DeepSeek V4 Pro" },
+=======
+      { id: "anthropic/claude-sonnet-4-20250514", name: "Claude Sonnet 4" },
+      { id: "anthropic/claude-opus-4-20250514", name: "Claude Opus 4" },
+      { id: "google/gemini-2.5-pro", name: "Gemini 2.5 Pro" },
+      { id: "google/gemini-2.5-flash", name: "Gemini 2.5 Flash" },
+      { id: "openai/gpt-4.1", name: "GPT-4.1" },
+      { id: "openai/o3", name: "o3" },
+      { id: "deepseek/deepseek-chat", name: "DeepSeek Chat" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ],
     passthroughModels: true,
   },
@@ -710,11 +1106,25 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     authType: "apikey",
     authHeader: "bearer",
     headers: {
+<<<<<<< HEAD
       "Anthropic-Version": ANTHROPIC_VERSION_HEADER,
       "Anthropic-Beta": ANTHROPIC_BETA_API_KEY,
     },
     models: [
       // T12/T28: MiniMax default upgraded from M2.5 to M2.7
+=======
+      "Anthropic-Version": "2023-06-01",
+      "Anthropic-Beta": "claude-code-20250219,interleaved-thinking-2025-05-14",
+    },
+    models: [
+      // T12/T28: MiniMax default upgraded from M2.5 to M2.7
+      { id: "minimax-m2.7", name: "MiniMax M2.7" },
+      { id: "MiniMax-M2.7", name: "MiniMax M2.7 (Legacy Alias)" },
+      { id: "minimax-m2.7-highspeed", name: "MiniMax M2.7 Highspeed" },
+      { id: "minimax-m2.5", name: "MiniMax M2.5" },
+      { id: "MiniMax-M2.5", name: "MiniMax M2.5 (Legacy Alias)" },
+      { id: "MiniMax-M2.1", name: "MiniMax M2.1" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ],
   },
 
@@ -728,6 +1138,7 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     authType: "apikey",
     authHeader: "bearer",
     headers: {
+<<<<<<< HEAD
       "Anthropic-Version": ANTHROPIC_VERSION_HEADER,
       "Anthropic-Beta": ANTHROPIC_BETA_API_KEY,
     },
@@ -738,6 +1149,19 @@ export const REGISTRY: Record<string, RegistryEntry> = {
       { id: "qwen3.5-397b-a17b", name: "Qwen3.5 397B A17B" },
       { id: "qwen3.5-9b", name: "Qwen3.5 9B" },
       { id: "qwen3.5-9b-chat", name: "Qwen3.5 9B (Chat)" },
+=======
+      "Anthropic-Version": "2023-06-01",
+      "Anthropic-Beta": "claude-code-20250219,interleaved-thinking-2025-05-14",
+    },
+    models: [
+      // Keep parity with minimax to ensure model discovery works for minimax-cn connections.
+      { id: "minimax-m2.7", name: "MiniMax M2.7" },
+      { id: "MiniMax-M2.7", name: "MiniMax M2.7 (Legacy Alias)" },
+      { id: "minimax-m2.7-highspeed", name: "MiniMax M2.7 Highspeed" },
+      { id: "minimax-m2.5", name: "MiniMax M2.5" },
+      { id: "MiniMax-M2.5", name: "MiniMax M2.5 (Legacy Alias)" },
+      { id: "MiniMax-M2.1", name: "MiniMax M2.1" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ],
   },
 
@@ -790,8 +1214,13 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     authType: "apikey",
     authHeader: "bearer",
     models: [
+<<<<<<< HEAD
       { id: "deepseek-v4-flash", name: "DeepSeek V4 Flash" },
       { id: "deepseek-v4-pro", name: "DeepSeek V4 Pro" },
+=======
+      { id: "deepseek-chat", name: "DeepSeek V3.2 Chat" },
+      { id: "deepseek-reasoner", name: "DeepSeek V3.2 Reasoner" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ],
   },
 
@@ -839,6 +1268,7 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     authType: "apikey",
     authHeader: "bearer",
     models: [
+<<<<<<< HEAD
       { id: "grok-4.3", name: "Grok 4.3" },
       { id: "grok-4.20-multi-agent-0309", name: "Grok 4.20 Multi Agent" },
       { id: "grok-4.20-0309-reasoning", name: "Grok 4.20 Reasoning" },
@@ -887,6 +1317,16 @@ export const REGISTRY: Record<string, RegistryEntry> = {
       { id: "expert", name: "Grok 4.20 Thinking", toolCalling: true },
       { id: "heavy", name: "Grok 4.20 Multi Agent", toolCalling: true },
       { id: "grok-420-computer-use-sa", name: "Grok 4.3 (Beta)", toolCalling: true },
+=======
+      { id: "grok-4-fast-non-reasoning", name: "Grok 4 Fast" },
+      { id: "grok-4-fast-reasoning", name: "Grok 4 Fast Reasoning" },
+      { id: "grok-4-1-fast-non-reasoning", name: "Grok 4.1 Fast" },
+      { id: "grok-4-1-fast-reasoning", name: "Grok 4.1 Fast Reasoning" },
+      { id: "grok-4-0709", name: "Grok 4 (0709)" },
+      { id: "grok-4", name: "Grok 4" },
+      { id: "grok-3", name: "Grok 3" },
+      { id: "grok-3-mini", name: "Grok 3 Mini" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ],
   },
 
@@ -900,10 +1340,15 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     authHeader: "bearer",
     models: [
       { id: "mistral-large-latest", name: "Mistral Large 3" },
+<<<<<<< HEAD
       { id: "mistral-medium-latest", name: "Mistral Medium 3.1" },
       { id: "mistral-small-latest", name: "Mistral Small 4" },
       { id: "devstral-latest", name: "Devstral 2" },
       { id: "codestral-latest", name: "Codestral" },
+=======
+      { id: "codestral-latest", name: "Codestral" },
+      { id: "mistral-medium-latest", name: "Mistral Medium 3" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ],
   },
 
@@ -916,13 +1361,17 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     authType: "apikey",
     authHeader: "bearer",
     models: [
+<<<<<<< HEAD
       { id: "sonar-deep-research", name: "Sonar Deep Research" },
       { id: "sonar-reasoning-pro", name: "Sonar Reasoning Pro" },
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       { id: "sonar-pro", name: "Sonar Pro" },
       { id: "sonar", name: "Sonar" },
     ],
   },
 
+<<<<<<< HEAD
   "perplexity-web": {
     id: "perplexity-web",
     alias: "pplx-web",
@@ -966,6 +1415,8 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     ],
   },
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   together: {
     id: "together",
     alias: "together",
@@ -997,11 +1448,17 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     authType: "apikey",
     authHeader: "bearer",
     models: [
+<<<<<<< HEAD
       { id: "accounts/fireworks/models/kimi-k2p6", name: "Kimi K2.6" },
       { id: "accounts/fireworks/models/minimax-m2p7", name: "MiniMax M2.7" },
       { id: "accounts/fireworks/models/qwen3p6-plus", name: "Qwen3.6 Plus" },
       { id: "accounts/fireworks/models/glm-5p1", name: "GLM 5.1" },
       { id: "accounts/fireworks/models/deepseek-v3p2", name: "DeepSeek V3.2" },
+=======
+      { id: "accounts/fireworks/models/deepseek-v3p1", name: "DeepSeek V3.1" },
+      { id: "accounts/fireworks/models/llama-v3p3-70b-instruct", name: "Llama 3.3 70B" },
+      { id: "accounts/fireworks/models/qwen3-235b-a22b", name: "Qwen3 235B" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ],
   },
 
@@ -1014,8 +1471,17 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     authType: "apikey",
     authHeader: "bearer",
     models: [
+<<<<<<< HEAD
       { id: "zai-glm-4.7", name: "GLM 4.7" },
       { id: "gpt-oss-120b", name: "GPT OSS 120B" },
+=======
+      { id: "gpt-oss-120b", name: "GPT OSS 120B" },
+      { id: "zai-glm-4.7", name: "ZAI GLM 4.7" },
+      { id: "llama-3.3-70b", name: "Llama 3.3 70B" },
+      { id: "llama-4-scout-17b-16e-instruct", name: "Llama 4 Scout" },
+      { id: "qwen-3-235b-a22b-instruct-2507", name: "Qwen3 235B A22B" },
+      { id: "qwen-3-32b", name: "Qwen3 32B" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ],
   },
 
@@ -1031,6 +1497,7 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     // Note: rate limits vary by plan (free = "Light usage", Pro = more, Max = 5x Pro).
     // Users can generate API keys at https://ollama.com/settings/api-keys
     models: [
+<<<<<<< HEAD
       { id: "deepseek-v4-flash", name: "DeepSeek V4 Flash" },
       { id: "kimi-k2.6", name: "Kimi K2.6" },
       { id: "glm-5.1", name: "GLM 5.1" },
@@ -1038,6 +1505,15 @@ export const REGISTRY: Record<string, RegistryEntry> = {
       { id: "gemma4:31b", name: "Gemma 4 31B" },
       { id: "nemotron-3-super", name: "NVIDIA Nemotron 3 Super" },
       { id: "qwen3.5:397b", name: "Qwen 3.5 397B" },
+=======
+      { id: "gemma3:27b", name: "Gemma 3 27B" },
+      { id: "llama3.3:70b", name: "Llama 3.3 70B" },
+      { id: "qwen3:72b", name: "Qwen3 72B" },
+      { id: "devstral:24b", name: "Devstral 24B" },
+      { id: "deepseek-r2:671b", name: "DeepSeek R2 671B" },
+      { id: "phi4:14b", name: "Phi 4 14B" },
+      { id: "mistral-small3.2:24b", name: "Mistral Small 3.2 24B" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ],
     passthroughModels: true,
   },
@@ -1054,8 +1530,11 @@ export const REGISTRY: Record<string, RegistryEntry> = {
       { id: "command-r-plus-08-2024", name: "Command R+ (Aug 2024)" },
       { id: "command-r-08-2024", name: "Command R (Aug 2024)" },
       { id: "command-a-03-2025", name: "Command A (Mar 2025)" },
+<<<<<<< HEAD
       { id: "command-a-vision-07-2025", name: "Command A Vision (Jul 2025)" },
       { id: "command-a-reasoning-08-2025", name: "Command A Reasoning (Aug 2025)" },
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ],
   },
 
@@ -1068,6 +1547,7 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     authType: "apikey",
     authHeader: "bearer",
     models: [
+<<<<<<< HEAD
       { id: "z-ai/glm-5.1", name: "GLM 5.1" },
       { id: "minimaxai/minimax-m2.7", name: "MiniMax M2.7" },
       { id: "google/gemma-4-31b-it", name: "Gemma 4 31B" },
@@ -1081,6 +1561,19 @@ export const REGISTRY: Record<string, RegistryEntry> = {
       { id: "openai/gpt-oss-120b", name: "GPT OSS 120B", toolCalling: false },
       { id: "openai/gpt-oss-20b", name: "GPT OSS 20B", toolCalling: false },
       { id: "nvidia/nemotron-3-super-120b-a12b", name: "Nemotron 3 Super 120B A12B" },
+=======
+      { id: "gpt-oss-120b", name: "GPT OSS 120B", toolCalling: false },
+      { id: "openai/gpt-oss-120b", name: "GPT OSS 120B (OpenAI Prefix)", toolCalling: false },
+      { id: "meta/llama-3.3-70b-instruct", name: "Llama 3.3 70B" },
+      { id: "nvidia/llama-3.3-70b-instruct", name: "Llama 3.3 70B (NVIDIA Prefix)" },
+      { id: "meta/llama-4-maverick-17b-128e-instruct", name: "Llama 4 Maverick" },
+      { id: "moonshotai/kimi-k2.5", name: "Kimi K2.5" },
+      { id: "z-ai/glm4.7", name: "GLM 4.7" },
+      { id: "deepseek-ai/deepseek-v3.2", name: "DeepSeek V3.2" },
+      { id: "deepseek/deepseek-r1", name: "DeepSeek R1" },
+      { id: "nvidia/llama-3.1-70b-instruct", name: "Llama 3.1 70B" },
+      { id: "nvidia/llama-3.1-405b-instruct", name: "Llama 3.1 405B" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ],
   },
 
@@ -1277,8 +1770,13 @@ export const REGISTRY: Record<string, RegistryEntry> = {
       { id: "LongCat-Flash-Lite", name: "LongCat Flash-Lite (50M tok/day 🆓)" },
       { id: "LongCat-Flash-Chat", name: "LongCat Flash-Chat (500K tok/day 🆓)" },
       { id: "LongCat-Flash-Thinking", name: "LongCat Flash-Thinking (500K tok/day 🆓)" },
+<<<<<<< HEAD
       { id: "LongCat-Flash-Omni-2603", name: "LongCat Flash-Omni-2603 (500K tok/day 🆓)" },
       //{ id: "LongCat-2.0-Preview", name: "LongCat 2.0 Preview (10M tok/day 🆓)" },
+=======
+      { id: "LongCat-Flash-Thinking-2601", name: "LongCat Flash-Thinking-2601 (🆓)" },
+      { id: "LongCat-Flash-Omni-2603", name: "LongCat Flash-Omni-2603 (🆓)" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ],
   },
 
@@ -1287,6 +1785,7 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     alias: "pol",
     format: "openai",
     executor: "pollinations",
+<<<<<<< HEAD
     // Primary endpoint is text.pollinations.ai. gen.pollinations.ai is the current
     // OpenAI-compatible fallback used when the primary edge is rate-limited or unavailable.
     baseUrl: "https://text.pollinations.ai/openai/chat/completions",
@@ -1328,6 +1827,19 @@ export const REGISTRY: Record<string, RegistryEntry> = {
       { id: "qwen-large", name: "Qwen Large (Pollinations)" },
       { id: "qwen-vision", name: "Qwen Vision (Pollinations)" },
       { id: "qwen-safety", name: "Qwen Safety (Pollinations)" },
+=======
+    // No API key required for basic use. Proxy to GPT-5, Claude, Gemini, DeepSeek, Llama 4.
+    baseUrl: "https://text.pollinations.ai/openai/chat/completions",
+    authType: "apikey", // Optional — works without one too
+    authHeader: "bearer",
+    models: [
+      { id: "openai", name: "GPT-5 via Pollinations (🆓)" },
+      { id: "claude", name: "Claude via Pollinations (🆓)" },
+      { id: "gemini", name: "Gemini via Pollinations (🆓)" },
+      { id: "deepseek", name: "DeepSeek V3 via Pollinations (🆓)" },
+      { id: "llama", name: "Llama 4 via Pollinations (🆓)" },
+      { id: "mistral", name: "Mistral via Pollinations (🆓)" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ],
   },
 
@@ -1348,20 +1860,59 @@ export const REGISTRY: Record<string, RegistryEntry> = {
       // OpenAI — use bare IDs
       { id: "gpt-4o-mini", name: "GPT-4o Mini (🆓 Puter)" },
       { id: "gpt-4o", name: "GPT-4o (Puter)" },
+<<<<<<< HEAD
+=======
+      { id: "gpt-4.1", name: "GPT-4.1 (Puter)" },
+      { id: "gpt-4.1-mini", name: "GPT-4.1 Mini (Puter)" },
+      { id: "gpt-5-nano", name: "GPT-5 Nano (Puter)" },
+      { id: "gpt-5-mini", name: "GPT-5 Mini (Puter)" },
+      { id: "gpt-5", name: "GPT-5 (Puter)" },
+      { id: "o3-mini", name: "OpenAI o3-mini (Puter)" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       { id: "o3", name: "OpenAI o3 (Puter)" },
       { id: "o4-mini", name: "OpenAI o4-mini (Puter)" },
       // Anthropic Claude — use bare IDs (confirmed working)
       { id: "claude-haiku-4-5", name: "Claude Haiku 4.5 (Puter)" },
+<<<<<<< HEAD
+=======
+      { id: "claude-sonnet-4-5", name: "Claude Sonnet 4.5 (Puter)" },
+      { id: "claude-opus-4-5", name: "Claude Opus 4.5 (Puter)" },
+      { id: "claude-sonnet-4", name: "Claude Sonnet 4 (Puter)" },
+      { id: "claude-opus-4", name: "Claude Opus 4 (Puter)" },
+      // Google Gemini — use google/ prefix (confirmed working)
+      { id: "google/gemini-2.0-flash", name: "Gemini 2.0 Flash (Puter)" },
+      { id: "google/gemini-2.5-flash", name: "Gemini 2.5 Flash (Puter)" },
+      { id: "google/gemini-2.5-pro", name: "Gemini 2.5 Pro (Puter)" },
+      { id: "google/gemini-3-flash", name: "Gemini 3 Flash (Puter)" },
+      { id: "google/gemini-3-pro", name: "Gemini 3 Pro (Puter)" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       // DeepSeek — use deepseek/ prefix (confirmed working)
       { id: "deepseek/deepseek-chat", name: "DeepSeek Chat (Puter)" },
       { id: "deepseek/deepseek-r1", name: "DeepSeek R1 (Puter)" },
       { id: "deepseek/deepseek-v3.2", name: "DeepSeek V3.2 (Puter)" },
       // xAI Grok — use x-ai/ prefix
+<<<<<<< HEAD
+=======
+      { id: "x-ai/grok-3", name: "Grok 3 (Puter)" },
+      { id: "x-ai/grok-3-mini", name: "Grok 3 Mini (Puter)" },
+      { id: "x-ai/grok-4", name: "Grok 4 (Puter)" },
+      { id: "x-ai/grok-4-fast", name: "Grok 4 Fast (Puter)" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       // Meta Llama — bare IDs (confirmed ✅)
       { id: "llama-4-scout", name: "Llama 4 Scout (Puter)" },
       { id: "llama-4-maverick", name: "Llama 4 Maverick (Puter)" },
       { id: "llama-3.3-70b-instruct", name: "Llama 3.3 70B (Puter)" },
       // Mistral — bare IDs (confirmed ✅)
+<<<<<<< HEAD
+=======
+      { id: "mistral-small-latest", name: "Mistral Small (Puter)" },
+      { id: "mistral-medium-latest", name: "Mistral Medium (Puter)" },
+      { id: "open-mistral-nemo", name: "Mistral Nemo (Puter)" },
+      // Qwen — use qwen/ prefix (confirmed ✅)
+      { id: "qwen/qwen3-235b-a22b", name: "Qwen3 235B (Puter)" },
+      { id: "qwen/qwen3-32b", name: "Qwen3 32B (Puter)" },
+      { id: "qwen/qwen3-coder", name: "Qwen3 Coder 480B (Puter)" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ],
     passthroughModels: true, // 500+ models available — users can type arbitrary Puter model IDs
   },
@@ -1405,6 +1956,7 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     ],
   },
 
+<<<<<<< HEAD
   deepinfra: {
     id: "deepinfra",
     alias: "deepinfra",
@@ -1757,6 +2309,8 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     models: CHAT_OPENAI_COMPAT_MODELS.bytez,
   },
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   aimlapi: {
     id: "aimlapi",
     alias: "aiml",
@@ -1776,6 +2330,7 @@ export const REGISTRY: Record<string, RegistryEntry> = {
     ],
     passthroughModels: true,
   },
+<<<<<<< HEAD
   // Free tier: 50 RPM, 500,000 TPM
   "nous-research": {
     id: "nous-research",
@@ -1804,6 +2359,8 @@ export const REGISTRY: Record<string, RegistryEntry> = {
       { id: "reka-edge-2603", name: "Reka Edge 2603" },
     ],
   },
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 };
 
 // ── Generator Functions ───────────────────────────────────────────────────
@@ -1823,12 +2380,15 @@ export function generateLegacyProviders(): Record<string, LegacyProvider> {
     if (entry.responsesBaseUrl) {
       p.responsesBaseUrl = entry.responsesBaseUrl;
     }
+<<<<<<< HEAD
     if (entry.requestDefaults) {
       p.requestDefaults = entry.requestDefaults;
     }
     if (typeof entry.timeoutMs === "number") {
       p.timeoutMs = entry.timeoutMs;
     }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     // Headers
     const mergedHeaders = {
@@ -2005,6 +2565,7 @@ export function getProviderCategory(provider: string): "oauth" | "apikey" {
   if (!entry) return "apikey"; // Safe default for unknown providers
   return entry.authType === "apikey" ? "apikey" : "oauth";
 }
+<<<<<<< HEAD
 
 /**
  * Derive the latest opus/sonnet/haiku model IDs from the `claude` registry entry.
@@ -2024,3 +2585,5 @@ export function getClaudeCodeDefaultModels(): {
     haiku: find(/haiku/i),
   };
 }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

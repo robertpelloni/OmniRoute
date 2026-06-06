@@ -2,7 +2,11 @@
 
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+<<<<<<< HEAD
 import { THEME_CONFIG } from "@/shared/constants/appConfig";
+=======
+import { THEME_CONFIG } from "@/shared/constants/config";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 interface ThemeState {
   theme: string;

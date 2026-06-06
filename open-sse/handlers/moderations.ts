@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { CORS_HEADERS } from "../utils/cors.ts";
+=======
+import { getCorsOrigin } from "../utils/cors.ts";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Moderation Handler
  *
@@ -58,14 +62,22 @@ export async function handleModeration({ body, credentials }) {
         status: res.status,
         headers: {
           "Content-Type": "application/json",
+<<<<<<< HEAD
           ...CORS_HEADERS,
+=======
+          "Access-Control-Allow-Origin": getCorsOrigin(),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         },
       });
     }
 
     const data = await res.json();
     return Response.json(data, {
+<<<<<<< HEAD
       headers: { ...CORS_HEADERS },
+=======
+      headers: { "Access-Control-Allow-Origin": getCorsOrigin() },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     });
   } catch (err) {
     return errorResponse(500, `Moderation request failed: ${err.message}`);

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { CORS_HEADERS } from "./cors.ts";
+=======
+import { getCorsOrigin } from "./cors.ts";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 type PendingToolCall = {
   id?: string;
@@ -105,6 +109,10 @@ export function transformToOllama(response, model) {
   return new Response(response.body.pipeThrough(transform), {
     headers: {
       "Content-Type": "application/x-ndjson",
+<<<<<<< HEAD
+=======
+      "Access-Control-Allow-Origin": getCorsOrigin(),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     },
   });
 }

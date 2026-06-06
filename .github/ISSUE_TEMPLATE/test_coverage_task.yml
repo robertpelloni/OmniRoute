@@ -26,7 +26,11 @@ body:
         Example:
         - open-sse/handlers/chatCore.ts
         - open-sse/services/combo.ts
+<<<<<<< HEAD
         - tests/integration/chat-pipeline.test.ts
+=======
+        - tests/integration/chat-pipeline.test.mjs
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     validations:
       required: true
 
@@ -59,7 +63,11 @@ body:
       description: "List the commands that must pass before this issue can be closed."
       placeholder: |
         Example:
+<<<<<<< HEAD
         - node --import tsx/esm --test tests/unit/my-suite.test.ts
+=======
+        - node --import tsx/esm --test tests/unit/my-suite.test.mjs
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         - npm run test:coverage
     validations:
       required: true

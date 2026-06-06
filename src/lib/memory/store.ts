@@ -4,6 +4,7 @@
 
 import { getDbInstance } from "../db/core";
 import { Memory, MemoryType } from "./types";
+<<<<<<< HEAD
 import { logger } from "../../../open-sse/utils/logger.ts";
 
 const log = logger("MEMORY_STORE");
@@ -12,6 +13,9 @@ const log = logger("MEMORY_STORE");
 import { getDbInstance, rowToCamel } from "../db/core";
 import { Memory, MemoryType } from "./types";
 >>>>>>> Stashed changes
+=======
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 interface CacheEntry<T> {
   value: T;
   timestamp: number;
@@ -30,15 +34,41 @@ interface MemoryRow {
   expires_at: string | null;
 }
 
+<<<<<<< HEAD
+=======
+// Memory cache configuration
+const MEMORY_CACHE_TTL = 300_000; // 5 minutes
+const MEMORY_MAX_CACHE_SIZE = 10_000;
+
+// Cache for recently accessed memories
+const _memoryCache = new Map<string, CacheEntry<Memory | null>>();
+
+// Helper function to safely parse JSON strings
+function parseJSON(value: unknown): Record<string, unknown> {
+  if (!value || typeof value !== "string" || value.trim() === "") {
+    return {};
+  }
+  try {
+    const parsed = JSON.parse(value);
+    return typeof parsed === "object" && parsed !== null ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function invalidateMemoryCache(key: string) {
   _memoryCache.delete(key);
 }
 
+<<<<<<< HEAD
 =======
 /**
  * Memory cache management with size control
  */
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function evictIfNeeded<TKey, TValue>(cache: Map<TKey, TValue>) {
   if (cache.size > MEMORY_MAX_CACHE_SIZE) {
     // Remove oldest entries first
@@ -50,7 +80,10 @@ function evictIfNeeded<TKey, TValue>(cache: Map<TKey, TValue>) {
   }
 }
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function rowToMemory(row: MemoryRow): Memory {
   return {
     id: String(row.id),
@@ -67,6 +100,7 @@ function rowToMemory(row: MemoryRow): Memory {
 }
 
 /**
+<<<<<<< HEAD
  * Find existing memory by apiKeyId and key (for UPSERT logic)
  */
 function findExistingMemory(
@@ -83,11 +117,15 @@ function findExistingMemory(
 
 /**
  * Create a new memory entry (UPSERT: updates existing if same apiKeyId + key)
+=======
+ * Create a new memory entry
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  */
 export async function createMemory(
   memory: Omit<Memory, "id" | "createdAt" | "updatedAt">
 ): Promise<Memory> {
   const db = getDbInstance();
+<<<<<<< HEAD
   const now = new Date().toISOString();
 
   // Check for existing memory with same apiKeyId + key (UPSERT logic)
@@ -139,6 +177,11 @@ export async function createMemory(
 
   // INSERT new record if not exists
   const id = crypto.randomUUID();
+=======
+  const id = crypto.randomUUID();
+  const now = new Date().toISOString();
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const stmt = db.prepare(
     "INSERT INTO memories (id, api_key_id, session_id, type, key, content, metadata, created_at, updated_at, expires_at) " +
       "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
@@ -175,8 +218,29 @@ export async function createMemory(
   evictIfNeeded(_memoryCache);
   _memoryCache.set(id, { value: createdMemory, timestamp: Date.now() });
 
+<<<<<<< HEAD
   log.info("memory.stored", { apiKeyId: memory.apiKeyId, type: memory.type, id });
 
+=======
+  return createdMemory;
+}
+
+/**
+ * Get a memory by ID
+ */
+export async function getMemory(id: string): Promise<Memory | null> {
+  if (!id || typeof id !== "string") return null;
+
+  // Check cache first
+  const cached = _memoryCache.get(id);
+  if (cached && Date.now() - cached.timestamp < MEMORY_CACHE_TTL) {
+    return cached.value;
+  }
+
+  const db = getDbInstance();
+  const stmt = db.prepare("SELECT * FROM memories WHERE id = ?");
+  const row = stmt.get(id) as MemoryRow | undefined;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   if (!row) {
     // Cache negative result briefly to prevent repeated DB hits
@@ -268,30 +332,85 @@ export async function deleteMemory(id: string): Promise<boolean> {
   // Invalidate cache for this memory
   invalidateMemoryCache(id);
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
   log.info("memory.deleted", { id });
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return true;
 }
 
 /**
+<<<<<<< HEAD
+=======
+ * List memories with optional filtering
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  */
 export async function listMemories(filters: {
   apiKeyId?: string;
   type?: MemoryType;
   sessionId?: string;
+<<<<<<< HEAD
+=======
+  limit?: number;
+  offset?: number;
+}): Promise<Memory[]> {
+  const db = getDbInstance();
+
+  // Build dynamic query
+  let query = "SELECT * FROM memories";
+  const params: unknown[] = [];
+  const whereClauses: string[] = [];
+
+  if (filters.apiKeyId) {
+    whereClauses.push("api_key_id = ?");
+    params.push(filters.apiKeyId);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   if (filters.type) {
     whereClauses.push("type = ?");
+<<<<<<< HEAD
+=======
+    params.push(filters.type);
+  }
+
+  if (filters.sessionId) {
+    whereClauses.push("session_id = ?");
+    params.push(filters.sessionId);
+  }
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (whereClauses.length > 0) {
     query += " WHERE " + whereClauses.join(" AND ");
   }
 
   // Add ordering and pagination
+<<<<<<< HEAD
+=======
+  query += " ORDER BY created_at DESC";
+
+  if (filters.limit !== undefined) {
+    query += " LIMIT ?";
+    params.push(filters.limit);
+  }
+
+  if (filters.offset !== undefined) {
+    if (filters.limit === undefined) {
+      query += " LIMIT -1";
+    }
+    query += " OFFSET ?";
+    params.push(filters.offset);
+  }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const stmt = db.prepare(query);
   const rows = stmt.all(...params);
 
+<<<<<<< HEAD
+=======
+  return (rows as MemoryRow[]).map(rowToMemory);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }

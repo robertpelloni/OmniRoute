@@ -1,9 +1,14 @@
+<<<<<<< HEAD
 import { trackPendingRequest } from "@/lib/usageDb";
 
 // Stream handler with disconnect detection - shared for all providers
 
 const PENDING_REQUEST_CLEARED_MARKER = "__omniroutePendingRequestCleared";
 
+=======
+// Stream handler with disconnect detection - shared for all providers
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 type StreamDisconnectEvent = {
   reason: string;
   duration: number;
@@ -14,7 +19,10 @@ type StreamControllerOptions = {
   log?: unknown;
   provider?: string;
   model?: string;
+<<<<<<< HEAD
   connectionId?: string | null;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 };
 
 type StreamController = ReturnType<typeof createStreamController>;
@@ -43,13 +51,19 @@ export function createStreamController({
   log,
   provider,
   model,
+<<<<<<< HEAD
   connectionId,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }: StreamControllerOptions = {}) {
   const abortController = new AbortController();
   const startTime = Date.now();
   let disconnected = false;
   let abortTimeout: ReturnType<typeof setTimeout> | null = null;
+<<<<<<< HEAD
   let pendingRequestCleared = false;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const logStream = (status) => {
     const duration = Date.now() - startTime;
@@ -59,6 +73,7 @@ export function createStreamController({
     );
   };
 
+<<<<<<< HEAD
   const clearPendingRequest = (error?: unknown) => {
     if (pendingRequestCleared) return;
     if (
@@ -77,6 +92,8 @@ export function createStreamController({
     } catch {}
   };
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return {
     signal: abortController.signal,
     startTime,
@@ -90,10 +107,13 @@ export function createStreamController({
 
       logStream(`disconnect: ${reason}`);
 
+<<<<<<< HEAD
       // Decrement pending request counter — the TransformStream flush() won't
       // fire when the client aborts mid-stream, so we must clean up here.
       clearPendingRequest();
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       // Delay abort to allow cleanup
       abortTimeout = setTimeout(() => {
         abortController.abort();
@@ -122,8 +142,11 @@ export function createStreamController({
         abortTimeout = null;
       }
 
+<<<<<<< HEAD
       clearPendingRequest(error);
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       if (error instanceof Error && error.name === "AbortError") {
         logStream("aborted");
         return;

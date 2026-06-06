@@ -16,11 +16,14 @@ import { getAccessToken } from "@omniroute/open-sse/services/tokenRefresh.ts";
 import { saveCallLog } from "@/lib/usageDb";
 import { logProxyEvent } from "@/lib/proxyLogger";
 import { runWithProxyContext } from "@omniroute/open-sse/utils/proxyFetch.ts";
+<<<<<<< HEAD
 import {
   buildGitLabOAuthEndpoints,
   isGitLabDirectAccessDisabled,
   resolveGitLabOAuthBaseUrl,
 } from "@/lib/oauth/gitlab";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 // OAuth provider test endpoints
 const OAUTH_TEST_CONFIG = {
@@ -57,6 +60,7 @@ const OAUTH_TEST_CONFIG = {
     authPrefix: "Bearer ",
     extraHeaders: { "User-Agent": "OmniRoute", Accept: "application/vnd.github+json" },
   },
+<<<<<<< HEAD
   "gitlab-duo": {
     getUrl: (connection: any) =>
       buildGitLabOAuthEndpoints(resolveGitLabOAuthBaseUrl(connection?.providerSpecificData))
@@ -64,6 +68,12 @@ const OAUTH_TEST_CONFIG = {
     method: "POST",
     authHeader: "Authorization",
     authPrefix: "Bearer ",
+=======
+  iflow: {
+    // iFlow's getUserInfo endpoint returns 400 without a specific format.
+    // Use checkExpiry instead — actual connectivity is validated via real requests.
+    checkExpiry: true,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     refreshable: true,
   },
   qwen: {
@@ -95,10 +105,13 @@ const OAUTH_TEST_CONFIG = {
     checkExpiry: true,
     refreshable: true,
   },
+<<<<<<< HEAD
   "amazon-q": {
     checkExpiry: true,
     refreshable: true,
   },
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 };
 
 const CLI_RUNTIME_PROVIDER_MAP = {
@@ -414,8 +427,12 @@ async function testOAuthConnection(connection: any) {
       ...config.extraHeaders,
     };
 
+<<<<<<< HEAD
     const url = typeof config.getUrl === "function" ? config.getUrl(connection) : config.url;
     const res = await fetch(url, {
+=======
+    const res = await fetch(config.url, {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       method: config.method,
       headers,
     });
@@ -430,6 +447,7 @@ async function testOAuthConnection(connection: any) {
       };
     }
 
+<<<<<<< HEAD
     if (connection.provider === "gitlab-duo") {
       const gitlabText = await res.text();
       if (isGitLabDirectAccessDisabled(res.status, gitlabText)) {
@@ -443,6 +461,8 @@ async function testOAuthConnection(connection: any) {
       }
     }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     // If 401/403 and we haven't tried refresh yet, only attempt refresh
     // if the token is actually expired. This prevents corrupting valid tokens
     // when the upstream returns transient 401/403 errors (rate-limiting, etc.).
@@ -456,7 +476,11 @@ async function testOAuthConnection(connection: any) {
       const tokens = await refreshOAuthToken(connection);
       if (tokens) {
         // Retry with new token
+<<<<<<< HEAD
         const retryRes = await fetch(url, {
+=======
+        const retryRes = await fetch(config.url, {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           method: config.method,
           headers: {
             [config.authHeader]: `${config.authPrefix}${tokens.accessToken}`,

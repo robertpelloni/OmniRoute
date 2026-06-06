@@ -1,6 +1,7 @@
 import { HTTP_STATUS, FETCH_TIMEOUT_MS } from "../config/constants.ts";
 import { applyFingerprint, isCliCompatEnabled } from "../config/cliFingerprints.ts";
 import { getRotatingApiKey } from "../services/apiKeyRotator.ts";
+<<<<<<< HEAD
 import { getOpenAICompatibleType, isClaudeCodeCompatible } from "../services/provider.ts";
 import type { ProviderRequestDefaults } from "../services/providerRequestDefaults.ts";
 import { signRequestBody } from "../services/claudeCodeCCH.ts";
@@ -15,6 +16,9 @@ import { remapToolNamesInRequest } from "../services/claudeCodeToolRemapper.ts";
 import { obfuscateInBody } from "../services/claudeCodeObfuscation.ts";
 import { randomUUID } from "node:crypto";
 import { createHash } from "node:crypto";
+=======
+import { getOpenAICompatibleType } from "../services/provider.ts";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * Sanitizes a custom API path to prevent path traversal attacks.
@@ -45,9 +49,12 @@ export type ProviderConfig = {
   refreshUrl?: string;
   authUrl?: string;
   headers?: Record<string, string>;
+<<<<<<< HEAD
   requestDefaults?: ProviderRequestDefaults;
   timeoutMs?: number;
   format?: string;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 };
 
 export type ProviderCredentials = {
@@ -56,7 +63,10 @@ export type ProviderCredentials = {
   apiKey?: string;
   expiresAt?: string;
   connectionId?: string; // T07: used for API key rotation index
+<<<<<<< HEAD
   maxConcurrent?: number | null;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   providerSpecificData?: JsonRecord;
   requestEndpointPath?: string;
 };
@@ -78,6 +88,7 @@ export type ExecuteInput = {
   extendedContext?: boolean;
   /** Merged after auth + CLI fingerprint headers (values override same-named defaults). */
   upstreamExtraHeaders?: Record<string, string> | null;
+<<<<<<< HEAD
   /** Original client request headers (read-only). Executors may forward select headers upstream. */
   clientHeaders?: Record<string, string> | null;
   /** Callback to persist tokens that are proactively refreshed during execution. */
@@ -96,6 +107,10 @@ export type CountTokensInput = {
 };
 
 >>>>>>> Stashed changes
+=======
+};
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /** Apply model-level extra upstream headers (e.g. Authentication, X-Custom-Auth). */
 export function mergeUpstreamExtraHeaders(
   headers: Record<string, string>,
@@ -108,6 +123,7 @@ export function mergeUpstreamExtraHeaders(
         setUserAgentHeader(headers, v);
         continue;
       }
+<<<<<<< HEAD
   const controller = new AbortController();
 
   const abortFrom = (source: AbortSignal) => {
@@ -127,6 +143,54 @@ export function mergeUpstreamExtraHeaders(
 
   primary.addEventListener("abort", () => abortFrom(primary), { once: true });
   secondary.addEventListener("abort", () => abortFrom(secondary), { once: true });
+=======
+      headers[k] = v;
+    }
+  }
+}
+
+export function getCustomUserAgent(providerSpecificData?: JsonRecord | null): string | null {
+  const customUserAgent =
+    typeof providerSpecificData?.customUserAgent === "string"
+      ? providerSpecificData.customUserAgent.trim()
+      : "";
+  return customUserAgent || null;
+}
+
+export function setUserAgentHeader(headers: Record<string, string>, userAgent: string): void {
+  headers["User-Agent"] = userAgent;
+  if ("user-agent" in headers) {
+    headers["user-agent"] = userAgent;
+  }
+}
+
+export function applyConfiguredUserAgent(
+  headers: Record<string, string>,
+  providerSpecificData?: JsonRecord | null
+): void {
+  const customUserAgent = getCustomUserAgent(providerSpecificData);
+  if (customUserAgent) {
+    setUserAgentHeader(headers, customUserAgent);
+  }
+}
+
+export function mergeAbortSignals(primary: AbortSignal, secondary: AbortSignal): AbortSignal {
+  const controller = new AbortController();
+
+  const abortBoth = () => {
+    if (!controller.signal.aborted) {
+      controller.abort();
+    }
+  };
+
+  if (primary.aborted || secondary.aborted) {
+    abortBoth();
+    return controller.signal;
+  }
+
+  primary.addEventListener("abort", abortBoth, { once: true });
+  secondary.addEventListener("abort", abortBoth, { once: true });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return controller.signal;
 }
 
@@ -156,6 +220,7 @@ export class BaseExecutor {
     return this.getBaseUrls().length || 1;
   }
 
+<<<<<<< HEAD
   getTimeoutMs() {
     const configured = this.config?.timeoutMs;
     if (typeof configured !== "number" || !Number.isFinite(configured)) {
@@ -164,6 +229,8 @@ export class BaseExecutor {
     return Math.max(1, Math.floor(configured));
   }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   buildUrl(
     model: string,
     stream: boolean,
@@ -190,6 +257,7 @@ export class BaseExecutor {
     return baseUrls[urlIndex] || baseUrls[0] || this.config.baseUrl;
   }
 
+<<<<<<< HEAD
   buildHeaders(
     credentials: ProviderCredentials,
     stream = true,
@@ -198,6 +266,9 @@ export class BaseExecutor {
   ): Record<string, string> {
     void clientHeaders;
     void model;
+=======
+  buildHeaders(credentials: ProviderCredentials, stream = true): Record<string, string> {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
       ...this.config.headers,
@@ -227,7 +298,13 @@ export class BaseExecutor {
       headers["Authorization"] = `Bearer ${effectiveKey}`;
     }
 
+<<<<<<< HEAD
     headers["Accept"] = stream ? "text/event-stream" : "application/json";
+=======
+    if (stream) {
+      headers["Accept"] = "text/event-stream";
+    }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     return headers;
   }
@@ -242,6 +319,7 @@ export class BaseExecutor {
     void model;
     void stream;
     void credentials;
+<<<<<<< HEAD
 
     // Fix #1674: Remove empty string values from optional parameters
     // like tool descriptions to avoid upstream validation failures.
@@ -278,6 +356,8 @@ export class BaseExecutor {
       return cloned;
     }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return body;
   }
 
@@ -287,9 +367,12 @@ export class BaseExecutor {
 
   // Intra-URL retry config: retry same URL before falling back to next node
   static readonly RETRY_CONFIG = { maxAttempts: 2, delayMs: 2000 };
+<<<<<<< HEAD
   // Timeout for receiving the initial upstream response headers. Once the response
   // starts streaming, STREAM_IDLE_TIMEOUT_MS / Undici bodyTimeout handle stalls.
   static FETCH_START_TIMEOUT_MS = FETCH_TIMEOUT_MS;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Override in subclass for provider-specific refresh
   async refreshCredentials(credentials: ProviderCredentials, log: ExecutorLog | null) {
@@ -298,8 +381,13 @@ export class BaseExecutor {
     return null;
   }
 
+<<<<<<< HEAD
   needsRefresh(credentials?: ProviderCredentials | null) {
     if (!credentials?.expiresAt) return false;
+=======
+  needsRefresh(credentials: ProviderCredentials) {
+    if (!credentials.expiresAt) return false;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const expiresAtMs = new Date(credentials.expiresAt).getTime();
     return expiresAtMs - Date.now() < 5 * 60 * 1000;
   }
@@ -308,6 +396,7 @@ export class BaseExecutor {
     return { status: response.status, message: bodyText || `HTTP ${response.status}` };
   }
 
+<<<<<<< HEAD
   buildCountTokensUrl(model: string, credentials: ProviderCredentials | null = null) {
     void model;
     void credentials;
@@ -521,6 +610,60 @@ export class BaseExecutor {
             `[CLAUDE-PATCH] provider=${this.provider} tools remapped, billing header injected, body fields added, headers patched`
           );
         }
+=======
+  async execute({
+    model,
+    body,
+    stream,
+    credentials,
+    signal,
+    log,
+    extendedContext,
+    upstreamExtraHeaders,
+  }: ExecuteInput) {
+    const fallbackCount = this.getFallbackCount();
+    let lastError: unknown = null;
+    let lastStatus = 0;
+    // Track per-URL intra-retry attempts to avoid infinite loops
+    const retryAttemptsByUrl: Record<number, number> = {};
+
+    for (let urlIndex = 0; urlIndex < fallbackCount; urlIndex++) {
+      const url = this.buildUrl(model, stream, urlIndex, credentials);
+      const headers = this.buildHeaders(credentials, stream);
+      applyConfiguredUserAgent(headers, credentials?.providerSpecificData);
+
+      // Append 1M context beta header when [1m] suffix was used
+      // Only supported for specific Claude models per Anthropic docs
+      if (extendedContext) {
+        const EXTENDED_CONTEXT_MODELS = [
+          "claude-opus-4-6",
+          "claude-sonnet-4-6",
+          "claude-sonnet-4-5",
+          "claude-sonnet-4",
+        ];
+        const baseModel = model.replace(/-\d{8}$/, "");
+        if (
+          EXTENDED_CONTEXT_MODELS.some((m) => baseModel === m || model === m || model.startsWith(m))
+        ) {
+          const existing = headers["Anthropic-Beta"];
+          if (existing) {
+            headers["Anthropic-Beta"] = existing + ",context-1m-2025-08-07";
+          } else {
+            headers["Anthropic-Beta"] = "context-1m-2025-08-07";
+          }
+        }
+      }
+
+      const transformedBody = await this.transformRequest(model, body, stream, credentials);
+
+      try {
+        // Apply timeout to all requests. Non-streaming requests need this to prevent
+        // stalled connections. Streaming requests also need it for the initial fetch() call
+        // to prevent hanging on unresponsive providers (e.g. 300s TCP default timeout — #769).
+        // Stream idle detection (STREAM_IDLE_TIMEOUT_MS) handles stalls after data starts flowing.
+        const timeoutSignal = AbortSignal.timeout(FETCH_TIMEOUT_MS);
+        const combinedSignal = signal ? mergeAbortSignals(signal, timeoutSignal) : timeoutSignal;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
         // Apply CLI fingerprint ordering if enabled for this provider
         let finalHeaders = headers;
@@ -532,6 +675,7 @@ export class BaseExecutor {
           bodyString = fingerprinted.bodyString;
         }
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         // CCH signing: Claude Code-compatible providers AND native claude provider
         // require an xxHash64 integrity token over the serialized body.
@@ -540,6 +684,8 @@ export class BaseExecutor {
         }
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         mergeUpstreamExtraHeaders(finalHeaders, upstreamExtraHeaders);
 
         const fetchOptions: RequestInit = {
@@ -549,6 +695,7 @@ export class BaseExecutor {
         };
         if (combinedSignal) fetchOptions.signal = combinedSignal;
 
+<<<<<<< HEAD
         let response;
         try {
           response = await fetch(url, fetchOptions);
@@ -558,6 +705,9 @@ export class BaseExecutor {
             timeoutId = null;
           }
         }
+=======
+        const response = await fetch(url, fetchOptions);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
         // Intra-URL retry: if 429 and we haven't exhausted per-URL retries, wait and retry the same URL
         if (
@@ -586,7 +736,11 @@ export class BaseExecutor {
         // Distinguish timeout errors from other abort errors
         const err = error instanceof Error ? error : new Error(String(error));
         if (err.name === "TimeoutError") {
+<<<<<<< HEAD
           log?.warn?.("TIMEOUT", `Fetch timeout after ${this.getTimeoutMs()}ms on ${url}`);
+=======
+          log?.warn?.("TIMEOUT", `Fetch timeout after ${FETCH_TIMEOUT_MS}ms on ${url}`);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         }
         lastError = err;
         if (urlIndex + 1 < fallbackCount) {

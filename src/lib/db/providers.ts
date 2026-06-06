@@ -5,6 +5,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { getDbInstance, rowToCamel, cleanNulls } from "./core";
 import { backupDbFile } from "./backup";
+<<<<<<< HEAD
 import {
   encryptConnectionFields,
   decryptConnectionFields,
@@ -12,6 +13,10 @@ import {
 } from "./encryption";
 import { invalidateDbCache } from "./readCache";
 import { normalizeProviderSpecificData } from "@/lib/providers/requestDefaults";
+=======
+import { encryptConnectionFields, decryptConnectionFields } from "./encryption";
+import { invalidateDbCache } from "./readCache";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 type JsonRecord = Record<string, unknown>;
 
@@ -25,6 +30,7 @@ interface DbLike {
   prepare: <TRow = unknown>(sql: string) => StatementLike<TRow>;
 }
 
+<<<<<<< HEAD
 function withNullableMaxConcurrent(
   record: JsonRecord,
   source: JsonRecord | null | undefined
@@ -45,6 +51,8 @@ function withNullableMaxConcurrent(
   };
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function toRecord(value: unknown): JsonRecord {
   return value && typeof value === "object" ? (value as JsonRecord) : {};
 }
@@ -80,28 +88,39 @@ export async function getProviderConnections(filter: JsonRecord = {}) {
   sql += " ORDER BY priority ASC, updated_at DESC";
 
   const rows = db.prepare(sql).all(params);
+<<<<<<< HEAD
   return rows.map((r) => {
     const camelRow = rowToCamel(r);
     return decryptConnectionFields(withNullableMaxConcurrent(cleanNulls(camelRow), camelRow));
   });
+=======
+  return rows.map((r) => decryptConnectionFields(cleanNulls(rowToCamel(r))));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 export async function getProviderConnectionById(id: string) {
   const db = getDbInstance() as unknown as DbLike;
   const row = db.prepare("SELECT * FROM provider_connections WHERE id = ?").get(id);
+<<<<<<< HEAD
   if (!row) return null;
 
   const camelRow = rowToCamel(row);
   return decryptConnectionFields(withNullableMaxConcurrent(cleanNulls(camelRow), camelRow));
+=======
+  return row ? decryptConnectionFields(cleanNulls(rowToCamel(row))) : null;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 export async function createProviderConnection(data: JsonRecord) {
   const db = getDbInstance() as unknown as DbLike;
   const now = new Date().toISOString();
+<<<<<<< HEAD
   const normalizedProviderSpecificData = normalizeProviderSpecificData(
     toStringOrNull(data.provider),
     data.providerSpecificData
   );
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Upsert check
   // For Codex/OpenAI, a single email can have multiple workspaces (Team + Personal)
@@ -156,6 +175,7 @@ export async function createProviderConnection(data: JsonRecord) {
   if (existing) {
     const existingId = toStringOrNull(existing.id);
     if (!existingId) return null;
+<<<<<<< HEAD
     const merged: JsonRecord = { ...toRecord(rowToCamel(existing)), ...data, updatedAt: now };
     merged.providerSpecificData = normalizeProviderSpecificData(
       toStringOrNull(merged.provider),
@@ -164,6 +184,12 @@ export async function createProviderConnection(data: JsonRecord) {
     _updateConnectionRow(db, existingId, merged);
     backupDbFile("pre-write");
     return withNullableMaxConcurrent(cleanNulls(merged), merged);
+=======
+    const merged = { ...toRecord(rowToCamel(existing)), ...data, updatedAt: now };
+    _updateConnectionRow(db, existingId, merged);
+    backupDbFile("pre-write");
+    return cleanNulls(merged);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   // Generate name: prefer explicit name, then email, then a stable short-ID label.
@@ -225,15 +251,23 @@ export async function createProviderConnection(data: JsonRecord) {
     "consecutiveUseCount",
     "rateLimitProtection",
     "group",
+<<<<<<< HEAD
     "maxConcurrent",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   ];
   for (const field of optionalFields) {
     if (data[field] !== undefined && data[field] !== null) {
       connection[field] = data[field];
     }
   }
+<<<<<<< HEAD
   if (normalizedProviderSpecificData && Object.keys(normalizedProviderSpecificData).length > 0) {
     connection.providerSpecificData = normalizedProviderSpecificData;
+=======
+  if (data.providerSpecificData && Object.keys(data.providerSpecificData).length > 0) {
+    connection.providerSpecificData = data.providerSpecificData;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   _insertConnectionRow(db, encryptConnectionFields({ ...connection }));
@@ -244,7 +278,11 @@ export async function createProviderConnection(data: JsonRecord) {
   backupDbFile("pre-write");
   invalidateDbCache("connections"); // Bust connections read cache
 
+<<<<<<< HEAD
   return withNullableMaxConcurrent(cleanNulls(connection), connection);
+=======
+  return cleanNulls(connection);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 function _insertConnectionRow(db: DbLike, conn: JsonRecord) {
@@ -258,8 +296,12 @@ function _insertConnectionRow(db: DbLike, conn: JsonRecord) {
       rate_limited_until, health_check_interval, last_health_check_at,
       last_tested, api_key, id_token, provider_specific_data,
       expires_in, display_name, global_priority, default_model,
+<<<<<<< HEAD
       token_type, consecutive_use_count, rate_limit_protection, last_used_at, "group", max_concurrent,
       created_at, updated_at
+=======
+      token_type, consecutive_use_count, rate_limit_protection, last_used_at, "group", created_at, updated_at
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ) VALUES (
       @id, @provider, @authType, @name, @email, @priority, @isActive,
       @accessToken, @refreshToken, @expiresAt, @tokenExpiresAt,
@@ -268,8 +310,12 @@ function _insertConnectionRow(db: DbLike, conn: JsonRecord) {
       @rateLimitedUntil, @healthCheckInterval, @lastHealthCheckAt,
       @lastTested, @apiKey, @idToken, @providerSpecificData,
       @expiresIn, @displayName, @globalPriority, @defaultModel,
+<<<<<<< HEAD
       @tokenType, @consecutiveUseCount, @rateLimitProtection, @lastUsedAt, @group, @maxConcurrent,
       @createdAt, @updatedAt
+=======
+      @tokenType, @consecutiveUseCount, @rateLimitProtection, @lastUsedAt, @group, @createdAt, @updatedAt
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     )
   `
   ).run({
@@ -312,7 +358,10 @@ function _insertConnectionRow(db: DbLike, conn: JsonRecord) {
       conn.rateLimitProtection === true || conn.rateLimitProtection === 1 ? 1 : 0,
     lastUsedAt: conn.lastUsedAt || null,
     group: conn.group || null,
+<<<<<<< HEAD
     maxConcurrent: conn.maxConcurrent ?? null,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     createdAt: conn.createdAt,
     updatedAt: conn.updatedAt,
   });
@@ -338,7 +387,10 @@ function _updateConnectionRow(db: DbLike, id: string, data: JsonRecord) {
       rate_limit_protection = @rateLimitProtection,
       last_used_at = @lastUsedAt,
       "group" = @group,
+<<<<<<< HEAD
       max_concurrent = @maxConcurrent,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       updated_at = @updatedAt
     WHERE id = @id
   `
@@ -382,7 +434,10 @@ function _updateConnectionRow(db: DbLike, id: string, data: JsonRecord) {
       data.rateLimitProtection === true || data.rateLimitProtection === 1 ? 1 : 0,
     lastUsedAt: data.lastUsedAt || null,
     group: data.group || null,
+<<<<<<< HEAD
     maxConcurrent: data.maxConcurrent ?? null,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     updatedAt: now,
   });
 }
@@ -392,6 +447,7 @@ export async function updateProviderConnection(id: string, data: JsonRecord) {
   const existing = db.prepare("SELECT * FROM provider_connections WHERE id = ?").get(id);
   if (!existing) return null;
 
+<<<<<<< HEAD
   const merged: JsonRecord = {
     ...toRecord(rowToCamel(existing)),
     ...data,
@@ -401,6 +457,9 @@ export async function updateProviderConnection(id: string, data: JsonRecord) {
     toStringOrNull(merged.provider),
     merged.providerSpecificData
   );
+=======
+  const merged = { ...rowToCamel(existing), ...data, updatedAt: new Date().toISOString() };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   _updateConnectionRow(db, id, encryptConnectionFields({ ...merged }));
   backupDbFile("pre-write");
   invalidateDbCache("connections"); // Bust connections read cache
@@ -414,7 +473,11 @@ export async function updateProviderConnection(id: string, data: JsonRecord) {
     _reorderConnections(db, providerId);
   }
 
+<<<<<<< HEAD
   return withNullableMaxConcurrent(cleanNulls(merged), merged);
+=======
+  return cleanNulls(merged);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 export async function deleteProviderConnection(id: string) {
@@ -422,7 +485,10 @@ export async function deleteProviderConnection(id: string) {
   const existing = db.prepare("SELECT provider FROM provider_connections WHERE id = ?").get(id);
   if (!existing) return false;
 
+<<<<<<< HEAD
   db.prepare("DELETE FROM quota_snapshots WHERE connection_id = ?").run(id);
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   db.prepare("DELETE FROM provider_connections WHERE id = ?").run(id);
   const existingRecord = toRecord(existing);
   const providerId =
@@ -437,6 +503,7 @@ export async function deleteProviderConnection(id: string) {
 
 export async function deleteProviderConnectionsByProvider(providerId: string) {
   const db = getDbInstance() as unknown as DbLike;
+<<<<<<< HEAD
   const connectionIds = db
     .prepare("SELECT id FROM provider_connections WHERE provider = ?")
     .all(providerId)
@@ -453,6 +520,8 @@ export async function deleteProviderConnectionsByProvider(providerId: string) {
     }
   }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const result = db.prepare("DELETE FROM provider_connections WHERE provider = ?").run(providerId);
   backupDbFile("pre-write");
   return result.changes;
@@ -491,6 +560,7 @@ export async function getDistinctGroups(): Promise<string[]> {
   return rows.map((r) => String(r.group ?? "")).filter(Boolean);
 }
 
+<<<<<<< HEAD
 // ──────────────── Auto Migration ────────────────
 
 /**
@@ -552,6 +622,8 @@ export function autoMigrateLegacyEncryptedConnections(): number {
   return migratedCount;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // ──────────────── Provider Nodes ────────────────
 
 export async function getProviderNodes(filter: JsonRecord = {}) {

@@ -1,20 +1,30 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/shared/components/ThemeProvider";
+<<<<<<< HEAD
+=======
+import "@/lib/initCloudSync"; // Auto-initialize cloud sync
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getLocale } from "next-intl/server";
 import { RTL_LOCALES } from "@/i18n/config";
 import { getSettings } from "@/lib/db/settings";
+<<<<<<< HEAD
 import type { Viewport } from "next";
 import { PwaRegister } from "@/shared/components/PwaRegister";
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
 });
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export async function generateMetadata() {
   const settings = await getSettings();
   const instanceName = settings?.instanceName || "OmniRoute";
@@ -24,6 +34,7 @@ export async function generateMetadata() {
     title: `${instanceName} — AI Gateway for Multi-Provider LLMs`,
     description:
       "OmniRoute is an AI gateway for multi-provider LLMs. One endpoint for all your AI providers.",
+<<<<<<< HEAD
     manifest: "/manifest.webmanifest",
     applicationName: instanceName,
     appleWebApp: {
@@ -43,6 +54,11 @@ export async function generateMetadata() {
             { url: "/icon-512.png", type: "image/png", sizes: "512x512" },
           ],
       apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+=======
+    icons: {
+      icon: customFaviconUrl ? "/api/settings/favicon" : "/favicon.svg",
+      apple: "/apple-touch-icon.svg",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     },
   };
 }
@@ -62,6 +78,7 @@ export default async function RootLayout({ children }) {
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
           rel="stylesheet"
         />
+<<<<<<< HEAD
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -78,6 +95,8 @@ export default async function RootLayout({ children }) {
             `,
           }}
         />
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       </head>
       <body className={`${inter.variable} font-sans antialiased`} suppressHydrationWarning>
         <a
@@ -87,7 +106,10 @@ export default async function RootLayout({ children }) {
           Skip to content
         </a>
         <NextIntlClientProvider locale={locale} messages={messages}>
+<<<<<<< HEAD
           <PwaRegister />
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           <ThemeProvider>{children}</ThemeProvider>
         </NextIntlClientProvider>
       </body>

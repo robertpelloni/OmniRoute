@@ -8,9 +8,12 @@ const execFileAsync = promisify(execFile);
 
 type ComposeCommand = "docker compose" | "docker-compose";
 export type AutoUpdateMode = "npm" | "docker-compose" | "source";
+<<<<<<< HEAD
 =======
 export type AutoUpdateMode = "npm" | "docker-compose";
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 type ExecFileLike = typeof execFileAsync;
 type SpawnLike = typeof spawn;
@@ -197,7 +200,10 @@ export async function validateAutoUpdateRuntime(
   return { supported: true, reason: null, composeCommand };
 }
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export async function ensureGitTagExists(
   targetTag: string,
   execFileImpl: ExecFileLike = execFileAsync,
@@ -213,7 +219,10 @@ export async function ensureGitTagExists(
   }
 }
 
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export function buildNpmUpdateScript(latest: string): string {
   return [
     "set -eu",
@@ -249,7 +258,10 @@ export function buildSourceUpdateScript(latest: string, gitRemote = "origin"): s
   ].join("\n");
 }
 
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export function buildDockerComposeUpdateScript({
   latest,
   config,
@@ -304,12 +316,22 @@ export async function launchAutoUpdate({
   execFileImpl = execFileAsync,
   spawnImpl = spawn,
   existsImpl = pathExists,
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }: {
   latest: string;
   env?: NodeJS.ProcessEnv;
   execFileImpl?: ExecFileLike;
   spawnImpl?: SpawnLike;
+<<<<<<< HEAD
+=======
+  existsImpl?: (targetPath: string) => Promise<boolean>;
+}): Promise<AutoUpdateLaunchResult> {
+  const config = getAutoUpdateConfig(env);
+  const validation = await validateAutoUpdateRuntime(config, execFileImpl, existsImpl);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   if (!validation.supported) {
     return {
@@ -328,6 +350,12 @@ export async function launchAutoUpdate({
           config,
           composeCommand: validation.composeCommand || "docker-compose",
         })
+<<<<<<< HEAD
+=======
+      : config.mode === "source"
+        ? buildSourceUpdateScript(latest, config.gitRemote)
+        : buildNpmUpdateScript(latest);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   mkdirSync(path.dirname(config.logPath), { recursive: true });
   const logFd = openSync(config.logPath, "a");

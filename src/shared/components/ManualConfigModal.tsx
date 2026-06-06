@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+<<<<<<< HEAD
 import { useTranslations } from "next-intl";
 import Modal from "./Modal";
 import Button from "./Button";
@@ -8,6 +9,17 @@ import Button from "./Button";
 export default function ManualConfigModal({ isOpen, onClose, title, configs = [] }) {
   const t = useTranslations("common");
   const resolvedTitle = title ?? t("manualConfig");
+=======
+import Modal from "./Modal";
+import Button from "./Button";
+
+export default function ManualConfigModal({
+  isOpen,
+  onClose,
+  title = "Manual Configuration",
+  configs = [],
+}) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [copiedIndex, setCopiedIndex] = useState(null);
 
   const copyToClipboard = async (text, index) => {
@@ -35,7 +47,11 @@ export default function ManualConfigModal({ isOpen, onClose, title, configs = []
   };
 
   return (
+<<<<<<< HEAD
     <Modal isOpen={isOpen} onClose={onClose} title={resolvedTitle} size="xl">
+=======
+    <Modal isOpen={isOpen} onClose={onClose} title={title} size="xl">
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       <div className="flex flex-col gap-4">
         {configs.map((config, index) => (
           <div key={index} className="flex flex-col gap-2">
@@ -49,7 +65,11 @@ export default function ManualConfigModal({ isOpen, onClose, title, configs = []
                 <span className="material-symbols-outlined text-[14px] mr-1">
                   {copiedIndex === index ? "check" : "content_copy"}
                 </span>
+<<<<<<< HEAD
                 {copiedIndex === index ? t("copied") : t("copy")}
+=======
+                {copiedIndex === index ? "Copied!" : "Copy"}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               </Button>
             </div>
             <pre className="px-3 py-2 bg-black/5 dark:bg-white/5 rounded font-mono text-xs overflow-x-auto whitespace-pre-wrap break-all max-h-60 overflow-y-auto border border-border">

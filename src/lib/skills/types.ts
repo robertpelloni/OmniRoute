@@ -26,11 +26,14 @@ export interface Skill {
   schema: SkillSchema;
   handler: string;
   enabled: boolean;
+<<<<<<< HEAD
   mode?: "on" | "off" | "auto";
   sourceProvider?: "skillsmp" | "skillssh" | "local";
   tags?: string[];
   installCount?: number;
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   createdAt: Date;
   updatedAt: Date;
 }

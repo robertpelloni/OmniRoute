@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // @ts-nocheck
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Token Usage Tracking - Extract, normalize, estimate and log token usage
  */
@@ -342,6 +345,7 @@ export function extractUsage(chunk) {
     return normalizeUsage({
       prompt_tokens: usage.input_tokens || usage.prompt_tokens || 0,
       completion_tokens: usage.output_tokens || usage.completion_tokens || 0,
+<<<<<<< HEAD
       cached_tokens:
         usage.input_tokens_details?.cached_tokens ??
         usage.prompt_tokens_details?.cached_tokens ??
@@ -351,6 +355,10 @@ export function extractUsage(chunk) {
         usage.output_tokens_details?.reasoning_tokens ??
         usage.completion_tokens_details?.reasoning_tokens ??
         usage.reasoning_tokens,
+=======
+      cached_tokens: usage.input_tokens_details?.cached_tokens,
+      reasoning_tokens: usage.output_tokens_details?.reasoning_tokens,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     });
   }
 
@@ -363,6 +371,11 @@ export function extractUsage(chunk) {
     return normalizeUsage({
       prompt_tokens: chunk.usage.prompt_tokens ?? chunk.usage.input_tokens ?? 0,
       completion_tokens: chunk.usage.completion_tokens ?? chunk.usage.output_tokens ?? 0,
+<<<<<<< HEAD
+=======
+      cached_tokens: chunk.usage.prompt_tokens_details?.cached_tokens,
+      reasoning_tokens: chunk.usage.completion_tokens_details?.reasoning_tokens,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     });
   }
 
@@ -495,6 +508,7 @@ export function estimateUsage(body, contentLength, targetFormat = FORMATS.OPENAI
 /**
  * Log usage with cache info (green color)
  */
+<<<<<<< HEAD
 export function logUsage(
   provider,
   usage,
@@ -502,6 +516,9 @@ export function logUsage(
   connectionId: string | null = null,
   apiKeyInfo = null
 ) {
+=======
+export function logUsage(provider, usage, model = null, connectionId = null, apiKeyInfo = null) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (!usage || typeof usage !== "object") return;
 
   const p = provider?.toUpperCase() || "UNKNOWN";
@@ -511,6 +528,10 @@ export function logUsage(
   // - Claude: input_tokens, output_tokens
   const inTokens = getLoggedInputTokens(usage);
   const outTokens = getLoggedOutputTokens(usage);
+<<<<<<< HEAD
+=======
+  const accountPrefix = connectionId ? connectionId.slice(0, 8) + "..." : "unknown";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   let msg = `[${getTimeString()}] 📊 ${COLORS.green}[USAGE] ${p} | in=${inTokens} | out=${outTokens} | account=${accountPrefix}${COLORS.reset}`;
 
@@ -540,4 +561,8 @@ export function logUsage(
     cacheCreation: cacheCreation || 0,
     reasoning: reasoning || 0,
   };
+<<<<<<< HEAD
+=======
+  appendRequestLog({ model, provider, connectionId, tokens, status: "200 OK" }).catch(() => {});
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }

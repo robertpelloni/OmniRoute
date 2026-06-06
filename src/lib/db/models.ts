@@ -234,10 +234,13 @@ function asRecord(value: unknown): JsonRecord {
   return value && typeof value === "object" && !Array.isArray(value) ? (value as JsonRecord) : {};
 }
 
+<<<<<<< HEAD
 function toNonEmptyString(value: unknown): string | null {
   return typeof value === "string" && value.trim().length > 0 ? value.trim() : null;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function getKeyValue(row: unknown): { key: string | null; value: string | null } {
   const record = asRecord(row);
   return {
@@ -347,6 +350,7 @@ export async function addCustomModel(
   modelId: string,
   modelName?: string,
   source = "manual",
+<<<<<<< HEAD
   apiFormat:
     | "chat-completions"
     | "responses"
@@ -355,6 +359,9 @@ export async function addCustomModel(
     | "audio-transcriptions"
     | "audio-speech"
     | "images-generations" = "chat-completions",
+=======
+  apiFormat: "chat-completions" | "responses" = "chat-completions",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   supportedEndpoints: string[] = ["chat"]
 ) {
   const db = getDbInstance();
@@ -383,10 +390,14 @@ export async function addCustomModel(
 }
 
 /**
+<<<<<<< HEAD
  * Replace the entire custom models list for a provider.
 =======
  * Replace the entire custom models list for a provider (used by auto-sync).
 >>>>>>> Stashed changes
+=======
+ * Replace the entire custom models list for a provider (used by auto-sync).
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  * Preserves per-model compatibility overrides for models that still exist.
  */
 export async function replaceCustomModels(
@@ -401,6 +412,14 @@ export async function replaceCustomModels(
     outputTokenLimit?: number;
     description?: string;
     supportsThinking?: boolean;
+<<<<<<< HEAD
+=======
+  }>,
+  { allowEmpty = false }: { allowEmpty?: boolean } = {}
+) {
+  // Guard: skip destructive clear when the caller hasn't explicitly opted in.
+  // This prevents auto-sync from wiping manually-imported models when the
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // upstream /models endpoint fails, times out, or returns an empty list.
   if (models.length === 0 && !allowEmpty) {
     const existing = await getCustomModels(providerId);
@@ -425,7 +444,10 @@ export async function replaceCustomModels(
       source: m.source || "auto-sync",
       apiFormat: m.apiFormat || (prev as any)?.apiFormat || "chat-completions",
       supportedEndpoints: m.supportedEndpoints || (prev as any)?.supportedEndpoints || ["chat"],
+<<<<<<< HEAD
 <<<<<<< Updated upstream
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       // Preserve metadata from provider API (or previous sync)
       ...(m.inputTokenLimit != null
         ? { inputTokenLimit: m.inputTokenLimit }
@@ -447,7 +469,10 @@ export async function replaceCustomModels(
         : (prev as any)?.supportsThinking != null
           ? { supportsThinking: (prev as any).supportsThinking }
           : {}),
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       // Preserve existing compat flags
       ...(prev && (prev as any).normalizeToolCallId !== undefined
         ? { normalizeToolCallId: (prev as any).normalizeToolCallId }
@@ -525,8 +550,12 @@ export async function removeCustomModel(providerId: string, modelId: string) {
 export interface SyncedAvailableModel {
   id: string;
   name: string;
+<<<<<<< HEAD
   source: "imported";
   apiFormat?: string;
+=======
+  source: "api-sync";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   supportedEndpoints?: string[];
   inputTokenLimit?: number;
   outputTokenLimit?: number;
@@ -534,6 +563,7 @@ export interface SyncedAvailableModel {
   supportsThinking?: boolean;
 }
 
+<<<<<<< HEAD
 type SyncedAvailableModelInput = Omit<SyncedAvailableModel, "source"> & {
   source?: string;
 };
@@ -610,6 +640,8 @@ export async function getSyncedAvailableModelsForConnection(
   }
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Get all synced available models for a provider, unioned across all connections.
  */
@@ -626,7 +658,11 @@ export async function getSyncedAvailableModels(
   for (const row of rows) {
     const { key, value } = getKeyValue(row);
     if (!key || value === null) continue;
+<<<<<<< HEAD
     const models = normalizeSyncedAvailableModels(JSON.parse(value));
+=======
+    const models: SyncedAvailableModel[] = JSON.parse(value);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     for (const m of models) {
       if (m.id) map.set(m.id, m);
     }
@@ -651,7 +687,11 @@ export async function getAllSyncedAvailableModels(): Promise<
     if (!key || value === null) continue;
     const providerId = key.split(":")[0];
     if (!byProvider.has(providerId)) byProvider.set(providerId, new Map());
+<<<<<<< HEAD
     const models = normalizeSyncedAvailableModels(JSON.parse(value));
+=======
+    const models: SyncedAvailableModel[] = JSON.parse(value);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const map = byProvider.get(providerId)!;
     for (const m of models) {
       if (m.id) map.set(m.id, m);
@@ -671,19 +711,31 @@ export async function getAllSyncedAvailableModels(): Promise<
 export async function replaceSyncedAvailableModelsForConnection(
   providerId: string,
   connectionId: string,
+<<<<<<< HEAD
   models: SyncedAvailableModelInput[]
 ): Promise<SyncedAvailableModel[]> {
   const db = getDbInstance();
   const key = `${providerId}:${connectionId}`;
   const normalizedModels = normalizeSyncedAvailableModels(models);
   if (normalizedModels.length === 0) {
+=======
+  models: SyncedAvailableModel[]
+): Promise<SyncedAvailableModel[]> {
+  const db = getDbInstance();
+  const key = `${providerId}:${connectionId}`;
+  if (models.length === 0) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     db.prepare("DELETE FROM key_value WHERE namespace = 'syncedAvailableModels' AND key = ?").run(
       key
     );
   } else {
     db.prepare(
       "INSERT OR REPLACE INTO key_value (namespace, key, value) VALUES ('syncedAvailableModels', ?, ?)"
+<<<<<<< HEAD
     ).run(key, JSON.stringify(normalizedModels));
+=======
+    ).run(key, JSON.stringify(models));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
   backupDbFile("pre-write");
   // Return the full unioned list for the provider

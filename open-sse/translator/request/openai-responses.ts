@@ -4,6 +4,7 @@
  * Responses API uses: { input: [...], instructions: "..." }
  * Chat API uses: { messages: [...] }
  */
+<<<<<<< HEAD
 import { isOpenAIResponsesStoreEnabled } from "@/lib/providers/requestDefaults";
 import { FORMATS } from "../formats.ts";
 import { generateToolCallId } from "../helpers/toolCallHelper.ts";
@@ -12,6 +13,13 @@ import { register } from "../registry.ts";
 type JsonRecord = Record<string, unknown>;
 const RESPONSES_STORE_MARKER = "_omnirouteResponsesStore";
 =======
+=======
+import { register } from "../registry.ts";
+import { FORMATS } from "../formats.ts";
+import { generateToolCallId } from "../helpers/toolCallHelper.ts";
+
+type JsonRecord = Record<string, unknown>;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 function toRecord(value: unknown): JsonRecord {
   return value && typeof value === "object" && !Array.isArray(value) ? (value as JsonRecord) : {};
@@ -25,11 +33,14 @@ function toString(value: unknown, fallback = ""): string {
   return typeof value === "string" ? value : fallback;
 }
 
+<<<<<<< HEAD
 function normalizeResponsesReasoningEffort(value: unknown): string {
   const effort = toString(value).toLowerCase();
   return effort === "max" ? "xhigh" : effort;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function unsupportedFeature(message: string): Error & { statusCode: number; errorType: string } {
   const error = new Error(message) as Error & { statusCode: number; errorType: string };
   error.statusCode = 400;
@@ -52,8 +63,11 @@ export function openaiResponsesToOpenAIRequest(
 
   const root = toRecord(body);
   if (root.input === undefined) return body;
+<<<<<<< HEAD
   const credentialRecord = toRecord(credentials);
   const storeEnabled = isOpenAIResponsesStoreEnabled(credentialRecord.providerSpecificData);
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Validate tool types — only function tools can be translated to Chat Completions
   const tools = toArray(root.tools);
@@ -61,6 +75,11 @@ export function openaiResponsesToOpenAIRequest(
     for (const toolValue of tools) {
       const tool = toRecord(toolValue);
       const toolType = toString(tool.type);
+<<<<<<< HEAD
+=======
+      // Allow: function tools, and tools already in Chat format (have .function property)
+      if (toolType && toolType !== "function" && !tool.function) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         throw unsupportedFeature(
           `Unsupported Responses API feature: ${toolType} tool type is not supported by omniroute`
         );
@@ -279,9 +298,12 @@ export function openaiResponsesToOpenAIRequest(
   delete result.input;
   delete result.instructions;
   delete result.include;
+<<<<<<< HEAD
   if (storeEnabled && root.store !== undefined) {
     result[RESPONSES_STORE_MARKER] = root.store;
   }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   delete result.store;
   delete result.reasoning;
 
@@ -298,18 +320,29 @@ export function openaiToOpenAIResponsesRequest(
   credentials: unknown
 ): unknown {
   void stream;
+<<<<<<< HEAD
 
   const root = toRecord(body);
   const credentialRecord = toRecord(credentials);
   const storeEnabled = isOpenAIResponsesStoreEnabled(credentialRecord.providerSpecificData);
+=======
+  void credentials;
+
+  const root = toRecord(body);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const result: JsonRecord = {
     model,
     input: [],
     stream: true,
+<<<<<<< HEAD
   };
   if (!storeEnabled) {
     result.store = false;
   }
+=======
+    store: false,
+  };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const input = result.input as JsonRecord[];
 
@@ -321,7 +354,11 @@ export function openaiToOpenAIResponsesRequest(
     const msg = toRecord(messageValue);
     const role = toString(msg.role);
 
+<<<<<<< HEAD
     if (role === "system" || role === "developer") {
+=======
+    if (role === "system") {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       if (!hasSystemMessage) {
         result.instructions = typeof msg.content === "string" ? msg.content : "";
         hasSystemMessage = true;
@@ -528,6 +565,7 @@ export function openaiToOpenAIResponsesRequest(
   }
 
   // Pass through relevant fields
+<<<<<<< HEAD
   if (root.previous_response_id !== undefined) {
     result.previous_response_id = root.previous_response_id;
   }
@@ -566,6 +604,12 @@ export function openaiToOpenAIResponsesRequest(
       result.store = root.store;
     }
   }
+=======
+  if (root.service_tier !== undefined) result.service_tier = root.service_tier;
+  if (root.temperature !== undefined) result.temperature = root.temperature;
+  if (root.max_tokens !== undefined) result.max_tokens = root.max_tokens;
+  if (root.top_p !== undefined) result.top_p = root.top_p;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   return result;
 }

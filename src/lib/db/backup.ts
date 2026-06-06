@@ -23,6 +23,19 @@ type CountRow = { cnt?: number };
 let _lastBackupAt = 0;
 const BACKUP_THROTTLE_MS = 60 * 60 * 1000; // 60 minutes
 const MAX_DB_BACKUPS = 20;
+<<<<<<< HEAD
+=======
+const TRUE_ENV_VALUES = new Set(["1", "true", "yes", "on"]);
+
+function isSqliteAutoBackupDisabled() {
+  const isTest =
+    typeof process !== "undefined" &&
+    (process.env.NODE_ENV === "test" ||
+      process.env.VITEST !== undefined ||
+      process.argv.some((a) => a.includes("test")));
+  if (isTest) return true;
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const value = process.env.DISABLE_SQLITE_AUTO_BACKUP;
   if (!value) return false;
   return TRUE_ENV_VALUES.has(value.trim().toLowerCase());
@@ -77,6 +90,7 @@ export function backupDbFile(reason = "auto") {
       return null;
     _lastBackupAt = now;
 
+<<<<<<< HEAD
     const backupDir = getBackupDir();
     if (!fs.existsSync(backupDir)) fs.mkdirSync(backupDir, { recursive: true });
 
@@ -94,6 +108,22 @@ export function backupDbFile(reason = "auto") {
           console.warn(`[DB] Backup SKIPPED — DB shrank from ${latestStat.size}B to ${stat.size}B`);
           return null;
         }
+=======
+    const backupDir = DB_BACKUPS_DIR || path.join(DATA_DIR, "db_backups");
+    if (!fs.existsSync(backupDir)) fs.mkdirSync(backupDir, { recursive: true });
+
+    // Shrink check vs latest backup
+    const existingBackups = fs
+      .readdirSync(backupDir)
+      .filter((f) => f.startsWith("db_") && f.endsWith(".sqlite"))
+      .sort();
+    if (existingBackups.length > 0) {
+      const latestBackup = existingBackups[existingBackups.length - 1];
+      const latestStat = fs.statSync(path.join(backupDir, latestBackup));
+      if (latestStat.size > 4096 && stat.size < latestStat.size * 0.5) {
+        console.warn(`[DB] Backup SKIPPED — DB shrank from ${latestStat.size}B to ${stat.size}B`);
+        return null;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     }
 
@@ -105,13 +135,47 @@ export function backupDbFile(reason = "auto") {
     db.backup(backupFile)
       .then(() => {
         console.log(`[DB] Backup created: ${backupFile} (${stat.size} bytes)`);
+<<<<<<< HEAD
         cleanupDbBackups();
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       })
       .catch((err: unknown) => {
         const message = err instanceof Error ? err.message : String(err);
         console.error("[DB] Backup failed:", message);
       });
 
+<<<<<<< HEAD
+=======
+    // Rotation — keep only last N, delete smallest first
+    const files = fs
+      .readdirSync(backupDir)
+      .filter((f) => f.startsWith("db_") && f.endsWith(".sqlite"))
+      .sort();
+    while (files.length > MAX_DB_BACKUPS) {
+      let smallestIdx = 0;
+      let smallestSize = Infinity;
+      for (let i = 0; i < files.length - 1; i++) {
+        try {
+          const fStat = fs.statSync(path.join(backupDir, files[i]));
+          if (fStat.size < smallestSize) {
+            smallestSize = fStat.size;
+            smallestIdx = i;
+          }
+        } catch {
+          smallestIdx = i;
+          break;
+        }
+      }
+      try {
+        fs.unlinkSync(path.join(backupDir, files[smallestIdx]));
+      } catch {
+        /* gone */
+      }
+      files.splice(smallestIdx, 1);
+    }
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return { filename: path.basename(backupFile), size: stat.size };
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
@@ -123,7 +187,11 @@ export function backupDbFile(reason = "auto") {
 // ──────────────── List Backups ────────────────
 
 export async function listDbBackups() {
+<<<<<<< HEAD
   const backupDir = getBackupDir();
+=======
+  const backupDir = DB_BACKUPS_DIR || path.join(DATA_DIR, "db_backups");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     if (!fs.existsSync(backupDir)) return [];
 
@@ -168,7 +236,11 @@ export async function listDbBackups() {
 // ──────────────── Restore Backup ────────────────
 
 export async function restoreDbBackup(backupId: string) {
+<<<<<<< HEAD
   const backupDir = getBackupDir();
+=======
+  const backupDir = DB_BACKUPS_DIR || path.join(DATA_DIR, "db_backups");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Validate format: must be db_<timestamp>_<reason>.sqlite, no path separators
   if (
@@ -210,6 +282,10 @@ export async function restoreDbBackup(backupId: string) {
   // Force pre-restore backup (bypass throttle) and await so the DB is not closed while backup runs
   if (!isSqliteAutoBackupDisabled()) {
     _lastBackupAt = 0;
+<<<<<<< HEAD
+=======
+    const backupDirForPre = DB_BACKUPS_DIR || path.join(DATA_DIR, "db_backups");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (SQLITE_FILE && fs.existsSync(SQLITE_FILE)) {
       const stat = fs.statSync(SQLITE_FILE);
       if (stat.size >= 4096) {

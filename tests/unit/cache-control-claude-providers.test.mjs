@@ -139,7 +139,11 @@ describe("Cache Control Policy - Claude Protocol Providers", () => {
     );
   });
 
+<<<<<<< HEAD
   test("shouldPreserveCacheControl defaults CC-compatible providers to OmniRoute-managed cache in auto mode", () => {
+=======
+  test("shouldPreserveCacheControl treats CC-compatible providers like other Claude providers in auto mode", () => {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const claudeCodeUA = "Claude-Code/1.0.0";
 
     assert.equal(
@@ -150,7 +154,11 @@ describe("Cache Control Policy - Claude Protocol Providers", () => {
         targetFormat: "claude",
         settings: { alwaysPreserveClientCache: "auto" },
       }),
+<<<<<<< HEAD
       false
+=======
+      true
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     );
   });
 });

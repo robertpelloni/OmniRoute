@@ -2,6 +2,7 @@
  * Usage Fetcher - Get usage data from provider APIs
  */
 
+<<<<<<< HEAD
 import crypto from "node:crypto";
 import { PROVIDERS } from "../config/constants.ts";
 import {
@@ -32,6 +33,20 @@ import { getCreditsMode } from "./antigravityCredits.ts";
 // Antigravity API config (credentials from PROVIDERS via credential loader)
 const ANTIGRAVITY_CONFIG = {
   quotaApiUrls: getAntigravityFetchAvailableModelsUrls(),
+=======
+import { PROVIDERS } from "../config/constants.ts";
+import { safePercentage } from "@/shared/utils/formatting";
+
+// GitHub API config
+const GITHUB_CONFIG = {
+  apiVersion: "2022-11-28",
+  userAgent: "GitHubCopilotChat/0.26.7",
+};
+
+// Antigravity API config (credentials from PROVIDERS via credential loader)
+const ANTIGRAVITY_CONFIG = {
+  quotaApiUrl: "https://cloudcode-pa.googleapis.com/v1internal:fetchAvailableModels",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   loadProjectApiUrl: "https://cloudcode-pa.googleapis.com/v1internal:loadCodeAssist",
   tokenUrl: "https://oauth2.googleapis.com/token",
   get clientId() {
@@ -40,9 +55,13 @@ const ANTIGRAVITY_CONFIG = {
   get clientSecret() {
     return PROVIDERS.antigravity.clientSecret;
   },
+<<<<<<< HEAD
   get userAgent() {
     return antigravityUserAgent();
   },
+=======
+  userAgent: "antigravity/1.11.3 Darwin/arm64",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 };
 
 // Codex (OpenAI) API config
@@ -65,6 +84,7 @@ const KIMI_CONFIG = {
   apiVersion: "2023-06-01",
 };
 
+<<<<<<< HEAD
 const CURSOR_USAGE_CONFIG = {
   usageUrl: "https://www.cursor.com/api/usage",
   userMetaUrl: "https://www.cursor.com/api/auth/me",
@@ -91,6 +111,8 @@ const MINIMAX_USAGE_CONFIG = {
   },
 } as const;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 type JsonRecord = Record<string, unknown>;
 type UsageQuota = {
   used: number;
@@ -146,6 +168,7 @@ function shouldDisplayGitHubQuota(quota: UsageQuota | null): quota is UsageQuota
   return quota.total > 0 || quota.remainingPercentage !== undefined;
 }
 
+<<<<<<< HEAD
 function createQuotaFromUsage(
   usedValue: unknown,
   totalValue: unknown,
@@ -518,6 +541,8 @@ async function getCrofUsage(apiKey: string) {
 async function getGlmUsage(apiKey: string, providerSpecificData?: Record<string, unknown>) {
   const quotaUrl = getGlmQuotaUrl(providerSpecificData);
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // GLM (Z.AI) quota API config
 const GLM_QUOTA_URLS: Record<string, string> = {
   international: "https://api.z.ai/api/monitor/usage/quota/limit",
@@ -525,9 +550,17 @@ const GLM_QUOTA_URLS: Record<string, string> = {
 };
 
 async function getGlmUsage(apiKey: string, providerSpecificData?: Record<string, unknown>) {
+<<<<<<< HEAD
   const region = providerSpecificData?.apiRegion || "international";
   const quotaUrl = GLM_QUOTA_URLS[region] || GLM_QUOTA_URLS.international;
 >>>>>>> Stashed changes
+=======
+  const region =
+    typeof providerSpecificData?.apiRegion === "string"
+      ? providerSpecificData.apiRegion
+      : "international";
+  const quotaUrl = GLM_QUOTA_URLS[region] || GLM_QUOTA_URLS.international;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const res = await fetch(quotaUrl, {
     headers: {
@@ -572,6 +605,7 @@ async function getGlmUsage(apiKey: string, providerSpecificData?: Record<string,
   return { plan, quotas };
 }
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 /**
  * Bailian (Alibaba Coding Plan) Usage
@@ -692,11 +726,18 @@ async function getNanoGptUsage(apiKey: string) {
 }
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Get usage data for a provider connection
  * @param {Object} connection - Provider connection with accessToken
  * @returns {Promise<unknown>} Usage data with quotas
  */
+<<<<<<< HEAD
+=======
+export async function getUsageForProvider(connection) {
+  const { provider, accessToken, apiKey, providerSpecificData, projectId } = connection;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   switch (provider) {
     case "github":
@@ -704,19 +745,32 @@ async function getNanoGptUsage(apiKey: string) {
     case "gemini-cli":
       return await getGeminiUsage(accessToken, providerSpecificData, projectId);
     case "antigravity":
+<<<<<<< HEAD
       return await getAntigravityUsage(accessToken, providerSpecificData, projectId, id, options);
+=======
+      return await getAntigravityUsage(accessToken, undefined);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     case "claude":
       return await getClaudeUsage(accessToken);
     case "codex":
       return await getCodexUsage(accessToken, providerSpecificData);
     case "kiro":
+<<<<<<< HEAD
     case "amazon-q":
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       return await getKiroUsage(accessToken, providerSpecificData);
     case "kimi-coding":
       return await getKimiUsage(accessToken);
     case "qwen":
       return await getQwenUsage(accessToken, providerSpecificData);
     case "qoder":
+<<<<<<< HEAD
+=======
+      return await getIflowUsage(accessToken);
+    case "glm":
+      return await getGlmUsage(apiKey, providerSpecificData);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     default:
       return { message: `Usage API not implemented for ${provider}` };
   }
@@ -734,6 +788,10 @@ function parseResetTime(resetValue) {
     if (resetValue instanceof Date) {
       date = resetValue;
     } else if (typeof resetValue === "number") {
+<<<<<<< HEAD
+=======
+      date = new Date(resetValue);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     } else if (typeof resetValue === "string") {
       date = new Date(resetValue);
     } else {
@@ -761,7 +819,18 @@ async function getGitHubUsage(accessToken, providerSpecificData) {
 
     // copilot_internal/user API requires GitHub OAuth token, not copilotToken
     const response = await fetch("https://api.github.com/copilot_internal/user", {
+<<<<<<< HEAD
       headers: getGitHubCopilotInternalUserHeaders(`token ${accessToken}`),
+=======
+      headers: {
+        Authorization: `token ${accessToken}`,
+        Accept: "application/json",
+        "X-GitHub-Api-Version": GITHUB_CONFIG.apiVersion,
+        "User-Agent": GITHUB_CONFIG.userAgent,
+        "Editor-Version": "vscode/1.100.0",
+        "Editor-Plugin-Version": "copilot-chat/0.26.7",
+      },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     });
 
     if (!response.ok) {
@@ -942,6 +1011,26 @@ function inferGitHubPlanName(data: JsonRecord, premiumQuota: UsageQuota | null):
   return "GitHub Copilot";
 }
 
+<<<<<<< HEAD
+=======
+// ── Gemini CLI subscription info cache ──────────────────────────────────────
+// Prevents duplicate loadCodeAssist calls within the same quota cycle.
+// Key: accessToken → { data, fetchedAt }
+const _geminiCliSubCache = new Map();
+const GEMINI_CLI_CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+
+/**
+ * Gemini CLI Usage — fetch per-model quota from Cloud Code Assist API.
+ * Gemini CLI and Antigravity share the same upstream (cloudcode-pa.googleapis.com),
+ * so this follows the same pattern as getAntigravityUsage().
+ */
+async function getGeminiUsage(accessToken, providerSpecificData?, connectionProjectId?) {
+  if (!accessToken) {
+    return { plan: "Free", message: "Gemini CLI access token not available." };
+  }
+
+  try {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const subscriptionInfo = await getGeminiCliSubscriptionInfoCached(accessToken);
     const projectId =
       connectionProjectId ||
@@ -1104,6 +1193,7 @@ function getGeminiCliPlanLabel(subscriptionInfo) {
 // Key: truncated accessToken → { data, fetchedAt }
 const _antigravitySubCache = new Map();
 const ANTIGRAVITY_CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+<<<<<<< HEAD
 const ANTIGRAVITY_MODELS_CACHE_TTL_MS = 60 * 1000;
 const ANTIGRAVITY_CREDIT_PROBE_TTL_MS = 5 * 60 * 1000;
 const _antigravityAvailableModelsCache = new Map<string, { data: unknown; fetchedAt: number }>();
@@ -1182,6 +1272,8 @@ async function fetchAntigravityAvailableModelsCached(
   _antigravityAvailableModelsInflight.set(cacheKey, promise);
   return promise;
 }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * Map raw loadCodeAssist tier data to short display labels.
@@ -1244,6 +1336,7 @@ function getAntigravityPlanLabel(subscriptionInfo) {
 }
 
 /**
+<<<<<<< HEAD
     });
 
   _antigravityCreditProbeInflight.set(cacheKey, promise);
@@ -1336,11 +1429,14 @@ async function probeAntigravityCreditBalanceUncached(
 }
 
 /**
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  * Antigravity Usage - Fetch quota from Google Cloud Code API
  * Uses fetchAvailableModels API which returns ALL models (including Claude)
  * with per-model quotaInfo (remainingFraction, resetTime).
  * retrieveUserQuota only returns Gemini models — not suitable for Antigravity.
  */
+<<<<<<< HEAD
 async function getAntigravityUsage(
   accessToken,
   providerSpecificData,
@@ -1382,6 +1478,67 @@ async function getAntigravityUsage(
     const modelEntries = toRecord(dataObj.models);
     const quotas: Record<string, UsageQuota> = {};
 
+=======
+async function getAntigravityUsage(accessToken, providerSpecificData) {
+  try {
+    const subscriptionInfo = await getAntigravitySubscriptionInfoCached(accessToken);
+    const projectId = subscriptionInfo?.cloudaicompanionProject || null;
+
+    // Fetch model list with quota info from fetchAvailableModels
+    const response = await fetch(ANTIGRAVITY_CONFIG.quotaApiUrl, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "User-Agent": ANTIGRAVITY_CONFIG.userAgent,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(projectId ? { project: projectId } : {}),
+      signal: AbortSignal.timeout(10000),
+    });
+
+    if (response.status === 403) {
+      return { message: "Antigravity access forbidden. Check subscription." };
+    }
+
+    if (!response.ok) {
+      throw new Error(`Antigravity API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const dataObj = toRecord(data);
+    const modelEntries = toRecord(dataObj.models);
+    const quotas: Record<string, UsageQuota> = {};
+
+    // Models excluded from quota display — internal/special-purpose models that
+    // the Antigravity API returns quota for but are not user-callable via
+    // generateContent.  Matches CLIProxyAPI's hardcoded exclusion list.
+    const ANTIGRAVITY_EXCLUDED_MODELS = new Set([
+      "chat_20706",
+      "chat_23310",
+      "tab_flash_lite_preview",
+      "tab_jump_flash_lite_preview",
+      "gemini-2.5-flash-thinking",
+      "gemini-2.5-pro", // browser subagent model — not user-callable
+      "gemini-2.5-flash", // internal — quota always exhausted on free tier
+      "gemini-2.5-flash-lite", // internal — quota always exhausted on free tier
+      "gemini-2.5-flash-preview-image-generation", // image-gen only, not usable for chat
+      "gemini-3.1-flash-image-preview", // image-gen preview, not usable for chat
+      "gemini-3-flash-agent", // internal agent model — not user-callable
+      "gemini-3.1-flash-lite", // not usable for chat
+      "gemini-3-pro-low", // not usable for chat
+      "gemini-3-pro-high", // not usable for chat
+    ]);
+
+    // Parse per-model quota info from fetchAvailableModels response.
+    for (const [modelKey, infoValue] of Object.entries(modelEntries)) {
+      const info = toRecord(infoValue);
+      const quotaInfo = toRecord(info.quotaInfo);
+
+      // Skip internal, excluded, and models without quota info
+      if (
+        info.isInternal === true ||
+        ANTIGRAVITY_EXCLUDED_MODELS.has(modelKey) ||
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         Object.keys(quotaInfo).length === 0
       ) {
         continue;
@@ -1410,6 +1567,7 @@ async function getAntigravityUsage(
 
     return {
       plan: getAntigravityPlanLabel(subscriptionInfo),
+<<<<<<< HEAD
       quotas: {
         ...quotas,
         ...(creditBalance !== null && {
@@ -1422,6 +1580,9 @@ async function getAntigravityUsage(
           },
         }),
       },
+=======
+      quotas,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       subscriptionInfo,
     };
   } catch (error) {
@@ -1454,8 +1615,29 @@ async function getAntigravitySubscriptionInfo(accessToken) {
   try {
     const response = await fetch(ANTIGRAVITY_CONFIG.loadProjectApiUrl, {
       method: "POST",
+<<<<<<< HEAD
       headers: getAntigravityHeaders("loadCodeAssist", accessToken),
       body: JSON.stringify({ metadata: getAntigravityLoadCodeAssistMetadata() }),
+=======
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+        "User-Agent": "google-api-nodejs-client/9.15.1",
+        "X-Goog-Api-Client": "google-cloud-sdk vscode_cloudshelleditor/0.1",
+        "Client-Metadata": JSON.stringify({
+          ideType: "IDE_UNSPECIFIED",
+          platform: "PLATFORM_UNSPECIFIED",
+          pluginType: "GEMINI",
+        }),
+      },
+      body: JSON.stringify({
+        metadata: {
+          ideType: "IDE_UNSPECIFIED",
+          platform: "PLATFORM_UNSPECIFIED",
+          pluginType: "GEMINI",
+        },
+      }),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     });
 
     if (!response.ok) return null;
@@ -1993,7 +2175,11 @@ async function getQwenUsage(accessToken, providerSpecificData) {
 /**
  * Qoder Usage
  */
+<<<<<<< HEAD
 async function getQoderUsage(accessToken) {
+=======
+async function getIflowUsage(accessToken) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     // Qoder may have usage endpoint
     return { message: "Qoder connected. Usage tracked per request." };
@@ -2006,11 +2192,14 @@ export const __testing = {
   parseResetTime,
   formatGitHubQuotaSnapshot,
   inferGitHubPlanName,
+<<<<<<< HEAD
   buildCursorUsageHeaders,
   formatCursorQuota,
   getCursorMonthlyRequestLimit,
   getCursorOnDemandLimit,
   inferCursorPlanName,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   getGeminiCliPlanLabel,
   getAntigravityPlanLabel,
 };

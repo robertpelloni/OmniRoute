@@ -2,7 +2,11 @@
 /**
  * OmniRoute — Environment Sync
  *
+<<<<<<< HEAD
  * Ensures .env exists and contains the selected keys from .env.example.
+=======
+ * Ensures .env exists and contains all keys from .env.example.
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  * Runs on installs and can be executed manually via `npm run env:sync`.
  *
  * Rules:
@@ -14,6 +18,7 @@
 
 import { copyFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { randomBytes } from "node:crypto";
+<<<<<<< HEAD
 import { createRequire } from "node:module";
 import { dirname, join, resolve } from "node:path";
 import { homedir } from "node:os";
@@ -21,6 +26,11 @@ import { fileURLToPath } from "node:url";
 
 const require = createRequire(import.meta.url);
 
+=======
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 const CRYPTO_SECRETS = {
   JWT_SECRET: () => randomBytes(64).toString("hex"),
   API_KEY_SECRET: () => randomBytes(32).toString("hex"),
@@ -28,6 +38,7 @@ const CRYPTO_SECRETS = {
   MACHINE_ID_SALT: () => `omniroute-${randomBytes(8).toString("hex")}`,
 };
 
+<<<<<<< HEAD
 /**
  * Keys that MUST NOT be regenerated when existing encrypted data exists in the DB.
  * Generating a new key would make all previously-encrypted credentials unrecoverable.
@@ -86,6 +97,8 @@ function hasEncryptedCredentials(dataDir) {
   }
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export function parseEnvFile(filePath) {
   if (!existsSync(filePath)) return new Map();
 
@@ -93,16 +106,28 @@ export function parseEnvFile(filePath) {
   const entries = new Map();
 
   for (const line of content.split(/\r?\n/)) {
+<<<<<<< HEAD
     const parsed = parseEnvEntry(line);
     if (!parsed) continue;
 
     const [key, value] = parsed;
+=======
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) continue;
+
+    const eqIndex = trimmed.indexOf("=");
+    if (eqIndex < 1) continue;
+
+    const key = trimmed.slice(0, eqIndex).trim();
+    const value = trimmed.slice(eqIndex + 1).trim();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     entries.set(key, value);
   }
 
   return entries;
 }
 
+<<<<<<< HEAD
 function parseEnvEntry(line) {
   const trimmed = line.trim();
   if (!trimmed || trimmed.startsWith("#")) return null;
@@ -216,12 +241,18 @@ export function getEnvSyncPlan({ rootDir, scope = "full" } = {}) {
   };
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function replaceBlankSecret(content, key, value) {
   const pattern = new RegExp(`^${key}=\\s*$`, "m");
   return pattern.test(content) ? content.replace(pattern, `${key}=${value}`) : content;
 }
 
+<<<<<<< HEAD
 export function syncEnv({ rootDir, quiet = false, scope = "full" } = {}) {
+=======
+export function syncEnv({ rootDir, quiet = false } = {}) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const log = quiet ? () => {} : (message) => process.stderr.write(`[sync-env] ${message}\n`);
   const root = rootDir || dirname(dirname(fileURLToPath(import.meta.url)));
   const envExamplePath = join(root, ".env.example");
@@ -232,6 +263,7 @@ export function syncEnv({ rootDir, quiet = false, scope = "full" } = {}) {
     return { created: false, added: 0 };
   }
 
+<<<<<<< HEAD
   const exampleEntries = parseExampleEntries(readFileSync(envExamplePath, "utf8"), scope);
 
   if (!existsSync(envPath)) {
@@ -287,6 +319,52 @@ export function syncEnv({ rootDir, quiet = false, scope = "full" } = {}) {
   }
 
   const { missingEntries } = getEnvSyncPlan({ rootDir: root, scope });
+=======
+  const exampleEntries = parseEnvFile(envExamplePath);
+
+  if (!existsSync(envPath)) {
+    copyFileSync(envExamplePath, envPath);
+
+    let content = readFileSync(envPath, "utf8");
+    let generated = 0;
+    for (const [key, generator] of Object.entries(CRYPTO_SECRETS)) {
+      const nextContent = replaceBlankSecret(content, key, generator());
+      if (nextContent !== content) {
+        content = nextContent;
+        generated++;
+        log(`✨ ${key} auto-generated`);
+      }
+    }
+
+    writeFileSync(envPath, content, "utf8");
+    log(
+      `✨ Created .env from .env.example (${exampleEntries.size} keys, ${generated} secrets generated)`
+    );
+    return { created: true, added: exampleEntries.size };
+  }
+
+  const currentEntries = parseEnvFile(envPath);
+  const missingEntries = [];
+
+  for (const [key, defaultValue] of exampleEntries) {
+    if (currentEntries.has(key)) continue;
+
+    if (CRYPTO_SECRETS[key] && !defaultValue) {
+      missingEntries.push({
+        key,
+        value: CRYPTO_SECRETS[key](),
+        generated: true,
+      });
+      continue;
+    }
+
+    missingEntries.push({
+      key,
+      value: defaultValue,
+      generated: false,
+    });
+  }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   if (missingEntries.length === 0) {
     log("✅ .env is up to date (0 keys added)");
@@ -299,6 +377,7 @@ export function syncEnv({ rootDir, quiet = false, scope = "full" } = {}) {
   ];
 
   for (const entry of missingEntries) {
+<<<<<<< HEAD
     if (entry.blocked) {
       log(
         `⚠️  ${entry.key} NOT generated — encrypted credentials exist in DB. ` +
@@ -307,6 +386,8 @@ export function syncEnv({ rootDir, quiet = false, scope = "full" } = {}) {
       );
       continue;
     }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     appendLines.push(`${entry.key}=${entry.value}`);
     log(
       `${entry.generated ? "✨" : "📦"} ${entry.key}${entry.generated ? " (auto-generated)" : ""}`
@@ -323,5 +404,9 @@ export function syncEnv({ rootDir, quiet = false, scope = "full" } = {}) {
 }
 
 if (process.argv[1]?.endsWith("sync-env.mjs")) {
+<<<<<<< HEAD
   syncEnv({ scope: process.argv.includes("--oauth-only") ? "oauth" : "full" });
+=======
+  syncEnv();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }

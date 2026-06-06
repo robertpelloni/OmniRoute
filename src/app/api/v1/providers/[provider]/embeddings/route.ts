@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+import { CORS_ORIGIN } from "@/shared/utils/cors";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { errorResponse, unavailableResponse } from "@omniroute/open-sse/utils/error.ts";
 import { HTTP_STATUS } from "@omniroute/open-sse/config/constants.ts";
 import { getRegistryEntry } from "@omniroute/open-sse/config/providerRegistry.ts";
@@ -19,6 +23,10 @@ import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
 export async function OPTIONS() {
   return new Response(null, {
     headers: {
+<<<<<<< HEAD
+=======
+      "Access-Control-Allow-Origin": CORS_ORIGIN,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
       "Access-Control-Allow-Headers": "*",
     },
@@ -51,6 +59,17 @@ export async function POST(request, { params }) {
   }
   const body = validation.data;
 
+<<<<<<< HEAD
+=======
+  // Optional API key validation
+  if (process.env.REQUIRE_API_KEY === "true") {
+    const apiKey = extractApiKey(request);
+    if (!apiKey || !(await isValidApiKey(apiKey))) {
+      return errorResponse(HTTP_STATUS.UNAUTHORIZED, "Invalid API key");
+    }
+  }
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Add provider prefix if missing
   if (body.model && !body.model.includes("/")) {
     body.model = `${providerAlias}/${body.model}`;

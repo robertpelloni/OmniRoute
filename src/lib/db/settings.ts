@@ -7,14 +7,20 @@ import { backupDbFile } from "./backup";
 import { PROVIDER_ID_TO_ALIAS } from "@omniroute/open-sse/config/providerModels.ts";
 import { invalidateDbCache } from "./readCache";
 import { resolveProxyForConnectionFromRegistry } from "./proxies";
+<<<<<<< HEAD
 import { getComboModelProvider as getComboEntryProvider } from "@/lib/combos/steps";
 import { requestBodyLimitMbFromEnv } from "@/shared/constants/bodySize";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 type JsonRecord = Record<string, unknown>;
 type PricingModels = Record<string, JsonRecord>;
 type PricingByProvider = Record<string, PricingModels>;
+<<<<<<< HEAD
 export type PricingSource = "default" | "litellm" | "modelsDev" | "user";
 export type PricingSourceMap = Record<string, Record<string, PricingSource>>;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 type ProxyValue = JsonRecord | string | null;
 type ProxyMap = Record<string, ProxyValue>;
 
@@ -47,6 +53,7 @@ export async function getSettings() {
   const rows = db.prepare("SELECT key, value FROM key_value WHERE namespace = 'settings'").all();
   const settings: Record<string, unknown> = {
     cloudEnabled: false,
+<<<<<<< HEAD
     tailscaleEnabled: false,
     tailscaleUrl: "",
     stickyRoundRobinLimit: 3,
@@ -70,6 +77,13 @@ export async function getSettings() {
     alwaysPreserveClientCache: "auto",
     idempotencyWindowMs: 5000,
 >>>>>>> Stashed changes
+=======
+    stickyRoundRobinLimit: 3,
+    requireLogin: true,
+    hiddenSidebarItems: [],
+    alwaysPreserveClientCache: "auto",
+    idempotencyWindowMs: 5000,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
   for (const row of rows) {
     const record = toRecord(row);
@@ -108,6 +122,7 @@ export async function updateSettings(updates: Record<string, unknown>) {
   tx();
   backupDbFile("pre-write");
   invalidateDbCache("settings"); // Bust the read cache immediately
+<<<<<<< HEAD
   const nextSettings = await getSettings();
 
   try {
@@ -121,6 +136,9 @@ export async function updateSettings(updates: Record<string, unknown>) {
   }
 
   return nextSettings;
+=======
+  return getSettings();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 export async function isCloudEnabled() {
@@ -130,6 +148,7 @@ export async function isCloudEnabled() {
 
 // ──────────────── Pricing ────────────────
 
+<<<<<<< HEAD
 function readPricingNamespace(
   db: ReturnType<typeof getDbInstance>,
   namespace: string
@@ -138,18 +157,52 @@ function readPricingNamespace(
   const pricing: PricingByProvider = {};
 
   for (const row of rows) {
+=======
+export async function getPricing() {
+  const db = getDbInstance();
+
+  // Layer 1: Hardcoded defaults (lowest priority)
+  const { getDefaultPricing } = await import("@/shared/constants/pricing");
+  const defaultPricing = getDefaultPricing();
+
+  // Layer 2: Synced external pricing from LiteLLM (middle-low priority)
+  const syncedRows = db
+    .prepare("SELECT key, value FROM key_value WHERE namespace = 'pricing_synced'")
+    .all();
+  const syncedPricing: PricingByProvider = {};
+  for (const row of syncedRows) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const record = toRecord(row);
     const key = typeof record.key === "string" ? record.key : null;
     const rawValue = typeof record.value === "string" ? record.value : null;
     if (!key || rawValue === null) continue;
+<<<<<<< HEAD
 
     try {
       pricing[key] = toRecord(JSON.parse(rawValue)) as PricingModels;
+=======
+    syncedPricing[key] = toRecord(JSON.parse(rawValue)) as PricingModels;
+  }
+
+  // Layer 3: Synced pricing from models.dev (middle-high priority)
+  const modelsDevRows = db
+    .prepare("SELECT key, value FROM key_value WHERE namespace = 'models_dev_pricing'")
+    .all();
+  const modelsDevPricing: PricingByProvider = {};
+  for (const row of modelsDevRows) {
+    const record = toRecord(row);
+    const key = typeof record.key === "string" ? record.key : null;
+    const rawValue = typeof record.value === "string" ? record.value : null;
+    if (!key || rawValue === null) continue;
+    try {
+      modelsDevPricing[key] = JSON.parse(rawValue) as PricingModels;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     } catch {
       // Corrupted data — skip silently, fallback to lower layers
     }
   }
 
+<<<<<<< HEAD
   return pricing;
 }
 
@@ -167,6 +220,38 @@ function mergePricingLayers(layers: PricingByProvider[]): PricingByProvider {
         mergedPricing[provider][model] = mergedPricing[provider][model]
           ? { ...(mergedPricing[provider][model] || {}), ...toRecord(pricing) }
           : pricing;
+=======
+  // Layer 4: User overrides (highest priority)
+  const rows = db.prepare("SELECT key, value FROM key_value WHERE namespace = 'pricing'").all();
+  const userPricing: PricingByProvider = {};
+  for (const row of rows) {
+    const record = toRecord(row);
+    const key = typeof record.key === "string" ? record.key : null;
+    const rawValue = typeof record.value === "string" ? record.value : null;
+    if (!key || rawValue === null) continue;
+    userPricing[key] = toRecord(JSON.parse(rawValue)) as PricingModels;
+  }
+
+  // Merge: defaults → LiteLLM → models.dev → user (each layer overrides the previous)
+  const mergedPricing: PricingByProvider = {};
+
+  // Start with defaults
+  for (const [provider, models] of Object.entries(defaultPricing) as Array<[string, unknown]>) {
+    mergedPricing[provider] = { ...(toRecord(models) as PricingModels) };
+  }
+
+  // Layer synced (LiteLLM), then models.dev, then user on top
+  for (const layer of [syncedPricing, modelsDevPricing, userPricing]) {
+    for (const [provider, models] of Object.entries(layer)) {
+      if (!mergedPricing[provider]) {
+        mergedPricing[provider] = { ...models };
+      } else {
+        for (const [model, pricing] of Object.entries(models)) {
+          mergedPricing[provider][model] = mergedPricing[provider][model]
+            ? { ...(mergedPricing[provider][model] || {}), ...toRecord(pricing) }
+            : pricing;
+        }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     }
   }
@@ -174,6 +259,7 @@ function mergePricingLayers(layers: PricingByProvider[]): PricingByProvider {
   return mergedPricing;
 }
 
+<<<<<<< HEAD
 function buildPricingSourceMap(layers: {
   defaults: PricingByProvider;
   litellm: PricingByProvider;
@@ -237,11 +323,14 @@ export async function getPricingWithSources(): Promise<{
   };
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export async function getPricingForModel(provider: string, model: string) {
   const pricing = await getPricing();
   if (pricing[provider]?.[model]) return pricing[provider][model];
 
   const { PROVIDER_ID_TO_ALIAS } = await import("@omniroute/open-sse/config/providerModels");
+<<<<<<< HEAD
   // Check if provider is an ID -> map to ALIAS
   const alias = PROVIDER_ID_TO_ALIAS[provider];
   if (alias && pricing[alias]) return pricing[alias][model] || null;
@@ -253,6 +342,11 @@ export async function getPricingForModel(provider: string, model: string) {
     }
   }
 
+=======
+  const alias = PROVIDER_ID_TO_ALIAS[provider];
+  if (alias && pricing[alias]) return pricing[alias][model] || null;
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const np = provider?.replace(/-cn$/, "");
   if (np && np !== provider && pricing[np]) return pricing[np][model] || null;
 
@@ -388,8 +482,28 @@ function resolveProviderAliasOrId(providerOrAlias: string): string {
 }
 
 function getComboModelProvider(modelEntry: unknown): string | null {
+<<<<<<< HEAD
   const providerOrAlias = getComboEntryProvider(modelEntry);
   return providerOrAlias ? resolveProviderAliasOrId(providerOrAlias) : null;
+=======
+  const record = toRecord(modelEntry);
+  if (typeof record.provider === "string") {
+    return resolveProviderAliasOrId(record.provider);
+  }
+
+  const modelValue =
+    typeof modelEntry === "string"
+      ? modelEntry
+      : typeof record.model === "string"
+        ? record.model
+        : null;
+
+  if (!modelValue) return null;
+
+  const [providerOrAlias] = modelValue.split("/", 1);
+  if (!providerOrAlias) return null;
+  return resolveProviderAliasOrId(providerOrAlias);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 function migrateProxyEntry(value: unknown): JsonRecord | null {
@@ -642,6 +756,7 @@ export async function getCacheMetrics() {
         `
       SELECT
         provider,
+<<<<<<< HEAD
         COUNT(*) as totalRequests,
         SUM(CASE WHEN tokens_cache_read > 0 OR tokens_cache_creation > 0 THEN 1 ELSE 0 END) as cachedRequests,
         SUM(CASE WHEN tokens_cache_read > 0 OR tokens_cache_creation > 0 THEN tokens_input ELSE 0 END) as inputTokens,
@@ -651,12 +766,26 @@ export async function getCacheMetrics() {
       WHERE provider IS NOT NULL
       GROUP BY provider
       HAVING cachedRequests > 0
+=======
+        COUNT(*) as requests,
+        SUM(tokens_input) as inputTokens,
+        SUM(tokens_cache_read) as cachedTokens,
+        SUM(tokens_cache_creation) as cacheCreationTokens
+      FROM usage_history
+      WHERE (tokens_cache_read > 0 OR tokens_cache_creation > 0)
+        AND provider IS NOT NULL
+      GROUP BY provider
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     `
       )
       .all() as Array<{
       provider: string;
+<<<<<<< HEAD
       totalRequests: number;
       cachedRequests: number;
+=======
+      requests: number;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       inputTokens: number | null;
       cachedTokens: number | null;
       cacheCreationTokens: number | null;
@@ -700,10 +829,13 @@ export async function getCacheMetrics() {
       string,
       {
         requests: number;
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         totalRequests: number;
         cachedRequests: number;
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         inputTokens: number;
         cachedTokens: number;
         cacheCreationTokens: number;
@@ -711,6 +843,10 @@ export async function getCacheMetrics() {
     > = {};
     for (const row of byProviderRows) {
       byProvider[row.provider] = {
+<<<<<<< HEAD
+=======
+        requests: row.requests,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         inputTokens: row.inputTokens || 0,
         cachedTokens: row.cachedTokens || 0,
         cacheCreationTokens: row.cacheCreationTokens || 0,

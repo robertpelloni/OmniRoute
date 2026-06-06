@@ -10,6 +10,7 @@ process.env.DATA_DIR = TEST_DATA_DIR;
 const core = await import("../../src/lib/db/core.ts");
 const providersDb = await import("../../src/lib/db/providers.ts");
 const chatRoute = await import("../../src/app/api/v1/chat/completions/route.ts");
+<<<<<<< HEAD
 const {
   generateSignature,
   invalidateBySignature,
@@ -28,6 +29,22 @@ const {
 
 const originalFetch = globalThis.fetch;
 
+=======
+const { generateSignature, invalidateBySignature, setCachedResponse } =
+  await import("../../src/lib/semanticCache.ts");
+const { clearModelUnavailability, resetAllAvailability, setModelUnavailable } =
+  await import("../../src/domain/modelAvailability.ts");
+const { getCircuitBreaker, resetAllCircuitBreakers, STATE } =
+  await import("../../src/shared/utils/circuitBreaker.ts");
+
+const originalFetch = globalThis.fetch;
+
+async function flushBackgroundWork() {
+  await new Promise((resolve) => setTimeout(resolve, 50));
+  await new Promise((resolve) => setImmediate(resolve));
+}
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 async function resetStorage() {
   core.resetDbInstance();
   fs.rmSync(TEST_DATA_DIR, { recursive: true, force: true });
@@ -80,13 +97,23 @@ test.beforeEach(async () => {
   await resetStorage();
 });
 
+<<<<<<< HEAD
 test.afterEach(() => {
+=======
+test.afterEach(async () => {
+  await flushBackgroundWork();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   globalThis.fetch = originalFetch;
   resetAllAvailability();
   resetAllCircuitBreakers();
 });
 
+<<<<<<< HEAD
 test.after(() => {
+=======
+test.after(async () => {
+  await flushBackgroundWork();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   globalThis.fetch = originalFetch;
   resetAllAvailability();
   resetAllCircuitBreakers();

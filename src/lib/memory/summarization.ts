@@ -91,6 +91,13 @@ function estimateTokens(text: string): number {
 }
 
 function generateSummary(content: string): string {
+<<<<<<< HEAD
+=======
+  const sentences = content
+    .split(/[.!?]+/)
+    .map((sentence) => sentence.trim())
+    .filter((sentence) => sentence.length > 0);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (sentences.length <= 3) {
     return content;
   }

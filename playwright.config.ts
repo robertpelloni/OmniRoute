@@ -4,10 +4,13 @@ const dashboardPort = process.env.DASHBOARD_PORT || process.env.PORT || "20128";
 const dashboardBaseUrl = `http://localhost:${dashboardPort}`;
 const webServerReadyUrl = `${dashboardBaseUrl}/api/monitoring/health`;
 const playwrightServerMode = process.env.OMNIROUTE_PLAYWRIGHT_SERVER_MODE || "start";
+<<<<<<< HEAD
 const playwrightWebServerTimeout = Number.parseInt(
   process.env.OMNIROUTE_PLAYWRIGHT_WEB_SERVER_TIMEOUT || "900000",
   10
 );
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -34,9 +37,16 @@ export default defineConfig({
     },
   ],
   webServer: {
+<<<<<<< HEAD
     command: `${JSON.stringify(process.execPath)} scripts/run-next-playwright.mjs ${playwrightServerMode}`,
     url: webServerReadyUrl,
     reuseExistingServer: !process.env.CI,
     timeout: Number.isFinite(playwrightWebServerTimeout) ? playwrightWebServerTimeout : 900_000,
+=======
+    command: `node scripts/run-next-playwright.mjs ${playwrightServerMode}`,
+    url: webServerReadyUrl,
+    reuseExistingServer: !process.env.CI,
+    timeout: 300_000,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   },
 });

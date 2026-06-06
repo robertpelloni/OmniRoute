@@ -21,8 +21,11 @@ declare const EdgeRuntime: string | undefined;
  */
 
 import { BaseExecutor, mergeUpstreamExtraHeaders } from "./base.ts";
+<<<<<<< HEAD
 import { getCursorUserAgent } from "../config/providerHeaderProfiles.ts";
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { PROVIDERS, HTTP_STATUS } from "../config/constants.ts";
 import {
   generateCursorBody,
@@ -30,7 +33,10 @@ import {
   extractTextFromResponse,
 } from "../utils/cursorProtobuf.ts";
 import { estimateUsage } from "../utils/usageTracking.ts";
+<<<<<<< HEAD
 import { getCursorVersion } from "../utils/cursorVersionDetector.ts";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { FORMATS } from "../translator/formats.ts";
 import crypto from "crypto";
 import { v5 as uuidv5 } from "uuid";
@@ -240,6 +246,7 @@ export class CursorExecutor extends BaseExecutor {
 
   buildHeaders(credentials) {
     const accessToken = credentials.accessToken;
+<<<<<<< HEAD
     const ghostMode = credentials.providerSpecificData?.ghostMode !== false;
 
     // Use stored machineId, or derive a stable one from the access token
@@ -247,6 +254,14 @@ export class CursorExecutor extends BaseExecutor {
     const machineId =
       credentials.providerSpecificData?.machineId ||
       crypto.createHash("sha256").update(accessToken).digest("hex");
+=======
+    const machineId = credentials.providerSpecificData?.machineId;
+    const ghostMode = credentials.providerSpecificData?.ghostMode !== false;
+
+    if (!machineId) {
+      throw new Error("Machine ID is required for Cursor API");
+    }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     const cleanToken = accessToken.includes("::") ? accessToken.split("::")[1] : accessToken;
 
@@ -255,11 +270,19 @@ export class CursorExecutor extends BaseExecutor {
       "connect-accept-encoding": "gzip",
       "connect-protocol-version": "1",
       "content-type": "application/connect+proto",
+<<<<<<< HEAD
       "user-agent": getCursorUserAgent(getCursorVersion()),
       "x-amzn-trace-id": `Root=${crypto.randomUUID()}`,
       "x-client-key": crypto.createHash("sha256").update(cleanToken).digest("hex"),
       "x-cursor-checksum": this.generateChecksum(machineId),
       "x-cursor-client-version": getCursorVersion(),
+=======
+      "user-agent": "connect-es/1.6.1",
+      "x-amzn-trace-id": `Root=${crypto.randomUUID()}`,
+      "x-client-key": crypto.createHash("sha256").update(cleanToken).digest("hex"),
+      "x-cursor-checksum": this.generateChecksum(machineId),
+      "x-cursor-client-version": "2.3.41",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       "x-cursor-client-type": "ide",
       "x-cursor-client-os":
         process.platform === "win32"
@@ -269,7 +292,10 @@ export class CursorExecutor extends BaseExecutor {
             : "linux",
       "x-cursor-client-arch": process.arch === "arm64" ? "aarch64" : "x64",
       "x-cursor-client-device-type": "desktop",
+<<<<<<< HEAD
       "x-cursor-user-agent": getCursorUserAgent(getCursorVersion()),
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       "x-cursor-config-version": crypto.randomUUID(),
       "x-cursor-timezone": Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC",
       "x-ghost-mode": ghostMode ? "true" : "false",

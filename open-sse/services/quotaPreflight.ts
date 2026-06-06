@@ -11,13 +11,17 @@ export interface PreflightQuotaResult {
   proceed: boolean;
   reason?: string;
   quotaPercent?: number;
+<<<<<<< HEAD
   resetAt?: string | null;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 export interface QuotaInfo {
   used: number;
   total: number;
   percentUsed: number;
+<<<<<<< HEAD
   resetAt?: string | null;
 }
 
@@ -27,6 +31,13 @@ export type QuotaFetcher = (
 ) => Promise<QuotaInfo | null>;
 
 const EXHAUSTION_THRESHOLD = 0.98;
+=======
+}
+
+export type QuotaFetcher = (connectionId: string) => Promise<QuotaInfo | null>;
+
+const EXHAUSTION_THRESHOLD = 0.95;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 const WARN_THRESHOLD = 0.8;
 
 const quotaFetcherRegistry = new Map<string, QuotaFetcher>();
@@ -56,7 +67,11 @@ export async function preflightQuota(
 
   let quota: QuotaInfo | null = null;
   try {
+<<<<<<< HEAD
     quota = await fetcher(connectionId, connection);
+=======
+    quota = await fetcher(connectionId);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   } catch {
     return { proceed: true };
   }
@@ -71,12 +86,16 @@ export async function preflightQuota(
     console.info(
       `[QuotaPreflight] ${provider}/${connectionId}: ${(percentUsed * 100).toFixed(1)}% used — switching`
     );
+<<<<<<< HEAD
     return {
       proceed: false,
       reason: "quota_exhausted",
       quotaPercent: percentUsed,
       resetAt: quota.resetAt ?? null,
     };
+=======
+    return { proceed: false, reason: "quota_exhausted", quotaPercent: percentUsed };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   if (percentUsed >= WARN_THRESHOLD) {

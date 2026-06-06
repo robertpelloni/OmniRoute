@@ -1,10 +1,15 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+<<<<<<< HEAD
 import { useSearchParams } from "next/navigation";
 import { RequestLoggerV2, ProxyLogger, SegmentedControl } from "@/shared/components";
 import ConsoleLogViewer from "@/shared/components/ConsoleLogViewer";
 import ActiveRequestsPanel from "@/shared/components/ActiveRequestsPanel";
+=======
+import { RequestLoggerV2, ProxyLogger, SegmentedControl } from "@/shared/components";
+import ConsoleLogViewer from "@/shared/components/ConsoleLogViewer";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import AuditLogTab from "./AuditLogTab";
 import { useTranslations } from "next-intl";
 
@@ -23,23 +28,30 @@ const TAB_TO_LOG_TYPE: Record<string, string> = {
 };
 
 export default function LogsPage() {
+<<<<<<< HEAD
   const searchParams = useSearchParams();
   const requestedTab = searchParams.get("tab");
   const [activeTab, setActiveTab] = useState(
     requestedTab && TAB_TO_LOG_TYPE[requestedTab] ? requestedTab : "request-logs"
   );
+=======
+  const [activeTab, setActiveTab] = useState("request-logs");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [showExport, setShowExport] = useState(false);
   const [exporting, setExporting] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const t = useTranslations("logs");
 
   useEffect(() => {
+<<<<<<< HEAD
     if (requestedTab && TAB_TO_LOG_TYPE[requestedTab] && requestedTab !== activeTab) {
       setActiveTab(requestedTab);
     }
   }, [activeTab, requestedTab]);
 
   useEffect(() => {
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     function handleClickOutside(e: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setShowExport(false);
@@ -55,7 +67,11 @@ export default function LogsPage() {
     try {
       const logType = TAB_TO_LOG_TYPE[activeTab] || "call-logs";
       const res = await fetch(`/api/logs/export?hours=${hours}&type=${logType}`);
+<<<<<<< HEAD
       if (!res.ok) throw new Error(t("exportFailed"));
+=======
+      if (!res.ok) throw new Error("Export failed");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -66,7 +82,11 @@ export default function LogsPage() {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     } catch (err) {
+<<<<<<< HEAD
       console.error(t("exportFailed"), err);
+=======
+      console.error("Export failed:", err);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     } finally {
       setExporting(false);
     }
@@ -111,7 +131,11 @@ export default function LogsPage() {
                 strokeLinejoin="round"
               />
             </svg>
+<<<<<<< HEAD
             {exporting ? t("exporting") : t("export")}
+=======
+            {exporting ? "Exporting..." : "Export"}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           </button>
 
           {showExport && (
@@ -121,7 +145,11 @@ export default function LogsPage() {
                 shadow-xl overflow-hidden animate-in fade-in"
             >
               <div className="px-3 py-2 text-xs text-[var(--text-muted,#666)] border-b border-[var(--border,#333)] font-medium">
+<<<<<<< HEAD
                 {t("timeRange")}
+=======
+                Time Range
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               </div>
               {TIME_RANGES.map((range) => (
                 <button
@@ -132,9 +160,15 @@ export default function LogsPage() {
                     text-[var(--text-secondary,#aaa)] hover:text-[var(--text-primary,#fff)]
                     transition-colors flex items-center justify-between"
                 >
+<<<<<<< HEAD
                   <span>{t("lastNHours", { hours: range.label })}</span>
                   <span className="text-xs text-[var(--text-muted,#666)]">
                     {range.hours === 24 ? t("defaultRange") : ""}
+=======
+                  <span>Last {range.label}</span>
+                  <span className="text-xs text-[var(--text-muted,#666)]">
+                    {range.hours === 24 ? "default" : ""}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   </span>
                 </button>
               ))}
@@ -144,12 +178,16 @@ export default function LogsPage() {
       </div>
 
       {/* Content */}
+<<<<<<< HEAD
       {activeTab === "request-logs" && (
         <div className="flex flex-col gap-6">
           <ActiveRequestsPanel />
           <RequestLoggerV2 />
         </div>
       )}
+=======
+      {activeTab === "request-logs" && <RequestLoggerV2 />}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       {activeTab === "proxy-logs" && <ProxyLogger />}
       {activeTab === "audit-logs" && <AuditLogTab />}
       {activeTab === "console" && <ConsoleLogViewer />}

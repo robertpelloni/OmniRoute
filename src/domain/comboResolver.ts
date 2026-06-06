@@ -11,7 +11,10 @@
 /**
  * @typedef {import('./types.js').Combo} Combo
  */
+<<<<<<< HEAD
 import { getComboStepTarget, getComboStepWeight } from "@/lib/combos/steps";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /** @type {Map<string, number>} Persistent round-robin counters per combo */
 const roundRobinCounters = new Map();
@@ -31,12 +34,16 @@ export function resolveComboModel(combo: any, context: any = {}) {
   }
 
   // Normalize models to { model, weight } format
+<<<<<<< HEAD
   const normalized = models
     .map((entry) => ({
       model: getComboStepTarget(entry) || "",
       weight: getComboStepWeight(entry) || 1,
     }))
     .filter((entry) => entry.model);
+=======
+  const normalized = models.map((m) => (typeof m === "string" ? { model: m, weight: 1 } : m));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const strategy = combo.strategy || "priority";
 
@@ -99,8 +106,12 @@ export function resolveComboModel(combo: any, context: any = {}) {
  * @returns {string[]} Remaining models in order
  */
 export function getComboFallbacks(combo, primaryIndex) {
+<<<<<<< HEAD
   const models = (combo.models || [])
     .map((entry) => getComboStepTarget(entry))
     .filter((entry): entry is string => !!entry);
+=======
+  const models = (combo.models || []).map((m) => (typeof m === "string" ? m : m.model));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return [...models.slice(primaryIndex + 1), ...models.slice(0, primaryIndex)];
 }

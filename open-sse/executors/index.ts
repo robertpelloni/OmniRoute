@@ -12,6 +12,7 @@ import { OpencodeExecutor } from "./opencode.ts";
 import { PuterExecutor } from "./puter.ts";
 import { VertexExecutor } from "./vertex.ts";
 import { CliproxyapiExecutor } from "./cliproxyapi.ts";
+<<<<<<< HEAD
 import { PerplexityWebExecutor } from "./perplexity-web.ts";
 import { GrokWebExecutor } from "./grok-web.ts";
 import { ChatGptWebExecutor } from "./chatgpt-web.ts";
@@ -22,6 +23,8 @@ import { GitlabExecutor } from "./gitlab.ts";
 import { NlpCloudExecutor } from "./nlpcloud.ts";
 import { PetalsExecutor } from "./petals.ts";
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const executors = {
   antigravity: new AntigravityExecutor(),
@@ -29,6 +32,7 @@ const executors = {
   github: new GithubExecutor(),
   qoder: new QoderExecutor(),
   kiro: new KiroExecutor(),
+<<<<<<< HEAD
   "amazon-q": new KiroExecutor("amazon-q"),
   codex: new CodexExecutor(),
   cursor: new CursorExecutor(),
@@ -38,6 +42,11 @@ const executors = {
   "gitlab-duo": new GitlabExecutor("gitlab-duo"),
   nlpcloud: new NlpCloudExecutor(),
   petals: new PetalsExecutor(),
+=======
+  codex: new CodexExecutor(),
+  cursor: new CursorExecutor(),
+  cu: new CursorExecutor(), // Alias for cursor
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   pollinations: new PollinationsExecutor(),
   pol: new PollinationsExecutor(), // Alias
   "cloudflare-ai": new CloudflareAIExecutor(),
@@ -47,6 +56,7 @@ const executors = {
   puter: new PuterExecutor(),
   pu: new PuterExecutor(), // Alias
   vertex: new VertexExecutor(),
+<<<<<<< HEAD
   "vertex-partner": new VertexExecutor(),
   cliproxyapi: new CliproxyapiExecutor(),
   cpa: new CliproxyapiExecutor(), // Alias
@@ -60,6 +70,10 @@ const executors = {
   "muse-spark-web": new MuseSparkWebExecutor(),
   "ms-web": new MuseSparkWebExecutor(), // Alias
 =======
+=======
+  cliproxyapi: new CliproxyapiExecutor(),
+  cpa: new CliproxyapiExecutor(), // Alias
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 };
 
 const defaultCache = new Map();
@@ -87,3 +101,8 @@ export { PollinationsExecutor } from "./pollinations.ts";
 export { CloudflareAIExecutor } from "./cloudflare-ai.ts";
 export { OpencodeExecutor } from "./opencode.ts";
 export { PuterExecutor } from "./puter.ts";
+<<<<<<< HEAD
+=======
+export { CliproxyapiExecutor } from "./cliproxyapi.ts";
+export { VertexExecutor } from "./vertex.ts";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

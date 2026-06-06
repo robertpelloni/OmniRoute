@@ -19,6 +19,7 @@ import { join } from "path";
 import { resolveDataDir } from "../../src/lib/dataPaths";
 
 // Fields that can be overridden per provider
+<<<<<<< HEAD
 const CREDENTIAL_FIELDS = [
   "clientId",
   "clientSecret",
@@ -29,11 +30,18 @@ const CREDENTIAL_FIELDS = [
 type CredentialField = (typeof CREDENTIAL_FIELDS)[number];
 type ProviderCredentialOverrides = Partial<Record<CredentialField, unknown>>;
 type MutableProviderRecord = Record<string, Record<string, unknown>>;
+=======
+const CREDENTIAL_FIELDS = ["clientId", "clientSecret", "tokenUrl", "authUrl", "refreshUrl"];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 // TTL-based cache — reloads credentials from disk at most once per minute
 const CONFIG_TTL_MS = 60_000;
 let lastLoadTime = 0;
+<<<<<<< HEAD
 let cachedProviders: Record<string, unknown> | null = null;
+=======
+let cachedProviders = null;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 // Survives Next.js dev HMR: module-level cache resets but process is the same (V4 pattern).
 type CredGlobals = typeof globalThis & { __omnirouteCredNoFileLogged?: boolean };
@@ -41,6 +49,7 @@ function credGlobals(): CredGlobals {
   return globalThis as CredGlobals;
 }
 
+<<<<<<< HEAD
 function resolveCredentialsPath(): string {
   let resolveDataDir: (options?: { isCloud?: boolean }) => string;
 
@@ -60,6 +69,31 @@ function resolveCredentialsPath(): string {
 export function loadProviderCredentials<T extends Record<string, unknown>>(providers: T): T {
   if (cachedProviders && Date.now() - lastLoadTime < CONFIG_TTL_MS) {
     return cachedProviders as T;
+=======
+/**
+ * Resolves the path to provider-credentials.json using the application's
+ * data directory. Delegates to resolveDataDir() which handles DATA_DIR env,
+ * platform-specific defaults, and fallback logic.
+ *
+ * previous: Priority: DATA_DIR env → ./data (project root)
+ */
+function resolveCredentialsPath() {
+  return join(resolveDataDir(), "provider-credentials.json");
+}
+
+/**
+ * Load and merge external credentials into the PROVIDERS object.
+ * Uses TTL-based caching (60s) so credential file changes are picked up
+ * without requiring a server restart.
+ *
+ * @param {object} providers - The PROVIDERS object from constants.js
+ * @returns {object} The same PROVIDERS object (mutated in place)
+ */
+export function loadProviderCredentials(providers) {
+  // Return cached result if within TTL
+  if (cachedProviders && Date.now() - lastLoadTime < CONFIG_TTL_MS) {
+    return cachedProviders;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   const credPath = resolveCredentialsPath();
@@ -76,6 +110,7 @@ export function loadProviderCredentials<T extends Record<string, unknown>>(provi
 
   try {
     const raw = readFileSync(credPath, "utf-8");
+<<<<<<< HEAD
     const external = JSON.parse(raw) as Record<string, unknown>;
 
     let overrideCount = 0;
@@ -84,6 +119,14 @@ export function loadProviderCredentials<T extends Record<string, unknown>>(provi
 
     for (const [providerKey, creds] of Object.entries(external)) {
       if (!mutableProviders[providerKey]) {
+=======
+    const external = JSON.parse(raw);
+
+    let overrideCount = 0;
+
+    for (const [providerKey, creds] of Object.entries(external)) {
+      if (!providers[providerKey]) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         console.log(
           `[CREDENTIALS] Warning: unknown provider "${providerKey}" in credentials file, skipping.`
         );
@@ -97,10 +140,16 @@ export function loadProviderCredentials<T extends Record<string, unknown>>(provi
         continue;
       }
 
+<<<<<<< HEAD
       const credentialOverrides = creds as ProviderCredentialOverrides;
       for (const field of CREDENTIAL_FIELDS) {
         if (credentialOverrides[field] !== undefined) {
           mutableProviders[providerKey][field] = credentialOverrides[field];
+=======
+      for (const field of CREDENTIAL_FIELDS) {
+        if (creds[field] !== undefined) {
+          providers[providerKey][field] = creds[field];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           overrideCount++;
         }
       }

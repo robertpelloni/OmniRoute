@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { getEvalScorecard, listEvalRuns, getApiKeys } from "@/lib/localDb";
@@ -32,14 +33,30 @@ export async function GET(request: Request) {
       })),
     });
   } catch (error: any) {
+=======
+import { NextResponse } from "next/server";
+import { listSuites, runSuite } from "@/lib/evals/evalRunner";
+import { evalRunSuiteSchema } from "@/shared/validation/schemas";
+import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
+
+export async function GET() {
+  try {
+    const suites = listSuites();
+    return NextResponse.json(suites);
+  } catch (error) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
+<<<<<<< HEAD
 export async function POST(request: Request) {
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
 
+=======
+export async function POST(request) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody;
   try {
     rawBody = await request.json();
@@ -60,6 +77,7 @@ export async function POST(request: Request) {
     if (isValidationFailure(validation)) {
       return NextResponse.json({ error: validation.error }, { status: 400 });
     }
+<<<<<<< HEAD
 
     const { suiteId, outputs, target, compareTarget, apiKeyId } = validation.data;
 
@@ -106,6 +124,12 @@ export async function POST(request: Request) {
       historyScorecard: getEvalScorecard({ limit: 50 }),
     });
   } catch (error: any) {
+=======
+    const { suiteId, outputs } = validation.data;
+    const result = runSuite(suiteId, outputs);
+    return NextResponse.json(result);
+  } catch (error) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

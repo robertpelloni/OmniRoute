@@ -1,10 +1,13 @@
 import crypto from "crypto";
 import open from "open";
 import { ANTIGRAVITY_CONFIG } from "../constants/oauth";
+<<<<<<< HEAD
 import {
   getAntigravityHeaders,
   getAntigravityLoadCodeAssistMetadata,
 } from "@omniroute/open-sse/services/antigravityHeaders.ts";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { getServerCredentials } from "../config/index";
 import { startLocalServer } from "../utils/server";
 import { spinner as createSpinner } from "../utils/ui";
@@ -87,14 +90,32 @@ export class AntigravityService {
    * Get common headers for Antigravity API calls
    */
   getApiHeaders(accessToken: string) {
+<<<<<<< HEAD
     return getAntigravityHeaders("loadCodeAssist", accessToken);
+=======
+    return {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+      "User-Agent": this.config.loadCodeAssistUserAgent,
+      "X-Goog-Api-Client": this.config.loadCodeAssistApiClient,
+      "Client-Metadata": this.config.loadCodeAssistClientMetadata,
+    };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   /**
    * Get metadata object for API calls
    */
   getMetadata() {
+<<<<<<< HEAD
     return getAntigravityLoadCodeAssistMetadata();
+=======
+    return {
+      ideType: "IDE_UNSPECIFIED",
+      platform: "PLATFORM_UNSPECIFIED",
+      pluginType: "GEMINI",
+    };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   /**

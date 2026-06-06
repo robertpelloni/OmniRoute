@@ -9,6 +9,20 @@ import path from "path";
 import yaml from "js-yaml";
 
 let cachedSpec: { data: any; mtime: number } | null = null;
+<<<<<<< HEAD
+=======
+
+export async function GET() {
+  try {
+    // Try multiple locations for the spec file
+    const candidates = [
+      path.join(process.cwd(), "docs", "openapi.yaml"),
+      path.join(process.cwd(), "app", "docs", "openapi.yaml"),
+    ];
+
+    let specPath = "";
+    for (const p of candidates) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       if (fs.existsSync(p)) {
         specPath = p;
         break;

@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // @ts-nocheck
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Usage Migrations — extracted from usageDb.js (T-15)
  *
@@ -13,9 +16,12 @@ import path from "path";
 import { ZipFile } from "yazl";
 import { getDbInstance, isCloud, isBuildPhase, DATA_DIR } from "../db/core";
 import { getLegacyDotDataDir, isSamePath } from "../dataPaths";
+<<<<<<< HEAD
 import { protectPayloadForLog } from "../logPayloads";
 import { sanitizePII } from "../piiSanitizer";
 import { writeCallArtifact, type CallLogArtifact } from "./callLogArtifacts";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 export const shouldPersistToDisk = !isCloud && !isBuildPhase;
 
@@ -45,6 +51,7 @@ type ArchiveTarget = {
   deleteAfterArchive: boolean;
 };
 
+<<<<<<< HEAD
 function buildLegacyRequestSummary(requestType: unknown, requestBody: unknown) {
   if (requestType !== "search" || !requestBody || typeof requestBody !== "object") return null;
 
@@ -65,6 +72,8 @@ function buildLegacyRequestSummary(requestType: unknown, requestBody: unknown) {
 }
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function copyIfMissing(fromPath: string | null, toPath: string | null, label: string) {
   if (!fromPath || !toPath) return;
   if (!fs.existsSync(fromPath) || fs.existsSync(toPath)) return;
@@ -282,10 +291,15 @@ export function migrateUsageJsonToSqlite() {
               connectionId: entry.connectionId || null,
               apiKeyId: entry.apiKeyId || null,
               apiKeyName: entry.apiKeyName || null,
+<<<<<<< HEAD
               tokensInput:
                 entry.tokens?.input ?? entry.tokens?.prompt_tokens ?? entry.tokens?.in ?? 0,
               tokensOutput:
                 entry.tokens?.output ?? entry.tokens?.completion_tokens ?? entry.tokens?.out ?? 0,
+=======
+              tokensInput: entry.tokens?.input ?? entry.tokens?.prompt_tokens ?? 0,
+              tokensOutput: entry.tokens?.output ?? entry.tokens?.completion_tokens ?? 0,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               tokensCacheRead: entry.tokens?.cacheRead ?? entry.tokens?.cached_tokens ?? 0,
               tokensCacheCreation:
                 entry.tokens?.cacheCreation ?? entry.tokens?.cache_creation_input_tokens ?? 0,
@@ -323,12 +337,24 @@ export function migrateUsageJsonToSqlite() {
         console.log(`[usageDb] Migrating ${logs.length} call log entries from JSON → SQLite...`);
 
         const insert = db.prepare(`
+<<<<<<< HEAD
           INSERT OR IGNORE INTO call_logs (id, timestamp, method, path, status, model, requested_model, provider,
             account, connection_id, duration, tokens_in, tokens_out, source_format, target_format,
+=======
+          INSERT OR IGNORE INTO call_logs (id, timestamp, method, path, status, model, provider,
+            account, connection_id, duration, tokens_in, tokens_out, source_format, target_format,
+            api_key_id, api_key_name, combo_name, request_body, response_body, error,
+            artifact_relpath, has_pipeline_details)
+          VALUES (@id, @timestamp, @method, @path, @status, @model, @provider,
+            @account, @connectionId, @duration, @tokensIn, @tokensOut, @sourceFormat, @targetFormat,
+            @apiKeyId, @apiKeyName, @comboName, @requestBody, @responseBody, @error,
+            NULL, 0)
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         `);
 
         const tx = db.transaction(() => {
           for (const log of logs) {
+<<<<<<< HEAD
             const id = log.id || `${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
             const timestamp = log.timestamp || new Date().toISOString();
             const protectedRequestBody = log.requestBody
@@ -400,11 +426,19 @@ export function migrateUsageJsonToSqlite() {
             insert.run({
               id,
               timestamp,
+=======
+            insert.run({
+              id: log.id || `${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+              timestamp: log.timestamp || new Date().toISOString(),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               method: log.method || "POST",
               path: log.path || null,
               status: log.status || 0,
               model: log.model || null,
+<<<<<<< HEAD
               requestedModel: log.requestedModel || null,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               provider: log.provider || null,
               account: log.account || null,
               connectionId: log.connectionId || null,
@@ -416,6 +450,7 @@ export function migrateUsageJsonToSqlite() {
               apiKeyId: log.apiKeyId || null,
               apiKeyName: log.apiKeyName || null,
               comboName: log.comboName || null,
+<<<<<<< HEAD
               comboStepId: log.comboStepId || null,
               comboExecutionKey: log.comboExecutionKey || log.comboStepId || null,
               errorSummary:
@@ -432,6 +467,11 @@ export function migrateUsageJsonToSqlite() {
               hasResponseBody: protectedResponseBody ? 1 : 0,
               hasPipelineDetails: 0,
               requestSummary: buildLegacyRequestSummary(log.requestType, protectedRequestBody),
+=======
+              requestBody: log.requestBody ? JSON.stringify(log.requestBody) : null,
+              responseBody: log.responseBody ? JSON.stringify(log.responseBody) : null,
+              error: log.error || null,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             });
           }
         });

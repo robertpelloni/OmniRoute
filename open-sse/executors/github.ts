@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { BaseExecutor, ExecuteInput, type ProviderCredentials } from "./base.ts";
 =======
 import { BaseExecutor, ExecuteInput } from "./base.ts";
@@ -8,17 +9,30 @@ import {
   getGitHubCopilotChatHeaders,
   getGitHubCopilotRefreshHeaders,
 } from "../config/providerHeaderProfiles.ts";
+=======
+import { BaseExecutor, ExecuteInput } from "./base.ts";
+import { PROVIDERS, OAUTH_ENDPOINTS } from "../config/constants.ts";
+import { getModelTargetFormat } from "../config/providerModels.ts";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 export class GithubExecutor extends BaseExecutor {
   constructor() {
     super("github", PROVIDERS.github);
   }
 
+<<<<<<< HEAD
   getCopilotToken(credentials: Record<string, any> | null | undefined) {
     return credentials?.copilotToken || credentials?.providerSpecificData?.copilotToken || null;
   }
 
   getCopilotTokenExpiresAt(credentials: Record<string, any> | null | undefined) {
+=======
+  getCopilotToken(credentials) {
+    return credentials?.copilotToken || credentials?.providerSpecificData?.copilotToken || null;
+  }
+
+  getCopilotTokenExpiresAt(credentials) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return (
       credentials?.copilotTokenExpiresAt ||
       credentials?.providerSpecificData?.copilotTokenExpiresAt ||
@@ -26,7 +40,11 @@ export class GithubExecutor extends BaseExecutor {
     );
   }
 
+<<<<<<< HEAD
   buildUrl(model: string, _stream: boolean, _urlIndex = 0) {
+=======
+  buildUrl(model, stream, urlIndex = 0) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const targetFormat = getModelTargetFormat("gh", model);
     if (targetFormat === "openai-responses") {
       return (
@@ -38,7 +56,11 @@ export class GithubExecutor extends BaseExecutor {
     return this.config.baseUrl;
   }
 
+<<<<<<< HEAD
   injectResponseFormat(messages: Array<Record<string, any>>, responseFormat: any) {
+=======
+  injectResponseFormat(messages: any[], responseFormat: any) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (!responseFormat) return messages;
 
     let formatInstruction = "";
@@ -55,9 +77,15 @@ export class GithubExecutor extends BaseExecutor {
 
     if (!formatInstruction) return messages;
 
+<<<<<<< HEAD
     const systemIdx = messages.findIndex((m) => m.role === "system");
     if (systemIdx >= 0) {
       return messages.map((m, i: number) =>
+=======
+    const systemIdx = messages.findIndex((m: any) => m.role === "system");
+    if (systemIdx >= 0) {
+      return messages.map((m: any, i: number) =>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         i === systemIdx ? { ...m, content: `${m.content}\n\n${formatInstruction}` } : m
       );
     }
@@ -66,6 +94,7 @@ export class GithubExecutor extends BaseExecutor {
   }
 
   transformRequest(model: string, body: any, stream: boolean, credentials: any): any {
+<<<<<<< HEAD
     void stream;
     void credentials;
 
@@ -88,10 +117,17 @@ export class GithubExecutor extends BaseExecutor {
     if (modifiedBody.response_format && model.toLowerCase().includes("claude")) {
       modifiedBody.messages = this.injectResponseFormat(
         Array.isArray(modifiedBody.messages) ? modifiedBody.messages : [],
+=======
+    const modifiedBody = JSON.parse(JSON.stringify(body));
+    if (modifiedBody.response_format && model.toLowerCase().includes("claude")) {
+      modifiedBody.messages = this.injectResponseFormat(
+        modifiedBody.messages,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         modifiedBody.response_format
       );
       delete modifiedBody.response_format;
     }
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 
     if (Array.isArray(modifiedBody.tools) && modifiedBody.tools.length > 128) {
@@ -99,27 +135,114 @@ export class GithubExecutor extends BaseExecutor {
     }
 
 =======
+=======
+
+    // Strip reasoning_text / reasoning_content from assistant messages.
+    // GitHub Copilot converts these into Anthropic thinking blocks but cannot
+    // supply a valid `signature`, causing upstream 400 errors.
+    if (Array.isArray(modifiedBody.messages)) {
+      for (const msg of modifiedBody.messages) {
+        if (msg.role === "assistant") {
+          delete msg.reasoning_text;
+          delete msg.reasoning_content;
+        }
+      }
+    }
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return modifiedBody;
   }
 
   async execute(input: ExecuteInput) {
     const result = await super.execute(input);
+<<<<<<< HEAD
+=======
+    if (!result || !result.response) return result;
+
+    if (!input.stream) {
+      // wreq-js clone/text semantics consume the original response body. Materialize
+      // non-streaming responses immediately so downstream code always sees a native
+      // fetch Response with a readable body.
+      const status = result.response.status;
+      const statusText = result.response.statusText;
+      const headers = new Headers(result.response.headers);
+      const payload = await result.response.text();
+      result.response = new Response(payload, { status, statusText, headers });
+      return result;
+    }
+
+    if (!result.response.body) return result;
+
+    const isStreaming = input.stream === true;
+    const contentType = (result.response.headers.get("content-type") || "").toLowerCase();
+    if (isStreaming && result.response.ok && contentType.includes("text/event-stream")) {
+      // Preserve the original response body for downstream error handling.
+      const sourceResponse = result.response.clone();
+      if (!sourceResponse.body) return result;
+
+      const decoder = new TextDecoder();
+      const transformStream = new TransformStream({
+        transform(chunk, controller) {
+          const text = decoder.decode(chunk, { stream: true });
+          if (text.includes("data: [DONE]")) {
+            return;
+          }
+          controller.enqueue(chunk);
+        },
+      });
+
+      const newResponse = new Response(sourceResponse.body.pipeThrough(transformStream), {
+        status: sourceResponse.status,
+        statusText: sourceResponse.statusText,
+        headers: new Headers(sourceResponse.headers),
+      });
+      result.response = newResponse;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
 
     return result;
   }
 
+<<<<<<< HEAD
     return {
       ...getGitHubCopilotChatHeaders(stream ? "text/event-stream" : "application/json", initiator),
       Authorization: `Bearer ${token}`,
       "x-request-id":
         crypto.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+=======
+  buildHeaders(credentials, stream = true) {
+    const token = this.getCopilotToken(credentials) || credentials.accessToken;
+    return {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+      "copilot-integration-id": "vscode-chat",
+      "editor-version": "vscode/1.110.0",
+      "editor-plugin-version": "copilot-chat/0.38.0",
+      "user-agent": "GitHubCopilotChat/0.38.0",
+      "openai-intent": "conversation-panel",
+      "x-github-api-version": "2025-04-01",
+      "x-request-id":
+        crypto.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+      "x-vscode-user-agent-library-version": "electron-fetch",
+      "X-Initiator": "user",
+      Accept: stream ? "text/event-stream" : "application/json",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     };
   }
 
   async refreshCopilotToken(githubAccessToken, log) {
     try {
       const response = await fetch("https://api.github.com/copilot_internal/v2/token", {
+<<<<<<< HEAD
+=======
+        headers: {
+          Authorization: `token ${githubAccessToken}`,
+          "User-Agent": "GithubCopilot/1.0",
+          "Editor-Version": "vscode/1.110.0",
+          "Editor-Plugin-Version": "copilot/1.300.0",
+          Accept: "application/json",
+        },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       });
       if (!response.ok) return null;
       const data = await response.json();

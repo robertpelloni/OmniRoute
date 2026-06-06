@@ -261,6 +261,7 @@ function buildResponsesSummary(
   let latestResponse: JsonRecord | null = null;
   let usage: JsonRecord | null = null;
   const textParts: string[] = [];
+<<<<<<< HEAD
   const buildOutputFromText = () =>
     textParts.length > 0
       ? [
@@ -272,6 +273,8 @@ function buildResponsesSummary(
         ]
       : [];
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   for (const payload of payloads) {
     const eventType = toString(payload.type);
@@ -303,16 +306,23 @@ function buildResponsesSummary(
 
   const picked = completed || latestResponse;
   if (picked && Object.keys(picked).length > 0) {
+<<<<<<< HEAD
     const pickedOutput = Array.isArray(picked.output) ? picked.output : [];
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return {
       id: toString(picked.id, `resp_${Date.now()}`),
       object: "response",
       model: toString(picked.model, fallbackModel || "unknown"),
+<<<<<<< HEAD
       output: pickedOutput.length > 0 ? pickedOutput : buildOutputFromText(),
 =======
       output: Array.isArray(picked.output) ? picked.output : [],
 >>>>>>> Stashed changes
+=======
+      output: Array.isArray(picked.output) ? picked.output : [],
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       usage: picked.usage ?? usage ?? null,
       status: toString(picked.status, completed ? "completed" : "in_progress"),
       created_at: toNumber(picked.created_at, Math.floor(Date.now() / 1000)),
@@ -324,7 +334,20 @@ function buildResponsesSummary(
     id: `resp_${Date.now()}`,
     object: "response",
     model: fallbackModel || "unknown",
+<<<<<<< HEAD
     output: buildOutputFromText(),
+=======
+    output:
+      textParts.length > 0
+        ? [
+            {
+              type: "message",
+              role: "assistant",
+              content: [{ type: "output_text", text: textParts.join("") }],
+            },
+          ]
+        : [],
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     usage: usage ?? null,
     status: "completed",
     created_at: Math.floor(Date.now() / 1000),
@@ -349,12 +372,15 @@ function buildClaudeSummary(events: StructuredSSEEvent[], fallbackModel?: string
         input: unknown;
         inputJson: string;
       };
+<<<<<<< HEAD
 <<<<<<< Updated upstream
   type ClaudeContentBlock =
     | { type: "text"; text: string }
     | { type: "thinking"; thinking: string; signature?: string }
     | { type: "tool_use"; id: string; name: string; input: unknown };
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const blocks = new Map<number, ClaudeBlock>();
   const usage: JsonRecord = {};
@@ -467,6 +493,10 @@ function buildClaudeSummary(events: StructuredSSEEvent[], fallbackModel?: string
 
   const content = [...blocks.values()]
     .sort((a, b) => a.index - b.index)
+<<<<<<< HEAD
+=======
+    .flatMap((block) => {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       if (block.type === "text") {
         return block.text
           ? [

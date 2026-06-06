@@ -1,5 +1,9 @@
 {
   "name": "omniroute-desktop",
+<<<<<<< HEAD
+=======
+  "version": "3.5.9",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   "description": "OmniRoute Desktop Application",
   "main": "main.js",
   "author": {
@@ -21,6 +25,7 @@
     "pack": "npm run prepare:bundle && electron-builder --dir"
   },
   "dependencies": {
+<<<<<<< HEAD
     "better-sqlite3": "^12.8.0",
     "electron-updater": "^6.8.3"
   },
@@ -31,6 +36,13 @@
   "overrides": {
     "@xmldom/xmldom": "^0.9.10",
     "plist": "^4.0.0"
+=======
+    "electron-updater": "^6.8.3"
+  },
+  "devDependencies": {
+    "electron": "^40.6.1",
+    "electron-builder": "^25.1.8"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   },
   "build": {
     "appId": "online.omniroute.desktop",
@@ -48,14 +60,19 @@
     "files": [
       "main.js",
       "preload.js",
+<<<<<<< HEAD
       "package.json",
       "node_modules/**/*"
+=======
+      "package.json"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ],
     "extraResources": [
       {
         "from": "../.next/electron-standalone",
         "to": "app",
         "filter": [
+<<<<<<< HEAD
           "**/*",
           "node_modules/**/*"
         ]
@@ -64,6 +81,8 @@
         "from": "../.next/electron-standalone/node_modules",
         "to": "app/node_modules",
         "filter": [
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           "**/*"
         ]
       },
@@ -105,8 +124,12 @@
         {
           "target": "AppImage",
           "arch": [
+<<<<<<< HEAD
             "x64",
             "arm64"
+=======
+            "x64"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           ]
         },
         {

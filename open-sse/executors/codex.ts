@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { getCodexRequestDefaults } from "@/lib/providers/requestDefaults";
 import {
   BaseExecutor,
@@ -93,6 +94,12 @@ function codexWebSocketUnavailableResponse(): Response {
     }
   );
 }
+=======
+import { BaseExecutor } from "./base.ts";
+import { CODEX_DEFAULT_INSTRUCTIONS } from "../config/codexInstructions.ts";
+import { PROVIDERS } from "../config/constants.ts";
+import { refreshCodexToken } from "../services/tokenRefresh.ts";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 // ─── T09: Codex vs Spark Scope-Aware Rate Limiting ────────────────────────
 // Codex has two independent quota pools: "codex" (standard) and "spark" (premium).
@@ -247,6 +254,7 @@ export function getCodexDualWindowCooldownMs(
   return { cooldownMs: 0, window: "none" };
 }
 
+<<<<<<< HEAD
 // ─── T09: Codex vs Spark Scope-Aware Rate Limiting ────────────────────────
 // Codex has two independent quota pools: "codex" (standard) and "spark" (premium).
 // Exhausting one should NOT block requests to the other.
@@ -353,10 +361,13 @@ export function getCodexResetTime(quota: CodexQuotaSnapshot): number | null {
   return Math.max(...times); // Use furthest-out reset to avoid premature unblock
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // Ordered list of effort levels from lowest to highest
 const EFFORT_ORDER = ["none", "low", "medium", "high", "xhigh"] as const;
 type EffortLevel = (typeof EFFORT_ORDER)[number];
 const CODEX_FAST_WIRE_VALUE = "priority";
+<<<<<<< HEAD
 const CODEX_RESPONSES_WS_URL = "wss://chatgpt.com/backend-api/codex/responses";
 
 function splitCodexReasoningSuffix(model: unknown): {
@@ -400,12 +411,47 @@ function convertSystemToDeveloperRole(body: Record<string, unknown>): void {
   for (const itemValue of body.input) {
     if (!itemValue || typeof itemValue !== "object" || Array.isArray(itemValue)) {
       continue;
+=======
+let defaultFastServiceTierEnabled = false;
+
+function stringifyCodexInstructionContent(content: unknown): string {
+  if (typeof content === "string") {
+    return content.trim();
+  }
+
+  if (Array.isArray(content)) {
+    return content
+      .map((part) => {
+        if (typeof part === "string") return part.trim();
+        if (!part || typeof part !== "object") return "";
+        const record = part as Record<string, unknown>;
+        if (typeof record.text === "string") return record.text.trim();
+        if (typeof record.content === "string") return record.content.trim();
+        return "";
+      })
+      .filter(Boolean)
+      .join("\n")
+      .trim();
+  }
+
+  return "";
+}
+
+function hoistSystemMessagesToInstructions(body: Record<string, unknown>): void {
+  if (!Array.isArray(body.input)) return;
+
+  const systemChunks: string[] = [];
+  const filteredInput = body.input.filter((itemValue) => {
+    if (!itemValue || typeof itemValue !== "object" || Array.isArray(itemValue)) {
+      return true;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
 
     const item = itemValue as Record<string, unknown>;
     const role = typeof item.role === "string" ? item.role : "";
     const type = typeof item.type === "string" ? item.type : "";
     const isSystemMessage = role === "system" && (!type || type === "message");
+<<<<<<< HEAD
     if (isSystemMessage) {
       item.role = "developer";
     }
@@ -662,6 +708,28 @@ const CODEX_HOSTED_TOOL_TYPES: ReadonlySet<string> = new Set([
   "mcp",
   "local_shell",
 ]);
+=======
+    if (!isSystemMessage) {
+      return true;
+    }
+
+    const text = stringifyCodexInstructionContent(item.content);
+    if (text) {
+      systemChunks.push(text);
+    }
+    return false;
+  });
+
+  if (systemChunks.length === 0) return;
+
+  const existingInstructions =
+    typeof body.instructions === "string" ? body.instructions.trim() : "";
+  body.instructions = existingInstructions
+    ? `${systemChunks.join("\n\n")}\n\n${existingInstructions}`
+    : systemChunks.join("\n\n");
+  body.input = filteredInput;
+}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 function normalizeCodexTools(body: Record<string, unknown>): void {
   if (!Array.isArray(body.tools)) return;
@@ -673,6 +741,7 @@ function normalizeCodexTools(body: Record<string, unknown>): void {
     }
 
     const tool = toolValue as Record<string, unknown>;
+<<<<<<< HEAD
     const toolType = typeof tool.type === "string" ? tool.type : "";
 
     // Preserve namespace tools (MCP tool groups used by Codex/OpenAI Responses API).
@@ -700,6 +769,9 @@ function normalizeCodexTools(body: Record<string, unknown>): void {
         return true;
       }
       console.debug(`[Codex] dropping unknown hosted tool type: ${toolType}`);
+=======
+    if (tool.type !== "function") {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       return false;
     }
 
@@ -717,6 +789,7 @@ function normalizeCodexTools(body: Record<string, unknown>): void {
       return false;
     }
 
+<<<<<<< HEAD
     // Codex Responses API requires function tools in flat Responses format:
     // { type: "function", name, description, parameters }
     // Some clients/translators send Chat Completions shape:
@@ -751,6 +824,8 @@ function normalizeCodexTools(body: Record<string, unknown>): void {
     if (description) tool.description = description;
     tool.parameters = parameters;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     validToolNames.add(name);
     return true;
   });
@@ -771,6 +846,7 @@ function normalizeCodexTools(body: Record<string, unknown>): void {
 }
 
 function getResponsesSubpath(endpointPath: unknown): string | null {
+<<<<<<< HEAD
   let normalizedEndpoint = String(endpointPath || "");
   while (normalizedEndpoint.endsWith("/") && normalizedEndpoint.length > 0) {
     normalizedEndpoint = normalizedEndpoint.slice(0, -1);
@@ -795,6 +871,15 @@ function getResponsesSubpath(endpointPath: unknown): string | null {
 }
 
 export function isCompactResponsesEndpoint(endpointPath: unknown): boolean {
+=======
+  const normalizedEndpoint = String(endpointPath || "").replace(/\/+$/, "");
+  const match = normalizedEndpoint.match(/(?:^|\/)responses(?:(\/.*))?$/i);
+  if (!match) return null;
+  return match[1] || "";
+}
+
+function isCompactResponsesEndpoint(endpointPath: unknown): boolean {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return getResponsesSubpath(endpointPath)?.toLowerCase() === "/compact";
 }
 
@@ -806,6 +891,13 @@ function normalizeServiceTierValue(value: unknown): string | undefined {
   return normalized;
 }
 
+<<<<<<< HEAD
+=======
+export function setDefaultFastServiceTierEnabled(enabled: boolean): void {
+  defaultFastServiceTierEnabled = enabled;
+}
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Maximum reasoning effort allowed per Codex model.
  * Models not listed here default to "xhigh" (unrestricted).
@@ -835,6 +927,7 @@ function clampEffort(model: string, requested: string): string {
   return requested;
 }
 
+<<<<<<< HEAD
 function normalizeEffortValue(value: unknown): string | undefined {
   if (typeof value !== "string") return undefined;
   const normalized = value.trim().toLowerCase();
@@ -980,6 +1073,8 @@ function normalizeCodexWsHeaders(headers: Record<string, string>): Record<string
   return result;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Codex Executor - handles OpenAI Codex API (Responses API format)
  * Automatically injects default instructions if missing.
@@ -990,6 +1085,7 @@ export class CodexExecutor extends BaseExecutor {
     super("codex", PROVIDERS.codex);
   }
 
+<<<<<<< HEAD
   async execute(input: ExecuteInput) {
     const sessionId = this.getPromptCacheSessionId(
       input.credentials,
@@ -1194,6 +1290,8 @@ export class CodexExecutor extends BaseExecutor {
     };
   }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   buildUrl(model, stream, urlIndex = 0, credentials = null) {
     void model;
     void stream;
@@ -1219,14 +1317,18 @@ export class CodexExecutor extends BaseExecutor {
   buildHeaders(credentials, stream = true) {
     const isCompactRequest = isCompactResponsesEndpoint(credentials?.requestEndpointPath);
     const headers = super.buildHeaders(credentials, isCompactRequest ? false : true);
+<<<<<<< HEAD
     headers.Version = getCodexClientVersion();
     setUserAgentHeader(headers, getCodexUserAgent());
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     // Add workspace binding header if workspaceId is persisted
     const workspaceId = credentials?.providerSpecificData?.workspaceId;
     if (workspaceId) {
       headers["chatgpt-account-id"] = workspaceId;
     }
+<<<<<<< HEAD
     const clientIdentity = credentials?.providerSpecificData?.codexClientIdentity;
 
     // Originator header — identifies the client type to the Codex backend.
@@ -1241,11 +1343,14 @@ export class CodexExecutor extends BaseExecutor {
       headers["session_id"] = cacheSessionId;
     }
     applyCodexClientIdentityHeaders(headers, clientIdentity);
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     return headers;
   }
 
   /**
+<<<<<<< HEAD
    * Derive a stable session ID for prompt cache affinity.
    * Priority: per-conversation session_id/conversation_id from request body → workspaceId.
    * The official Codex client uses conversation_id (a unique UUID per session), NOT
@@ -1271,6 +1376,8 @@ export class CodexExecutor extends BaseExecutor {
   }
 
   /**
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
    * Refresh Codex OAuth credentials when a 401 is received.
    * OpenAI uses rotating (one-time-use) refresh tokens — if the token was already
    * consumed by a concurrent refresh, this returns null to signal re-auth is needed.
@@ -1284,7 +1391,11 @@ export class CodexExecutor extends BaseExecutor {
       log?.warn?.("TOKEN_REFRESH", "Codex: no refresh token available, re-authentication required");
       return null;
     }
+<<<<<<< HEAD
     const result = await getAccessToken("codex", credentials, log);
+=======
+    const result = await refreshCodexToken(credentials.refreshToken, log);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (!result || result.error) {
       log?.warn?.(
         "TOKEN_REFRESH",
@@ -1299,6 +1410,7 @@ export class CodexExecutor extends BaseExecutor {
    * Transform request before sending - inject default instructions if missing
    */
   transformRequest(model, body, stream, credentials) {
+<<<<<<< HEAD
     // Do not mutate the caller's payload in place. Combo quality checks and
     // other post-execute paths still inspect the original request body.
     body =
@@ -1310,12 +1422,19 @@ export class CodexExecutor extends BaseExecutor {
     const thinkingBudgetConfig = getThinkingBudgetConfig();
     const allowConnectionReasoningDefaults = thinkingBudgetConfig.mode === ThinkingMode.PASSTHROUGH;
     consumeResponsesStoreMarker(body);
+=======
+    const nativeCodexPassthrough = body?._nativeCodexPassthrough === true;
+    const isCompactRequest = isCompactResponsesEndpoint(credentials?.requestEndpointPath);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     // Codex /responses rejects stream=false, but /responses/compact rejects the stream field entirely.
     if (isCompactRequest) {
       delete body.stream;
       delete body.stream_options;
+<<<<<<< HEAD
       delete body.client_metadata;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     } else {
       body.stream = true;
     }
@@ -1324,6 +1443,7 @@ export class CodexExecutor extends BaseExecutor {
     const requestServiceTier = normalizeServiceTierValue(body.service_tier);
     if (requestServiceTier) {
       body.service_tier = requestServiceTier;
+<<<<<<< HEAD
     } else if (requestDefaults.serviceTier) {
       body.service_tier = requestDefaults.serviceTier;
     }
@@ -1445,6 +1565,12 @@ export class CodexExecutor extends BaseExecutor {
     // so any references to previous response items would cause 404 errors.
     stripStoredItemReferences(body);
 =======
+=======
+    } else if (defaultFastServiceTierEnabled) {
+      body.service_tier = CODEX_FAST_WIRE_VALUE;
+    }
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     // If no instructions provided, inject default Codex instructions
     // NOTE: must run before the passthrough return — Codex upstream rejects
     // requests without instructions even when the body is forwarded as-is.
@@ -1454,13 +1580,26 @@ export class CodexExecutor extends BaseExecutor {
 
     // Ensure store is false (Codex requirement)
     body.store = false;
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+
+    // Cursor can send native Responses payloads with role=system items inside `input`.
+    // Codex rejects system messages there; they must be folded into `instructions`.
+    hoistSystemMessagesToInstructions(body);
+
+    // Codex Responses only supports function tools with non-empty names.
+    // Cursor may include custom tools (e.g. ApplyPatch) that work locally but are
+    // invalid upstream, and translation bugs can leave orphaned/empty tool_choice names.
+    normalizeCodexTools(body);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     // Issue #806: Even for native passthrough, some clients (purist completions) might indiscriminately inject
     // a `messages` or `prompt` array which the strict Codex Responses schema rejects.
     delete body.messages;
     delete body.prompt;
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     let modelEffort: string | null = null;
     let cleanModel = typeof body.model === "string" ? body.model : model;
@@ -1529,10 +1668,43 @@ export class CodexExecutor extends BaseExecutor {
     delete body.conversation_id;
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (nativeCodexPassthrough) {
       return body;
     }
 
+<<<<<<< HEAD
+=======
+    // Extract thinking level from model name suffix
+    // e.g., gpt-5.3-codex-high → high, gpt-5.3-codex → medium (default)
+    const effortLevels = ["none", "low", "medium", "high", "xhigh"];
+    let modelEffort: string | null = null;
+    // Track the clean model name (suffix stripped) for clamp lookup
+    let cleanModel = model;
+    for (const level of effortLevels) {
+      if (model.endsWith(`-${level}`)) {
+        modelEffort = level;
+        // Strip suffix from model name for actual API call
+        body.model = body.model.replace(`-${level}`, "");
+        cleanModel = body.model;
+        break;
+      }
+    }
+
+    // Priority: explicit reasoning.effort > reasoning_effort param > model suffix > default (medium)
+    if (!body.reasoning) {
+      const rawEffort = body.reasoning_effort || modelEffort || "medium";
+      // Clamp effort to the model's maximum allowed level (feature-07)
+      const effort = clampEffort(cleanModel, rawEffort);
+      body.reasoning = { effort };
+    } else if (body.reasoning.effort) {
+      // Also clamp if reasoning object was provided directly
+      body.reasoning.effort = clampEffort(cleanModel, body.reasoning.effort);
+    }
+    delete body.reasoning_effort;
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     // Remove unsupported parameters for Codex API
     delete body.temperature;
     delete body.top_p;
@@ -1542,9 +1714,15 @@ export class CodexExecutor extends BaseExecutor {
     delete body.top_logprobs;
     delete body.n;
     delete body.seed;
+<<<<<<< HEAD
     // max_tokens and max_output_tokens already deleted above (before passthrough return)
     delete body.user; // Cursor sends this but Codex doesn't support it
 
+=======
+    delete body.max_tokens;
+    delete body.user; // Cursor sends this but Codex doesn't support it
+    delete body.prompt_cache_retention; // Cursor sends this but Codex doesn't support it
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     delete body.metadata; // Cursor sends this but Codex doesn't support it
     delete body.stream_options; // Cursor sends this but Codex doesn't support it
     delete body.safety_identifier; // Droid CLI sends this but Codex doesn't support it

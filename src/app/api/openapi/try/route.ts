@@ -5,15 +5,28 @@
 
 import { z } from "zod";
 import { NextRequest, NextResponse } from "next/server";
+<<<<<<< HEAD
+=======
+import { validateBody, isValidationFailure } from "@/shared/validation/helpers";
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 const tryRequestSchema = z.object({
   method: z
     .enum(["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"])
     .optional()
     .default("GET"),
+<<<<<<< HEAD
+=======
+  path: z.string().min(1, "Path is required").startsWith("/", "Path must start with /"),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   headers: z.record(z.string(), z.string()).optional().default({}),
   body: z.any().optional(),
 });
 
+<<<<<<< HEAD
+=======
+export async function POST(request: NextRequest) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const rawBody = await request.json();
     const validation = validateBody(tryRequestSchema, rawBody);
@@ -23,10 +36,25 @@ const tryRequestSchema = z.object({
 
     const { method, path, headers, body: reqBody } = validation.data;
 
+<<<<<<< HEAD
+=======
+    // Build the target URL using the incoming request's origin
+    const origin = request.headers.get("x-forwarded-proto")
+      ? `${request.headers.get("x-forwarded-proto")}://${request.headers.get("host")}`
+      : `http://${request.headers.get("host") || "localhost:20128"}`;
+
+    const targetUrl = `${origin}${path}`;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     const start = performance.now();
 
     // Forward cookies/auth from the original request
+<<<<<<< HEAD
+=======
+    const forwardHeaders: Record<string, string> = {
+      ...(headers as Record<string, string>),
+    };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     // Forward auth from the dashboard session
     const cookie = request.headers.get("cookie");

@@ -3,6 +3,7 @@ import os from "os";
 
 export const APP_NAME = "omniroute";
 
+<<<<<<< HEAD
 function fallbackHomeDir() {
   const envHome = process.env.HOME || process.env.USERPROFILE;
   if (typeof envHome === "string" && envHome.trim().length > 0) {
@@ -12,11 +13,17 @@ function fallbackHomeDir() {
   return os.tmpdir();
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function safeHomeDir() {
   try {
     return os.homedir();
   } catch {
+<<<<<<< HEAD
     return fallbackHomeDir();
+=======
+    return process.cwd();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 }
 

@@ -69,7 +69,11 @@ export function startLocalServer(
 
     // Listen on fixed port or find available port
     const portToUse = fixedPort || 0;
+<<<<<<< HEAD
     server.listen(portToUse, "0.0.0.0", () => {
+=======
+    server.listen(portToUse, "127.0.0.1", () => {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       const addr = server.address() as { port: number };
       resolve({
         server,

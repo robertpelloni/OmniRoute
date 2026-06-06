@@ -44,10 +44,16 @@ export class CloudSyncScheduler {
     await this.initializeMachineId();
 
     // Delay first sync by 30 seconds to ensure server is ready
+<<<<<<< HEAD
     const startupTimer = setTimeout(() => {
       this.syncWithRetry().catch(() => {});
     }, 30000);
     startupTimer.unref?.();
+=======
+    setTimeout(() => {
+      this.syncWithRetry().catch(() => {});
+    }, 30000);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     // Then sync periodically
     this.intervalId = setInterval(
@@ -56,7 +62,10 @@ export class CloudSyncScheduler {
       },
       this.intervalMinutes * 60 * 1000
     );
+<<<<<<< HEAD
     this.intervalId.unref?.();
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   /**

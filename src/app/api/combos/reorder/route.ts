@@ -4,6 +4,7 @@ import { getConsistentMachineId } from "@/shared/utils/machineId";
 import { syncToCloud } from "@/lib/cloudSync";
 import { reorderCombosSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
+<<<<<<< HEAD
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
 
 // POST /api/combos/reorder - Persist combo ordering
@@ -11,6 +12,11 @@ export async function POST(request) {
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
 
+=======
+
+// POST /api/combos/reorder - Persist combo ordering
+export async function POST(request) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody;
   try {
     rawBody = await request.json();

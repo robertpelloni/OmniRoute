@@ -1,16 +1,22 @@
 "use server";
 
 import { NextResponse } from "next/server";
+<<<<<<< HEAD
 import { requireCliToolsAuth } from "@/lib/api/requireCliToolsAuth";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { getMitmAlias, setMitmAliasAll } from "@/models";
 import { cliMitmAliasUpdateSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
 
 // GET - Get MITM aliases for a tool
 export async function GET(request) {
+<<<<<<< HEAD
   const authError = await requireCliToolsAuth(request);
   if (authError) return authError;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const { searchParams } = new URL(request.url);
     const toolName = searchParams.get("tool");
@@ -24,9 +30,12 @@ export async function GET(request) {
 
 // PUT - Save MITM aliases for a specific tool
 export async function PUT(request) {
+<<<<<<< HEAD
   const authError = await requireCliToolsAuth(request);
   if (authError) return authError;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody;
   try {
     rawBody = await request.json();

@@ -18,6 +18,7 @@ interface StatementLike<TRow = unknown> {
 
 interface AuditDatabase {
   prepare: <TRow = unknown>(sql: string) => StatementLike<TRow>;
+<<<<<<< HEAD
   pragma: (sql: string) => unknown;
   close: () => void;
   open?: boolean;
@@ -25,6 +26,8 @@ interface AuditDatabase {
 
 declare global {
   var __omnirouteMcpAuditDb: AuditDatabase | null | undefined;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 interface AuditStatsRow {
@@ -128,6 +131,7 @@ function buildAuditFilterSql(filters: McpAuditQuery): { whereSql: string; params
   };
 }
 
+<<<<<<< HEAD
 function getCachedAuditDb(): AuditDatabase | null {
   return globalThis.__omnirouteMcpAuditDb ?? null;
 }
@@ -135,6 +139,9 @@ function getCachedAuditDb(): AuditDatabase | null {
 function setCachedAuditDb(database: AuditDatabase | null): void {
   globalThis.__omnirouteMcpAuditDb = database;
 }
+=======
+let db: AuditDatabase | null = null;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 function toNumber(value: unknown, fallback = 0): number {
   const parsed =
@@ -155,8 +162,12 @@ function toString(value: unknown): string {
  * Uses the same SQLite database as the main OmniRoute app.
  */
 async function getDb(): Promise<AuditDatabase | null> {
+<<<<<<< HEAD
   const cachedDb = getCachedAuditDb();
   if (cachedDb) return cachedDb;
+=======
+  if (db) return db;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   try {
     // Try importing the db module from the main app
@@ -176,9 +187,14 @@ async function getDb(): Promise<AuditDatabase | null> {
     const Database = (await import("better-sqlite3")).default as unknown as new (
       dbPath: string
     ) => AuditDatabase;
+<<<<<<< HEAD
     const database = new Database(dbPath);
     setCachedAuditDb(database);
     return database;
+=======
+    db = new Database(dbPath);
+    return db;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
     console.error("[MCP Audit] Failed to connect to database:", message);
@@ -186,6 +202,7 @@ async function getDb(): Promise<AuditDatabase | null> {
   }
 }
 
+<<<<<<< HEAD
 export function closeAuditDb(): boolean {
   const database = getCachedAuditDb();
   if (!database) return false;
@@ -213,6 +230,8 @@ export function closeAuditDb(): boolean {
   return true;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // ============ Audit Logger ============
 
 /**

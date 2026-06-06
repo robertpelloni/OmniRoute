@@ -16,12 +16,15 @@ export function getDefaultModel(aliasOrId: string): string | null {
   return models?.[0]?.id || null;
 }
 
+<<<<<<< HEAD
 export function getProviderModel(aliasOrId: string, modelId: string): RegistryModel | undefined {
   const models = PROVIDER_MODELS[aliasOrId];
   if (!models) return undefined;
   return models.find((model) => model.id === modelId);
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export function isValidModel(
   aliasOrId: string,
   modelId: string,
@@ -47,6 +50,7 @@ export function getModelTargetFormat(aliasOrId: string, modelId: string): string
   return found?.targetFormat || null;
 }
 
+<<<<<<< HEAD
 export function getModelStripTypes(aliasOrId: string, modelId: string): string[] {
   const models = PROVIDER_MODELS[aliasOrId];
   if (!models) return [];
@@ -54,12 +58,17 @@ export function getModelStripTypes(aliasOrId: string, modelId: string): string[]
   return Array.isArray(found?.strip) ? [...found.strip] : [];
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export function getModelsByProviderId(providerId: string): RegistryModel[] {
   const alias = PROVIDER_ID_TO_ALIAS[providerId] || providerId;
   return PROVIDER_MODELS[alias] || [];
 }
+<<<<<<< HEAD
 
 export function supportsXHighEffort(aliasOrId: string, modelId: string): boolean {
   const alias = PROVIDER_ID_TO_ALIAS[aliasOrId] || aliasOrId;
   return getProviderModel(alias, modelId)?.supportsXHighEffort === true;
 }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

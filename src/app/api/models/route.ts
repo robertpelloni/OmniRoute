@@ -3,7 +3,10 @@ import { getModelAliases, setModelAlias, getProviderConnections } from "@/models
 import { AI_MODELS, PROVIDER_ID_TO_ALIAS } from "@/shared/constants/models";
 import { updateModelAliasSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
+<<<<<<< HEAD
 import { hasEligibleConnectionForModel } from "@/domain/connectionModelRules";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 // GET /api/models - Get models with aliases (only from active providers by default)
 export async function GET(request: Request) {
@@ -30,6 +33,7 @@ export async function GET(request: Request) {
           const alias = PROVIDER_ID_TO_ALIAS[pId];
           if (alias) activeProviders.add(alias);
         }
+<<<<<<< HEAD
         const connectionsByProvider = new Map<string, typeof active>();
         const registerConnectionKey = (
           key: string | null | undefined,
@@ -69,6 +73,8 @@ export async function GET(request: Request) {
               : [];
           })
         );
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       } catch {
         // If DB unavailable, show all models
       }

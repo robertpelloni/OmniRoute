@@ -209,7 +209,11 @@ export async function isZedInstalled(): Promise<boolean> {
   ];
 
   for (const configPath of zedConfigPaths) {
+<<<<<<< HEAD
     if (fs.existsSync(/* turbopackIgnore: true */ configPath)) {
+=======
+    if (fs.existsSync(configPath)) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       return true;
     }
   }

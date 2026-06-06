@@ -61,11 +61,15 @@ let mainWindow = null;
 let tray = null;
 let nextServer = null;
 let serverPort = 20128;
+<<<<<<< HEAD
 let isServerStopped = false;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const getServerUrl = () => `http://localhost:${serverPort}`;
 
 function resolveNodeExecutable(env = process.env) {
+<<<<<<< HEAD
   // #1081: Ensure Next.js standalone runs using Electron's Node runtime
   // instead of a randomly found system Node to prevent ABI architecture mismatches.
   return process.execPath;
@@ -100,6 +104,24 @@ function resolveServerNodePath(env = process.env) {
   addEntry(path.join(NEXT_SERVER_PATH, "node_modules"));
 
   return entries.join(path.delimiter);
+=======
+  const candidates = [
+    env.OMNIROUTE_NODE_PATH,
+    "/usr/local/bin/node",
+    "/opt/homebrew/bin/node",
+    "/opt/local/bin/node",
+  ].filter(Boolean);
+
+  for (const candidate of candidates) {
+    try {
+      if (fs.existsSync(candidate)) return candidate;
+    } catch {
+      /* continue */
+    }
+  }
+
+  return "node";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 function resolveDataDir(overridePath, env = process.env) {
@@ -280,6 +302,7 @@ function installUpdate() {
 // ── Content Security Policy (#15) ──────────────────────────
 function setupContentSecurityPolicy() {
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+<<<<<<< HEAD
     const scriptSrc = isDev
       ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:"
       : "script-src 'self' 'unsafe-inline' blob:";
@@ -300,6 +323,16 @@ function setupContentSecurityPolicy() {
       `connect-src 'self' http://localhost:* http://127.0.0.1:* ws://localhost:* ws://127.0.0.1:* https://*.omniroute.online https://*.omniroute.dev`,
       "worker-src 'self' blob:",
       "manifest-src 'self'",
+=======
+    const csp = [
+      "default-src 'self'",
+      `connect-src 'self' http://localhost:* ws://localhost:* https://*.omniroute.online https://*.omniroute.dev`,
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "font-src 'self' https://fonts.gstatic.com data:",
+      "img-src 'self' data: blob: https:",
+      "media-src 'self'",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ].join("; ");
 
     callback({
@@ -331,7 +364,10 @@ function createWindow() {
       contextIsolation: true,
       nodeIntegration: false,
       webSecurity: true,
+<<<<<<< HEAD
       webviewTag: false,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     },
     show: false,
     backgroundColor: "#0a0a0a",
@@ -581,8 +617,11 @@ function startNextServer() {
       DATA_DIR: dataDir,
       PORT: String(serverPort),
       NODE_ENV: "production",
+<<<<<<< HEAD
       ELECTRON_RUN_AS_NODE: "1",
       NODE_PATH: resolveServerNodePath(serverEnv),
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     },
     stdio: "pipe",
   });
@@ -737,6 +776,7 @@ app.on("window-all-closed", () => {
 });
 
 // Clean up before quit
+<<<<<<< HEAD
 app.on("before-quit", async (event) => {
   if (nextServer && !isServerStopped) {
     event.preventDefault(); // Stop immediate quit
@@ -752,6 +792,11 @@ app.on("before-quit", async (event) => {
   } else {
     app.isQuitting = true;
   }
+=======
+app.on("before-quit", () => {
+  app.isQuitting = true;
+  stopNextServer();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 });
 
 // Global error handlers

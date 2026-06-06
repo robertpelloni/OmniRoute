@@ -6,7 +6,10 @@ import { createKeySchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
 import { isApiKeyRevealEnabled, maskStoredApiKey } from "@/lib/apiKeyExposure";
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
+<<<<<<< HEAD
 import * as log from "@/sse/utils/logger";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 function parsePagination(request: Request) {
   const url = new URL(request.url);
@@ -22,7 +25,10 @@ function parsePagination(request: Request) {
 
   return { limit, offset };
 }
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 // GET /api/keys - List API keys
 export async function GET(request: Request) {
@@ -35,8 +41,22 @@ export async function GET(request: Request) {
       ...k,
       key: maskStoredApiKey(k.key),
     }));
+<<<<<<< HEAD
   } catch (error) {
     log.error("keys", "Error fetching keys", error);
+=======
+    const { limit, offset } = parsePagination(request);
+    const pagedKeys =
+      limit === null ? maskedKeys.slice(offset) : maskedKeys.slice(offset, offset + limit);
+
+    return NextResponse.json({
+      keys: pagedKeys,
+      total: maskedKeys.length,
+      allowKeyReveal: isApiKeyRevealEnabled(),
+    });
+  } catch (error) {
+    console.log("Error fetching keys:", error);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return NextResponse.json({ error: "Failed to fetch keys" }, { status: 500 });
   }
 }
@@ -77,7 +97,11 @@ export async function POST(request) {
       { status: 201 }
     );
   } catch (error) {
+<<<<<<< HEAD
     log.error("keys", "Error creating key", error);
+=======
+    console.log("Error creating key:", error);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return NextResponse.json({ error: "Failed to create key" }, { status: 500 });
   }
 }
@@ -93,6 +117,10 @@ async function syncKeysToCloudIfEnabled() {
     const machineId = await getConsistentMachineId();
     await syncToCloud(machineId);
   } catch (error) {
+<<<<<<< HEAD
     log.error("keys", "Error syncing keys to cloud", error);
+=======
+    console.log("Error syncing keys to cloud:", error);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 }

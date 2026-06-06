@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { CORS_HEADERS } from "../utils/cors.ts";
+=======
+import { getCorsOrigin } from "../utils/cors.ts";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Responses API Handler for Workers
  * Converts Chat Completions to Codex Responses API format
@@ -7,7 +11,10 @@ import { CORS_HEADERS } from "../utils/cors.ts";
 import { handleChatCore } from "./chatCore.ts";
 import { convertResponsesApiFormat } from "../translator/helpers/responsesApiHelper.ts";
 import { createResponsesApiTransformStream } from "../transformer/responsesTransformer.ts";
+<<<<<<< HEAD
 import { createSseHeartbeatTransform } from "../utils/sseHeartbeat.ts";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * Handle /v1/responses request
@@ -20,7 +27,10 @@ import { createSseHeartbeatTransform } from "../utils/sseHeartbeat.ts";
  * @param {function} options.onRequestSuccess - Callback when request succeeds
  * @param {function} options.onDisconnect - Callback when client disconnects
  * @param {string} options.connectionId - Connection ID for usage tracking
+<<<<<<< HEAD
  * @param {AbortSignal} [options.signal] - Abort signal for request/disconnect cleanup
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  * @returns {Promise<{success: boolean, response?: Response, status?: number, error?: string}>}
  */
 export async function handleResponsesCore({
@@ -32,10 +42,16 @@ export async function handleResponsesCore({
   onRequestSuccess,
   onDisconnect,
   connectionId,
+<<<<<<< HEAD
   signal,
 }) {
   // Convert Responses API format to Chat Completions format
   const convertedBody = convertResponsesApiFormat(body, credentials);
+=======
+}) {
+  // Convert Responses API format to Chat Completions format
+  const convertedBody = convertResponsesApiFormat(body);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Ensure stream is enabled
   convertedBody.stream = true;
@@ -69,9 +85,13 @@ export async function handleResponsesCore({
 
   // Transform SSE stream to Responses API format (no logging in worker)
   const transformStream = createResponsesApiTransformStream(null);
+<<<<<<< HEAD
   const transformedBody = response.body
     .pipeThrough(transformStream)
     .pipeThrough(createSseHeartbeatTransform({ signal }));
+=======
+  const transformedBody = response.body.pipeThrough(transformStream);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   return {
     success: true,
@@ -81,6 +101,10 @@ export async function handleResponsesCore({
         "Content-Type": "text/event-stream",
         "Cache-Control": "no-cache",
         Connection: "keep-alive",
+<<<<<<< HEAD
+=======
+        "Access-Control-Allow-Origin": getCorsOrigin(),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       },
     }),
   };

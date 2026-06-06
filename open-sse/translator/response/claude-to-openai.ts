@@ -129,6 +129,7 @@ export function claudeToOpenAIResponse(chunk, state) {
             : 0;
 
         // Use OpenAI format keys for consistent logging in stream.js
+<<<<<<< HEAD
         // Issue #1426: Include cached tokens in prompt_tokens and input_tokens
         const totalInputTokens = inputTokens + cacheReadTokens + cacheCreationTokens;
         state.usage = {
@@ -139,6 +140,16 @@ export function claudeToOpenAIResponse(chunk, state) {
         };
 
         // Store cache tokens if present (needed for prompt_tokens_details in final chunk)
+=======
+        state.usage = {
+          prompt_tokens: inputTokens,
+          completion_tokens: outputTokens,
+          input_tokens: inputTokens,
+          output_tokens: outputTokens,
+        };
+
+        // Store cache tokens if present
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         if (cacheReadTokens > 0) {
           state.usage.cache_read_input_tokens = cacheReadTokens;
         }
@@ -181,10 +192,17 @@ export function claudeToOpenAIResponse(chunk, state) {
           const cachedTokens = state.usage.cache_read_input_tokens || 0;
           const cacheCreationTokens = state.usage.cache_creation_input_tokens || 0;
 
+<<<<<<< HEAD
           // prompt_tokens = input_tokens (which now includes cache_read + cache_creation)
           // completion_tokens = output_tokens
           // total_tokens = prompt_tokens + completion_tokens
           const promptTokens = inputTokens;
+=======
+          // prompt_tokens = input_tokens + cache_read + cache_creation (all prompt-side tokens)
+          // completion_tokens = output_tokens
+          // total_tokens = prompt_tokens + completion_tokens
+          const promptTokens = inputTokens + cachedTokens + cacheCreationTokens;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           const completionTokens = outputTokens;
           const totalTokens = promptTokens + completionTokens;
 

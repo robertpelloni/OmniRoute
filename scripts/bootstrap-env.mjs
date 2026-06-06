@@ -18,7 +18,11 @@
  *   4. process.env            (shell / Docker -e flags, highest priority)
  */
 
+<<<<<<< HEAD
 import { randomBytes, createDecipheriv, scryptSync, createHash } from "node:crypto";
+=======
+import { randomBytes } from "node:crypto";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { homedir } from "node:os";
@@ -28,18 +32,24 @@ const require = createRequire(import.meta.url);
 
 // ── OAuth secrets that are optional but warn if missing ─────────────────────
 const OPTIONAL_OAUTH_SECRETS = [
+<<<<<<< HEAD
 <<<<<<< Updated upstream
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   { keys: ["ANTIGRAVITY_OAUTH_CLIENT_SECRET"], label: "Antigravity OAuth" },
   { keys: ["QODER_OAUTH_CLIENT_SECRET"], label: "Qoder OAuth" },
   {
     keys: ["GEMINI_CLI_OAUTH_CLIENT_SECRET", "GEMINI_OAUTH_CLIENT_SECRET"],
     label: "Gemini OAuth",
   },
+<<<<<<< HEAD
 =======
   { key: "ANTIGRAVITY_OAUTH_CLIENT_SECRET", label: "Antigravity OAuth" },
   { key: "QODER_OAUTH_CLIENT_SECRET", label: "Qoder OAuth" },
   { key: "GEMINI_OAUTH_CLIENT_SECRET", label: "Gemini OAuth" },
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 ];
 
 // ── Resolve DATA_DIR (mirrors dataPaths.ts logic) ───────────────────────────
@@ -223,6 +233,7 @@ export function bootstrapEnv({ dataDirOverride, quiet = false } = {}) {
     log("⚠️  INITIAL_PASSWORD is not set — using default 'CHANGEME'. Change it in Settings!");
   }
 
+<<<<<<< HEAD
   // ── Decrypt-probe: verify STORAGE_ENCRYPTION_KEY matches encrypted data (#1622) ─
   if (merged.STORAGE_ENCRYPTION_KEY?.trim() && hasEncryptedCredentials(dataDir)) {
     try {
@@ -308,6 +319,8 @@ export function bootstrapEnv({ dataDirOverride, quiet = false } = {}) {
     }
   }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return merged;
 }
 

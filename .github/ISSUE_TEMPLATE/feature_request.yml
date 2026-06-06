@@ -33,8 +33,11 @@ body:
     validations:
       required: false
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   - type: textarea
     id: acceptance
     attributes:
@@ -48,10 +51,13 @@ body:
     validations:
       required: true
 
+<<<<<<< HEAD
 =======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   - type: dropdown
     id: area
     attributes:
@@ -87,8 +93,11 @@ body:
       description: "Any other context, mockups, or references."
     validations:
       required: false
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   - type: textarea
     id: test-plan
@@ -102,7 +111,10 @@ body:
         - Keep npm run test:coverage at 60%+
     validations:
       required: false
+<<<<<<< HEAD
 =======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

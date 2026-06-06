@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+<<<<<<< HEAD
 import {
   getPricing,
   getPricingWithSources,
@@ -6,6 +7,9 @@ import {
   resetPricing,
   resetAllPricing,
 } from "@/lib/localDb";
+=======
+import { getPricing, updatePricing, resetPricing, resetAllPricing } from "@/lib/localDb";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { updatePricingSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
 
@@ -13,6 +17,7 @@ import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
  * GET /api/pricing
  * Get current pricing configuration (merged user + defaults)
  */
+<<<<<<< HEAD
 export async function GET(request: Request) {
   try {
     const includeSources = new URL(request.url).searchParams.get("includeSources") === "1";
@@ -20,6 +25,10 @@ export async function GET(request: Request) {
       return NextResponse.json(await getPricingWithSources());
     }
 
+=======
+export async function GET() {
+  try {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const pricing = await getPricing();
     return NextResponse.json(pricing);
   } catch (error) {

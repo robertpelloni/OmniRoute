@@ -32,6 +32,7 @@ Claude / Codex / OpenCode / Cline / KiloCode / Continue / Kiro / Cursor / Copilo
 The dashboard cards in `/dashboard/cli-tools` are generated from `src/shared/constants/cliTools.ts`.
 Current list (v3.0.0-rc.16):
 
+<<<<<<< HEAD
 | Tool               | ID            | Command    | Setup Mode | Install Method |
 | ------------------ | ------------- | ---------- | ---------- | -------------- |
 | **Claude Code**    | `claude`      | `claude`   | env        | npm            |
@@ -47,17 +48,41 @@ Current list (v3.0.0-rc.16):
 | **OpenCode**       | `opencode`    | `opencode` | guide      | npm            |
 | **Kiro AI**        | `kiro`        | app/cli    | mitm       | desktop/CLI    |
 | **Qwen Code**      | `qwen`        | `qwen`     | custom     | npm            |
+=======
+| Tool             | ID            | Command      | Setup Mode | Install Method |
+| ---------------- | ------------- | ------------ | ---------- | -------------- |
+| **Claude Code**  | `claude`      | `claude`     | env        | npm            |
+| **OpenAI Codex** | `codex`       | `codex`      | custom     | npm            |
+| **Factory Droid**| `droid`       | `droid`      | custom     | bundled/CLI    |
+| **OpenClaw**     | `openclaw`    | `openclaw`   | custom     | bundled/CLI    |
+| **Cursor**       | `cursor`      | app          | guide      | desktop app    |
+| **Cline**        | `cline`       | `cline`      | custom     | npm            |
+| **Kilo Code**    | `kilo`        | `kilocode`   | custom     | npm            |
+| **Continue**     | `continue`    | extension    | guide      | VS Code        |
+| **Antigravity**  | `antigravity` | internal     | mitm       | OmniRoute      |
+| **GitHub Copilot**| `copilot`    | extension    | custom     | VS Code        |
+| **OpenCode**     | `opencode`    | `opencode`   | guide      | npm            |
+| **Kiro AI**      | `kiro`        | app/cli      | mitm       | desktop/CLI    |
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ### CLI fingerprint sync (Agents + Settings)
 
 `/dashboard/agents` and `Settings > CLI Fingerprint` use `src/shared/constants/cliCompatProviders.ts`.
 This keeps provider IDs aligned with CLI cards and legacy IDs.
 
+<<<<<<< HEAD
 | CLI ID                                                                                               | Fingerprint Provider ID |
 | ---------------------------------------------------------------------------------------------------- | ----------------------- |
 | `kilo`                                                                                               | `kilocode`              |
 | `copilot`                                                                                            | `github`                |
 | `claude` / `codex` / `antigravity` / `kiro` / `cursor` / `cline` / `opencode` / `droid` / `openclaw` | same ID                 |
+=======
+| CLI ID | Fingerprint Provider ID |
+| ------ | ----------------------- |
+| `kilo` | `kilocode`              |
+| `copilot` | `github`             |
+| `claude` / `codex` / `antigravity` / `kiro` / `cursor` / `cline` / `opencode` / `droid` / `openclaw` | same ID |
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 Legacy IDs still accepted for compatibility: `copilot`, `kimi-coding`, `qwen`.
 
@@ -121,8 +146,13 @@ Add to `~/.bashrc` (or `~/.zshrc`), then run `source ~/.bashrc`:
 # OmniRoute Universal Endpoint
 export OPENAI_BASE_URL="http://localhost:20128/v1"
 export OPENAI_API_KEY="sk-your-omniroute-key"
+<<<<<<< HEAD
 export ANTHROPIC_BASE_URL="http://localhost:20128"
 export ANTHROPIC_AUTH_TOKEN="sk-your-omniroute-key"
+=======
+export ANTHROPIC_BASE_URL="http://localhost:20128/v1"
+export ANTHROPIC_API_KEY="sk-your-omniroute-key"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export GEMINI_BASE_URL="http://localhost:20128/v1"
 export GEMINI_API_KEY="sk-your-omniroute-key"
 ```
@@ -137,6 +167,7 @@ export GEMINI_API_KEY="sk-your-omniroute-key"
 ### Claude Code
 
 ```bash
+<<<<<<< HEAD
 # Create ~/.claude/settings.json:
 mkdir -p ~/.claude && cat > ~/.claude/settings.json << EOF
 {
@@ -144,12 +175,25 @@ mkdir -p ~/.claude && cat > ~/.claude/settings.json << EOF
     "ANTHROPIC_BASE_URL": "http://localhost:20128",
     "ANTHROPIC_AUTH_TOKEN": "sk-your-omniroute-key"
   }
+=======
+# Via CLI:
+claude config set --global api-base-url http://localhost:20128/v1
+
+# Or create ~/.claude/settings.json:
+mkdir -p ~/.claude && cat > ~/.claude/settings.json << EOF
+{
+  "apiBaseUrl": "http://localhost:20128/v1",
+  "apiKey": "sk-your-omniroute-key"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 EOF
 ```
 
+<<<<<<< HEAD
 Use the unified Anthropic gateway root for Claude Code. Do not append `/v1` here.
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 **Test:** `claude "say hello"`
 
 ---
@@ -255,6 +299,7 @@ kiro-cli status
 
 ---
 
+<<<<<<< HEAD
 ### Qwen Code (Alibaba)
 
 Qwen Code supports OpenAI-compatible API endpoints via environment variables or `settings.json`.
@@ -304,6 +349,8 @@ qwen
 
 **Test:** `qwen "say hello"`
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 ### Cursor (Desktop App)
 
 > **Note:** Cursor routes requests through its cloud. For OmniRoute integration,
@@ -371,12 +418,18 @@ They run as internal routes and use OmniRoute's model routing automatically.
 ```bash
 # Install all CLIs and configure for OmniRoute (replace with your key and server URL)
 OMNIROUTE_URL="http://localhost:20128/v1"
+<<<<<<< HEAD
 OMNIROUTE_ANTHROPIC_URL="http://localhost:20128"
 OMNIROUTE_KEY="sk-your-omniroute-key"
 
 =======
 npm install -g @anthropic-ai/claude-code @openai/codex opencode-ai cline kilocode
 >>>>>>> Stashed changes
+=======
+OMNIROUTE_KEY="sk-your-omniroute-key"
+
+npm install -g @anthropic-ai/claude-code @openai/codex opencode-ai cline kilocode
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 # Kiro CLI
 apt-get install -y unzip 2>/dev/null; curl -fsSL https://cli.kiro.dev/install | bash
@@ -384,13 +437,22 @@ apt-get install -y unzip 2>/dev/null; curl -fsSL https://cli.kiro.dev/install | 
 # Write configs
 mkdir -p ~/.claude ~/.codex ~/.config/opencode ~/.continue
 
+<<<<<<< HEAD
 cat > ~/.claude/settings.json   <<< "{\"env\":{\"ANTHROPIC_BASE_URL\":\"$OMNIROUTE_ANTHROPIC_URL\",\"ANTHROPIC_AUTH_TOKEN\":\"$OMNIROUTE_KEY\"}}"
+=======
+cat > ~/.claude/settings.json   <<< "{\"apiBaseUrl\":\"$OMNIROUTE_URL\",\"apiKey\":\"$OMNIROUTE_KEY\"}"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 cat > ~/.codex/config.yaml      <<< "model: auto\napiKey: $OMNIROUTE_KEY\napiBaseUrl: $OMNIROUTE_URL"
 cat >> ~/.bashrc << EOF
 export OPENAI_BASE_URL="$OMNIROUTE_URL"
 export OPENAI_API_KEY="$OMNIROUTE_KEY"
+<<<<<<< HEAD
 export ANTHROPIC_BASE_URL="$OMNIROUTE_ANTHROPIC_URL"
 export ANTHROPIC_AUTH_TOKEN="$OMNIROUTE_KEY"
+=======
+export ANTHROPIC_BASE_URL="$OMNIROUTE_URL"
+export ANTHROPIC_API_KEY="$OMNIROUTE_KEY"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 EOF
 
 source ~/.bashrc

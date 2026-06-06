@@ -13,7 +13,11 @@ function getRandomBytes(byteLength: number): Uint8Array {
 }
 
 function toBase64(bytes: Uint8Array): string {
+<<<<<<< HEAD
   return btoa(String.fromCodePoint(...bytes));
+=======
+  return btoa(String.fromCharCode(...bytes));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 function toHex(bytes: Uint8Array): string {
@@ -74,6 +78,7 @@ export async function registerNodejs(): Promise<void> {
   console.log("[STARTUP] Global fetch proxy patch initialized");
 
   await ensureSecrets();
+<<<<<<< HEAD
   const { enforceWebRuntimeEnv } = await import("@/lib/env/runtimeEnv");
   enforceWebRuntimeEnv();
 
@@ -82,6 +87,8 @@ export async function registerNodejs(): Promise<void> {
 
   // Trigger request-log layout migration during startup, before any request hits usageDb.
   await import("@/lib/usage/migrations");
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Trigger request-log layout migration during startup, before any request hits usageDb.
   await import("@/lib/usage/migrations");
@@ -93,6 +100,7 @@ export async function registerNodejs(): Promise<void> {
     { initGracefulShutdown },
     { initApiBridgeServer },
     { startBackgroundRefresh },
+<<<<<<< HEAD
     { ensureCloudSyncInitialized },
 =======
     { startProviderLimitsSyncScheduler },
@@ -104,10 +112,15 @@ export async function registerNodejs(): Promise<void> {
     { ensurePersistentManagementPasswordHash },
     { skillExecutor },
     { registerBuiltinSkills },
+=======
+    { startProviderLimitsSyncScheduler },
+    { getSettings },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   ] = await Promise.all([
     import("@/lib/gracefulShutdown"),
     import("@/lib/apiBridgeServer"),
     import("@/domain/quotaCache"),
+<<<<<<< HEAD
     import("@/lib/initCloudSync"),
 =======
     import("@/shared/services/providerLimitsSyncScheduler"),
@@ -119,10 +132,15 @@ export async function registerNodejs(): Promise<void> {
     import("@/lib/auth/managementPassword"),
     import("@/lib/skills/executor"),
     import("@/lib/skills/builtins"),
+=======
+    import("@/shared/services/providerLimitsSyncScheduler"),
+    import("@/lib/db/settings"),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   ]);
 
   initGracefulShutdown();
   initApiBridgeServer();
+<<<<<<< HEAD
 
   try {
     const [{ migrateCodexConnectionDefaultsFromLegacySettings }, { seedDefaultModelAliases }] =
@@ -168,6 +186,46 @@ export async function registerNodejs(): Promise<void> {
     }
 
     startRuntimeConfigHotReload();
+=======
+  if (!isBackgroundServicesDisabled()) {
+    startBackgroundRefresh();
+    console.log("[STARTUP] Quota cache background refresh started");
+    startProviderLimitsSyncScheduler();
+    console.log("[STARTUP] Provider limits sync scheduler started");
+  }
+
+  try {
+    const [{ setCustomAliases }, { setDefaultFastServiceTierEnabled }] = await Promise.all([
+      import("@omniroute/open-sse/services/modelDeprecation.ts"),
+      import("@omniroute/open-sse/executors/codex.ts"),
+    ]);
+    const settings = await getSettings();
+
+    if (settings.modelAliases) {
+      const aliases =
+        typeof settings.modelAliases === "string"
+          ? JSON.parse(settings.modelAliases)
+          : settings.modelAliases;
+      if (aliases && typeof aliases === "object") {
+        setCustomAliases(aliases);
+        console.log(
+          `[STARTUP] Restored ${Object.keys(aliases).length} custom model alias(es) from settings`
+        );
+      }
+    }
+
+    const persisted =
+      typeof settings.codexServiceTier === "string"
+        ? JSON.parse(settings.codexServiceTier)
+        : settings.codexServiceTier;
+
+    if (typeof persisted?.enabled === "boolean") {
+      setDefaultFastServiceTierEnabled(persisted.enabled);
+      console.log(
+        `[STARTUP] Restored Codex fast service tier: ${persisted.enabled ? "on" : "off"}`
+      );
+    }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
     console.warn("[STARTUP] Could not restore runtime settings:", msg);

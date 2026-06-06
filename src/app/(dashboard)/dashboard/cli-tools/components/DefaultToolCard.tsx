@@ -5,9 +5,12 @@ import { Card, Button, ModelSelectModal } from "@/shared/components";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { copyToClipboard } from "@/shared/utils/clipboard";
+<<<<<<< HEAD
 import { buildOpenCodeConfigDocument } from "@/shared/services/opencodeConfig";
 import { useTheme } from "@/shared/hooks/useTheme";
 import { DEFAULT_DISPLAY_BASE_URL } from "@/shared/hooks";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 export default function DefaultToolCard({
   toolId,
@@ -34,11 +37,15 @@ export default function DefaultToolCard({
   const [copiedField, setCopiedField] = useState(null);
   const [showModelModal, setShowModelModal] = useState(false);
   const [modelValue, setModelValue] = useState("");
+<<<<<<< HEAD
   const [modelValues, setModelValues] = useState<string[]>([]);
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [runtimeStatus, setRuntimeStatus] = useState(null);
   const [message, setMessage] = useState(null);
   const [saving, setSaving] = useState(false);
   const runtimeFetchStartedRef = useRef(false);
+<<<<<<< HEAD
   const { isDark } = useTheme();
 
   // (#523) Initialize state with key *id* instead of masked key string
@@ -95,10 +102,18 @@ export default function DefaultToolCard({
   const baseUrlWithV1 = normalizedBaseUrl.endsWith("/v1")
     ? normalizedBaseUrl
     : `${normalizedBaseUrl}/v1`;
+=======
+
+  // Initialize state directly with computed value
+  const [selectedApiKey, setSelectedApiKey] = useState(() =>
+    apiKeys?.length > 0 ? apiKeys[0].key : ""
+  );
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Persist and restore model selection per tool via localStorage
   useEffect(() => {
     const savedModel = localStorage.getItem(`omniroute-cli-model-${toolId}`);
+<<<<<<< HEAD
     if (savedModel) {
       if (isMultiModelTool) {
         try {
@@ -133,6 +148,12 @@ export default function DefaultToolCard({
       if (matchedKey) setSelectedApiKeyId(matchedKey.id);
     }
   }, [toolId, apiKeys, isMultiModelTool]);
+=======
+    if (savedModel) setModelValue(savedModel);
+    const savedKey = localStorage.getItem(`omniroute-cli-key-${toolId}`);
+    if (savedKey && apiKeys?.some((k) => k.key === savedKey)) setSelectedApiKey(savedKey);
+  }, [toolId, apiKeys]);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const handleModelChange = useCallback(
     (value) => {
@@ -146,6 +167,7 @@ export default function DefaultToolCard({
     [toolId]
   );
 
+<<<<<<< HEAD
   const handleModelValuesChange = useCallback(
     (values) => {
       const normalized = Array.isArray(values)
@@ -169,6 +191,12 @@ export default function DefaultToolCard({
       setSelectedApiKeyId(value);
       if (value) {
         // (#523) Store the key id in localStorage for persistence
+=======
+  const handleApiKeyChange = useCallback(
+    (value) => {
+      setSelectedApiKey(value);
+      if (value) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         localStorage.setItem(`omniroute-cli-key-${toolId}`, value);
       }
     },
@@ -183,6 +211,7 @@ export default function DefaultToolCard({
       .then((res) => res.json())
       .then((data) => setRuntimeStatus(data))
       .catch((error) => setRuntimeStatus({ error: error?.message || t("runtimeCheckFailed") }));
+<<<<<<< HEAD
   }, [isExpanded, runtimeStatus, t, toolId]);
 
   const replaceVars = useCallback(
@@ -196,6 +225,28 @@ export default function DefaultToolCard({
     },
     [baseUrl, getSelectedModelLabels, resolveApiKeyValue, t]
   );
+=======
+  }, [isExpanded, runtimeStatus, toolId]);
+
+  const replaceVars = (text) => {
+    const keyToUse =
+      selectedApiKey && selectedApiKey.trim()
+        ? selectedApiKey
+        : !cloudEnabled
+          ? "sk_omniroute"
+          : t("yourApiKeyPlaceholder");
+
+    const normalizedBaseUrl = baseUrl || "http://localhost:20128";
+    const baseUrlWithV1 = normalizedBaseUrl.endsWith("/v1")
+      ? normalizedBaseUrl
+      : `${normalizedBaseUrl}/v1`;
+
+    return text
+      .replace(/\{\{baseUrl\}\}/g, baseUrlWithV1)
+      .replace(/\{\{apiKey\}\}/g, keyToUse)
+      .replace(/\{\{model\}\}/g, modelValue || t("modelPlaceholder"));
+  };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const handleCopy = async (text, field) => {
     await copyToClipboard(replaceVars(text));
@@ -203,6 +254,7 @@ export default function DefaultToolCard({
     setTimeout(() => setCopiedField(null), 2000);
   };
 
+<<<<<<< HEAD
   const getSelectedModels = useCallback(() => {
     if (!isMultiModelTool) return modelValue ? [modelValue] : [];
     return modelValues.length > 0 ? modelValues : modelValue ? [modelValue] : [];
@@ -251,6 +303,10 @@ export default function DefaultToolCard({
     }
 
     handleModelValuesChange([...modelValues, model.value]);
+=======
+  const handleSelectModel = (model) => {
+    handleModelChange(model.value);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 
   const hasActiveProviders = activeProviders.length > 0;
@@ -261,31 +317,54 @@ export default function DefaultToolCard({
     setSaving(true);
     setMessage(null);
     try {
+<<<<<<< HEAD
       // (#523) Prefer keyId lookup so the backend writes the real key to disk.
       const selectedKeyId = selectedApiKeyId?.trim() || null;
+=======
+      const keyToUse =
+        selectedApiKey && selectedApiKey.trim()
+          ? selectedApiKey
+          : !cloudEnabled
+            ? "sk_omniroute"
+            : "";
+
+      const normalizedBaseUrl = baseUrl || "http://localhost:20128";
+      const baseUrlWithV1 = normalizedBaseUrl.endsWith("/v1")
+        ? normalizedBaseUrl
+        : `${normalizedBaseUrl}/v1`;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
       const res = await fetch(`/api/cli-tools/guide-settings/${toolId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           baseUrl: baseUrlWithV1,
+<<<<<<< HEAD
           apiKey: !cloudEnabled ? "sk_omniroute" : null,
           keyId: selectedKeyId,
           model: modelValue,
           models: isMultiModelTool ? getSelectedModels() : undefined,
           modelLabels: getSelectedModelLabelMap(),
+=======
+          apiKey: keyToUse,
+          model: modelValue,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         }),
       });
       const data = await res.json();
       if (res.ok) {
         setMessage({ type: "success", text: data.message || t("configurationSaved") });
       } else {
+<<<<<<< HEAD
         setMessage({
           type: "error",
           text:
             (typeof data.error === "string" ? data.error : data.error?.message) ||
             t("failedToSave"),
         });
+=======
+        setMessage({ type: "error", text: data.error || t("failedToSave") });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     } catch (error) {
       setMessage({ type: "error", text: error.message });
@@ -295,6 +374,10 @@ export default function DefaultToolCard({
   };
 
   // Check if this tool supports direct config file write
+<<<<<<< HEAD
+=======
+  const supportsDirectSave = ["continue", "opencode"].includes(toolId);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const renderApiKeySelector = () => {
     return (
@@ -302,20 +385,32 @@ export default function DefaultToolCard({
         {apiKeys && apiKeys.length > 0 ? (
           <>
             <select
+<<<<<<< HEAD
               value={selectedApiKeyId}
+=======
+              value={selectedApiKey}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               onChange={(e) => handleApiKeyChange(e.target.value)}
               className="flex-1 px-3 py-2 bg-bg-secondary rounded-lg text-sm border border-border focus:outline-none focus:ring-1 focus:ring-primary/50"
             >
               {apiKeys.map((key) => (
+<<<<<<< HEAD
                 <option key={key.id} value={key.id}>
+=======
+                <option key={key.id} value={key.key}>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   {key.key}
                 </option>
               ))}
             </select>
             <button
+<<<<<<< HEAD
               onClick={() => {
                 handleCopy(resolveApiKeyValue(), "apiKey");
               }}
+=======
+              onClick={() => handleCopy(selectedApiKey, "apiKey")}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               className="shrink-0 px-3 py-2 bg-bg-secondary hover:bg-bg-tertiary rounded-lg border border-border transition-colors"
             >
               <span className="material-symbols-outlined text-lg">
@@ -333,14 +428,18 @@ export default function DefaultToolCard({
   };
 
   const renderModelSelector = () => {
+<<<<<<< HEAD
     const displayValue = isMultiModelTool
       ? getSelectedModelLabels().join(", ")
       : getSelectedModelLabels()[0] || "";
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return (
       <div className="mt-2 flex items-center gap-2">
         <input
           type="text"
+<<<<<<< HEAD
           value={displayValue}
           onChange={(e) =>
             isMultiModelTool
@@ -352,6 +451,10 @@ export default function DefaultToolCard({
                 )
               : handleModelChange(e.target.value)
           }
+=======
+          value={modelValue}
+          onChange={(e) => handleModelChange(e.target.value)}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           placeholder={t("modelPlaceholder")}
           className="flex-1 px-3 py-2 bg-bg-secondary rounded-lg text-sm border border-border focus:outline-none focus:ring-1 focus:ring-primary/50"
         />
@@ -366,10 +469,17 @@ export default function DefaultToolCard({
         >
           {t("selectModel")}
         </button>
+<<<<<<< HEAD
         {displayValue && (
           <>
             <button
               onClick={() => handleCopy(displayValue, "model")}
+=======
+        {modelValue && (
+          <>
+            <button
+              onClick={() => handleCopy(modelValue, "model")}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               className="shrink-0 px-3 py-2 bg-bg-secondary hover:bg-bg-tertiary rounded-lg border border-border transition-colors"
             >
               <span className="material-symbols-outlined text-lg">
@@ -377,9 +487,13 @@ export default function DefaultToolCard({
               </span>
             </button>
             <button
+<<<<<<< HEAD
               onClick={() =>
                 isMultiModelTool ? handleModelValuesChange([]) : handleModelChange("")
               }
+=======
+              onClick={() => handleModelChange("")}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               className="p-2 text-text-muted hover:text-red-500 rounded transition-colors"
               title={t("clear")}
             >
@@ -514,9 +628,13 @@ export default function DefaultToolCard({
                 </p>
                 {item.desc && (
                   <p className="text-sm text-text-muted mt-0.5">
+<<<<<<< HEAD
                     {translateOrFallback(`guides.${toolId}.steps.${item.step}.desc`, item.desc, {
                       baseUrl: baseUrlWithV1,
                     })}
+=======
+                    {translateOrFallback(`guides.${toolId}.steps.${item.step}.desc`, item.desc)}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   </p>
                 )}
                 {item.type === "apiKeySelector" && renderApiKeySelector()}
@@ -549,7 +667,11 @@ export default function DefaultToolCard({
                 {tool.codeBlock.language}
               </span>
               <button
+<<<<<<< HEAD
                 onClick={() => handleCopy(getRenderedCodeBlock(), "codeblock")}
+=======
+                onClick={() => handleCopy(tool.codeBlock.code, "codeblock")}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 className="flex items-center gap-1 px-2 py-1 text-xs bg-bg-secondary hover:bg-bg-tertiary rounded border border-border transition-colors"
               >
                 <span className="material-symbols-outlined text-sm">
@@ -559,7 +681,13 @@ export default function DefaultToolCard({
               </button>
             </div>
             <pre className="p-4 bg-bg-secondary rounded-lg border border-border overflow-x-auto">
+<<<<<<< HEAD
               <code className="text-sm font-mono whitespace-pre">{getRenderedCodeBlock()}</code>
+=======
+              <code className="text-sm font-mono whitespace-pre">
+                {replaceVars(tool.codeBlock.code)}
+              </code>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             </pre>
           </div>
         )}
@@ -583,7 +711,11 @@ export default function DefaultToolCard({
                   variant="primary"
                   size="sm"
                   onClick={handleSaveConfig}
+<<<<<<< HEAD
                   disabled={isMultiModelTool ? getSelectedModels().length === 0 : !modelValue}
+=======
+                  disabled={!modelValue}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   loading={saving}
                 >
                   <span className="material-symbols-outlined text-[14px] mr-1">save</span>
@@ -594,7 +726,11 @@ export default function DefaultToolCard({
                 <Button
                   variant={supportsDirectSave ? "outline" : "primary"}
                   size="sm"
+<<<<<<< HEAD
                   onClick={() => handleCopy(getRenderedCodeBlock(), "codeblock")}
+=======
+                  onClick={() => handleCopy(tool.codeBlock.code, "codeblock")}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 >
                   <span className="material-symbols-outlined text-[14px] mr-1">
                     {copiedField === "codeblock" ? "check" : "content_copy"}
@@ -602,7 +738,11 @@ export default function DefaultToolCard({
                   {copiedField === "codeblock" ? t("copied") : t("copyConfig")}
                 </Button>
               )}
+<<<<<<< HEAD
               {(isMultiModelTool ? getSelectedModels().length > 0 : !!modelValue) && (
+=======
+              {modelValue && (
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 <span className="text-xs text-text-muted flex items-center gap-1">
                   <span className="material-symbols-outlined text-[14px] text-green-500">
                     check_circle
@@ -633,6 +773,7 @@ export default function DefaultToolCard({
         />
       );
     }
+<<<<<<< HEAD
     if (tool.imageLight || tool.imageDark) {
       const themedSrc = isDark
         ? tool.imageDark || tool.imageLight
@@ -651,6 +792,8 @@ export default function DefaultToolCard({
         />
       );
     }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (tool.icon) {
       return (
         <span className="material-symbols-outlined text-xl" style={{ color: tool.color }}>
@@ -745,11 +888,16 @@ export default function DefaultToolCard({
         onClose={() => setShowModelModal(false)}
         onSelect={handleSelectModel}
         selectedModel={modelValue}
+<<<<<<< HEAD
         selectedModels={isMultiModelTool ? getSelectedModels() : []}
         activeProviders={activeProviders}
         title={t("selectModel")}
         multiSelect={isMultiModelTool}
         showCombos={!tool.hideComboModels}
+=======
+        activeProviders={activeProviders}
+        title={t("selectModel")}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       />
     </Card>
   );

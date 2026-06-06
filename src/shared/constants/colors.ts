@@ -38,6 +38,7 @@ export const PROTOCOL_COLORS = {
   bypass: { bg: "#6B7280", text: "#fff", label: "Bypass" },
 };
 
+<<<<<<< HEAD
 const PROTOCOL_KEY_ALIASES = {
   "openai-chat": "openai",
   "openai-response": "openai-responses",
@@ -47,6 +48,8 @@ function normalizeProtocolKey(protocol) {
   return PROTOCOL_KEY_ALIASES[protocol] || protocol;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // ═══════════════════════════════════════════
 // Proxy Type Colors (ProxyLogger)
 // ═══════════════════════════════════════════
@@ -143,6 +146,7 @@ export function getProviderColor(provider) {
     }
   );
 }
+<<<<<<< HEAD
 
 /**
  * Get default fallback for a protocol color lookup.
@@ -161,3 +165,5 @@ export function getProtocolColor(protocol, fallbackProvider) {
     }
   );
 }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

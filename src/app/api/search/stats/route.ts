@@ -42,7 +42,11 @@ export async function GET(request: Request) {
     const recentRows = db
       .prepare(
         `
+<<<<<<< HEAD
         SELECT request_summary, provider, timestamp
+=======
+        SELECT request_body, provider, timestamp
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         FROM call_logs
         WHERE request_type = 'search'
         ORDER BY timestamp DESC
@@ -55,11 +59,20 @@ export async function GET(request: Request) {
       let query = "";
       let filters = {};
       try {
+<<<<<<< HEAD
         const summary = JSON.parse(row.request_summary);
         query = summary.query || "";
         filters = summary.filters || {};
       } catch {
         // Unparseable request_summary
+=======
+        const body = JSON.parse(row.request_body);
+        query = body.query || "";
+        const { query: _q, provider: _p, ...rest } = body;
+        filters = rest;
+      } catch {
+        // Unparseable request_body
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
       return {
         query,

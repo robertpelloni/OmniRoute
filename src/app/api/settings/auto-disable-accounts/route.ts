@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getSettings, updateSettings } from "@/lib/localDb";
 import { updateAutoDisableAccountsSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
+<<<<<<< HEAD
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
 
 export async function GET(request: Request) {
@@ -11,6 +12,10 @@ export async function GET(request: Request) {
 
 export async function GET() {
 >>>>>>> Stashed changes
+=======
+
+export async function GET() {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const settings = await getSettings();
     return NextResponse.json({
@@ -27,10 +32,13 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody: unknown;
   try {
     rawBody = await request.json();

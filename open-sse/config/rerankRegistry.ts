@@ -45,6 +45,7 @@ export const RERANK_PROVIDERS = {
     authHeader: "bearer",
     models: [{ id: "accounts/fireworks/models/nomic-rerank-v1", name: "Nomic Rerank v1" }],
   },
+<<<<<<< HEAD
 
   "voyage-ai": {
     id: "voyage-ai",
@@ -99,11 +100,19 @@ function toProviderScopedModelId(providerId, modelId) {
   return modelId.startsWith(`${providerId}/`) ? modelId : `${providerId}/${modelId}`;
 }
 
+=======
+};
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Get rerank provider config by ID
  */
 export function getRerankProvider(providerId) {
+<<<<<<< HEAD
   return RERANK_PROVIDERS[resolveRerankProviderId(providerId)] || null;
+=======
+  return RERANK_PROVIDERS[providerId] || null;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 /**
@@ -113,6 +122,7 @@ export function getRerankProvider(providerId) {
 export function parseRerankModel(modelStr) {
   if (!modelStr) return { provider: null, model: null };
 
+<<<<<<< HEAD
   const slashIdx = modelStr.indexOf("/");
   if (slashIdx > 0) {
     const rawProvider = modelStr.slice(0, slashIdx);
@@ -132,6 +142,12 @@ export function parseRerankModel(modelStr) {
         provider: providerId,
         model: normalizeProviderScopedModelId(providerId, modelStr.slice(providerId.length + 1)),
       };
+=======
+  // Try each provider prefix
+  for (const [providerId, config] of Object.entries(RERANK_PROVIDERS)) {
+    if (modelStr.startsWith(providerId + "/")) {
+      return { provider: providerId, model: modelStr.slice(providerId.length + 1) };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
   }
 
@@ -153,7 +169,11 @@ export function getAllRerankModels() {
   for (const [providerId, config] of Object.entries(RERANK_PROVIDERS)) {
     for (const model of config.models) {
       models.push({
+<<<<<<< HEAD
         id: toProviderScopedModelId(providerId, model.id),
+=======
+        id: `${providerId}/${model.id}`,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         name: model.name,
         provider: providerId,
       });

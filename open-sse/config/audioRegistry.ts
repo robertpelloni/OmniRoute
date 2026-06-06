@@ -246,6 +246,7 @@ export const AUDIO_SPEECH_PROVIDERS: Record<string, AudioProvider> = {
       { id: "Play3.0-mini", name: "Play3.0 Mini" },
     ],
   },
+<<<<<<< HEAD
 
   "aws-polly": {
     id: "aws-polly",
@@ -274,6 +275,8 @@ export const AUDIO_SPEECH_PROVIDERS: Record<string, AudioProvider> = {
       { id: "mimo-v2.5-tts-voiceclone", name: "MiMo V2.5 Voice Clone" },
     ],
   },
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 };
 
 /**

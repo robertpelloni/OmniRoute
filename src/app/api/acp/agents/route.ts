@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+<<<<<<< HEAD
 import { z } from "zod";
 import {
   type CliAgentInfo,
@@ -28,6 +29,20 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+=======
+import {
+  detectInstalledAgents,
+  refreshAgentCache,
+  setCustomAgents,
+  getCustomAgentDefs,
+  type CustomAgentDef,
+} from "@/lib/acp/registry";
+import { getSettings, updateSettings } from "@/lib/localDb";
+import { jsonObjectSchema } from "@/shared/validation/schemas";
+import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
+
+export async function GET() {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     // Load custom agents from settings on each GET to stay in sync
     const settings = await getSettings();
@@ -36,7 +51,11 @@ export async function GET(request: Request) {
     }
 
     const agents = detectInstalledAgents();
+<<<<<<< HEAD
     const installed = agents.filter((a: CliAgentInfo) => a.installed).length;
+=======
+    const installed = agents.filter((a) => a.installed).length;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const total = agents.length;
 
     return NextResponse.json({
@@ -45,8 +64,13 @@ export async function GET(request: Request) {
         total,
         installed,
         notFound: total - installed,
+<<<<<<< HEAD
         builtIn: agents.filter((a: CliAgentInfo) => !a.isCustom).length,
         custom: agents.filter((a: CliAgentInfo) => a.isCustom).length,
+=======
+        builtIn: agents.filter((a) => !a.isCustom).length,
+        custom: agents.filter((a) => a.isCustom).length,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       },
     });
   } catch (error) {
@@ -56,10 +80,13 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+<<<<<<< HEAD
   if (!(await isAuthenticated(request))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody: unknown;
   try {
     rawBody = await request.json();
@@ -67,7 +94,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
+<<<<<<< HEAD
   const validation = validateBody(customAgentBodySchema, rawBody);
+=======
+  const validation = validateBody(jsonObjectSchema, rawBody);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (isValidationFailure(validation)) {
     return NextResponse.json({ error: validation.error }, { status: 400 });
   }
@@ -90,6 +121,7 @@ export async function POST(request: Request) {
     }
 
     const newAgent: CustomAgentDef = {
+<<<<<<< HEAD
       id: id.toLowerCase().replace(/[^a-z0-9-]/g, "-"),
       name,
       binary,
@@ -106,6 +138,17 @@ export async function POST(request: Request) {
       );
     }
 
+=======
+      id: (id as string).toLowerCase().replace(/[^a-z0-9-]/g, "-"),
+      name: name as string,
+      binary: binary as string,
+      versionCommand: versionCommand as string,
+      providerAlias: (providerAlias as string) || (id as string),
+      spawnArgs: Array.isArray(spawnArgs) ? (spawnArgs as string[]) : [],
+      protocol: (protocol as "stdio" | "http") || "stdio",
+    };
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     // Load current, append, save
     const settings = await getSettings();
     const current: CustomAgentDef[] = (settings.customAgents as CustomAgentDef[]) || [];
@@ -132,10 +175,13 @@ export async function POST(request: Request) {
 }
 
 export async function DELETE(request: Request) {
+<<<<<<< HEAD
   if (!(await isAuthenticated(request))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const { searchParams } = new URL(request.url);
     const agentId = searchParams.get("id");

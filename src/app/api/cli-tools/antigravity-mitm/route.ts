@@ -3,6 +3,7 @@
 export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
+<<<<<<< HEAD
 import { requireCliToolsAuth } from "@/lib/api/requireCliToolsAuth";
 import { cliMitmStartSchema, cliMitmStopSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
@@ -14,6 +15,13 @@ export async function GET(request) {
   const authError = await requireCliToolsAuth(request);
   if (authError) return authError;
 
+=======
+import { cliMitmStartSchema, cliMitmStopSchema } from "@/shared/validation/schemas";
+import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
+
+// GET - Check MITM status
+export async function GET() {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const { getMitmStatus, getCachedPassword } = await import("@/mitm/manager");
     const status = await getMitmStatus();
@@ -32,9 +40,12 @@ export async function GET(request) {
 
 // POST - Start MITM proxy
 export async function POST(request) {
+<<<<<<< HEAD
   const authError = await requireCliToolsAuth(request);
   if (authError) return authError;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody;
   try {
     rawBody = await request.json();
@@ -55,6 +66,7 @@ export async function POST(request) {
     if (isValidationFailure(validation)) {
       return NextResponse.json({ error: validation.error }, { status: 400 });
     }
+<<<<<<< HEAD
     const { apiKey: rawApiKey, sudoPassword } = validation.data;
     // (#523) Extract keyId BEFORE validation — Zod strips unknown fields!
     const apiKeyId = typeof rawBody?.keyId === "string" ? rawBody.keyId.trim() : null;
@@ -65,6 +77,14 @@ export async function POST(request) {
     const pwd = sudoPassword || getCachedPassword() || "";
 
     if (!apiKey || (!isWin && !pwd && !isRootUser)) {
+=======
+    const { apiKey, sudoPassword } = validation.data;
+    const { startMitm, getCachedPassword, setCachedPassword } = await import("@/mitm/manager");
+    const isWin = process.platform === "win32";
+    const pwd = sudoPassword || getCachedPassword() || "";
+
+    if (!apiKey || (!isWin && !pwd)) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       return NextResponse.json(
         { error: isWin ? "Missing apiKey" : "Missing apiKey or sudoPassword" },
         { status: 400 }
@@ -90,9 +110,12 @@ export async function POST(request) {
 
 // DELETE - Stop MITM proxy
 export async function DELETE(request) {
+<<<<<<< HEAD
   const authError = await requireCliToolsAuth(request);
   if (authError) return authError;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody;
   try {
     rawBody = await request.json();
@@ -116,10 +139,16 @@ export async function DELETE(request) {
     const { sudoPassword } = validation.data;
     const { stopMitm, getCachedPassword, setCachedPassword } = await import("@/mitm/manager");
     const isWin = process.platform === "win32";
+<<<<<<< HEAD
     const isRootUser = !isWin && isRoot();
     const pwd = sudoPassword || getCachedPassword() || "";
 
     if (!isWin && !pwd && !isRootUser) {
+=======
+    const pwd = sudoPassword || getCachedPassword() || "";
+
+    if (!isWin && !pwd) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       return NextResponse.json({ error: "Missing sudoPassword" }, { status: 400 });
     }
 

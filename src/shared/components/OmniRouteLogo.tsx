@@ -1,13 +1,22 @@
+<<<<<<< HEAD
+=======
+import PropTypes from "prop-types";
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * OmniRoute logo SVG — network hub icon with connected nodes.
  * Matches the favicon and app icon design.
  */
+<<<<<<< HEAD
 type OmniRouteLogoProps = {
   size?: number;
   className?: string;
 };
 
 export default function OmniRouteLogo({ size = 20, className = "" }: OmniRouteLogoProps) {
+=======
+export default function OmniRouteLogo({ size = 20, className = "" }) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return (
     <svg
       width={size}
@@ -84,3 +93,11 @@ export default function OmniRouteLogo({ size = 20, className = "" }: OmniRouteLo
     </svg>
   );
 }
+<<<<<<< HEAD
+=======
+
+OmniRouteLogo.propTypes = {
+  size: PropTypes.number,
+  className: PropTypes.string,
+};
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

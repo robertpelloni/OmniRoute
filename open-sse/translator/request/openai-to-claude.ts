@@ -1,7 +1,10 @@
 import { register } from "../registry.ts";
 import { FORMATS } from "../formats.ts";
 import { CLAUDE_SYSTEM_PROMPT } from "../../config/constants.ts";
+<<<<<<< HEAD
 import { supportsXHighEffort } from "../../config/providerModels.ts";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { adjustMaxTokens } from "../helpers/maxTokensHelper.ts";
 import { sanitizeToolId } from "../helpers/schemaCoercion.ts";
 import { DEFAULT_THINKING_CLAUDE_SIGNATURE } from "../../config/defaultThinkingSignature.ts";
@@ -100,7 +103,10 @@ export function openaiToClaudeRequest(model, body, stream) {
     tools?: ClaudeTool[];
     tool_choice?: Record<string, unknown> | string;
     thinking?: Record<string, unknown>;
+<<<<<<< HEAD
     output_config?: Record<string, unknown>;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     _toolNameMap?: Map<string, string>;
   } = {
     model: model,
@@ -255,6 +261,30 @@ export function openaiToClaudeRequest(model, body, stream) {
         // When prefix is disabled (non-Claude backends), use original name
         const toolName = disableToolPrefix ? originalName : CLAUDE_OAUTH_TOOL_PREFIX + originalName;
 
+<<<<<<< HEAD
+=======
+        // Store mapping for response translation (prefixed → original)
+        if (!disableToolPrefix) {
+          toolNameMap.set(toolName, originalName);
+        }
+
+        // Normalize input_schema: Anthropic requires `properties` when type is "object" (#595).
+        // MCP tools (e.g. pencil, computer_use) may omit properties on object-type schemas.
+        const rawSchema: Record<string, unknown> = toolData.parameters ||
+          toolData.input_schema || { type: "object", properties: {}, required: [] };
+        const normalizedSchema =
+          rawSchema.type === "object" && !rawSchema.properties
+            ? { ...rawSchema, properties: {} }
+            : rawSchema;
+
+        return {
+          name: toolName,
+          description: toolData.description || "",
+          input_schema: normalizedSchema,
+        };
+      })
+      .filter((tool): tool is ClaudeTool => Boolean(tool));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     // Filter out tools with empty names (would cause Claude 400 error)
     result.tools = result.tools.filter((tool) => tool.name && tool.name?.trim());
@@ -291,12 +321,26 @@ export function openaiToClaudeRequest(model, body, stream) {
     }
   }
 
+<<<<<<< HEAD
   // System messages and cache_control
   if (systemParts.length > 0) {
     const systemText = systemParts.join("\n");
     result.system = [
       { type: "text", text: systemText, cache_control: { type: "ephemeral", ttl: "1h" } },
     ];
+=======
+  // System with Claude Code prompt and cache_control
+  const claudeCodePrompt = { type: "text", text: CLAUDE_SYSTEM_PROMPT };
+
+  if (systemParts.length > 0) {
+    const systemText = systemParts.join("\n");
+    result.system = [
+      claudeCodePrompt,
+      { type: "text", text: systemText, cache_control: { type: "ephemeral", ttl: "1h" } },
+    ];
+  } else {
+    result.system = [claudeCodePrompt];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   // Thinking configuration
@@ -309,6 +353,25 @@ export function openaiToClaudeRequest(model, body, stream) {
   } else if (body.reasoning_effort) {
     // Convert OpenAI reasoning_effort to Claude thinking format (#627)
     // Clients like OpenCode send reasoning_effort via @ai-sdk/openai-compatible
+<<<<<<< HEAD
+=======
+    const effortBudgetMap: Record<string, number> = {
+      low: 1024,
+      medium: 10240,
+      high: 131072,
+      max: 131072,
+    };
+    const effort = String(body.reasoning_effort).toLowerCase();
+    const budget = effortBudgetMap[effort];
+    if (budget !== undefined && budget > 0) {
+      result.thinking = {
+        type: "enabled",
+        budget_tokens: budget,
+      };
+      // Claude requires max_tokens > budget_tokens
+      if (result.max_tokens <= budget) {
+        result.max_tokens = budget + 8192;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     }
   }
@@ -455,8 +518,12 @@ function convertOpenAIToolChoice(choice) {
     }
     // Map OpenAI string types to Claude equivalents
     if (choice.type === "auto" || choice.type === "none") return { type: "auto" };
+<<<<<<< HEAD
     if (choice.type === "required" || choice.type === "any")
       return { type: CLAUDE_TOOL_CHOICE_REQUIRED };
+=======
+    if (choice.type === "required" || choice.type === "any") return { type: CLAUDE_TOOL_CHOICE_REQUIRED };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     // If type is "tool" already (Claude-native), pass through
     if (choice.type === "tool" && choice.name) return choice;
     // Fallback: unknown object type — default to auto to avoid 400 errors
@@ -496,6 +563,19 @@ function tryParseJSON(str) {
 function openaiToClaudeRequestForAntigravity(model, body, stream) {
   const result = openaiToClaudeRequest(model, body, stream);
 
+<<<<<<< HEAD
+=======
+  // Remove Claude Code system prompt, keep only user's system messages
+  if (result.system && Array.isArray(result.system)) {
+    result.system = result.system.filter(
+      (block) => !block.text || !block.text.includes("You are Claude Code")
+    );
+    if (result.system.length === 0) {
+      delete result.system;
+    }
+  }
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Strip prefix from tool names for Antigravity (doesn't use Claude OAuth)
   if (result.tools && Array.isArray(result.tools)) {
     result.tools = result.tools.map((tool) => {

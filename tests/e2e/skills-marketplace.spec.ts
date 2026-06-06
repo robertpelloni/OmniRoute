@@ -1,5 +1,8 @@
 import { expect, test, type Page, type Route } from "@playwright/test";
+<<<<<<< HEAD
 import { gotoDashboardRoute } from "./helpers/dashboardAuth";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const NAVIGATION_TIMEOUT_MS = 300_000;
 
@@ -28,6 +31,32 @@ async function fulfillJson(route: Route, body: unknown, status = 200) {
   });
 }
 
+<<<<<<< HEAD
+=======
+async function gotoOrSkip(page: Page, url: string) {
+  let lastError: unknown;
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      await page.goto(url, { waitUntil: "commit", timeout: NAVIGATION_TIMEOUT_MS });
+    } catch (error) {
+      lastError = error;
+    }
+    try {
+      await page.waitForURL(/\/(login|dashboard)(\/.*)?$/, { timeout: NAVIGATION_TIMEOUT_MS });
+      await page.locator("body").waitFor({ state: "visible", timeout: NAVIGATION_TIMEOUT_MS });
+      lastError = null;
+      break;
+    } catch (error) {
+      lastError = error;
+    }
+    await page.waitForTimeout(1000);
+  }
+  if (lastError) throw lastError;
+  const redirectedToLogin = page.url().includes("/login");
+  test.skip(redirectedToLogin, "Authentication enabled without a login fixture.");
+}
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 test.describe("Skills marketplace", () => {
   test.setTimeout(600_000);
 
@@ -68,8 +97,13 @@ test.describe("Skills marketplace", () => {
       customInstalls: 0,
     };
 
+<<<<<<< HEAD
     await page.route(/\/api\/skills\/executions(?:\?.*)?$/, async (route) => {
       await fulfillJson(route, { data: [], total: 0, totalPages: 1 });
+=======
+    await page.route("**/api/skills/executions", async (route) => {
+      await fulfillJson(route, { executions: [] });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     });
 
     await page.route(/\/api\/skills\/marketplace(?:\?.*)?$/, async (route) => {
@@ -129,6 +163,7 @@ test.describe("Skills marketplace", () => {
       await fulfillJson(route, { success: true });
     });
 
+<<<<<<< HEAD
     await page.route(/\/api\/skills(?:\?.*)?$/, async (route) => {
       await fulfillJson(route, {
         data: state.skills,
@@ -142,6 +177,15 @@ test.describe("Skills marketplace", () => {
     });
 
     await expect(page.getByText("lookupWeather")).toBeVisible({ timeout: 15000 });
+=======
+    await page.route("**/api/skills", async (route) => {
+      await fulfillJson(route, { skills: state.skills });
+    });
+
+    await gotoOrSkip(page, "/dashboard/skills");
+
+    await expect(page.getByText("lookupWeather")).toBeVisible();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const weatherCard = page
       .locator("div")
       .filter({ has: page.getByText("lookupWeather") })
@@ -153,6 +197,7 @@ test.describe("Skills marketplace", () => {
     await expect.poll(() => state.toggleCalls).toBe(1);
 
     await page.getByRole("button", { name: /marketplace/i }).click();
+<<<<<<< HEAD
     const marketplaceSearch = page.getByPlaceholder(/Search SkillsMP\.\.\./i);
     await expect(marketplaceSearch).toBeVisible({ timeout: 15000 });
 
@@ -163,6 +208,17 @@ test.describe("Skills marketplace", () => {
     await expect.poll(() => state.marketplaceInstalls).toBe(1);
 
     await marketplaceSearch.fill("");
+=======
+    await expect(page.getByPlaceholder("Search skills...")).toBeVisible();
+
+    await page.getByPlaceholder("Search skills...").fill("weather");
+    await page.getByRole("button", { name: /search skillsmp/i }).click();
+    await expect(page.getByText("Weather Pro")).toBeVisible();
+    await page.getByRole("button", { name: /^install$/i }).click();
+    await expect.poll(() => state.marketplaceInstalls).toBe(1);
+
+    await page.getByPlaceholder("Search skills...").fill("");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     await page.getByRole("button", { name: /search skillsmp/i }).click();
     const lastMarketplaceSkill = page.getByText("Skill Page 12").last();
     await lastMarketplaceSkill.scrollIntoViewIfNeeded();

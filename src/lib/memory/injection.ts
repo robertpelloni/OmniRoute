@@ -11,10 +11,13 @@
  */
 
 import { Memory } from "./types";
+<<<<<<< HEAD
 import { logger } from "../../../open-sse/utils/logger.ts";
 
 const log = logger("MEMORY_INJECTION");
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 export interface ChatMessage {
   role: "system" | "user" | "assistant";
@@ -36,6 +39,7 @@ export interface ChatRequest {
  * Providers known NOT to support a top-level system-role message.
  * These receive memories injected as the first user message instead.
  */
+<<<<<<< HEAD
 const PROVIDERS_WITHOUT_SYSTEM_MESSAGE = new Set([
   "o1",
   "o1-mini",
@@ -49,6 +53,9 @@ const PROVIDERS_WITHOUT_SYSTEM_MESSAGE = new Set([
 =======
 const PROVIDERS_WITHOUT_SYSTEM_MESSAGE = new Set(["o1", "o1-mini", "o1-preview"]);
 >>>>>>> Stashed changes
+=======
+const PROVIDERS_WITHOUT_SYSTEM_MESSAGE = new Set(["o1", "o1-mini", "o1-preview"]);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * Returns true when the given provider accepts a system-role message.
@@ -89,7 +96,15 @@ export function injectMemory(
   provider: string | null | undefined
 ): ChatRequest {
   if (!memories || memories.length === 0) {
+<<<<<<< HEAD
     log.info("memory.injection.skipped", { reason: "no_memories", model: request.model });
+=======
+    return request;
+  }
+
+  const memoryText = formatMemoryContext(memories);
+  if (!memoryText) return request;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const messages: ChatMessage[] = Array.isArray(request.messages) ? [...request.messages] : [];
 
@@ -98,6 +113,7 @@ export function injectMemory(
     // Prepending before any existing system messages keeps memory context
     // accessible without overriding the caller's own system instructions.
     const memorySystemMessage: ChatMessage = { role: "system", content: memoryText };
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     log.info("memory.injection.injected", {
       count: memories.length,
@@ -105,17 +121,22 @@ export function injectMemory(
       model: request.model,
     });
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return { ...request, messages: [memorySystemMessage, ...messages] };
   } else {
     // Strategy 2 (fallback): inject as the first user message.
     // Used for providers like o1-mini that reject the system role.
     const memoryUserMessage: ChatMessage = { role: "user", content: memoryText };
+<<<<<<< HEAD
     log.info("memory.injection.injected", {
       count: memories.length,
       strategy: "user",
       model: request.model,
     });
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return { ...request, messages: [memoryUserMessage, ...messages] };
   }
 }

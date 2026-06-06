@@ -31,6 +31,7 @@ export interface ComboHealthMetrics {
   comboName: string;
   strategy: string;
   models: string[];
+<<<<<<< HEAD
   targetHealth?: Array<{
     executionKey: string;
     stepId: string;
@@ -48,6 +49,8 @@ export interface ComboHealthMetrics {
     quotaTrend: "improving" | "stable" | "declining" | null;
     quotaScope: "connection" | "provider" | "none";
   }>;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   quotaHealth: {
     providers: Array<{
       provider: string;

@@ -1,14 +1,23 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+<<<<<<< HEAD
 import { useTranslations } from "next-intl";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import Card from "./Card";
 import RequestLoggerDetail from "./RequestLoggerDetail";
 import { copyToClipboard } from "@/shared/utils/clipboard";
 import {
+<<<<<<< HEAD
   PROVIDER_COLORS,
   getHttpStatusStyle as getStatusStyle,
   getProtocolColor,
+=======
+  PROTOCOL_COLORS,
+  PROVIDER_COLORS,
+  getHttpStatusStyle as getStatusStyle,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 } from "@/shared/constants/colors";
 import {
   formatTime,
@@ -17,7 +26,35 @@ import {
   maskAccount,
   formatApiKeyLabel,
 } from "@/shared/utils/formatting";
+<<<<<<< HEAD
 import useEmailPrivacyStore from "@/store/emailPrivacyStore";
+=======
+
+// Quick filter categories - status-based only (providers are dynamic from data)
+const STATUS_FILTERS = [
+  { key: "all", label: "All" },
+  { key: "error", label: "Errors", icon: "error" },
+  { key: "ok", label: "Success", icon: "check_circle" },
+  { key: "combo", label: "Combo", icon: "hub" },
+];
+
+// Column definitions for visibility toggles
+const COLUMNS = [
+  { key: "status", label: "Status" },
+  { key: "model", label: "Model" },
+  { key: "requestedModel", label: "Requested" },
+  { key: "provider", label: "Provider" },
+  { key: "protocol", label: "Req Protocol" },
+  { key: "account", label: "Account" },
+  { key: "apiKey", label: "API Key" },
+  { key: "combo", label: "Combo" },
+  { key: "tokens", label: "Tokens" },
+  { key: "duration", label: "Duration" },
+  { key: "time", label: "Time" },
+];
+
+const DEFAULT_VISIBLE = Object.fromEntries(COLUMNS.map((c) => [c.key, true]));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * Get a friendly display label for compatible providers.
@@ -56,6 +93,7 @@ function getLogTotalTokens(log) {
   return (log?.tokens?.in || 0) + (log?.tokens?.out || 0);
 }
 
+<<<<<<< HEAD
 function getLogTps(log): number {
   const tokensOut = log?.tokens?.out || 0;
   const durationMs = log?.duration || 0;
@@ -119,6 +157,9 @@ export default function RequestLoggerV2() {
     [t]
   );
 
+=======
+export default function RequestLoggerV2() {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [recording, setRecording] = useState(true);
@@ -136,11 +177,15 @@ export default function RequestLoggerV2() {
   const [detailLoggingLoading, setDetailLoggingLoading] = useState(false);
   const intervalRef = useRef(null);
   const hasLoadedRef = useRef(false);
+<<<<<<< HEAD
   const logsSignatureRef = useRef("");
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [providerNodes, setProviderNodes] = useState([]);
 
   // Column visibility with localStorage persistence
   const [visibleColumns, setVisibleColumns] = useState(() => {
+<<<<<<< HEAD
     const defaultVisible = Object.fromEntries(columns.map((c) => [c.key, true]));
     if (typeof window === "undefined") return defaultVisible;
     try {
@@ -148,6 +193,14 @@ export default function RequestLoggerV2() {
       return saved ? { ...defaultVisible, ...JSON.parse(saved) } : defaultVisible;
     } catch {
       return defaultVisible;
+=======
+    if (typeof window === "undefined") return DEFAULT_VISIBLE;
+    try {
+      const saved = localStorage.getItem("loggerVisibleColumns");
+      return saved ? { ...DEFAULT_VISIBLE, ...JSON.parse(saved) } : DEFAULT_VISIBLE;
+    } catch {
+      return DEFAULT_VISIBLE;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
   });
 
@@ -179,12 +232,16 @@ export default function RequestLoggerV2() {
         const res = await fetch(`/api/usage/call-logs?${params}`);
         if (res.ok) {
           const data = await res.json();
+<<<<<<< HEAD
           // Skip re-render if data hasn't changed (#1369 GPU perf)
           const sig = JSON.stringify(data.map?.((l: any) => l.id) ?? []);
           if (sig !== logsSignatureRef.current) {
             logsSignatureRef.current = sig;
             setLogs(data);
           }
+=======
+          setLogs(data);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         }
       } catch (error) {
         console.error("Failed to fetch call logs:", error);
@@ -253,10 +310,13 @@ export default function RequestLoggerV2() {
           return (b.duration || 0) - (a.duration || 0);
         case "duration_asc":
           return (a.duration || 0) - (b.duration || 0);
+<<<<<<< HEAD
         case "tps_desc":
           return getLogTps(b) - getLogTps(a);
         case "tps_asc":
           return getLogTps(a) - getLogTps(b);
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         case "status_desc":
           return (b.status || 0) - (a.status || 0);
         case "status_asc":
@@ -306,7 +366,11 @@ export default function RequestLoggerV2() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ enabled: nextEnabled }),
       });
+<<<<<<< HEAD
       if (!res.ok) throw new Error(t("updatePipelineFailed"));
+=======
+      if (!res.ok) throw new Error("Failed to update pipeline logging");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       setDetailLoggingEnabled(nextEnabled);
     } catch (error) {
       console.error("Failed to toggle pipeline logging:", error);
@@ -351,6 +415,7 @@ export default function RequestLoggerV2() {
           <span
             className={`w-2 h-2 rounded-full ${recording ? "bg-red-500 animate-pulse" : "bg-text-muted"}`}
           />
+<<<<<<< HEAD
           {recording ? t("recording") : t("paused")}
         </button>
 
@@ -372,6 +437,9 @@ export default function RequestLoggerV2() {
             : detailLoggingEnabled
               ? t("pipelineLogsOn")
               : t("pipelineLogsOff")}
+=======
+          {recording ? "Recording" : "Paused"}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         </button>
 
         <button
@@ -401,7 +469,11 @@ export default function RequestLoggerV2() {
           </span>
           <input
             type="text"
+<<<<<<< HEAD
             placeholder={t("searchPlaceholder")}
+=======
+            placeholder="Search model, provider, account, API key, combo..."
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-10 pr-4 py-2 rounded-lg bg-bg-subtle border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-primary"
@@ -414,7 +486,11 @@ export default function RequestLoggerV2() {
           onChange={(e) => setSelectedProvider(e.target.value)}
           className="px-3 py-2 rounded-lg bg-bg-subtle border border-border text-sm text-text-primary focus:outline-none focus:border-primary appearance-none cursor-pointer min-w-[140px]"
         >
+<<<<<<< HEAD
           <option value="">{t("allProviders")}</option>
+=======
+          <option value="">All Providers</option>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           {uniqueProviders.map((p) => {
             const compatLabel = getProviderDisplayLabel(p, providerNodes);
             const pc = PROVIDER_COLORS[p];
@@ -432,7 +508,11 @@ export default function RequestLoggerV2() {
           onChange={(e) => setSelectedModel(e.target.value)}
           className="px-3 py-2 rounded-lg bg-bg-subtle border border-border text-sm text-text-primary focus:outline-none focus:border-primary appearance-none cursor-pointer min-w-[180px]"
         >
+<<<<<<< HEAD
           <option value="">{t("allModels")}</option>
+=======
+          <option value="">All Models</option>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           {uniqueModels.map((model) => (
             <option key={model} value={model}>
               {model}
@@ -446,7 +526,11 @@ export default function RequestLoggerV2() {
           onChange={(e) => setSelectedAccount(e.target.value)}
           className="px-3 py-2 rounded-lg bg-bg-subtle border border-border text-sm text-text-primary focus:outline-none focus:border-primary appearance-none cursor-pointer min-w-[140px]"
         >
+<<<<<<< HEAD
           <option value="">{t("allAccounts")}</option>
+=======
+          <option value="">All Accounts</option>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           {uniqueAccounts.map((a) => (
             <option key={a} value={a}>
               {a}
@@ -460,7 +544,11 @@ export default function RequestLoggerV2() {
           onChange={(e) => setSelectedApiKey(e.target.value)}
           className="px-3 py-2 rounded-lg bg-bg-subtle border border-border text-sm text-text-primary focus:outline-none focus:border-primary appearance-none cursor-pointer min-w-[160px]"
         >
+<<<<<<< HEAD
           <option value="">{t("allApiKeys")}</option>
+=======
+          <option value="">All API Keys</option>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           {uniqueApiKeys.map((value) => {
             const matched = logs.find((l) => (l.apiKeyId || l.apiKeyName) === value);
             const label = formatApiKeyLabel(matched?.apiKeyName, matched?.apiKeyId);
@@ -475,6 +563,7 @@ export default function RequestLoggerV2() {
         {/* Stats */}
         <div className="flex items-center gap-2 text-xs text-text-muted">
           <span className="px-2 py-1 rounded bg-bg-subtle border border-border font-mono">
+<<<<<<< HEAD
             {totalCount} {t("total")}
           </span>
           <span className="px-2 py-1 rounded bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 font-mono">
@@ -483,20 +572,42 @@ export default function RequestLoggerV2() {
           {errorCount > 0 && (
             <span className="px-2 py-1 rounded bg-red-500/10 text-red-700 dark:text-red-400 font-mono">
               {errorCount} {t("err")}
+=======
+            {totalCount} total
+          </span>
+          <span className="px-2 py-1 rounded bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 font-mono">
+            {okCount} OK
+          </span>
+          {errorCount > 0 && (
+            <span className="px-2 py-1 rounded bg-red-500/10 text-red-700 dark:text-red-400 font-mono">
+              {errorCount} ERR
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             </span>
           )}
           {comboCount > 0 && (
             <span className="px-2 py-1 rounded bg-violet-500/10 text-violet-700 dark:text-violet-400 font-mono">
+<<<<<<< HEAD
               {comboCount} {t("combo")}
+=======
+              {comboCount} combo
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             </span>
           )}
           {apiKeyCount > 0 && (
             <span className="px-2 py-1 rounded bg-primary/10 text-primary font-mono">
+<<<<<<< HEAD
               {apiKeyCount} {t("keys")}
             </span>
           )}
           <span className="px-2 py-1 rounded bg-bg-subtle border border-border font-mono">
             {sortedLogs.length} {t("shown")}
+=======
+              {apiKeyCount} keys
+            </span>
+          )}
+          <span className="px-2 py-1 rounded bg-bg-subtle border border-border font-mono">
+            {sortedLogs.length} shown
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           </span>
         </div>
 
@@ -505,6 +616,7 @@ export default function RequestLoggerV2() {
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
           className="px-3 py-2 rounded-lg bg-bg-subtle border border-border text-sm text-text-primary focus:outline-none focus:border-primary appearance-none cursor-pointer min-w-[150px]"
+<<<<<<< HEAD
           title={t("sortLogs")}
         >
           <option value="newest">{t("sortNewest")}</option>
@@ -517,13 +629,31 @@ export default function RequestLoggerV2() {
           <option value="status_asc">{t("sortStatusAsc")}</option>
           <option value="model_asc">{t("sortModelAsc")}</option>
           <option value="model_desc">{t("sortModelDesc")}</option>
+=======
+          title="Sort logs"
+        >
+          <option value="newest">Newest</option>
+          <option value="oldest">Oldest</option>
+          <option value="tokens_desc">Tokens ↓</option>
+          <option value="tokens_asc">Tokens ↑</option>
+          <option value="duration_desc">Duration ↓</option>
+          <option value="duration_asc">Duration ↑</option>
+          <option value="status_desc">Status ↓</option>
+          <option value="status_asc">Status ↑</option>
+          <option value="model_asc">Model A-Z</option>
+          <option value="model_desc">Model Z-A</option>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         </select>
 
         {/* Refresh */}
         <button
           onClick={() => fetchLogs(false)}
           className="p-2 rounded-lg hover:bg-bg-subtle text-text-muted hover:text-text-primary transition-colors"
+<<<<<<< HEAD
           title={t("refresh")}
+=======
+          title="Refresh"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         >
           <span className="material-symbols-outlined text-[18px]">refresh</span>
         </button>
@@ -532,7 +662,11 @@ export default function RequestLoggerV2() {
       {/* Quick Filters */}
       <div className="flex flex-wrap items-center gap-2">
         {/* Status Filters */}
+<<<<<<< HEAD
         {statusFilters.map((f) => (
+=======
+        {STATUS_FILTERS.map((f) => (
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           <button
             key={f.key}
             onClick={() => setActiveFilter(activeFilter === f.key ? "all" : f.key)}
@@ -588,10 +722,15 @@ export default function RequestLoggerV2() {
 
       {/* Column Visibility Toggles */}
       <div className="flex flex-wrap items-center gap-1.5">
+<<<<<<< HEAD
         <span className="text-[10px] text-text-muted uppercase tracking-wider mr-1">
           {t("columnsLabel")}
         </span>
         {columns.map((col) => (
+=======
+        <span className="text-[10px] text-text-muted uppercase tracking-wider mr-1">Columns</span>
+        {COLUMNS.map((col) => (
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           <button
             key={col.key}
             onClick={() => toggleColumn(col.key)}
@@ -610,16 +749,29 @@ export default function RequestLoggerV2() {
       <Card className="overflow-hidden bg-black/5 dark:bg-black/20">
         <div className="p-0 overflow-x-auto max-h-[calc(100vh-320px)] overflow-y-auto">
           {loading && logs.length === 0 ? (
+<<<<<<< HEAD
             <div className="p-8 text-center text-text-muted">{t("loadingLogs")}</div>
+=======
+            <div className="p-8 text-center text-text-muted">Loading logs...</div>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           ) : logs.length === 0 ? (
             <div className="p-8 text-center text-text-muted">
               <span className="material-symbols-outlined text-[48px] mb-2 block opacity-40">
                 receipt_long
               </span>
+<<<<<<< HEAD
               {t("noLogs")}
             </div>
           ) : sortedLogs.length === 0 ? (
             <div className="p-8 text-center text-text-muted">{t("noMatchingLogs")}</div>
+=======
+              No logs recorded yet. Make some API calls to see them here.
+            </div>
+          ) : sortedLogs.length === 0 ? (
+            <div className="p-8 text-center text-text-muted">
+              No logs match the current filters.
+            </div>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           ) : (
             <table className="w-full text-left border-collapse text-xs">
               <thead
@@ -632,22 +784,30 @@ export default function RequestLoggerV2() {
                 >
                   {visibleColumns.status && (
                     <th className="px-3 py-2.5 font-semibold text-text-muted uppercase tracking-wider text-[10px]">
+<<<<<<< HEAD
                       {t("columns.status")}
                     </th>
                   )}
                   {visibleColumns.cacheSource && (
                     <th className="px-3 py-2.5 font-semibold text-text-muted uppercase tracking-wider text-[10px]">
                       {t("columns.cacheSource")}
+=======
+                      Status
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     </th>
                   )}
                   {visibleColumns.model && (
                     <th className="px-3 py-2.5 font-semibold text-text-muted uppercase tracking-wider text-[10px]">
+<<<<<<< HEAD
                       {t("columns.model")}
                     </th>
                   )}
                   {visibleColumns.requestedModel && (
                     <th className="px-3 py-2.5 font-semibold text-text-muted uppercase tracking-wider text-[10px]">
                       {t("columns.requested")}
+=======
+                      Model
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     </th>
                   )}
                   {visibleColumns.requestedModel && (
@@ -657,47 +817,79 @@ export default function RequestLoggerV2() {
                   )}
                   {visibleColumns.provider && (
                     <th className="px-3 py-2.5 font-semibold text-text-muted uppercase tracking-wider text-[10px]">
+<<<<<<< HEAD
                       {t("columns.provider")}
+=======
+                      Provider
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     </th>
                   )}
                   {visibleColumns.protocol && (
                     <th className="px-3 py-2.5 font-semibold text-text-muted uppercase tracking-wider text-[10px]">
+<<<<<<< HEAD
                       {t("columns.protocol")}
+=======
+                      Req Protocol
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     </th>
                   )}
                   {visibleColumns.account && (
                     <th className="px-3 py-2.5 font-semibold text-text-muted uppercase tracking-wider text-[10px]">
+<<<<<<< HEAD
                       {t("columns.account")}
+=======
+                      Account
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     </th>
                   )}
                   {visibleColumns.apiKey && (
                     <th className="px-3 py-2.5 font-semibold text-text-muted uppercase tracking-wider text-[10px]">
+<<<<<<< HEAD
                       {t("columns.apiKey")}
+=======
+                      API Key
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     </th>
                   )}
                   {visibleColumns.combo && (
                     <th className="px-3 py-2.5 font-semibold text-text-muted uppercase tracking-wider text-[10px]">
+<<<<<<< HEAD
                       {t("columns.combo")}
+=======
+                      Combo
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     </th>
                   )}
                   {visibleColumns.tokens && (
                     <th className="px-3 py-2.5 font-semibold text-text-muted uppercase tracking-wider text-[10px] text-right">
+<<<<<<< HEAD
                       {t("columns.tokens")}
                     </th>
                   )}
                   {visibleColumns.tps && (
                     <th className="px-3 py-2.5 font-semibold text-text-muted uppercase tracking-wider text-[10px] text-right">
                       {t("columns.tps")}
+=======
+                      Tokens
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     </th>
                   )}
                   {visibleColumns.duration && (
                     <th className="px-3 py-2.5 font-semibold text-text-muted uppercase tracking-wider text-[10px] text-right">
+<<<<<<< HEAD
                       {t("columns.duration")}
+=======
+                      Duration
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     </th>
                   )}
                   {visibleColumns.time && (
                     <th className="px-3 py-2.5 font-semibold text-text-muted uppercase tracking-wider text-[10px] text-right">
+<<<<<<< HEAD
                       {t("columns.time")}
+=======
+                      Time
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     </th>
                   )}
                 </tr>
@@ -706,7 +898,16 @@ export default function RequestLoggerV2() {
                 {sortedLogs.map((log) => {
                   const statusStyle = getStatusStyle(log.status);
                   const protocolKey = log.sourceFormat || log.provider;
+<<<<<<< HEAD
                   const protocol = getProtocolColor(protocolKey, log.provider);
+=======
+                  const protocol = PROTOCOL_COLORS[protocolKey] ||
+                    PROTOCOL_COLORS[log.provider] || {
+                      bg: "#6B7280",
+                      text: "#fff",
+                      label: (protocolKey || log.provider || "-").toUpperCase(),
+                    };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   const compatLabel = getProviderDisplayLabel(log.provider, providerNodes);
                   const providerColor = PROVIDER_COLORS[log.provider] || {
                     bg: "#374151",
@@ -715,8 +916,11 @@ export default function RequestLoggerV2() {
                   };
                   const providerLabel = compatLabel || providerColor.label;
                   const isError = log.status >= 400;
+<<<<<<< HEAD
                   const cacheSourceMeta = getCacheSourceMeta(log.cacheSource);
                   const isSemanticCache = cacheSourceMeta.key === "semantic";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
                   return (
                     <tr
@@ -734,6 +938,7 @@ export default function RequestLoggerV2() {
                           </span>
                         </td>
                       )}
+<<<<<<< HEAD
                       {visibleColumns.cacheSource && (
                         <td className="px-3 py-2">
                           <span
@@ -744,6 +949,8 @@ export default function RequestLoggerV2() {
                           </span>
                         </td>
                       )}
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                       {visibleColumns.model && (
                         <td className="px-3 py-2 font-medium text-primary font-mono text-[11px]">
                           {log.model}
@@ -760,10 +967,14 @@ export default function RequestLoggerV2() {
                               }
                               title={
                                 log.requestedModel !== log.model
+<<<<<<< HEAD
                                   ? t("requestedRoutedTitle", {
                                       requested: log.requestedModel,
                                       routed: log.model,
                                     })
+=======
+                                  ? `Requested ${log.requestedModel}, routed as ${log.model}`
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                                   : log.requestedModel
                               }
                             >
@@ -799,13 +1010,21 @@ export default function RequestLoggerV2() {
                           className="px-3 py-2 text-text-muted truncate max-w-[120px]"
                           title={log.account}
                         >
+<<<<<<< HEAD
                           {maskAccount(log.account, emailsVisible)}
+=======
+                          {maskAccount(log.account)}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                         </td>
                       )}
                       {visibleColumns.apiKey && (
                         <td
                           className="px-3 py-2 text-text-muted truncate max-w-[140px]"
+<<<<<<< HEAD
                           title={log.apiKeyName || log.apiKeyId || t("noApiKey")}
+=======
+                          title={log.apiKeyName || log.apiKeyId || "No API key"}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                         >
                           {formatApiKeyLabel(log.apiKeyName, log.apiKeyId)}
                         </td>
@@ -832,6 +1051,7 @@ export default function RequestLoggerV2() {
                           <span className="text-emerald-700 dark:text-emerald-400">
                             {log.tokens?.out?.toLocaleString() || 0}
                           </span>
+<<<<<<< HEAD
                           {log.tokens?.compressed != null && log.tokens.compressed > 0 && (
                             <>
                               <span className="mx-1 text-border">|</span>
@@ -863,6 +1083,8 @@ export default function RequestLoggerV2() {
                               </span>
                             );
                           })()}
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                         </td>
                       )}
                       {visibleColumns.duration && (
@@ -885,11 +1107,16 @@ export default function RequestLoggerV2() {
       </Card>
 
       <div className="text-[10px] text-text-muted italic">
+<<<<<<< HEAD
         {t("callLogsInfo", {
           dataDir: "{DATA_DIR}/call_logs/",
           retentionDays: "CALL_LOG_RETENTION_DAYS",
           maxEntries: "CALL_LOG_MAX_ENTRIES",
         })}
+=======
+        Call logs are also saved as JSON files to <code>{`{DATA_DIR}/call_logs/`}</code> and rotated
+        by <code>CALL_LOG_RETENTION_DAYS</code> and <code>CALL_LOG_MAX_ENTRIES</code>.
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       </div>
 
       {/* Detail Modal */}
@@ -898,7 +1125,10 @@ export default function RequestLoggerV2() {
           log={selectedLog}
           detail={detailData}
           loading={detailLoading}
+<<<<<<< HEAD
           debugEnabled={detailLoggingEnabled}
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           onClose={closeDetail}
           onCopy={copyToClipboard}
         />

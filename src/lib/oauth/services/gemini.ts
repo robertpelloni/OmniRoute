@@ -1,6 +1,9 @@
 import crypto from "crypto";
 import open from "open";
+<<<<<<< HEAD
 import { getGeminiCliLoadCodeAssistMetadata } from "@omniroute/open-sse/services/geminiCliHeaders.ts";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { GEMINI_CONFIG } from "../constants/oauth";
 import { getServerCredentials } from "../config/index";
 import { startLocalServer } from "../utils/server";
@@ -70,9 +73,26 @@ export class GeminiCLIService {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
+<<<<<<< HEAD
       },
       body: JSON.stringify({
         metadata: getGeminiCliLoadCodeAssistMetadata(),
+=======
+        "User-Agent": "google-api-nodejs-client/9.15.1",
+        "X-Goog-Api-Client": "google-cloud-sdk vscode_cloudshelleditor/0.1",
+        "Client-Metadata": JSON.stringify({
+          ideType: "IDE_UNSPECIFIED",
+          platform: "PLATFORM_UNSPECIFIED",
+          pluginType: "GEMINI",
+        }),
+      },
+      body: JSON.stringify({
+        metadata: {
+          ideType: "IDE_UNSPECIFIED",
+          platform: "PLATFORM_UNSPECIFIED",
+          pluginType: "GEMINI",
+        },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }),
     });
 

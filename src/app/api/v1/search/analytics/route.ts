@@ -6,7 +6,10 @@
  */
 
 import { NextResponse } from "next/server";
+<<<<<<< HEAD
 import { SEARCH_PROVIDERS } from "@omniroute/open-sse/config/searchRegistry.ts";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { getDbInstance } from "@/lib/db/core";
 import { enforceApiKeyPolicy } from "@/shared/utils/apiKeyPolicy";
 
@@ -34,7 +37,11 @@ export async function GET(req: Request) {
         `SELECT
           COUNT(*) as total,
           COALESCE(SUM(CASE WHEN timestamp >= ? THEN 1 ELSE 0 END), 0) as today,
+<<<<<<< HEAD
           COALESCE(SUM(CASE WHEN status >= 400 OR error_summary IS NOT NULL THEN 1 ELSE 0 END), 0) as errors,
+=======
+          COALESCE(SUM(CASE WHEN status >= 400 OR error IS NOT NULL THEN 1 ELSE 0 END), 0) as errors,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           AVG(CASE WHEN duration > 0 THEN duration END) as avg_duration,
           COALESCE(SUM(CASE WHEN duration > 0 AND duration < 5 THEN 1 ELSE 0 END), 0) as cached
          FROM call_logs
@@ -57,11 +64,27 @@ export async function GET(req: Request) {
       )
       .all() as Array<{ provider: string; cnt: number }>;
 
+<<<<<<< HEAD
     const byProvider: Record<string, { count: number; costUsd: number }> = {};
     let totalCostUsd = 0;
     for (const row of provRows) {
       const costPerQuery = SEARCH_PROVIDERS[row.provider]?.costPerQuery ?? 0;
       const cost = costPerQuery * row.cnt;
+=======
+    // Cost per search provider (matching searchRegistry.ts rates)
+    const COST_PER_QUERY: Record<string, number> = {
+      "serper-search": 0.001,
+      "brave-search": 0.003,
+      "perplexity-search": 0.005,
+      "exa-search": 0.01,
+      "tavily-search": 0.004,
+    };
+
+    const byProvider: Record<string, { count: number; costUsd: number }> = {};
+    let totalCostUsd = 0;
+    for (const row of provRows) {
+      const cost = (COST_PER_QUERY[row.provider] ?? 0.001) * row.cnt;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       byProvider[row.provider] = { count: row.cnt, costUsd: cost };
       totalCostUsd += cost;
     }

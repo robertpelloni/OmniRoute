@@ -4,11 +4,17 @@
 
 ---
 
+<<<<<<< HEAD
 > **Agent-to-Agent Protocol v0.3** — Enables any AI agent to use OmniRoute as an intelligent routing agent via JSON-RPC 2.0.
 
 The A2A Server exposes OmniRoute as a **first-class agent** that other agents can discover, delegate tasks to, and collaborate with using the [A2A Protocol](https://google.github.io/A2A/).
 
 ---
+=======
+> **Agent-to-Agent Protocol v0.3**— Mahdollistaa minkä tahansa tekoälyagentin käyttää OmniRoutea älykkäänä reititysagenttina JSON-RPC 2.0:n kautta.
+
+A2A-palvelin paljastaa OmniRouten**ensiluokan agentiksi**, jonka muut agentit voivat löytää, delegoida tehtäviä ja tehdä yhteistyötä [A2A-protokollan](https://google.github.io/A2A/) avulla.---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## Arkkitehtuuri
 
@@ -43,6 +49,7 @@ The A2A Server exposes OmniRoute as a **first-class agent** that other agents ca
 
 ### Agent Discovery
 
+<<<<<<< HEAD
 Every A2A-compatible agent exposes an **Agent Card** at `/.well-known/agent.json`:
 
 ```bash
@@ -52,6 +59,14 @@ curl http://localhost:20128/.well-known/agent.json
 **Response:**
 
 ```json
+=======
+Jokainen A2A-yhteensopiva agentti paljastaa**Agent Cardin**osoitteessa `/.well-known/agent.json`:```bash
+curl http://localhost:20128/.well-known/agent.json
+
+````
+
+**Vastaus:**```json
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 {
   "name": "OmniRoute",
   "description": "Intelligent AI gateway with auto-routing across 50+ providers",
@@ -88,7 +103,11 @@ curl http://localhost:20128/.well-known/agent.json
     "apiKeyHeader": "Authorization"
   }
 }
+<<<<<<< HEAD
 ```
+=======
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ---
 
@@ -96,6 +115,7 @@ curl http://localhost:20128/.well-known/agent.json
 
 ### `message/send` — Synchronous Execution
 
+<<<<<<< HEAD
 Send a message to a skill and receive the complete response.
 
 ```bash
@@ -117,6 +137,26 @@ curl -X POST http://localhost:20128/a2a \
 **Response:**
 
 ```json
+=======
+Lähetä viesti taidolle ja vastaanota täydellinen vastaus.```bash
+curl -X POST http://localhost:20128/a2a \
+ -H "Content-Type: application/json" \
+ -H "Authorization: Bearer YOUR_KEY" \
+ -d '{
+"jsonrpc": "2.0",
+"id": "1",
+"method": "message/send",
+"params": {
+"skill": "smart-routing",
+"messages": [{"role": "user", "content": "Write a Python hello world"}],
+"metadata": {"model": "auto", "combo": "fast-coding"}
+}
+}'
+
+````
+
+**Vastaus:**```json
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 {
   "jsonrpc": "2.0",
   "id": "1",
@@ -133,6 +173,7 @@ curl -X POST http://localhost:20128/a2a \
     }
   }
 }
+<<<<<<< HEAD
 ```
 
 ### `message/stream` — SSE Streaming
@@ -157,12 +198,39 @@ curl -N -X POST http://localhost:20128/a2a \
 **SSE Events:**
 
 ```
+=======
+````
+
+### `message/stream` — SSE Streaming
+
+Sama kuin "message/send", mutta palauttaa palvelimen lähettämät tapahtumat reaaliaikaista suoratoistoa varten.```bash
+curl -N -X POST http://localhost:20128/a2a \
+ -H "Content-Type: application/json" \
+ -H "Authorization: Bearer YOUR_KEY" \
+ -d '{
+"jsonrpc": "2.0",
+"id": "1",
+"method": "message/stream",
+"params": {
+"skill": "smart-routing",
+"messages": [{"role": "user", "content": "Explain quantum computing"}]
+}
+}'
+
+````
+
+**SSE-tapahtumat:**```
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 data: {"jsonrpc":"2.0","method":"message/stream","params":{"task":{"id":"...","state":"working"},"chunk":{"type":"text","content":"Quantum computing..."}}}
 
 : heartbeat 2026-03-04T21:00:00Z
 
 data: {"jsonrpc":"2.0","method":"message/stream","params":{"task":{"id":"...","state":"completed"},"metadata":{...}}}
+<<<<<<< HEAD
 ```
+=======
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ### `tasks/get` — Query Task Status
 
@@ -188,6 +256,7 @@ curl -X POST http://localhost:20128/a2a \
 
 ### `smart-routing`
 
+<<<<<<< HEAD
 Routes prompts through OmniRoute's intelligent pipeline with full observability.
 
 **Parameters (in `metadata`):**
@@ -222,6 +291,38 @@ Answers natural-language queries about provider quotas.
 | Default                                        | Full quota summary with warnings for low-quota providers |
 
 ---
+=======
+Routes ohjaa OmniRouten älykkään putkilinjan läpi täydellä havainnolla.
+
+**Parametrit ("metatiedoissa"):**
+
+| Parametri    | Tyyppi       | Oletus                | Kuvaus                                                                                                     |
+| ------------ | ------------ | --------------------- | ---------------------------------------------------------------------------------------------------------- |
+| "malli"      | "merkkijono" | `"auto"`              | Kohdemalli (esim. "claude-sonnet-4", "gpt-4o", "auto")                                                     |
+| "yhdistelmä" | "merkkijono" | aktiivinen yhdistelmä | Erityinen yhdistelmä reittiä varten                                                                        |
+| "budjetti"   | "numero"     | ei yhtään             | Tämän pyynnön enimmäishinta USD                                                                            |
+| "rooli"      | "merkkijono" | ei yhtään             | Tehtävän roolivinkki: "koodaus", "tarkistus", "suunnittelu", "analyysi", "virheenkorjaus", "dokumentaatio" |
+
+**Palautukset:**
+
+| Kenttä                         | Kuvaus                                                       |
+| ------------------------------ | ------------------------------------------------------------ | ---------------------- |
+| `artefacts[].content`          | LLM-vastausteksti                                            |
+| `metadata.routing_explanation` | Ihmisen luettava selitys reitityspäätöksestä                 |
+| `metadata.cost_envelope`       | Arvioidut vs. todelliset kustannukset valuutalla             |
+| `metadata.resilience_trace`    | Joukko tapahtumia (ensisijainen_valittu, vara_tarvittu jne.) |
+| `metadata.policy_verdict`      | Onko pyyntö hyväksytty ja miksi                              | ### `quota-management` |
+
+Vastaa luonnollisen kielen kyselyihin palveluntarjoajan kiintiöistä.
+
+**Kyselytyypit (päätelty viestin sisällöstä):**
+
+| Kyselymalli                                             | Vastaustyyppi                                                              |
+| ------------------------------------------------------- | -------------------------------------------------------------------------- | --- |
+| Sisältää `"sijoituksen"`, `"suurin kiintiö"`, `"paras"` | Palveluntarjoajat luokiteltu jäljellä olevan kiintiön mukaan               |
+| Sisältää sanat "ilmainen", "suggest"                    | Luetteloi ilmaiset yhdistelmät tai ehdottaa vapaan tason tarjoajia         |
+| Oletus                                                  | Täydellinen kiintiöyhteenveto ja varoituksia alhaisen kiintiön tarjoajille | --- |
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## Task Lifecycle
 
@@ -231,6 +332,7 @@ submitted ──→ working ──→ completed
               ──────────→ cancelled
 ```
 
+<<<<<<< HEAD
 | State       | Description                                           |
 | ----------- | ----------------------------------------------------- |
 | `submitted` | Task created, queued for execution                    |
@@ -244,6 +346,19 @@ submitted ──→ working ──→ completed
 - Tasks are garbage-collected after 2× TTL
 
 ---
+=======
+| valtio        | Kuvaus                                                           |
+| ------------- | ---------------------------------------------------------------- |
+| "lähetetty"   | Tehtävä luotu, jonossa suoritusta varten                         |
+| "työssä"      | Taitokäsittelijä suorittaa                                       |
+| "valmis"      | Suoritus onnistui, artefakteja saatavilla                        |
+| "epäonnistui" | Suoritus epäonnistui tai tehtävä vanhentunut (TTL: 5 min oletus) |
+| `peruutettu`  | Asiakas peruutti tehtävät/peruuta                                |
+
+- Päätteen tilat: "valmis", "epäonnistunut", "peruutettu" (ei muita siirtoja)
+- Vanhentuneet tehtävät kohdassa "lähetetty" tai "työssä" merkitään automaattisesti epäonnistuneiksi
+- Tehtävät kerätään roskat 2× TTL:n jälkeen---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## Client Examples
 
@@ -541,6 +656,7 @@ func main() {
 
 ### 🤖 Use Case 1: Multi-Agent Coding Pipeline
 
+<<<<<<< HEAD
 An orchestrator agent delegates code generation to OmniRoute, then passes the output to a review agent.
 
 ```python
@@ -550,6 +666,14 @@ def coding_pipeline(task: str):
         {"role": "user", "content": f"Write production-quality code: {task}"}
     ], metadata={"model": "auto", "role": "coding"})
     code = code_result["artifacts"][0]["content"]
+=======
+Orchestrator-agentti delegoi koodin luomisen OmniRoutelle ja välittää sitten tulosteen tarkistusagentille.```python
+def coding_pipeline(task: str): # Step 1: Generate code via OmniRoute A2A
+code_result = a2a_send("smart-routing", [
+{"role": "user", "content": f"Write production-quality code: {task}"}
+], metadata={"model": "auto", "role": "coding"})
+code = code_result["artifacts"][0]["content"]
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     # Step 2: Review the code via OmniRoute A2A (different model)
     review_result = a2a_send("smart-routing", [
@@ -562,6 +686,7 @@ def coding_pipeline(task: str):
     print(f"Review cost: ${review_result['metadata']['cost_envelope']['actual']}")
 
     return {"code": code, "review": review}
+<<<<<<< HEAD
 ```
 
 ### 💡 Use Case 2: Quota-Aware Agent Swarm
@@ -569,6 +694,14 @@ def coding_pipeline(task: str):
 Multiple agents share quota through OmniRoute, using the quota skill to coordinate.
 
 ```python
+=======
+
+````
+
+### 💡 Use Case 2: Quota-Aware Agent Swarm
+
+Useat agentit jakavat kiintiön OmniRouten kautta käyttämällä kiintiötaitoa koordinointiin.```python
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 async def quota_aware_agent(agent_name: str, task: str):
     # Check quota before starting
     quota = a2a_send("quota-management", [
@@ -591,6 +724,7 @@ async def quota_aware_agent(agent_name: str, task: str):
         print(f"[{agent_name}] Free alternatives: {quota['artifacts'][0]['content']}")
 
     return result
+<<<<<<< HEAD
 ```
 
 ### 📊 Use Case 3: Real-Time Streaming Dashboard
@@ -598,10 +732,18 @@ async def quota_aware_agent(agent_name: str, task: str):
 A monitoring agent streams responses and displays progress in real-time.
 
 ```typescript
+=======
+````
+
+### 📊 Use Case 3: Real-Time Streaming Dashboard
+
+Valvontaagentti suoratoistaa vastauksia ja näyttää edistymisen reaaliajassa.```typescript
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 async function streamingDashboard(prompt: string) {
   const response = await fetch(`${BASE_URL}/a2a`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${API_KEY}` },
+<<<<<<< HEAD
     body: JSON.stringify({
       jsonrpc: "2.0",
       id: "dash-1",
@@ -617,6 +759,23 @@ async function streamingDashboard(prompt: string) {
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
+=======
+body: JSON.stringify({
+jsonrpc: "2.0",
+id: "dash-1",
+method: "message/stream",
+params: { skill: "smart-routing", messages: [{ role: "user", content: prompt }] },
+}),
+});
+
+let totalChunks = 0;
+const reader = response.body!.getReader();
+const decoder = new TextDecoder();
+
+while (true) {
+const { done, value } = await reader.read();
+if (done) break;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     for (const line of decoder.decode(value).split("\n")) {
       if (line.startsWith("data: ")) {
@@ -640,6 +799,7 @@ async function streamingDashboard(prompt: string) {
         }
       }
     }
+<<<<<<< HEAD
   }
 }
 ```
@@ -649,6 +809,17 @@ async function streamingDashboard(prompt: string) {
 For long-running tasks, poll the task status instead of waiting synchronously.
 
 ```python
+=======
+
+}
+}
+
+````
+
+### 🔁 Use Case 4: Task Polling Pattern
+
+Pitkäaikaisten tehtävien kohdalla kysely tehtävän tilasta synkronisen odottamisen sijaan.```python
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import time
 
 def poll_task(task_id: str, timeout: int = 60):
@@ -678,12 +849,17 @@ def poll_task(task_id: str, timeout: int = 60):
         "params": {"taskId": task_id},
     })
     raise TimeoutError(f"Task {task_id} timed out after {timeout}s")
+<<<<<<< HEAD
 ```
+=======
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ---
 
 ## Error Codes
 
+<<<<<<< HEAD
 | Code   | Constant                 | Meaning                                  |
 | ------ | ------------------------ | ---------------------------------------- |
 | -32700 | —                        | Parse error (invalid JSON)               |
@@ -710,10 +886,34 @@ Authorization: Bearer YOUR_OMNIROUTE_API_KEY
 If no API key is configured on the server (`OMNIROUTE_API_KEY` is empty), authentication is bypassed.
 
 ---
+=======
+| Koodi  | Jatkuva                  | Merkitys                                 |
+| ------ | ------------------------ | ---------------------------------------- | --- |
+| -32700 | —                        | Jäsennysvirhe (virheellinen JSON)        |
+| -32600 | `INVALID_REQUEST`        | Virheellinen JSON-RPC-pyyntö tai luvaton |
+| -32601 | `METHOD_NOT_FOUND`       | Tuntematon menetelmä tai taito           |
+| -32602 | "INVALID_PARAMS"         | Puuttuvat tai virheelliset parametrit    |
+| -32603 | "SISÄINEN_VIRHE"         | Taidon suoritus epäonnistui              |
+| -32001 | `TASK_NOT_FOUND`         | Tehtävätunnusta ei löydy                 |
+| -32002 | `TASK_ALREADY_COMPLETED` | Valmistettua tehtävää ei voi muokata     |
+| -32003 | "LUVATTOMAT"             | Virheellinen tai puuttuva API-avain      |
+| -32004 | `BUDGET_EXCEEDED`        | Pyyntö ylittää määritetyn budjetin       |
+| -32005 | `PROVIDER_UNAVAILABLE`   | Ei saatavilla palveluntarjoajia          | --- |
+
+## Authentication
+
+Kaikki "/a2a"-pyynnöt vaativat siirtotietunnuksen "Authorization"-otsikon kautta:```
+Authorization: Bearer YOUR_OMNIROUTE_API_KEY
+
+```
+
+Jos palvelimelle ei ole määritetty API-avainta (OMNIROUTE_API_KEY on tyhjä), todennus ohitetaan.---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## File Structure
 
 ```
+<<<<<<< HEAD
 src/lib/a2a/
 ├── taskManager.ts         # Task lifecycle (create/update/cancel/list), TTL, cleanup
 ├── taskExecution.ts       # Generic task executor with state management
@@ -728,12 +928,31 @@ src/app/a2a/
 
 open-sse/mcp-server/
 └── schemas/a2a.ts         # Zod schemas (AgentCard, Task, JSON-RPC, SSE events)
+=======
+
+src/lib/a2a/
+├── taskManager.ts # Task lifecycle (create/update/cancel/list), TTL, cleanup
+├── taskExecution.ts # Generic task executor with state management
+├── streaming.ts # SSE stream formatting, heartbeat, chunk/completion events
+├── routingLogger.ts # Routing decision logger (stats, history, retention)
+└── skills/
+├── smartRouting.ts # Smart routing skill (routes via /v1/chat/completions)
+└── quotaManagement.ts # Quota management skill (natural-language quota queries)
+
+src/app/a2a/
+└── route.ts # Next.js API route handler (JSON-RPC 2.0 dispatch)
+
+open-sse/mcp-server/
+└── schemas/a2a.ts # Zod schemas (AgentCard, Task, JSON-RPC, SSE events)
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 ```
 
 ---
 
 ## Comparison: MCP vs A2A
 
+<<<<<<< HEAD
 | Feature           | MCP Server                   | A2A Server                                        |
 | ----------------- | ---------------------------- | ------------------------------------------------- |
 | **Protocol**      | Model Context Protocol       | Agent-to-Agent Protocol v0.3                      |
@@ -750,3 +969,20 @@ open-sse/mcp-server/
 ## Lisenssi
 
 Part of [OmniRoute](https://github.com/diegosouzapw/OmniRoute) — MIT License.
+=======
+| Ominaisuus | MCP-palvelin | A2A-palvelin |
+| ------------------ | ----------------------------- | -------------------------------------------------- |
+|**Pöytäkirja**| Mallikontekstiprotokolla | Agenttien välinen protokolla v0.3 |
+|**Kuljetus**| stdio / HTTP | HTTP (JSON-RPC 2.0) |
+|**Löytö**| Työkaluluettelo MCP:n kautta | "/.well-known/agent.json" |
+|**Rakeisuus**| 16 yksittäistä työkalua | 2 korkeatasoista taitoa |
+|**Paras**| IDE-agentit (kursori, VS-koodi) | Moniagenttijärjestelmät (LangChain, CrewAI) |
+|**Striimaus**| Ei tuettu | SSE viestin/streamin kautta |
+|**Tehtävän seuranta**| Ei | Koko elinkaari (toimitettu → valmis) |
+|**Havaittavuus**| Tarkastusloki työkalukutsua kohti | Kustannuskirje + sietokykyjäljitys + politiikkapäätös |---
+
+## Lisenssi
+
+Osa [OmniRoute](https://github.com/diegosouzapw/OmniRoute) – MIT-lisenssi.
+```
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

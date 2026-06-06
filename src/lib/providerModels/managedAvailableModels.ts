@@ -34,6 +34,10 @@ async function getProviderDisplayPrefix(providerId: string): Promise<string> {
   return typeof prefix === "string" && prefix.trim().length > 0 ? prefix.trim() : providerId;
 }
 
+<<<<<<< HEAD
+=======
+export async function syncManagedAvailableModelAliases(providerId: string, modelIds: string[]) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const storagePrefix = getProviderStoragePrefix(providerId);
   const displayPrefix = await getProviderDisplayPrefix(providerId);
   const existingAliasesRaw = await getModelAliases();
@@ -52,6 +56,16 @@ async function getProviderDisplayPrefix(providerId: string): Promise<string> {
   const targetFullModels = new Set(targetModelIds.map((modelId) => `${storagePrefix}/${modelId}`));
   const removedAliases: string[] = [];
 
+<<<<<<< HEAD
+=======
+  for (const [alias, value] of Object.entries(workingAliases)) {
+    if (!value.startsWith(`${storagePrefix}/`)) continue;
+    if (targetFullModels.has(value)) continue;
+
+    await deleteModelAlias(alias);
+    delete workingAliases[alias];
+    removedAliases.push(alias);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   const assignedAliases: string[] = [];

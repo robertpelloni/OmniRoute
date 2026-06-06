@@ -23,7 +23,13 @@
  */
 import { getAppLogFormat, getAppLogLevel } from "../../src/lib/logEnv";
 
+<<<<<<< HEAD
 const LEVELS = { debug: 0, info: 1, warn: 2, error: 3 } as const;
+=======
+const LEVELS = { debug: 0, info: 1, warn: 2, error: 3 };
+
+const currentLevel = LEVELS[getAppLogLevel("info").toLowerCase()] ?? LEVELS.info;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const jsonFormat = getAppLogFormat("text") === "json";
 
@@ -44,7 +50,11 @@ export function generateRequestId() {
  * @param {string} key
  * @returns {string}
  */
+<<<<<<< HEAD
 export function maskKey(key: string | null | undefined): string {
+=======
+export function maskKey(key) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (!key || key.length < 12) return "(redacted)";
   return `${key.slice(0, 6)}...${key.slice(-4)}`;
 }
@@ -54,7 +64,11 @@ export function maskKey(key: string | null | undefined): string {
  * @param {string} level
  * @returns {Function}
  */
+<<<<<<< HEAD
 function getConsoleFn(level: LogLevel): ConsoleFn {
+=======
+function getConsoleFn(level) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   switch (level) {
     case "debug":
       return console.debug;
@@ -73,9 +87,15 @@ function getConsoleFn(level: LogLevel): ConsoleFn {
  * @param {object} [meta] - Optional metadata
  * @returns {string} Formatted metadata string or empty string
  */
+<<<<<<< HEAD
 function formatMeta(meta?: LogMetadata | null): string {
   if (!meta || typeof meta !== "object") return "";
   const cleaned: LogMetadata = {};
+=======
+function formatMeta(meta) {
+  if (!meta || typeof meta !== "object") return "";
+  const cleaned = {};
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   for (const [k, v] of Object.entries(meta)) {
     if (v !== undefined && v !== null) cleaned[k] = v;
   }
@@ -87,8 +107,13 @@ function formatMeta(meta?: LogMetadata | null): string {
  * @param {string} tag - Log category tag (e.g. "CHAT", "AUTH", "STREAM")
  * @returns {{ debug: Function, info: Function, warn: Function, error: Function }}
  */
+<<<<<<< HEAD
 export function logger(tag: string): TaggedLogger {
   const emit = (level: LogLevel, message: string, meta?: LogMetadata | null): void => {
+=======
+export function logger(tag) {
+  const emit = (level, message, meta) => {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (LEVELS[level] < currentLevel) return;
     const consoleFn = getConsoleFn(level);
 
@@ -123,8 +148,13 @@ export function logger(tag: string): TaggedLogger {
  * @param {string} [requestId] - Unique request ID for correlation
  * @returns {{ debug, info, warn, error }}
  */
+<<<<<<< HEAD
 export function createLogger(requestId: string | null = null): RequestScopedLogger {
   const emit = (level: LogLevel, tag: string, message: string, data?: LogMetadata | null): void => {
+=======
+export function createLogger(requestId = null) {
+  const emit = (level, tag, message, data) => {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (LEVELS[level] < currentLevel) return;
     const consoleFn = getConsoleFn(level);
 

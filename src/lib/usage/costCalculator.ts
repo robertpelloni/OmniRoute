@@ -15,8 +15,15 @@
  *   "deepseek-ai/DeepSeek-R1" → "DeepSeek-R1"
  *   "gpt-oss-120b" → "gpt-oss-120b" (no-op)
  *
+<<<<<<< HEAD
  */
 export function normalizeModelName(model: string): string {
+=======
+ * @param {string} model
+ * @returns {string}
+ */
+export function normalizeModelName(model) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (!model || !model.includes("/")) return model;
   const parts = model.split("/");
   return parts[parts.length - 1];
@@ -45,7 +52,11 @@ function toNumber(value: unknown, fallback = 0): number {
  */
 export function computeCostFromPricing(
   pricing: Record<string, unknown> | null | undefined,
+<<<<<<< HEAD
   tokens: Record<string, number | undefined> | null | undefined
+=======
+  tokens: any
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 ): number {
   if (!pricing || !tokens) return 0;
   const inputPrice = toNumber(pricing.input, 0);
@@ -74,11 +85,15 @@ export function computeCostFromPricing(
   return cost;
 }
 
+<<<<<<< HEAD
 export async function calculateCost(
   provider: string,
   model: string,
   tokens: Record<string, number | undefined> | null | undefined
 ): Promise<number> {
+=======
+export async function calculateCost(provider, model, tokens) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (!tokens || !provider || !model) return 0;
 
   try {
@@ -98,7 +113,42 @@ export async function calculateCost(
       pricing && typeof pricing === "object" && !Array.isArray(pricing)
         ? (pricing as Record<string, unknown>)
         : {};
+<<<<<<< HEAD
     return computeCostFromPricing(pricingRecord, tokens);
+=======
+    const inputPrice = toNumber(pricingRecord.input, 0);
+    const cachedPrice = toNumber(pricingRecord.cached, inputPrice);
+    const outputPrice = toNumber(pricingRecord.output, 0);
+    const reasoningPrice = toNumber(pricingRecord.reasoning, outputPrice);
+    const cacheCreationPrice = toNumber(pricingRecord.cache_creation, inputPrice);
+
+    let cost = 0;
+
+    const inputTokens = tokens.input ?? tokens.prompt_tokens ?? tokens.input_tokens ?? 0;
+    const cachedTokens =
+      tokens.cacheRead ?? tokens.cached_tokens ?? tokens.cache_read_input_tokens ?? 0;
+    const nonCachedInput = Math.max(0, inputTokens - cachedTokens);
+    cost += nonCachedInput * (inputPrice / 1000000);
+
+    if (cachedTokens > 0) {
+      cost += cachedTokens * (cachedPrice / 1000000);
+    }
+
+    const outputTokens = tokens.output ?? tokens.completion_tokens ?? tokens.output_tokens ?? 0;
+    cost += outputTokens * (outputPrice / 1000000);
+
+    const reasoningTokens = tokens.reasoning ?? tokens.reasoning_tokens ?? 0;
+    if (reasoningTokens > 0) {
+      cost += reasoningTokens * (reasoningPrice / 1000000);
+    }
+
+    const cacheCreationTokens = tokens.cacheCreation ?? tokens.cache_creation_input_tokens ?? 0;
+    if (cacheCreationTokens > 0) {
+      cost += cacheCreationTokens * (cacheCreationPrice / 1000000);
+    }
+
+    return cost;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   } catch (error) {
     console.error("Error calculating cost:", error);
     return 0;

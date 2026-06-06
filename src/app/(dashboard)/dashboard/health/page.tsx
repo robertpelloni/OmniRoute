@@ -16,7 +16,10 @@ import { useState, useEffect, useCallback } from "react";
 import { Card } from "@/shared/components";
 import { AI_PROVIDERS } from "@/shared/constants/providers";
 import { useTranslations } from "next-intl";
+<<<<<<< HEAD
 import TelemetryCard from "./TelemetryCard";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 function formatUptime(seconds) {
   const d = Math.floor(seconds / 86400);
@@ -33,6 +36,7 @@ function formatBytes(bytes) {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
+<<<<<<< HEAD
 function formatRelativeTime(timestamp) {
   if (!timestamp || !Number.isFinite(timestamp)) return null;
   const diffMs = Math.max(0, Date.now() - timestamp);
@@ -45,6 +49,8 @@ function formatRelativeTime(timestamp) {
   return `${diffDays}d`;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 const CB_STYLES = {
   CLOSED: { bg: "bg-green-500/10", text: "text-green-500", labelKey: "healthy" },
   OPEN: { bg: "bg-red-500/10", text: "text-red-500", labelKey: "down" },
@@ -56,15 +62,24 @@ export default function HealthPage() {
   const tc = useTranslations("common");
   const tp = useTranslations("providers");
   const [data, setData] = useState(null);
+<<<<<<< HEAD
   const [dbHealth, setDbHealth] = useState(null);
   const [dbHealthError, setDbHealthError] = useState(null);
   const [error, setError] = useState(null);
   const [lastRefresh, setLastRefresh] = useState(null);
+=======
+  const [error, setError] = useState(null);
+  const [lastRefresh, setLastRefresh] = useState(null);
+  const [telemetry, setTelemetry] = useState(null);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [cache, setCache] = useState(null);
   const [signatureCache, setSignatureCache] = useState(null);
   const [degradation, setDegradation] = useState(null);
   const [resetting, setResetting] = useState(false);
+<<<<<<< HEAD
   const [repairingDb, setRepairingDb] = useState(false);
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const fetchHealth = useCallback(async () => {
     try {
@@ -79,6 +94,7 @@ export default function HealthPage() {
     }
   }, []);
 
+<<<<<<< HEAD
   const fetchDbHealth = useCallback(async () => {
     try {
       const res = await fetch("/api/db/health");
@@ -94,19 +110,35 @@ export default function HealthPage() {
   // Fetch cache, signature cache, and degradation stats.
   const fetchExtras = useCallback(async () => {
     const results = await Promise.allSettled([
+=======
+  // Fetch telemetry, cache, and signature cache stats
+  const fetchExtras = useCallback(async () => {
+    const results = await Promise.allSettled([
+      fetch("/api/telemetry/summary").then((r) => r.json()),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       fetch("/api/cache/stats").then((r) => r.json()),
       fetch("/api/rate-limits").then((r) => r.json()),
       fetch("/api/health/degradation").then((r) => r.json()),
     ]);
+<<<<<<< HEAD
     if (results[0].status === "fulfilled") setCache(results[0].value);
     if (results[1].status === "fulfilled" && results[1].value.cacheStats) {
       setSignatureCache(results[1].value.cacheStats);
     }
+=======
+    if (results[0].status === "fulfilled") setTelemetry(results[0].value);
+    if (results[1].status === "fulfilled") setCache(results[1].value);
+    if (results[2].status === "fulfilled" && results[2].value.cacheStats) {
+      setSignatureCache(results[2].value.cacheStats);
+    }
+    if (results[3].status === "fulfilled") setDegradation(results[3].value);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }, []);
 
   useEffect(() => {
     fetchHealth();
     fetchExtras();
+<<<<<<< HEAD
     fetchDbHealth();
     const interval = setInterval(() => {
       fetchHealth();
@@ -115,6 +147,14 @@ export default function HealthPage() {
     }, 15000);
     return () => clearInterval(interval);
   }, [fetchHealth, fetchExtras, fetchDbHealth]);
+=======
+    const interval = setInterval(() => {
+      fetchHealth();
+      fetchExtras();
+    }, 15000);
+    return () => clearInterval(interval);
+  }, [fetchHealth, fetchExtras]);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const handleResetHealth = async () => {
     if (!confirm(t("resetConfirm"))) return;
@@ -132,6 +172,7 @@ export default function HealthPage() {
     }
   };
 
+<<<<<<< HEAD
   const handleRepairDb = async () => {
     setRepairingDb(true);
     try {
@@ -150,6 +191,8 @@ export default function HealthPage() {
     }
   };
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const fmtMs = (ms) =>
     ms != null ? t("millisecondsShort", { value: Math.round(ms) }) : t("notAvailable");
 
@@ -181,6 +224,10 @@ export default function HealthPage() {
     );
   }
 
+<<<<<<< HEAD
+=======
+  const { system, providerHealth, providerSummary, rateLimitStatus, lockouts } = data;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const cbEntries = Object.entries(providerHealth || {});
   const lockoutEntries = Object.entries(lockouts || {});
 
@@ -202,7 +249,10 @@ export default function HealthPage() {
             onClick={() => {
               fetchHealth();
               fetchExtras();
+<<<<<<< HEAD
               fetchDbHealth();
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             }}
             className="p-2 rounded-lg bg-surface hover:bg-surface/80 text-text-muted hover:text-text-main transition-colors"
             title={tc("refresh")}
@@ -234,6 +284,7 @@ export default function HealthPage() {
         </span>
       </div>
 
+<<<<<<< HEAD
       <TelemetryCard />
 
       <Card className="p-5">
@@ -317,6 +368,8 @@ export default function HealthPage() {
         )}
       </Card>
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       {/* System Info Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="p-4">
@@ -400,6 +453,7 @@ export default function HealthPage() {
         </Card>
       </div>
 
+<<<<<<< HEAD
               </div>
             </div>
             <div className="rounded-xl border border-border/40 bg-surface/30 p-3">
@@ -517,6 +571,8 @@ export default function HealthPage() {
         </Card>
       </div>
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       {/* Graceful Degradation Status */}
       {degradation && degradation.features && degradation.features.length > 0 && (
         <Card className="p-5" role="region" aria-label="Graceful Degradation Status">
@@ -591,8 +647,43 @@ export default function HealthPage() {
         </Card>
       )}
 
+<<<<<<< HEAD
       {/* Cache Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+=======
+      {/* Telemetry Cards — Latency & Prompt Cache */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Latency Card */}
+        <Card className="p-4">
+          <h3 className="text-sm font-semibold text-text-muted mb-3 flex items-center gap-2">
+            <span className="material-symbols-outlined text-[18px]">speed</span>
+            {t("latency")}
+          </h3>
+          {telemetry ? (
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-text-muted">{t("latencyP50")}</span>
+                <span className="font-mono">{fmtMs(telemetry.p50)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-text-muted">{t("latencyP95")}</span>
+                <span className="font-mono">{fmtMs(telemetry.p95)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-text-muted">{t("latencyP99")}</span>
+                <span className="font-mono">{fmtMs(telemetry.p99)}</span>
+              </div>
+              <div className="flex justify-between border-t border-border pt-2 mt-2">
+                <span className="text-text-muted">{t("totalRequests")}</span>
+                <span className="font-mono">{telemetry.totalRequests ?? 0}</span>
+              </div>
+            </div>
+          ) : (
+            <p className="text-sm text-text-muted">{t("noDataYet")}</p>
+          )}
+        </Card>
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         {/* Prompt Cache Card */}
         <Card className="p-4">
           <h3 className="text-sm font-semibold text-text-muted mb-3 flex items-center gap-2">
@@ -766,9 +857,12 @@ export default function HealthPage() {
                               {cb.failures === 1
                                 ? t("failures", { count: cb.failures })
                                 : t("failuresPlural", { count: cb.failures })}
+<<<<<<< HEAD
                               {Number(cb.retryAfterMs) > 0 && (
                                 <span className="ml-2">· retry in {fmtMs(cb.retryAfterMs)}</span>
                               )}
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                               {cb.lastFailure && (
                                 <span className="ml-2">
                                   · {t("lastFailure")}:{" "}
@@ -886,6 +980,7 @@ export default function HealthPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {entries.map(
                   ({ key, displayName, providerInfo, connectionId, model, status }: any) => {
+<<<<<<< HEAD
                     const learned = learnedLimits?.[key] || null;
                     const isActive = (status.queued || 0) + (status.running || 0) > 0;
                     const isQueued = (status.queued || 0) > 0;
@@ -910,10 +1005,15 @@ export default function HealthPage() {
                       learnedLimit != null && learnedRemaining != null
                         ? Math.max(0, Math.min(100, (learnedRemaining / learnedLimit) * 100))
                         : null;
+=======
+                    const isActive = (status.queued || 0) + (status.running || 0) > 0;
+                    const isQueued = (status.queued || 0) > 0;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     return (
                       <div
                         key={key}
                         className={`rounded-lg p-3 border transition-colors ${
+<<<<<<< HEAD
                           exhausted
                             ? "bg-red-500/5 border-red-500/20"
                             : isQueued || lowRemaining
@@ -921,6 +1021,13 @@ export default function HealthPage() {
                               : isActive
                                 ? "bg-blue-500/5 border-blue-500/15"
                                 : "bg-surface/30 border-white/5"
+=======
+                          isQueued
+                            ? "bg-amber-500/5 border-amber-500/20"
+                            : isActive
+                              ? "bg-blue-500/5 border-blue-500/15"
+                              : "bg-surface/30 border-white/5"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                         }`}
                         title={key}
                       >
@@ -951,6 +1058,7 @@ export default function HealthPage() {
                           </div>
                           <span
                             className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold ${
+<<<<<<< HEAD
                               exhausted
                                 ? "bg-red-500/15 text-red-400"
                                 : isQueued || lowRemaining
@@ -994,6 +1102,18 @@ export default function HealthPage() {
                             </div>
                           </div>
                         )}
+=======
+                              isQueued
+                                ? "bg-amber-500/15 text-amber-400"
+                                : isActive
+                                  ? "bg-blue-500/15 text-blue-400"
+                                  : "bg-green-500/10 text-green-400"
+                            }`}
+                          >
+                            {isQueued ? t("queued") : isActive ? tc("active") : t("ok")}
+                          </span>
+                        </div>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                         <div className="flex items-center gap-3 text-[11px] text-text-muted">
                           <span className="flex items-center gap-1">
                             <span className="material-symbols-outlined text-[12px]">schedule</span>
@@ -1006,6 +1126,7 @@ export default function HealthPage() {
                             {t("runningCount", { count: status.running || 0 })}
                           </span>
                         </div>
+<<<<<<< HEAD
                         {(learnedMinTime != null || learnedLastUpdated != null) && (
                           <div className="mt-3 space-y-1 text-[11px] text-text-muted">
                             {learnedMinTime != null && (
@@ -1020,6 +1141,8 @@ export default function HealthPage() {
                             )}
                           </div>
                         )}
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                       </div>
                     );
                   }

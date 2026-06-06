@@ -69,6 +69,7 @@ const AUDIT_PAGE_SIZE = 20;
 
 const RESILIENCE_PRESETS = {
   aggressive: {
+<<<<<<< HEAD
     requestQueue: {
       requestsPerMinute: 180,
       minTimeBetweenRequestsMs: 100,
@@ -154,6 +155,75 @@ const RESILIENCE_PRESETS = {
         resetTimeoutMs: 60000,
       },
     },
+=======
+    profiles: {
+      oauth: {
+        transientCooldown: 3000,
+        rateLimitCooldown: 30000,
+        maxBackoffLevel: 4,
+        circuitBreakerThreshold: 2,
+        circuitBreakerReset: 30000,
+      },
+      apikey: {
+        transientCooldown: 2000,
+        rateLimitCooldown: 0,
+        maxBackoffLevel: 3,
+        circuitBreakerThreshold: 3,
+        circuitBreakerReset: 15000,
+      },
+    },
+    defaults: {
+      requestsPerMinute: 180,
+      minTimeBetweenRequests: 100,
+      concurrentRequests: 16,
+    },
+  },
+  balanced: {
+    profiles: {
+      oauth: {
+        transientCooldown: 5000,
+        rateLimitCooldown: 60000,
+        maxBackoffLevel: 8,
+        circuitBreakerThreshold: 3,
+        circuitBreakerReset: 60000,
+      },
+      apikey: {
+        transientCooldown: 3000,
+        rateLimitCooldown: 0,
+        maxBackoffLevel: 5,
+        circuitBreakerThreshold: 5,
+        circuitBreakerReset: 30000,
+      },
+    },
+    defaults: {
+      requestsPerMinute: 100,
+      minTimeBetweenRequests: 200,
+      concurrentRequests: 10,
+    },
+  },
+  conservative: {
+    profiles: {
+      oauth: {
+        transientCooldown: 8000,
+        rateLimitCooldown: 120000,
+        maxBackoffLevel: 10,
+        circuitBreakerThreshold: 8,
+        circuitBreakerReset: 120000,
+      },
+      apikey: {
+        transientCooldown: 5000,
+        rateLimitCooldown: 30000,
+        maxBackoffLevel: 8,
+        circuitBreakerThreshold: 8,
+        circuitBreakerReset: 60000,
+      },
+    },
+    defaults: {
+      requestsPerMinute: 60,
+      minTimeBetweenRequests: 350,
+      concurrentRequests: 6,
+    },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   },
 } as const;
 

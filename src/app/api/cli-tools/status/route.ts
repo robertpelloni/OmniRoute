@@ -2,7 +2,10 @@
 
 import { NextResponse } from "next/server";
 import fs from "fs/promises";
+<<<<<<< HEAD
 import { requireCliToolsAuth } from "@/lib/api/requireCliToolsAuth";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import {
   getCliRuntimeStatus,
   CLI_TOOL_IDS,
@@ -21,6 +24,7 @@ async function checkToolConfigStatus(toolId: string): Promise<string> {
     if (!configPath) return "unknown";
 
     const content = await fs.readFile(configPath, "utf-8");
+<<<<<<< HEAD
 
     // Codex uses TOML config — parse as raw text, not JSON
     if (toolId === "codex") {
@@ -47,12 +51,15 @@ async function checkToolConfigStatus(toolId: string): Promise<string> {
       return "configured";
     }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const config = JSON.parse(content);
 
     // Each tool stores OmniRoute config differently
     switch (toolId) {
       case "claude":
         return config?.env?.ANTHROPIC_BASE_URL ? "configured" : "not_configured";
+<<<<<<< HEAD
       case "qwen":
         // Check modelProviders for OmniRoute entries
         const mp = config?.modelProviders;
@@ -61,6 +68,10 @@ async function checkToolConfigStatus(toolId: string): Promise<string> {
         return qwenConfigStr.includes("omniroute") ||
           qwenConfigStr.includes(`localhost:${apiPort}`) ||
           qwenConfigStr.includes(`127.0.0.1:${apiPort}`)
+=======
+      case "codex":
+        return config?.providers?.omniroute || config?.providers?.["openai-compatible"]
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           ? "configured"
           : "not_configured";
       case "droid":
@@ -69,6 +80,7 @@ async function checkToolConfigStatus(toolId: string): Promise<string> {
       case "kilo":
         // Generic check: look for OmniRoute-specific markers in the config
         const configStr = JSON.stringify(config).toLowerCase();
+<<<<<<< HEAD
         if (
           configStr.includes("omniroute") ||
           configStr.includes("sk_omniroute") ||
@@ -87,6 +99,14 @@ async function checkToolConfigStatus(toolId: string): Promise<string> {
           return "configured";
         }
         return "not_configured";
+=======
+        return configStr.includes("omniroute") ||
+          configStr.includes("sk_omniroute") ||
+          configStr.includes(`localhost:${apiPort}`) ||
+          configStr.includes(`127.0.0.1:${apiPort}`)
+          ? "configured"
+          : "not_configured";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       default:
         return "unknown";
     }
@@ -100,10 +120,14 @@ async function checkToolConfigStatus(toolId: string): Promise<string> {
  * Returns runtime + config status for all CLI tools in one batch call.
  * Used by the CLI Tools page to show status badges in collapsed state.
  */
+<<<<<<< HEAD
 export async function GET(request: Request) {
   const authError = await requireCliToolsAuth(request);
   if (authError) return authError;
 
+=======
+export async function GET() {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const statuses = {};
 
@@ -142,7 +166,11 @@ export async function GET(request: Request) {
     );
 
     // Check config status for installed+runnable tools via direct file reads
+<<<<<<< HEAD
     const settingsTools = ["claude", "codex", "droid", "openclaw", "cline", "kilo", "qwen"];
+=======
+    const settingsTools = ["claude", "codex", "droid", "openclaw", "cline", "kilo"];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     await Promise.all(
       settingsTools.map(async (toolId) => {

@@ -22,12 +22,15 @@ Authorization: Bearer YOUR_OMNIROUTE_API_KEY
 
 If no API key is configured on the server, authentication is bypassed.
 
+<<<<<<< HEAD
 ## Enablement
 
 A2A is controlled by the **Endpoints → A2A** toggle and is disabled by default. When disabled,
 `GET /api/a2a/status` reports `status: "disabled"` and `online: false`; JSON-RPC calls to
 `POST /a2a` return HTTP 503 with JSON-RPC error code `-32000`.
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 ---
 
 ## JSON-RPC 2.0 Methods
@@ -154,7 +157,10 @@ submitted → working → completed
 | -32601 | Method or skill not found      |
 | -32602 | Invalid params                 |
 | -32603 | Internal error                 |
+<<<<<<< HEAD
 | -32000 | A2A endpoint is disabled       |
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ---
 

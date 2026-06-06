@@ -4,6 +4,7 @@
 
 ---
 
+<<<<<<< HEAD
 > Self-managing model chains with adaptive scoring
 
 ## How It Works
@@ -40,6 +41,31 @@ The Auto-Combo Engine dynamically selects the best provider/model for each reque
 5% of requests (configurable) are routed to random providers for exploration. Disabled in incident mode.
 
 ## API
+=======
+> Samozarządzające się łańcuchy modeli z adaptacyjną punktacją## How It Works
+
+Silnik Auto-Combo dynamicznie wybiera najlepszego dostawcę/model dla każdego żądania, korzystając z**funkcji punktacji 6-czynnikowej**:
+
+| Czynnik       | Waga | Opis                                              |
+| :------------ | :--- | :------------------------------------------------ | ------------- |
+| Kwota         | 0,20 | Pozostała pojemność [0..1]                        |
+| Zdrowie       | 0,25 | Wyłącznik: ZAMKNIĘTY=1,0, PÓŁOWA=0,5, OTWARTY=0,0 |
+| KosztInw      | 0,20 | Koszt odwrotny (tańszy = wyższy wynik)            |
+| OpóźnienieInv | 0,15 | Odwrotne opóźnienie p95 (szybciej = wyżej)        |
+| ZadanieFit    | 0,10 | Model × wynik sprawności typu zadania             |
+| Stabilność    | 0,10 | Niska zmienność opóźnień/błędów                   | ## Mode Packs |
+
+| Paczka                            | Skup się        | Waga klucza         |
+| :-------------------------------- | :-------------- | :------------------ | --------------- |
+| 🚀**Wysyłaj szybko**              | Prędkość        | opóźnienieInv: 0,35 |
+| 💰**Oszczędność kosztów**         | Gospodarka      | kosztInw: 0,40      |
+| 🎯**Jakość na pierwszym miejscu** | Najlepszy model | zadanieFit: 0,40    |
+| 📡**Przyjazny offline**           | Dostępność      | kwota: 0,40         | ## Self-Healing |
+
+-**Tymczasowe wykluczenie**: Wynik < 0,2 → wykluczenie na 5 min (stopniowe wycofywanie, maks. 30 min) -**Wykrywanie wyłącznika**: OTWARTE → automatyczne wykluczenie; HALF_OPEN → żądania sondowania -**Tryb incydentu**: >50% OTWARTY → wyłącz eksplorację, zmaksymalizuj stabilność -**Odzyskiwanie czasu odnowienia**: Po wykluczeniu pierwszym żądaniem jest „sonda” ze skróconym limitem czasu## Bandit Exploration
+
+5% żądań (konfigurowalnych) jest kierowanych do losowych dostawców w celu eksploracji. Wyłączone w trybie incydentalnym.## API
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ```bash
 # Create auto-combo
@@ -53,6 +79,7 @@ curl http://localhost:20128/api/combos/auto
 
 ## Task Fitness
 
+<<<<<<< HEAD
 30+ models scored across 6 task types (`coding`, `review`, `planning`, `analysis`, `debugging`, `documentation`). Supports wildcard patterns (e.g., `*-coder` → high coding score).
 
 ## Files
@@ -65,3 +92,15 @@ curl http://localhost:20128/api/combos/auto
 | `open-sse/services/autoCombo/selfHealing.ts` | Exclusion, probes, incident mode      |
 | `open-sse/services/autoCombo/modePacks.ts`   | 4 weight profiles                     |
 | `src/app/api/combos/auto/route.ts`           | REST API                              |
+=======
+Ponad 30 modeli ocenianych w ramach 6 typów zadań („kodowanie”, „przegląd”, „planowanie”, „analiza”, „debugowanie”, „dokumentacja”). Obsługuje wzorce wieloznaczne (np. `*-coder` → wysoki wynik kodowania).## Files
+
+| Plik                                         | Cel                                              |
+| :------------------------------------------- | :----------------------------------------------- |
+| `open-sse/services/autoCombo/scoring.ts`     | Funkcja punktacji i normalizacja puli            |
+| `open-sse/services/autoCombo/taskFitness.ts` | Wyszukiwanie sprawności modelu × zadania         |
+| `open-sse/services/autoCombo/engine.ts`      | Logika selekcji, bandyta, ograniczenie budżetowe |
+| `open-sse/services/autoCombo/selfHealing.ts` | Wykluczenie, sondy, tryb incydentalny            |
+| `open-sse/services/autoCombo/modePacks.ts`   | 4 profile wagowe                                 |
+| `src/app/api/combos/auto/route.ts`           | API REST                                         |
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

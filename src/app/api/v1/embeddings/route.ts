@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+import { CORS_ORIGIN } from "@/shared/utils/cors";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { handleEmbedding } from "@omniroute/open-sse/handlers/embeddings.ts";
 import {
   getProviderCredentials,
@@ -23,16 +27,23 @@ import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
 
 import { getAllCustomModels, getProviderNodes } from "@/lib/localDb";
 
+<<<<<<< HEAD
 function toProviderScopedModelId(providerId: string, modelId: string): string {
   return modelId.startsWith(`${providerId}/`) ? modelId : `${providerId}/${modelId}`;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Handle CORS preflight
  */
 export async function OPTIONS() {
   return new Response(null, {
     headers: {
+<<<<<<< HEAD
+=======
+      "Access-Control-Allow-Origin": CORS_ORIGIN,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
       "Access-Control-Allow-Headers": "*",
     },
@@ -63,7 +74,11 @@ export async function GET() {
       for (const model of models) {
         if (!model?.id || !Array.isArray(model.supportedEndpoints)) continue;
         if (!model.supportedEndpoints.includes("embeddings")) continue;
+<<<<<<< HEAD
         const fullId = toProviderScopedModelId(providerId, model.id);
+=======
+        const fullId = `${providerId}/${model.id}`;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         if (data.some((d) => d.id === fullId)) continue;
         data.push({
           id: fullId,
@@ -85,19 +100,59 @@ export async function GET() {
 /**
  * POST /v1/embeddings — create embeddings
  */
+<<<<<<< HEAD
 type ValidatedEmbeddingBody = Record<string, unknown> & { model: string };
 
 export async function handleValidatedEmbeddingRequestBody(body: ValidatedEmbeddingBody) {
+=======
+export async function POST(request) {
+  let rawBody;
+  try {
+    rawBody = await request.json();
+  } catch {
+    log.warn("EMBED", "Invalid JSON body");
+    return errorResponse(HTTP_STATUS.BAD_REQUEST, "Invalid JSON body");
+  }
+
+  const validation = validateBody(v1EmbeddingsSchema, rawBody);
+  if (isValidationFailure(validation)) {
+    return errorResponse(HTTP_STATUS.BAD_REQUEST, validation.error.message);
+  }
+  const body = validation.data;
+
+  // Optional API key validation
+  if (process.env.REQUIRE_API_KEY === "true") {
+    const apiKey = extractApiKey(request);
+    if (!apiKey) {
+      return errorResponse(HTTP_STATUS.UNAUTHORIZED, "Missing API key");
+    }
+    const valid = await isValidApiKey(apiKey);
+    if (!valid) {
+      return errorResponse(HTTP_STATUS.UNAUTHORIZED, "Invalid API key");
+    }
+  }
+
+  // Enforce API key policies (model restrictions + budget limits)
+  const policy = await enforceApiKeyPolicy(request, body.model);
+  if (policy.rejection) return policy.rejection;
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Load local provider_nodes for embedding routing (only localhost — prevents auth bypass/SSRF)
   let dynamicProviders: ReturnType<typeof buildDynamicEmbeddingProvider>[] = [];
   try {
     const nodes = (await getProviderNodes()) as unknown as EmbeddingProviderNodeRow[];
     dynamicProviders = (Array.isArray(nodes) ? nodes : [])
       .filter((n) => {
+<<<<<<< HEAD
         // provider_nodes apiType is "chat", "responses" or "embeddings" — local OpenAI-compatible
         // backends expose /embeddings under the same base URL as chat, so we build the URL as baseUrl + /embeddings.
         const validTypes = ["chat", "responses", "embeddings"];
         if (!validTypes.includes(n.apiType || "")) return false;
+=======
+        // provider_nodes apiType is "chat" or "responses" (not "embeddings") — local OpenAI-compatible
+        // backends expose /embeddings under the same base URL as chat, so we build the URL as baseUrl + /embeddings.
+        if (n.apiType !== "chat" && n.apiType !== "responses") return false;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         try {
           const hostname = new URL(n.baseUrl).hostname;
           // Strictly matching 172.16.0.0/12 (Docker/local) and explicitly blocking ::1 per SSRF hardening
@@ -145,9 +200,13 @@ export async function handleValidatedEmbeddingRequestBody(body: ValidatedEmbeddi
       const allNodes = (await getProviderNodes()) as unknown as EmbeddingProviderNodeRow[];
       const matchingNode = (Array.isArray(allNodes) ? allNodes : []).find(
         (n) =>
+<<<<<<< HEAD
           n.prefix === provider &&
           (n.apiType === "chat" || n.apiType === "responses" || n.apiType === "embeddings") &&
           n.baseUrl
+=======
+          n.prefix === provider && (n.apiType === "chat" || n.apiType === "responses") && n.baseUrl
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       );
       if (matchingNode) {
         const baseUrl = String(matchingNode.baseUrl).replace(/\/+$/, "");
@@ -218,6 +277,7 @@ export async function handleValidatedEmbeddingRequestBody(body: ValidatedEmbeddi
     headers: { "Content-Type": "application/json" },
   });
 }
+<<<<<<< HEAD
 
 export async function POST(request) {
   let rawBody;
@@ -240,3 +300,5 @@ export async function POST(request) {
 
   return handleValidatedEmbeddingRequestBody(body as ValidatedEmbeddingBody);
 }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

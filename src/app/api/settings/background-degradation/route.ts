@@ -7,15 +7,22 @@ import {
 import { updateSettings } from "@/lib/db/settings";
 import { jsonObjectSchema, resetStatsActionSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
+<<<<<<< HEAD
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * GET /api/settings/background-degradation
  * Returns the current background degradation configuration.
  */
+<<<<<<< HEAD
 export async function GET(request: Request) {
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
+=======
+export async function GET() {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     return NextResponse.json(getBackgroundDegradationConfig());
   } catch (error) {
@@ -29,9 +36,13 @@ export async function GET(request: Request) {
  * Update the background degradation configuration.
  * Body: { enabled?: boolean, degradationMap?: {...}, detectionPatterns?: [...] }
  */
+<<<<<<< HEAD
 export async function PUT(request: Request) {
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
+=======
+export async function PUT(request) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody;
   try {
     rawBody = await request.json();
@@ -58,7 +69,11 @@ export async function PUT(request: Request) {
 
     // Persist to database (excluding stats)
     const { stats, ...persistable } = getBackgroundDegradationConfig();
+<<<<<<< HEAD
     await updateSettings({ backgroundDegradation: persistable });
+=======
+    await updateSettings({ backgroundDegradation: JSON.stringify(persistable) });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     return NextResponse.json({ success: true, ...getBackgroundDegradationConfig() });
   } catch (error) {
@@ -72,9 +87,13 @@ export async function PUT(request: Request) {
  * Reset stats counters.
  * Body: { action: "reset-stats" }
  */
+<<<<<<< HEAD
 export async function POST(request: Request) {
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
+=======
+export async function POST(request) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody;
   try {
     rawBody = await request.json();

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo, useCallback } from "react";
+<<<<<<< HEAD
 =======
 import PropTypes from "prop-types";
 >>>>>>> Stashed changes
@@ -8,6 +9,12 @@ import Link from "next/link";
 import { Card, Button, Input, Modal, CardSkeleton, SegmentedControl } from "@/shared/components";
 import { useCopyToClipboard } from "@/shared/hooks/useCopyToClipboard";
 import { useDisplayBaseUrl } from "@/shared/hooks";
+=======
+import PropTypes from "prop-types";
+import Link from "next/link";
+import { Card, Button, Input, Modal, CardSkeleton, SegmentedControl } from "@/shared/components";
+import { useCopyToClipboard } from "@/shared/hooks/useCopyToClipboard";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { AI_PROVIDERS, getProviderByAlias } from "@/shared/constants/providers";
 import { useTranslations } from "next-intl";
 
@@ -39,6 +46,7 @@ type CloudflaredTunnelStatus = {
   logPath: string;
 };
 
+<<<<<<< HEAD
 type TailscaleTunnelPhase =
   | "unsupported"
   | "not_installed"
@@ -86,6 +94,14 @@ type NgrokTunnelStatus = {
   lastError: string | null;
 };
 
+=======
+type TunnelNotice = {
+  type: "success" | "error" | "info";
+  message: string;
+};
+
+export default function APIPageClient({ machineId }) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [resolvedMachineId, setResolvedMachineId] = useState(machineId || "");
   const t = useTranslations("endpoint");
   const tc = useTranslations("common");
@@ -93,7 +109,10 @@ type NgrokTunnelStatus = {
 
   // Endpoints / models state
   const [allModels, setAllModels] = useState([]);
+<<<<<<< HEAD
   const [modelsLoading, setModelsLoading] = useState(true);
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [expandedEndpoint, setExpandedEndpoint] = useState(null);
 
   // Cloud sync state
@@ -114,6 +133,7 @@ type NgrokTunnelStatus = {
   const [cloudflaredStatus, setCloudflaredStatus] = useState<CloudflaredTunnelStatus | null>(null);
   const [cloudflaredBusy, setCloudflaredBusy] = useState(false);
   const [cloudflaredNotice, setCloudflaredNotice] = useState<TunnelNotice | null>(null);
+<<<<<<< HEAD
   const [tailscaleStatus, setTailscaleStatus] = useState<TailscaleTunnelStatus | null>(null);
   const [tailscaleBusy, setTailscaleBusy] = useState(false);
   const [tailscaleNotice, setTailscaleNotice] = useState<TunnelNotice | null>(null);
@@ -131,6 +151,87 @@ type NgrokTunnelStatus = {
 
   const fetchModels = async () => {
     setModelsLoading(true);
+=======
+
+  const { copied, copy } = useCopyToClipboard();
+
+  const translateOrFallback = useCallback(
+    (key: string, fallback: string, values?: TranslationValues) => {
+      try {
+        const message = values ? t(key as never, values as never) : t(key as never);
+        if (!message || message === key || message === `endpoint.${key}`) {
+          return fallback;
+        }
+        return message;
+      } catch {
+        return fallback;
+      }
+    },
+    [t]
+  );
+
+  const fetchSearchProviders = async () => {
+    try {
+      const res = await fetch("/api/search/providers");
+      if (res.ok) {
+        const data = await res.json();
+        setSearchProviders(data.providers || []);
+      }
+    } catch {
+      // Search endpoint may not be available
+    }
+  };
+
+  const fetchCloudflaredStatus = useCallback(
+    async (silent = false) => {
+      try {
+        const res = await fetch("/api/tunnels/cloudflared", { cache: "no-store" });
+        const data = await res.json().catch(() => null);
+        if (!res.ok) {
+          throw new Error(
+            data?.error ||
+              translateOrFallback(
+                "cloudflaredRequestFailed",
+                "Failed to load Cloudflare tunnel status"
+              )
+          );
+        }
+
+        setCloudflaredStatus(data);
+        return data as CloudflaredTunnelStatus;
+      } catch (error) {
+        if (!silent) {
+          setCloudflaredNotice({
+            type: "error",
+            message:
+              error instanceof Error
+                ? error.message
+                : translateOrFallback(
+                    "cloudflaredRequestFailed",
+                    "Failed to load Cloudflare tunnel status"
+                  ),
+          });
+        }
+        return null;
+      }
+    },
+    [translateOrFallback]
+  );
+
+  useEffect(() => {
+    Promise.allSettled([
+      loadCloudSettings(),
+      fetchModels(),
+      fetchProtocolStatus(),
+      fetchSearchProviders(),
+      fetchCloudflaredStatus(true),
+    ]).finally(() => {
+      setLoading(false);
+    });
+  }, [fetchCloudflaredStatus]);
+
+  const fetchModels = async () => {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     try {
       const res = await fetch("/v1/models");
       if (res.ok) {
@@ -139,8 +240,11 @@ type NgrokTunnelStatus = {
       }
     } catch (e) {
       console.log("Error fetching models:", e);
+<<<<<<< HEAD
     } finally {
       setModelsLoading(false);
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
   };
 
@@ -168,7 +272,10 @@ type NgrokTunnelStatus = {
     const chat = allModels.filter((m) => !m.type && !m.parent);
     const embeddings = allModels.filter((m) => m.type === "embedding" && !m.parent);
     const images = allModels.filter((m) => m.type === "image" && !m.parent);
+<<<<<<< HEAD
     const video = allModels.filter((m) => m.type === "video" && !m.parent);
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const rerank = allModels.filter((m) => m.type === "rerank" && !m.parent);
     const audioTranscription = allModels.filter(
       (m) => m.type === "audio" && m.subtype === "transcription" && !m.parent
@@ -178,6 +285,7 @@ type NgrokTunnelStatus = {
     );
     const moderation = allModels.filter((m) => m.type === "moderation" && !m.parent);
     const music = allModels.filter((m) => m.type === "music" && !m.parent);
+<<<<<<< HEAD
     return {
       chat,
       embeddings,
@@ -201,6 +309,11 @@ type NgrokTunnelStatus = {
     [endpointData]
   );
 
+=======
+    return { chat, embeddings, images, rerank, audioTranscription, audioSpeech, moderation, music };
+  }, [allModels]);
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const postCloudAction = async (action, timeoutMs = CLOUD_ACTION_TIMEOUT_MS) => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
@@ -223,13 +336,18 @@ type NgrokTunnelStatus = {
     }
   };
 
+<<<<<<< HEAD
   const loadCloudSettings = async (
     shouldApplyState: () => boolean = () => true
   ): Promise<EndpointTunnelVisibility> => {
+=======
+  const loadCloudSettings = async () => {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     try {
       const res = await fetch("/api/settings");
       if (res.ok) {
         const data = await res.json();
+<<<<<<< HEAD
         const tunnelVisibility = {
           showCloudflaredTunnel: data.hideEndpointCloudflaredTunnel !== true,
           showTailscaleFunnel: data.hideEndpointTailscaleFunnel !== true,
@@ -240,6 +358,8 @@ type NgrokTunnelStatus = {
           return tunnelVisibility;
         }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         setCloudEnabled(data.cloudEnabled || false);
         if (typeof data.cloudConfigured === "boolean") {
           setCloudConfigured(data.cloudConfigured);
@@ -250,6 +370,7 @@ type NgrokTunnelStatus = {
         if (data.machineId) {
           setResolvedMachineId(data.machineId);
         }
+<<<<<<< HEAD
         setShowCloudflaredTunnel(tunnelVisibility.showCloudflaredTunnel);
         setShowTailscaleFunnel(tunnelVisibility.showTailscaleFunnel);
         setShowNgrokTunnel(tunnelVisibility.showNgrokTunnel);
@@ -268,6 +389,51 @@ type NgrokTunnelStatus = {
         }
 
         return tunnelVisibility;
+=======
+      }
+    } catch (error) {
+      console.log("Error loading cloud settings:", error);
+    }
+  };
+
+  const handleCloudToggle = (checked) => {
+    if (checked) {
+      if (!cloudConfigured) {
+        setCloudStatus({
+          type: "warning",
+          message: "Cloud sync is not configured on this instance.",
+        });
+        return;
+      }
+      setShowCloudModal(true);
+    } else {
+      setShowDisableModal(true);
+    }
+  };
+
+  // Auto-dismiss cloudStatus after 5s
+  useEffect(() => {
+    if (cloudStatus) {
+      const timer = setTimeout(() => setCloudStatus(null), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [cloudStatus]);
+
+  useEffect(() => {
+    if (cloudflaredNotice) {
+      const timer = setTimeout(() => setCloudflaredNotice(null), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [cloudflaredNotice]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      void fetchProtocolStatus();
+      void fetchCloudflaredStatus(true);
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [fetchCloudflaredStatus]);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const dispatchCloudChange = () => {
     globalThis.dispatchEvent(new Event("cloud-status-changed"));
@@ -407,6 +573,7 @@ type NgrokTunnelStatus = {
     }
   };
 
+<<<<<<< HEAD
   const handleNgrokAction = async (action: "enable" | "disable") => {
     setNgrokBusy(true);
     setNgrokNotice(null);
@@ -737,6 +904,9 @@ type NgrokTunnelStatus = {
 
   const displayBaseUrl = useDisplayBaseUrl();
   const baseUrl = `${displayBaseUrl}/v1`;
+=======
+  const [baseUrl, setBaseUrl] = useState("/v1");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const normalizedCloudBaseUrl = cloudBaseUrl
     ? resolvedMachineId && !cloudBaseUrl.endsWith(`/${resolvedMachineId}`)
       ? `${cloudBaseUrl}/${resolvedMachineId}`
@@ -744,6 +914,16 @@ type NgrokTunnelStatus = {
     : null;
   const cloudEndpointNew = normalizedCloudBaseUrl ? `${normalizedCloudBaseUrl}/v1` : null;
 
+<<<<<<< HEAD
+=======
+  // Hydration fix: Only access window on client side
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setBaseUrl(`${window.location.origin}/v1`);
+    }
+  }, []);
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (loading) {
     return (
       <div className="flex flex-col gap-8">
@@ -796,6 +976,7 @@ type NgrokTunnelStatus = {
     "cloudflaredUrlNotice",
     "Creates a temporary Cloudflare Quick Tunnel. The URL changes after every restart."
   );
+<<<<<<< HEAD
 <<<<<<< Updated upstream
   const tailscalePhase = tailscaleStatus?.phase || "not_installed";
   const tailscalePhaseMeta: Record<TailscaleTunnelPhase, { label: string; className: string }> = {
@@ -872,6 +1053,8 @@ type NgrokTunnelStatus = {
     : translateOrFallback("ngrokEnable", "Enable Tunnel");
   const ngrokUrlNotice = translateOrFallback("ngrokUrlNotice", "Creates a public ngrok tunnel.");
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   return (
     <div className="flex flex-col gap-8">
@@ -975,6 +1158,101 @@ type NgrokTunnelStatus = {
           </Button>
         </div>
 
+<<<<<<< HEAD
+=======
+        <div className="rounded-xl border border-border/70 bg-surface/40 p-4">
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h3 className="text-sm font-semibold">
+                    {translateOrFallback("cloudflaredTitle", "Cloudflare Quick Tunnel")}
+                  </h3>
+                  <span
+                    className={`inline-flex items-center rounded-full border px-2 py-1 text-xs font-medium ${cloudflaredPhaseMeta[cloudflaredPhase].className}`}
+                  >
+                    {cloudflaredPhaseMeta[cloudflaredPhase].label}
+                  </span>
+                </div>
+              </div>
+
+              {cloudflaredStatus?.supported !== false && (
+                <Button
+                  size="sm"
+                  variant={cloudflaredStatus?.running ? "secondary" : "primary"}
+                  icon={cloudflaredStatus?.running ? "cloud_off" : "cloud_upload"}
+                  onClick={() =>
+                    handleCloudflaredAction(cloudflaredStatus?.running ? "disable" : "enable")
+                  }
+                  loading={cloudflaredBusy}
+                  className={
+                    cloudflaredStatus?.running
+                      ? "border-border/70! text-text-muted! hover:text-text!"
+                      : "bg-linear-to-r from-primary to-cyan-500 hover:from-primary-hover hover:to-cyan-600"
+                  }
+                >
+                  {cloudflaredActionLabel}
+                </Button>
+              )}
+            </div>
+
+            {cloudflaredNotice && (
+              <div
+                className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-sm ${
+                  cloudflaredNotice.type === "success"
+                    ? "border-green-500/30 bg-green-500/10 text-green-400"
+                    : cloudflaredNotice.type === "info"
+                      ? "border-blue-500/30 bg-blue-500/10 text-blue-400"
+                      : "border-red-500/30 bg-red-500/10 text-red-400"
+                }`}
+              >
+                <span className="material-symbols-outlined text-[18px]">
+                  {cloudflaredNotice.type === "success"
+                    ? "check_circle"
+                    : cloudflaredNotice.type === "info"
+                      ? "info"
+                      : "error"}
+                </span>
+                <span className="flex-1">{cloudflaredNotice.message}</span>
+                <button
+                  onClick={() => setCloudflaredNotice(null)}
+                  className="rounded p-0.5 transition-colors hover:bg-white/10"
+                >
+                  <span className="material-symbols-outlined text-[16px]">close</span>
+                </button>
+              </div>
+            )}
+
+            <p className="text-xs text-text-muted">{cloudflaredUrlNotice}</p>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Input
+                value={cloudflaredStatus?.apiUrl || ""}
+                readOnly
+                placeholder="https://*.trycloudflare.com/v1"
+                className="flex-1 min-w-0 font-mono text-sm"
+              />
+              <Button
+                variant="secondary"
+                icon={copied === "cloudflared_url" ? "check" : "content_copy"}
+                onClick={() =>
+                  cloudflaredStatus?.apiUrl && copy(cloudflaredStatus.apiUrl, "cloudflared_url")
+                }
+                disabled={!cloudflaredStatus?.apiUrl}
+                className="shrink-0 self-start sm:self-auto"
+              >
+                {copied === "cloudflared_url" ? tc("copied") : tc("copy")}
+              </Button>
+            </div>
+            {cloudflaredStatus?.lastError && (
+              <p className="text-xs text-red-400">
+                {translateOrFallback("cloudflaredLastError", "Last error: {error}", {
+                  error: cloudflaredStatus.lastError,
+                })}
+              </p>
+            )}
+          </div>
+        </div>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       </Card>
 
       <Card>
@@ -1004,12 +1282,32 @@ type NgrokTunnelStatus = {
             <div>
               <h2 className="text-lg font-semibold">{t("available")}</h2>
               <p className="text-sm text-text-muted">
+<<<<<<< HEAD
                 {modelsLoading
                   ? translateOrFallback("loadingModels", "Loading available models...")
                   : t("modelsAcrossEndpoints", {
                       models: totalEndpointModelCount,
                       endpoints: availableEndpointCount,
                     })}
+=======
+                {t("modelsAcrossEndpoints", {
+                  models: Object.values(endpointData).reduce(
+                    (acc, models) => acc + models.length,
+                    0
+                  ),
+                  endpoints:
+                    [
+                      endpointData.chat,
+                      endpointData.embeddings,
+                      endpointData.images,
+                      endpointData.rerank,
+                      endpointData.audioTranscription,
+                      endpointData.audioSpeech,
+                      endpointData.moderation,
+                      endpointData.music,
+                    ].filter((a) => a.length > 0).length + 2,
+                })}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               </p>
             </div>
           </div>
@@ -1038,7 +1336,10 @@ type NgrokTunnelStatus = {
                 copy={copy}
                 copied={copied}
                 baseUrl={currentEndpoint}
+<<<<<<< HEAD
                 modelsLoading={modelsLoading}
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               />
 
               {/* Responses API */}
@@ -1060,7 +1361,10 @@ type NgrokTunnelStatus = {
                 copy={copy}
                 copied={copied}
                 baseUrl={currentEndpoint}
+<<<<<<< HEAD
                 modelsLoading={modelsLoading}
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               />
 
               {/* Legacy Completions */}
@@ -1082,7 +1386,10 @@ type NgrokTunnelStatus = {
                 copy={copy}
                 copied={copied}
                 baseUrl={currentEndpoint}
+<<<<<<< HEAD
                 modelsLoading={modelsLoading}
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               />
             </div>
           </div>
@@ -1113,7 +1420,10 @@ type NgrokTunnelStatus = {
                 copy={copy}
                 copied={copied}
                 baseUrl={currentEndpoint}
+<<<<<<< HEAD
                 modelsLoading={modelsLoading}
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               />
 
               {/* Image Generation */}
@@ -1132,7 +1442,10 @@ type NgrokTunnelStatus = {
                 copy={copy}
                 copied={copied}
                 baseUrl={currentEndpoint}
+<<<<<<< HEAD
                 modelsLoading={modelsLoading}
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               />
 
               {/* Audio Transcription */}
@@ -1153,7 +1466,10 @@ type NgrokTunnelStatus = {
                 copy={copy}
                 copied={copied}
                 baseUrl={currentEndpoint}
+<<<<<<< HEAD
                 modelsLoading={modelsLoading}
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               />
 
               {/* Audio Speech (TTS) */}
@@ -1172,7 +1488,10 @@ type NgrokTunnelStatus = {
                 copy={copy}
                 copied={copied}
                 baseUrl={currentEndpoint}
+<<<<<<< HEAD
                 modelsLoading={modelsLoading}
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               />
 
               {/* Music Generation */}
@@ -1192,6 +1511,7 @@ type NgrokTunnelStatus = {
                 copy={copy}
                 copied={copied}
                 baseUrl={currentEndpoint}
+<<<<<<< HEAD
                 modelsLoading={modelsLoading}
               />
 
@@ -1213,6 +1533,8 @@ type NgrokTunnelStatus = {
                 copied={copied}
                 baseUrl={currentEndpoint}
                 modelsLoading={modelsLoading}
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               />
             </div>
           </div>
@@ -1284,7 +1606,10 @@ type NgrokTunnelStatus = {
                 copy={copy}
                 copied={copied}
                 baseUrl={currentEndpoint}
+<<<<<<< HEAD
                 modelsLoading={modelsLoading}
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               />
 
               {/* Moderations */}
@@ -1303,7 +1628,10 @@ type NgrokTunnelStatus = {
                 copy={copy}
                 copied={copied}
                 baseUrl={currentEndpoint}
+<<<<<<< HEAD
                 modelsLoading={modelsLoading}
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               />
 
               {/* List Models */}
@@ -1364,7 +1692,11 @@ type NgrokTunnelStatus = {
                 <div className="mt-3 text-xs text-text-muted space-y-1">
                   <p>
                     {t("protocolToolsLabel") || "Tools"}:{" "}
+<<<<<<< HEAD
                     <span className="text-text-main font-semibold">{mcpToolCount || 29}</span>
+=======
+                    <span className="text-text-main font-semibold">{mcpToolCount || 16}</span>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   </p>
                   <p>
                     {t("protocolLastActivity") || "Last activity"}:{" "}
@@ -1638,6 +1970,7 @@ type NgrokTunnelStatus = {
           </div>
         </div>
       </Modal>
+<<<<<<< HEAD
 
       <Modal
         isOpen={showTailscaleInstallModal}
@@ -1704,6 +2037,8 @@ type NgrokTunnelStatus = {
           </div>
         </div>
       </Modal>
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       {/* Provider Models Popup */}
       {selectedProvider && (
         <ProviderModelsModal
@@ -1718,6 +2053,7 @@ type NgrokTunnelStatus = {
   );
 }
 
+<<<<<<< HEAD
 // -- Sub-component: Provider Models Modal ------------------------------------------
 
 function ProviderModelsModal({
@@ -1733,6 +2069,15 @@ function ProviderModelsModal({
   copied?: string | null;
   onClose: () => void;
 }) {
+=======
+APIPageClient.propTypes = {
+  machineId: PropTypes.string.isRequired,
+};
+
+// -- Sub-component: Provider Models Modal ------------------------------------------
+
+function ProviderModelsModal({ provider, models, copy, copied, onClose }) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const t = useTranslations("endpoint");
   const tc = useTranslations("common");
   // Get provider alias for matching models
@@ -1808,6 +2153,17 @@ function ProviderModelsModal({
   );
 }
 
+<<<<<<< HEAD
+=======
+ProviderModelsModal.propTypes = {
+  provider: PropTypes.object.isRequired,
+  models: PropTypes.array.isRequired,
+  copy: PropTypes.func.isRequired,
+  copied: PropTypes.string,
+  onClose: PropTypes.func.isRequired,
+};
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // -- Sub-component: Endpoint Section ------------------------------------------
 
 function EndpointSection({
@@ -1823,6 +2179,7 @@ function EndpointSection({
   copy,
   copied,
   baseUrl,
+<<<<<<< HEAD
   modelsLoading = false,
 }: {
   icon: string;
@@ -1838,6 +2195,8 @@ function EndpointSection({
   copied?: string | null;
   baseUrl: string;
   modelsLoading?: boolean;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }) {
   const t = useTranslations("endpoint");
   const grouped = useMemo(() => {
@@ -1871,7 +2230,11 @@ function EndpointSection({
           <div className="flex items-center gap-2">
             <span className="font-semibold text-sm">{title}</span>
             <span className="text-xs px-2 py-0.5 rounded-full bg-surface text-text-muted font-medium">
+<<<<<<< HEAD
               {modelsLoading ? "..." : t("modelsCount", { count: models.length })}
+=======
+              {t("modelsCount", { count: models.length })}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             </span>
           </div>
           <p className="text-xs text-text-muted mt-0.5">{description}</p>
@@ -1903,6 +2266,7 @@ function EndpointSection({
           </div>
 
           {/* Models grouped by provider */}
+<<<<<<< HEAD
           {modelsLoading ? (
             <div className="flex items-center gap-2 rounded-lg border border-border/70 bg-surface/40 px-3 py-2 text-xs text-text-muted">
               <span className="material-symbols-outlined animate-spin text-sm">
@@ -1941,8 +2305,57 @@ function EndpointSection({
               ))}
             </div>
           )}
+=======
+          <div className="flex flex-col gap-2">
+            {grouped.map(([providerId, providerModels]) => (
+              <div key={providerId}>
+                <div className="flex items-center gap-2 mb-1">
+                  <div
+                    className="size-2.5 rounded-full shrink-0"
+                    style={{ backgroundColor: providerColor(providerId) }}
+                  />
+                  <span className="text-xs font-semibold text-text-main">
+                    {providerName(providerId)}
+                  </span>
+                  <span className="text-xs text-text-muted">
+                    ({(providerModels as any).length})
+                  </span>
+                </div>
+                <div className="ml-5 flex flex-wrap gap-1.5">
+                  {(providerModels as any).map((m) => (
+                    <span
+                      key={m.id}
+                      className="text-xs px-2 py-0.5 rounded-md bg-surface/80 text-text-muted font-mono"
+                      title={m.id}
+                    >
+                      {m.root || m.id.split("/").pop()}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         </div>
       )}
     </div>
   );
 }
+<<<<<<< HEAD
+=======
+
+EndpointSection.propTypes = {
+  icon: PropTypes.string.isRequired,
+  iconColor: PropTypes.string.isRequired,
+  iconBg: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  path: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  models: PropTypes.array.isRequired,
+  expanded: PropTypes.bool.isRequired,
+  onToggle: PropTypes.func.isRequired,
+  copy: PropTypes.func.isRequired,
+  copied: PropTypes.string,
+  baseUrl: PropTypes.string.isRequired,
+};
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

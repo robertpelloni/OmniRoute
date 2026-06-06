@@ -5,8 +5,11 @@ const PROVIDER_PLAN_FALLBACKS = new Set([
   "claude code",
   "kimi coding",
   "kiro",
+<<<<<<< HEAD
   "amazon q",
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   "openai codex",
   "codex",
   "github copilot",
@@ -21,9 +24,12 @@ const QUOTA_LABEL_MAP: Record<string, string> = {
   code_review: "Code Review",
   agentic_request: "Agentic",
   agentic_request_freetrial: "Agentic (Trial)",
+<<<<<<< HEAD
   credits: "AI Credits",
   models: "Models",
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 };
 
 function toRecord(value: unknown): Record<string, unknown> {
@@ -159,6 +165,7 @@ function normalizeQuotaEntry(name: string, quota: any = {}, extras: any = {}) {
   const usedRaw = Number(quota?.used || 0);
   const totalRaw = Number(quota?.total || 0);
   const resetAt = quota?.resetAt || null;
+<<<<<<< HEAD
 
   // T13: Only consider it stale if the reset time passed AND there's still usage shown.
   // If usage is already 0 (or remaining is 100%), it's naturally reset and doesn't need to be marked as stale.
@@ -172,11 +179,16 @@ function normalizeQuotaEntry(name: string, quota: any = {}, extras: any = {}) {
   const total = Number.isFinite(totalRaw) ? totalRaw : 0;
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const staleAfterReset = isPastResetWindow(resetAt);
   const used = staleAfterReset ? 0 : usedRaw;
   const total = Number.isFinite(totalRaw) ? totalRaw : 0;
   const remainingPercentageRaw = safePercentage(quota?.remainingPercentage);
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const remainingPercentage =
     staleAfterReset && total > 0
       ? 100
@@ -222,6 +234,7 @@ export function parseQuotaData(provider, data) {
       case "antigravity":
         if (data.quotas) {
           Object.entries(data.quotas).forEach(([modelKey, quota]: [string, any]) => {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
             if (modelKey === "credits") {
               // Credit balance: render as "N credits remaining" counter, not a progress bar
@@ -245,6 +258,8 @@ export function parseQuotaData(provider, data) {
               return;
             }
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             if (quota?.unlimited && (!quota?.total || quota.total <= 0)) {
               return;
             }
@@ -266,7 +281,10 @@ export function parseQuotaData(provider, data) {
         break;
 
       case "kiro":
+<<<<<<< HEAD
       case "amazon-q":
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         if (data.quotas) {
           Object.entries(data.quotas).forEach(([quotaType, quota]: [string, any]) => {
             normalizedQuotas.push(normalizeQuotaEntry(quotaType, quota));
@@ -299,6 +317,7 @@ export function parseQuotaData(provider, data) {
         }
         break;
 
+<<<<<<< HEAD
       case "nanogpt":
         if (data.quotas) {
           Object.entries(data.quotas).forEach(([name, quota]: [string, any]) => {
@@ -308,6 +327,8 @@ export function parseQuotaData(provider, data) {
         }
         break;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       default:
         // Generic fallback for unknown providers
         if (data.quotas) {

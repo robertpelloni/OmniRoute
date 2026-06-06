@@ -1,11 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
+<<<<<<< HEAD
 import { useTranslations } from "next-intl";
+=======
+import PropTypes from "prop-types";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import Modal from "./Modal";
 import Button from "./Button";
 import Input from "./Input";
 
+<<<<<<< HEAD
 type CursorAuthModalProps = {
   isOpen: boolean;
   onSuccess?: () => void;
@@ -13,10 +18,13 @@ type CursorAuthModalProps = {
   reauthConnection?: unknown;
 };
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Cursor Auth Modal
  * Auto-detect and import token from Cursor IDE's local SQLite database
  */
+<<<<<<< HEAD
 export default function CursorAuthModal({
   isOpen,
   onSuccess,
@@ -24,6 +32,9 @@ export default function CursorAuthModal({
   reauthConnection: _,
 }: CursorAuthModalProps) {
   const t = useTranslations("cursorAuthModal");
+=======
+export default function CursorAuthModal({ isOpen, onSuccess, onClose }) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [accessToken, setAccessToken] = useState("");
   const [machineId, setMachineId] = useState("");
   const [error, setError] = useState(null);
@@ -46,6 +57,7 @@ export default function CursorAuthModal({
 
         if (data.found) {
           setAccessToken(data.accessToken);
+<<<<<<< HEAD
           setMachineId(data.machineId || "");
           setAutoDetected(true);
         } else {
@@ -53,6 +65,15 @@ export default function CursorAuthModal({
         }
       } catch (err) {
         setError(t("errorAutoDetectFailed"));
+=======
+          setMachineId(data.machineId);
+          setAutoDetected(true);
+        } else {
+          setError(data.error || "Could not auto-detect tokens");
+        }
+      } catch (err) {
+        setError("Failed to auto-detect tokens");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       } finally {
         setAutoDetecting(false);
       }
@@ -63,7 +84,16 @@ export default function CursorAuthModal({
 
   const handleImportToken = async () => {
     if (!accessToken.trim()) {
+<<<<<<< HEAD
       setError(t("errorEnterToken"));
+=======
+      setError("Please enter an access token");
+      return;
+    }
+
+    if (!machineId.trim()) {
+      setError("Please enter a machine ID");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       return;
     }
 
@@ -71,6 +101,7 @@ export default function CursorAuthModal({
     setError(null);
 
     try {
+<<<<<<< HEAD
       const body: Record<string, string> = { accessToken: accessToken.trim() };
       if (machineId.trim()) body.machineId = machineId.trim();
 
@@ -78,12 +109,25 @@ export default function CursorAuthModal({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
+=======
+      const res = await fetch("/api/oauth/cursor/import", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          accessToken: accessToken.trim(),
+          machineId: machineId.trim(),
+        }),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       });
 
       const data = await res.json();
 
       if (!res.ok) {
+<<<<<<< HEAD
         throw new Error(data.error || t("errorImportFailed"));
+=======
+        throw new Error(data.error || "Import failed");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
 
       // Success - close modal and trigger refresh
@@ -97,7 +141,11 @@ export default function CursorAuthModal({
   };
 
   return (
+<<<<<<< HEAD
     <Modal isOpen={isOpen} title={t("title")} onClose={onClose}>
+=======
+    <Modal isOpen={isOpen} title="Connect Cursor IDE" onClose={onClose}>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       <div className="flex flex-col gap-4">
         {/* Auto-detecting state */}
         {autoDetecting && (
@@ -107,8 +155,13 @@ export default function CursorAuthModal({
                 progress_activity
               </span>
             </div>
+<<<<<<< HEAD
             <h3 className="text-lg font-semibold mb-2">{t("autoDetecting")}</h3>
             <p className="text-sm text-text-muted">{t("readingFromCursor")}</p>
+=======
+            <h3 className="text-lg font-semibold mb-2">Auto-detecting tokens...</h3>
+            <p className="text-sm text-text-muted">Reading from Cursor IDE database</p>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           </div>
         )}
 
@@ -123,7 +176,11 @@ export default function CursorAuthModal({
                     check_circle
                   </span>
                   <p className="text-sm text-green-800 dark:text-green-200">
+<<<<<<< HEAD
                     {t("tokensAutoDetected")}
+=======
+                    Tokens auto-detected from Cursor IDE successfully!
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   </p>
                 </div>
               </div>
@@ -137,7 +194,11 @@ export default function CursorAuthModal({
                     info
                   </span>
                   <p className="text-sm text-blue-800 dark:text-blue-200">
+<<<<<<< HEAD
                     {t("cursorNotDetected")}
+=======
+                    Cursor IDE not detected. Please paste your tokens manually.
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   </p>
                 </div>
               </div>
@@ -146,26 +207,45 @@ export default function CursorAuthModal({
             {/* Access Token Input */}
             <div>
               <label className="block text-sm font-medium mb-2">
+<<<<<<< HEAD
                 {t("accessToken")} <span className="text-red-500">{t("required")}</span>
+=======
+                Access Token <span className="text-red-500">*</span>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               </label>
               <textarea
                 value={accessToken}
                 onChange={(e) => setAccessToken(e.target.value)}
+<<<<<<< HEAD
                 placeholder={t("accessTokenPlaceholder")}
+=======
+                placeholder="Access token will be auto-filled..."
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 rows={3}
                 className="w-full px-3 py-2 text-sm font-mono border border-border rounded-lg bg-background focus:outline-none focus:border-primary resize-none"
               />
             </div>
 
+<<<<<<< HEAD
             {/* Machine ID Input (optional — not needed for cursor-agent imports) */}
             <div>
               <label className="block text-sm font-medium mb-2">
                 {t("machineId")} <span className="text-text-muted text-xs">{t("optional")}</span>
+=======
+            {/* Machine ID Input */}
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Machine ID <span className="text-red-500">*</span>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               </label>
               <Input
                 value={machineId}
                 onChange={(e) => setMachineId(e.target.value)}
+<<<<<<< HEAD
                 placeholder={t("machineIdPlaceholder")}
+=======
+                placeholder="Machine ID will be auto-filled..."
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 className="font-mono text-sm"
               />
             </div>
@@ -182,12 +262,21 @@ export default function CursorAuthModal({
               <Button
                 onClick={handleImportToken}
                 fullWidth
+<<<<<<< HEAD
                 disabled={importing || !accessToken.trim()}
               >
                 {importing ? t("importing") : t("importToken")}
               </Button>
               <Button onClick={onClose} variant="ghost" fullWidth>
                 {t("cancel")}
+=======
+                disabled={importing || !accessToken.trim() || !machineId.trim()}
+              >
+                {importing ? "Importing..." : "Import Token"}
+              </Button>
+              <Button onClick={onClose} variant="ghost" fullWidth>
+                Cancel
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               </Button>
             </div>
           </>
@@ -196,3 +285,12 @@ export default function CursorAuthModal({
     </Modal>
   );
 }
+<<<<<<< HEAD
+=======
+
+CursorAuthModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onSuccess: PropTypes.func,
+  onClose: PropTypes.func.isRequired,
+};
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

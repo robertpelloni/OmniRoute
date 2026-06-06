@@ -12,22 +12,32 @@ import {
 
 /**
  * Compute date range boundaries
+<<<<<<< HEAD
  * @param {string} range - "1d" | "7d" | "30d" | "90d" | "ytd" | "all" | "custom"
  * @param {string} [startDate] - ISO string for custom range start
  * @param {string} [endDate] - ISO string for custom range end
  * @returns {{ start: Date, end: Date }}
  */
 function getDateRange(range: string, startDate?: string, endDate?: string) {
+=======
+ * @param {string} range - "1d" | "7d" | "30d" | "90d" | "ytd" | "all"
+ * @returns {{ start: Date, end: Date }}
+ */
+function getDateRange(range: string) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const end = new Date();
   let start;
 
   switch (range) {
+<<<<<<< HEAD
     case "custom":
       start = startDate ? new Date(startDate) : new Date(0);
       return {
         start,
         end: endDate ? new Date(endDate) : end,
       };
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     case "1d":
       start = new Date(end);
       start.setDate(start.getDate() - 1);
@@ -86,10 +96,16 @@ function shortModelName(model: string) {
 export async function computeAnalytics(
   history: any[],
   range = "30d",
+<<<<<<< HEAD
   connectionMap: Record<string, string> = {},
   options: { startDate?: string; endDate?: string } = {}
 ) {
   const { start, end } = getDateRange(range, options.startDate, options.endDate);
+=======
+  connectionMap: Record<string, string> = {}
+) {
+  const { start, end } = getDateRange(range);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // ---- Filtered entries ----
   const entries = history.filter((e) => {

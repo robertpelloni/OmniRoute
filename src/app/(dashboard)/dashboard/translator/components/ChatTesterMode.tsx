@@ -79,6 +79,7 @@ export default function ChatTesterMode() {
             parts: [{ text: m.content }],
           })),
         };
+<<<<<<< HEAD
       } else if (clientFormat === "antigravity") {
         clientRequest = {
           request: {
@@ -90,6 +91,8 @@ export default function ChatTesterMode() {
           model,
           userAgent: "antigravity",
         };
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       } else if (clientFormat === "openai-responses") {
         clientRequest = {
           model,
@@ -100,12 +103,15 @@ export default function ChatTesterMode() {
           })),
           stream: true,
         };
+<<<<<<< HEAD
       } else if (clientFormat === "cursor" || clientFormat === "kiro") {
         clientRequest = {
           model,
           messages: allMessages,
           stream: true,
         };
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       } else {
         clientRequest = {
           model,
@@ -295,7 +301,13 @@ export default function ChatTesterMode() {
                   <Select
                     value={clientFormat}
                     onChange={(e) => setClientFormat(e.target.value)}
+<<<<<<< HEAD
                     options={FORMAT_OPTIONS}
+=======
+                    options={FORMAT_OPTIONS.filter((o) =>
+                      ["openai", "claude", "gemini", "openai-responses"].includes(o.value)
+                    )}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   />
                 </div>
                 <div className="flex-1">

@@ -5,10 +5,13 @@ import { Card, Button, ModelSelectModal, ManualConfigModal } from "@/shared/comp
 import Image from "next/image";
 import CliStatusBadge from "./CliStatusBadge";
 import { useTranslations } from "next-intl";
+<<<<<<< HEAD
 import {
   getStoredClaudeAuthValue,
   normalizeClaudeBaseUrl,
 } from "@/shared/services/claudeCliConfig";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const CLOUD_URL = process.env.NEXT_PUBLIC_CLOUD_URL;
 
@@ -102,12 +105,18 @@ export default function ClaudeToolCard({
         }
       });
       // Restore selected key from file: match token stored in file against known keys
+<<<<<<< HEAD
       const tokenFromFile = getStoredClaudeAuthValue(env);
       if (tokenFromFile) {
         // (#523) Keys from /api/keys are masked (first 8 + "****" + last 4).
         // Mask the token from file to compare against the masked list.
         const maskedToken = tokenFromFile.slice(0, 8) + "****" + tokenFromFile.slice(-4);
         const matchedKey = apiKeys?.find((k) => k.key === maskedToken);
+=======
+      const tokenFromFile = env.ANTHROPIC_AUTH_TOKEN;
+      if (tokenFromFile) {
+        const matchedKey = apiKeys?.find((k) => k.key === tokenFromFile);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         if (matchedKey) setSelectedApiKey(matchedKey.id);
       }
     }
@@ -128,12 +137,20 @@ export default function ClaudeToolCard({
 
   const getEffectiveBaseUrl = () => {
     const url = customBaseUrl || baseUrl;
+<<<<<<< HEAD
     return normalizeClaudeBaseUrl(url);
+=======
+    return url.endsWith("/v1") ? url : `${url}/v1`;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 
   const getDisplayUrl = () => {
     const url = customBaseUrl || baseUrl;
+<<<<<<< HEAD
     return normalizeClaudeBaseUrl(url);
+=======
+    return url.endsWith("/v1") ? url : `${url}/v1`;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 
   const handleApplySettings = async () => {
@@ -143,12 +160,25 @@ export default function ClaudeToolCard({
       const env: any = { ANTHROPIC_BASE_URL: getEffectiveBaseUrl() };
 
       // (#523) Prefer keyId lookup so the backend writes the real key to disk.
+<<<<<<< HEAD
       // If no key is selected, leave auth unset so local installs can rely on
       // anonymous access instead of persisting a fake placeholder token.
       const selectedKeyId = selectedApiKey?.trim() || (apiKeys?.length > 0 ? apiKeys[0].id : null);
 
       tool.defaultModels.forEach((model) => {
         const targetModel = modelMappings[model.alias] || model.defaultValue || "";
+=======
+      // Fall back to sk_omniroute for localhost-only setups without a key.
+      const selectedKeyId = selectedApiKey?.trim() || (apiKeys?.length > 0 ? apiKeys[0].id : null);
+      const skOmnirouteFallback = !cloudEnabled ? "sk_omniroute" : null;
+
+      if (!selectedKeyId && skOmnirouteFallback) {
+        env.ANTHROPIC_AUTH_TOKEN = skOmnirouteFallback;
+      }
+
+      tool.defaultModels.forEach((model) => {
+        const targetModel = modelMappings[model.alias];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         if (targetModel && model.envKey) env[model.envKey] = targetModel;
       });
 
@@ -169,12 +199,16 @@ export default function ClaudeToolCard({
           settings: { ...prev?.settings, env },
         }));
       } else {
+<<<<<<< HEAD
         setMessage({
           type: "error",
           text:
             (typeof data.error === "string" ? data.error : data.error?.message) ||
             t("failedApplySettings"),
         });
+=======
+        setMessage({ type: "error", text: data.error || t("failedApplySettings") });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     } catch (error) {
       setMessage({ type: "error", text: error.message });
@@ -196,12 +230,16 @@ export default function ClaudeToolCard({
         );
         setSelectedApiKey("");
       } else {
+<<<<<<< HEAD
         setMessage({
           type: "error",
           text:
             (typeof data.error === "string" ? data.error : data.error?.message) ||
             t("failedResetSettings"),
         });
+=======
+        setMessage({ type: "error", text: data.error || t("failedResetSettings") });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     } catch (error) {
       setMessage({ type: "error", text: error.message });
@@ -221,6 +259,7 @@ export default function ClaudeToolCard({
 
   // Generate settings.json content for manual copy
   const getManualConfigs = () => {
+<<<<<<< HEAD
     const env = { ANTHROPIC_BASE_URL: getEffectiveBaseUrl() };
     if (selectedApiKey && selectedApiKey.trim()) {
       env.ANTHROPIC_AUTH_TOKEN = "<API_KEY_FROM_DASHBOARD>";
@@ -228,6 +267,15 @@ export default function ClaudeToolCard({
       env.ANTHROPIC_AUTH_TOKEN = "<API_KEY_FROM_DASHBOARD>";
     }
 
+=======
+    const keyToUse =
+      selectedApiKey && selectedApiKey.trim()
+        ? selectedApiKey
+        : !cloudEnabled
+          ? "sk_omniroute"
+          : "<API_KEY_FROM_DASHBOARD>";
+    const env = { ANTHROPIC_BASE_URL: getEffectiveBaseUrl(), ANTHROPIC_AUTH_TOKEN: keyToUse };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     tool.defaultModels.forEach((model) => {
       const targetModel = modelMappings[model.alias];
       if (targetModel && model.envKey) env[model.envKey] = targetModel;
@@ -267,12 +315,16 @@ export default function ClaudeToolCard({
         checkClaudeStatus();
         fetchBackups();
       } else {
+<<<<<<< HEAD
         setMessage({
           type: "error",
           text:
             (typeof data.error === "string" ? data.error : data.error?.message) ||
             t("failedRestore"),
         });
+=======
+        setMessage({ type: "error", text: data.error || t("failedRestore") });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     } catch (error) {
       setMessage({ type: "error", text: error.message });
@@ -443,7 +495,11 @@ export default function ClaudeToolCard({
                     </select>
                   ) : (
                     <span className="flex-1 text-xs text-text-muted px-2 py-1.5">
+<<<<<<< HEAD
                       {cloudEnabled ? t("noApiKeysCreateOne") : t("noApiKeysAvailable")}
+=======
+                      {cloudEnabled ? t("noApiKeysCreateOne") : t("defaultOmnirouteKey")}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     </span>
                   )}
                 </div>
@@ -457,6 +513,7 @@ export default function ClaudeToolCard({
                     <span className="material-symbols-outlined text-text-muted text-[14px]">
                       arrow_forward
                     </span>
+<<<<<<< HEAD
                     <button
                       onClick={() => openModelSelector(model.alias)}
                       disabled={!hasActiveProviders}
@@ -464,6 +521,8 @@ export default function ClaudeToolCard({
                     >
                       {t("selectModel")}
                     </button>
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     <input
                       type="text"
                       value={modelMappings[model.alias] || ""}
@@ -471,6 +530,16 @@ export default function ClaudeToolCard({
                       placeholder={t("providerModelPlaceholder")}
                       className="flex-1 px-2 py-1.5 bg-surface rounded border border-border text-xs focus:outline-none focus:ring-1 focus:ring-primary/50"
                     />
+<<<<<<< HEAD
+=======
+                    <button
+                      onClick={() => openModelSelector(model.alias)}
+                      disabled={!hasActiveProviders}
+                      className={`px-2 py-1.5 rounded border text-xs transition-colors shrink-0 whitespace-nowrap ${hasActiveProviders ? "bg-surface border-border text-text-main hover:border-primary cursor-pointer" : "opacity-50 cursor-not-allowed border-border"}`}
+                    >
+                      {t("selectModel")}
+                    </button>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     {modelMappings[model.alias] && (
                       <button
                         onClick={() => onModelMappingChange(model.alias, "")}

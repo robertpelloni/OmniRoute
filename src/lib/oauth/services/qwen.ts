@@ -1,5 +1,8 @@
 import open from "open";
+<<<<<<< HEAD
 import { randomUUID } from "node:crypto";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { QWEN_CONFIG } from "../constants/oauth";
 import { getServerCredentials } from "../config/index";
 import { generatePKCE } from "../utils/pkce";
@@ -25,7 +28,10 @@ export class QwenService {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         Accept: "application/json",
+<<<<<<< HEAD
         "x-request-id": randomUUID(),
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       },
       body: new URLSearchParams({
         client_id: this.config.clientId,

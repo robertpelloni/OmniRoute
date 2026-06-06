@@ -3,7 +3,10 @@
 import { NextResponse } from "next/server";
 import fs from "fs/promises";
 import path from "path";
+<<<<<<< HEAD
 import { requireCliToolsAuth } from "@/lib/api/requireCliToolsAuth";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import {
   ensureCliConfigWriteAllowed,
   getCliConfigPaths,
@@ -39,6 +42,7 @@ const parseToml = (content: string) => {
     // Key = value
     const kvMatch = trimmed.match(/^([^=]+)\s*=\s*(.+)$/);
     if (kvMatch) {
+<<<<<<< HEAD
       let key = kvMatch[1].trim();
       const rawValue = kvMatch[2].trim();
       // Strip quotes from key (TOML quoted keys like "gpt-5.3-codex")
@@ -72,6 +76,21 @@ const parseToml = (content: string) => {
         result._root[key] = parsedValue;
       } else {
         result._sections[currentSection][key] = parsedValue;
+=======
+      const key = kvMatch[1].trim();
+      let value = kvMatch[2].trim();
+      // Remove quotes
+      if (
+        (value.startsWith('"') && value.endsWith('"')) ||
+        (value.startsWith("'") && value.endsWith("'"))
+      ) {
+        value = value.slice(1, -1);
+      }
+      if (currentSection === "_root") {
+        result._root[key] = value;
+      } else {
+        result._sections[currentSection][key] = value;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     }
   });
@@ -79,6 +98,7 @@ const parseToml = (content: string) => {
   return result;
 };
 
+<<<<<<< HEAD
 // Format a TOML value: arrays and booleans stay unquoted, strings get quoted
 const formatTomlValue = (value: unknown): string => {
   if (typeof value === "boolean") return value ? "true" : "false";
@@ -89,13 +109,19 @@ const formatTomlValue = (value: unknown): string => {
   return `"${value}"`;
 };
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // Convert parsed object back to TOML string
 const toToml = (parsed: Record<string, any>) => {
   let lines: string[] = [];
 
   // Root level keys
   Object.entries(parsed._root).forEach(([key, value]) => {
+<<<<<<< HEAD
     lines.push(`${key} = ${formatTomlValue(value)}`);
+=======
+    lines.push(`${key} = "${value}"`);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   });
 
   // Sections
@@ -103,8 +129,12 @@ const toToml = (parsed: Record<string, any>) => {
     lines.push("");
     lines.push(`[${section}]`);
     Object.entries(values).forEach(([key, value]) => {
+<<<<<<< HEAD
       const formattedKey = key.includes(".") ? `"${key}"` : key;
       lines.push(`${formattedKey} = ${formatTomlValue(value)}`);
+=======
+      lines.push(`${key} = "${value}"`);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     });
   });
 
@@ -127,17 +157,24 @@ const readConfig = async () => {
 const hasOmniRouteConfig = (config: string | null) => {
   if (!config) return false;
   return (
+<<<<<<< HEAD
     config.includes("openai_base_url") ||
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     config.includes('model_provider = "omniroute"') ||
     config.includes("[model_providers.omniroute]")
   );
 };
 
 // GET - Check codex CLI and read current settings
+<<<<<<< HEAD
 export async function GET(request: Request) {
   const authError = await requireCliToolsAuth(request);
   if (authError) return authError;
 
+=======
+export async function GET() {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const runtime = await getCliRuntimeStatus("codex");
 
@@ -178,9 +215,12 @@ export async function GET(request: Request) {
 
 // POST - Update OmniRoute settings (merge with existing config)
 export async function POST(request: Request) {
+<<<<<<< HEAD
   const authError = await requireCliToolsAuth(request);
   if (authError) return authError;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody;
   try {
     rawBody = await request.json();
@@ -202,15 +242,22 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: writeGuard }, { status: 403 });
     }
 
+<<<<<<< HEAD
     // (#549) Extract keyId BEFORE validation — Zod strips unknown fields!
     // The dashboard sends masked key strings — resolving by ID guarantees
     // we always write the full key value to the config file.
     const keyId = typeof rawBody?.keyId === "string" ? rawBody.keyId.trim() : null;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const validation = validateBody(cliModelConfigSchema, rawBody);
     if (isValidationFailure(validation)) {
       return NextResponse.json({ error: validation.error }, { status: 400 });
     }
+<<<<<<< HEAD
+=======
+    const { baseUrl, model } = validation.data;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     let { apiKey } = validation.data;
     if (!apiKey) {
       return NextResponse.json(
@@ -219,6 +266,13 @@ export async function POST(request: Request) {
       );
     }
 
+<<<<<<< HEAD
+=======
+    // (#549) Resolve real key from DB if keyId was provided.
+    // The dashboard sends masked key strings — resolving by ID guarantees
+    // we always write the full key value to the config file.
+    const keyId = typeof rawBody?.keyId === "string" ? rawBody.keyId.trim() : null;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (keyId) {
       try {
         const keyRecord = await getApiKeyById(keyId);
@@ -251,6 +305,7 @@ export async function POST(request: Request) {
 
     // Update only OmniRoute related fields (api_key goes to auth.json, not config.toml)
     parsed._root.model = model;
+<<<<<<< HEAD
 
     if (reasoningEffort && reasoningEffort !== "none") {
       // Optional: low, medium, high
@@ -283,6 +338,18 @@ export async function POST(request: Request) {
     } else {
       delete parsed._sections["notice.model_migrations"];
     }
+=======
+    parsed._root.model_provider = "omniroute";
+
+    // Update or create omniroute provider section (no api_key - Codex reads from auth.json)
+    // Ensure /v1 suffix is added only once
+    const normalizedBaseUrl = baseUrl.endsWith("/v1") ? baseUrl : `${baseUrl}/v1`;
+    parsed._sections["model_providers.omniroute"] = {
+      name: "OmniRoute",
+      base_url: normalizedBaseUrl,
+      wire_api: "responses",
+    };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     // Write merged config
     const configContent = toToml(parsed);
@@ -319,10 +386,14 @@ export async function POST(request: Request) {
 }
 
 // DELETE - Remove OmniRoute settings only (keep other settings)
+<<<<<<< HEAD
 export async function DELETE(request: Request) {
   const authError = await requireCliToolsAuth(request);
   if (authError) return authError;
 
+=======
+export async function DELETE() {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const writeGuard = ensureCliConfigWriteAllowed();
     if (writeGuard) {
@@ -349,9 +420,13 @@ export async function DELETE(request: Request) {
       throw error;
     }
 
+<<<<<<< HEAD
     // Remove OmniRoute related root fields
     delete parsed._root.openai_base_url;
 
+=======
+    // Remove OmniRoute related root fields only if they point to omniroute
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (parsed._root.model_provider === "omniroute") {
       delete parsed._root.model;
       delete parsed._root.model_provider;

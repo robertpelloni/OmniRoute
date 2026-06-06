@@ -33,6 +33,7 @@ export interface RequestDetailLog {
   no_log?: boolean;
 }
 
+<<<<<<< HEAD
 let requestDetailLogsTableExistsCache: boolean | undefined;
 
 function requestDetailLogsTableExists(): boolean {
@@ -53,6 +54,8 @@ export function resetRequestDetailLogsTableExistsCache(): void {
 =======
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /** Returns true if detailed logging is enabled in settings */
 export async function isDetailedLoggingEnabled(): Promise<boolean> {
   try {
@@ -68,10 +71,14 @@ export async function isDetailedLoggingEnabled(): Promise<boolean> {
 export function saveRequestDetailLog(entry: RequestDetailLog): void {
   const noLogEnabled =
     Boolean(entry.no_log) || (entry.api_key_id ? isNoLog(entry.api_key_id) : false);
+<<<<<<< HEAD
   if (noLogEnabled || !requestDetailLogsTableExists()) return;
 =======
   if (noLogEnabled) return;
 >>>>>>> Stashed changes
+=======
+  if (noLogEnabled) return;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const db = getDbInstance();
   const id = entry.id ?? uuidv4();
@@ -104,7 +111,10 @@ export function saveRequestDetailLog(entry: RequestDetailLog): void {
 
 /** Fetch detailed logs (latest first) */
 export function getRequestDetailLogs(limit = 50, offset = 0): RequestDetailLog[] {
+<<<<<<< HEAD
   if (!requestDetailLogsTableExists()) return [];
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const db = getDbInstance();
   const rows = db
     .prepare(
@@ -121,7 +131,10 @@ export function getRequestDetailLogs(limit = 50, offset = 0): RequestDetailLog[]
 
 /** Get a single detailed log by ID */
 export function getRequestDetailLogById(id: string): RequestDetailLog | null {
+<<<<<<< HEAD
   if (!requestDetailLogsTableExists()) return null;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const db = getDbInstance();
   const row = db.prepare("SELECT * FROM request_detail_logs WHERE id = ?").get(id) as
     | Record<string, unknown>
@@ -131,9 +144,12 @@ export function getRequestDetailLogById(id: string): RequestDetailLog | null {
 
 /** Get the most recent detailed log for a call log ID */
 export function getRequestDetailLogByCallLogId(callLogId: string): RequestDetailLog | null {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
   if (!requestDetailLogsTableExists()) return null;
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const db = getDbInstance();
   const row = db
     .prepare(
@@ -150,7 +166,10 @@ export function getRequestDetailLogByCallLogId(callLogId: string): RequestDetail
 
 /** Get total count of detailed logs */
 export function getRequestDetailLogCount(): number {
+<<<<<<< HEAD
   if (!requestDetailLogsTableExists()) return 0;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const db = getDbInstance();
   const row = db.prepare("SELECT COUNT(*) as cnt FROM request_detail_logs").get() as {
     cnt: number;

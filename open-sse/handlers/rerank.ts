@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { CORS_HEADERS } from "../utils/cors.ts";
+=======
+import { getCorsOrigin } from "../utils/cors.ts";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Rerank Handler
  *
@@ -6,7 +10,11 @@ import { CORS_HEADERS } from "../utils/cors.ts";
  * Routes to the appropriate provider based on the model prefix or lookup.
  */
 
+<<<<<<< HEAD
 import { getRerankProvider, parseRerankModel, RERANK_PROVIDERS } from "../config/rerankRegistry.ts";
+=======
+import { getRerankProvider, parseRerankModel } from "../config/rerankRegistry.ts";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { errorResponse } from "../utils/error.ts";
 
 /**
@@ -89,10 +97,16 @@ export async function handleRerank({
   const providerConfig = providerId ? getRerankProvider(providerId) : null;
 
   if (!providerConfig) {
+<<<<<<< HEAD
     const availableProviders = Object.keys(RERANK_PROVIDERS).join(", ");
     return errorResponse(
       400,
       `No rerank provider found for model "${model}". Available: ${availableProviders}`
+=======
+    return errorResponse(
+      400,
+      `No rerank provider found for model "${model}". Available: cohere, together, nvidia, fireworks`
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     );
   }
 
@@ -131,7 +145,11 @@ export async function handleRerank({
     const result = transformResponseFromProvider(providerConfig, data);
 
     return Response.json(result, {
+<<<<<<< HEAD
       headers: { ...CORS_HEADERS },
+=======
+      headers: { "Access-Control-Allow-Origin": getCorsOrigin() },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     });
   } catch (err) {
     return errorResponse(500, `Rerank request failed: ${err.message}`);

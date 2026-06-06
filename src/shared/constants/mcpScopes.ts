@@ -19,12 +19,15 @@ export const MCP_SCOPE_LIST = [
   "execute:search",
   "write:budget",
   "write:resilience",
+<<<<<<< HEAD
   "pricing:write",
   "read:cache",
   "write:cache",
   "read:compression",
   "write:compression",
   "read:proxies",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 ] as const;
 
 export type McpScope = (typeof MCP_SCOPE_LIST)[number];
@@ -53,6 +56,7 @@ export const MCP_TOOL_SCOPES: Record<string, readonly McpScope[]> = {
   omniroute_best_combo_for_task: ["read:combos", "read:health"],
   omniroute_explain_route: ["read:health", "read:usage"],
   omniroute_get_session_snapshot: ["read:usage"],
+<<<<<<< HEAD
   omniroute_db_health_check: ["read:health", "write:resilience"],
   omniroute_sync_pricing: ["pricing:write"],
   omniroute_cache_stats: ["read:cache"],
@@ -65,6 +69,8 @@ export const MCP_TOOL_SCOPES: Record<string, readonly McpScope[]> = {
   omniroute_oneproxy_fetch: ["read:proxies"],
   omniroute_oneproxy_rotate: ["read:proxies"],
   omniroute_oneproxy_stats: ["read:proxies"],
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 } as const;
 
 // ============ Scope Groups ============
@@ -78,14 +84,18 @@ export const MCP_SCOPE_PRESETS = {
     "read:quota",
     "read:usage",
     "read:models",
+<<<<<<< HEAD
     "read:cache",
     "read:compression",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   ] as const satisfies readonly McpScope[],
 
   /** Full access including writes and execution */
   full: [...MCP_SCOPE_LIST] as McpScope[],
 
   /** Monitoring only — health and metrics */
+<<<<<<< HEAD
   monitor: [
     "read:health",
     "read:quota",
@@ -93,6 +103,9 @@ export const MCP_SCOPE_PRESETS = {
     "read:cache",
     "read:compression",
   ] as const satisfies readonly McpScope[],
+=======
+  monitor: ["read:health", "read:quota", "read:usage"] as const satisfies readonly McpScope[],
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   /** Agent — can execute completions and read state */
   agent: [
@@ -101,8 +114,11 @@ export const MCP_SCOPE_PRESETS = {
     "read:quota",
     "read:usage",
     "read:models",
+<<<<<<< HEAD
     "read:cache",
     "read:compression",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     "execute:completions",
     "execute:search",
   ] as const satisfies readonly McpScope[],

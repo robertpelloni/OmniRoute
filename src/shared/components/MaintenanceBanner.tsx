@@ -22,7 +22,11 @@ export default function MaintenanceBanner() {
   useEffect(() => {
     const checkHealth = async () => {
       const controller = new AbortController();
+<<<<<<< HEAD
       const timeoutId = setTimeout(() => controller.abort("Health check timeout"), 8000);
+=======
+      const timeoutId = setTimeout(() => controller.abort(), 8000);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       try {
         const res = await fetch("/api/monitoring/health", {
           signal: controller.signal,

@@ -35,12 +35,21 @@ export default function CopilotToolCard({
       return new Set<string>();
     }
   });
+<<<<<<< HEAD
   const [selectedApiKeyId, setSelectedApiKeyId] = useState(() => {
     if (typeof window !== "undefined") {
       const savedKey = localStorage.getItem("omniroute-cli-key-copilot");
       if (savedKey && apiKeys?.some((k: any) => k.id === savedKey)) return savedKey;
     }
     return apiKeys?.length > 0 ? apiKeys[0].id : "";
+=======
+  const [selectedApiKey, setSelectedApiKey] = useState(() => {
+    if (typeof window !== "undefined") {
+      const savedKey = localStorage.getItem("omniroute-cli-key-copilot");
+      if (savedKey && apiKeys?.some((k: any) => k.key === savedKey)) return savedKey;
+    }
+    return apiKeys?.length > 0 ? apiKeys[0].key : "";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   });
   const [maxInputTokens, setMaxInputTokens] = useState(128000);
   const [maxOutputTokens, setMaxOutputTokens] = useState(16000);
@@ -145,7 +154,11 @@ export default function CopilotToolCard({
   };
 
   const handleApiKeyChange = (value: string) => {
+<<<<<<< HEAD
     setSelectedApiKeyId(value);
+=======
+    setSelectedApiKey(value);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (value) localStorage.setItem("omniroute-cli-key-copilot", value);
   };
 
@@ -229,12 +242,20 @@ export default function CopilotToolCard({
                   <span className="font-medium text-sm">API Key</span>
                 </div>
                 <select
+<<<<<<< HEAD
                   value={selectedApiKeyId}
+=======
+                  value={selectedApiKey}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   onChange={(e) => handleApiKeyChange(e.target.value)}
                   className="w-full px-3 py-2 bg-bg-secondary rounded-lg text-sm border border-border focus:outline-none focus:ring-1 focus:ring-primary/50"
                 >
                   {apiKeys.map((key: any) => (
+<<<<<<< HEAD
                     <option key={key.id} value={key.id}>
+=======
+                    <option key={key.id} value={key.key}>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                       {key.key}
                     </option>
                   ))}

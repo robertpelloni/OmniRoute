@@ -4,6 +4,7 @@
 
 ---
 
+<<<<<<< HEAD
 > **Agent-to-Agent Protocol v0.3** — Enables any AI agent to use OmniRoute as an intelligent routing agent via JSON-RPC 2.0.
 
 The A2A Server exposes OmniRoute as a **first-class agent** that other agents can discover, delegate tasks to, and collaborate with using the [A2A Protocol](https://google.github.io/A2A/).
@@ -11,6 +12,11 @@ The A2A Server exposes OmniRoute as a **first-class agent** that other agents ca
 ---
 
 ## الهندسة
+=======
+> **Agent-to-Agent Protocol v0.3**— يتزايد أي وكيل AI من استخدام OmniRoute كوكيل توجيه ذكي عبر JSON-RPC 2.0.
+
+يعرض مضيف A2A OmniRoute**وكيلًا من الدرجة الأولى**يمكن لوكلاء الاكتشافات الأخرى وطلب الاتصال به باستخدام [بروتوكول A2A](https://google.github.io/A2A/).---## الهندسة
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
@@ -43,6 +49,7 @@ The A2A Server exposes OmniRoute as a **first-class agent** that other agents ca
 
 ### Agent Discovery
 
+<<<<<<< HEAD
 Every A2A-compatible agent exposes an **Agent Card** at `/.well-known/agent.json`:
 
 ```bash
@@ -89,6 +96,50 @@ curl http://localhost:20128/.well-known/agent.json
   }
 }
 ```
+=======
+يعرض كل وكيل متوافق مع A2A**بطاقة الوكيل**على `/.well-known/agent.json`:`bash
+حليقة http://localhost:20128/.well-known/agent.json`
+
+**إجابة:**```json
+{
+"name": "OmniRoute",
+"description": "Intelligent AI gateway with auto-routing across 50+ providers",
+"url": "http://localhost:20128/a2a",
+"version": "1.8.1",
+"capabilities": {
+"streaming": true,
+"pushNotifications": false
+},
+"skills": [
+{
+"id": "smart-routing",
+"name": "Smart Routing",
+"description": "Routes prompts through OmniRoute intelligent pipeline",
+"tags": ["routing", "llm", "multi-provider", "cost-optimization"],
+"examples": [
+"Write a hello world in Python",
+"Explain quantum computing using the cheapest provider"
+]
+},
+{
+"id": "quota-management",
+"name": "Quota Management",
+"description": "Natural-language queries about provider quotas",
+"tags": ["quota", "analytics", "cost"],
+"examples": [
+"Which provider has the most quota remaining?",
+"Suggest a free combo for coding"
+]
+}
+],
+"authentication": {
+"schemes": ["bearer"],
+"apiKeyHeader": "Authorization"
+}
+}
+
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ---
 
@@ -96,6 +147,7 @@ curl http://localhost:20128/.well-known/agent.json
 
 ### `message/send` — Synchronous Execution
 
+<<<<<<< HEAD
 Send a message to a skill and receive the complete response.
 
 ```bash
@@ -117,6 +169,24 @@ curl -X POST http://localhost:20128/a2a \
 **Response:**
 
 ```json
+=======
+أرسل رسالة إلى إحدى المهارات واحصل على الرد الكامل.```bash
+حليقة -X POST http://localhost:20128/a2a \
+  -H "نوع المحتوى: application/json" \
+  -H "التفويض: حامل YOUR_KEY" \
+  -د '{
+    "jsonrpc": "2.0",
+    "المعرف": "1"،
+    "الطريقة": "رسالة/إرسال"،
+    "المعلمات": {
+      "المهارة": "التوجيه الذكي"،
+      "messages": [{"role": "user", "content": "اكتب عالم بايثون المرحب"}],
+      "بيانات التعريف": {"model": "auto"، "combo": "الترميز السريع"}
+    }
+  }'```
+
+**إجابة:**```json
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 {
   "jsonrpc": "2.0",
   "id": "1",
@@ -133,6 +203,7 @@ curl -X POST http://localhost:20128/a2a \
     }
   }
 }
+<<<<<<< HEAD
 ```
 
 ### `message/stream` — SSE Streaming
@@ -157,12 +228,38 @@ curl -N -X POST http://localhost:20128/a2a \
 **SSE Events:**
 
 ```
+=======
+````
+
+### `message/stream` — SSE Streaming
+
+نفس `الرسالة/الإرسال` ولكنها تُرجع الأحداث المرسلة من العميل للبث في الوقت الحقيقي.`bash
+حليقة -N -X POST http://localhost:20128/a2a \
+  -H "نوع المحتوى: application/json" \
+  -H "التفويض: حامل YOUR_KEY" \
+  -د '{
+    "jsonrpc": "2.0",
+    "المعرف": "1"،
+    "الطريقة": "رسالة/دفق"،
+    "المعلمات": {
+      "المهارة": "التوجيه الذكي"،
+      "messages": [{"role": "user", "content": "شرح الحوسبة الكمومية"}]
+    }
+  }'`
+
+**أحداث SSE:**```
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 data: {"jsonrpc":"2.0","method":"message/stream","params":{"task":{"id":"...","state":"working"},"chunk":{"type":"text","content":"Quantum computing..."}}}
 
 : heartbeat 2026-03-04T21:00:00Z
 
 data: {"jsonrpc":"2.0","method":"message/stream","params":{"task":{"id":"...","state":"completed"},"metadata":{...}}}
+<<<<<<< HEAD
 ```
+=======
+
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ### `tasks/get` — Query Task Status
 
@@ -171,7 +268,11 @@ curl -X POST http://localhost:20128/a2a \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_KEY" \
   -d '{"jsonrpc":"2.0","id":"2","method":"tasks/get","params":{"taskId":"TASK_UUID"}}'
+<<<<<<< HEAD
 ```
+=======
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ### `tasks/cancel` — Cancel a Running Task
 
@@ -188,6 +289,7 @@ curl -X POST http://localhost:20128/a2a \
 
 ### `smart-routing`
 
+<<<<<<< HEAD
 Routes prompts through OmniRoute's intelligent pipeline with full observability.
 
 **Parameters (in `metadata`):**
@@ -224,6 +326,38 @@ Answers natural-language queries about provider quotas.
 ---
 
 ## Task Lifecycle
+=======
+تطالب المسارات عبر خط الأنابيب OmniRoute الذكي مع إمكانية المراقبة الكاملة.
+
+**المعلمات (في `البيانات الوصفية`):**
+
+| المعلمة          | اكتب      | افتراضي            | الوصف                                                                         |
+| ---------------- | --------- | ------------------ | ----------------------------------------------------------------------------- |
+| `نموذج`          | "السلسلة" | `"تلقائي"`         | النموذج المستهدف (على سبيل المثال، `clude-sonnet-4`، `gpt-4o`، `auto`)        |
+| `التحرير والسرد` | "السلسلة" | التحرير والسرد لكم | التحرير والسرد للتوجيه من خلال                                                |
+| `الميزانية`      | `الرقم`   | لا شيء             | الحد الأقصى للتكلفة بالدولار الأمريكي هذا الطلب                               |
+| `دور`            | "السلسلة" | لا شيء             | تلميح مهم: `التميز`، `المراجعة`، `التخطيط`، `التحليل`، `تصحيح سبب`، `التوثيق` |
+
+**المرتجعات:**
+
+|                                | الوصف                                                                    |
+| ------------------------------ | ------------------------------------------------------------------------ | ----------------- |
+| `المصنوعات[].content`          | نصرد LLM                                                                 |
+| `metadata.routing_explanation` | شرح مفهوم لقرار التوجيه                                                  |
+| `metadata.cost_envelope`       | التكلفة المقدرة مقابل تكلفة التكلفة للعملة                               |
+| `metadata.resilience_trace`    | مصفوفة من الأحداث (تم تحديدها بشكل أساسي، والمطلوبة بديلاً، وما إلى ذلك) |
+| `metadata.policy_verdict`      | ما إذا كان ائداً لها لسبب                                                | ### `إدارة الحصص` |
+
+يجيب على استفسارات اللغة الطبيعية حول حصص الموفرين.
+
+**أنواع اتفق (المنتهية من محتوى الرسالة):**
+
+| نمط                                               | نوع المصدر                                |
+| ------------------------------------------------- | ----------------------------------------- | -------------------- |
+| يحتوي على `"التصنيف"`، `"الأكثر حصة"`، `"الأفضل"` | تم ترتيب مقدمي الخدمة حسب الحصص النهائية  |
+| يحتوي على `"مجاني"`، `"اقتراح"`                   | يسرد المهرجانات أو المهرجانات المجانية    |
+| افتراضي                                           | ملخص كامل للحصص مع تحذيرات للحصص المنخفضة | ---## Task Lifecycle |
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ```
 submitted ──→ working ──→ completed
@@ -231,6 +365,7 @@ submitted ──→ working ──→ completed
               ──────────→ cancelled
 ```
 
+<<<<<<< HEAD
 | State       | Description                                           |
 | ----------- | ----------------------------------------------------- |
 | `submitted` | Task created, queued for execution                    |
@@ -246,6 +381,19 @@ submitted ──→ working ──→ completed
 ---
 
 ## Client Examples
+=======
+| الدولة   | الوصف                                                        |
+| -------- | ------------------------------------------------------------ |
+| `مُقدم`  | تم إنشاء المهمة، في قائمة الانتظار للتنفيذ                   |
+| `العمل`  | معالج المهارة ينفذ                                           |
+| `مكتملة` | البدء في التنفيذ، القطع الأثرية الصعبة                       |
+| `فشل`    | فشل التنفيذ أو النهاية إلى النهاية (TTL: 5 بالضغط الافتراضي) |
+| `ملغاة`  | تم الإلغاء من قبل العميل عبر `المهام/الإلغاء`                |
+
+- حالات الوحدة الطرفية: `مكتملة`، `فشل`، `ملغى` (لم تحدث عمليات انتقال أخرى)
+- يتم وضع العلامة التجارية الجديدة على انتهاء الصلاحية في "المقدمة" أو "الجاري" على أنها "فاشلة".
+- يتم جمع المهام المهمة بعد 2 × TTL---## Client Examples
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ### Python — Orchestrator Agent
 
@@ -541,6 +689,7 @@ func main() {
 
 ### 🤖 Use Case 1: Multi-Agent Coding Pipeline
 
+<<<<<<< HEAD
 An orchestrator agent delegates code generation to OmniRoute, then passes the output to a review agent.
 
 ```python
@@ -575,6 +724,35 @@ async def quota_aware_agent(agent_name: str, task: str):
         {"role": "user", "content": "Which provider has the most quota remaining?"}
     ])
     print(f"[{agent_name}] {quota['artifacts'][0]['content']}")
+=======
+يقوم وكيل منسق بتفويض إنشاء تعليمات الحظر إلى OmniRoute، ثم يقوم بتمرير الترخيص لوكيل التعديل.```python
+تعريف coding_pipeline (المهمة: str): # الخطوة 1: قم بإنشاء الكود عبر OmniRoute A2A
+code_result = a2a_send("التوجيه الذكي"، [
+{"role": "user"، "content": f"اكتب كود جودة الإنتاج: {task}"}
+]، البيانات الوصفية={"model": "auto"، "role": "coding"})
+كود = code_result["artifacts"][0]["content"]
+
+    # الخطوة الثانية: قم بمراجعة الكود عبر OmniRoute A2A (نموذج مختلف)
+    review_result = a2a_send("التوجيه الذكي"، [
+        {"role": "user"، "content": f"راجع هذا الرمز بحثًا عن الأخطاء والتحسينات:\n\n{code}"}
+    ]، البيانات الوصفية={"model": "auto"، "role": "review"})
+    المراجعة = review_result["artifacts"][0]["content"]
+
+    # الخطوة 3: التحقق من التكاليف
+    print(f"تكلفة الكود: ${code_result['metadata']['cost_envelope']['actual']}")
+    print(f"تكلفة المراجعة: ${review_result['metadata']['cost_envelope']['actual']}")
+
+    إرجاع {"كود": كود، "مراجعة": مراجعة}```
+
+### 💡 Use Case 2: Quota-Aware Agent Swarm
+
+يقوم العديد من الوكلاء بمشاركة الحصص من خلال OmniRoute، وذلك باستخدام مهارة الحصص للتنسيق.```python
+async def quota_aware_agent(agent_name: str, task: str): # Check quota before starting
+quota = a2a_send("quota-management", [
+{"role": "user", "content": "Which provider has the most quota remaining?"}
+])
+print(f"[{agent_name}] {quota['artifacts'][0]['content']}")
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     # Send request with budget constraint
     result = a2a_send("smart-routing", [
@@ -591,6 +769,7 @@ async def quota_aware_agent(agent_name: str, task: str):
         print(f"[{agent_name}] Free alternatives: {quota['artifacts'][0]['content']}")
 
     return result
+<<<<<<< HEAD
 ```
 
 ### 📊 Use Case 3: Real-Time Streaming Dashboard
@@ -636,11 +815,58 @@ async function streamingDashboard(prompt: string) {
           );
         }
         if (state === "failed") {
+=======
+
+````
+
+### 📊 Use Case 3: Real-Time Streaming Dashboard
+
+يقوم بالمراقبة ببث الاستجابات ويعرض التقدم في الوقت الفعلي.```typescript
+وظيفة غير متزامنة StreamDashboard(prompt: string) {
+  استجابة ثابتة = انتظار الجلب(`${BASE_URL}/a2a`, {
+    الطريقة: "POST"،
+    الرؤوس: { "نوع المحتوى": "application/json"، التفويض: `Bearer ${API_KEY}` }،
+    الجسم: JSON.stringify({
+      جسونربك: "2.0"،
+      المعرف: "داش-1"،
+      الطريقة: "رسالة/دفق"،
+      المعلمات: { المهارة: "التوجيه الذكي"، الرسائل: [{ الدور: "المستخدم"، المحتوى: موجه }] }،
+    }),
+  });
+
+  دع مجموع القطع = 0؛
+  قارئ ثابت = استجابة. الجسم!.getReader();
+  const decoder = new TextDecoder();
+
+  بينما (صحيح) {
+    const { تم، القيمة } = انتظار Reader.read();
+    إذا (تم) كسر؛
+
+    for (سطر ثابت من decoder.decode(value).split("\n")) {
+      إذا (line.startsWith("البيانات:")) {
+        حدث const = JSON.parse(line.slice(6));
+        حالة ثابتة = Event.params.task.state;
+
+        إذا (الحالة === "العمل" && events.params.chunk) {
+          TotalChunks++;
+          عملية.stdout.write(
+            `\r[قطعة ${totalChunks}] ${event.params.chunk.content.slice(0, 50)}...`
+          );
+        }
+        إذا (الحالة === "مكتملة") {
+          const meta = events.params.metadata;
+          console.log(
+            `\n ✅ تم | التكلفة: $${meta?.cost_envelope?.actual || 0} | الطريق: ${meta?.routing_explanation || "غير متوفر"}`
+          );
+        }
+        إذا (الحالة === "فشل") {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           console.error(`\n❌ Failed: ${event.params.metadata?.error}`);
         }
       }
     }
   }
+<<<<<<< HEAD
 }
 ```
 
@@ -649,6 +875,13 @@ async function streamingDashboard(prompt: string) {
 For long-running tasks, poll the task status instead of waiting synchronously.
 
 ```python
+=======
+}```
+
+### 🔁 Use Case 4: Task Polling Pattern
+
+بالنسبة للمهام طويلة الأمد، قم باستقصاء حالة المهمة بدلاً من الانتظار بشكل متزامن.```python
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import time
 
 def poll_task(task_id: str, timeout: int = 60):
@@ -678,12 +911,17 @@ def poll_task(task_id: str, timeout: int = 60):
         "params": {"taskId": task_id},
     })
     raise TimeoutError(f"Task {task_id} timed out after {timeout}s")
+<<<<<<< HEAD
 ```
+=======
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ---
 
 ## Error Codes
 
+<<<<<<< HEAD
 | Code   | Constant                 | Meaning                                  |
 | ------ | ------------------------ | ---------------------------------------- |
 | -32700 | —                        | Parse error (invalid JSON)               |
@@ -729,11 +967,49 @@ src/app/a2a/
 open-sse/mcp-server/
 └── schemas/a2a.ts         # Zod schemas (AgentCard, Task, JSON-RPC, SSE events)
 ```
+=======
+| الكود  | ثابت                       | معنى                              |
+| ------ | -------------------------- | --------------------------------- | -------------------- |
+| -32700 | —                          | خطأ في التحليل (JSON غير صالح)    |
+| -32600 | `طلب_غير صالح`             | طلب JSON-RPC غير صالح أو          | غير مصرح به          |
+| -32601 | `METHOD_NOT_FOUND`         | طريقة أو مهارة غير معروفة         |
+| -32602 | `INVALID_PARAMS`           | معلمات مفقودة أو غير صالحة        |
+| -32603 | `خطأ_داخلي`                | فشل في تنفيذ المهارة              |
+| -32001 | `مهمة_لم يتم العثور عليها` | لم يتم العثور على المفتاح الرئيسي |
+| -32002 | `المهمة_الجاهزة_مكتملة`    | لا يمكن تعديل مهمة مكتملة         |
+| -32003 | "غير مصرح به"              | API الرئيسية غير صالحة أو مفقودة  |
+| -32004 | `الميزانية_تجاوزت`         | التجاوز المدى المكمل              |
+| -32005 | `PROVIDER_UNAVAILABLE`     | لا يوجد مقدمي خيارات الأسهم       | ---## Authentication |
+
+تتطلب جميع الطلبات `/a2a` رمزًا مميزًا لحاملها عبر الرأس `الإعلان`:`
+التفويض: الحامل YOUR_OMNIROUTE_API_KEY`
+
+إذا لم يتم تكوين أي مفتاح API على الخادم (`OMNIROUTE_API_KEY` فارغ)، فسيتم تجاوز المصادقة.---
+
+## File Structure
+
+````
+سرك/ليب/a2a/
+├── TaskManager.ts # دورة حياة المهمة (إنشاء/تحديث/إلغاء/قائمة)، TTL، تنظيف
+├── TaskExecution.ts # منفذ المهام العامة مع إدارة الحالة
+├── Stream.ts # تنسيق دفق SSE، ونبضات القلب، وأحداث القطعة/الإكمال
+├── routingLogger.ts # مسجل قرار التوجيه (الإحصائيات والتاريخ والاحتفاظ)
+└── المهارات/
+    ├── SmartRouting.ts # مهارة التوجيه الذكي (الطرق عبر /v1/chat/completions)
+    └── quotaManagement.ts # مهارة إدارة الحصص (استعلامات الحصص باللغة الطبيعية)
+
+سرك/التطبيق/a2a/
+└── Route.ts # معالج مسار واجهة برمجة التطبيقات Next.js (إرسال JSON-RPC 2.0)
+
+مفتوح-SSE/MCP-خادم/
+└── schemas/a2a.ts # مخططات Zod (AgentCard، Task، JSON-RPC، أحداث SSE)```
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ---
 
 ## Comparison: MCP vs A2A
 
+<<<<<<< HEAD
 | Feature           | MCP Server                   | A2A Server                                        |
 | ----------------- | ---------------------------- | ------------------------------------------------- |
 | **Protocol**      | Model Context Protocol       | Agent-to-Agent Protocol v0.3                      |
@@ -750,3 +1026,20 @@ open-sse/mcp-server/
 ## الرخصة
 
 Part of [OmniRoute](https://github.com/diegosouzapw/OmniRoute) — MIT License.
+=======
+| ميزة | خادم MCP | خادم A2A |
+| ----------------- | ---------------------------- | ------------------------------------------------- |
+|**البروتوكول**| بروتوكول السياق النموذجي | بروتوكول وكيل إلى وكيل v0.3 |
+|**النقل**| ستديو / HTTP | HTTP (JSON-RPC 2.0) |
+|**الاكتشاف**| قائمة الأدوات عبر MCP | `/.well-known/agent.json` |
+|**التفاصيل**| 16 أداة فردية | 2 مهارات عالية المستوى |
+|**الأفضل لـ**| وكلاء IDE (المؤشر، كود VS) | أنظمة متعددة الوكلاء (LangChain، CrewAI) |
+|**البث**| غير مدعوم | SSE عبر "الرسالة/الدفق" |
+|**تتبع المهام**| لا | دورة حياة كاملة (مقدمة → مكتملة) |
+|**الملاحظة**| سجل التدقيق لكل استدعاء أداة | مظروف التكلفة + تتبع المرونة + حكم السياسة |---
+
+## الرخصة
+
+جزء من [OmniRoute](https://github.com/diegosouzapw/OmniRoute) - ترخيص معهد ماساتشوستس للتكنولوجيا.
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

@@ -14,7 +14,11 @@ import { isAuthRequired, isAuthenticated } from "@/shared/utils/apiAuth";
  * 🔒 Auth-guarded: requires JWT cookie or Bearer API key (finding #258-2).
  */
 export async function GET(request: Request) {
+<<<<<<< HEAD
   if (await isAuthRequired(request)) {
+=======
+  if (await isAuthRequired()) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (!(await isAuthenticated(request))) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

@@ -6,8 +6,11 @@ import {
   cleanJSONSchemaForAntigravity,
 } from "../helpers/geminiHelper.ts";
 import { DEFAULT_THINKING_GEMINI_SIGNATURE } from "../../config/defaultThinkingSignature.ts";
+<<<<<<< HEAD
 import { buildGeminiTools, sanitizeGeminiToolName } from "../helpers/geminiToolsSanitizer.ts";
 import { capMaxOutputTokens } from "../../../src/lib/modelCapabilities.ts";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * Direct Claude → Gemini request translator.
@@ -15,23 +18,30 @@ import { capMaxOutputTokens } from "../../../src/lib/modelCapabilities.ts";
  * skipping the OpenAI hub intermediate step.
  */
 export function claudeToGeminiRequest(model, body, stream) {
+<<<<<<< HEAD
   const toolNameMap = new Map<string, string>();
   const sanitizeToolName = (name: string) =>
     sanitizeGeminiToolName(name, {
       toolNameMap,
     });
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const result: {
     model: string;
     contents: Array<Record<string, unknown>>;
     generationConfig: Record<string, unknown>;
     safetySettings: unknown;
     systemInstruction?: { role: string; parts: Array<{ text: string }> };
+<<<<<<< HEAD
     tools?: Array<{
       functionDeclarations?: Array<Record<string, unknown>>;
       googleSearch?: Record<string, unknown>;
       googleSearchRetrieval?: Record<string, unknown>;
     }>;
     _toolNameMap?: Map<string, string>;
+=======
+    tools?: Array<{ functionDeclarations: Array<Record<string, unknown>> }>;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   } = {
     model: model,
     contents: [],
@@ -50,7 +60,11 @@ export function claudeToGeminiRequest(model, body, stream) {
     result.generationConfig.topK = body.top_k;
   }
   if (body.max_tokens !== undefined) {
+<<<<<<< HEAD
     result.generationConfig.maxOutputTokens = capMaxOutputTokens(model, body.max_tokens);
+=======
+    result.generationConfig.maxOutputTokens = body.max_tokens;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   // ── System instruction ─────────────────────────────────────────
@@ -63,7 +77,11 @@ export function claudeToGeminiRequest(model, body, stream) {
     }
     if (systemText) {
       result.systemInstruction = {
+<<<<<<< HEAD
         role: "system",
+=======
+        role: "user",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         parts: [{ text: systemText }],
       };
     }
@@ -76,7 +94,11 @@ export function claudeToGeminiRequest(model, body, stream) {
       if (msg.role === "assistant" && Array.isArray(msg.content)) {
         for (const block of msg.content) {
           if (block.type === "tool_use" && block.id && block.name) {
+<<<<<<< HEAD
             toolUseNames[block.id] = sanitizeToolName(block.name);
+=======
+            toolUseNames[block.id] = block.name;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           }
         }
       }
@@ -99,6 +121,10 @@ export function claudeToGeminiRequest(model, body, stream) {
               // Preserve thinking blocks as thought parts
               if (block.thinking) {
                 parts.push({ thought: true, text: block.thinking });
+<<<<<<< HEAD
+=======
+                parts.push({ thoughtSignature: DEFAULT_THINKING_GEMINI_SIGNATURE, text: "" });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               }
               break;
 
@@ -106,7 +132,11 @@ export function claudeToGeminiRequest(model, body, stream) {
               parts.push({
                 functionCall: {
                   id: block.id,
+<<<<<<< HEAD
                   name: sanitizeToolName(block.name),
+=======
+                  name: block.name,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   args: block.input || {},
                 },
               });
@@ -156,11 +186,29 @@ export function claudeToGeminiRequest(model, body, stream) {
         // Map Claude roles to Gemini roles
         const geminiRole = msg.role === "assistant" ? "model" : "user";
 
+<<<<<<< HEAD
         // Gemini 3+ expects the signature on all functionCall parts in a tool-call
         // batch. If there is no real signature, we don't inject a fake one because
         // Gemini API strictly validates it and returns 400.
         if (geminiRole === "model") {
           // No operation needed since we no longer inject fake signatures.
+=======
+        // Gemini 3+ expects the signature on the first functionCall part in a tool-call
+        // batch. If the assistant turn had no explicit thinking block, inject a fallback
+        // signature into that first functionCall. (#927)
+        if (geminiRole === "model") {
+          const hasFunctionCall = parts.some((p) => p.functionCall);
+          const hasSignature = parts.some((p) => p.thoughtSignature);
+          if (hasFunctionCall && !hasSignature) {
+            const fcIndex = parts.findIndex((p) => p.functionCall);
+            if (fcIndex >= 0) {
+              parts[fcIndex] = {
+                ...parts[fcIndex],
+                thoughtSignature: DEFAULT_THINKING_GEMINI_SIGNATURE,
+              };
+            }
+          }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         }
 
         result.contents.push({ role: geminiRole, parts });
@@ -169,6 +217,7 @@ export function claudeToGeminiRequest(model, body, stream) {
   }
 
   // ── Convert tools ──────────────────────────────────────────────
+<<<<<<< HEAD
   }
 
   // ── Thinking config ────────────────────────────────────────────
@@ -176,10 +225,33 @@ export function claudeToGeminiRequest(model, body, stream) {
   if (model.startsWith("gemma-4")) {
     // gemma-4 models returns - 400: Thinking budget is not supported for this model
   } else if (body.thinking?.type === "enabled" && body.thinking.budget_tokens) {
+=======
+  if (body.tools && Array.isArray(body.tools) && body.tools.length > 0) {
+    const functionDeclarations = [];
+    for (const tool of body.tools) {
+      if (tool.name) {
+        functionDeclarations.push({
+          name: tool.name,
+          description: tool.description || "",
+          parameters: cleanJSONSchemaForAntigravity(
+            tool.input_schema || { type: "object", properties: {} }
+          ),
+        });
+      }
+    }
+    if (functionDeclarations.length > 0) {
+      result.tools = [{ functionDeclarations }];
+    }
+  }
+
+  // ── Thinking config ────────────────────────────────────────────
+  if (body.thinking?.type === "enabled" && body.thinking.budget_tokens) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     result.generationConfig.thinkingConfig = {
       thinkingBudget: body.thinking.budget_tokens,
       includeThoughts: true,
     };
+<<<<<<< HEAD
   } else if (typeof body.output_config?.effort === "string") {
     const effort = body.output_config.effort.toLowerCase();
     const effortBudgetMap: Record<string, number> = {
@@ -206,6 +278,8 @@ export function claudeToGeminiRequest(model, body, stream) {
   );
   if (changedToolNameMap.size > 0) {
     result._toolNameMap = changedToolNameMap;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   return result;

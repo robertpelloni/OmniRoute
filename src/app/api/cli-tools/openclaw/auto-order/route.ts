@@ -5,16 +5,23 @@
  */
 
 import { NextResponse } from "next/server";
+<<<<<<< HEAD
 import { requireCliToolsAuth } from "@/lib/api/requireCliToolsAuth";
 import { getComboModelProvider } from "@/lib/combos/steps";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { resolveOmniRouteBaseUrl } from "@/shared/utils/resolveOmniRouteBaseUrl";
 
 const OMNIROUTE_BASE_URL = resolveOmniRouteBaseUrl();
 
+<<<<<<< HEAD
 export async function GET(request: Request) {
   const authError = await requireCliToolsAuth(request);
   if (authError) return authError;
 
+=======
+export async function GET() {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     // Fetch current health and combos to determine best provider ordering
     const [healthRes, combosRes] = await Promise.allSettled([
@@ -23,12 +30,16 @@ export async function GET(request: Request) {
     ]);
 
     const health = healthRes.status === "fulfilled" ? await healthRes.value.json() : {};
+<<<<<<< HEAD
     const combosPayload = combosRes.status === "fulfilled" ? await combosRes.value.json() : [];
     const combos = Array.isArray(combosPayload)
       ? combosPayload
       : Array.isArray(combosPayload?.combos)
         ? combosPayload.combos
         : [];
+=======
+    const combos = combosRes.status === "fulfilled" ? await combosRes.value.json() : [];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     // Build provider scores from circuit breaker state
     const breakers: any[] = health?.circuitBreakers || [];
@@ -39,10 +50,15 @@ export async function GET(request: Request) {
     if (Array.isArray(combos)) {
       for (const combo of combos) {
         for (const model of combo.models || combo.data?.models || []) {
+<<<<<<< HEAD
           const provider = getComboModelProvider(model);
           if (!provider) continue;
           allProviders.add(provider);
           providerScores.set(provider, (providerScores.get(provider) || 0) + 1);
+=======
+          allProviders.add(model.provider);
+          providerScores.set(model.provider, (providerScores.get(model.provider) || 0) + 1);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         }
       }
     }

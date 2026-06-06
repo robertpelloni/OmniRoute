@@ -1,10 +1,14 @@
 import { test, expect } from "@playwright/test";
+<<<<<<< HEAD
 import { gotoDashboardRoute } from "./helpers/dashboardAuth";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 function getTimeRangeSelector(page: import("@playwright/test").Page) {
   return page.getByRole("tablist", { name: /select time range/i }).first();
 }
 
+<<<<<<< HEAD
 async function waitForAnalyticsShell(page: import("@playwright/test").Page) {
   const mainTabList = page.locator('[role="tablist"]').first();
   await expect(mainTabList).toBeVisible({ timeout: 15000 });
@@ -18,6 +22,8 @@ async function waitForAnalyticsShell(page: import("@playwright/test").Page) {
   ).toBeVisible({ timeout: 15000 });
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 test.describe("Analytics Tabs UI", () => {
   test.beforeEach(async ({ page }) => {
     await page.route("**/api/usage/analytics", async (route) => {
@@ -123,8 +129,16 @@ test.describe("Analytics Tabs UI", () => {
   });
 
   test("displays all 5 analytics tabs", async ({ page }) => {
+<<<<<<< HEAD
     await gotoDashboardRoute(page, "/dashboard/analytics");
     await waitForAnalyticsShell(page);
+=======
+    await page.goto("/dashboard/analytics");
+    await page.waitForLoadState("networkidle");
+
+    const redirectedToLogin = page.url().includes("/login");
+    test.skip(redirectedToLogin, "Authentication enabled without a login fixture.");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     const mainTabList = page.locator('[role="tablist"]').first();
     await expect(mainTabList).toBeVisible();
@@ -148,8 +162,16 @@ test.describe("Analytics Tabs UI", () => {
   });
 
   test("Provider Utilization tab shows TimeRangeSelector and chart", async ({ page }) => {
+<<<<<<< HEAD
     await gotoDashboardRoute(page, "/dashboard/analytics");
     await waitForAnalyticsShell(page);
+=======
+    await page.goto("/dashboard/analytics");
+    await page.waitForLoadState("networkidle");
+
+    const redirectedToLogin = page.url().includes("/login");
+    test.skip(redirectedToLogin, "Authentication enabled without a login fixture.");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     const utilizationTab = page
       .locator("button")
@@ -183,8 +205,16 @@ test.describe("Analytics Tabs UI", () => {
   });
 
   test("Combo Health tab displays health cards and metrics", async ({ page }) => {
+<<<<<<< HEAD
     await gotoDashboardRoute(page, "/dashboard/analytics");
     await waitForAnalyticsShell(page);
+=======
+    await page.goto("/dashboard/analytics");
+    await page.waitForLoadState("networkidle");
+
+    const redirectedToLogin = page.url().includes("/login");
+    test.skip(redirectedToLogin, "Authentication enabled without a login fixture.");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     const comboHealthTab = page
       .locator("button")
@@ -212,8 +242,16 @@ test.describe("Analytics Tabs UI", () => {
   });
 
   test("time range change triggers network request", async ({ page }) => {
+<<<<<<< HEAD
     await gotoDashboardRoute(page, "/dashboard/analytics");
     await waitForAnalyticsShell(page);
+=======
+    await page.goto("/dashboard/analytics");
+    await page.waitForLoadState("networkidle");
+
+    const redirectedToLogin = page.url().includes("/login");
+    test.skip(redirectedToLogin, "Authentication enabled without a login fixture.");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     const utilizationTab = page
       .locator("button")
@@ -269,8 +307,16 @@ test.describe("Analytics Tabs UI", () => {
   });
 
   test("tab switching persists state correctly", async ({ page }) => {
+<<<<<<< HEAD
     await gotoDashboardRoute(page, "/dashboard/analytics");
     await waitForAnalyticsShell(page);
+=======
+    await page.goto("/dashboard/analytics");
+    await page.waitForLoadState("networkidle");
+
+    const redirectedToLogin = page.url().includes("/login");
+    test.skip(redirectedToLogin, "Authentication enabled without a login fixture.");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     const overviewTab = page
       .locator("button")
@@ -285,7 +331,11 @@ test.describe("Analytics Tabs UI", () => {
       // Overview uses UsageAnalytics, we wait for a generic evidence of overview
       // Or simply just wait 300ms if click doesn't throw
     })
+<<<<<<< HEAD
       .toPass({ timeout: 15000 })
+=======
+      .toPass({ timeout: 5000 })
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       .catch(() => {});
 
     const utilizationTab = page

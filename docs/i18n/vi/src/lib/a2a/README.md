@@ -4,11 +4,17 @@
 
 ---
 
+<<<<<<< HEAD
 > **Agent-to-Agent Protocol v0.3** — Enables any AI agent to use OmniRoute as an intelligent routing agent via JSON-RPC 2.0.
 
 The A2A Server exposes OmniRoute as a **first-class agent** that other agents can discover, delegate tasks to, and collaborate with using the [A2A Protocol](https://google.github.io/A2A/).
 
 ---
+=======
+> **Giao thức giữa tác nhân với tác nhân v0.3**— Cho phép mọi tác nhân AI sử dụng OmniRoute làm tác nhân định tuyến thông minh thông qua JSON-RPC 2.0.
+
+Máy chủ A2A hiển thị OmniRoute với tư cách là**nhân viên hỗ trợ hạng nhất**mà các nhân viên khác có thể khám phá, ủy quyền nhiệm vụ và cộng tác bằng cách sử dụng [Giao thức A2A](https://google.github.io/A2A/).---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## Kiến trúc
 
@@ -43,6 +49,7 @@ The A2A Server exposes OmniRoute as a **first-class agent** that other agents ca
 
 ### Agent Discovery
 
+<<<<<<< HEAD
 Every A2A-compatible agent exposes an **Agent Card** at `/.well-known/agent.json`:
 
 ```bash
@@ -52,6 +59,14 @@ curl http://localhost:20128/.well-known/agent.json
 **Response:**
 
 ```json
+=======
+Mọi tác nhân tương thích với A2A đều hiển thị**Thẻ tác nhân**tại `/.well-known/agent.json`:```bash
+curl http://localhost:20128/.well-known/agent.json
+
+````
+
+**Phản ứng:**```json
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 {
   "name": "OmniRoute",
   "description": "Intelligent AI gateway with auto-routing across 50+ providers",
@@ -88,7 +103,11 @@ curl http://localhost:20128/.well-known/agent.json
     "apiKeyHeader": "Authorization"
   }
 }
+<<<<<<< HEAD
 ```
+=======
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ---
 
@@ -96,6 +115,7 @@ curl http://localhost:20128/.well-known/agent.json
 
 ### `message/send` — Synchronous Execution
 
+<<<<<<< HEAD
 Send a message to a skill and receive the complete response.
 
 ```bash
@@ -117,6 +137,26 @@ curl -X POST http://localhost:20128/a2a \
 **Response:**
 
 ```json
+=======
+Gửi tin nhắn đến một kỹ năng và nhận được phản hồi đầy đủ.```bash
+curl -X POST http://localhost:20128/a2a \
+ -H "Content-Type: application/json" \
+ -H "Authorization: Bearer YOUR_KEY" \
+ -d '{
+"jsonrpc": "2.0",
+"id": "1",
+"method": "message/send",
+"params": {
+"skill": "smart-routing",
+"messages": [{"role": "user", "content": "Write a Python hello world"}],
+"metadata": {"model": "auto", "combo": "fast-coding"}
+}
+}'
+
+````
+
+**Phản ứng:**```json
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 {
   "jsonrpc": "2.0",
   "id": "1",
@@ -133,6 +173,7 @@ curl -X POST http://localhost:20128/a2a \
     }
   }
 }
+<<<<<<< HEAD
 ```
 
 ### `message/stream` — SSE Streaming
@@ -157,12 +198,39 @@ curl -N -X POST http://localhost:20128/a2a \
 **SSE Events:**
 
 ```
+=======
+````
+
+### `message/stream` — SSE Streaming
+
+Tương tự như `message/send` nhưng trả về Sự kiện do máy chủ gửi để phát trực tuyến theo thời gian thực.```bash
+curl -N -X POST http://localhost:20128/a2a \
+ -H "Content-Type: application/json" \
+ -H "Authorization: Bearer YOUR_KEY" \
+ -d '{
+"jsonrpc": "2.0",
+"id": "1",
+"method": "message/stream",
+"params": {
+"skill": "smart-routing",
+"messages": [{"role": "user", "content": "Explain quantum computing"}]
+}
+}'
+
+````
+
+**Sự kiện SSE:**```
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 data: {"jsonrpc":"2.0","method":"message/stream","params":{"task":{"id":"...","state":"working"},"chunk":{"type":"text","content":"Quantum computing..."}}}
 
 : heartbeat 2026-03-04T21:00:00Z
 
 data: {"jsonrpc":"2.0","method":"message/stream","params":{"task":{"id":"...","state":"completed"},"metadata":{...}}}
+<<<<<<< HEAD
 ```
+=======
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ### `tasks/get` — Query Task Status
 
@@ -188,6 +256,7 @@ curl -X POST http://localhost:20128/a2a \
 
 ### `smart-routing`
 
+<<<<<<< HEAD
 Routes prompts through OmniRoute's intelligent pipeline with full observability.
 
 **Parameters (in `metadata`):**
@@ -222,6 +291,38 @@ Answers natural-language queries about provider quotas.
 | Default                                        | Full quota summary with warnings for low-quota providers |
 
 ---
+=======
+Định tuyến các lời nhắc thông qua đường dẫn thông minh của OmniRoute với khả năng quan sát đầy đủ.
+
+**Thông số (trong `siêu dữ liệu`):**
+
+| Tham số     | Loại    | Mặc định          | Mô tả                                                                                            |
+| ----------- | ------- | ----------------- | ------------------------------------------------------------------------------------------------ |
+| `người mẫu` | `chuỗi` | `"tự động"`       | Mô hình mục tiêu (ví dụ: `claude-sonnet-4`, `gpt-4o`, `auto`)                                    |
+| `kết hợp`   | `chuỗi` | kết hợp hoạt động | Combo cụ thể để định tuyến                                                                       |
+| `ngân sách` | `số`    | không             | Chi phí tối đa bằng USD cho yêu cầu này                                                          |
+| `role`      | `chuỗi` | không             | Gợi ý vai trò nhiệm vụ: `viết mã`, `đánh giá`, `lập kế hoạch`, `phân tích`, `gỡ lỗi`, `tài liệu` |
+
+**Trả về:**
+
+| Lĩnh vực                               | Mô tả                                                 |
+| -------------------------------------- | ----------------------------------------------------- | ---------------------- |
+| `hiện vật[].content`                   | Văn bản phản hồi LLM                                  |
+| `siêu dữ liệu.routing_explanation`     | Giải thích dễ hiểu về quyết định định tuyến           |
+| `siêu dữ liệu.cost_envelope`           | Ước tính so với chi phí thực tế bằng đơn vị tiền tệ   |
+| `siêu dữ liệu.khả năng phục hồi_trace` | Mảng sự kiện (primary*selected, fallback* Need, v.v.) |
+| `siêu dữ liệu.chính sách_bản án`       | Liệu yêu cầu có được cho phép hay không và tại sao    | ### `quota-management` |
+
+Trả lời các truy vấn bằng ngôn ngữ tự nhiên về hạn ngạch của nhà cung cấp.
+
+**Các loại truy vấn (suy ra từ nội dung tin nhắn):**
+
+| Mẫu truy vấn                                              | Loại phản hồi                                                                   |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------- | --- |
+| Chứa `"xếp hạng"`, `"hạn ngạch nhiều nhất"`, `"tốt nhất"` | Nhà cung cấp được xếp hạng theo hạn ngạch còn lại                               |
+| Chứa `"miễn phí"`, `"gợi ý"`                              | Liệt kê các combo miễn phí hoặc đề xuất các nhà cung cấp cấp miễn phí           |
+| Mặc định                                                  | Tóm tắt hạn ngạch đầy đủ kèm theo cảnh báo dành cho nhà cung cấp hạn ngạch thấp | --- |
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## Task Lifecycle
 
@@ -231,6 +332,7 @@ submitted ──→ working ──→ completed
               ──────────→ cancelled
 ```
 
+<<<<<<< HEAD
 | State       | Description                                           |
 | ----------- | ----------------------------------------------------- |
 | `submitted` | Task created, queued for execution                    |
@@ -244,6 +346,19 @@ submitted ──→ working ──→ completed
 - Tasks are garbage-collected after 2× TTL
 
 ---
+=======
+| Tiểu bang    | Mô tả                                                                   |
+| ------------ | ----------------------------------------------------------------------- |
+| `đã gửi`     | Tác vụ đã được tạo, xếp hàng để thực hiện                               |
+| `làm việc`   | Trình xử lý kỹ năng đang thực thi                                       |
+| `hoàn thành` | Thực hiện thành công, hiện vật có sẵn                                   |
+| `thất bại`   | Thực thi không thành công hoặc tác vụ đã hết hạn (TTL: mặc định 5 phút) |
+| `đã hủy`     | Đã bị khách hàng hủy qua `tasks/cancel`                                 |
+
+- Trạng thái đầu cuối: `đã hoàn thành`, `không thành công`, `đã hủy` (không có chuyển tiếp nào nữa)
+- Các tác vụ đã hết hạn trong `đã gửi` hoặc `đang làm việc` được tự động đánh dấu là `không thành công`
+- Các tác vụ được thu gom rác sau 2× TTL---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## Client Examples
 
@@ -541,6 +656,7 @@ func main() {
 
 ### 🤖 Use Case 1: Multi-Agent Coding Pipeline
 
+<<<<<<< HEAD
 An orchestrator agent delegates code generation to OmniRoute, then passes the output to a review agent.
 
 ```python
@@ -550,6 +666,14 @@ def coding_pipeline(task: str):
         {"role": "user", "content": f"Write production-quality code: {task}"}
     ], metadata={"model": "auto", "role": "coding"})
     code = code_result["artifacts"][0]["content"]
+=======
+Tác nhân điều phối ủy quyền việc tạo mã cho OmniRoute, sau đó chuyển kết quả đầu ra cho tác nhân đánh giá.```python
+def coding_pipeline(task: str): # Step 1: Generate code via OmniRoute A2A
+code_result = a2a_send("smart-routing", [
+{"role": "user", "content": f"Write production-quality code: {task}"}
+], metadata={"model": "auto", "role": "coding"})
+code = code_result["artifacts"][0]["content"]
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     # Step 2: Review the code via OmniRoute A2A (different model)
     review_result = a2a_send("smart-routing", [
@@ -562,6 +686,7 @@ def coding_pipeline(task: str):
     print(f"Review cost: ${review_result['metadata']['cost_envelope']['actual']}")
 
     return {"code": code, "review": review}
+<<<<<<< HEAD
 ```
 
 ### 💡 Use Case 2: Quota-Aware Agent Swarm
@@ -569,6 +694,14 @@ def coding_pipeline(task: str):
 Multiple agents share quota through OmniRoute, using the quota skill to coordinate.
 
 ```python
+=======
+
+````
+
+### 💡 Use Case 2: Quota-Aware Agent Swarm
+
+Nhiều đại lý chia sẻ hạn ngạch thông qua OmniRoute, sử dụng kỹ năng hạn ngạch để phối hợp.```python
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 async def quota_aware_agent(agent_name: str, task: str):
     # Check quota before starting
     quota = a2a_send("quota-management", [
@@ -591,6 +724,7 @@ async def quota_aware_agent(agent_name: str, task: str):
         print(f"[{agent_name}] Free alternatives: {quota['artifacts'][0]['content']}")
 
     return result
+<<<<<<< HEAD
 ```
 
 ### 📊 Use Case 3: Real-Time Streaming Dashboard
@@ -598,10 +732,18 @@ async def quota_aware_agent(agent_name: str, task: str):
 A monitoring agent streams responses and displays progress in real-time.
 
 ```typescript
+=======
+````
+
+### 📊 Use Case 3: Real-Time Streaming Dashboard
+
+Tác nhân giám sát truyền các phản hồi và hiển thị tiến trình trong thời gian thực.```typescript
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 async function streamingDashboard(prompt: string) {
   const response = await fetch(`${BASE_URL}/a2a`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${API_KEY}` },
+<<<<<<< HEAD
     body: JSON.stringify({
       jsonrpc: "2.0",
       id: "dash-1",
@@ -617,6 +759,23 @@ async function streamingDashboard(prompt: string) {
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
+=======
+body: JSON.stringify({
+jsonrpc: "2.0",
+id: "dash-1",
+method: "message/stream",
+params: { skill: "smart-routing", messages: [{ role: "user", content: prompt }] },
+}),
+});
+
+let totalChunks = 0;
+const reader = response.body!.getReader();
+const decoder = new TextDecoder();
+
+while (true) {
+const { done, value } = await reader.read();
+if (done) break;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     for (const line of decoder.decode(value).split("\n")) {
       if (line.startsWith("data: ")) {
@@ -640,6 +799,7 @@ async function streamingDashboard(prompt: string) {
         }
       }
     }
+<<<<<<< HEAD
   }
 }
 ```
@@ -649,6 +809,17 @@ async function streamingDashboard(prompt: string) {
 For long-running tasks, poll the task status instead of waiting synchronously.
 
 ```python
+=======
+
+}
+}
+
+````
+
+### 🔁 Use Case 4: Task Polling Pattern
+
+Đối với các tác vụ chạy dài, hãy thăm dò trạng thái tác vụ thay vì chờ đợi đồng bộ.```python
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import time
 
 def poll_task(task_id: str, timeout: int = 60):
@@ -678,12 +849,17 @@ def poll_task(task_id: str, timeout: int = 60):
         "params": {"taskId": task_id},
     })
     raise TimeoutError(f"Task {task_id} timed out after {timeout}s")
+<<<<<<< HEAD
 ```
+=======
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ---
 
 ## Error Codes
 
+<<<<<<< HEAD
 | Code   | Constant                 | Meaning                                  |
 | ------ | ------------------------ | ---------------------------------------- |
 | -32700 | —                        | Parse error (invalid JSON)               |
@@ -710,10 +886,34 @@ Authorization: Bearer YOUR_OMNIROUTE_API_KEY
 If no API key is configured on the server (`OMNIROUTE_API_KEY` is empty), authentication is bypassed.
 
 ---
+=======
+| Mã     | Hằng số                  | Ý nghĩa                                      |
+| ------ | ------------------------ | -------------------------------------------- | --- |
+| -32700 | —                        | Lỗi phân tích cú pháp (JSON không hợp lệ)    |
+| -32600 | `INVALID_REQUEST`        | Yêu cầu JSON-RPC không hợp lệ hoặc trái phép |
+| -32601 | `PHƯƠNG PHÁP_NOT_FOUND`  | Phương pháp hoặc kỹ năng không xác định      |
+| -32602 | `INVALID_PARAMS`         | Tham số bị thiếu hoặc không hợp lệ           |
+| -32603 | `NỘI BỘ_ERROR`           | Thực hiện kỹ năng không thành công           |
+| -32001 | `TASK_NOT_FOUND`         | Không tìm thấy ID nhiệm vụ                   |
+| -32002 | `TASK_ALREADY_COMPLETED` | Không thể sửa đổi một nhiệm vụ đã hoàn thành |
+| -32003 | `TRÁI PHÉP`              | Khóa API không hợp lệ hoặc bị thiếu          |
+| -32004 | `BUDGET_EXCEEDED`        | Yêu cầu vượt quá ngân sách đã định cấu hình  |
+| -32005 | `PROVIDER_UNAVAILABLE`   | Không có nhà cung cấp nào                    | --- |
+
+## Authentication
+
+Tất cả các yêu cầu `/a2a` đều yêu cầu mã thông báo Bearer thông qua tiêu đề `Ủy quyền`:```
+Authorization: Bearer YOUR_OMNIROUTE_API_KEY
+
+```
+
+Nếu không có khóa API nào được định cấu hình trên máy chủ (`OMNIROUTE_API_KEY` trống), xác thực sẽ bị bỏ qua.---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## File Structure
 
 ```
+<<<<<<< HEAD
 src/lib/a2a/
 ├── taskManager.ts         # Task lifecycle (create/update/cancel/list), TTL, cleanup
 ├── taskExecution.ts       # Generic task executor with state management
@@ -728,12 +928,31 @@ src/app/a2a/
 
 open-sse/mcp-server/
 └── schemas/a2a.ts         # Zod schemas (AgentCard, Task, JSON-RPC, SSE events)
+=======
+
+src/lib/a2a/
+├── taskManager.ts # Task lifecycle (create/update/cancel/list), TTL, cleanup
+├── taskExecution.ts # Generic task executor with state management
+├── streaming.ts # SSE stream formatting, heartbeat, chunk/completion events
+├── routingLogger.ts # Routing decision logger (stats, history, retention)
+└── skills/
+├── smartRouting.ts # Smart routing skill (routes via /v1/chat/completions)
+└── quotaManagement.ts # Quota management skill (natural-language quota queries)
+
+src/app/a2a/
+└── route.ts # Next.js API route handler (JSON-RPC 2.0 dispatch)
+
+open-sse/mcp-server/
+└── schemas/a2a.ts # Zod schemas (AgentCard, Task, JSON-RPC, SSE events)
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 ```
 
 ---
 
 ## Comparison: MCP vs A2A
 
+<<<<<<< HEAD
 | Feature           | MCP Server                   | A2A Server                                        |
 | ----------------- | ---------------------------- | ------------------------------------------------- |
 | **Protocol**      | Model Context Protocol       | Agent-to-Agent Protocol v0.3                      |
@@ -750,3 +969,20 @@ open-sse/mcp-server/
 ## Giấy phép
 
 Part of [OmniRoute](https://github.com/diegosouzapw/OmniRoute) — MIT License.
+=======
+| Tính năng | Máy chủ MCP | Máy chủ A2A |
+| ----------------- | ---------------------------- | ------------------------------------------------- |
+|**Giao thức**| Giao thức bối cảnh mô hình | Giao thức giữa tác nhân với tác nhân v0.3 |
+|**Giao thông**| stdio / HTTP | HTTP (JSON-RPC 2.0) |
+|**Khám phá**| Danh sách công cụ qua MCP | `/.well-known/agent.json` |
+|**Mức độ chi tiết**| 16 công cụ riêng lẻ | 2 kỹ năng cấp cao |
+|**Tốt nhất cho**| Tác nhân IDE (Con trỏ, Mã VS) | Hệ thống đa tác nhân (LangChain, CrewAI) |
+|**Truyền phát**| Không được hỗ trợ | SSE qua `tin nhắn/luồng` |
+|**Theo dõi nhiệm vụ**| Không | Toàn bộ vòng đời (đã gửi → đã hoàn thành) |
+|**Khả năng quan sát**| Nhật ký kiểm tra mỗi cuộc gọi công cụ | Đường bao chi phí + dấu vết khả năng phục hồi + phán quyết chính sách |---
+
+## Giấy phép
+
+Một phần của [OmniRoute](https://github.com/diegosouzapw/OmniRoute) — Giấy phép MIT.
+```
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

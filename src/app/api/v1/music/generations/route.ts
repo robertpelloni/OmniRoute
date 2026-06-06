@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+import { CORS_ORIGIN } from "@/shared/utils/cors";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { handleMusicGeneration } from "@omniroute/open-sse/handlers/musicGeneration.ts";
 import {
   getProviderCredentials,
@@ -24,6 +28,10 @@ import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
 export async function OPTIONS() {
   return new Response(null, {
     headers: {
+<<<<<<< HEAD
+=======
+      "Access-Control-Allow-Origin": CORS_ORIGIN,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
       "Access-Control-Allow-Headers": "*",
     },
@@ -70,8 +78,21 @@ export async function POST(request) {
   }
   const body = validation.data;
 
+<<<<<<< HEAD
   if (typeof body.prompt !== "string" || body.prompt.trim().length === 0) {
     return errorResponse(HTTP_STATUS.BAD_REQUEST, "Prompt is required");
+=======
+  // Optional API key validation
+  if (process.env.REQUIRE_API_KEY === "true") {
+    const apiKey = extractApiKey(request);
+    if (!apiKey) {
+      return errorResponse(HTTP_STATUS.UNAUTHORIZED, "Missing API key");
+    }
+    const valid = await isValidApiKey(apiKey);
+    if (!valid) {
+      return errorResponse(HTTP_STATUS.UNAUTHORIZED, "Invalid API key");
+    }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   // Enforce API key policies (model restrictions + budget limits)

@@ -12,8 +12,11 @@ import {
 } from "@/lib/localDb";
 import { syncToCloud } from "@/lib/cloudSync";
 import { setQuotaCache } from "@/domain/quotaCache";
+<<<<<<< HEAD
 import { buildClaudeExtraUsageConnectionUpdate } from "@/lib/providers/claudeExtraUsage";
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { getMachineId } from "@/shared/utils/machine";
 import { USAGE_SUPPORTED_PROVIDERS } from "@/shared/constants/providers";
 import { getExecutor } from "@omniroute/open-sse/executors/index.ts";
@@ -30,12 +33,16 @@ interface ProviderConnectionLike {
   authType?: string;
   accessToken?: string;
   refreshToken?: string;
+<<<<<<< HEAD
   expiresAt?: string;
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   tokenExpiresAt?: string;
   providerSpecificData?: JsonRecord;
   testStatus?: string;
   isActive?: boolean;
+<<<<<<< HEAD
   lastError?: string | null;
   lastErrorAt?: string | null;
   lastErrorType?: string | null;
@@ -58,6 +65,11 @@ const PROVIDER_LIMITS_APIKEY_PROVIDERS = new Set([
 
 const PROVIDER_LIMITS_APIKEY_PROVIDERS = new Set(["glm"]);
 >>>>>>> Stashed changes
+=======
+}
+
+const PROVIDER_LIMITS_APIKEY_PROVIDERS = new Set(["glm"]);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 const DEFAULT_PROVIDER_LIMITS_SYNC_INTERVAL_MINUTES = 70;
 const PROVIDER_LIMITS_AUTO_SYNC_SETTING_KEY = "provider_limits_auto_sync_last_run";
 
@@ -113,7 +125,11 @@ async function refreshAndUpdateCredentials(connection: ProviderConnectionLike) {
   const credentials = {
     accessToken: connection.accessToken,
     refreshToken: connection.refreshToken,
+<<<<<<< HEAD
     expiresAt: connection.tokenExpiresAt || connection.expiresAt || null,
+=======
+    expiresAt: connection.tokenExpiresAt,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     providerSpecificData: connection.providerSpecificData,
     copilotToken: connection.providerSpecificData?.copilotToken,
     copilotTokenExpiresAt: connection.providerSpecificData?.copilotTokenExpiresAt,
@@ -146,11 +162,16 @@ async function refreshAndUpdateCredentials(connection: ProviderConnectionLike) {
     updateData.refreshToken = refreshResult.refreshToken;
   }
   if (refreshResult.expiresIn) {
+<<<<<<< HEAD
     const expiresAt = new Date(Date.now() + refreshResult.expiresIn * 1000).toISOString();
     updateData.expiresAt = expiresAt;
     updateData.tokenExpiresAt = expiresAt;
   } else if (refreshResult.expiresAt) {
     updateData.expiresAt = refreshResult.expiresAt;
+=======
+    updateData.tokenExpiresAt = new Date(Date.now() + refreshResult.expiresIn * 1000).toISOString();
+  } else if (refreshResult.expiresAt) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     updateData.tokenExpiresAt = refreshResult.expiresAt;
   }
   if (refreshResult.copilotToken || refreshResult.copilotTokenExpiresAt) {
@@ -209,6 +230,7 @@ async function syncExpiredStatusIfNeeded(connection: ProviderConnectionLike, usa
   }
 }
 
+<<<<<<< HEAD
 async function syncClaudeExtraUsageStateIfNeeded(
   connection: ProviderConnectionLike,
   usage: JsonRecord
@@ -223,11 +245,77 @@ async function syncClaudeExtraUsageStateIfNeeded(
   };
 }
 
+=======
+export function getProviderLimitsSyncIntervalMinutes(): number {
+  const raw = Number.parseInt(process.env.PROVIDER_LIMITS_SYNC_INTERVAL_MINUTES ?? "", 10);
+  return Number.isFinite(raw) && raw > 0 ? raw : DEFAULT_PROVIDER_LIMITS_SYNC_INTERVAL_MINUTES;
+}
+
+export function getProviderLimitsSyncIntervalMs(): number {
+  return getProviderLimitsSyncIntervalMinutes() * 60 * 1000;
+}
+
+export async function getLastProviderLimitsAutoSyncTime(): Promise<string | null> {
+  try {
+    const settings = await getSettings();
+    const value = settings[PROVIDER_LIMITS_AUTO_SYNC_SETTING_KEY];
+    return typeof value === "string" && value.trim() ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+async function setLastProviderLimitsAutoSyncTime(timestamp: string): Promise<void> {
+  await updateSettings({ [PROVIDER_LIMITS_AUTO_SYNC_SETTING_KEY]: timestamp });
+}
+
+export function getCachedProviderLimitsMap(): Record<string, ProviderLimitsCacheEntry> {
+  return getAllProviderLimitsCache();
+}
+
+export async function fetchLiveProviderLimits(connectionId: string): Promise<{
+  connection: ProviderConnectionLike;
+  usage: JsonRecord;
+}> {
+  let connection = (await getProviderConnectionById(connectionId)) as ProviderConnectionLike | null;
+  if (!connection) {
+    throw withStatus(new Error("Connection not found"), 404);
+  }
+
+  if (!isSupportedUsageConnection(connection)) {
+    throw withStatus(new Error("Usage not available for this connection"), 400);
+  }
+
+  if (connection.authType !== "oauth") {
+    const usage = (await getUsageForProvider(connection)) as JsonRecord;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (isRecord(usage.quotas)) {
       setQuotaCache(connectionId, connection.provider, usage.quotas);
     }
     await syncExpiredStatusIfNeeded(connection, usage);
+<<<<<<< HEAD
     connection = await syncClaudeExtraUsageStateIfNeeded(connection, usage);
+=======
+    return { connection, usage };
+  }
+
+  const proxyInfo = await resolveProxyForConnection(connectionId);
+
+  const fetchUsageWithContext = async (proxyConfig: unknown) =>
+    runWithProxyContext(proxyConfig, async () => {
+      let conn = connection as ProviderConnectionLike;
+      let wasRefreshed = false;
+
+      const result = await refreshAndUpdateCredentials(conn);
+      conn = result.connection;
+      wasRefreshed = result.refreshed;
+
+      if (wasRefreshed) {
+        await syncToCloudIfEnabled();
+      }
+
+      const usageData = (await getUsageForProvider(conn)) as JsonRecord;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       connection = conn;
       return { usage: usageData };
     });
@@ -267,9 +355,12 @@ async function syncClaudeExtraUsageStateIfNeeded(
     setQuotaCache(connectionId, connection.provider, result.usage.quotas);
   }
   await syncExpiredStatusIfNeeded(connection, result.usage);
+<<<<<<< HEAD
 <<<<<<< Updated upstream
   connection = await syncClaudeExtraUsageStateIfNeeded(connection, result.usage);
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   return {
     connection,
@@ -285,6 +376,10 @@ export async function fetchAndPersistProviderLimits(
   usage: JsonRecord;
   cache: ProviderLimitsCacheEntry;
 }> {
+<<<<<<< HEAD
+=======
+  const { connection, usage } = await fetchLiveProviderLimits(connectionId);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const cache = toProviderLimitsCacheEntry(usage, source);
   setProviderLimitsCache(connectionId, cache);
   return { connection, usage, cache };
@@ -314,6 +409,10 @@ export async function syncAllProviderLimits(
     const chunk = connections.slice(i, i + concurrency);
     const results = await Promise.allSettled(
       chunk.map(async (connection) => {
+<<<<<<< HEAD
+=======
+        const { usage } = await fetchLiveProviderLimits(connection.id);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         const cache = toProviderLimitsCacheEntry(usage, source);
         return { connectionId: connection.id, cache };
       })

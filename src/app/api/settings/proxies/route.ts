@@ -9,11 +9,16 @@ import {
 import { createProxyRegistrySchema, updateProxyRegistrySchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
 import { createErrorResponse, createErrorResponseFromUnknown } from "@/lib/api/errorResponse";
+<<<<<<< HEAD
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
 
 export async function GET(request: Request) {
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
+=======
+
+export async function GET(request: Request) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
@@ -40,8 +45,11 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+<<<<<<< HEAD
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody: unknown;
   try {
     rawBody = await request.json();
@@ -72,8 +80,11 @@ export async function POST(request: Request) {
 }
 
 export async function PATCH(request: Request) {
+<<<<<<< HEAD
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody: unknown;
   try {
     rawBody = await request.json();
@@ -109,8 +120,11 @@ export async function PATCH(request: Request) {
 }
 
 export async function DELETE(request: Request) {
+<<<<<<< HEAD
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");

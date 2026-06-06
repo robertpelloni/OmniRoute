@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+<<<<<<< HEAD
 import fs from "node:fs";
 import http from "node:http";
 import path from "node:path";
@@ -21,6 +22,15 @@ if (fs.existsSync(rootAppDir) && fs.statSync(rootAppDir).isDirectory()) {
   console.error("Please rename or delete the root 'app/' directory before starting OmniRoute.\n");
   process.exit(1);
 =======
+=======
+import {
+  resolveRuntimePorts,
+  withRuntimePortEnv,
+  spawnWithForwardedSignals,
+} from "./runtime-env.mjs";
+import { bootstrapEnv } from "./bootstrap-env.mjs";
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 const mode = process.argv[2] === "start" ? "start" : "dev";
 
 // Load .env / server.env first so PORT / DASHBOARD_PORT from files affect --port below.
@@ -33,6 +43,7 @@ const args = ["./node_modules/next/dist/bin/next", mode, "--port", String(dashbo
 // Must read merged `env` from bootstrap — .env is not applied to process.env in the launcher.
 if (mode === "dev" && env.OMNIROUTE_USE_TURBOPACK !== "1") {
   args.splice(2, 0, "--webpack");
+<<<<<<< HEAD
 >>>>>>> Stashed changes
 }
 
@@ -121,4 +132,11 @@ async function start() {
 start().catch((error) => {
   console.error("[FATAL] Failed to start Next custom server:", error);
   process.exit(1);
+=======
+}
+
+spawnWithForwardedSignals(process.execPath, args, {
+  stdio: "inherit",
+  env: withRuntimePortEnv(env, runtimePorts),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 });

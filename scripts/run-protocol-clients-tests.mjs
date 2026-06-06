@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { spawn } from "node:child_process";
+<<<<<<< HEAD
 import { join } from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 import { sanitizeColorEnv } from "./runtime-env.mjs";
@@ -19,6 +20,13 @@ const isolatedDataDir =
   process.env.DATA_DIR || join(process.cwd(), ".tmp", "protocol-clients-data", String(process.pid));
 const port = explicitBaseUrl ? null : isolatedPort;
 const baseUrl = explicitBaseUrl || `http://127.0.0.1:${isolatedPort}`;
+=======
+import { setTimeout as delay } from "node:timers/promises";
+import { sanitizeColorEnv } from "./runtime-env.mjs";
+
+const port = process.env.DASHBOARD_PORT || process.env.PORT || "20128";
+const baseUrl = process.env.OMNIROUTE_BASE_URL || `http://localhost:${port}`;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 const healthUrl = `${baseUrl}/api/monitoring/health`;
 const maxWaitMs = Number(process.env.ECOSYSTEM_SERVER_WAIT_MS || 180000);
 const pollMs = 2000;
@@ -45,6 +53,7 @@ async function waitForServerReady() {
 async function main() {
   let serverProcess = null;
   let startedHere = false;
+<<<<<<< HEAD
   const testEnv = {
     ...sanitizeColorEnv(process.env),
     DATA_DIR: isolatedDataDir,
@@ -58,6 +67,9 @@ async function main() {
         }),
     OMNIROUTE_E2E_BOOTSTRAP_MODE: process.env.OMNIROUTE_E2E_BOOTSTRAP_MODE || "open",
   };
+=======
+  const testEnv = sanitizeColorEnv(process.env);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   if (!(await isServerReady())) {
     serverProcess = spawn(process.execPath, ["scripts/run-next-playwright.mjs", "dev"], {
@@ -73,6 +85,7 @@ async function main() {
     [
       "./node_modules/vitest/vitest.mjs",
       "run",
+<<<<<<< HEAD
 <<<<<<< Updated upstream
       "--environment",
       "node",
@@ -82,6 +95,11 @@ async function main() {
       "--dir",
       "tests",
 >>>>>>> Stashed changes
+=======
+      "tests/e2e/protocol-clients.test.ts",
+      "--dir",
+      "tests",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ],
     {
       stdio: "inherit",

@@ -18,11 +18,14 @@ import { randomUUID } from "crypto";
 
 import { getImageProvider, parseImageModel } from "../config/imageRegistry.ts";
 import { mapImageSize } from "../translator/image/sizeMapper.ts";
+<<<<<<< HEAD
 import { getCodexClientVersion, getCodexUserAgent } from "../config/codexClient.ts";
 import { ChatGptWebExecutor } from "../executors/chatgpt-web.ts";
 import { getChatGptImage, findChatGptImageBySha256 } from "../services/chatgptImageCache.ts";
 import { createHash } from "node:crypto";
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { saveCallLog } from "@/lib/usageDb";
 import {
   submitComfyWorkflow,
@@ -30,6 +33,7 @@ import {
   fetchComfyOutput,
   extractComfyOutputFiles,
 } from "../utils/comfyuiClient.ts";
+<<<<<<< HEAD
 import { fetchRemoteImage } from "@/shared/network/remoteImageFetch";
 
 const OPENAI_IMAGE_TO_IMAGE_MODELS = new Set([
@@ -128,6 +132,8 @@ const FAL_PRESET_SIZES = {
   "576x1024": "portrait_16_9",
   "1024x576": "landscape_16_9",
 };
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * Handle image generation request
@@ -137,6 +143,7 @@ const FAL_PRESET_SIZES = {
  * @param {object} options.log - Logger
  * @param {string} [options.resolvedProvider] - Pre-resolved provider ID (from route layer custom model resolution)
  */
+<<<<<<< HEAD
 export async function handleImageGeneration({
   body,
   credentials,
@@ -145,6 +152,9 @@ export async function handleImageGeneration({
   signal = null,
   clientHeaders = null,
 }) {
+=======
+export async function handleImageGeneration({ body, credentials, log, resolvedProvider = null }) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let provider, model;
 
   if (resolvedProvider) {
@@ -233,6 +243,7 @@ export async function handleImageGeneration({
     });
   }
 
+<<<<<<< HEAD
   if (providerConfig.format === "fal-ai") {
     return handleFalAIImageGeneration({
       model,
@@ -300,6 +311,8 @@ export async function handleImageGeneration({
     });
   }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (providerConfig.format === "nanobanana") {
     return handleNanoBananaImageGeneration({
       model,
@@ -319,6 +332,7 @@ export async function handleImageGeneration({
     return handleComfyUIImageGeneration({ model, provider, providerConfig, body, log });
   }
 
+<<<<<<< HEAD
   if (providerConfig.format === "codex-responses") {
     return handleCodexImageGeneration({
       model,
@@ -330,6 +344,8 @@ export async function handleImageGeneration({
     });
   }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return handleOpenAIImageGeneration({ model, provider, providerConfig, body, credentials, log });
 }
 
@@ -502,11 +518,14 @@ async function handleOpenAIImageGeneration({
   if (body.response_format !== undefined) upstreamBody.response_format = body.response_format;
   if (body.style !== undefined) upstreamBody.style = body.style;
 
+<<<<<<< HEAD
   const { imageUrl } = extractImageInputs(body);
   if (imageUrl && OPENAI_IMAGE_TO_IMAGE_MODELS.has(model)) {
     upstreamBody.image_url = imageUrl;
   }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Build headers
   const headers = {
     "Content-Type": "application/json",
@@ -580,6 +599,7 @@ async function handleOpenAIImageGeneration({
   return result;
 }
 
+<<<<<<< HEAD
 const CHATGPT_WEB_IMAGE_MARKDOWN_RE = /!\[[^\]]*\]\(([^)\s]+)\)/g;
 const CHATGPT_WEB_IMAGE_ID_RE = /\/v1\/chatgpt-web\/image\/([a-f0-9]{16,64})(?=[?\s"'<>)]|$)/i;
 
@@ -2051,6 +2071,8 @@ function saveImageErrorResult({ provider, model, status, startTime, error, reque
   };
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Fetch a single image endpoint and normalize response
  */
@@ -2504,8 +2526,17 @@ async function normalizeNanoBananaTaskResult(taskData, body, log) {
 
     if (urlCandidates.length > 0) {
       const firstUrl = urlCandidates[0];
+<<<<<<< HEAD
       const remoteImage = await fetchRemoteImage(firstUrl);
       const base64 = remoteImage.buffer.toString("base64");
+=======
+      const resp = await fetch(firstUrl);
+      if (!resp.ok) {
+        throw new Error(`Failed to fetch NanoBanana result image URL (${resp.status})`);
+      }
+      const arrayBuffer = await resp.arrayBuffer();
+      const base64 = Buffer.from(arrayBuffer).toString("base64");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       return [{ b64_json: base64, revised_prompt: body.prompt }];
     }
   }

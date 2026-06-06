@@ -1,5 +1,8 @@
 import { expect, test } from "@playwright/test";
+<<<<<<< HEAD
 import { gotoDashboardRoute } from "./helpers/dashboardAuth";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 type ComboStub = {
   id: string;
@@ -18,6 +21,7 @@ type ComboCreatePayload = {
   config?: Record<string, unknown>;
 };
 
+<<<<<<< HEAD
 async function dispatchHtml5DragAndDrop(
   page: import("@playwright/test").Page,
   source: import("@playwright/test").Locator,
@@ -32,6 +36,8 @@ async function dispatchHtml5DragAndDrop(
   await dataTransfer.dispose();
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 test.describe("Combos flow", () => {
   test("applies template, creates combo, and runs quick test CTA", async ({ page }) => {
     const state: {
@@ -64,6 +70,7 @@ test.describe("Combos flow", () => {
       });
     });
 
+<<<<<<< HEAD
     await page.route(/\/api\/settings$/, async (route) => {
       await route.fulfill({
         status: 200,
@@ -72,6 +79,8 @@ test.describe("Combos flow", () => {
       });
     });
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     await page.route("**/api/settings/proxy", async (route) => {
       await route.fulfill({
         status: 200,
@@ -133,6 +142,7 @@ test.describe("Combos flow", () => {
       });
     });
 
+<<<<<<< HEAD
     await page.route("**/api/combos/builder/options", async (route) => {
       await route.fulfill({
         status: 200,
@@ -160,6 +170,8 @@ test.describe("Combos flow", () => {
       });
     });
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     await page.route("**/api/combos", async (route) => {
       const method = route.request().method();
       if (method === "GET") {
@@ -201,12 +213,20 @@ test.describe("Combos flow", () => {
       });
     });
 
+<<<<<<< HEAD
     await gotoDashboardRoute(page, "/dashboard/combos", {
       waitUntil: "domcontentloaded",
     });
     await expect(
       page.getByRole("button", { name: /create combo|criar combo/i }).first()
     ).toBeVisible();
+=======
+    await page.goto("/dashboard/combos");
+    await page.waitForLoadState("networkidle");
+
+    const redirectedToLogin = page.url().includes("/login");
+    test.skip(redirectedToLogin, "Authentication enabled without a login fixture.");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     await page
       .getByRole("button", { name: /create combo|criar combo/i })
@@ -215,6 +235,7 @@ test.describe("Combos flow", () => {
 
     const comboDialog = page.getByRole("dialog").first();
     await expect(comboDialog).toBeVisible();
+<<<<<<< HEAD
     const comboNextButton = comboDialog.locator('[data-testid="combo-builder-next"]');
     await expect(comboNextButton).toBeDisabled();
 
@@ -231,6 +252,17 @@ test.describe("Combos flow", () => {
     await expect(comboNextButton).toBeEnabled();
     await comboNextButton.click();
 
+=======
+    const comboCreateButton = comboDialog
+      .getByRole("button", { name: /create combo|criar combo/i })
+      .last();
+    const readinessPanel = comboDialog.locator('[data-testid="combo-readiness-panel"]');
+    const saveBlockers = comboDialog.locator('[data-testid="combo-save-blockers"]');
+
+    await expect(readinessPanel).toBeVisible();
+    await expect(saveBlockers).toBeVisible();
+    await expect(comboCreateButton).toBeDisabled();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const applyRecommendationsButton = comboDialog
       .getByRole("button", { name: /apply recommendations|aplicar recomendações/i })
       .first();
@@ -242,6 +274,7 @@ test.describe("Combos flow", () => {
     await expect(comboDialog.locator('[data-testid="strategy-change-nudge"]')).toBeVisible();
     await applyRecommendationsButton.click();
 
+<<<<<<< HEAD
     await comboNextButton.click();
 
     const comboCreateButton = comboDialog
@@ -251,6 +284,16 @@ test.describe("Combos flow", () => {
     const saveBlockers = comboDialog.locator('[data-testid="combo-save-blockers"]');
 
     await expect(readinessPanel).toBeVisible();
+=======
+    await comboDialog
+      .getByRole("button", { name: /high availability|alta disponibilidade/i })
+      .click();
+    await comboDialog.getByRole("button", { name: /add model|adicionar modelo/i }).click();
+
+    const modelDialog = page.getByRole("dialog").last();
+    await expect(modelDialog.getByRole("button", { name: /qa test model/i })).toBeVisible();
+    await modelDialog.getByRole("button", { name: /qa test model/i }).click();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     await expect(saveBlockers).toHaveCount(0);
     await expect(comboCreateButton).toBeEnabled();
 
@@ -271,6 +314,7 @@ test.describe("Combos flow", () => {
     await expect(testResultsModal).toContainText(/qa-test-model/i);
   });
 
+<<<<<<< HEAD
   test("expert mode shows a single-page combo form with manual model entry", async ({ page }) => {
     const state: {
       combos: ComboStub[];
@@ -478,6 +522,8 @@ test.describe("Combos flow", () => {
     ]);
   });
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   test("allows dragging combo cards to persist manual order", async ({ page }) => {
     const state: {
       combos: ComboStub[];
@@ -523,6 +569,7 @@ test.describe("Combos flow", () => {
       });
     });
 
+<<<<<<< HEAD
     await page.route(/\/api\/settings$/, async (route) => {
       await route.fulfill({
         status: 200,
@@ -531,6 +578,8 @@ test.describe("Combos flow", () => {
       });
     });
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     await page.route("**/api/settings/proxy", async (route) => {
       await route.fulfill({
         status: 200,
@@ -582,10 +631,18 @@ test.describe("Combos flow", () => {
       });
     });
 
+<<<<<<< HEAD
     await gotoDashboardRoute(page, "/dashboard/combos", {
       waitUntil: "domcontentloaded",
     });
     await expect(page.getByTestId("combo-card-combo-1")).toBeVisible();
+=======
+    await page.goto("/dashboard/combos");
+    await page.waitForLoadState("networkidle");
+
+    const redirectedToLogin = page.url().includes("/login");
+    test.skip(redirectedToLogin, "Authentication enabled without a login fixture.");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     const comboCards = page.locator('[data-testid^="combo-card-"]');
     await expect
@@ -594,11 +651,17 @@ test.describe("Combos flow", () => {
       )
       .toEqual(["combo-card-combo-1", "combo-card-combo-2", "combo-card-combo-3"]);
 
+<<<<<<< HEAD
     await dispatchHtml5DragAndDrop(
       page,
       page.getByTestId("combo-drag-handle-combo-3"),
       page.getByTestId("combo-card-combo-1")
     );
+=======
+    await page
+      .getByTestId("combo-drag-handle-combo-3")
+      .dragTo(page.getByTestId("combo-card-combo-1"));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     await expect.poll(() => state.reorderRequests).toBe(1);
     await expect
@@ -607,8 +670,13 @@ test.describe("Combos flow", () => {
       )
       .toEqual(["combo-card-combo-3", "combo-card-combo-1", "combo-card-combo-2"]);
 
+<<<<<<< HEAD
     await page.reload({ waitUntil: "domcontentloaded" });
     await expect(page.getByTestId("combo-card-combo-3")).toBeVisible();
+=======
+    await page.reload();
+    await page.waitForLoadState("networkidle");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     await expect
       .poll(async () =>

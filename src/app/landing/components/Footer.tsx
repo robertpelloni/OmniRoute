@@ -1,5 +1,8 @@
 "use client";
+<<<<<<< HEAD
 import Link from "next/link";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { useTranslations } from "next-intl";
 import OmniRouteLogo from "@/shared/components/OmniRouteLogo";
 
@@ -62,12 +65,20 @@ export default function Footer() {
           {/* Resources */}
           <div className="flex flex-col gap-4">
             <h4 className="font-bold text-white">{t("resources")}</h4>
+<<<<<<< HEAD
             <Link
+=======
+            <a
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               className="text-gray-400 hover:text-[#E54D5E] text-sm transition-colors"
               href="/docs"
             >
               {t("documentation")}
+<<<<<<< HEAD
             </Link>
+=======
+            </a>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             <a
               className="text-gray-400 hover:text-[#E54D5E] text-sm transition-colors"
               href="https://github.com/diegosouzapw/OmniRoute"

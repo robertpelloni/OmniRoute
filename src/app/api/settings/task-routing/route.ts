@@ -8,15 +8,22 @@ import {
 import { updateSettings } from "@/lib/db/settings";
 import { taskRoutingActionSchema, updateTaskRoutingSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
+<<<<<<< HEAD
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * GET /api/settings/task-routing
  * Returns the current task-aware routing configuration.
  */
+<<<<<<< HEAD
 export async function GET(request: Request) {
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
+=======
+export async function GET() {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     return NextResponse.json({
       ...getTaskRoutingConfig(),
@@ -34,8 +41,11 @@ export async function GET(request: Request) {
  * Body: { enabled?: boolean, taskModelMap?: { coding?: "...", ... }, detectionEnabled?: boolean }
  */
 export async function PUT(request: Request) {
+<<<<<<< HEAD
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody: unknown;
   try {
     rawBody = await request.json();
@@ -78,8 +88,11 @@ export async function PUT(request: Request) {
  * For "detect": pass { action: "detect", body: <request-body> } to test detection
  */
 export async function POST(request: Request) {
+<<<<<<< HEAD
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody: unknown;
   try {
     rawBody = await request.json();

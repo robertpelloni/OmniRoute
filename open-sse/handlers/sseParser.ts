@@ -74,7 +74,10 @@ function toNumber(value, fallback = 0) {
 export function parseSSEToOpenAIResponse(rawSSE, fallbackModel) {
   const lines = String(rawSSE || "").split("\n");
   const chunks = [];
+<<<<<<< HEAD
   let sawChoices = false;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   for (const line of lines) {
     const trimmed = line.trim();
@@ -82,17 +85,25 @@ export function parseSSEToOpenAIResponse(rawSSE, fallbackModel) {
     const payload = trimmed.slice(5).trim();
     if (!payload || payload === "[DONE]") continue;
     try {
+<<<<<<< HEAD
       const parsed = JSON.parse(payload);
       if (Array.isArray(parsed?.choices)) {
         sawChoices = true;
       }
       chunks.push(parsed);
+=======
+      chunks.push(JSON.parse(payload));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     } catch {
       // Ignore malformed SSE lines and continue best-effort parsing.
     }
   }
 
+<<<<<<< HEAD
   if (chunks.length === 0 || !sawChoices) return null;
+=======
+  if (chunks.length === 0) return null;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const first = chunks[0];
   const contentParts = [];
@@ -235,7 +246,10 @@ export function parseSSEToClaudeResponse(rawSSE, fallbackModel) {
   let role = "assistant";
   let stopReason = "end_turn";
   let stopSequence = null;
+<<<<<<< HEAD
   let sawClaudeEvent = false;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const mergeUsage = (incoming) => {
     const usageRecord = toRecord(incoming);
@@ -261,7 +275,10 @@ export function parseSSEToClaudeResponse(rawSSE, fallbackModel) {
   for (const payload of payloads) {
     const eventType = toString(payload.type);
     if (eventType === "message_start") {
+<<<<<<< HEAD
       sawClaudeEvent = true;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       const message = toRecord(payload.message);
       messageId = toString(message.id, messageId || `msg_${Date.now()}`);
       model = toString(message.model, model);
@@ -271,7 +288,10 @@ export function parseSSEToClaudeResponse(rawSSE, fallbackModel) {
     }
 
     if (eventType === "content_block_start") {
+<<<<<<< HEAD
       sawClaudeEvent = true;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       const index = toNumber(payload.index, blocks.size);
       const contentBlock = toRecord(payload.content_block);
       const blockType = toString(contentBlock.type);
@@ -304,7 +324,10 @@ export function parseSSEToClaudeResponse(rawSSE, fallbackModel) {
     }
 
     if (eventType === "content_block_delta") {
+<<<<<<< HEAD
       sawClaudeEvent = true;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       const index = toNumber(payload.index, 0);
       const delta = toRecord(payload.delta);
       const deltaType = toString(delta.type);
@@ -351,7 +374,10 @@ export function parseSSEToClaudeResponse(rawSSE, fallbackModel) {
     }
 
     if (eventType === "message_delta") {
+<<<<<<< HEAD
       sawClaudeEvent = true;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       const delta = toRecord(payload.delta);
       stopReason = toString(delta.stop_reason, stopReason);
       stopSequence =
@@ -363,8 +389,11 @@ export function parseSSEToClaudeResponse(rawSSE, fallbackModel) {
     mergeUsage(payload.usage);
   }
 
+<<<<<<< HEAD
   if (!sawClaudeEvent) return null;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const content = [...blocks.values()]
     .sort((a, b) => a.index - b.index)
     .flatMap((block) => {
@@ -411,6 +440,7 @@ export function parseSSEToClaudeResponse(rawSSE, fallbackModel) {
  * Convert Responses API SSE events into a single non-streaming response object.
  * Expects events such as response.created / response.in_progress / response.completed.
  */
+<<<<<<< HEAD
 const RESPONSES_TERMINAL_EVENT_TYPES = new Set([
   "response.completed",
   "response.done",
@@ -537,6 +567,8 @@ function mergeResponseItems(existing, incoming) {
   };
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export function parseSSEToResponsesOutput(rawSSE, fallbackModel) {
   const lines = String(rawSSE || "").split("\n");
   const events = [];
@@ -547,11 +579,15 @@ export function parseSSEToResponsesOutput(rawSSE, fallbackModel) {
     const payload = trimmed.slice(5).trim();
     if (!payload || payload === "[DONE]") continue;
     try {
+<<<<<<< HEAD
       const parsed = JSON.parse(payload);
       const record = toRecord(parsed);
       if (Object.keys(record).length > 0) {
         events.push(record);
       }
+=======
+      events.push(JSON.parse(payload));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     } catch {
       // Ignore malformed lines and continue best-effort parsing.
     }
@@ -559,6 +595,7 @@ export function parseSSEToResponsesOutput(rawSSE, fallbackModel) {
 
   if (events.length === 0) return null;
 
+<<<<<<< HEAD
   let terminalResponse = null;
   let terminalEventType = "";
   let latestResponse = null;
@@ -657,6 +694,14 @@ export function parseSSEToResponsesOutput(rawSSE, fallbackModel) {
     if (RESPONSES_TERMINAL_EVENT_TYPES.has(eventType) && evt.response) {
       terminalResponse = evt.response;
       terminalEventType = eventType;
+=======
+  let completed = null;
+  let latestResponse = null;
+
+  for (const evt of events) {
+    if (evt?.type === "response.completed" && evt.response) {
+      completed = evt.response;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
     if (evt?.response && typeof evt.response === "object") {
       latestResponse = evt.response;
@@ -665,6 +710,7 @@ export function parseSSEToResponsesOutput(rawSSE, fallbackModel) {
     }
   }
 
+<<<<<<< HEAD
   const picked = terminalResponse || latestResponse;
   if (!picked || typeof picked !== "object") return null;
   const reconstructedOutput = [...outputItems.entries()]
@@ -692,6 +738,18 @@ export function parseSSEToResponsesOutput(rawSSE, fallbackModel) {
     output: pickedOutput.length > 0 ? pickedOutput : reconstructedOutput,
     usage: picked.usage || null,
     status: picked.status || statusFallback,
+=======
+  const picked = completed || latestResponse;
+  if (!picked || typeof picked !== "object") return null;
+
+  return {
+    id: picked.id || `resp_${Date.now()}`,
+    object: "response",
+    model: picked.model || fallbackModel || "unknown",
+    output: Array.isArray(picked.output) ? picked.output : [],
+    usage: picked.usage || null,
+    status: picked.status || (completed ? "completed" : "in_progress"),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     created_at: picked.created_at || Math.floor(Date.now() / 1000),
     metadata: picked.metadata || {},
   };

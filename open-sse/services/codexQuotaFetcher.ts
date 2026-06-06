@@ -76,6 +76,7 @@ export function registerCodexConnection(connectionId: string, meta: CodexConnect
   connectionRegistry.set(connectionId, meta);
 }
 
+<<<<<<< HEAD
 function getCodexConnectionMeta(
   connectionId: string,
   connection?: Record<string, unknown>
@@ -120,6 +121,8 @@ function getDominantResetAt(quota: {
   return quota.window7d.resetAt || quota.window5h.resetAt;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // ─── Core Fetcher ────────────────────────────────────────────────────────────
 
 /**
@@ -129,10 +132,14 @@ function getDominantResetAt(quota: {
  * @param connectionId - Connection ID from the DB (used to look up credentials)
  * @returns QuotaInfo or null if fetch fails / no credentials
  */
+<<<<<<< HEAD
 export async function fetchCodexQuota(
   connectionId: string,
   connection?: Record<string, unknown>
 ): Promise<QuotaInfo | null> {
+=======
+export async function fetchCodexQuota(connectionId: string): Promise<QuotaInfo | null> {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Check cache first
   const cached = quotaCache.get(connectionId);
   if (cached && Date.now() - cached.fetchedAt < CACHE_TTL_MS) {
@@ -140,7 +147,11 @@ export async function fetchCodexQuota(
   }
 
   // Look up credentials
+<<<<<<< HEAD
   const meta = getCodexConnectionMeta(connectionId, connection);
+=======
+  const meta = connectionRegistry.get(connectionId);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (!meta?.accessToken) {
     // No credentials registered — skip preflight gracefully
     return null;
@@ -253,10 +264,13 @@ function parseCodexUsageResponse(data: unknown): CodexDualWindowQuota | null {
     used: worstPercentUsed,
     total: 100,
     percentUsed: percentUsedNormalized,
+<<<<<<< HEAD
     resetAt: getDominantResetAt({
       window5h: { percentUsed: usedPercent5h / 100, resetAt: resetAt5h },
       window7d: { percentUsed: usedPercent7d / 100, resetAt: resetAt7d },
     }),
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     window5h: { percentUsed: usedPercent5h / 100, resetAt: resetAt5h },
     window7d: { percentUsed: usedPercent7d / 100, resetAt: resetAt7d },
     limitReached,

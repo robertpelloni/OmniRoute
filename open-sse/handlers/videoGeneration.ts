@@ -17,11 +17,14 @@
 
 import { getVideoProvider, parseVideoModel } from "../config/videoRegistry.ts";
 import {
+<<<<<<< HEAD
   buildRunwayApiUrl,
   buildRunwayHeaders,
   RUNWAYML_IMAGE_REQUIRED_MODELS,
 } from "../config/runway.ts";
 import {
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   submitComfyWorkflow,
   pollComfyResult,
   fetchComfyOutput,
@@ -60,10 +63,13 @@ export async function handleVideoGeneration({ body, credentials, log }) {
     return handleSDWebUIVideoGeneration({ model, provider, providerConfig, body, log });
   }
 
+<<<<<<< HEAD
   if (providerConfig.format === "runwayml") {
     return handleRunwayVideoGeneration({ model, provider, providerConfig, body, credentials, log });
   }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return {
     success: false,
     status: 400,
@@ -271,6 +277,7 @@ async function handleSDWebUIVideoGeneration({ model, provider, providerConfig, b
     return { success: false, status: 502, error: `Video provider error: ${err.message}` };
   }
 }
+<<<<<<< HEAD
 
 async function handleRunwayVideoGeneration({
   model,
@@ -624,3 +631,5 @@ async function normalizeRunwayVideoResult(task, body) {
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

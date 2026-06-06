@@ -26,7 +26,11 @@ export default function DroidToolCard({
   const [applying, setApplying] = useState(false);
   const [restoring, setRestoring] = useState(false);
   const [message, setMessage] = useState(null);
+<<<<<<< HEAD
   const [selectedApiKeyId, setSelectedApiKeyId] = useState("");
+=======
+  const [selectedApiKey, setSelectedApiKey] = useState("");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [selectedModel, setSelectedModel] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [modelAliases, setModelAliases] = useState({});
@@ -57,6 +61,7 @@ export default function DroidToolCard({
   // Use batch status as fallback when card hasn't been expanded yet
   const effectiveConfigStatus = configStatus || batchStatus?.configStatus || null;
 
+<<<<<<< HEAD
   // (#523) Store the key *id* (not the masked string) so the backend can
   // resolve the real secret from DB before writing to config files.
   useEffect(() => {
@@ -64,6 +69,13 @@ export default function DroidToolCard({
       setSelectedApiKeyId(apiKeys[0].id);
     }
   }, [apiKeys, selectedApiKeyId]);
+=======
+  useEffect(() => {
+    if (apiKeys?.length > 0 && !selectedApiKey) {
+      setSelectedApiKey(apiKeys[0].key);
+    }
+  }, [apiKeys, selectedApiKey]);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   useEffect(() => {
     if (isExpanded && !droidStatus) {
@@ -91,6 +103,7 @@ export default function DroidToolCard({
       );
       if (customModel) {
         if (customModel.model) setSelectedModel(customModel.model);
+<<<<<<< HEAD
         if (customModel.apiKey) {
           // (#523) Keys from /api/keys are masked. Match by prefix/suffix.
           const fileKeyPrefix = customModel.apiKey.slice(0, 8);
@@ -99,6 +112,10 @@ export default function DroidToolCard({
             (k) => k.key && k.key.startsWith(fileKeyPrefix) && k.key.endsWith(fileKeySuffix)
           );
           if (matchedKey) setSelectedApiKeyId(matchedKey.id);
+=======
+        if (customModel.apiKey && apiKeys?.some((k) => k.key === customModel.apiKey)) {
+          setSelectedApiKey(customModel.apiKey);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         }
       }
     }
@@ -131,17 +148,28 @@ export default function DroidToolCard({
     setApplying(true);
     setMessage(null);
     try {
+<<<<<<< HEAD
       // (#523) Prefer keyId lookup so the backend writes the real key to disk.
       const selectedKeyId =
         selectedApiKeyId?.trim() || (apiKeys?.length > 0 ? apiKeys[0].id : null);
+=======
+      const keyToUse =
+        selectedApiKey?.trim() ||
+        (apiKeys?.length > 0 ? apiKeys[0].key : null) ||
+        (!cloudEnabled ? "sk_omniroute" : null);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
       const res = await fetch("/api/cli-tools/droid-settings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           baseUrl: getEffectiveBaseUrl(),
+<<<<<<< HEAD
           apiKey: !cloudEnabled ? "sk_omniroute" : null,
           keyId: selectedKeyId,
+=======
+          apiKey: keyToUse,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           model: selectedModel,
         }),
       });
@@ -150,12 +178,16 @@ export default function DroidToolCard({
         setMessage({ type: "success", text: t("settingsApplied") });
         checkDroidStatus();
       } else {
+<<<<<<< HEAD
         setMessage({
           type: "error",
           text:
             (typeof data.error === "string" ? data.error : data.error?.message) ||
             t("failedApplySettings"),
         });
+=======
+        setMessage({ type: "error", text: data.error || t("failedApplySettings") });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     } catch (error) {
       setMessage({ type: "error", text: error.message });
@@ -173,6 +205,7 @@ export default function DroidToolCard({
       if (res.ok) {
         setMessage({ type: "success", text: t("settingsReset") });
         setSelectedModel("");
+<<<<<<< HEAD
         setSelectedApiKeyId("");
         checkDroidStatus();
       } else {
@@ -182,6 +215,12 @@ export default function DroidToolCard({
             (typeof data.error === "string" ? data.error : data.error?.message) ||
             t("failedResetSettings"),
         });
+=======
+        setSelectedApiKey("");
+        checkDroidStatus();
+      } else {
+        setMessage({ type: "error", text: data.error || t("failedResetSettings") });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     } catch (error) {
       setMessage({ type: "error", text: error.message });
@@ -221,12 +260,16 @@ export default function DroidToolCard({
         checkDroidStatus();
         fetchBackups();
       } else {
+<<<<<<< HEAD
         setMessage({
           type: "error",
           text:
             (typeof data.error === "string" ? data.error : data.error?.message) ||
             t("failedRestore"),
         });
+=======
+        setMessage({ type: "error", text: data.error || t("failedRestore") });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     } catch (error) {
       setMessage({ type: "error", text: error.message });
@@ -236,10 +279,19 @@ export default function DroidToolCard({
   };
 
   const getManualConfigs = () => {
+<<<<<<< HEAD
     // (#523) Look up the key object by id to get the masked display value.
     const selectedKeyObj = apiKeys?.find((k) => k.id === selectedApiKeyId);
     const keyToDisplay =
       selectedKeyObj?.key || (!cloudEnabled ? "sk_omniroute" : "<API_KEY_FROM_DASHBOARD>");
+=======
+    const keyToUse =
+      selectedApiKey && selectedApiKey.trim()
+        ? selectedApiKey
+        : !cloudEnabled
+          ? "sk_omniroute"
+          : "<API_KEY_FROM_DASHBOARD>";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     const settingsContent = {
       customModels: [
@@ -248,7 +300,11 @@ export default function DroidToolCard({
           id: "custom:OmniRoute-0",
           index: 0,
           baseUrl: getEffectiveBaseUrl(),
+<<<<<<< HEAD
           apiKey: keyToDisplay,
+=======
+          apiKey: keyToUse,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           displayName: selectedModel || "provider/model-id",
           maxOutputTokens: 131072,
           noImageSupport: false,
@@ -395,12 +451,21 @@ export default function DroidToolCard({
                   </span>
                   {apiKeys.length > 0 ? (
                     <select
+<<<<<<< HEAD
                       value={selectedApiKeyId}
                       onChange={(e) => setSelectedApiKeyId(e.target.value)}
                       className="flex-1 px-2 py-1.5 bg-surface rounded text-xs border border-border focus:outline-none focus:ring-1 focus:ring-primary/50"
                     >
                       {apiKeys.map((key) => (
                         <option key={key.id} value={key.id}>
+=======
+                      value={selectedApiKey}
+                      onChange={(e) => setSelectedApiKey(e.target.value)}
+                      className="flex-1 px-2 py-1.5 bg-surface rounded text-xs border border-border focus:outline-none focus:ring-1 focus:ring-primary/50"
+                    >
+                      {apiKeys.map((key) => (
+                        <option key={key.id} value={key.key}>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                           {key.key}
                         </option>
                       ))}

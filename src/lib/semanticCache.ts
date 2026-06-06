@@ -1,9 +1,13 @@
 /**
  * Semantic Cache — Phase 9.1
  *
+<<<<<<< HEAD
  * Caches LLM responses (temperature=0) to reduce cost and latency.
  * Supports both streaming and non-streaming requests: streaming responses
  * are cached after assembly; cache hits always return JSON.
+=======
+ * Caches non-streaming LLM responses (temperature=0) to reduce cost and latency.
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  * Two-tier: in-memory LRU (fast) + SQLite (persistent across restarts).
  *
  * Cache key = SHA-256(model + normalized messages + temperature + top_p)
@@ -115,16 +119,24 @@ function getMemoryCache() {
  * @param {number} topP
  * @returns {string} hex signature
  */
+<<<<<<< HEAD
 export function generateSignature(model, conversation, temperature = 0, topP = 1) {
   const payload = JSON.stringify({
     model,
     messages: normalizeConversation(conversation),
+=======
+export function generateSignature(model, messages, temperature = 0, topP = 1) {
+  const payload = JSON.stringify({
+    model,
+    messages: normalizeMessages(messages),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     temperature,
     top_p: topP,
   });
   return crypto.createHash("sha256").update(payload).digest("hex");
 }
 
+<<<<<<< HEAD
 function stringifyForSignature(value: unknown): string {
   if (typeof value === "string") return value;
   try {
@@ -147,6 +159,17 @@ function normalizeConversation(conversation: unknown) {
   return conversation.map((item: Record<string, unknown>) => ({
     role: typeof item?.role === "string" && item.role.trim().length > 0 ? item.role : "user",
     content: stringifyForSignature(item?.content),
+=======
+/**
+ * Normalize messages for consistent hashing.
+ * Strips metadata, keeps only role + content.
+ */
+function normalizeMessages(messages) {
+  if (!Array.isArray(messages)) return [];
+  return messages.map((m) => ({
+    role: m.role || "user",
+    content: typeof m.content === "string" ? m.content : JSON.stringify(m.content),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }));
 }
 
@@ -351,6 +374,7 @@ export function cleanOldMetrics(retentionDays = 90): number {
 /**
  * Clear all cache entries.
  */
+<<<<<<< HEAD
 export function clearCache(): number {
   getMemoryCache().clear();
   let removed = 0;
@@ -361,13 +385,23 @@ export function clearCache(): number {
 =======
     db.prepare("DELETE FROM semantic_cache").run();
 >>>>>>> Stashed changes
+=======
+export function clearCache() {
+  getMemoryCache().clear();
+  try {
+    const db = getDbInstance();
+    db.prepare("DELETE FROM semantic_cache").run();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     db.prepare("UPDATE cache_metrics SET value = 0").run();
   } catch {
     // DB not available
   }
+<<<<<<< HEAD
 <<<<<<< Updated upstream
   return removed;
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 export function getCacheStats() {
@@ -399,9 +433,14 @@ export function getCacheStats() {
 }
 
 /**
+<<<<<<< HEAD
  * Check if a request is cacheable for read (pre-request lookup).
  * Only non-streaming, deterministic (temperature=0) requests.
  * @deprecated Use isCacheableForRead instead.
+=======
+ * Check if a request is cacheable.
+ * Only non-streaming, deterministic (temperature=0) requests.
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  */
 export function isCacheable(body, headers) {
   if ((getHeaderValue(headers, "x-omniroute-no-cache") || "").toLowerCase() === "true") {
@@ -411,6 +450,7 @@ export function isCacheable(body, headers) {
   if ((body.temperature ?? 0) !== 0) return false;
   return true;
 }
+<<<<<<< HEAD
 
 /**
  * Check if a cached response can be served for this request.
@@ -438,3 +478,5 @@ export function isCacheableForWrite(body, headers) {
   if (body.temperature !== 0) return false;
   return true;
 }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

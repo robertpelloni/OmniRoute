@@ -2,7 +2,11 @@
  * SSE Logger — Thin wrapper around the shared Pino logger
  * for backward compatibility with existing SSE code.
  *
+<<<<<<< HEAD
  * Migrated from direct console logging to structured Pino logging.
+=======
+ * Migrated from console.log to structured Pino logging.
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  */
 import { createLogger, logger as rootLogger } from "@/shared/utils/logger";
 

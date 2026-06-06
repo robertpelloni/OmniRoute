@@ -1,6 +1,10 @@
 openapi: 3.1.0
 info:
   title: OmniRoute API
+<<<<<<< HEAD
+=======
+  version: 3.5.9
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   description: |
     OmniRoute is a local-first AI API proxy router. It provides an OpenAI-compatible
     endpoint that routes requests to multiple AI providers with load balancing,
@@ -50,8 +54,11 @@ tags:
     description: Routing combo management
   - name: Settings
     description: Application settings
+<<<<<<< HEAD
   - name: Compression
     description: Prompt compression, RTK filters, Caveman rules, and compression combos
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   - name: Usage
     description: Usage analytics and logs
   - name: Translator
@@ -461,6 +468,25 @@ paths:
         "200":
           description: Complete catalog with all providers
 
+<<<<<<< HEAD
+=======
+  /api/models/availability:
+    get:
+      tags: [Models]
+      summary: Get model availability status
+      description: Returns availability data for all configured models across providers.
+      responses:
+        "200":
+          description: Model availability map
+    post:
+      tags: [Models]
+      summary: Refresh model availability
+      description: Triggers a re-check of model availability across all providers.
+      responses:
+        "200":
+          description: Availability refreshed
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   # ─── Management Endpoints ──────────────────────────────────────
 
   /api/providers:
@@ -735,6 +761,7 @@ paths:
         "200":
           description: Updated settings
 
+<<<<<<< HEAD
   /api/settings/compression:
     get:
       tags: [Compression]
@@ -995,6 +1022,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ApiErrorResponse"
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   /api/settings/combo-defaults:
     get:
       tags: [Settings]
@@ -2025,6 +2054,7 @@ paths:
   /api/resilience:
     get:
       tags: [System]
+<<<<<<< HEAD
       summary: Get resilience configuration
       responses:
         "200":
@@ -2032,6 +2062,15 @@ paths:
     patch:
       tags: [System]
       summary: Update resilience configuration
+=======
+      summary: Get resilience profiles and circuit breaker states
+      responses:
+        "200":
+          description: Resilience configuration and current states
+    put:
+      tags: [System]
+      summary: Update resilience profiles
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       requestBody:
         required: true
         content:
@@ -2040,7 +2079,11 @@ paths:
               type: object
       responses:
         "200":
+<<<<<<< HEAD
           description: Updated resilience configuration
+=======
+          description: Updated resilience profiles
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   /api/resilience/reset:
     post:
@@ -2242,11 +2285,14 @@ components:
       type: http
       scheme: bearer
       description: API key obtained from the OmniRoute dashboard
+<<<<<<< HEAD
     ManagementSessionAuth:
       type: apiKey
       in: cookie
       name: auth_token
       description: Dashboard management session cookie for protected management routes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   parameters:
     ResourceId:
@@ -2267,6 +2313,7 @@ components:
               error:
                 type: string
                 example: Unauthorized
+<<<<<<< HEAD
     ManagementAuthenticationRequired:
       description: Authentication required for management routes
       content:
@@ -2432,6 +2479,10 @@ components:
         - required: [defaultRaw]
         - required: [default-raw]
 
+=======
+
+  schemas:
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ChatCompletionRequest:
       type: object
       required: [model, messages]
@@ -2544,10 +2595,13 @@ components:
           type: string
         isActive:
           type: boolean
+<<<<<<< HEAD
         maxConcurrent:
           type: integer
           nullable: true
           minimum: 0
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         priority:
           type: integer
         testStatus:
@@ -2573,10 +2627,13 @@ components:
         isActive:
           type: boolean
           default: true
+<<<<<<< HEAD
         maxConcurrent:
           type: integer
           nullable: true
           minimum: 0
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     ApiKey:
       type: object

@@ -54,15 +54,25 @@ const SECRET_RULES = [
 
 /**
  * Validate all required secrets.
+<<<<<<< HEAD
  * @param {NodeJS.ProcessEnv} [env]
  * @returns {ValidationResult}
  */
 export function validateSecrets(env = process.env) {
+=======
+ * @returns {ValidationResult}
+ */
+export function validateSecrets() {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const errors = [];
   const warnings = [];
 
   for (const rule of SECRET_RULES) {
+<<<<<<< HEAD
     const value = env[rule.name];
+=======
+    const value = process.env[rule.name];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     // Missing entirely
     if (!value || value.trim() === "") {
@@ -107,8 +117,13 @@ export function validateSecrets(env = process.env) {
  * Should be called during server initialization (fail-fast).
  * @param {object} [logger] - Optional logger (defaults to console)
  */
+<<<<<<< HEAD
 export function enforceSecrets(logger = console, env = process.env) {
   const result = validateSecrets(env);
+=======
+export function enforceSecrets(logger = console) {
+  const result = validateSecrets();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Print warnings (non-fatal)
   for (const w of result.warnings) {

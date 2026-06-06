@@ -36,6 +36,30 @@ describe("getAutoUpdateConfig", () => {
 });
 
 describe("validateAutoUpdateRuntime", () => {
+<<<<<<< HEAD
+=======
+  it("supports source mode when git is available in a git repository", async () => {
+    const config = autoUpdate.getAutoUpdateConfig({
+      AUTO_UPDATE_MODE: "source",
+    });
+
+    const result = await autoUpdate.validateAutoUpdateRuntime(
+      config,
+      async (file) => {
+        if (file === "git") return { stdout: "git version 2.0.0", stderr: "" };
+        throw new Error(`unexpected command: ${file}`);
+      },
+      async () => true
+    );
+
+    assert.deepEqual(result, {
+      supported: true,
+      reason: null,
+      composeCommand: null,
+    });
+  });
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   it("reports missing docker socket for docker-compose mode", async () => {
     const config = autoUpdate.getAutoUpdateConfig({
       AUTO_UPDATE_MODE: "docker-compose",
@@ -102,3 +126,17 @@ describe("buildDockerComposeUpdateScript", () => {
     assert.match(script, /docker compose -f "\$COMPOSE_FILE" up -d --build "\$SERVICE"/);
   });
 });
+<<<<<<< HEAD
+=======
+
+describe("buildSourceUpdateScript", () => {
+  it("includes git checkout, env sync, and rebuild steps", () => {
+    const script = autoUpdate.buildSourceUpdateScript("3.2.6", "upstream");
+
+    assert.match(script, /git fetch --tags 'upstream'/);
+    assert.match(script, /git checkout "v3\.2\.6"/);
+    assert.match(script, /node scripts\/sync-env\.mjs 2>\/dev\/null \|\| true/);
+    assert.match(script, /pm2 restart omniroute --update-env \|\| true/);
+  });
+});
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

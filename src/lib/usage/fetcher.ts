@@ -2,6 +2,7 @@
  * Usage Fetcher - Get usage data from provider APIs
  */
 
+<<<<<<< HEAD
 import { GEMINI_CONFIG } from "@/lib/oauth/constants/oauth";
 import {
   getGitHubCopilotInternalUserHeaders,
@@ -21,6 +22,9 @@ import {
   updateAntigravityRemainingCredits,
 } from "@omniroute/open-sse/executors/antigravity.ts";
 import { getCreditsMode } from "@omniroute/open-sse/services/antigravityCredits.ts";
+=======
+import { GITHUB_CONFIG, GEMINI_CONFIG, ANTIGRAVITY_CONFIG } from "@/lib/oauth/constants/oauth";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * Get usage data for a provider connection
@@ -36,12 +40,16 @@ export async function getUsageForProvider(connection) {
     case "gemini-cli":
       return await getGeminiUsage(accessToken);
     case "antigravity":
+<<<<<<< HEAD
       return await getAntigravityUsage(
         accessToken,
         providerSpecificData,
         connection.projectId,
         connection.id
       );
+=======
+      return await getAntigravityUsage(accessToken);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     case "claude":
       return await getClaudeUsage(accessToken);
     case "codex":
@@ -49,8 +57,13 @@ export async function getUsageForProvider(connection) {
     case "qwen":
       return await getQwenUsage(accessToken, providerSpecificData);
     case "qoder":
+<<<<<<< HEAD
     case "kiro":
     case "amazon-q":
+=======
+      return await getIflowUsage(accessToken);
+    case "kiro":
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       return await getKiroUsage(accessToken);
     default:
       return { message: `Usage API not implemented for ${provider}` };
@@ -69,7 +82,16 @@ async function getGitHubUsage(accessToken, providerSpecificData) {
     }
 
     const response = await fetch("https://api.github.com/copilot_internal/user", {
+<<<<<<< HEAD
       headers: getGitHubCopilotInternalUserHeaders(`Bearer ${copilotToken}`),
+=======
+      headers: {
+        Authorization: `Bearer ${copilotToken}`,
+        Accept: "application/json",
+        "X-GitHub-Api-Version": GITHUB_CONFIG.apiVersion,
+        "User-Agent": GITHUB_CONFIG.userAgent,
+      },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     });
 
     if (!response.ok) {
@@ -163,6 +185,7 @@ async function getGeminiUsage(accessToken) {
 }
 
 /**
+<<<<<<< HEAD
  * Proactive credit balance probe for Antigravity.
  *
  * Fires a minimal streamGenerateContent request with GOOGLE_ONE_AI credits enabled
@@ -247,10 +270,28 @@ async function probeAntigravityCreditBalance(
   } catch {
     // Probe is best-effort — don't let it break the usage fetch
     return null;
+=======
+ * Antigravity Usage
+ */
+async function getAntigravityUsage(accessToken) {
+  try {
+    // Similar to Gemini, uses Google Cloud
+    return { message: "Antigravity connected. Usage tracked via Google Cloud Console." };
+  } catch (error) {
+    return { message: "Unable to fetch Antigravity usage." };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 }
 
 /**
+<<<<<<< HEAD
+=======
+ * Claude Usage (legacy fallback)
+ * Real Claude OAuth quota windows are fetched in @omniroute/open-sse/services/usage.ts.
+ */
+async function getClaudeUsage() {
+  try {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return {
       message:
         "Claude connected. Detailed quota windows are handled by the open-sse usage service.",
@@ -300,7 +341,11 @@ async function getQwenUsage(accessToken, providerSpecificData) {
 /**
  * Qoder Usage
  */
+<<<<<<< HEAD
 async function getQoderUsage(accessToken) {
+=======
+async function getIflowUsage(accessToken) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     // Qoder may have usage endpoint
     return { message: "Qoder connected. Usage tracked per request." };
@@ -320,7 +365,13 @@ async function getKiroUsage(accessToken: string) {
       method: "GET",
       headers: {
         Authorization: `Bearer ${accessToken}`,
+<<<<<<< HEAD
         ...getKiroServiceHeaders("application/json"),
+=======
+        "Content-Type": "application/json",
+        "User-Agent": "AWS-SDK-JS/3.0.0 kiro-ide/1.0.0",
+        "X-Amz-User-Agent": "aws-sdk-js/3.0.0 kiro-ide/1.0.0",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       },
     });
 

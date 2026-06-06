@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+<<<<<<< HEAD
 import { getAuditRequestContext, logAuditEvent } from "@/lib/compliance/index";
 import { validateClaudeCodeCompatibleProvider } from "@/lib/providers/validation";
 import {
@@ -14,6 +15,9 @@ import {
 =======
 import { validateClaudeCodeCompatibleProvider } from "@/lib/providers/validation";
 >>>>>>> Stashed changes
+=======
+import { validateClaudeCodeCompatibleProvider } from "@/lib/providers/validation";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { isCcCompatibleProviderEnabled } from "@/shared/utils/featureFlags";
 import { providerNodeValidateSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
@@ -32,6 +36,7 @@ function sanitizeClaudeCodeCompatibleBaseUrl(baseUrl: string) {
     .replace(/\/(?:v\d+\/)?messages(?:\?[^#]*)?$/i, "");
 }
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 function sanitizeAuditBaseUrl(baseUrl: string) {
   if (!baseUrl) return null;
@@ -47,6 +52,10 @@ function sanitizeAuditBaseUrl(baseUrl: string) {
 // POST /api/provider-nodes/validate - Validate API key against base URL
 export async function POST(request) {
   const auditContext = getAuditRequestContext(request);
+=======
+// POST /api/provider-nodes/validate - Validate API key against base URL
+export async function POST(request) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody;
   try {
     rawBody = await request.json();
@@ -101,9 +110,13 @@ export async function POST(request) {
       // Use /models endpoint for validation as many compatible providers support it (like OpenAI)
       const modelsUrl = `${normalizedBase}${modelsPath || "/models"}`;
 
+<<<<<<< HEAD
       const res = await safeOutboundFetch(modelsUrl, {
         ...SAFE_OUTBOUND_FETCH_PRESETS.validationRead,
         guard: getProviderOutboundGuard(),
+=======
+      const res = await fetch(modelsUrl, {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         method: "GET",
         headers: {
           "x-api-key": apiKey,
@@ -117,14 +130,19 @@ export async function POST(request) {
 
     // OpenAI Compatible Validation (Default)
     const modelsUrl = `${baseUrl.replace(/\/$/, "")}${modelsPath || "/models"}`;
+<<<<<<< HEAD
     const res = await safeOutboundFetch(modelsUrl, {
       ...SAFE_OUTBOUND_FETCH_PRESETS.validationRead,
       guard: getProviderOutboundGuard(),
+=======
+    const res = await fetch(modelsUrl, {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       headers: { Authorization: `Bearer ${apiKey}` },
     });
 
     return NextResponse.json({ valid: res.ok, error: res.ok ? null : "Invalid API key" });
   } catch (error) {
+<<<<<<< HEAD
     const status = getSafeOutboundFetchErrorStatus(error);
     if (status) {
       const message = error instanceof Error ? error.message : "Validation failed";
@@ -154,6 +172,8 @@ export async function POST(request) {
       }
       return NextResponse.json({ error: message }, { status });
     }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     console.log("Error validating provider node:", error);
     return NextResponse.json({ error: "Validation failed" }, { status: 500 });
   }

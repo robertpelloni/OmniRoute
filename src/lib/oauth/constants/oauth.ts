@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {
   ANTIGRAVITY_LOAD_CODE_ASSIST_API_CLIENT,
   ANTIGRAVITY_LOAD_CODE_ASSIST_USER_AGENT,
@@ -11,10 +12,13 @@ import {
 } from "@omniroute/open-sse/config/providerHeaderProfiles.ts";
 import { buildGitLabOAuthEndpoints, GITLAB_DUO_DEFAULT_BASE_URL } from "../gitlab";
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * OAuth Configuration Constants
  *
  * All credentials are read exclusively from environment variables.
+<<<<<<< HEAD
  * Default values match the public CLI client IDs from .env.example
  * (auto-populated by scripts/sync-env.mjs on install).
  *
@@ -22,11 +26,20 @@ import { buildGitLabOAuthEndpoints, GITLAB_DUO_DEFAULT_BASE_URL } from "../gitla
  * that rely on PKCE for security (RFC 8252), not on secret confidentiality.
  * Shared header/version fingerprints now come from the central provider
  * header profile module so OAuth, usage fetchers and executors stay aligned.
+=======
+ * Default values are provided via .env.example and auto-populated by
+ * scripts/sync-env.mjs on install. See .env.example for the built-in
+ * credentials used for localhost setups.
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  */
 
 // Claude OAuth Configuration (Authorization Code Flow with PKCE)
 export const CLAUDE_CONFIG = {
+<<<<<<< HEAD
   clientId: process.env.CLAUDE_OAUTH_CLIENT_ID || "9d1c250a-e61b-44d9-88ed-5944d1962f5e",
+=======
+  clientId: process.env.CLAUDE_OAUTH_CLIENT_ID || "",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   authorizeUrl: "https://claude.ai/oauth/authorize",
   tokenUrl: "https://console.anthropic.com/v1/oauth/token",
   redirectUri:
@@ -43,7 +56,11 @@ export const CLAUDE_CONFIG = {
 
 // Codex (OpenAI) OAuth Configuration (Authorization Code Flow with PKCE)
 export const CODEX_CONFIG = {
+<<<<<<< HEAD
   clientId: process.env.CODEX_OAUTH_CLIENT_ID || "app_EMoamEEZ73f0CkXaXp7hrann",
+=======
+  clientId: process.env.CODEX_OAUTH_CLIENT_ID || "",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   authorizeUrl: "https://auth.openai.com/oauth/authorize",
   tokenUrl: "https://auth.openai.com/oauth/token",
   scope: "openid profile email offline_access",
@@ -58,6 +75,7 @@ export const CODEX_CONFIG = {
 
 // Gemini (Google) OAuth Configuration (Standard OAuth2)
 export const GEMINI_CONFIG = {
+<<<<<<< HEAD
   clientId:
     process.env.GEMINI_CLI_OAUTH_CLIENT_ID ||
     process.env.GEMINI_OAUTH_CLIENT_ID ||
@@ -66,6 +84,11 @@ export const GEMINI_CONFIG = {
     process.env.GEMINI_CLI_OAUTH_CLIENT_SECRET ||
     process.env.GEMINI_OAUTH_CLIENT_SECRET ||
     "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",
+=======
+  clientId: process.env.GEMINI_CLI_OAUTH_CLIENT_ID || process.env.GEMINI_OAUTH_CLIENT_ID || "",
+  clientSecret:
+    process.env.GEMINI_CLI_OAUTH_CLIENT_SECRET || process.env.GEMINI_OAUTH_CLIENT_SECRET || "",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   authorizeUrl: "https://accounts.google.com/o/oauth2/v2/auth",
   tokenUrl: "https://oauth2.googleapis.com/token",
   userInfoUrl: "https://www.googleapis.com/oauth2/v1/userinfo",
@@ -78,7 +101,11 @@ export const GEMINI_CONFIG = {
 
 // Qwen OAuth Configuration (Device Code Flow with PKCE)
 export const QWEN_CONFIG = {
+<<<<<<< HEAD
   clientId: process.env.QWEN_OAUTH_CLIENT_ID || "f0304373b74a44d2b584a3fb70ca9e56",
+=======
+  clientId: process.env.QWEN_OAUTH_CLIENT_ID || "",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   deviceCodeUrl: "https://chat.qwen.ai/api/v1/oauth2/device/code",
   tokenUrl: "https://chat.qwen.ai/api/v1/oauth2/token",
   scope: "openid profile email model.completion",
@@ -86,6 +113,28 @@ export const QWEN_CONFIG = {
 };
 
 // Qoder OAuth Configuration (Authorization Code)
+<<<<<<< HEAD
+=======
+const QODER_OAUTH_AUTHORIZE_URL = process.env.QODER_OAUTH_AUTHORIZE_URL || "";
+const QODER_OAUTH_TOKEN_URL = process.env.QODER_OAUTH_TOKEN_URL || "";
+const QODER_OAUTH_USERINFO_URL = process.env.QODER_OAUTH_USERINFO_URL || "";
+const QODER_OAUTH_CLIENT_ID = process.env.QODER_OAUTH_CLIENT_ID || "";
+const QODER_OAUTH_CLIENT_SECRET = process.env.QODER_OAUTH_CLIENT_SECRET || "";
+const QODER_OAUTH_ENABLED =
+  !!QODER_OAUTH_AUTHORIZE_URL &&
+  !!QODER_OAUTH_TOKEN_URL &&
+  !!QODER_OAUTH_USERINFO_URL &&
+  !!QODER_OAUTH_CLIENT_ID &&
+  !!QODER_OAUTH_CLIENT_SECRET;
+
+export const QODER_CONFIG = {
+  enabled: QODER_OAUTH_ENABLED,
+  clientId: QODER_OAUTH_CLIENT_ID,
+  clientSecret: QODER_OAUTH_CLIENT_SECRET,
+  authorizeUrl: QODER_OAUTH_AUTHORIZE_URL,
+  tokenUrl: QODER_OAUTH_TOKEN_URL,
+  userInfoUrl: QODER_OAUTH_USERINFO_URL,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   extraParams: {
     loginMethod: "phone",
     type: "phone",
@@ -94,7 +143,11 @@ export const QWEN_CONFIG = {
 
 // Kimi Coding OAuth Configuration (Device Code Flow)
 export const KIMI_CODING_CONFIG = {
+<<<<<<< HEAD
   clientId: process.env.KIMI_CODING_OAUTH_CLIENT_ID || "17e5f671-d194-4dfb-9706-5516cb48c098",
+=======
+  clientId: process.env.KIMI_CODING_OAUTH_CLIENT_ID || "",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   deviceCodeUrl: "https://auth.kimi.com/api/oauth/device_authorization",
   tokenUrl: "https://auth.kimi.com/api/oauth/token",
 };
@@ -117,11 +170,16 @@ export const CLINE_CONFIG = {
 
 // Antigravity OAuth Configuration (Standard OAuth2 with Google)
 export const ANTIGRAVITY_CONFIG = {
+<<<<<<< HEAD
   clientId:
     process.env.ANTIGRAVITY_OAUTH_CLIENT_ID ||
     "1071006060591-tmhssin2h21lcre235vtolojh4g403ep.apps.googleusercontent.com",
   clientSecret:
     process.env.ANTIGRAVITY_OAUTH_CLIENT_SECRET || "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",
+=======
+  clientId: process.env.ANTIGRAVITY_OAUTH_CLIENT_ID || "",
+  clientSecret: process.env.ANTIGRAVITY_OAUTH_CLIENT_SECRET || "",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   authorizeUrl: "https://accounts.google.com/o/oauth2/v2/auth",
   tokenUrl: "https://oauth2.googleapis.com/token",
   userInfoUrl: "https://www.googleapis.com/oauth2/v1/userinfo",
@@ -137,6 +195,7 @@ export const ANTIGRAVITY_CONFIG = {
   apiVersion: "v1internal",
   loadCodeAssistEndpoint: "https://cloudcode-pa.googleapis.com/v1internal:loadCodeAssist",
   onboardUserEndpoint: "https://cloudcode-pa.googleapis.com/v1internal:onboardUser",
+<<<<<<< HEAD
   fetchAvailableModelsEndpoint:
     "https://cloudcode-pa.googleapis.com/v1internal:fetchAvailableModels",
   loadCodeAssistUserAgent: ANTIGRAVITY_LOAD_CODE_ASSIST_USER_AGENT,
@@ -148,6 +207,16 @@ export const ANTIGRAVITY_CONFIG = {
 // Re-uses CODEX_CONFIG.clientId to avoid duplication — same provider, different originator.
 export const OPENAI_CONFIG = {
   clientId: CODEX_CONFIG.clientId,
+=======
+  loadCodeAssistUserAgent: "google-api-nodejs-client/9.15.1",
+  loadCodeAssistApiClient: "google-cloud-sdk vscode_cloudshelleditor/0.1",
+  loadCodeAssistClientMetadata: `{"ideType":"IDE_UNSPECIFIED","platform":"PLATFORM_UNSPECIFIED","pluginType":"GEMINI"}`,
+};
+
+// OpenAI OAuth Configuration (Authorization Code Flow with PKCE)
+export const OPENAI_CONFIG = {
+  clientId: process.env.CODEX_OAUTH_CLIENT_ID || "",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   authorizeUrl: "https://auth.openai.com/oauth/authorize",
   tokenUrl: "https://auth.openai.com/oauth/token",
   scope: "openid profile email offline_access",
@@ -160,11 +229,16 @@ export const OPENAI_CONFIG = {
 
 // GitHub Copilot OAuth Configuration (Device Code Flow)
 export const GITHUB_CONFIG = {
+<<<<<<< HEAD
   clientId: process.env.GITHUB_OAUTH_CLIENT_ID || "Iv1.b507a08c87ecfe98",
+=======
+  clientId: process.env.GITHUB_OAUTH_CLIENT_ID || "",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   deviceCodeUrl: "https://github.com/login/device/code",
   tokenUrl: "https://github.com/login/oauth/access_token",
   userInfoUrl: "https://api.github.com/user",
   scopes: "read:user",
+<<<<<<< HEAD
   apiVersion: GITHUB_COPILOT_API_VERSION,
   copilotTokenUrl: "https://api.github.com/copilot_internal/v2/token",
   userAgent: GITHUB_COPILOT_CHAT_USER_AGENT,
@@ -185,6 +259,13 @@ export const GITLAB_DUO_CONFIG = {
   directAccessUrl: GITLAB_DUO_ENDPOINTS.directAccessUrl,
   scope: "ai_features read_user",
   codeChallengeMethod: "S256",
+=======
+  apiVersion: "2022-11-28", // Updated to supported version
+  copilotTokenUrl: "https://api.github.com/copilot_internal/v2/token",
+  userAgent: "GitHubCopilotChat/0.26.7",
+  editorVersion: "vscode/1.85.0",
+  editorPluginVersion: "copilot-chat/0.26.7",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 };
 
 // Kiro OAuth Configuration
@@ -229,7 +310,11 @@ export const CURSOR_CONFIG = {
   agentEndpoint: "https://agent.api5.cursor.sh", // Privacy mode
   agentNonPrivacyEndpoint: "https://agentn.api5.cursor.sh", // Non-privacy mode
   // Client metadata
+<<<<<<< HEAD
   clientVersion: "3.2.14",
+=======
+  clientVersion: "0.48.6",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   clientType: "ide",
   // Token storage locations (for user reference)
   tokenStoragePaths: {
@@ -258,9 +343,13 @@ export const PROVIDERS = {
   KIMI_CODING: "kimi-coding",
   OPENAI: "openai",
   GITHUB: "github",
+<<<<<<< HEAD
   GITLAB_DUO: "gitlab-duo",
   KIRO: "kiro",
   AMAZON_Q: "amazon-q",
+=======
+  KIRO: "kiro",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   CURSOR: "cursor",
   KILOCODE: "kilocode",
   CLINE: "cline",

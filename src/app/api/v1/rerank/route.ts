@@ -1,5 +1,16 @@
+<<<<<<< HEAD
 import { handleRerank } from "@omniroute/open-sse/handlers/rerank.ts";
 import { getProviderCredentials, clearRecoveredProviderState } from "@/sse/services/auth";
+=======
+import { CORS_ORIGIN } from "@/shared/utils/cors";
+import { handleRerank } from "@omniroute/open-sse/handlers/rerank.ts";
+import {
+  getProviderCredentials,
+  clearRecoveredProviderState,
+  extractApiKey,
+  isValidApiKey,
+} from "@/sse/services/auth";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { parseRerankModel, getRerankProvider } from "@omniroute/open-sse/config/rerankRegistry.ts";
 import { errorResponse } from "@omniroute/open-sse/utils/error.ts";
 import { HTTP_STATUS } from "@omniroute/open-sse/config/constants.ts";
@@ -14,6 +25,10 @@ import { getProviderNodes } from "@/lib/localDb";
 export async function OPTIONS() {
   return new Response(null, {
     headers: {
+<<<<<<< HEAD
+=======
+      "Access-Control-Allow-Origin": CORS_ORIGIN,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       "Access-Control-Allow-Methods": "POST, OPTIONS",
       "Access-Control-Allow-Headers": "*",
     },
@@ -45,6 +60,17 @@ function buildDynamicRerankProvider(node: any) {
  * and local provider_nodes (oMLX, vLLM, etc.) via dynamic routing.
  */
 export async function POST(request) {
+<<<<<<< HEAD
+=======
+  // Optional API key validation
+  if (process.env.REQUIRE_API_KEY === "true") {
+    const apiKey = extractApiKey(request);
+    if (!apiKey) return errorResponse(HTTP_STATUS.UNAUTHORIZED, "Missing API key");
+    const valid = await isValidApiKey(apiKey);
+    if (!valid) return errorResponse(HTTP_STATUS.UNAUTHORIZED, "Invalid API key");
+  }
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody;
   try {
     rawBody = await request.json();
@@ -159,7 +185,11 @@ export async function POST(request) {
 
         const data = await res.json();
         return Response.json(data, {
+<<<<<<< HEAD
           headers: {},
+=======
+          headers: { "Access-Control-Allow-Origin": CORS_ORIGIN },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         });
       } catch (err: any) {
         return errorResponse(500, `Rerank request failed: ${err.message}`);

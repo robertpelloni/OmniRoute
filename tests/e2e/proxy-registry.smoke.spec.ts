@@ -1,5 +1,8 @@
 import { test, expect } from "@playwright/test";
+<<<<<<< HEAD
 import { gotoDashboardRoute } from "./helpers/dashboardAuth";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 type ProxyStub = {
   id: string;
@@ -172,7 +175,15 @@ test.describe("Proxy Registry smoke flow", () => {
       });
     });
 
+<<<<<<< HEAD
     await gotoDashboardRoute(page, "/dashboard/system/proxy");
+=======
+    await page.goto("/dashboard/settings?tab=advanced");
+    await page.waitForLoadState("networkidle");
+
+    const redirectedToLogin = page.url().includes("/login");
+    test.skip(redirectedToLogin, "Authentication enabled without a login fixture.");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     await expect(page.getByRole("heading", { name: "Proxy Registry" })).toBeVisible();
 

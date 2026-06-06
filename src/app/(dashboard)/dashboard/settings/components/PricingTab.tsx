@@ -1,7 +1,11 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
+<<<<<<< HEAD
 import { Card, Button } from "@/shared/components";
+=======
+import { Card } from "@/shared/components";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { useTranslations } from "next-intl";
 
 const PRICING_FIELDS = ["input", "output", "cached", "reasoning", "cache_creation"] as const;
@@ -13,6 +17,7 @@ const FIELD_LABEL_KEYS: Record<(typeof PRICING_FIELDS)[number], string> = {
   cache_creation: "cacheCreation",
 };
 
+<<<<<<< HEAD
 type PricingField = (typeof PRICING_FIELDS)[number];
 type PricingSource = "default" | "litellm" | "modelsDev" | "user";
 
@@ -150,12 +155,77 @@ export default function PricingTab() {
     );
     const overriddenCount = Object.values(pricingSources).reduce(
       (sum, models) => sum + Object.values(models).filter((source) => source === "user").length,
+=======
+export default function PricingTab() {
+  const [catalog, setCatalog] = useState({});
+  const [pricingData, setPricingData] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState("");
+  const [selectedProvider, setSelectedProvider] = useState(null);
+  const [expandedProviders, setExpandedProviders] = useState(new Set());
+  const [searchQuery, setSearchQuery] = useState("");
+  const [editedProviders, setEditedProviders] = useState(new Set());
+  const t = useTranslations("settings");
+
+  // Load catalog + pricing
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    setLoading(true);
+    try {
+      const [catalogRes, pricingRes] = await Promise.all([
+        fetch("/api/pricing/models"),
+        fetch("/api/pricing"),
+      ]);
+      if (catalogRes.ok) setCatalog(await catalogRes.json());
+      if (pricingRes.ok) setPricingData(await pricingRes.json());
+    } catch (error) {
+      console.error("Failed to load pricing data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // All providers sorted by model count (desc)
+  const allProviders = useMemo(() => {
+    const providers = Object.entries(catalog)
+      .map(([alias, info]: [string, any]) => ({
+        alias,
+        ...info,
+        pricedModels: pricingData[alias] ? Object.keys(pricingData[alias]).length : 0,
+      }))
+      .sort((a, b) => b.modelCount - a.modelCount);
+    return providers;
+  }, [catalog, pricingData]);
+
+  // Filter providers by search
+  const filteredProviders = useMemo(() => {
+    if (!searchQuery.trim()) return allProviders;
+    const q = searchQuery.toLowerCase();
+    return allProviders.filter(
+      (p) =>
+        p.alias.toLowerCase().includes(q) ||
+        p.id.toLowerCase().includes(q) ||
+        p.models.some((m) => m.id.toLowerCase().includes(q) || m.name.toLowerCase().includes(q))
+    );
+  }, [allProviders, searchQuery]);
+
+  // Stats
+  const stats = useMemo(() => {
+    const totalModels = allProviders.reduce((s, p) => s + p.modelCount, 0);
+    const pricedCount = Object.values(pricingData).reduce(
+      (s: number, models: any) => s + Object.keys(models).length,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       0
     );
     return {
       providers: allProviders.length,
       totalModels,
       pricedCount,
+<<<<<<< HEAD
       overriddenCount,
     };
   }, [allProviders, pricingData, pricingSources]);
@@ -204,10 +274,21 @@ export default function PricingTab() {
       } else {
         next.add(alias);
       }
+=======
+    };
+  }, [allProviders, pricingData]);
+
+  const toggleProvider = useCallback((alias) => {
+    setExpandedProviders((prev) => {
+      const next = new Set(prev);
+      if (next.has(alias)) next.delete(alias);
+      else next.add(alias);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       return next;
     });
   }, []);
 
+<<<<<<< HEAD
   const handlePricingChange = useCallback(
     (provider: string, model: string, field: PricingField, value: string) => {
       const numValue = Number.parseFloat(value);
@@ -263,10 +344,54 @@ export default function PricingTab() {
             reason: error?.message || t("unknownError"),
           })
         );
+=======
+  const handlePricingChange = useCallback((provider, model, field, value) => {
+    const numValue = parseFloat(value);
+    if (isNaN(numValue) || numValue < 0) return;
+
+    setPricingData((prev) => {
+      const next = { ...prev };
+      if (!next[provider]) next[provider] = {};
+      if (!next[provider][model])
+        next[provider][model] = { input: 0, output: 0, cached: 0, reasoning: 0, cache_creation: 0 };
+      next[provider][model] = { ...next[provider][model], [field]: numValue };
+      return next;
+    });
+    setEditedProviders((prev) => new Set(prev).add(provider));
+  }, []);
+
+  const saveProvider = useCallback(
+    async (providerAlias) => {
+      setSaving(true);
+      setSaveStatus("");
+      try {
+        const providerPricing = pricingData[providerAlias] || {};
+        const response = await fetch("/api/pricing", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ [providerAlias]: providerPricing }),
+        });
+
+        if (response.ok) {
+          setSaveStatus(`✅ ${providerAlias.toUpperCase()} ${t("saved")}`);
+          setEditedProviders((prev) => {
+            const next = new Set(prev);
+            next.delete(providerAlias);
+            return next;
+          });
+          setTimeout(() => setSaveStatus(""), 3000);
+        } else {
+          const err = await response.json();
+          setSaveStatus(`❌ ${t("errorOccurred")}: ${err.error}`);
+        }
+      } catch (error) {
+        setSaveStatus(`❌ ${t("saveFailed")}: ${error.message}`);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       } finally {
         setSaving(false);
       }
     },
+<<<<<<< HEAD
     [loadData, pricingData, showStatus, t]
   );
 
@@ -274,10 +399,19 @@ export default function PricingTab() {
     async (providerAlias: string) => {
       if (!confirm(t("resetPricingConfirm", { provider: providerAlias.toUpperCase() }))) return;
 
+=======
+    [pricingData, t]
+  );
+
+  const resetProvider = useCallback(
+    async (providerAlias) => {
+      if (!confirm(t("resetPricingConfirm", { provider: providerAlias.toUpperCase() }))) return;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       try {
         const response = await fetch(`/api/pricing?provider=${providerAlias}`, {
           method: "DELETE",
         });
+<<<<<<< HEAD
 
         if (!response.ok) {
           const errorPayload = (await response.json().catch(() => ({}))) as { error?: string };
@@ -364,6 +498,38 @@ export default function PricingTab() {
     setSelectedProvider((previous) => (previous === alias ? null : alias));
   }, []);
 
+=======
+        if (response.ok) {
+          const updated = await response.json();
+          setPricingData(updated);
+          setSaveStatus(`🔄 ${providerAlias.toUpperCase()} ${t("resetDefaults")}`);
+          setEditedProviders((prev) => {
+            const next = new Set(prev);
+            next.delete(providerAlias);
+            return next;
+          });
+          setTimeout(() => setSaveStatus(""), 3000);
+        }
+      } catch (error) {
+        setSaveStatus(`❌ ${t("resetFailed")}: ${error.message}`);
+      }
+    },
+    [t]
+  );
+
+  const selectProviderFilter = useCallback((alias) => {
+    setSelectedProvider((prev) => (prev === alias ? null : alias));
+  }, []);
+
+  // Which providers to display in the main area
+  const displayProviders = useMemo(() => {
+    if (selectedProvider) {
+      return filteredProviders.filter((p) => p.alias === selectedProvider);
+    }
+    return filteredProviders;
+  }, [filteredProviders, selectedProvider]);
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (loading) {
     return (
       <div className="flex items-center justify-center py-16">
@@ -374,12 +540,17 @@ export default function PricingTab() {
 
   return (
     <div className="flex flex-col gap-4">
+<<<<<<< HEAD
+=======
+      {/* Header + Stats */}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       <div className="flex items-start justify-between flex-wrap gap-4">
         <div>
           <h2 className="text-xl font-bold">{t("modelPricing")}</h2>
           <p className="text-text-muted text-sm mt-1">{t("modelPricingDesc")}</p>
         </div>
         <div className="flex gap-3 text-sm">
+<<<<<<< HEAD
           <StatPill label={t("providers")} value={stats.providers} />
           <StatPill label={t("registry")} value={stats.totalModels} />
           <StatPill label={t("priced")} value={stats.pricedCount} accent="text-success" />
@@ -437,6 +608,31 @@ export default function PricingTab() {
         </div>
       )}
 
+=======
+          <div className="bg-bg-subtle rounded-lg px-3 py-2 text-center">
+            <div className="text-text-muted text-xs font-semibold">{t("providers")}</div>
+            <div className="text-lg font-bold">{stats.providers}</div>
+          </div>
+          <div className="bg-bg-subtle rounded-lg px-3 py-2 text-center">
+            <div className="text-text-muted text-xs font-semibold">{t("registry")}</div>
+            <div className="text-lg font-bold">{stats.totalModels}</div>
+          </div>
+          <div className="bg-bg-subtle rounded-lg px-3 py-2 text-center">
+            <div className="text-text-muted text-xs font-semibold">{t("priced")}</div>
+            <div className="text-lg font-bold text-success">{stats.pricedCount as number}</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Save Status */}
+      {saveStatus && (
+        <div className="px-3 py-2 rounded-lg bg-bg-subtle border border-border text-sm">
+          {saveStatus}
+        </div>
+      )}
+
+      {/* Search + Provider Filter */}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       <div className="flex gap-3 items-center flex-wrap">
         <div className="relative flex-1 min-w-[200px]">
           <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-lg">
@@ -446,7 +642,11 @@ export default function PricingTab() {
             type="text"
             placeholder={t("searchProvidersModels")}
             value={searchQuery}
+<<<<<<< HEAD
             onChange={(event) => setSearchQuery(event.target.value)}
+=======
+            onChange={(e) => setSearchQuery(e.target.value)}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             className="w-full pl-10 pr-3 py-2 bg-bg-base border border-border rounded-lg focus:outline-none focus:border-primary text-sm"
           />
         </div>
@@ -456,11 +656,16 @@ export default function PricingTab() {
             className="px-3 py-2 text-xs bg-primary/10 text-primary border border-primary/20 rounded-lg hover:bg-primary/20 transition-colors flex items-center gap-1"
           >
             <span className="material-symbols-outlined text-sm">close</span>
+<<<<<<< HEAD
             {selectedProvider.toUpperCase()} - {t("showAll")}
+=======
+            {selectedProvider.toUpperCase()} — {t("showAll")}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           </button>
         )}
       </div>
 
+<<<<<<< HEAD
       <div className="flex flex-wrap gap-1.5">
         {allProviders.map((provider) => (
           <button
@@ -470,33 +675,62 @@ export default function PricingTab() {
               selectedProvider === provider.alias
                 ? "bg-primary text-white shadow-sm"
                 : editedProviders.has(provider.alias)
+=======
+      {/* Provider Pills (quick filter) */}
+      <div className="flex flex-wrap gap-1.5">
+        {allProviders.map((p) => (
+          <button
+            key={p.alias}
+            onClick={() => selectProviderFilter(p.alias)}
+            className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
+              selectedProvider === p.alias
+                ? "bg-primary text-white shadow-sm"
+                : editedProviders.has(p.alias)
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   ? "bg-yellow-500/15 text-yellow-400 border border-yellow-500/30"
                   : "bg-bg-subtle text-text-muted hover:bg-bg-hover border border-transparent"
             }`}
           >
+<<<<<<< HEAD
             {provider.alias.toUpperCase()}{" "}
             <span className="opacity-60">({provider.modelCount})</span>
+=======
+            {p.alias.toUpperCase()} <span className="opacity-60">({p.modelCount})</span>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           </button>
         ))}
       </div>
 
+<<<<<<< HEAD
+=======
+      {/* Provider Sections */}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       <div className="flex flex-col gap-2">
         {displayProviders.map((provider) => (
           <ProviderSection
             key={provider.alias}
             provider={provider}
             pricingData={pricingData[provider.alias] || {}}
+<<<<<<< HEAD
             sourceMap={pricingSources[provider.alias] || {}}
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             isExpanded={expandedProviders.has(provider.alias)}
             isEdited={editedProviders.has(provider.alias)}
             onToggle={() => toggleProvider(provider.alias)}
             onPricingChange={(model, field, value) =>
               handlePricingChange(provider.alias, model, field, value)
             }
+<<<<<<< HEAD
             onSave={() => void saveProvider(provider.alias)}
             onReset={() => void resetProvider(provider.alias)}
             saving={saving}
             getSourceLabel={getSourceLabel}
+=======
+            onSave={() => saveProvider(provider.alias)}
+            onReset={() => resetProvider(provider.alias)}
+            saving={saving}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           />
         ))}
 
@@ -505,6 +739,10 @@ export default function PricingTab() {
         )}
       </div>
 
+<<<<<<< HEAD
+=======
+      {/* Info Box */}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       <Card className="p-4 mt-2">
         <h3 className="text-sm font-semibold mb-2">
           <span className="material-symbols-outlined text-sm align-middle mr-1">info</span>
@@ -522,6 +760,7 @@ export default function PricingTab() {
   );
 }
 
+<<<<<<< HEAD
 function StatPill({ label, value, accent }: { label: string; value: number; accent?: string }) {
   return (
     <div className="bg-bg-subtle rounded-lg px-3 py-2 text-center">
@@ -539,11 +778,17 @@ function SyncMetric({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
+=======
+// ── Provider Section (collapsible) ──────────────────────────────────────
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 function ProviderSection({
   provider,
   pricingData,
+<<<<<<< HEAD
   sourceMap,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   isExpanded,
   isEdited,
   onToggle,
@@ -551,6 +796,7 @@ function ProviderSection({
   onSave,
   onReset,
   saving,
+<<<<<<< HEAD
   getSourceLabel,
 }: {
   provider: PricingCatalogProvider;
@@ -564,10 +810,13 @@ function ProviderSection({
   onReset: () => void;
   saving: boolean;
   getSourceLabel: (source: PricingSource) => string;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }) {
   const t = useTranslations("settings");
   const tGlobal = useTranslations();
   const pricedCount = Object.keys(pricingData).length;
+<<<<<<< HEAD
   const sourceCounts = Object.values(sourceMap).reduce(
     (counts, source) => {
       counts[source] = (counts[source] || 0) + 1;
@@ -575,6 +824,8 @@ function ProviderSection({
     },
     { default: 0, litellm: 0, modelsDev: 0, user: 0 } as Record<PricingSource, number>
   );
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const authBadge =
     provider.authType === "oauth"
       ? tGlobal("providers.oauthLabel")
@@ -588,11 +839,19 @@ function ProviderSection({
         isEdited ? "border-yellow-500/40 bg-yellow-500/5" : "border-border"
       }`}
     >
+<<<<<<< HEAD
+=======
+      {/* Header (click to expand) */}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       <button
         onClick={onToggle}
         className="w-full flex items-center justify-between px-4 py-3 hover:bg-bg-hover/50 transition-colors text-left"
       >
+<<<<<<< HEAD
         <div className="flex items-center gap-3 min-w-0">
+=======
+        <div className="flex items-center gap-3">
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           <span
             className={`material-symbols-outlined text-lg transition-transform ${
               isExpanded ? "rotate-90" : ""
@@ -600,7 +859,11 @@ function ProviderSection({
           >
             chevron_right
           </span>
+<<<<<<< HEAD
           <div className="min-w-0">
+=======
+          <div>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             <span className="font-semibold text-sm">
               {provider.id.charAt(0).toUpperCase() + provider.id.slice(1)}
             </span>
@@ -614,6 +877,7 @@ function ProviderSection({
           </span>
         </div>
         <div className="flex items-center gap-3">
+<<<<<<< HEAD
           <div className="hidden xl:flex items-center gap-1.5">
             {sourceCounts.user > 0 && (
               <span className={`px-1.5 py-0.5 rounded text-[10px] ${getSourceTone("user")}`}>
@@ -631,6 +895,8 @@ function ProviderSection({
               </span>
             )}
           </div>
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           {isEdited && <span className="text-yellow-500 text-xs font-medium">{t("unsaved")}</span>}
           <span className="text-text-muted text-xs">
             {pricedCount}/{provider.modelCount} {t("withPricing")}
@@ -650,16 +916,28 @@ function ProviderSection({
         </div>
       </button>
 
+<<<<<<< HEAD
       {isExpanded && (
         <div className="border-t border-border">
+=======
+      {/* Expanded: models table */}
+      {isExpanded && (
+        <div className="border-t border-border">
+          {/* Actions bar */}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           <div className="flex items-center justify-between px-4 py-2 bg-bg-subtle/50">
             <span className="text-xs text-text-muted">
               {provider.modelCount} {t("models")} • {pricedCount} {t("withPricing")}
             </span>
             <div className="flex items-center gap-2">
               <button
+<<<<<<< HEAD
                 onClick={(event) => {
                   event.stopPropagation();
+=======
+                onClick={(e) => {
+                  e.stopPropagation();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   onReset();
                 }}
                 className="px-2.5 py-1 text-[11px] text-red-400 hover:bg-red-500/10 rounded border border-red-500/20 transition-colors"
@@ -667,8 +945,13 @@ function ProviderSection({
                 {t("resetDefaults")}
               </button>
               <button
+<<<<<<< HEAD
                 onClick={(event) => {
                   event.stopPropagation();
+=======
+                onClick={(e) => {
+                  e.stopPropagation();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   onSave();
                 }}
                 disabled={saving || !isEdited}
@@ -679,6 +962,10 @@ function ProviderSection({
             </div>
           </div>
 
+<<<<<<< HEAD
+=======
+          {/* Table */}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="text-[11px] text-text-muted uppercase bg-bg-subtle/30">
@@ -697,8 +984,11 @@ function ProviderSection({
                     key={model.id}
                     model={model}
                     pricing={pricingData[model.id]}
+<<<<<<< HEAD
                     source={sourceMap[model.id] || "default"}
                     getSourceLabel={getSourceLabel}
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     onPricingChange={(field, value) => onPricingChange(model.id, field, value)}
                   />
                 ))}
@@ -711,6 +1001,7 @@ function ProviderSection({
   );
 }
 
+<<<<<<< HEAD
 function ModelRow({
   model,
   pricing,
@@ -726,6 +1017,13 @@ function ModelRow({
 }) {
   const t = useTranslations("settings");
   const hasPricing = Boolean(pricing && Object.values(pricing).some((value) => Number(value) > 0));
+=======
+// ── Model Row ────────────────────────────────────────────────────────────
+
+function ModelRow({ model, pricing, onPricingChange }) {
+  const t = useTranslations("settings");
+  const hasPricing = pricing && Object.values(pricing).some((v: any) => v > 0);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   return (
     <tr className="hover:bg-bg-hover/30 group">
@@ -740,9 +1038,12 @@ function ModelRow({
               {t("custom")}
             </span>
           )}
+<<<<<<< HEAD
           <span className={`px-1.5 py-0.5 rounded text-[9px] ${getSourceTone(source)}`}>
             {getSourceLabel(source)}
           </span>
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           <span className="text-text-muted text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">
             {model.id}
           </span>
@@ -755,7 +1056,11 @@ function ModelRow({
             step="0.01"
             min="0"
             value={pricing?.[field] || 0}
+<<<<<<< HEAD
             onChange={(event) => onPricingChange(field, event.target.value)}
+=======
+            onChange={(e) => onPricingChange(field, e.target.value)}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             className="w-full px-2 py-1 text-right text-xs bg-transparent border border-transparent hover:border-border focus:border-primary focus:bg-bg-base rounded transition-colors outline-none tabular-nums"
           />
         </td>

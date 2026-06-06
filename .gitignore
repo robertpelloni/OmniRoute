@@ -68,8 +68,11 @@ antigravity-manager-analysis/
 .sisyphus/
 .plans/
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 # docs (allow specific tracked files)
 docs/*
 !docs/ARCHITECTURE.md
@@ -101,6 +104,7 @@ docs/*
 !docs/MCP-SERVER.md
 !docs/CLI-TOOLS.md
 !docs/COVERAGE_PLAN.md
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
 
@@ -108,6 +112,10 @@ docs/*
 
 
 >>>>>>> Stashed changes
+=======
+
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 # open-sse tests
 open-sse/test/*
 
@@ -119,7 +127,10 @@ test-results/
 playwright-report/
 blob-report/
 cloud/
+<<<<<<< HEAD
 .tmp/
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 # Security Analysis (standalone project with own git)
 security-analysis/
@@ -139,7 +150,12 @@ app.__qa_backup/
 # npm publish still includes it via package.json "files" field
 /app/
 
+<<<<<<< HEAD
 # Electron
+=======
+# Electron (subproject dependency lock and build artifacts)
+electron/package-lock.json
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 electron/dist-electron/
 electron/node_modules/
 icon.iconset/
@@ -165,8 +181,11 @@ vscode-extension/
 typescript
 
 # Gemini Antigravity agent data
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 .gemini/
 
 # Superpowers plans/specs (internal tooling, not project code)
@@ -174,6 +193,7 @@ docs/superpowers/
 
 # GitNexus local index
 .gitnexus
+<<<<<<< HEAD
 .worktrees
 bin/omniroute.mjs
 
@@ -190,3 +210,5 @@ http-client.private.env.json
 =======
 .gemini/
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

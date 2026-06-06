@@ -1,14 +1,23 @@
 import path from "path";
 import fs from "fs";
+<<<<<<< HEAD
 import { resolveMitmDataDir } from "../dataDir.ts";
+=======
+import { resolveDataDir } from "@/lib/dataPaths";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const TARGET_HOST = "daily-cloudcode-pa.googleapis.com";
 
 /**
  * Generate self-signed SSL certificate using selfsigned (pure JS, no openssl needed)
  */
+<<<<<<< HEAD
 export async function generateCert(): Promise<{ key: string; cert: string }> {
   const certDir = path.join(resolveMitmDataDir(), "mitm");
+=======
+export async function generateCert() {
+  const certDir = path.join(resolveDataDir(), "mitm");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const keyPath = path.join(certDir, "server.key");
   const certPath = path.join(certDir, "server.crt");
 

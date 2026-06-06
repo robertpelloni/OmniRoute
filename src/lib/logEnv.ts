@@ -5,10 +5,13 @@ const DEFAULT_CALL_LOG_RETENTION_DAYS = 7;
 const DEFAULT_APP_LOG_MAX_SIZE = 50 * 1024 * 1024;
 const DEFAULT_APP_LOG_MAX_FILES = 20;
 const DEFAULT_CALL_LOG_MAX_ENTRIES = 10000;
+<<<<<<< HEAD
 const DEFAULT_CALL_LOGS_TABLE_MAX_ROWS = 100000;
 const DEFAULT_CALL_LOG_PIPELINE_MAX_SIZE_KB = 512;
 const DEFAULT_PROXY_LOGS_TABLE_MAX_ROWS = 100000;
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 const DEFAULT_APP_LOG_PATH = path.join(process.cwd(), "logs", "application", "app.log");
 
 function parsePositiveInt(value: string | undefined, fallback: number): number {
@@ -17,6 +20,7 @@ function parsePositiveInt(value: string | undefined, fallback: number): number {
   return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
 }
 
+<<<<<<< HEAD
 function parseBoolean(value: string | undefined, fallback: boolean): boolean {
   if (!value) return fallback;
   const normalized = value.trim().toLowerCase();
@@ -26,6 +30,8 @@ function parseBoolean(value: string | undefined, fallback: boolean): boolean {
 }
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export function parseFileSize(raw: string | undefined): number {
   if (!raw) return DEFAULT_APP_LOG_MAX_SIZE;
   const match = raw.match(/^(\d+)\s*(k|m|g|kb|mb|gb)?$/i);
@@ -75,6 +81,7 @@ export function getCallLogMaxEntries(): number {
   return parsePositiveInt(process.env.CALL_LOG_MAX_ENTRIES, DEFAULT_CALL_LOG_MAX_ENTRIES);
 }
 
+<<<<<<< HEAD
 export function getCallLogsTableMaxRows(): number {
   return parsePositiveInt(process.env.CALL_LOGS_TABLE_MAX_ROWS, DEFAULT_CALL_LOGS_TABLE_MAX_ROWS);
 }
@@ -97,6 +104,8 @@ export function getProxyLogsTableMaxRows(): number {
 }
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export function getAppLogLevel(defaultLevel: string): string {
   return process.env.APP_LOG_LEVEL || defaultLevel;
 }

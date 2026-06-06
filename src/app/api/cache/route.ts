@@ -2,18 +2,25 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   getCacheStats,
   clearCache,
+<<<<<<< HEAD
 =======
   cleanExpiredEntries,
 >>>>>>> Stashed changes
+=======
+  cleanExpiredEntries,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   invalidateByModel,
   invalidateBySignature,
   invalidateStale,
 } from "@/lib/semanticCache";
 import { getIdempotencyStats } from "@/lib/idempotencyLayer";
 import { getCacheMetrics, getCacheTrend } from "@/lib/db/settings";
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 import { getCachedSettings } from "@/lib/localDb";
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { isAuthenticated } from "@/shared/utils/apiAuth";
 
 function errorMessage(error: unknown): string {
@@ -34,17 +41,23 @@ export async function GET(req: NextRequest) {
     const idempotencyStats = await getIdempotencyStats();
     const promptCacheMetrics = await getCacheMetrics();
     const trend = await getCacheTrend(trendHours);
+<<<<<<< HEAD
     const settings = await getCachedSettings().catch(() => ({}));
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     return NextResponse.json({
       semanticCache: cacheStats,
       promptCache: promptCacheMetrics,
       trend,
       idempotency: idempotencyStats,
+<<<<<<< HEAD
       config: {
         semanticCacheEnabled: settings.semanticCacheEnabled !== false,
       },
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     });
   } catch (error) {
     return NextResponse.json({ error: errorMessage(error) }, { status: 500 });
@@ -97,6 +110,12 @@ export async function DELETE(req: NextRequest) {
     }
 
     // Full clear
+<<<<<<< HEAD
+=======
+    clearCache();
+    const expiredRemoved = cleanExpiredEntries();
+    return NextResponse.json({ ok: true, expiredRemoved, scope: "all" });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   } catch (error) {
     return NextResponse.json({ error: errorMessage(error) }, { status: 500 });
   }

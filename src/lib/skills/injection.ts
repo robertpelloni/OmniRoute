@@ -1,9 +1,12 @@
 import { skillRegistry } from "./registry";
 import { Skill } from "./types";
+<<<<<<< HEAD
 import { logger } from "../../../open-sse/utils/logger.ts";
 
 const log = logger("SKILLS_INJECTION");
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 interface OpenAITool {
   type: string;
@@ -57,6 +60,18 @@ export interface InjectionOptions {
   provider: "openai" | "anthropic" | "google" | "other";
   existingTools?: unknown[];
   apiKeyId: string;
+<<<<<<< HEAD
+=======
+}
+
+export function injectSkills(options: InjectionOptions): unknown[] {
+  const skills = skillRegistry.list(options.apiKeyId).filter((s) => s.enabled);
+
+  if (skills.length === 0) {
+    return options.existingTools || [];
+  }
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const injectedTools = skills.map((skill) => {
     switch (options.provider) {
       case "openai":

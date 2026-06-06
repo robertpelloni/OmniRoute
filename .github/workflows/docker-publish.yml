@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
     tags:
@@ -14,6 +15,8 @@ on:
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   release:
     types: [published]
   workflow_dispatch:
@@ -35,12 +38,20 @@ jobs:
       IMAGE_NAME: diegosouzapw/omniroute
     steps:
       - name: Checkout
+<<<<<<< HEAD
         uses: actions/checkout@v4
+=======
+        uses: actions/checkout@v6
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         with:
           ref: ${{ github.event_name == 'workflow_dispatch' && format('refs/tags/v{0}', inputs.version) || '' }}
 
       - name: Set up QEMU (for multi-arch builds)
+<<<<<<< HEAD
         uses: docker/setup-qemu-action@v3
+=======
+        uses: docker/setup-qemu-action@v4
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
@@ -52,6 +63,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Login to GitHub Container Registry
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
         uses: docker/login-action@v4
@@ -61,6 +73,9 @@ jobs:
 =======
         uses: docker/login-action@v3
 >>>>>>> Stashed changes
+=======
+        uses: docker/login-action@v3
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         with:
           registry: ghcr.io
           username: ${{ github.actor }}

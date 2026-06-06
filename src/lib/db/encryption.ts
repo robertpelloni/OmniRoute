@@ -6,6 +6,7 @@
  *
  * If STORAGE_ENCRYPTION_KEY is not set, operates in passthrough mode
  * (stores plaintext for development convenience).
+<<<<<<< HEAD
  *
  * KEY DERIVATION CHANGE (v3.7.9):
  * The PRIMARY key is now derived with a static salt ("omniroute-field-encryption-v1").
@@ -26,15 +27,26 @@
  */
 
 import { createCipheriv, createDecipheriv, randomBytes, scryptSync, createHash } from "crypto";
+=======
+ */
+
+import { createCipheriv, createDecipheriv, randomBytes, scryptSync } from "crypto";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const ALGORITHM = "aes-256-gcm";
 const IV_LENGTH = 16;
 const KEY_LENGTH = 32;
 const PREFIX = "enc:v1:";
+<<<<<<< HEAD
 const STATIC_SALT = "omniroute-field-encryption-v1";
 
 let _staticKey: Buffer | null = null;
 let _legacyDynamicKey: Buffer | null = null;
+=======
+
+let _derivedKey: Buffer | null = null;
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /** Connection object with potentially encrypted credential fields. */
 export interface ConnectionFields {
   apiKey?: string | null;
@@ -45,6 +57,7 @@ export interface ConnectionFields {
 }
 
 /**
+<<<<<<< HEAD
  * Derive the PRIMARY encryption key using the static salt.
  * This is the canonical key derivation that all new encryptions use.
  * Returns null if no encryption key is configured.
@@ -88,6 +101,21 @@ function getLegacyDynamicKey(): Buffer | null {
     return null;
   }
   return _legacyDynamicKey;
+=======
+ * Derive a 256-bit key from the env secret using scrypt.
+ * Returns null if no encryption key is configured.
+ */
+function getKey(): Buffer | null {
+  if (_derivedKey !== null) return _derivedKey;
+
+  const secret = process.env.STORAGE_ENCRYPTION_KEY;
+  if (!secret) return null;
+
+  // Fixed salt derived from app name — deterministic so same key always produces same derived key
+  const salt = "omniroute-field-encryption-v1";
+  _derivedKey = scryptSync(secret, salt, KEY_LENGTH);
+  return _derivedKey;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 /** Check if encryption is enabled. */
@@ -96,12 +124,17 @@ export function isEncryptionEnabled(): boolean {
 }
 
 /**
+<<<<<<< HEAD
  * Encrypt a plaintext string using the STATIC salt key.
+=======
+ * Encrypt a plaintext string. Returns ciphertext with prefix.
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  * If encryption is not configured, returns plaintext unchanged.
  */
 export function encrypt(plaintext: string | null | undefined): string | null | undefined {
   if (!plaintext || typeof plaintext !== "string") return plaintext;
 
+<<<<<<< HEAD
   const key = getStaticKey();
   if (!key) {
     console.warn(
@@ -109,10 +142,15 @@ export function encrypt(plaintext: string | null | undefined): string | null | u
     );
     return plaintext; // passthrough mode
   }
+=======
+  const key = getKey();
+  if (!key) return plaintext; // passthrough mode
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Already encrypted — don't double-encrypt
   if (plaintext.startsWith(PREFIX)) return plaintext;
 
+<<<<<<< HEAD
   try {
     const iv = randomBytes(IV_LENGTH);
     const cipher = createCipheriv(ALGORITHM, key, iv);
@@ -139,6 +177,20 @@ export function encrypt(plaintext: string | null | undefined): string | null | u
  * When a token is decrypted using the legacy key, it is flagged for
  * auto-migration: the next encrypt() call will re-encrypt it with the
  * static-salt key, gradually migrating the database.
+=======
+  const iv = randomBytes(IV_LENGTH);
+  const cipher = createCipheriv(ALGORITHM, key, iv);
+
+  let encrypted = cipher.update(plaintext, "utf8", "hex");
+  encrypted += cipher.final("hex");
+  const authTag = cipher.getAuthTag().toString("hex");
+
+  return `${PREFIX}${iv.toString("hex")}:${encrypted}:${authTag}`;
+}
+
+/**
+ * Decrypt a ciphertext string. If not encrypted (no prefix), returns as-is.
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  */
 export function decrypt(ciphertext: string | null | undefined): string | null | undefined {
   if (!ciphertext || typeof ciphertext !== "string") return ciphertext;
@@ -146,23 +198,37 @@ export function decrypt(ciphertext: string | null | undefined): string | null | 
   // Not encrypted — return as-is (legacy plaintext or passthrough mode)
   if (!ciphertext.startsWith(PREFIX)) return ciphertext;
 
+<<<<<<< HEAD
   const staticKey = getStaticKey();
   if (!staticKey) {
     console.warn(
       "[Encryption] Found encrypted data but STORAGE_ENCRYPTION_KEY is not set. Cannot decrypt."
     );
     return null;
+=======
+  const key = getKey();
+  if (!key) {
+    console.warn(
+      "[Encryption] Found encrypted data but STORAGE_ENCRYPTION_KEY is not set. Cannot decrypt."
+    );
+    return ciphertext;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   const body = ciphertext.slice(PREFIX.length);
   const parts = body.split(":");
   if (parts.length !== 3) {
     console.error("[Encryption] Malformed encrypted value");
+<<<<<<< HEAD
     return null;
+=======
+    return ciphertext;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   const [ivHex, encryptedHex, authTagHex] = parts;
 
+<<<<<<< HEAD
   const tryDecryptWithKey = (candidateKey: Buffer): string | null => {
     try {
       const iv = Buffer.from(ivHex, "hex");
@@ -194,13 +260,31 @@ export function decrypt(ciphertext: string | null | undefined): string | null | 
     const message = err instanceof Error ? err.message : String(err);
     console.error("[Encryption] Decryption failed:", message);
     return null;
+=======
+  try {
+    const iv = Buffer.from(ivHex, "hex");
+    const authTag = Buffer.from(authTagHex, "hex");
+    const decipher = createDecipheriv(ALGORITHM, key, iv);
+    decipher.setAuthTag(authTag);
+
+    let decrypted = decipher.update(encryptedHex, "hex", "utf8");
+    decrypted += decipher.final("utf8");
+    return decrypted;
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error("[Encryption] Decryption failed:", message);
+    return ciphertext;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 }
 
 /**
  * Encrypt sensitive fields in a connection object (mutates in-place).
+<<<<<<< HEAD
  * After decryption that required legacy key, re-encrypt with static key
  * to migrate tokens automatically.
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  */
 export function encryptConnectionFields<T extends ConnectionFields | null | undefined>(conn: T): T {
   if (!isEncryptionEnabled()) return conn;
@@ -215,9 +299,12 @@ export function encryptConnectionFields<T extends ConnectionFields | null | unde
 
 /**
  * Decrypt sensitive fields in a connection row (returns new object).
+<<<<<<< HEAD
  * Note: If any field was decrypted using the legacy key, the migration
  * flag is set. The calling code should check isMigrationNeeded() and
  * trigger a re-encrypt (write-back) to migrate those tokens to the static key.
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  */
 export function decryptConnectionFields<T extends ConnectionFields | null | undefined>(row: T): T {
   if (!row) return row;
@@ -231,6 +318,7 @@ export function decryptConnectionFields<T extends ConnectionFields | null | unde
     idToken: decrypt(row.idToken),
   };
 }
+<<<<<<< HEAD
 
 /**
  * Validate encryption configuration at startup.
@@ -322,3 +410,5 @@ export function migrateLegacyEncryptedString(ciphertext: string | null | undefin
   // 3. Un-decryptable or corrupted, leave it alone
   return { updated: false, value: ciphertext };
 }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

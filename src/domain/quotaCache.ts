@@ -49,7 +49,10 @@ const ACTIVE_TTL_MS = 5 * 60 * 1000; // 5 minutes for active accounts
 const EXHAUSTED_TTL_MS = 5 * 60 * 1000; // 5 minutes for 429-sourced entries (no resetAt)
 const EXHAUSTED_REFRESH_MS = 5 * 60 * 1000; // 5 minutes: recheck exhausted accounts (aligned with TTL)
 const REFRESH_INTERVAL_MS = 60 * 1000; // Background tick every 1 minute
+<<<<<<< HEAD
 export const DEFAULT_QUOTA_THRESHOLD_PERCENT = 99;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 // ─── State ──────────────────────────────────────────────────────────────────
 
@@ -261,7 +264,11 @@ export function isAccountQuotaExhausted(connectionId: string): boolean {
 export function getQuotaWindowStatus(
   connectionId: string,
   windowName: string,
+<<<<<<< HEAD
   thresholdPercent = DEFAULT_QUOTA_THRESHOLD_PERCENT
+=======
+  thresholdPercent = 90
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 ): QuotaWindowStatus | null {
   const entry = cache.get(connectionId);
   if (!entry) return null;

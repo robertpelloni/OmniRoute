@@ -1,5 +1,8 @@
 import { CURSOR_CONFIG } from "../constants/oauth";
+<<<<<<< HEAD
 import { getCursorUserAgent } from "@omniroute/open-sse/config/providerHeaderProfiles.ts";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * Cursor IDE OAuth Service
@@ -52,13 +55,19 @@ export class CursorService {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/connect+proto",
       "Connect-Protocol-Version": "1",
+<<<<<<< HEAD
       "User-Agent": getCursorUserAgent(this.config.clientVersion),
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       "x-cursor-client-version": this.config.clientVersion,
       "x-cursor-client-type": this.config.clientType,
       "x-cursor-client-os": this.detectOS(),
       "x-cursor-client-arch": this.detectArch(),
       "x-cursor-client-device-type": "desktop",
+<<<<<<< HEAD
       "x-cursor-user-agent": getCursorUserAgent(this.config.clientVersion),
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       "x-cursor-checksum": checksum,
       "x-ghost-mode": ghostMode ? "true" : "false",
     };
@@ -91,6 +100,7 @@ export class CursorService {
   }
 
   /**
+<<<<<<< HEAD
    * Validate and import token from Cursor IDE or cursor-agent CLI.
    * Note: We skip API validation because Cursor API uses complex protobuf format.
    * Token will be validated when actually used for requests.
@@ -98,22 +108,45 @@ export class CursorService {
    * @param {string} [machineId] - Machine ID from state.vscdb (optional for cursor-agent imports)
    */
   async validateImportToken(accessToken: string, machineId?: string) {
+=======
+   * Validate and import token from Cursor IDE
+   * Note: We skip API validation because Cursor API uses complex protobuf format.
+   * Token will be validated when actually used for requests.
+   * @param {string} accessToken - Access token from state.vscdb
+   * @param {string} machineId - Machine ID from state.vscdb
+   */
+  async validateImportToken(accessToken: string, machineId: string) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     // Basic validation
     if (!accessToken || typeof accessToken !== "string") {
       throw new Error("Access token is required");
     }
 
+<<<<<<< HEAD
+=======
+    if (!machineId || typeof machineId !== "string") {
+      throw new Error("Machine ID is required");
+    }
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     // Token format validation (Cursor tokens are typically long strings)
     if (accessToken.length < 50) {
       throw new Error("Invalid token format. Token appears too short.");
     }
 
+<<<<<<< HEAD
     // Machine ID format validation (only if provided — cursor-agent imports don't have one)
     if (machineId) {
       const uuidRegex = /^[a-f0-9-]{32,}$/i;
       if (!uuidRegex.test(machineId.replace(/-/g, ""))) {
         throw new Error("Invalid machine ID format. Expected UUID format.");
       }
+=======
+    // Machine ID format validation (should be UUID-like)
+    const uuidRegex = /^[a-f0-9-]{32,}$/i;
+    if (!uuidRegex.test(machineId.replace(/-/g, ""))) {
+      throw new Error("Invalid machine ID format. Expected UUID format.");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
 
     // Note: We don't validate against API because Cursor uses complex protobuf.
@@ -121,9 +154,15 @@ export class CursorService {
 
     return {
       accessToken,
+<<<<<<< HEAD
       machineId: machineId || null,
       expiresIn: 86400, // Cursor tokens typically last 24 hours
       authMethod: machineId ? "imported" : "cursor-agent",
+=======
+      machineId,
+      expiresIn: 86400, // Cursor tokens typically last 24 hours
+      authMethod: "imported",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     };
   }
 

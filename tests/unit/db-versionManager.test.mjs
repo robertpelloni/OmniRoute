@@ -6,6 +6,14 @@ import os from "node:os";
 import Database from "better-sqlite3";
 
 const fileTmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "omni-dbvm-test-"));
+<<<<<<< HEAD
+=======
+const moduleDataDir = fs.mkdtempSync(path.join(os.tmpdir(), "omni-dbvm-module-"));
+process.env.DATA_DIR = moduleDataDir;
+
+const coreDb = await import("../../src/lib/db/core.ts");
+const versionManagerDb = await import("../../src/lib/db/versionManager.ts");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const SCHEMA = `
 CREATE TABLE IF NOT EXISTS version_manager (
@@ -52,6 +60,15 @@ after(() => {
   if (fs.existsSync(fileTmpDir)) fs.rmSync(fileTmpDir, { recursive: true, force: true });
 });
 
+<<<<<<< HEAD
+=======
+async function resetModuleStorage() {
+  coreDb.resetDbInstance();
+  fs.rmSync(moduleDataDir, { recursive: true, force: true });
+  fs.mkdirSync(moduleDataDir, { recursive: true });
+}
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function upsertTool(db, data) {
   db.prepare(
     `
@@ -366,3 +383,96 @@ describe("db/versionManager (logic)", () => {
     });
   });
 });
+<<<<<<< HEAD
+=======
+
+describe("db/versionManager (module coverage)", () => {
+  beforeEach(async () => {
+    await resetModuleStorage();
+  });
+
+  after(async () => {
+    coreDb.resetDbInstance();
+    fs.rmSync(moduleDataDir, { recursive: true, force: true });
+  });
+
+  it("round-trips inserts, updates and status listings through the production module", async () => {
+    const inserted = await versionManagerDb.upsertVersionManagerTool({
+      tool: "cliproxyapi",
+      installedVersion: "6.9.7",
+      binaryPath: "/tmp/cliproxyapi",
+      status: "installed",
+      autoUpdate: false,
+      autoStart: true,
+      configOverrides: { port: 9999 },
+    });
+
+    assert.equal(inserted.tool, "cliproxyapi");
+    assert.equal(inserted.autoUpdate, false);
+    assert.equal(inserted.autoStart, true);
+    assert.deepEqual(inserted.configOverrides, { port: 9999 });
+
+    const updated = await versionManagerDb.updateVersionManagerTool("cliproxyapi", {
+      installedVersion: "7.0.0",
+      configOverrides: { port: 8317, host: "127.0.0.1" },
+      apiKey: null,
+      ignoredField: "noop",
+    });
+
+    assert.equal(updated.installedVersion, "7.0.0");
+    assert.deepEqual(updated.configOverrides, { port: 8317, host: "127.0.0.1" });
+
+    const status = await versionManagerDb.getVersionManagerStatus();
+    assert.equal(status.length, 1);
+    assert.equal(status[0].tool, "cliproxyapi");
+  });
+
+  it("parses invalid config overrides defensively and returns null for missing updates", async () => {
+    const db = coreDb.getDbInstance();
+    db.prepare(
+      `
+      INSERT INTO version_manager
+      (tool, status, config_overrides, created_at, updated_at)
+      VALUES (?, ?, ?, datetime('now'), datetime('now'))
+    `
+    ).run("broken-tool", "installed", "{not-json");
+
+    const loaded = await versionManagerDb.getVersionManagerTool("broken-tool");
+
+    assert.equal(loaded.configOverrides, null);
+    assert.equal(
+      await versionManagerDb.updateVersionManagerTool("ghost", { status: "running" }),
+      null
+    );
+  });
+
+  it("updates health/version/status fields and deletes tools", async () => {
+    await versionManagerDb.upsertVersionManagerTool({
+      tool: "managed-tool",
+      status: "installed",
+    });
+
+    assert.equal(await versionManagerDb.updateToolHealth("managed-tool", "healthy"), true);
+    assert.equal(
+      await versionManagerDb.updateToolVersion("managed-tool", "current_version", "1.2.3"),
+      true
+    );
+    assert.equal(
+      await versionManagerDb.updateToolVersion("managed-tool", "installed_version", "1.2.0"),
+      true
+    );
+    assert.equal(await versionManagerDb.setToolStatus("managed-tool", "running", 4321, "ok"), true);
+    assert.equal(await versionManagerDb.setToolStatus("managed-tool", "error"), true);
+
+    const stored = await versionManagerDb.getVersionManagerTool("managed-tool");
+    assert.equal(stored.currentVersion, "1.2.3");
+    assert.equal(stored.installedVersion, "1.2.0");
+    assert.equal(stored.status, "error");
+
+    assert.equal(await versionManagerDb.updateToolHealth("ghost", "healthy"), false);
+    assert.equal(await versionManagerDb.setToolStatus("ghost", "running"), false);
+    assert.equal(await versionManagerDb.deleteVersionManagerTool("managed-tool"), true);
+    assert.equal(await versionManagerDb.deleteVersionManagerTool("managed-tool"), false);
+  });
+});
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

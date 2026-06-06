@@ -1,7 +1,10 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+<<<<<<< HEAD
 import { useTranslations } from "next-intl";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import Card from "./Card";
 import ProxyLogDetail from "./ProxyLogDetail";
 import {
@@ -16,6 +19,7 @@ import {
   truncateUrl,
 } from "@/shared/utils/formatting";
 
+<<<<<<< HEAD
 const PROXY_COLUMN_KEYS = [
   "status",
   "proxy",
@@ -33,6 +37,31 @@ const DEFAULT_VISIBLE = Object.fromEntries(PROXY_COLUMN_KEYS.map((key) => [key, 
 
 export default function ProxyLogger() {
   const t = useTranslations("proxyLogger");
+=======
+const STATUS_FILTERS = [
+  { key: "all", label: "All" },
+  { key: "error", label: "Errors", icon: "error" },
+  { key: "ok", label: "Success", icon: "check_circle" },
+  { key: "timeout", label: "Timeout", icon: "timer_off" },
+];
+
+const COLUMNS = [
+  { key: "status", label: "Status" },
+  { key: "proxy", label: "Proxy" },
+  { key: "tls", label: "TLS" },
+  { key: "type", label: "Type" },
+  { key: "level", label: "Level" },
+  { key: "provider", label: "Provider" },
+  { key: "target", label: "Target" },
+  { key: "latency", label: "Latency" },
+  { key: "ip", label: "Public IP" },
+  { key: "time", label: "Time" },
+];
+
+const DEFAULT_VISIBLE = Object.fromEntries(COLUMNS.map((c) => [c.key, true]));
+
+export default function ProxyLogger() {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [recording, setRecording] = useState(true);
@@ -45,6 +74,7 @@ export default function ProxyLogger() {
   const [selectedLog, setSelectedLog] = useState(null);
   const intervalRef = useRef(null);
   const hasLoadedRef = useRef(false);
+<<<<<<< HEAD
   const logsSignatureRef = useRef("");
 
   const statusFilters = useMemo(
@@ -72,6 +102,8 @@ export default function ProxyLogger() {
     ],
     [t]
   );
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const [visibleColumns, setVisibleColumns] = useState(() => {
     if (typeof window === "undefined") return DEFAULT_VISIBLE;
@@ -110,12 +142,16 @@ export default function ProxyLogger() {
         const res = await fetch(`/api/usage/proxy-logs?${params}`);
         if (res.ok) {
           const data = await res.json();
+<<<<<<< HEAD
           // Skip re-render if data hasn't changed (#1369 GPU perf)
           const sig = JSON.stringify(data.map?.((l: any) => l.id) ?? []);
           if (sig !== logsSignatureRef.current) {
             logsSignatureRef.current = sig;
             setLogs(data);
           }
+=======
+          setLogs(data);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         }
       } catch (error) {
         console.error("Failed to fetch proxy logs:", error);
@@ -187,7 +223,11 @@ export default function ProxyLogger() {
           <span
             className={`w-2 h-2 rounded-full ${recording ? "bg-red-500 animate-pulse" : "bg-text-muted"}`}
           />
+<<<<<<< HEAD
           {recording ? t("recording") : t("paused")}
+=======
+          {recording ? "Recording" : "Paused"}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         </button>
 
         {/* Search */}
@@ -197,7 +237,11 @@ export default function ProxyLogger() {
           </span>
           <input
             type="text"
+<<<<<<< HEAD
             placeholder={t("searchPlaceholder")}
+=======
+            placeholder="Search host, provider, target, IP..."
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-10 pr-4 py-2 rounded-lg bg-bg-subtle border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-primary"
@@ -210,7 +254,11 @@ export default function ProxyLogger() {
           onChange={(e) => setSelectedType(e.target.value)}
           className="px-3 py-2 rounded-lg bg-bg-subtle border border-border text-sm text-text-primary focus:outline-none focus:border-primary appearance-none cursor-pointer min-w-[120px]"
         >
+<<<<<<< HEAD
           <option value="">{t("allTypes")}</option>
+=======
+          <option value="">All Types</option>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           {uniqueTypes.map((t) => (
             <option key={t} value={t}>
               {(TYPE_COLORS[t]?.label || t).toUpperCase()}
@@ -224,7 +272,11 @@ export default function ProxyLogger() {
           onChange={(e) => setSelectedLevel(e.target.value)}
           className="px-3 py-2 rounded-lg bg-bg-subtle border border-border text-sm text-text-primary focus:outline-none focus:border-primary appearance-none cursor-pointer min-w-[120px]"
         >
+<<<<<<< HEAD
           <option value="">{t("allLevels")}</option>
+=======
+          <option value="">All Levels</option>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           {uniqueLevels.map((l) => (
             <option key={l} value={l}>
               {LEVEL_COLORS[l]?.label || l}
@@ -238,7 +290,11 @@ export default function ProxyLogger() {
           onChange={(e) => setSelectedProvider(e.target.value)}
           className="px-3 py-2 rounded-lg bg-bg-subtle border border-border text-sm text-text-primary focus:outline-none focus:border-primary appearance-none cursor-pointer min-w-[140px]"
         >
+<<<<<<< HEAD
           <option value="">{t("allProviders")}</option>
+=======
+          <option value="">All Providers</option>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           {uniqueProviders.map((p) => {
             const pc = PROVIDER_COLORS[p];
             return (
@@ -252,6 +308,7 @@ export default function ProxyLogger() {
         {/* Stats */}
         <div className="flex items-center gap-2 text-xs text-text-muted">
           <span className="px-2 py-1 rounded bg-bg-subtle border border-border font-mono">
+<<<<<<< HEAD
             {totalCount} {t("total")}
           </span>
           <span className="px-2 py-1 rounded bg-emerald-500/10 text-emerald-400 font-mono">
@@ -260,16 +317,34 @@ export default function ProxyLogger() {
           {errorCount > 0 && (
             <span className="px-2 py-1 rounded bg-red-500/10 text-red-400 font-mono">
               {errorCount} {t("err")}
+=======
+            {totalCount} total
+          </span>
+          <span className="px-2 py-1 rounded bg-emerald-500/10 text-emerald-400 font-mono">
+            {okCount} OK
+          </span>
+          {errorCount > 0 && (
+            <span className="px-2 py-1 rounded bg-red-500/10 text-red-400 font-mono">
+              {errorCount} ERR
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             </span>
           )}
           {timeoutCount > 0 && (
             <span className="px-2 py-1 rounded bg-amber-500/10 text-amber-400 font-mono">
+<<<<<<< HEAD
               {timeoutCount} {t("timeoutShort")}
+=======
+              {timeoutCount} TMO
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             </span>
           )}
           {directCount > 0 && (
             <span className="px-2 py-1 rounded bg-gray-500/10 text-gray-400 font-mono">
+<<<<<<< HEAD
               {directCount} {t("direct")}
+=======
+              {directCount} direct
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             </span>
           )}
           {tlsCount > 0 && (
@@ -285,17 +360,28 @@ export default function ProxyLogger() {
           onChange={(e) => setSortBy(e.target.value)}
           className="px-3 py-2 rounded-lg bg-bg-subtle border border-border text-sm text-text-primary focus:outline-none focus:border-primary appearance-none cursor-pointer min-w-[140px]"
         >
+<<<<<<< HEAD
           <option value="newest">{t("newest")}</option>
           <option value="oldest">{t("oldest")}</option>
           <option value="latency_desc">{t("latencyDesc")}</option>
           <option value="latency_asc">{t("latencyAsc")}</option>
+=======
+          <option value="newest">Newest</option>
+          <option value="oldest">Oldest</option>
+          <option value="latency_desc">Latency ↓</option>
+          <option value="latency_asc">Latency ↑</option>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         </select>
 
         {/* Refresh */}
         <button
           onClick={() => fetchLogs(false)}
           className="p-2 rounded-lg hover:bg-bg-subtle text-text-muted hover:text-text-primary transition-colors"
+<<<<<<< HEAD
           title={t("refresh")}
+=======
+          title="Refresh"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         >
           <span className="material-symbols-outlined text-[18px]">refresh</span>
         </button>
@@ -303,7 +389,11 @@ export default function ProxyLogger() {
 
       {/* Quick Filters */}
       <div className="flex flex-wrap items-center gap-2">
+<<<<<<< HEAD
         {statusFilters.map((f) => (
+=======
+        {STATUS_FILTERS.map((f) => (
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           <button
             key={f.key}
             onClick={() => setActiveFilter(activeFilter === f.key ? "all" : f.key)}
@@ -351,10 +441,15 @@ export default function ProxyLogger() {
 
       {/* Column Visibility Toggles */}
       <div className="flex flex-wrap items-center gap-1.5">
+<<<<<<< HEAD
         <span className="text-[10px] text-text-muted uppercase tracking-wider mr-1">
           {t("columns")}
         </span>
         {columns.map((col) => (
+=======
+        <span className="text-[10px] text-text-muted uppercase tracking-wider mr-1">Columns</span>
+        {COLUMNS.map((col) => (
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           <button
             key={col.key}
             onClick={() => toggleColumn(col.key)}
@@ -373,16 +468,29 @@ export default function ProxyLogger() {
       <Card className="overflow-hidden bg-black/5 dark:bg-black/20">
         <div className="p-0 overflow-x-auto max-h-[calc(100vh-320px)] overflow-y-auto">
           {loading && logs.length === 0 ? (
+<<<<<<< HEAD
             <div className="p-8 text-center text-text-muted">{t("loadingProxyLogs")}</div>
+=======
+            <div className="p-8 text-center text-text-muted">Loading proxy logs...</div>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           ) : logs.length === 0 ? (
             <div className="p-8 text-center text-text-muted">
               <span className="material-symbols-outlined text-[48px] mb-2 block opacity-40">
                 vpn_lock
               </span>
+<<<<<<< HEAD
               {t("noProxyLogs")}
             </div>
           ) : sortedLogs.length === 0 ? (
             <div className="p-8 text-center text-text-muted">{t("noMatchingLogs")}</div>
+=======
+              No proxy logs yet. Configure proxies and make API calls to see them here.
+            </div>
+          ) : sortedLogs.length === 0 ? (
+            <div className="p-8 text-center text-text-muted">
+              No logs match the current filters.
+            </div>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           ) : (
             <table className="w-full text-left border-collapse text-xs">
               <thead
@@ -395,52 +503,92 @@ export default function ProxyLogger() {
                 >
                   {visibleColumns.status && (
                     <th className="px-3 py-2.5 font-semibold text-text-muted uppercase tracking-wider text-[10px]">
+<<<<<<< HEAD
                       {t("colStatus")}
+=======
+                      Status
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     </th>
                   )}
                   {visibleColumns.proxy && (
                     <th className="px-3 py-2.5 font-semibold text-text-muted uppercase tracking-wider text-[10px]">
+<<<<<<< HEAD
                       {t("colProxy")}
+=======
+                      Proxy
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     </th>
                   )}
                   {visibleColumns.tls && (
                     <th className="px-3 py-2.5 font-semibold text-text-muted uppercase tracking-wider text-[10px]">
+<<<<<<< HEAD
                       {t("colTls")}
+=======
+                      TLS
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     </th>
                   )}
                   {visibleColumns.type && (
                     <th className="px-3 py-2.5 font-semibold text-text-muted uppercase tracking-wider text-[10px]">
+<<<<<<< HEAD
                       {t("colType")}
+=======
+                      Type
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     </th>
                   )}
                   {visibleColumns.level && (
                     <th className="px-3 py-2.5 font-semibold text-text-muted uppercase tracking-wider text-[10px]">
+<<<<<<< HEAD
                       {t("colLevel")}
+=======
+                      Level
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     </th>
                   )}
                   {visibleColumns.provider && (
                     <th className="px-3 py-2.5 font-semibold text-text-muted uppercase tracking-wider text-[10px]">
+<<<<<<< HEAD
                       {t("colProvider")}
+=======
+                      Provider
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     </th>
                   )}
                   {visibleColumns.target && (
                     <th className="px-3 py-2.5 font-semibold text-text-muted uppercase tracking-wider text-[10px]">
+<<<<<<< HEAD
                       {t("colTarget")}
+=======
+                      Target
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     </th>
                   )}
                   {visibleColumns.latency && (
                     <th className="px-3 py-2.5 font-semibold text-text-muted uppercase tracking-wider text-[10px] text-right">
+<<<<<<< HEAD
                       {t("colLatency")}
+=======
+                      Latency
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     </th>
                   )}
                   {visibleColumns.ip && (
                     <th className="px-3 py-2.5 font-semibold text-text-muted uppercase tracking-wider text-[10px]">
+<<<<<<< HEAD
                       {t("colPublicIp")}
+=======
+                      Public IP
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     </th>
                   )}
                   {visibleColumns.time && (
                     <th className="px-3 py-2.5 font-semibold text-text-muted uppercase tracking-wider text-[10px] text-right">
+<<<<<<< HEAD
                       {t("colTime")}
+=======
+                      Time
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     </th>
                   )}
                 </tr>
@@ -491,7 +639,11 @@ export default function ProxyLogger() {
                                 backgroundColor: "rgba(6, 182, 212, 0.15)",
                                 color: "#22d3ee",
                               }}
+<<<<<<< HEAD
                               title={t("tlsFingerprint")}
+=======
+                              title="Chrome 124 TLS Fingerprint"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                             >
                               <span style={{ fontSize: "10px" }}>🔒</span> TLS
                             </span>

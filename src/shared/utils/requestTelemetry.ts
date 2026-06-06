@@ -153,11 +153,18 @@ export function getTelemetrySummary(windowMs = 300000) {
   });
 
   if (recent.length === 0) {
+<<<<<<< HEAD
     return { count: 0, avg: 0, p50: 0, p95: 0, p99: 0, phaseBreakdown: {} };
   }
 
   const totals = recent.map((h) => h.totalMs).sort((a, b) => a - b);
   const avg = Math.round(totals.reduce((sum, value) => sum + value, 0) / totals.length);
+=======
+    return { count: 0, p50: 0, p95: 0, p99: 0, phaseBreakdown: {} };
+  }
+
+  const totals = recent.map((h) => h.totalMs).sort((a, b) => a - b);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Phase breakdown
   const phaseBreakdown = {};
@@ -178,7 +185,10 @@ export function getTelemetrySummary(windowMs = 300000) {
 
   return {
     count: recent.length,
+<<<<<<< HEAD
     avg,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     p50: percentile(totals, 50),
     p95: percentile(totals, 95),
     p99: percentile(totals, 99),

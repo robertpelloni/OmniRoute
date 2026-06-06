@@ -1,6 +1,10 @@
 "use client";
 
+<<<<<<< HEAD
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
+=======
+import { useState, useMemo, useCallback } from "react";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { useLocale } from "next-intl";
 import Card from "../Card";
 import { getModelColor } from "@/shared/constants/colors";
@@ -174,8 +178,11 @@ export function CompactStatGrid({ sections }: { sections: CompactStatSection[] }
 // ── ActivityHeatmap ────────────────────────────────────────────────────────
 
 export function ActivityHeatmap({ activityMap }) {
+<<<<<<< HEAD
   const scrollRef = useRef<HTMLDivElement>(null);
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const cells = useMemo(() => {
     const today = new Date();
     const days = [];
@@ -211,12 +218,15 @@ export function ActivityHeatmap({ activityMap }) {
     return w;
   }, [cells]);
 
+<<<<<<< HEAD
   // Auto-scroll to the right edge so the current date is visible
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollLeft = scrollRef.current.scrollWidth;
     }
   }, [weeks]);
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const monthLabels = useMemo(() => {
     const labels = [];
     let lastMonth = -1;
@@ -267,6 +277,7 @@ export function ActivityHeatmap({ activityMap }) {
         </span>
       </div>
 
+<<<<<<< HEAD
       <div ref={scrollRef} className="overflow-x-auto">
         <div className="w-max">
           <div className="flex gap-[3px] mb-1 ml-6" style={{ fontSize: "10px" }}>
@@ -309,6 +320,46 @@ export function ActivityHeatmap({ activityMap }) {
             ))}
           </div>
         </div>
+=======
+      <div className="flex gap-[3px] mb-1 ml-6" style={{ fontSize: "10px" }}>
+        {monthLabels.map((m, i) => (
+          <span
+            key={i}
+            className="text-text-muted"
+            style={{
+              position: "relative",
+              left: `${m.weekIdx * 13}px`,
+              marginLeft: i === 0 ? 0 : "-20px",
+            }}
+          >
+            {m.label}
+          </span>
+        ))}
+      </div>
+
+      <div className="flex gap-[3px] overflow-x-auto">
+        <div className="flex flex-col gap-[3px] shrink-0 text-[10px] text-text-muted pr-1">
+          <span className="h-[10px]"></span>
+          <span className="h-[10px] leading-[10px]">Mon</span>
+          <span className="h-[10px]"></span>
+          <span className="h-[10px] leading-[10px]">Wed</span>
+          <span className="h-[10px]"></span>
+          <span className="h-[10px] leading-[10px]">Fri</span>
+          <span className="h-[10px]"></span>
+        </div>
+
+        {weeks.map((week, wi) => (
+          <div key={wi} className="flex flex-col gap-[3px]">
+            {week.map((day, di) => (
+              <div
+                key={di}
+                title={day ? `${day.date}: ${fmtFull(day.value)} tokens` : ""}
+                className={`w-[10px] h-[10px] rounded-[2px] ${day ? getCellColor(day.value) : "bg-transparent"}`}
+              />
+            ))}
+          </div>
+        ))}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       </div>
 
       <div className="flex items-center gap-1 mt-2 ml-6 text-[10px] text-text-muted">
@@ -361,7 +412,11 @@ export function DailyTrendChart({ dailyTrend }) {
         >
           <XAxis
             dataKey="date"
+<<<<<<< HEAD
             tick={{ fontSize: 9, fill: "var(--color-text-muted)" }}
+=======
+            tick={{ fontSize: 9, fill: "var(--text-muted)" }}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             axisLine={false}
             tickLine={false}
             interval={Math.max(Math.floor(chartData.length / 6), 0)}
@@ -781,7 +836,11 @@ export function WeeklyPattern({ weeklyPattern }) {
         <BarChart data={chartData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
           <XAxis
             dataKey="day"
+<<<<<<< HEAD
             tick={{ fontSize: 9, fill: "var(--color-text-muted)" }}
+=======
+            tick={{ fontSize: 9, fill: "var(--text-muted)" }}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             axisLine={false}
             tickLine={false}
           />
@@ -791,7 +850,11 @@ export function WeeklyPattern({ weeklyPattern }) {
           />
           <Bar
             dataKey="Tokens"
+<<<<<<< HEAD
             fill="var(--color-text-muted)"
+=======
+            fill="var(--text-muted)"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             opacity={0.3}
             radius={[3, 3, 0, 0]}
             animationDuration={400}
@@ -844,7 +907,11 @@ export function MostActiveDay7d({ activityMap }) {
     <Card className="p-4 flex flex-col justify-center" style={{ flex: 1, minHeight: 0 }}>
       <h3
         className="text-xs font-semibold uppercase tracking-wider mb-2"
+<<<<<<< HEAD
         style={{ color: "var(--color-text-muted)" }}
+=======
+        style={{ color: "var(--text-muted)" }}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       >
         Most Active Day
       </h3>
@@ -853,12 +920,20 @@ export function MostActiveDay7d({ activityMap }) {
           <span className="text-xl font-bold capitalize" style={{ lineHeight: 1.2 }}>
             {data.weekday}
           </span>
+<<<<<<< HEAD
           <span className="text-xs mt-1" style={{ color: "var(--color-text-muted)" }}>
+=======
+          <span className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             {data.label} · {fmt(data.tokens)} tokens
           </span>
         </>
       ) : (
+<<<<<<< HEAD
         <span className="text-xs" style={{ color: "var(--color-text-muted)" }}>
+=======
+        <span className="text-xs" style={{ color: "var(--text-muted)" }}>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           No data in the last 7 days
         </span>
       )}
@@ -910,7 +985,11 @@ export function WeeklySquares7d({ activityMap }) {
     <Card className="p-4 flex flex-col justify-center" style={{ flex: 1, minHeight: 0 }}>
       <h3
         className="text-xs font-semibold uppercase tracking-wider mb-3"
+<<<<<<< HEAD
         style={{ color: "var(--color-text-muted)" }}
+=======
+        style={{ color: "var(--text-muted)" }}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       >
         Weekly
       </h3>
@@ -935,7 +1014,11 @@ export function WeeklySquares7d({ activityMap }) {
               style={{
                 fontSize: 9,
                 fontWeight: 600,
+<<<<<<< HEAD
                 color: "var(--color-text-muted)",
+=======
+                color: "var(--text-muted)",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 letterSpacing: "0.03em",
               }}
             >
@@ -1235,13 +1318,21 @@ export function ModelOverTimeChart({ dailyByModel, modelNames }) {
         <AreaChart data={chartData} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
           <XAxis
             dataKey="dateLabel"
+<<<<<<< HEAD
             tick={{ fontSize: 10, fill: "var(--color-text-muted)" }}
+=======
+            tick={{ fontSize: 10, fill: "var(--text-muted)" }}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             axisLine={false}
             tickLine={false}
             interval="preserveStartEnd"
           />
           <YAxis
+<<<<<<< HEAD
             tick={{ fontSize: 10, fill: "var(--color-text-muted)" }}
+=======
+            tick={{ fontSize: 10, fill: "var(--text-muted)" }}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             tickFormatter={(v) => fmt(v)}
             axisLine={false}
             tickLine={false}

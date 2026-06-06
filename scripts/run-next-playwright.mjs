@@ -1,9 +1,14 @@
 #!/usr/bin/env node
 
 import { spawn } from "node:child_process";
+<<<<<<< HEAD
 import { cpSync, existsSync, mkdirSync, readdirSync, renameSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { pathToFileURL } from "node:url";
+=======
+import { existsSync, renameSync } from "node:fs";
+import { join } from "node:path";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import {
   resolveRuntimePorts,
   sanitizeColorEnv,
@@ -17,6 +22,7 @@ const cwd = process.cwd();
 const appDir = join(cwd, "app");
 const srcAppDir = join(cwd, "src", "app");
 const appPage = join(appDir, "page.tsx");
+<<<<<<< HEAD
 const defaultBackupDir = join(cwd, "app.__qa_backup");
 const backupDir = resolvePlaywrightAppBackupDir({
   cwd,
@@ -30,6 +36,12 @@ const rootStaticDir = join(cwd, testDistDir(), "static");
 const rootPublicDir = join(cwd, "public");
 const standaloneStaticDir = join(cwd, testDistDir(), "standalone", ".next", "static");
 const standalonePublicDir = join(cwd, testDistDir(), "standalone", "public");
+=======
+const backupDir = join(cwd, "app.__qa_backup");
+const buildScript = join(cwd, "scripts", "build-next-isolated.mjs");
+const standaloneServer = join(cwd, testDistDir(), "standalone", "server.js");
+const buildIdFile = join(cwd, testDistDir(), "BUILD_ID");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 let appDirMoved = false;
 
@@ -37,6 +49,7 @@ function testDistDir() {
   return process.env.NEXT_DIST_DIR || ".next";
 }
 
+<<<<<<< HEAD
 function resolvePlaywrightDataDir({ cwd, env, pid = process.pid }) {
   if (typeof env.DATA_DIR === "string" && env.DATA_DIR.trim().length > 0) {
     return env.DATA_DIR;
@@ -60,10 +73,13 @@ export function resolvePlaywrightAppBackupDir({
   return join(cwd, `app.__qa_backup.${pid}.${now}`);
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function shouldMoveAppDir() {
   return existsSync(appDir) && !existsSync(appPage) && existsSync(srcAppDir);
 }
 
+<<<<<<< HEAD
 export function directoryHasEntries(dirPath) {
   try {
     return readdirSync(dirPath).length > 0;
@@ -129,6 +145,17 @@ function prepareAppDir() {
     console.warn(
       "[Playwright WebServer] Existing app.__qa_backup detected; using a per-run backup dir instead."
     );
+=======
+function prepareAppDir() {
+  if (!shouldMoveAppDir()) return;
+
+  if (existsSync(backupDir)) {
+    console.warn(
+      "[Playwright WebServer] app.__qa_backup already exists; leaving app/ in place. " +
+        "If tests hit 404 on every route, clear app/ artifacts before running e2e."
+    );
+    return;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   renameSync(appDir, backupDir);
@@ -144,6 +171,7 @@ function restoreAppDir() {
   console.log("[Playwright WebServer] Restored app/ directory");
 }
 
+<<<<<<< HEAD
 const playwrightDataDir = resolvePlaywrightDataDir({
   cwd,
   env: process.env,
@@ -187,6 +215,28 @@ export function shouldUseWebpackForPlaywrightDev({ mode, env }) {
   return mode === "dev" && env.OMNIROUTE_USE_TURBOPACK !== "1";
 }
 
+=======
+process.on("exit", restoreAppDir);
+process.on("uncaughtException", (error) => {
+  restoreAppDir();
+  throw error;
+});
+
+prepareAppDir();
+
+const bootstrapEnvVars = bootstrapEnv({ quiet: true });
+const runtimePorts = resolveRuntimePorts(bootstrapEnvVars);
+const testServerEnv = {
+  ...sanitizeColorEnv(bootstrapEnvVars),
+  ...sanitizeColorEnv(process.env),
+  NEXT_PUBLIC_OMNIROUTE_E2E_MODE: process.env.NEXT_PUBLIC_OMNIROUTE_E2E_MODE || "1",
+  OMNIROUTE_DISABLE_BACKGROUND_SERVICES: process.env.OMNIROUTE_DISABLE_BACKGROUND_SERVICES || "1",
+  OMNIROUTE_DISABLE_TOKEN_HEALTHCHECK: process.env.OMNIROUTE_DISABLE_TOKEN_HEALTHCHECK || "1",
+  OMNIROUTE_DISABLE_LOCAL_HEALTHCHECK: process.env.OMNIROUTE_DISABLE_LOCAL_HEALTHCHECK || "1",
+  OMNIROUTE_HIDE_HEALTHCHECK_LOGS: process.env.OMNIROUTE_HIDE_HEALTHCHECK_LOGS || "1",
+};
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function runChild(command, args, env) {
   return new Promise((resolve) => {
     const child = spawn(command, args, {
@@ -212,7 +262,11 @@ function runChild(command, args, env) {
 async function runBuildForStart() {
   if (mode !== "start") return;
   if (process.env.OMNIROUTE_PLAYWRIGHT_SKIP_BUILD === "1") return;
+<<<<<<< HEAD
   console.log("[Playwright WebServer] Building fresh standalone app for this run...");
+=======
+  if (existsSync(buildIdFile)) return;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const buildEnv = withRuntimePortEnv(testServerEnv, runtimePorts);
   const result = await runChild(process.execPath, [buildScript], buildEnv);
@@ -227,6 +281,7 @@ async function runBuildForStart() {
   }
 }
 
+<<<<<<< HEAD
 export async function main() {
   process.on("exit", restoreAppDir);
   process.on("uncaughtException", (error) => {
@@ -258,6 +313,20 @@ export async function main() {
       return;
     }
 
+=======
+await runBuildForStart();
+if (mode === "start") {
+  if (existsSync(standaloneServer)) {
+    spawnWithForwardedSignals(process.execPath, [standaloneServer], {
+      stdio: "inherit",
+      env: {
+        ...withRuntimePortEnv(testServerEnv, runtimePorts),
+        PORT: String(runtimePorts.dashboardPort),
+        HOSTNAME: process.env.HOSTNAME || "127.0.0.1",
+      },
+    });
+  } else {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const args = [
       "./node_modules/next/dist/bin/next",
       "start",
@@ -269,26 +338,41 @@ export async function main() {
       stdio: "inherit",
       env: withRuntimePortEnv(testServerEnv, runtimePorts),
     });
+<<<<<<< HEAD
     return;
   }
 
   const args = [
     "./node_modules/next/dist/bin/next",
     mode,
+=======
+  }
+} else {
+  const args = [
+    "./node_modules/next/dist/bin/next",
+    mode,
+    "--webpack",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     "--port",
     String(runtimePorts.dashboardPort),
   ];
 
+<<<<<<< HEAD
   if (shouldUseWebpackForPlaywrightDev({ mode, env: testServerEnv })) {
     args.splice(2, 0, "--webpack");
   }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   spawnWithForwardedSignals(process.execPath, args, {
     stdio: "inherit",
     env: withRuntimePortEnv(testServerEnv, runtimePorts),
   });
 }
+<<<<<<< HEAD
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   await main();
 }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

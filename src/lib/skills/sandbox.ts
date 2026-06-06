@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+=======
+import { spawn, ChildProcess } from "child_process";
+import { randomUUID } from "crypto";
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 interface SandboxConfig {
   cpuLimit: number;
   memoryLimit: number;
@@ -46,6 +52,13 @@ class SandboxRunner {
   async run(
     image: string,
     command: string[],
+<<<<<<< HEAD
+=======
+    env: Record<string, string> = {}
+  ): Promise<SandboxResult> {
+    const sandboxId = randomUUID();
+    const startTime = Date.now();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     const dockerArgs = [
       "run",
@@ -53,6 +66,26 @@ class SandboxRunner {
       "--name",
       `omniroute-sandbox-${sandboxId}`,
       "--cpus",
+<<<<<<< HEAD
+=======
+      `${this.config.cpuLimit / 1000}`,
+      "--memory",
+      `${this.config.memoryLimit}m`,
+      "--network",
+      this.config.networkEnabled ? "bridge" : "none",
+      "--read-only",
+      this.config.readOnly.toString(),
+      "--cap-add",
+      "SYS_TIME",
+      "--pids-limit",
+      "100",
+      image,
+      ...command,
+    ];
+
+    return new Promise((resolve) => {
+      const proc = spawn("docker", dockerArgs, {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         env: { ...process.env, ...env },
         stdio: ["ignore", "pipe", "pipe"],
       });
@@ -72,6 +105,10 @@ class SandboxRunner {
 
       const timeoutId = setTimeout(() => {
         this.kill(sandboxId);
+<<<<<<< HEAD
+=======
+      }, this.config.timeout);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
       proc.on("close", (code) => {
         clearTimeout(timeoutId);
@@ -108,6 +145,10 @@ class SandboxRunner {
     if (proc) {
       proc.kill("SIGTERM");
       this.runningContainers.delete(sandboxId);
+<<<<<<< HEAD
+=======
+      spawn("docker", ["kill", `omniroute-sandbox-${sandboxId}`], { stdio: "ignore" });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       return true;
     }
     return false;
@@ -116,6 +157,10 @@ class SandboxRunner {
   killAll(): void {
     for (const [id, proc] of this.runningContainers) {
       proc.kill("SIGTERM");
+<<<<<<< HEAD
+=======
+      spawn("docker", ["kill", `omniroute-sandbox-${id}`], { stdio: "ignore" });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
     this.runningContainers.clear();
   }

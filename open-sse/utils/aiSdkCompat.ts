@@ -22,17 +22,24 @@ export function resolveStreamFlag(bodyStream: unknown, acceptHeader: unknown): b
   // Explicit body value always wins
   if (bodyStream === true) return true;
   if (bodyStream === false) return false;
+<<<<<<< HEAD
 
   // No explicit stream param — preserve OmniRoute's streaming default unless
   // the client explicitly asks for JSON and does not also accept SSE.
 =======
   // No explicit stream param — fall back to Accept header heuristic
 >>>>>>> Stashed changes
+=======
+  // No explicit stream param — fall back to Accept header heuristic
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return !clientWantsJsonResponse(acceptHeader);
 }
 
 /**
+<<<<<<< HEAD
 <<<<<<< Updated upstream
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  * Resolves explicit stream aliases used by non-standard clients.
  * Returns:
  * - `true`  -> explicit streaming intent
@@ -60,7 +67,10 @@ export function hasExplicitNoStreamParam(body: unknown): boolean {
 }
 
 /**
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  * Removes surrounding markdown code fences when Claude wraps JSON payloads.
  * Example: ```json\n{"ok":true}\n``` -> {"ok":true}
  */

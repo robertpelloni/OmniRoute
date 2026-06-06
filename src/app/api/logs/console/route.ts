@@ -13,8 +13,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { readFileSync, existsSync } from "fs";
 import { getAppLogFilePath } from "@/lib/logEnv";
+<<<<<<< HEAD
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const LEVEL_ORDER: Record<string, number> = {
   trace: 5,
@@ -47,9 +50,12 @@ function parseLevel(raw: string | number): string {
 }
 
 export async function GET(req: NextRequest) {
+<<<<<<< HEAD
   const authError = await requireManagementAuth(req);
   if (authError) return authError;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const { searchParams } = new URL(req.url);
     const levelFilter = searchParams.get("level") || "all";

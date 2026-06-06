@@ -1,4 +1,5 @@
 import crypto, { randomUUID } from "crypto";
+<<<<<<< HEAD
 import { BaseExecutor, mergeUpstreamExtraHeaders, type ExecuteInput } from "./base.ts";
 import { applyFingerprint, isCliCompatEnabled } from "../config/cliFingerprints.ts";
 =======
@@ -203,6 +204,16 @@ function flushAntigravitySSEText(
   processAntigravitySSEPayload(trimmed.slice(5).trim(), collected, log);
 }
 
+=======
+import { BaseExecutor, mergeUpstreamExtraHeaders } from "./base.ts";
+import { PROVIDERS, OAUTH_ENDPOINTS, HTTP_STATUS } from "../config/constants.ts";
+
+const MAX_RETRY_AFTER_MS = 60_000;
+const LONG_RETRY_THRESHOLD_MS = 60_000;
+
+const BARE_PRO_IDS = new Set(["gemini-3.1-pro"]);
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Strip provider prefixes (e.g. "antigravity/model" → "model").
  * Ensures the model name sent to the upstream API never contains a routing prefix.
@@ -210,6 +221,7 @@ function flushAntigravitySSEText(
 function cleanModelName(model: string): string {
   if (!model) return model;
   let clean = model.includes("/") ? model.split("/").pop()! : model;
+<<<<<<< HEAD
   clean = resolveAntigravityModelId(clean);
     };
     // Scrub proxy/fingerprint headers that reveal non-native traffic
@@ -217,6 +229,43 @@ function cleanModelName(model: string): string {
   }
 
   transformRequest(model, body, stream, credentials): AntigravityRequestEnvelope | Response {
+=======
+  // Normalize bare Pro IDs to the Low tier (matching OpenClaw convention).
+  // The upstream API requires an explicit tier suffix; bare IDs cause errors.
+  if (BARE_PRO_IDS.has(clean)) {
+    clean = `${clean}-low`;
+  }
+  return clean;
+}
+
+export class AntigravityExecutor extends BaseExecutor {
+  constructor() {
+    super("antigravity", PROVIDERS.antigravity);
+  }
+
+  buildUrl(model, stream, urlIndex = 0) {
+    const baseUrls = this.getBaseUrls();
+    const baseUrl = baseUrls[urlIndex] || baseUrls[0];
+    // Always use streaming endpoint — the non-streaming `generateContent` causes
+    // upstream 400 errors for some models (e.g. gpt-oss-120b-medium) because the
+    // Cloud Code API internally converts to OpenAI format and injects
+    // stream_options without setting stream=true.  chatCore already handles
+    // SSE→JSON conversion for non-streaming client requests.
+    return `${baseUrl}/v1internal:streamGenerateContent?alt=sse`;
+  }
+
+  buildHeaders(credentials, stream = true) {
+    return {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${credentials.accessToken}`,
+      "User-Agent": this.config.headers?.["User-Agent"] || "antigravity/1.104.0 darwin/arm64",
+      "X-OmniRoute-Source": "omniroute",
+      Accept: "text/event-stream",
+    };
+  }
+
+  transformRequest(model, body, stream, credentials) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     // TODO: Consider removing project override like gemini-cli.ts — stored projectId
     // can become stale for Cloud Code accounts, causing 403 "has not been used in project X".
     // Antigravity accounts may have more stable project IDs, but the risk exists.
@@ -252,6 +301,7 @@ function cleanModelName(model: string): string {
       return resp as unknown as never;
     }
 
+<<<<<<< HEAD
     const upstreamModel = cleanModelName(model);
     const isClaude = upstreamModel.toLowerCase().includes("claude");
     const baseBody = body && typeof body === "object" ? body : {};
@@ -336,13 +386,55 @@ function cleanModelName(model: string): string {
     } = normalizedBody;
 
     return {
+=======
+    // Fix contents for Claude models via Antigravity
+    const normalizedContents =
+      body.request?.contents?.map((c) => {
+        let role = c.role;
+        // functionResponse must be role "user" for Claude models
+        if (c.parts?.some((p) => p.functionResponse)) {
+          role = "user";
+        }
+
+        const hasFunctionCall = c.parts?.some((p) => p.functionCall) || false;
+
+        // Antigravity rejects synthetic thought text, but Gemini 3+ requires any
+        // returned thoughtSignature metadata to survive model tool-call turns.
+        const parts =
+          c.parts?.filter((p) => !p.thought && (hasFunctionCall || !p.thoughtSignature)) || [];
+        return { ...c, role, parts };
+      }) || [];
+
+    const contents = normalizedContents.filter((c) =>
+      Array.isArray(c.parts) ? c.parts.length > 0 : true
+    );
+
+    const transformedRequest = {
+      ...body.request,
+      ...(contents.length > 0 && { contents }),
+      sessionId: body.request?.sessionId || this.generateSessionId(),
+      safetySettings: undefined,
+      toolConfig:
+        body.request?.tools?.length > 0
+          ? { functionCallingConfig: { mode: "VALIDATED" } }
+          : body.request?.toolConfig,
+    };
+
+    const upstreamModel = cleanModelName(model);
+
+    return {
+      ...body,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       project: projectId,
       model: upstreamModel,
       userAgent: "antigravity",
       requestType: "agent",
       requestId: `agent-${crypto.randomUUID()}`,
       request: transformedRequest,
+<<<<<<< HEAD
       ...passthroughFields,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     };
   }
 
@@ -429,12 +521,16 @@ function cleanModelName(model: string): string {
     if (match[2]) totalMs += parseInt(match[2]) * 60 * 1000; // minutes
     if (match[3]) totalMs += parseInt(match[3]) * 1000; // seconds
 
+<<<<<<< HEAD
     // "reset after 0s" = burst/RPM limit, not quota exhaustion.
     // Return a minimum backoff so the auto-retry loop handles it
     // instead of falling through to the 24h exhaustion classifier.
     if (totalMs === 0) return 2_000; // 2s minimum burst-limit backoff
 
     return totalMs;
+=======
+    return totalMs > 0 ? totalMs : null;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   /**
@@ -449,6 +545,7 @@ function cleanModelName(model: string): string {
     const SSE_COLLECT_TIMEOUT_MS = 120_000;
 
     const collect = async () => {
+<<<<<<< HEAD
       const collected: AntigravityCollectedStream = {
         textContent: "",
         finishReason: "stop",
@@ -456,6 +553,9 @@ function cleanModelName(model: string): string {
         remainingCredits: null,
       };
       const partialLine = { value: "" };
+=======
+      const chunks: string[] = [];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       let timedOut = false;
       const timeout = AbortSignal.timeout(SSE_COLLECT_TIMEOUT_MS);
       try {
@@ -472,12 +572,16 @@ function cleanModelName(model: string): string {
             ),
           ]);
           if (done) break;
+<<<<<<< HEAD
           processAntigravitySSEText(
             decoder.decode(value, { stream: true }),
             partialLine,
             collected,
             log
           );
+=======
+          chunks.push(decoder.decode(value, { stream: true }));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         }
       } catch (err) {
         const msg = err?.message || String(err);
@@ -485,8 +589,51 @@ function cleanModelName(model: string): string {
         log?.warn?.("SSE_COLLECT", `Error collecting SSE stream: ${msg}`);
         // Fall through — return whatever was collected so far
       }
+<<<<<<< HEAD
       processAntigravitySSEText(decoder.decode(), partialLine, collected, log);
       flushAntigravitySSEText(partialLine, collected, log);
+=======
+      const rawSSE = chunks.join("");
+
+      // Parse Gemini SSE: each line is "data: {json}"
+      let textContent = "";
+      let finishReason = "stop";
+      let usage: Record<string, unknown> | null = null;
+      const lines = rawSSE.split("\n");
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed.startsWith("data:")) continue;
+        const payload = trimmed.slice(5).trim();
+        if (!payload || payload === "[DONE]") continue;
+        try {
+          const parsed = JSON.parse(payload);
+          const candidate = parsed?.response?.candidates?.[0];
+          if (candidate?.content?.parts) {
+            for (const part of candidate.content.parts) {
+              if (typeof part.text === "string" && !part.thought && !part.thoughtSignature) {
+                textContent += part.text;
+              }
+            }
+          }
+          if (candidate?.finishReason) {
+            finishReason =
+              candidate.finishReason.toLowerCase() === "stop"
+                ? "stop"
+                : candidate.finishReason.toLowerCase();
+          }
+          if (parsed?.response?.usageMetadata) {
+            const um = parsed.response.usageMetadata;
+            usage = {
+              prompt_tokens: um.promptTokenCount || 0,
+              completion_tokens: um.candidatesTokenCount || 0,
+              total_tokens: um.totalTokenCount || 0,
+            };
+          }
+        } catch (e) {
+          log?.debug?.("SSE_PARSE", `Skipping malformed SSE line: ${payload.slice(0, 80)}`);
+        }
+      }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
       const result = {
         id: `chatcmpl-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`,
@@ -496,6 +643,7 @@ function cleanModelName(model: string): string {
         choices: [
           {
             index: 0,
+<<<<<<< HEAD
             message: { role: "assistant", content: collected.textContent },
             finish_reason: timedOut ? "length" : collected.finishReason,
           },
@@ -503,6 +651,13 @@ function cleanModelName(model: string): string {
         ...(collected.usage && { usage: collected.usage }),
         // Expose credit balance for upstream consumers (usage service, dashboard)
         ...(collected.remainingCredits && { _remainingCredits: collected.remainingCredits }),
+=======
+            message: { role: "assistant", content: textContent },
+            finish_reason: timedOut ? "length" : finishReason,
+          },
+        ],
+        ...(usage && { usage }),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       };
 
       const syntheticStatus = timedOut ? 504 : response.status;
@@ -518,6 +673,7 @@ function cleanModelName(model: string): string {
     return collect();
   }
 
+<<<<<<< HEAD
   async execute({
     model,
     body,
@@ -528,6 +684,9 @@ function cleanModelName(model: string): string {
     upstreamExtraHeaders,
   }: ExecuteInput) {
     await resolveAntigravityVersion();
+=======
+  async execute({ model, body, stream, credentials, signal, log, upstreamExtraHeaders }) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const fallbackCount = this.getFallbackCount();
     let lastError = null;
     let lastStatus = 0;
@@ -539,6 +698,7 @@ function cleanModelName(model: string): string {
     // non-streaming Response so chatCore's non-streaming path stays unchanged.
     const upstreamStream = true;
 
+<<<<<<< HEAD
     // Account ID for credits tracking.
     // Use connectionId as the stable cache key — it's available in both the executor
     // (via credentials.connectionId) and the usage fetcher (via connection.id).
@@ -551,6 +711,13 @@ function cleanModelName(model: string): string {
     const creditsMode = getCreditsMode();
     const useCreditsFirst = shouldUseCreditsFirst(credentials?.accessToken || "", creditsMode);
 
+=======
+    for (let urlIndex = 0; urlIndex < fallbackCount; urlIndex++) {
+      const url = this.buildUrl(model, upstreamStream, urlIndex);
+      const headers = this.buildHeaders(credentials, upstreamStream);
+      mergeUpstreamExtraHeaders(headers, upstreamExtraHeaders);
+      const transformedBody = await this.transformRequest(model, body, upstreamStream, credentials);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
       // Initialize retry counter for this URL
       if (!retryAttemptsByUrl[urlIndex]) {
@@ -558,6 +725,7 @@ function cleanModelName(model: string): string {
       }
 
       try {
+<<<<<<< HEAD
         const serializedRequest = serializeAntigravityRequest(
           this.provider,
           headers,
@@ -586,6 +754,15 @@ function cleanModelName(model: string): string {
         }
 
 =======
+=======
+        const response = await fetch(url, {
+          method: "POST",
+          headers,
+          body: JSON.stringify(transformedBody),
+          signal,
+        });
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         // Parse retry time for 429/503 responses
         let retryMs = null;
 
@@ -602,6 +779,33 @@ function cleanModelName(model: string): string {
               const errorBody = await response.clone().text();
               const errorJson = JSON.parse(errorBody);
               const errorMessage = errorJson?.error?.message || errorJson?.message || "";
+<<<<<<< HEAD
+=======
+              retryMs = this.parseRetryFromErrorMessage(errorMessage);
+
+              if (!retryMs) {
+                // Dynamic quota interpretation logic for Free vs Pro accounts
+                const lowerMsg = errorMessage.toLowerCase();
+
+                if (
+                  lowerMsg.includes("free tier") ||
+                  lowerMsg.includes("exhausted your capacity") ||
+                  lowerMsg.includes("daily limit") ||
+                  lowerMsg.includes("quota exceeded")
+                ) {
+                  // Hard limit hit for Free accounts (or exhausting general capacity), fallback immediately.
+                  // Setting a massive retryMs forces an instant fallback.
+                  retryMs = 24 * 60 * 60 * 1000; // 24 hours
+                } else if (
+                  lowerMsg.includes("pro") ||
+                  lowerMsg.includes("per minute") ||
+                  lowerMsg.includes("rpm")
+                ) {
+                  // RPM limit for Pro counts, backoff up to 1 minute, then fallback
+                  retryMs = 60 * 1000; // 60s
+                }
+              }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             } catch (e) {
               // Ignore parse errors, will fall back to exponential backoff
             }
@@ -676,6 +880,10 @@ function cleanModelName(model: string): string {
               status: response.status,
               headers: response.headers,
             });
+<<<<<<< HEAD
+=======
+            return { response: modifiedResponse, url, headers, transformedBody };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           } catch (err) {
             log?.warn?.("RETRY", `Failed to embed retryAfterMs: ${err}`);
             // Fall back to original response
@@ -685,16 +893,32 @@ function cleanModelName(model: string): string {
         // For non-streaming clients, collect the SSE stream and return a synthetic
         // non-streaming Response so chatCore doesn't need to handle SSE conversion.
         if (!stream) {
+<<<<<<< HEAD
+=======
+          return this.collectStreamToResponse(
+            response,
+            model,
+            url,
+            headers,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             transformedBody,
             log,
             signal
           );
+<<<<<<< HEAD
       } catch (error) {
         lastError = error;
         log?.error?.(
           "TELEMETRY",
           `[Antigravity] Network/Fetch Error - URL: ${url}, Model: ${model}, Error: ${error instanceof Error ? error.message : String(error)}`
         );
+=======
+        }
+
+        return { response, url, headers, transformedBody };
+      } catch (error) {
+        lastError = error;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         if (urlIndex + 1 < fallbackCount) {
           log?.debug?.("RETRY", `Error on ${url}, trying fallback ${urlIndex + 1}`);
           continue;

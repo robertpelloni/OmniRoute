@@ -2,9 +2,15 @@
 
 import { useState, useEffect } from "react";
 import {
+<<<<<<< HEAD
   PROVIDER_COLORS,
   getHttpStatusStyle as getStatusStyle,
   getProtocolColor,
+=======
+  PROTOCOL_COLORS,
+  PROVIDER_COLORS,
+  getHttpStatusStyle as getStatusStyle,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 } from "@/shared/constants/colors";
 import { formatDuration, formatApiKeyLabel } from "@/shared/utils/formatting";
 
@@ -45,6 +51,7 @@ function PayloadSection({ title, json, onCopy }) {
 
 // ─── Detail Modal ───────────────────────────────────────────────────────────
 
+<<<<<<< HEAD
 type StreamChunks = Record<string, string | string[]>;
 
 export default function RequestLoggerDetail({
@@ -55,27 +62,47 @@ export default function RequestLoggerDetail({
   onClose,
   onCopy,
 }) {
+=======
+export default function RequestLoggerDetail({ log, detail, loading, onClose, onCopy }) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Close on Escape key
   useEffect(() => {
     const handler = (e) => {
       if (e.key === "Escape") onClose();
     };
+<<<<<<< HEAD
     globalThis.addEventListener("keydown", handler);
     return () => globalThis.removeEventListener("keydown", handler);
+=======
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }, [onClose]);
 
   const statusStyle = getStatusStyle(log.status);
   const protocolKey = log.sourceFormat || log.provider;
+<<<<<<< HEAD
   const protocol = getProtocolColor(protocolKey, log.provider);
+=======
+  const protocol = PROTOCOL_COLORS[protocolKey] ||
+    PROTOCOL_COLORS[log.provider] || {
+      bg: "#6B7280",
+      text: "#fff",
+      label: (protocolKey || log.provider || "-").toUpperCase(),
+    };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const providerColor = PROVIDER_COLORS[log.provider] || {
     bg: "#374151",
     text: "#fff",
     label: (log.provider || "-").toUpperCase(),
   };
 
+<<<<<<< HEAD
   const providerStatus = detail?.pipelinePayloads?.providerResponse?.status;
   const hasStatusDiscrepancy = providerStatus && providerStatus !== log.status;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const formatDate = (iso) => {
     try {
       const d = new Date(iso);
@@ -116,6 +143,7 @@ export default function RequestLoggerDetail({
     : [];
   const requestJson = detail?.requestBody ? toPrettyJson(detail.requestBody) : null;
   const responseJson = detail?.responseBody ? toPrettyJson(detail.responseBody) : null;
+<<<<<<< HEAD
   const streamChunksText = (() => {
     if (!debugEnabled || !detail?.pipelinePayloads?.streamChunks) return null;
     let chunks: StreamChunks = detail.pipelinePayloads.streamChunks;
@@ -152,17 +180,23 @@ export default function RequestLoggerDetail({
       : detail?.detailState === "corrupt"
         ? "Detailed payload artifact could not be parsed."
         : null;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const tokenStats = {
     totalIn: detail?.tokens?.in ?? log.tokens?.in ?? 0,
     totalOut: detail?.tokens?.out ?? log.tokens?.out ?? 0,
     cacheRead: detail?.tokens?.cacheRead ?? log.tokens?.cacheRead,
     cacheWrite: detail?.tokens?.cacheWrite ?? log.tokens?.cacheWrite,
     reasoning: detail?.tokens?.reasoning ?? log.tokens?.reasoning,
+<<<<<<< HEAD
     compressed: detail?.tokens?.compressed ?? log.tokens?.compressed,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 
   const formatTokenValue = (value) => (value != null ? value.toLocaleString() : "N/A");
 
+<<<<<<< HEAD
   const cacheSource = detail?.cacheSource || log.cacheSource || "upstream";
   const cacheSourceLabel =
     cacheSource === "semantic" ? "Semantic (OmniRoute)" : "Upstream (Provider)";
@@ -171,6 +205,8 @@ export default function RequestLoggerDetail({
       ? "bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500/30"
       : "bg-sky-500/20 text-sky-700 dark:text-sky-300 border-sky-500/30";
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return (
     <div
       className="fixed inset-0 z-50 flex items-start justify-center pt-[5vh]"
@@ -187,6 +223,7 @@ export default function RequestLoggerDetail({
         {/* Modal Header */}
         <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 border-b border-border bg-bg-primary/95 backdrop-blur-sm rounded-t-xl">
           <div className="flex items-center gap-3">
+<<<<<<< HEAD
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
                 <span
@@ -209,6 +246,16 @@ export default function RequestLoggerDetail({
               )}
             </div>
             <span className="text-text-muted font-mono text-sm self-center ml-2">{log.path}</span>
+=======
+            <span
+              className="inline-block px-2.5 py-1 rounded text-xs font-bold"
+              style={{ backgroundColor: statusStyle.bg, color: statusStyle.text }}
+            >
+              {log.status}
+            </span>
+            <span className="font-bold text-lg">{log.method}</span>
+            <span className="text-text-muted font-mono text-sm">{log.path}</span>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           </div>
           <button
             onClick={onClose}
@@ -249,6 +296,7 @@ export default function RequestLoggerDetail({
                 <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-700 dark:text-amber-400 text-xs font-bold">
                   Cache Write: {formatTokenValue(tokenStats.cacheWrite)}
                 </span>
+<<<<<<< HEAD
                 {tokenStats.compressed != null &&
                   tokenStats.compressed > 0 &&
                   (() => {
@@ -261,6 +309,8 @@ export default function RequestLoggerDetail({
                       </span>
                     );
                   })()}
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               </div>
             </div>
             <div>
@@ -319,6 +369,7 @@ export default function RequestLoggerDetail({
             </div>
             <div>
               <div className="text-[10px] text-text-muted uppercase tracking-wider mb-1">
+<<<<<<< HEAD
                 Cache Source
               </div>
               <span
@@ -329,6 +380,8 @@ export default function RequestLoggerDetail({
             </div>
             <div>
               <div className="text-[10px] text-text-muted uppercase tracking-wider mb-1">
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 Account
               </div>
               <div className="text-sm font-medium">{detail?.account || log.account || "-"}</div>
@@ -377,6 +430,7 @@ export default function RequestLoggerDetail({
             </div>
           )}
 
+<<<<<<< HEAD
           {detailIssue && (
             <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
               <div className="text-[10px] text-amber-700 dark:text-amber-400 uppercase tracking-wider mb-1 font-bold">
@@ -386,6 +440,8 @@ export default function RequestLoggerDetail({
             </div>
           )}
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           {loading ? (
             <div className="p-8 text-center text-text-muted animate-pulse">
               Loading request details...
@@ -402,6 +458,7 @@ export default function RequestLoggerDetail({
                   />
                 ))}
 
+<<<<<<< HEAD
               {streamChunksText && (
                 <PayloadSection
                   title="Event Stream (Debug)"
@@ -410,6 +467,8 @@ export default function RequestLoggerDetail({
                 />
               )}
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               {payloadSections.length === 0 && responseJson && (
                 <PayloadSection
                   title="Response Payload (Legacy)"

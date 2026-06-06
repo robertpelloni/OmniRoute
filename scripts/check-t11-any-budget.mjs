@@ -67,7 +67,11 @@ const budget = [
   { file: "open-sse/executors/default.ts", maxAny: 0 },
   { file: "open-sse/handlers/audioSpeech.ts", maxAny: 0 },
   { file: "open-sse/handlers/embeddings.ts", maxAny: 0 },
+<<<<<<< HEAD
   { file: "open-sse/handlers/imageGeneration.ts", maxAny: 3 },
+=======
+  { file: "open-sse/handlers/imageGeneration.ts", maxAny: 0 },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   { file: "open-sse/handlers/moderations.ts", maxAny: 0 },
   { file: "open-sse/handlers/rerank.ts", maxAny: 0 },
   { file: "open-sse/handlers/responsesHandler.ts", maxAny: 0 },

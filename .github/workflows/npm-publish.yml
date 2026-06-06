@@ -36,6 +36,7 @@ permissions:
   contents: read
   id-token: write
   packages: write
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 
@@ -45,6 +46,8 @@ env:
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 jobs:
   publish:
@@ -52,12 +55,21 @@ jobs:
     environment: NPM_TOKEN
     steps:
       - name: Checkout
+<<<<<<< HEAD
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NPM_PUBLISH_NODE_VERSION }}
+=======
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           registry-url: https://registry.npmjs.org
 
       - name: Install dependencies (skip scripts to avoid heavy build)
@@ -97,10 +109,14 @@ jobs:
       - name: Build CLI bundle (standalone app)
         env:
           JWT_SECRET: ci-build-secret-with-sufficient-length-for-validation
+<<<<<<< HEAD
         run: npm run build:cli
 
       - name: Validate npm package artifact
         run: npm run check:pack-artifact
+=======
+        run: node scripts/prepublish.mjs
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
       - name: Publish to npm
         run: |

@@ -401,8 +401,12 @@ export async function validateQoderCliPat({
   providerSpecificData?: JsonRecord;
 }) {
   // Resolve token: dashboard input → env var fallback
+<<<<<<< HEAD
   const resolvedToken =
     apiKey?.trim() || String(process.env.QODER_PERSONAL_ACCESS_TOKEN || "").trim();
+=======
+  const resolvedToken = apiKey?.trim() || String(process.env.QODER_PERSONAL_ACCESS_TOKEN || "").trim();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   if (!resolvedToken) {
     return {
@@ -503,6 +507,7 @@ export async function validateQoderCliPat({
       return { valid: true, error: null, unsupported: false };
     }
 
+<<<<<<< HEAD
     // Treat 5xx as valid bypass to prevent false negatives from legacy Qoder APIs (issue #1391)
     if (res.status >= 500) {
       return {
@@ -512,6 +517,8 @@ export async function validateQoderCliPat({
       };
     }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return {
       valid: false,
       error: `Qoder API returned HTTP ${res.status}${errorDetail ? `: ${errorDetail}` : ""}`,

@@ -1,6 +1,9 @@
 import http from "http";
 import type { IncomingMessage, ServerResponse } from "http";
+<<<<<<< HEAD
 import net from "net";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { getRuntimePorts } from "@/lib/runtime/ports";
 import { getApiBridgeTimeoutConfig } from "@/shared/utils/runtimeTimeouts";
 
@@ -71,6 +74,7 @@ function proxyRequest(req: IncomingMessage, res: ServerResponse, dashboardPort: 
   req.pipe(targetReq);
 }
 
+<<<<<<< HEAD
 function writeUpgradeProxyError(socket: net.Socket, status: number, body: string): void {
   if (!socket.writable || socket.destroyed) return;
   const buffer = Buffer.from(body, "utf8");
@@ -144,6 +148,8 @@ function proxyUpgrade(
   });
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 declare global {
   var __omnirouteApiBridgeStarted: boolean | undefined;
 }
@@ -177,6 +183,7 @@ export function initApiBridgeServer(): void {
   server.headersTimeout = API_BRIDGE_TIMEOUTS.serverHeadersTimeoutMs;
   server.keepAliveTimeout = API_BRIDGE_TIMEOUTS.serverKeepAliveTimeoutMs;
   server.setTimeout(API_BRIDGE_TIMEOUTS.serverSocketTimeoutMs);
+<<<<<<< HEAD
   server.on("upgrade", (req, socket, head) => {
     const rawUrl = req.url || "/";
     const pathname = rawUrl.split("?")[0] || "/";
@@ -195,6 +202,8 @@ export function initApiBridgeServer(): void {
 
     proxyUpgrade(req, socket, head, dashboardPort);
   });
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   server.on("error", (error: NodeJS.ErrnoException) => {
     if (error?.code === "EADDRINUSE") {

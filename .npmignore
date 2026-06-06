@@ -28,8 +28,11 @@ scripts/
 .vscode/
 .agents/
 .env*
+<<<<<<< HEAD
 app/.env
 app/.env*
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 eslint.config.mjs
 prettier.config.mjs
 postcss.config.mjs
@@ -69,6 +72,7 @@ clipr/
 omnirouteCloud/
 omnirouteSite/
 vscode-extension/
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 
@@ -106,3 +110,5 @@ coverage/
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

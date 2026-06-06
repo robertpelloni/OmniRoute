@@ -5,6 +5,11 @@ import Link from "next/link";
 import { Card, Button, Input } from "@/shared/components";
 import ProviderIcon from "@/shared/components/ProviderIcon";
 import { useTranslations } from "next-intl";
+<<<<<<< HEAD
+=======
+import { AI_PROVIDERS } from "@/shared/constants/config";
+import { CLI_COMPAT_PROVIDER_IDS } from "@/shared/constants/cliCompatProviders";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 interface AgentInfo {
   id: string;
@@ -41,6 +46,10 @@ const AGENT_ICON_MAP: Record<string, string> = {
   droid: "droid",
   goose: "goose",
   aider: "aider",
+<<<<<<< HEAD
+=======
+  iflow: "iflow",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   kiro: "kiro",
   nanobot: "nanobot",
   picoclaw: "picoclaw",
@@ -59,6 +68,12 @@ export default function AgentsPage() {
   const [refreshing, setRefreshing] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [addLoading, setAddLoading] = useState(false);
+<<<<<<< HEAD
+=======
+  const [settings, setSettings] = useState<Record<string, any>>({});
+  const [opencodeConfigLoading, setOpencodeConfigLoading] = useState(false);
+  const [opencodeConfigDone, setOpencodeConfigDone] = useState(false);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [newAgent, setNewAgent] = useState({
     name: "",
     binary: "",
@@ -66,6 +81,10 @@ export default function AgentsPage() {
     spawnArgs: "",
   });
   const t = useTranslations("agents");
+<<<<<<< HEAD
+=======
+  const ts = useTranslations("settings");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const fetchAgents = useCallback(async () => {
     try {
@@ -82,8 +101,31 @@ export default function AgentsPage() {
 
   useEffect(() => {
     fetchAgents();
+<<<<<<< HEAD
   }, [fetchAgents]);
 
+=======
+    // Also fetch settings for CLI fingerprint
+    fetch("/api/settings")
+      .then((r) => r.json())
+      .then((d) => setSettings(d))
+      .catch(() => {});
+  }, [fetchAgents]);
+
+  const updateSetting = async (key: string, value: any) => {
+    try {
+      const res = await fetch("/api/settings", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ [key]: value }),
+      });
+      if (res.ok) setSettings((prev) => ({ ...prev, [key]: value }));
+    } catch (err) {
+      console.error("Failed to update setting:", err);
+    }
+  };
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const handleRefresh = async () => {
     setRefreshing(true);
     try {
@@ -165,6 +207,7 @@ export default function AgentsPage() {
         </Button>
       </div>
 
+<<<<<<< HEAD
       <Card className="border-blue-500/20 bg-blue-500/5">
         <div className="flex flex-col gap-4">
           <div className="flex items-start justify-between gap-4 flex-wrap">
@@ -334,6 +377,8 @@ export default function AgentsPage() {
         </div>
       </Card>
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       {/* Summary Cards */}
       {summary && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -374,6 +419,16 @@ export default function AgentsPage() {
             {t("openCliTools")}
           </Link>
         </div>
+<<<<<<< HEAD
+=======
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="rounded-lg border border-border/50 bg-black/[0.02] dark:bg-white/[0.02] p-3">
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="material-symbols-outlined text-[16px] text-blue-500">radar</span>
+              <p className="text-sm font-medium">{t("setupGuideDetectCliTitle")}</p>
+            </div>
+            <p className="text-xs text-text-muted">{t("setupGuideDetectCliDesc")}</p>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           </div>
           <div className="rounded-lg border border-border/50 bg-black/[0.02] dark:bg-white/[0.02] p-3">
             <div className="flex items-center gap-2 mb-1.5">
@@ -392,6 +447,7 @@ export default function AgentsPage() {
             <p className="text-xs text-text-muted">{t("setupGuideCommandMissingDesc")}</p>
           </div>
         </div>
+<<<<<<< HEAD
         <div className="mt-3 flex items-center gap-2 rounded-lg border border-border/30 bg-surface/20 p-3">
           <span className="material-symbols-outlined text-[14px] text-text-muted">fingerprint</span>
           <p className="text-xs text-text-muted">
@@ -400,6 +456,71 @@ export default function AgentsPage() {
               {t("settingsRoutingLink")}
             </Link>
           </p>
+=======
+      </Card>
+
+      {/* CLI Fingerprint Matching */}
+      <Card>
+        <div className="flex items-center gap-3 mb-4">
+          <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+            <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
+              fingerprint
+            </span>
+          </div>
+          <h3 className="text-lg font-semibold">{ts("cliFingerprint")}</h3>
+        </div>
+        <div className="flex flex-col gap-4">
+          <p className="text-sm text-text-muted">{ts("cliFingerprintDesc")}</p>
+          <div className="flex flex-wrap gap-2">
+            {CLI_COMPAT_PROVIDER_IDS.map((providerId) => {
+              const providerMeta = Object.values(AI_PROVIDERS).find(
+                (p: any) => p.id === providerId
+              ) as any;
+              const isEnabled = (settings.cliCompatProviders || []).includes(providerId);
+              const displayName = providerMeta?.name || providerId;
+              const icon = providerMeta?.icon || "terminal";
+              const color = providerMeta?.color || "#888";
+              return (
+                <button
+                  key={providerId}
+                  onClick={() => {
+                    const current: string[] = settings.cliCompatProviders || [];
+                    const updated = current.includes(providerId)
+                      ? current.filter((p) => p !== providerId)
+                      : [...current, providerId];
+                    updateSetting("cliCompatProviders", updated);
+                  }}
+                  className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all border ${
+                    isEnabled
+                      ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400"
+                      : "bg-black/[0.02] dark:bg-white/[0.02] border-transparent text-text-muted hover:bg-black/[0.05] dark:hover:bg-white/[0.05]"
+                  }`}
+                >
+                  <span
+                    className="material-symbols-outlined text-[14px]"
+                    style={{ color: isEnabled ? undefined : color }}
+                  >
+                    {isEnabled ? "fingerprint" : icon}
+                  </span>
+                  {displayName}
+                  {isEnabled && (
+                    <span className="material-symbols-outlined text-[12px] text-emerald-500">
+                      check
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+          {(settings.cliCompatProviders || []).length > 0 && (
+            <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-1 flex items-center gap-1">
+              <span className="material-symbols-outlined text-[14px]">verified</span>
+              {ts("cliFingerprintEnabled", {
+                count: (settings.cliCompatProviders || []).length,
+              })}
+            </p>
+          )}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         </div>
       </Card>
 
@@ -451,6 +572,7 @@ export default function AgentsPage() {
               </div>
             </div>
             <div className="flex items-center justify-between mt-3 pt-3 border-t border-border/30">
+<<<<<<< HEAD
               <div>
                 <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-500 font-mono">
                   {agent.protocol}
@@ -459,6 +581,11 @@ export default function AgentsPage() {
                   <p className="mt-1 text-[10px] text-text-muted">{t("agentUseCaseHint")}</p>
                 )}
               </div>
+=======
+              <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-500 font-mono">
+                {agent.protocol}
+              </span>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               {agent.isCustom && (
                 <button
                   onClick={() => handleRemoveAgent(agent.id)}
@@ -474,6 +601,95 @@ export default function AgentsPage() {
         ))}
       </div>
 
+<<<<<<< HEAD
+=======
+      {/* OpenCode Config Generator — shown only when opencode is detected */}
+      {agents.find((a) => a.id === "opencode" && a.installed) && (
+        <Card>
+          <div className="flex items-start gap-3">
+            <div className="p-2 rounded-lg bg-violet-500/10 text-violet-500 shrink-0">
+              <span className="material-symbols-outlined text-[20px]">code_blocks</span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <h3 className="text-base font-semibold">{t("opencodeIntegration")}</h3>
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-medium">
+                  {t("opencodeDetected", {
+                    version: agents.find((a) => a.id === "opencode")?.version || "",
+                  })}
+                </span>
+              </div>
+              <p className="text-sm text-text-muted mb-3">
+                {t("opencodeDesc", {
+                  configFile: "opencode.json",
+                  command: "opencode",
+                })}
+              </p>
+              <Button
+                variant="secondary"
+                loading={opencodeConfigLoading}
+                onClick={async () => {
+                  setOpencodeConfigLoading(true);
+                  setOpencodeConfigDone(false);
+                  try {
+                    // Fetch available models
+                    const modelsRes = await fetch("/v1/models");
+                    const modelsData = modelsRes.ok ? await modelsRes.json() : { data: [] };
+                    const models: Record<string, { name: string }> = {};
+                    for (const m of modelsData.data || []) {
+                      models[m.id] = { name: m.id };
+                    }
+                    // Build opencode.json
+                    const baseURL = window.location.origin + "/v1";
+                    const config = {
+                      $schema: "https://opencode.ai/config.json",
+                      provider: {
+                        omniroute: {
+                          npm: "@ai-sdk/openai-compatible",
+                          name: "OmniRoute",
+                          options: {
+                            baseURL,
+                            apiKey: "YOUR_OMNIROUTE_API_KEY",
+                          },
+                          models:
+                            Object.keys(models).length > 0
+                              ? models
+                              : { "gpt-4o": { name: "gpt-4o" } },
+                        },
+                      },
+                    };
+                    // Download as file
+                    const blob = new Blob([JSON.stringify(config, null, 2)], {
+                      type: "application/json",
+                    });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = "opencode.json";
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    setOpencodeConfigDone(true);
+                    setTimeout(() => setOpencodeConfigDone(false), 3000);
+                  } catch (err) {
+                    console.error("Failed to generate opencode.json:", err);
+                  } finally {
+                    setOpencodeConfigLoading(false);
+                  }
+                }}
+              >
+                <span className="material-symbols-outlined text-[16px] mr-1">
+                  {opencodeConfigDone ? "check" : "download"}
+                </span>
+                {opencodeConfigDone
+                  ? t("downloaded")
+                  : t("downloadConfig", { file: "opencode.json" })}
+              </Button>
+            </div>
+          </div>
+        </Card>
+      )}
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       {/* Add Custom Agent */}
       <Card>
         <div className="flex items-center justify-between mb-4">
@@ -501,14 +717,22 @@ export default function AgentsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Input
                 label={t("agentName")}
+<<<<<<< HEAD
                 placeholder={t("agentNamePlaceholder")}
+=======
+                placeholder="e.g. My Custom CLI"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 value={newAgent.name}
                 onChange={(e) => setNewAgent({ ...newAgent, name: e.target.value })}
                 required
               />
               <Input
                 label={t("binaryName")}
+<<<<<<< HEAD
                 placeholder={t("binaryNamePlaceholder")}
+=======
+                placeholder="e.g. mycli"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 value={newAgent.binary}
                 onChange={(e) => setNewAgent({ ...newAgent, binary: e.target.value })}
                 required
@@ -517,13 +741,21 @@ export default function AgentsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Input
                 label={t("versionCommand")}
+<<<<<<< HEAD
                 placeholder={t("versionCommandPlaceholder")}
+=======
+                placeholder="e.g. mycli --version"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 value={newAgent.versionCommand}
                 onChange={(e) => setNewAgent({ ...newAgent, versionCommand: e.target.value })}
               />
               <Input
                 label={t("spawnArgs")}
+<<<<<<< HEAD
                 placeholder={t("spawnArgsPlaceholder")}
+=======
+                placeholder="e.g. --quiet, --json"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 value={newAgent.spawnArgs}
                 onChange={(e) => setNewAgent({ ...newAgent, spawnArgs: e.target.value })}
               />

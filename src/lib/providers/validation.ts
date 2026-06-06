@@ -1,6 +1,9 @@
 import { getRegistryEntry } from "@omniroute/open-sse/config/providerRegistry.ts";
+<<<<<<< HEAD
 import { getEmbeddingProvider } from "@omniroute/open-sse/config/embeddingRegistry.ts";
 import { getRerankProvider } from "@omniroute/open-sse/config/rerankRegistry.ts";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import {
   buildClaudeCodeCompatibleHeaders,
   buildClaudeCodeCompatibleValidationPayload,
@@ -15,6 +18,7 @@ import {
   isClaudeCodeCompatibleProvider,
   isAnthropicCompatibleProvider,
   isOpenAICompatibleProvider,
+<<<<<<< HEAD
   isSelfHostedChatProvider,
 } from "@/shared/constants/providers";
 import {
@@ -73,6 +77,10 @@ import {
 } from "@omniroute/open-sse/config/maritalk.ts";
 import { signAwsRequest } from "@omniroute/open-sse/utils/awsSigV4.ts";
 import { validateImageProviderApiKey } from "@/lib/providers/imageValidation";
+=======
+} from "@/shared/constants/providers";
+import { validateQoderCliPat } from "@omniroute/open-sse/services/qoderCli.ts";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const OPENAI_LIKE_FORMATS = new Set(["openai", "openai-responses"]);
 const GEMINI_LIKE_FORMATS = new Set(["gemini", "gemini-cli"]);
@@ -81,6 +89,7 @@ function normalizeBaseUrl(baseUrl: string) {
   return (baseUrl || "").trim().replace(/\/$/, "");
 }
 
+<<<<<<< HEAD
 function normalizeAzureOpenAIBaseUrl(baseUrl: string) {
   return normalizeBaseUrl(baseUrl)
     .replace(/\/openai$/i, "")
@@ -88,6 +97,8 @@ function normalizeAzureOpenAIBaseUrl(baseUrl: string) {
 }
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function normalizeAnthropicBaseUrl(baseUrl: string) {
   return stripAnthropicMessagesSuffix(baseUrl || "");
 }
@@ -145,6 +156,7 @@ function resolveChatUrl(provider: string, baseUrl: string, providerSpecificData:
   return normalized;
 }
 
+<<<<<<< HEAD
 function normalizeHerokuChatUrl(baseUrl: string) {
   const normalized = normalizeBaseUrl(baseUrl);
   if (!normalized) return "";
@@ -173,6 +185,8 @@ function normalizeGigachatChatUrl(baseUrl: string) {
   return `${normalized}/chat/completions`;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function getCustomUserAgent(providerSpecificData: any = {}) {
   if (typeof providerSpecificData?.customUserAgent !== "string") return null;
   const customUserAgent = providerSpecificData.customUserAgent.trim();
@@ -200,6 +214,7 @@ function withCustomUserAgent(init: RequestInit, providerSpecificData: any = {}) 
 }
 
 function buildBearerHeaders(apiKey: string, providerSpecificData: any = {}) {
+<<<<<<< HEAD
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
@@ -288,6 +303,15 @@ function toValidationErrorResult(error: unknown) {
       : {}),
     ...(statusCode === 503 ? { securityBlocked: true } : {}),
   };
+=======
+  return applyCustomUserAgent(
+    {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    providerSpecificData
+  );
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 async function validateOpenAILikeProvider({
@@ -297,6 +321,7 @@ async function validateOpenAILikeProvider({
   providerSpecificData = {},
   modelId = "gpt-4o-mini",
   modelsUrl: customModelsUrl,
+<<<<<<< HEAD
 }: {
   provider: string;
   apiKey: string;
@@ -304,6 +329,8 @@ async function validateOpenAILikeProvider({
   providerSpecificData?: any;
   modelId?: string;
   modelsUrl?: string;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }) {
   if (!baseUrl) {
     return { valid: false, error: "Missing base URL" };
@@ -314,7 +341,11 @@ async function validateOpenAILikeProvider({
     return { valid: false, error: "Invalid models endpoint" };
   }
 
+<<<<<<< HEAD
   const modelsRes = await validationRead(modelsUrl, {
+=======
+  const modelsRes = await fetch(modelsUrl, {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     method: "GET",
     headers: buildBearerHeaders(apiKey, providerSpecificData),
   });
@@ -340,7 +371,11 @@ async function validateOpenAILikeProvider({
     max_tokens: 1,
   };
 
+<<<<<<< HEAD
   const chatRes = await validationWrite(chatUrl, {
+=======
+  const chatRes = await fetch(chatUrl, {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     method: "POST",
     headers: buildBearerHeaders(apiKey, providerSpecificData),
     body: JSON.stringify(testBody),
@@ -366,6 +401,7 @@ async function validateOpenAILikeProvider({
   return { valid: true, error: null };
 }
 
+<<<<<<< HEAD
 async function validateDirectChatProvider({ url, headers, body, providerSpecificData = {} }: any) {
   try {
     const response = await validationWrite(url, {
@@ -535,6 +571,8 @@ async function validateRerankApiProvider({ apiKey, providerSpecificData = {}, ur
 }
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 async function validateAnthropicLikeProvider({
   apiKey,
   baseUrl,
@@ -565,6 +603,10 @@ async function validateAnthropicLikeProvider({
   const testModelId =
     providerSpecificData?.validationModelId || modelId || "claude-3-5-sonnet-20241022";
 
+<<<<<<< HEAD
+=======
+  const response = await fetch(baseUrl, {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     method: "POST",
     headers: requestHeaders,
     body: JSON.stringify({
@@ -602,7 +644,11 @@ async function validateGeminiLikeProvider({
   }
   applyCustomUserAgent(headers, providerSpecificData);
 
+<<<<<<< HEAD
   const response = await validationRead(baseUrl, { method: "GET", headers });
+=======
+  const response = await fetch(baseUrl, { method: "GET", headers });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   if (response.ok) {
     return { valid: true, error: null };
@@ -660,7 +706,11 @@ async function validateGeminiLikeProvider({
 
 async function validateDeepgramProvider({ apiKey, providerSpecificData = {} }: any) {
   try {
+<<<<<<< HEAD
     const response = await validationRead("https://api.deepgram.com/v1/auth/token", {
+=======
+    const response = await fetch("https://api.deepgram.com/v1/auth/token", {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       method: "GET",
       headers: applyCustomUserAgent({ Authorization: `Token ${apiKey}` }, providerSpecificData),
     });
@@ -670,13 +720,21 @@ async function validateDeepgramProvider({ apiKey, providerSpecificData = {} }: a
     }
     return { valid: false, error: `Validation failed: ${response.status}` };
   } catch (error: any) {
+<<<<<<< HEAD
     return toValidationErrorResult(error);
+=======
+    return { valid: false, error: error.message || "Validation failed" };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 }
 
 async function validateAssemblyAIProvider({ apiKey, providerSpecificData = {} }: any) {
   try {
+<<<<<<< HEAD
     const response = await validationRead("https://api.assemblyai.com/v2/transcript?limit=1", {
+=======
+    const response = await fetch("https://api.assemblyai.com/v2/transcript?limit=1", {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       method: "GET",
       headers: applyCustomUserAgent(
         {
@@ -692,18 +750,54 @@ async function validateAssemblyAIProvider({ apiKey, providerSpecificData = {} }:
     }
     return { valid: false, error: `Validation failed: ${response.status}` };
   } catch (error: any) {
+<<<<<<< HEAD
     return toValidationErrorResult(error);
+=======
+    return { valid: false, error: error.message || "Validation failed" };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 }
 
 async function validateNanoBananaProvider({ apiKey, providerSpecificData = {} }: any) {
+<<<<<<< HEAD
   return validateImageProviderApiKey({ provider: "nanobanana", apiKey, providerSpecificData });
+=======
+  try {
+    // NanoBanana doesn't expose a lightweight validation endpoint,
+    // so we send a minimal generate request that will succeed or fail on auth.
+    const response = await fetch("https://api.nanobananaapi.ai/api/v1/nanobanana/generate", {
+      method: "POST",
+      headers: applyCustomUserAgent(
+        {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        providerSpecificData
+      ),
+      body: JSON.stringify({
+        prompt: "test",
+        model: "nanobanana-flash",
+      }),
+    });
+    // Auth errors → 401/403; anything else (even 400 bad request) means auth passed
+    if (response.status === 401 || response.status === 403) {
+      return { valid: false, error: "Invalid API key" };
+    }
+    return { valid: true, error: null };
+  } catch (error: any) {
+    return { valid: false, error: error.message || "Validation failed" };
+  }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 async function validateElevenLabsProvider({ apiKey, providerSpecificData = {} }: any) {
   try {
     // Lightweight auth check endpoint
+<<<<<<< HEAD
     const response = await validationRead("https://api.elevenlabs.io/v1/voices", {
+=======
+    const response = await fetch("https://api.elevenlabs.io/v1/voices", {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       method: "GET",
       headers: applyCustomUserAgent(
         {
@@ -721,7 +815,11 @@ async function validateElevenLabsProvider({ apiKey, providerSpecificData = {} }:
 
     return { valid: false, error: `Validation failed: ${response.status}` };
   } catch (error: any) {
+<<<<<<< HEAD
     return toValidationErrorResult(error);
+=======
+    return { valid: false, error: error.message || "Validation failed" };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 }
 
@@ -729,7 +827,11 @@ async function validateInworldProvider({ apiKey, providerSpecificData = {} }: an
   try {
     // Inworld TTS lacks a simple key-introspection endpoint.
     // Send a minimal synth request and treat non-auth 4xx as auth-pass.
+<<<<<<< HEAD
     const response = await validationWrite("https://api.inworld.ai/tts/v1/voice", {
+=======
+    const response = await fetch("https://api.inworld.ai/tts/v1/voice", {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       method: "POST",
       headers: applyCustomUserAgent(
         {
@@ -752,6 +854,7 @@ async function validateInworldProvider({ apiKey, providerSpecificData = {} }: an
     // Any other response indicates auth is accepted (payload/model may still be wrong)
     return { valid: true, error: null };
   } catch (error: any) {
+<<<<<<< HEAD
     return toValidationErrorResult(error);
   }
 }
@@ -820,6 +923,9 @@ async function validateAwsPollyProvider({ apiKey, providerSpecificData = {} }: a
     return { valid: false, error: `Validation failed: ${response.status}` };
   } catch (error: any) {
     return toValidationErrorResult(error);
+=======
+    return { valid: false, error: error.message || "Validation failed" };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 }
 
@@ -835,7 +941,11 @@ async function validateBailianCodingPlanProvider({ apiKey, providerSpecificData 
     // It does NOT expose /v1/models — use messages probe directly
     const messagesUrl = `${baseUrl}/messages`;
 
+<<<<<<< HEAD
     const response = await validationWrite(messagesUrl, {
+=======
+    const response = await fetch(messagesUrl, {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       method: "POST",
       headers: applyCustomUserAgent(
         {
@@ -868,6 +978,7 @@ async function validateBailianCodingPlanProvider({ apiKey, providerSpecificData 
 
     return { valid: false, error: `Validation failed: ${response.status}` };
   } catch (error: any) {
+<<<<<<< HEAD
     return toValidationErrorResult(error);
   }
 }
@@ -1849,6 +1960,12 @@ async function validatePoeProvider({ apiKey, providerSpecificData = {} }: any) {
   return { valid: false, error: "Connection failed while testing Poe" };
 }
 
+=======
+    return { valid: false, error: error.message || "Validation failed" };
+  }
+}
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 async function validateOpenAICompatibleProvider({ apiKey, providerSpecificData = {} }: any) {
   const baseUrl = normalizeBaseUrl(providerSpecificData.baseUrl);
   if (!baseUrl) {
@@ -1863,7 +1980,11 @@ async function validateOpenAICompatibleProvider({ apiKey, providerSpecificData =
   // Step 1: Try GET /models
   let modelsReachable = false;
   try {
+<<<<<<< HEAD
     const modelsRes = await validationRead(`${baseUrl}/models`, {
+=======
+    const modelsRes = await fetch(`${baseUrl}/models`, {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       method: "GET",
       headers: buildBearerHeaders(apiKey, providerSpecificData),
     });
@@ -1908,7 +2029,11 @@ async function validateOpenAICompatibleProvider({ apiKey, providerSpecificData =
   const testModelId = validationModelId;
 
   try {
+<<<<<<< HEAD
     const chatRes = await validationWrite(chatUrl, {
+=======
+    const chatRes = await fetch(chatUrl, {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       method: "POST",
       headers: buildBearerHeaders(apiKey, providerSpecificData),
       body: JSON.stringify({
@@ -1970,9 +2095,16 @@ async function validateOpenAICompatibleProvider({ apiKey, providerSpecificData =
   }
 
   try {
+<<<<<<< HEAD
     const pingRes = await validationRead(baseUrl, {
       method: "GET",
       headers: buildBearerHeaders(apiKey, providerSpecificData),
+=======
+    const pingRes = await fetch(baseUrl, {
+      method: "GET",
+      headers: buildBearerHeaders(apiKey, providerSpecificData),
+      signal: AbortSignal.timeout(5000),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     });
 
     // If the server responds at all (even with an error page), it's reachable
@@ -1982,7 +2114,11 @@ async function validateOpenAICompatibleProvider({ apiKey, providerSpecificData =
 
     return { valid: false, error: `Provider unavailable (${pingRes.status})` };
   } catch (error: any) {
+<<<<<<< HEAD
     return toValidationErrorResult(error);
+=======
+    return { valid: false, error: error.message || "Connection failed" };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 }
 
@@ -1992,6 +2128,22 @@ async function validateAnthropicCompatibleProvider({ apiKey, providerSpecificDat
     return { valid: false, error: "No base URL configured for Anthropic compatible provider" };
   }
 
+<<<<<<< HEAD
+=======
+  const headers = applyCustomUserAgent(
+    {
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    providerSpecificData
+  );
+
+  // Step 1: Try GET /models
+  try {
+    const modelsRes = await fetch(
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       joinBaseUrlAndPath(baseUrl, providerSpecificData?.modelsPath || "/models"),
       {
         method: "GET",
@@ -2013,6 +2165,10 @@ async function validateAnthropicCompatibleProvider({ apiKey, providerSpecificDat
   // Step 2: Fallback — try a minimal messages request
   const testModelId = providerSpecificData?.validationModelId || "claude-3-5-sonnet-20241022";
   try {
+<<<<<<< HEAD
+=======
+    const messagesRes = await fetch(
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       joinBaseUrlAndPath(baseUrl, providerSpecificData?.chatPath || "/messages"),
       {
         method: "POST",
@@ -2032,7 +2188,11 @@ async function validateAnthropicCompatibleProvider({ apiKey, providerSpecificDat
     // Any other response (200, 400, 422, etc.) means auth passed
     return { valid: true, error: null };
   } catch (error: any) {
+<<<<<<< HEAD
     return toValidationErrorResult(error);
+=======
+    return { valid: false, error: error.message || "Connection failed" };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 }
 
@@ -2053,6 +2213,7 @@ export async function validateClaudeCodeCompatibleProvider({
   );
 
   try {
+<<<<<<< HEAD
     const modelsRes = await validationRead(joinClaudeCodeCompatibleUrl(baseUrl, modelsPath), {
       method: "GET",
       headers: defaultHeaders,
@@ -2130,6 +2291,8 @@ export async function validateClaudeCodeCompatibleProvider({
   const defaultHeaders = buildClaudeCodeCompatibleHeaders(apiKey, false);
 
   try {
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const modelsRes = await fetch(joinClaudeCodeCompatibleUrl(baseUrl, modelsPath), {
       method: "GET",
       headers: defaultHeaders,
@@ -2154,7 +2317,14 @@ export async function validateClaudeCodeCompatibleProvider({
   try {
     const messagesRes = await fetch(joinClaudeCodeCompatibleUrl(baseUrl, chatPath), {
       method: "POST",
+<<<<<<< HEAD
       headers: buildClaudeCodeCompatibleHeaders(apiKey, false, sessionId),
+=======
+      headers: applyCustomUserAgent(
+        buildClaudeCodeCompatibleHeaders(apiKey, true, sessionId),
+        providerSpecificData
+      ),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       body: JSON.stringify(payload),
     });
 
@@ -2198,11 +2368,15 @@ async function validateSearchProvider(
   providerSpecificData: any = {}
 ): Promise<{ valid: boolean; error: string | null; unsupported: false }> {
   try {
+<<<<<<< HEAD
     const response = await safeOutboundFetch(url, {
       ...SAFE_OUTBOUND_FETCH_PRESETS.validationWrite,
       guard: getProviderOutboundGuard(),
       ...withCustomUserAgent(init, providerSpecificData),
     });
+=======
+    const response = await fetch(url, withCustomUserAgent(init, providerSpecificData));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (response.ok) return { valid: true, error: null, unsupported: false };
     if (response.status === 401 || response.status === 403) {
       return { valid: false, error: "Invalid API key", unsupported: false };
@@ -2215,13 +2389,21 @@ async function validateSearchProvider(
     }
     return { valid: false, error: `Validation failed: ${response.status}`, unsupported: false };
   } catch (error: any) {
+<<<<<<< HEAD
     return toValidationErrorResult(error);
+=======
+    return { valid: false, error: error.message || "Validation failed", unsupported: false };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 }
 
 const SEARCH_VALIDATOR_CONFIGS: Record<
   string,
+<<<<<<< HEAD
   (apiKey: string, providerSpecificData?: any) => { url: string; init: RequestInit }
+=======
+  (apiKey: string) => { url: string; init: RequestInit }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 > = {
   "serper-search": (apiKey) => ({
     url: "https://google.serper.dev/search",
@@ -2262,6 +2444,7 @@ const SEARCH_VALIDATOR_CONFIGS: Record<
       body: JSON.stringify({ query: "test", max_results: 1 }),
     },
   }),
+<<<<<<< HEAD
   "google-pse-search": (apiKey, providerSpecificData = {}) => {
     const cx = providerSpecificData?.cx;
     if (!cx || typeof cx !== "string") {
@@ -2940,6 +3123,12 @@ export async function validateProviderApiKey({ provider, apiKey, providerSpecifi
     !isAnthropicCompatibleProvider(provider);
 
   if (!provider || (requiresApiKey && !apiKey)) {
+=======
+};
+
+export async function validateProviderApiKey({ provider, apiKey, providerSpecificData = {} }: any) {
+  if (!provider || !apiKey) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return { valid: false, error: "Provider and API key required", unsupported: false };
   }
 
@@ -2947,7 +3136,11 @@ export async function validateProviderApiKey({ provider, apiKey, providerSpecifi
     try {
       return await validateOpenAICompatibleProvider({ apiKey, providerSpecificData });
     } catch (error: any) {
+<<<<<<< HEAD
       return toValidationErrorResult(error);
+=======
+      return { valid: false, error: error.message || "Validation failed", unsupported: false };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
   }
 
@@ -2958,7 +3151,11 @@ export async function validateProviderApiKey({ provider, apiKey, providerSpecifi
       }
       return await validateAnthropicCompatibleProvider({ apiKey, providerSpecificData });
     } catch (error: any) {
+<<<<<<< HEAD
       return toValidationErrorResult(error);
+=======
+      return { valid: false, error: error.message || "Validation failed", unsupported: false };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
   }
 
@@ -2969,6 +3166,7 @@ export async function validateProviderApiKey({ provider, apiKey, providerSpecifi
     deepgram: validateDeepgramProvider,
     assemblyai: validateAssemblyAIProvider,
     nanobanana: validateNanoBananaProvider,
+<<<<<<< HEAD
     "fal-ai": ({ apiKey, providerSpecificData }: any) =>
       validateImageProviderApiKey({ provider: "fal-ai", apiKey, providerSpecificData }),
     "stability-ai": ({ apiKey, providerSpecificData }: any) =>
@@ -2983,6 +3181,17 @@ export async function validateProviderApiKey({ provider, apiKey, providerSpecifi
     inworld: validateInworldProvider,
     "aws-polly": validateAwsPollyProvider,
     "bailian-coding-plan": validateBailianCodingPlanProvider,
+=======
+    elevenlabs: validateElevenLabsProvider,
+    inworld: validateInworldProvider,
+    "bailian-coding-plan": validateBailianCodingPlanProvider,
+    // LongCat AI — does not expose /v1/models; validate via chat completions directly (#592)
+    longcat: async ({ apiKey, providerSpecificData }: any) => {
+      try {
+        const res = await fetch("https://api.longcat.chat/openai/v1/chat/completions", {
+          method: "POST",
+          headers: buildBearerHeaders(apiKey, providerSpecificData),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           body: JSON.stringify({
             model: "longcat",
             messages: [{ role: "user", content: "test" }],
@@ -2995,6 +3204,10 @@ export async function validateProviderApiKey({ provider, apiKey, providerSpecifi
         // Any non-auth response (200, 400, 422) means auth passed
         return { valid: true, error: null };
       } catch (error: any) {
+<<<<<<< HEAD
+=======
+        return { valid: false, error: error.message || "Connection failed" };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     },
     // Search providers — use factored validator
@@ -3002,7 +3215,11 @@ export async function validateProviderApiKey({ provider, apiKey, providerSpecifi
       Object.entries(SEARCH_VALIDATOR_CONFIGS).map(([id, configFn]) => [
         id,
         ({ apiKey, providerSpecificData }: any) => {
+<<<<<<< HEAD
           const { url, init } = configFn(apiKey, providerSpecificData);
+=======
+          const { url, init } = configFn(apiKey);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           return validateSearchProvider(url, init, providerSpecificData);
         },
       ])
@@ -3013,12 +3230,17 @@ export async function validateProviderApiKey({ provider, apiKey, providerSpecifi
     try {
       return await SPECIALTY_VALIDATORS[provider]({ apiKey, providerSpecificData });
     } catch (error: any) {
+<<<<<<< HEAD
       return toValidationErrorResult(error);
+=======
+      return { valid: false, error: error.message || "Validation failed", unsupported: false };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
   }
 
   const entry = getRegistryEntry(provider);
   if (!entry) {
+<<<<<<< HEAD
     if (isSelfHostedChatProvider(provider)) {
       return await validateOpenAILikeProvider({
         provider,
@@ -3029,6 +3251,8 @@ export async function validateProviderApiKey({ provider, apiKey, providerSpecifi
         modelsUrl: addModelsSuffix(providerSpecificData?.baseUrl || ""),
       });
     }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return { valid: false, error: "Provider validation not supported", unsupported: true };
   }
 
@@ -3084,6 +3308,10 @@ export async function validateProviderApiKey({ provider, apiKey, providerSpecifi
 
     return { valid: false, error: "Provider validation not supported", unsupported: true };
   } catch (error: any) {
+<<<<<<< HEAD
     return toValidationErrorResult(error);
+=======
+    return { valid: false, error: error.message || "Validation failed", unsupported: false };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 }

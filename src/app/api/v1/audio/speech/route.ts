@@ -1,5 +1,16 @@
+<<<<<<< HEAD
 import { handleAudioSpeech } from "@omniroute/open-sse/handlers/audioSpeech.ts";
 import { getProviderCredentials, clearRecoveredProviderState } from "@/sse/services/auth";
+=======
+import { CORS_ORIGIN } from "@/shared/utils/cors";
+import { handleAudioSpeech } from "@omniroute/open-sse/handlers/audioSpeech.ts";
+import {
+  getProviderCredentials,
+  clearRecoveredProviderState,
+  extractApiKey,
+  isValidApiKey,
+} from "@/sse/services/auth";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import {
   parseSpeechModel,
   getSpeechProvider,
@@ -19,6 +30,10 @@ import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
 export async function OPTIONS() {
   return new Response(null, {
     headers: {
+<<<<<<< HEAD
+=======
+      "Access-Control-Allow-Origin": CORS_ORIGIN,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       "Access-Control-Allow-Methods": "POST, OPTIONS",
       "Access-Control-Allow-Headers": "*",
     },
@@ -30,6 +45,16 @@ export async function OPTIONS() {
  * OpenAI TTS API compatible. Returns audio stream.
  */
 export async function POST(request) {
+<<<<<<< HEAD
+=======
+  if (process.env.REQUIRE_API_KEY === "true") {
+    const apiKey = extractApiKey(request);
+    if (!apiKey) return errorResponse(HTTP_STATUS.UNAUTHORIZED, "Missing API key");
+    const valid = await isValidApiKey(apiKey);
+    if (!valid) return errorResponse(HTTP_STATUS.UNAUTHORIZED, "Invalid API key");
+  }
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody;
   try {
     rawBody = await request.json();

@@ -8,7 +8,11 @@ import {
   refreshGoogleToken as _refreshGoogleToken,
   refreshQwenToken as _refreshQwenToken,
   refreshCodexToken as _refreshCodexToken,
+<<<<<<< HEAD
   refreshQoderToken as _refreshQoderToken,
+=======
+  refreshIflowToken as _refreshIflowToken,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   refreshGitHubToken as _refreshGitHubToken,
   refreshCopilotToken as _refreshCopilotToken,
   getAccessToken as _getAccessToken,
@@ -17,6 +21,7 @@ import {
   getAllAccessTokens as _getAllAccessTokens,
 } from "@omniroute/open-sse/services/tokenRefresh.ts";
 
+<<<<<<< HEAD
 // Per-connection mutex: prevents concurrent OAuth refresh for rotating tokens.
 // Key = connectionId, Value = { promise: in-flight refresh, waiters: count of callers sharing it }
 const connectionRefreshMutex = new Map<string, { promise: Promise<any>; waiters: number }>();
@@ -43,6 +48,8 @@ export async function withConnectionRefreshMutex<T>(
   return entry.promise;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export const TOKEN_EXPIRY_BUFFER_MS = BUFFER_MS;
 
 export const refreshAccessToken = async (
@@ -79,9 +86,15 @@ export const refreshCodexToken = async (refreshToken: string) => {
   return _refreshCodexToken(refreshToken, log, proxy);
 };
 
+<<<<<<< HEAD
 export const refreshQoderToken = async (refreshToken: string) => {
   const proxy = await resolveProxyForProvider("qoder");
   return _refreshQoderToken(refreshToken, log, proxy);
+=======
+export const refreshIflowToken = async (refreshToken: string) => {
+  const proxy = await resolveProxyForProvider("qoder");
+  return _refreshIflowToken(refreshToken, log, proxy);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 };
 
 export const refreshGitHubToken = async (refreshToken: string) => {
@@ -121,6 +134,7 @@ export async function updateProviderCredentials(connectionId: string, newCredent
       updates.refreshToken = newCredentials.refreshToken;
     }
     if (newCredentials.expiresIn) {
+<<<<<<< HEAD
       const expiresAt = new Date(Date.now() + newCredentials.expiresIn * 1000).toISOString();
       updates.expiresAt = expiresAt;
       updates.tokenExpiresAt = expiresAt;
@@ -128,10 +142,15 @@ export async function updateProviderCredentials(connectionId: string, newCredent
     } else if (newCredentials.expiresAt) {
       updates.expiresAt = newCredentials.expiresAt;
       updates.tokenExpiresAt = newCredentials.expiresAt;
+=======
+      updates.expiresAt = new Date(Date.now() + newCredentials.expiresIn * 1000).toISOString();
+      updates.expiresIn = newCredentials.expiresIn;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
     if (newCredentials.providerSpecificData) {
       updates.providerSpecificData = newCredentials.providerSpecificData;
     }
+<<<<<<< HEAD
     // Cookie/session providers (chatgpt-web, ...) refresh by rotating the
     // stored apiKey blob — propagate that here too so DB credentials don't
     // go stale after Set-Cookie rotation.
@@ -141,6 +160,8 @@ export async function updateProviderCredentials(connectionId: string, newCredent
     if (newCredentials.testStatus) {
       updates.testStatus = newCredentials.testStatus;
     }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     const result = await updateProviderConnection(connectionId, updates);
     log.info("TOKEN_REFRESH", "Credentials updated in localDb", {
@@ -172,12 +193,16 @@ export async function checkAndRefreshToken(provider: string, credentials: any) {
         expiresIn: Math.round((expiresAt - now) / 1000),
       });
 
+<<<<<<< HEAD
       const connectionId: string | undefined = updatedCredentials.connectionId;
       const newCredentials = connectionId
         ? await withConnectionRefreshMutex(connectionId, () =>
             getAccessToken(provider, updatedCredentials)
           )
         : await getAccessToken(provider, updatedCredentials);
+=======
+      const newCredentials = await getAccessToken(provider, updatedCredentials);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       if (newCredentials && newCredentials.accessToken) {
         await updateProviderCredentials(updatedCredentials.connectionId, newCredentials);
 

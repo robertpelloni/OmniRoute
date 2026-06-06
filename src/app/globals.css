@@ -4,6 +4,10 @@
    (e.g. Next.js route groups like "(dashboard)"). Explicit @source
    directives ensure all utility classes in route groups are included. */
 @source "../app/(dashboard)";
+<<<<<<< HEAD
+=======
+@source "../../open-sse";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 @source not "../../*.sqlite*";
 @source not "../../.claude*";
 @source not "../../.claude-memory";
@@ -14,7 +18,10 @@
 :root {
   --desktop-safe-top: 0px;
   --desktop-safe-bottom: 0px;
+<<<<<<< HEAD
   color-scheme: light;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   /* Primary - Coral Red (OpenClaw) */
   --color-primary: #e54d5e;
@@ -41,8 +48,12 @@
   --color-bg-primary: #f9f9fb;
   --color-bg-subtle: #f0f0f5;
   --color-surface: #ffffff;
+<<<<<<< HEAD
   --color-card: #ffffff;
   --color-sidebar: #f5f5fa;
+=======
+  --color-sidebar: rgba(245, 245, 250, 0.8);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   --color-border: rgba(0, 0, 0, 0.08);
   --color-text-main: #1a1a2e;
   --color-text-primary: #1a1a2e;
@@ -56,14 +67,21 @@
 
 .dark {
   /* Dark theme (ClawHub deep) */
+<<<<<<< HEAD
   color-scheme: dark;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   --color-bg: #0b0e14;
   --color-bg-alt: #111520;
   --color-bg-primary: #0b0e14;
   --color-bg-subtle: #111520;
   --color-surface: #161b22;
+<<<<<<< HEAD
   --color-card: #161b22;
   --color-sidebar: #10141e;
+=======
+  --color-sidebar: rgba(16, 20, 30, 0.8);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   --color-border: rgba(255, 255, 255, 0.08);
   --color-text-main: #e6e6ef;
   --color-text-primary: #e6e6ef;
@@ -95,7 +113,10 @@
   --color-bg-primary: var(--color-bg-primary);
   --color-bg-subtle: var(--color-bg-subtle);
   --color-surface: var(--color-surface);
+<<<<<<< HEAD
   --color-card: var(--color-card);
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   --color-sidebar: var(--color-sidebar);
   --color-border: var(--color-border);
   --color-text-main: var(--color-text-main);
@@ -361,6 +382,7 @@ button .material-symbols-outlined,
     min-width: 600px; /* Prevent columns from crushing together */
   }
 }
+<<<<<<< HEAD
 
 /* Fix for native dropdown options visibility in dark mode */
 select option {
@@ -368,3 +390,5 @@ select option {
   color: var(--color-text-main);
 }
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

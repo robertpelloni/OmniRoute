@@ -2,7 +2,10 @@ import { NextResponse } from "next/server";
 import initializeCloudSync from "@/shared/services/initializeCloudSync";
 import { startModelSyncScheduler } from "@/shared/services/modelSyncScheduler";
 import { resolveOmniRouteBaseUrl } from "@/shared/utils/resolveOmniRouteBaseUrl";
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 let syncInitialized = false;
 let modelSyncInitialized = false;
@@ -21,6 +24,10 @@ export async function POST(request) {
 
     // (#488) Start model auto-sync scheduler (24h, configurable via MODEL_SYNC_INTERVAL_HOURS)
     if (!modelSyncInitialized) {
+<<<<<<< HEAD
+=======
+      const origin = request.headers.get("origin") || resolveOmniRouteBaseUrl();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       startModelSyncScheduler(origin);
       modelSyncInitialized = true;
     }

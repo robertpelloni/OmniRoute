@@ -8,8 +8,11 @@
  * @module lib/evals/evalRunner
  */
 
+<<<<<<< HEAD
 import { getCustomEvalSuite, listCustomEvalSuites } from "@/lib/db/evals";
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * @typedef {Object} EvalCase
  * @property {string} id - Unique case ID
@@ -60,7 +63,11 @@ export function registerSuite(suite: any) {
  * @returns {EvalSuite | null}
  */
 export function getSuite(suiteId: string) {
+<<<<<<< HEAD
   return suites.get(suiteId) || getCustomEvalSuite(suiteId) || null;
+=======
+  return suites.get(suiteId) || null;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 /**
@@ -69,17 +76,25 @@ export function getSuite(suiteId: string) {
  * @returns {Array<{ id: string, name: string, caseCount: number }>}
  */
 export function listSuites() {
+<<<<<<< HEAD
   const builtInSuites = Array.from(suites.values()).map((s) => ({
     id: s.id,
     name: s.name,
     description: s.description || "",
     source: "built-in",
+=======
+  return Array.from(suites.values()).map((s) => ({
+    id: s.id,
+    name: s.name,
+    description: s.description || "",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     caseCount: s.cases.length,
     cases: s.cases.map((c) => ({
       id: c.id,
       name: c.name,
       model: c.model,
       input: c.input,
+<<<<<<< HEAD
       expected: c.expected,
       tags: c.tags || [],
     })),
@@ -103,6 +118,11 @@ export function listSuites() {
   }));
 
   return [...builtInSuites, ...customSuites];
+=======
+      tags: c.tags || [],
+    })),
+  }));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 /**
@@ -118,8 +138,11 @@ export function evaluateCase(evalCase: any, actualOutput: string) {
   try {
     let passed = false;
     const details: Record<string, any> = {};
+<<<<<<< HEAD
     details.actualSnippet =
       typeof actualOutput === "string" ? actualOutput.slice(0, 240) : String(actualOutput ?? "");
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     switch (evalCase.expected.strategy) {
       case "exact":
@@ -184,6 +207,7 @@ export function evaluateCase(evalCase: any, actualOutput: string) {
  *
  * @param {string} suiteId
  * @param {Record<string, string>} outputs - Map of caseId → actualOutput
+<<<<<<< HEAD
  * @param {Record<string, { durationMs?: number, error?: string }>} [caseMetrics]
  * @returns {{ suiteId: string, suiteName: string, results: EvalResult[], summary: { total: number, passed: number, failed: number, passRate: number } }}
  */
@@ -193,12 +217,19 @@ export function runSuite(
   caseMetrics: Record<string, { durationMs?: number; error?: string }> = {}
 ) {
   const suite = getSuite(suiteId);
+=======
+ * @returns {{ suiteId: string, suiteName: string, results: EvalResult[], summary: { total: number, passed: number, failed: number, passRate: number } }}
+ */
+export function runSuite(suiteId: string, outputs: Record<string, string>) {
+  const suite = suites.get(suiteId);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (!suite) {
     throw new Error(`Suite not found: ${suiteId}`);
   }
 
   const results = suite.cases.map((c) => {
     const output = outputs[c.id] || "";
+<<<<<<< HEAD
     const result = evaluateCase(c, output);
     const metrics = caseMetrics[c.id];
 
@@ -211,6 +242,9 @@ export function runSuite(
     }
 
     return result;
+=======
+    return evaluateCase(c, output);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   });
 
   const passed = results.filter((r) => r.passed).length;
@@ -577,6 +611,7 @@ const multilingualSuite = {
 };
 
 registerSuite(multilingualSuite);
+<<<<<<< HEAD
 
 // ─── Safety & Guardrails Suite ─────────────────────────────────────────
 
@@ -929,3 +964,5 @@ const codexComparisonSuite = {
 };
 
 registerSuite(codexComparisonSuite);
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

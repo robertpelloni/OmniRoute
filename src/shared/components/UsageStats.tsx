@@ -3,6 +3,10 @@
 import { useTranslations } from "next-intl";
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
+<<<<<<< HEAD
+=======
+import PropTypes from "prop-types";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { useSearchParams, useRouter } from "next/navigation";
 import Card from "./Card";
 import Badge from "./Badge";
@@ -22,6 +26,15 @@ function SortIcon({
   return <span className="ml-1">{currentOrder === "asc" ? "↑" : "↓"}</span>;
 }
 
+<<<<<<< HEAD
+=======
+SortIcon.propTypes = {
+  field: PropTypes.string.isRequired,
+  currentSort: PropTypes.string.isRequired,
+  currentOrder: PropTypes.string.isRequired,
+};
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function MiniBarGraph({
   data,
   colorClass = "bg-primary",
@@ -44,6 +57,14 @@ function MiniBarGraph({
   );
 }
 
+<<<<<<< HEAD
+=======
+MiniBarGraph.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.number).isRequired,
+  colorClass: PropTypes.string,
+};
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export default function UsageStats() {
   const t = useTranslations("stats");
   const router = useRouter();

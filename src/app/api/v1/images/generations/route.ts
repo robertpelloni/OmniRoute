@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+import { CORS_ORIGIN } from "@/shared/utils/cors";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { handleImageGeneration } from "@omniroute/open-sse/handlers/imageGeneration.ts";
 import {
   getProviderCredentials,
@@ -9,7 +13,10 @@ import {
   parseImageModel,
   getAllImageModels,
   getImageProvider,
+<<<<<<< HEAD
   getImageModelEntry,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 } from "@omniroute/open-sse/config/imageRegistry.ts";
 import { errorResponse, unavailableResponse } from "@omniroute/open-sse/utils/error.ts";
 import { HTTP_STATUS } from "@omniroute/open-sse/config/constants.ts";
@@ -19,8 +26,12 @@ import { enforceApiKeyPolicy } from "@/shared/utils/apiKeyPolicy";
 import { v1ImageGenerationSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
 
+<<<<<<< HEAD
 import { getAllCustomModels, resolveProxyForConnection } from "@/lib/localDb";
 import { runWithProxyContext } from "@omniroute/open-sse/utils/proxyFetch.ts";
+=======
+import { getAllCustomModels } from "@/lib/localDb";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * Handle CORS preflight
@@ -28,6 +39,10 @@ import { runWithProxyContext } from "@omniroute/open-sse/utils/proxyFetch.ts";
 export async function OPTIONS() {
   return new Response(null, {
     headers: {
+<<<<<<< HEAD
+=======
+      "Access-Control-Allow-Origin": CORS_ORIGIN,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
       "Access-Control-Allow-Headers": "*",
     },
@@ -48,9 +63,12 @@ export async function GET() {
     owned_by: m.provider,
     type: "image",
     supported_sizes: m.supportedSizes,
+<<<<<<< HEAD
     input_modalities: m.inputModalities || ["text"],
     output_modalities: ["image"],
     ...(m.description ? { description: m.description } : {}),
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }));
 
   // Include custom models tagged for images
@@ -70,8 +88,11 @@ export async function GET() {
           owned_by: providerId,
           type: "image",
           supported_sizes: null,
+<<<<<<< HEAD
           input_modalities: ["text"],
           output_modalities: ["image"],
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         });
       }
     }
@@ -85,6 +106,7 @@ export async function GET() {
 /**
  * POST /v1/images/generations — generate images
  */
+<<<<<<< HEAD
 function hasImageGenerationInput(body: Record<string, unknown>) {
   if (typeof body.image_url === "string" && body.image_url.trim()) return true;
   if (typeof body.image === "string" && body.image.trim()) return true;
@@ -117,6 +139,8 @@ function publicBaseUrlHeaders(headers: Headers): Record<string, string> {
   return out;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export async function POST(request) {
   let rawBody;
   try {
@@ -132,6 +156,21 @@ export async function POST(request) {
   }
   const body = validation.data;
 
+<<<<<<< HEAD
+=======
+  // Optional API key validation
+  if (process.env.REQUIRE_API_KEY === "true") {
+    const apiKey = extractApiKey(request);
+    if (!apiKey) {
+      return errorResponse(HTTP_STATUS.UNAUTHORIZED, "Missing API key");
+    }
+    const valid = await isValidApiKey(apiKey);
+    if (!valid) {
+      return errorResponse(HTTP_STATUS.UNAUTHORIZED, "Invalid API key");
+    }
+  }
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Enforce API key policies (model restrictions + budget limits)
   const policy = await enforceApiKeyPolicy(request, body.model);
   if (policy.rejection) return policy.rejection;
@@ -170,6 +209,7 @@ export async function POST(request) {
 
   // Check provider config for auth bypass
   const providerConfig = getImageProvider(provider);
+<<<<<<< HEAD
   const imageModelEntry = getImageModelEntry(body.model);
   const inputModalities = imageModelEntry?.inputModalities || ["text"];
   const requiresPrompt = inputModalities.includes("text");
@@ -190,6 +230,8 @@ export async function POST(request) {
       `Image input is required for image model: ${body.model}`
     );
   }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Get credentials — skip for local providers (authType: "none")
   let credentials = null;
@@ -227,6 +269,7 @@ export async function POST(request) {
     }
   }
 
+<<<<<<< HEAD
   // Resolve proxy for the connection if credentials exist (#1904)
   let proxyInfo = null;
   if (credentials?.connectionId) {
@@ -255,6 +298,14 @@ export async function POST(request) {
         error: err.message,
       }))
     : generateImage());
+=======
+  const result = await handleImageGeneration({
+    body,
+    credentials,
+    log,
+    ...(isCustomModel && { resolvedProvider: provider }),
+  });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   if (result.success) {
     await clearRecoveredProviderState(credentials);

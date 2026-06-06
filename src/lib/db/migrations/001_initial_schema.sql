@@ -115,13 +115,17 @@ CREATE TABLE IF NOT EXISTS call_logs (
   path TEXT,
   status INTEGER,
   model TEXT,
+<<<<<<< HEAD
   requested_model TEXT,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   provider TEXT,
   account TEXT,
   connection_id TEXT,
   duration INTEGER DEFAULT 0,
   tokens_in INTEGER DEFAULT 0,
   tokens_out INTEGER DEFAULT 0,
+<<<<<<< HEAD
   tokens_cache_read INTEGER DEFAULT NULL,
   tokens_cache_creation INTEGER DEFAULT NULL,
   tokens_reasoning INTEGER DEFAULT NULL,
@@ -145,6 +149,11 @@ CREATE TABLE IF NOT EXISTS call_logs (
   has_pipeline_details INTEGER DEFAULT 0,
   request_summary TEXT
 =======
+=======
+  source_format TEXT,
+  target_format TEXT,
+  api_key_id TEXT,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     api_key_name TEXT,
     combo_name TEXT,
     request_body TEXT,
@@ -152,6 +161,7 @@ CREATE TABLE IF NOT EXISTS call_logs (
     error TEXT,
     artifact_relpath TEXT,
     has_pipeline_details INTEGER DEFAULT 0
+<<<<<<< HEAD
 >>>>>>> Stashed changes
 );
 CREATE INDEX IF NOT EXISTS idx_cl_timestamp ON call_logs(timestamp);
@@ -160,6 +170,11 @@ CREATE INDEX IF NOT EXISTS idx_call_logs_requested_model ON call_logs(requested_
 CREATE INDEX IF NOT EXISTS idx_call_logs_request_type ON call_logs(request_type);
 CREATE INDEX IF NOT EXISTS idx_cl_combo_target
   ON call_logs(combo_name, combo_execution_key, timestamp);
+=======
+);
+CREATE INDEX IF NOT EXISTS idx_cl_timestamp ON call_logs(timestamp);
+CREATE INDEX IF NOT EXISTS idx_cl_status ON call_logs(status);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 CREATE TABLE IF NOT EXISTS proxy_logs (
   id TEXT PRIMARY KEY,

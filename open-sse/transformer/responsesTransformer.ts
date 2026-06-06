@@ -221,6 +221,7 @@ export function createResponsesApiTransformStream(logger = null) {
   const closeToolCall = (controller, idx) => {
     const callId = state.funcCallIds[idx];
     if (callId && !state.funcItemDone[idx]) {
+<<<<<<< HEAD
       let args = state.funcArgsBuf[idx] || "{}";
 
       // Fix #1674 & #1852: Final cleanup of empty string and empty array placeholders
@@ -242,6 +243,9 @@ export function createResponsesApiTransformStream(logger = null) {
       } catch (e) {
         // Ignore malformed JSON
       }
+=======
+      const args = state.funcArgsBuf[idx] || "{}";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
       emit(controller, "response.function_call_arguments.done", {
         type: "response.function_call_arguments.done",
@@ -419,6 +423,7 @@ export function createResponsesApiTransformStream(logger = null) {
 
           // Regular text content
           if (content) {
+<<<<<<< HEAD
             // Fix for #1211: Strip leading double-newlines / blank spaces from the very first text chunk
             if (!state.msgTextBuf[idx]) {
               content = content.trimStart();
@@ -426,6 +431,8 @@ export function createResponsesApiTransformStream(logger = null) {
 
             if (!content) continue;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             if (!state.msgItemAdded[idx]) {
               state.msgItemAdded[idx] = true;
               const msgId = `msg_${state.responseId}_${idx}`;
@@ -504,6 +511,7 @@ export function createResponsesApiTransformStream(logger = null) {
 
             if (tc.function?.arguments) {
               const refCallId = state.funcCallIds[tcIdx] || newCallId;
+<<<<<<< HEAD
               let deltaStr = tc.function.arguments;
 
               // Fix #1674 & #1852: Strip empty strings and empty arrays from streaming deltas
@@ -515,15 +523,24 @@ export function createResponsesApiTransformStream(logger = null) {
                   .replace(/"[a-zA-Z0-9_]+":\s*\[\s*\],?/g, "");
               }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               if (refCallId) {
                 emit(controller, "response.function_call_arguments.delta", {
                   type: "response.function_call_arguments.delta",
                   item_id: `fc_${refCallId}`,
                   output_index: tcIdx,
+<<<<<<< HEAD
                   delta: deltaStr,
                 });
               }
               state.funcArgsBuf[tcIdx] += deltaStr;
+=======
+                  delta: tc.function.arguments,
+                });
+              }
+              state.funcArgsBuf[tcIdx] += tc.function.arguments;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             }
           }
         }

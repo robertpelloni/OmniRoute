@@ -9,6 +9,7 @@ import path from "path";
 import fs from "fs";
 import { resolveDataDir, getLegacyDotDataDir } from "../dataPaths";
 import { runMigrations } from "./migrationRunner";
+<<<<<<< HEAD
 import { runDbHealthCheck } from "./healthCheck";
 import { parseStoredPayload } from "../logPayloads";
 import {
@@ -18,10 +19,13 @@ import {
 } from "../usage/callLogArtifacts";
 import { migrateLegacyEncryptedString } from "./encryption";
 import { invalidateDbCache } from "./readCache";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 type SqliteDatabase = import("better-sqlite3").Database;
 type JsonRecord = Record<string, unknown>;
 type CheckpointMode = "PASSIVE" | "FULL" | "RESTART" | "TRUNCATE";
+<<<<<<< HEAD
 type PreservedTableSnapshot = {
   table: string;
   rowCount: number;
@@ -47,6 +51,8 @@ type CriticalTableSpec = {
   readRows?: (db: SqliteDatabase) => JsonRecord[];
 };
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 // ──────────────── Environment Detection ────────────────
 
@@ -61,6 +67,7 @@ const LEGACY_DATA_DIR = isCloud ? null : getLegacyDotDataDir();
 export const SQLITE_FILE = isCloud ? null : path.join(DATA_DIR, "storage.sqlite");
 const JSON_DB_FILE = isCloud ? null : path.join(DATA_DIR, "db.json");
 export const DB_BACKUPS_DIR = isCloud ? null : path.join(DATA_DIR, "db_backups");
+<<<<<<< HEAD
 const DEFAULT_CRITICAL_TABLE_ROW_LIMIT = 10_000;
 const SKIP_PRESERVE_NAMESPACES = new Set(["syncedAvailableModels", "providerLimitsCache", "lkgp"]);
 const CRITICAL_DB_TABLES: CriticalTableSpec[] = [
@@ -133,6 +140,8 @@ function openSqliteDatabase(
     throw error;
   }
 }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 // Ensure data directory exists — with fallback for restricted home directories (#133)
 if (!isCloud && !fs.existsSync(DATA_DIR)) {
@@ -188,7 +197,10 @@ const SCHEMA_SQL = `
     rate_limit_protection INTEGER DEFAULT 0,
     last_used_at TEXT,
     "group" TEXT,
+<<<<<<< HEAD
     max_concurrent INTEGER,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL
   );
@@ -269,24 +281,31 @@ const SCHEMA_SQL = `
     path TEXT,
     status INTEGER,
     model TEXT,
+<<<<<<< HEAD
     requested_model TEXT,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     provider TEXT,
     account TEXT,
     connection_id TEXT,
     duration INTEGER DEFAULT 0,
     tokens_in INTEGER DEFAULT 0,
     tokens_out INTEGER DEFAULT 0,
+<<<<<<< HEAD
     tokens_cache_read INTEGER DEFAULT NULL,
     tokens_cache_creation INTEGER DEFAULT NULL,
     tokens_reasoning INTEGER DEFAULT NULL,
     tokens_compressed INTEGER DEFAULT NULL,
     cache_source TEXT DEFAULT "upstream",
     request_type TEXT,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     source_format TEXT,
     target_format TEXT,
     api_key_id TEXT,
     api_key_name TEXT,
     combo_name TEXT,
+<<<<<<< HEAD
     combo_step_id TEXT,
     combo_execution_key TEXT,
     error_summary TEXT,
@@ -299,12 +318,17 @@ const SCHEMA_SQL = `
     has_pipeline_details INTEGER DEFAULT 0,
     request_summary TEXT
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     request_body TEXT,
     response_body TEXT,
     error TEXT,
     artifact_relpath TEXT,
     has_pipeline_details INTEGER DEFAULT 0
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   );
   CREATE INDEX IF NOT EXISTS idx_cl_timestamp ON call_logs(timestamp);
   CREATE INDEX IF NOT EXISTS idx_cl_status ON call_logs(status);
@@ -341,6 +365,7 @@ const SCHEMA_SQL = `
   CREATE TABLE IF NOT EXISTS domain_budgets (
     api_key_id TEXT PRIMARY KEY,
     daily_limit_usd REAL NOT NULL,
+<<<<<<< HEAD
     weekly_limit_usd REAL DEFAULT 0,
     monthly_limit_usd REAL DEFAULT 0,
     warning_threshold REAL DEFAULT 0.8,
@@ -364,6 +389,12 @@ const SCHEMA_SQL = `
   );
   CREATE INDEX IF NOT EXISTS idx_dbrl_key_reset ON domain_budget_reset_logs(api_key_id, reset_at DESC);
 
+=======
+    monthly_limit_usd REAL DEFAULT 0,
+    warning_threshold REAL DEFAULT 0.8
+  );
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   CREATE TABLE IF NOT EXISTS domain_cost_history (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     api_key_id TEXT NOT NULL,
@@ -400,6 +431,7 @@ const SCHEMA_SQL = `
   );
   CREATE INDEX IF NOT EXISTS idx_sc_sig ON semantic_cache(signature);
   CREATE INDEX IF NOT EXISTS idx_sc_model ON semantic_cache(model);
+<<<<<<< HEAD
 
   CREATE TABLE IF NOT EXISTS quota_snapshots (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -416,6 +448,8 @@ const SCHEMA_SQL = `
   CREATE INDEX IF NOT EXISTS idx_quota_snapshots_provider_time ON quota_snapshots(provider, created_at);
   CREATE INDEX IF NOT EXISTS idx_quota_snapshots_connection_time ON quota_snapshots(connection_id, created_at);
   CREATE INDEX IF NOT EXISTS idx_quota_snapshots_created_at ON quota_snapshots(created_at);
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 `;
 
 // ──────────────── Column Mapping ────────────────
@@ -513,6 +547,7 @@ function ensureProviderConnectionsColumns(db: SqliteDatabase) {
       db.exec('ALTER TABLE provider_connections ADD COLUMN "group" TEXT');
       console.log('[DB] Added provider_connections."group" column');
     }
+<<<<<<< HEAD
     if (!columnNames.has("max_concurrent")) {
       db.exec("ALTER TABLE provider_connections ADD COLUMN max_concurrent INTEGER");
       console.log("[DB] Added provider_connections.max_concurrent column");
@@ -520,6 +555,8 @@ function ensureProviderConnectionsColumns(db: SqliteDatabase) {
     db.exec(
       "CREATE INDEX IF NOT EXISTS idx_pc_max_concurrent ON provider_connections(provider, max_concurrent)"
     );
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     console.warn("[DB] Failed to verify provider_connections schema:", message);
@@ -570,6 +607,7 @@ function ensureCallLogsColumns(db: SqliteDatabase) {
       db.exec("ALTER TABLE call_logs ADD COLUMN has_pipeline_details INTEGER DEFAULT 0");
       console.log("[DB] Added call_logs.has_pipeline_details column");
     }
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     if (!columnNames.has("requested_model")) {
       db.exec("ALTER TABLE call_logs ADD COLUMN requested_model TEXT DEFAULT NULL");
@@ -640,6 +678,8 @@ function ensureCallLogsColumns(db: SqliteDatabase) {
       "CREATE INDEX IF NOT EXISTS idx_cl_combo_target ON call_logs(combo_name, combo_execution_key, timestamp)"
     );
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     console.warn("[DB] Failed to verify call_logs schema:", message);
@@ -651,6 +691,7 @@ function hasColumn(db: SqliteDatabase, tableName: string, columnName: string): b
   return rows.some((row) => row.name === columnName);
 }
 
+<<<<<<< HEAD
 function hasTable(db: SqliteDatabase, tableName: string): boolean {
   return Boolean(
     db.prepare("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?").get(tableName)
@@ -1114,6 +1155,8 @@ export function runManagedDbHealthCheck(options?: { autoRepair?: boolean }) {
 }
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export function getDbInstance(): SqliteDatabase {
   const existing = getDb();
   if (existing) return existing;
@@ -1122,11 +1165,18 @@ export function getDbInstance(): SqliteDatabase {
     if (isBuildPhase) {
       console.log("[DB] Build phase detected — using in-memory SQLite (read-only)");
     }
+<<<<<<< HEAD
     const memoryDb = openSqliteDatabase(":memory:");
     memoryDb.pragma("journal_mode = WAL");
     memoryDb.exec(SCHEMA_SQL);
     ensureUsageHistoryColumns(memoryDb);
     ensureCallLogsColumns(memoryDb);
+=======
+    const memoryDb = new Database(":memory:");
+    memoryDb.pragma("journal_mode = WAL");
+    memoryDb.exec(SCHEMA_SQL);
+    ensureUsageHistoryColumns(memoryDb);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     setDb(memoryDb);
     return memoryDb;
   }
@@ -1136,6 +1186,7 @@ export function getDbInstance(): SqliteDatabase {
     throw new Error("SQLITE_FILE is unavailable for local mode");
   }
   const jsonDbFile = JSON_DB_FILE;
+<<<<<<< HEAD
   const probeFailureBackups = listProbeFailureBackups(sqliteFile);
   if (!fs.existsSync(sqliteFile) && probeFailureBackups.length > 0) {
     const latestBackup = probeFailureBackups[0];
@@ -1192,12 +1243,18 @@ export function getDbInstance(): SqliteDatabase {
   // that would otherwise trigger because heuristic seeding marks some migrations
   // as applied, making the fresh DB look like a wiped existing DB (#1328).
   const isNewDb = !fs.existsSync(sqliteFile);
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Detect and handle old schema format — preserve data when possible (#146)
   // Uses a single probe connection that becomes the real connection when possible.
   if (fs.existsSync(sqliteFile)) {
     try {
+<<<<<<< HEAD
       const probe = openSqliteDatabase(sqliteFile, { readonly: true });
+=======
+      const probe = new Database(sqliteFile, { readonly: true });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       const hasOldSchema = probe
         .prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='schema_migrations'")
         .get();
@@ -1218,7 +1275,11 @@ export function getDbInstance(): SqliteDatabase {
           console.log(
             `[DB] Old schema_migrations table found but data exists — preserving data (#146)`
           );
+<<<<<<< HEAD
           const fixDb = openSqliteDatabase(sqliteFile);
+=======
+          const fixDb = new Database(sqliteFile);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           try {
             fixDb.exec("DROP TABLE IF EXISTS schema_migrations");
             fixDb.pragma("wal_checkpoint(TRUNCATE)");
@@ -1247,6 +1308,7 @@ export function getDbInstance(): SqliteDatabase {
       }
     } catch (e: unknown) {
       const message = e instanceof Error ? e.message : String(e);
+<<<<<<< HEAD
       console.warn("[DB] Could not probe existing DB:", message);
 
       // If the error is a Node module/ABI failure, throw it immediately to avoid renaming the database
@@ -1262,12 +1324,18 @@ export function getDbInstance(): SqliteDatabase {
         console.warn(`[DB] Renamed corrupt DB to ${path.basename(failedPath)}`);
         failedProbePath = failedPath;
         failedProbeMessage = message;
+=======
+      console.warn("[DB] Could not probe existing DB, will create fresh:", message);
+      try {
+        fs.unlinkSync(sqliteFile);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       } catch {
         /* ok */
       }
     }
   }
 
+<<<<<<< HEAD
   if (failedProbePath) {
     const hasUnsafeSkippedTables = preservedCriticalState.skippedTables.length > 0;
     const missingSnapshot = !preservedCriticalState.captureSucceeded;
@@ -1285,6 +1353,9 @@ export function getDbInstance(): SqliteDatabase {
   }
 
   const db = openSqliteDatabase(sqliteFile);
+=======
+  const db = new Database(sqliteFile);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   db.pragma("journal_mode = WAL");
   db.pragma("busy_timeout = 5000");
   db.pragma("synchronous = NORMAL");
@@ -1305,16 +1376,27 @@ export function getDbInstance(): SqliteDatabase {
     INSERT OR IGNORE INTO _omniroute_migrations (version, name)
     VALUES ('001', 'initial_schema');
   `);
+<<<<<<< HEAD
 
   runMigrations(db, { isNewDb });
 
   offloadLegacyCallLogDetails(db);
+=======
+  if (hasColumn(db, "combos", "sort_order")) {
+    db.prepare("INSERT OR IGNORE INTO _omniroute_migrations (version, name) VALUES (?, ?)").run(
+      "020",
+      "combo_sort_order"
+    );
+  }
+  runMigrations(db);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Auto-migrate from db.json if exists
   if (jsonDbFile && fs.existsSync(jsonDbFile)) {
     migrateFromJson(db, jsonDbFile);
   }
 
+<<<<<<< HEAD
   if (failedProbePath && preservedCriticalState.preservedTables.length > 0) {
     try {
       const restoredTables = restoreCriticalDbState(db, preservedCriticalState);
@@ -1339,11 +1421,14 @@ export function getDbInstance(): SqliteDatabase {
     }
   }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Store schema version
   const versionStmt = db.prepare(
     "INSERT OR REPLACE INTO db_meta (key, value) VALUES ('schema_version', '1')"
   );
   versionStmt.run();
+<<<<<<< HEAD
   if (shouldRunStartupDbHealthCheck()) {
     runDbHealthCheck(db, {
       autoRepair: true,
@@ -1363,13 +1448,20 @@ export function getDbInstance(): SqliteDatabase {
   }
 
   startDbHealthCheckScheduler(db);
+=======
+
+  setDb(db);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   console.log(`[DB] SQLite database ready: ${sqliteFile}`);
   return db;
 }
 
 export function closeDbInstance(options?: { checkpointMode?: CheckpointMode | null }): boolean {
+<<<<<<< HEAD
   clearDbHealthCheckScheduler();
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const db = getDb();
   if (!db) return false;
 
@@ -1596,6 +1688,7 @@ function migrateFromJson(db: SqliteDatabase, jsonPath: string) {
     console.error("[DB] Migration from db.json failed:", err.message);
   }
 }
+<<<<<<< HEAD
 
 // ──────────────── Auto-Vacuum Management ────────────────
 
@@ -1690,3 +1783,5 @@ export function setCacheSize(cacheSizeKb: number): void {
   const newCacheSize = db.pragma("cache_size", { simple: true }) as number;
   console.log(`[DB] cache_size changed to ${Math.abs(newCacheSize)}KB`);
 }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

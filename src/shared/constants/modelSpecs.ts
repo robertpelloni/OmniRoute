@@ -18,6 +18,7 @@ export interface ModelSpec {
 }
 
 export const MODEL_SPECS: Record<string, ModelSpec> = {
+<<<<<<< HEAD
   "gpt-5.5": {
     maxOutputTokens: 128000,
     contextWindow: 1050000,
@@ -26,6 +27,8 @@ export const MODEL_SPECS: Record<string, ModelSpec> = {
     supportsVision: true,
   },
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // ── Gemini 3 Flash series ───────────────────────────────────────
   "gemini-3-flash": {
     maxOutputTokens: 65536,
@@ -48,12 +51,16 @@ export const MODEL_SPECS: Record<string, ModelSpec> = {
     supportsThinking: true,
     supportsTools: true,
     supportsVision: true,
+<<<<<<< HEAD
     aliases: [
       "gemini-3-pro-high",
       "gemini-3-pro-preview",
       "gemini-3.1-pro-preview",
       "gemini-3.1-pro-preview-customtools",
     ],
+=======
+    aliases: ["gemini-3-pro-high", "gemini-3.1-pro-preview", "gemini-3.1-pro-preview-customtools"],
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   },
 
   // ── Gemini 3.1 Pro Low ──────────────────────────────────────────
@@ -79,6 +86,7 @@ export const MODEL_SPECS: Record<string, ModelSpec> = {
     supportsVision: true,
   },
 
+<<<<<<< HEAD
   // ── Claude Opus 4.7 ─────────────────────────────────────────────
   "claude-opus-4-7": {
     maxOutputTokens: 128000,
@@ -89,6 +97,8 @@ export const MODEL_SPECS: Record<string, ModelSpec> = {
     aliases: ["claude-opus-4.7"],
   },
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Defaults
   __default__: {
     maxOutputTokens: 8192,

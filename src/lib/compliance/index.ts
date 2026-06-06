@@ -10,6 +10,7 @@
  */
 
 import { getDbInstance } from "../db/core";
+<<<<<<< HEAD
 import { getClientIpFromRequest } from "../ipUtils";
 import {
   getAppLogRetentionDays,
@@ -22,6 +23,9 @@ import { deleteCallLogsBefore, trimCallLogsToMaxRows } from "../usage/callLogs";
 =======
 import { getAppLogRetentionDays, getCallLogRetentionDays } from "../logEnv";
 >>>>>>> Stashed changes
+=======
+import { getAppLogRetentionDays, getCallLogRetentionDays } from "../logEnv";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /** @returns {import("better-sqlite3").Database | null} */
 function getDb() {
@@ -32,6 +36,7 @@ function getDb() {
   }
 }
 
+<<<<<<< HEAD
 type AuditLogWriteEntry = {
   action: string;
   actor?: string;
@@ -149,6 +154,15 @@ function parseAuditValue(value: unknown): unknown {
 }
 
 function ensureAuditLogSchema(db: import("better-sqlite3").Database) {
+=======
+/**
+ * Initialize the audit_log table.
+ */
+export function initAuditLog() {
+  const db = getDb();
+  if (!db) return;
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   db.exec(`
     CREATE TABLE IF NOT EXISTS audit_log (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -157,6 +171,7 @@ function ensureAuditLogSchema(db: import("better-sqlite3").Database) {
       actor TEXT NOT NULL DEFAULT 'system',
       target TEXT,
       details TEXT,
+<<<<<<< HEAD
       ip_address TEXT,
       resource_type TEXT,
       status TEXT,
@@ -274,6 +289,15 @@ export function initAuditLog() {
   ensureAuditLogSchema(db);
 }
 
+=======
+      ip_address TEXT
+    );
+    CREATE INDEX IF NOT EXISTS idx_audit_timestamp ON audit_log(timestamp);
+    CREATE INDEX IF NOT EXISTS idx_audit_action ON audit_log(action);
+  `);
+}
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Log an administrative action.
  *
@@ -289,17 +313,22 @@ export function logAuditEvent(entry: {
   actor?: string;
   target?: string;
   details?: unknown;
+<<<<<<< HEAD
   metadata?: unknown;
   ipAddress?: string;
   resourceType?: string;
   status?: string;
   requestId?: string;
   createdAt?: string;
+=======
+  ipAddress?: string;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }) {
   const db = getDb();
   if (!db) return;
 
   try {
+<<<<<<< HEAD
     ensureAuditLogSchema(db);
     const createdAt = entry.createdAt || new Date().toISOString();
     const serializedDetails = serializeAuditValue(entry.details ?? entry.metadata);
@@ -335,6 +364,18 @@ export function logAuditEvent(entry: {
       entry.status || null,
       entry.requestId || null,
       serializeAuditValue(metadataSource)
+=======
+    const stmt = db.prepare(`
+      INSERT INTO audit_log (action, actor, target, details, ip_address)
+      VALUES (?, ?, ?, ?, ?)
+    `);
+    stmt.run(
+      entry.action,
+      entry.actor || "system",
+      entry.target || null,
+      typeof entry.details === "object" ? JSON.stringify(entry.details) : entry.details || null,
+      entry.ipAddress || null
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     );
   } catch {
     // Silently fail — audit logging should never break the main flow
@@ -351,6 +392,7 @@ export function logAuditEvent(entry: {
  * @param {number} [filter.offset=0] - Pagination offset
  * @returns {Array<{ id: number, timestamp: string, action: string, actor: string, target: string, details: any, ip_address: string }>}
  */
+<<<<<<< HEAD
 export function getAuditLog(filter: AuditLogFilter = {}) {
   const db = getDb();
   if (!db) return [];
@@ -380,6 +422,38 @@ export function countAuditLog(filter: AuditLogFilter = {}) {
     | { count?: number }
     | undefined;
   return Number(row?.count || 0);
+=======
+export function getAuditLog(
+  filter: { action?: string; actor?: string; limit?: number; offset?: number } = {}
+) {
+  const db = getDb();
+  if (!db) return [];
+
+  const conditions: string[] = [];
+  const params: (string | number)[] = [];
+
+  if (filter.action) {
+    conditions.push("action = ?");
+    params.push(filter.action);
+  }
+  if (filter.actor) {
+    conditions.push("actor = ?");
+    params.push(filter.actor);
+  }
+
+  const where = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+  const limit = filter.limit || 100;
+  const offset = filter.offset || 0;
+
+  const rows = db
+    .prepare(`SELECT * FROM audit_log ${where} ORDER BY timestamp DESC LIMIT ? OFFSET ?`)
+    .all(...params, limit, offset) as Array<Record<string, unknown> & { details?: string | null }>;
+
+  return rows.map((row) => ({
+    ...(row as Record<string, unknown>),
+    details: row.details ? JSON.parse(String(row.details)) : null,
+  }));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 // ─── No-Log Opt-Out ────────────────
@@ -491,20 +565,39 @@ export function getRetentionDays() {
  *   deletedRequestDetailLogs: number,
  *   deletedAuditLogs: number,
  *   deletedMcpAuditLogs: number,
+<<<<<<< HEAD
  *   trimmedCallLogs: number,
  *   trimmedProxyLogs: number,
  *   appRetentionDays: number,
  *   callRetentionDays: number,
  *   callLogsMaxRows: number,
  *   proxyLogsMaxRows: number
+=======
+ *   appRetentionDays: number,
+ *   callRetentionDays: number
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  * }}
  */
 export function cleanupExpiredLogs() {
   const db = getDb();
   const appRetentionDays = getAppLogRetentionDays();
   const callRetentionDays = getCallLogRetentionDays();
+<<<<<<< HEAD
   const callLogsMaxRows = getCallLogsTableMaxRows();
   const proxyLogsMaxRows = getProxyLogsTableMaxRows();
+=======
+
+  if (!db) {
+    return {
+      deletedUsage: 0,
+      deletedCallLogs: 0,
+      deletedProxyLogs: 0,
+      deletedRequestDetailLogs: 0,
+      deletedAuditLogs: 0,
+      deletedMcpAuditLogs: 0,
+      appRetentionDays,
+      callRetentionDays,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     };
   }
 
@@ -517,8 +610,22 @@ export function cleanupExpiredLogs() {
   let deletedRequestDetailLogs = 0;
   let deletedAuditLogs = 0;
   let deletedMcpAuditLogs = 0;
+<<<<<<< HEAD
   let trimmedCallLogs = 0;
   let trimmedProxyLogs = 0;
+=======
+
+  try {
+    const r1 = db.prepare("DELETE FROM usage_history WHERE timestamp < ?").run(callCutoff);
+    deletedUsage = r1.changes;
+  } catch {
+    /* table may not exist */
+  }
+
+  try {
+    const r2 = db.prepare("DELETE FROM call_logs WHERE timestamp < ?").run(callCutoff);
+    deletedCallLogs = r2.changes;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   } catch {
     /* table may not exist */
   }
@@ -551,6 +658,7 @@ export function cleanupExpiredLogs() {
     /* table may not exist */
   }
 
+<<<<<<< HEAD
   // Enforce row count limits to prevent unbounded DB growth (batched to avoid long locks)
   const BATCH_SIZE = 5000;
   if (callLogsMaxRows > 0) {
@@ -593,6 +701,10 @@ export function cleanupExpiredLogs() {
     resourceType: "maintenance",
     status: "success",
 =======
+=======
+  logAuditEvent({
+    action: "compliance.cleanup",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     details: {
       deletedUsage,
       deletedCallLogs,
@@ -600,6 +712,11 @@ export function cleanupExpiredLogs() {
       deletedRequestDetailLogs,
       deletedAuditLogs,
       deletedMcpAuditLogs,
+<<<<<<< HEAD
+=======
+      appRetentionDays,
+      callRetentionDays,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     },
   });
 
@@ -610,5 +727,10 @@ export function cleanupExpiredLogs() {
     deletedRequestDetailLogs,
     deletedAuditLogs,
     deletedMcpAuditLogs,
+<<<<<<< HEAD
+=======
+    appRetentionDays,
+    callRetentionDays,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 }

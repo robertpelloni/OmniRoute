@@ -34,7 +34,11 @@ type PricingEntry = {
 type PricingModels = Record<string, PricingEntry>;
 type PricingByProvider = Record<string, PricingModels>;
 
+<<<<<<< HEAD
 export interface ModelCapabilityEntry {
+=======
+interface CapabilityEntry {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   tool_call: boolean | null;
   reasoning: boolean | null;
   attachment: boolean | null;
@@ -54,7 +58,11 @@ export interface ModelCapabilityEntry {
   interleaved_field: string | null;
 }
 
+<<<<<<< HEAD
 export type CapabilitiesByProvider = Record<string, Record<string, ModelCapabilityEntry>>;
+=======
+type CapabilitiesByProvider = Record<string, Record<string, CapabilityEntry>>;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 interface SyncStatus {
   enabled: boolean;
@@ -154,16 +162,23 @@ const MODELS_DEV_PROVIDER_MAP: Record<string, string[]> = {
   openai: ["openai", "cx"], // cx = Codex (uses OpenAI models)
   anthropic: ["anthropic", "cc"], // cc = Claude Code
   google: ["gemini", "gemini-cli"],
+<<<<<<< HEAD
   "google-vertex": ["gemini", "vertex"],
   "google-vertex-anthropic": ["anthropic", "cc", "vertex"],
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   vertex_ai: ["gemini", "vertex"],
   deepseek: ["deepseek", "if"], // if = Qoder (routes through DeepSeek)
   groq: ["groq"],
   xai: ["xai"],
   mistral: ["mistral"],
+<<<<<<< HEAD
   togetherai: ["together", "openrouter"],
   together_ai: ["together", "openrouter"],
   "fireworks-ai": ["fireworks"],
+=======
+  together_ai: ["together", "openrouter"],
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   fireworks: ["fireworks"],
   cerebras: ["cerebras"],
   cohere: ["cohere"],
@@ -176,6 +191,7 @@ const MODELS_DEV_PROVIDER_MAP: Record<string, string[]> = {
   perplexity: ["pplx", "perplexity"],
   // OAuth / special providers
   bedrock: ["kiro", "kr"], // kr = Kiro (AWS Bedrock)
+<<<<<<< HEAD
   "github-copilot": ["github", "gh"],
   "github-models": ["github", "gh"],
   kilo: ["kilocode", "kc", "kilo-gateway"],
@@ -195,6 +211,13 @@ const MODELS_DEV_PROVIDER_MAP: Record<string, string[]> = {
   moonshot: ["moonshot", "kimi", "kimi-coding", "kmc", "kmca"],
   minimax: ["minimax", "minimax-cn"],
   "minimax-cn": ["minimax-cn"],
+=======
+  // Additional providers that may overlap with OmniRoute
+  alibaba: ["ali", "alibaba", "bcp", "alicode", "alicode-intl"],
+  zai: ["zai", "glm"], // GLM models via Z.AI
+  moonshot: ["kimi", "kimi-coding", "kmc", "kmca"],
+  minimax: ["minimax", "minimax-cn"],
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   longcat: ["lc", "longcat"],
   pollinations: ["pol", "pollinations"],
   puter: ["pu", "puter"],
@@ -202,6 +225,10 @@ const MODELS_DEV_PROVIDER_MAP: Record<string, string[]> = {
   scaleway: ["scw"],
   ollama: ["ollamacloud", "ollama-cloud"],
   blackbox: ["bb", "blackbox"],
+<<<<<<< HEAD
+=======
+  kilocode: ["kc", "kilocode"],
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   cline: ["cl", "cline"],
   cursor: ["cu", "cursor"],
   github: ["gh", "github"],
@@ -219,9 +246,12 @@ export function mapProviderId(modelsDevProviderId: string): string[] {
 // ─── Periodic sync state ─────────────────────────────────
 
 let syncTimer: ReturnType<typeof setInterval> | null = null;
+<<<<<<< HEAD
 let activeSyncAbortController: AbortController | null = null;
 let activeSyncPromise: Promise<SyncResult> | null = null;
 let activePeriodicSyncToken: { stopped: boolean } | null = null;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 let lastSyncTime: string | null = null;
 let lastSyncModelCount = 0;
 let lastSyncCapabilityCount = 0;
@@ -229,6 +259,7 @@ let activeSyncIntervalMs = SYNC_INTERVAL_MS;
 let cachedData: ModelsDevData | null = null;
 let cacheTime = 0;
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+<<<<<<< HEAD
 let cachedCapabilities: CapabilitiesByProvider | null = null;
 let cachedCapabilitiesLoadedAll = false;
 const MODELS_DEV_ABORT_ERROR = "AbortError";
@@ -273,6 +304,8 @@ async function sleepWithAbort(ms: number, signal?: AbortSignal): Promise<void> {
     signal?.addEventListener("abort", onAbort, { once: true });
   });
 }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 // ─── Core: Fetch ─────────────────────────────────────────
 
@@ -280,14 +313,22 @@ async function sleepWithAbort(ms: number, signal?: AbortSignal): Promise<void> {
  * Fetch raw data from models.dev API.
  * Uses in-memory cache with 24h TTL to avoid repeated fetches.
  */
+<<<<<<< HEAD
 export async function fetchModelsDev(signal?: AbortSignal): Promise<ModelsDevData> {
+=======
+export async function fetchModelsDev(): Promise<ModelsDevData> {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Return cached data if still fresh
   if (cachedData && Date.now() - cacheTime < CACHE_TTL_MS) {
     return cachedData;
   }
 
   const response = await fetch(MODELS_DEV_API_URL, {
+<<<<<<< HEAD
     signal: signal ?? AbortSignal.timeout(30000),
+=======
+    signal: AbortSignal.timeout(30000),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   });
   if (!response.ok) {
     throw new Error(`models.dev fetch failed [${response.status}]: ${response.statusText}`);
@@ -361,7 +402,11 @@ export function transformModelsDevToCapabilities(raw: ModelsDevData): Capabiliti
     const omniRouteProviders = mapProviderId(providerId);
 
     for (const [modelId, model] of Object.entries(providerData.models || {})) {
+<<<<<<< HEAD
       const cap: ModelCapabilityEntry = {
+=======
+      const cap: CapabilityEntry = {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         tool_call: model.tool_call ?? null,
         reasoning: model.reasoning ?? null,
         attachment: model.attachment ?? null,
@@ -402,6 +447,7 @@ function toRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === "object" ? (value as Record<string, unknown>) : {};
 }
 
+<<<<<<< HEAD
 function mapCapabilityRecord(record: Record<string, unknown>): ModelCapabilityEntry {
   return {
     tool_call: record.tool_call === 1 ? true : record.tool_call === 0 ? false : null,
@@ -427,6 +473,8 @@ function mapCapabilityRecord(record: Record<string, unknown>): ModelCapabilityEn
   };
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Read synced pricing from `models_dev_pricing` namespace.
  */
@@ -518,6 +566,7 @@ export function ensureCapabilitiesTable(): void {
 /**
  * Read synced capabilities from `model_capabilities` table.
  */
+<<<<<<< HEAD
 export function getSyncedCapabilities(provider?: string, modelId?: string): CapabilitiesByProvider {
   if (cachedCapabilitiesLoadedAll) {
     if (!provider) {
@@ -532,6 +581,12 @@ export function getSyncedCapabilities(provider?: string, modelId?: string): Capa
     return providerCaps?.[modelId] ? { [provider]: { [modelId]: providerCaps[modelId] } } : {};
   }
 
+=======
+export function getSyncedCapabilities(
+  provider?: string,
+  modelId?: string
+): Record<string, Record<string, CapabilityEntry>> {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const db = getDbInstance();
   ensureCapabilitiesTable();
 
@@ -548,7 +603,11 @@ export function getSyncedCapabilities(provider?: string, modelId?: string): Capa
   }
 
   const rows = db.prepare(query).all(...params);
+<<<<<<< HEAD
   const result: CapabilitiesByProvider = {};
+=======
+  const result: Record<string, Record<string, CapabilityEntry>> = {};
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   for (const row of rows) {
     const record = toRecord(row);
@@ -557,17 +616,45 @@ export function getSyncedCapabilities(provider?: string, modelId?: string): Capa
     if (!prov || !mid) continue;
 
     if (!result[prov]) result[prov] = {};
+<<<<<<< HEAD
     result[prov][mid] = mapCapabilityRecord(record);
   }
 
   if (!provider && !modelId) {
     cachedCapabilities = result;
     cachedCapabilitiesLoadedAll = true;
+=======
+    result[prov][mid] = {
+      tool_call: record.tool_call === 1 ? true : record.tool_call === 0 ? false : null,
+      reasoning: record.reasoning === 1 ? true : record.reasoning === 0 ? false : null,
+      attachment: record.attachment === 1 ? true : record.attachment === 0 ? false : null,
+      structured_output:
+        record.structured_output === 1 ? true : record.structured_output === 0 ? false : null,
+      temperature: record.temperature === 1 ? true : record.temperature === 0 ? false : null,
+      modalities_input:
+        typeof record.modalities_input === "string" ? record.modalities_input : "[]",
+      modalities_output:
+        typeof record.modalities_output === "string" ? record.modalities_output : "[]",
+      knowledge_cutoff:
+        typeof record.knowledge_cutoff === "string" ? record.knowledge_cutoff : null,
+      release_date: typeof record.release_date === "string" ? record.release_date : null,
+      last_updated: typeof record.last_updated === "string" ? record.last_updated : null,
+      status: typeof record.status === "string" ? record.status : null,
+      family: typeof record.family === "string" ? record.family : null,
+      open_weights: record.open_weights === 1 ? true : record.open_weights === 0 ? false : null,
+      limit_context: typeof record.limit_context === "number" ? record.limit_context : null,
+      limit_input: typeof record.limit_input === "number" ? record.limit_input : null,
+      limit_output: typeof record.limit_output === "number" ? record.limit_output : null,
+      interleaved_field:
+        typeof record.interleaved_field === "string" ? record.interleaved_field : null,
+    };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   return result;
 }
 
+<<<<<<< HEAD
 export function getSyncedCapability(
   provider: string,
   modelId: string
@@ -587,6 +674,8 @@ export function getSyncedCapability(
   return mapCapabilityRecord(toRecord(row));
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Save synced capabilities to `model_capabilities` table (full replace).
  */
@@ -636,8 +725,11 @@ export function saveModelsDevCapabilities(data: CapabilitiesByProvider): void {
   });
   tx();
   backupDbFile("pre-write");
+<<<<<<< HEAD
   cachedCapabilities = data;
   cachedCapabilitiesLoadedAll = true;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 /**
@@ -648,8 +740,11 @@ export function clearModelsDevCapabilities(): void {
   ensureCapabilitiesTable();
   db.prepare("DELETE FROM model_capabilities").run();
   backupDbFile("pre-write");
+<<<<<<< HEAD
   cachedCapabilities = {};
   cachedCapabilitiesLoadedAll = true;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 // ─── Main sync function ──────────────────────────────────
@@ -660,6 +755,7 @@ export function clearModelsDevCapabilities(): void {
 export async function syncModelsDev(opts?: {
   dryRun?: boolean;
   syncCapabilities?: boolean;
+<<<<<<< HEAD
   maxRetries?: number;
   signal?: AbortSignal;
 }): Promise<SyncResult> {
@@ -747,6 +843,57 @@ export async function syncModelsDev(opts?: {
     dryRun,
     error: message,
   };
+=======
+}): Promise<SyncResult> {
+  const dryRun = opts?.dryRun ?? false;
+  const syncCapabilities = opts?.syncCapabilities ?? true;
+
+  try {
+    const raw = await fetchModelsDev();
+    const pricing = transformModelsDevToPricing(raw);
+    const capabilities = syncCapabilities ? transformModelsDevToCapabilities(raw) : {};
+
+    const modelCount = Object.values(pricing).reduce(
+      (sum, models) => sum + Object.keys(models).length,
+      0
+    );
+    const providerCount = Object.keys(pricing).length;
+    const capabilityCount = syncCapabilities
+      ? Object.values(capabilities).reduce((sum, models) => sum + Object.keys(models).length, 0)
+      : 0;
+
+    if (!dryRun) {
+      saveModelsDevPricing(pricing);
+      if (syncCapabilities) {
+        ensureCapabilitiesTable();
+        saveModelsDevCapabilities(capabilities);
+      }
+      lastSyncTime = new Date().toISOString();
+      lastSyncModelCount = modelCount;
+      lastSyncCapabilityCount = capabilityCount;
+    }
+
+    return {
+      success: true,
+      modelCount,
+      providerCount,
+      capabilityCount,
+      dryRun,
+      ...(dryRun ? { data: { pricing, capabilities } } : {}),
+    };
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.warn("[MODELS_DEV] Sync failed:", message);
+    return {
+      success: false,
+      modelCount: 0,
+      providerCount: 0,
+      capabilityCount: 0,
+      dryRun,
+      error: message,
+    };
+  }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 // ─── Periodic sync ───────────────────────────────────────
@@ -759,6 +906,7 @@ export function startPeriodicSync(intervalMs?: number): void {
 
   const interval = intervalMs ?? SYNC_INTERVAL_MS;
   activeSyncIntervalMs = interval;
+<<<<<<< HEAD
   const syncToken = { stopped: false };
   activePeriodicSyncToken = syncToken;
   console.log(`[MODELS_DEV] Starting periodic sync every ${interval / 1000}s`);
@@ -786,6 +934,12 @@ export function startPeriodicSync(intervalMs?: number): void {
 
   // Initial sync (non-blocking)
   launchSync()
+=======
+  console.log(`[MODELS_DEV] Starting periodic sync every ${interval / 1000}s`);
+
+  // Initial sync (non-blocking)
+  syncModelsDev()
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     .then((result) => {
       if (result.success) {
         console.log(
@@ -798,7 +952,11 @@ export function startPeriodicSync(intervalMs?: number): void {
     });
 
   syncTimer = setInterval(() => {
+<<<<<<< HEAD
     launchSync()
+=======
+    syncModelsDev()
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       .then((result) => {
         if (result.success) {
           console.log(`[MODELS_DEV] Periodic sync complete: ${result.modelCount} pricing entries`);
@@ -818,6 +976,7 @@ export function startPeriodicSync(intervalMs?: number): void {
  * Stop periodic sync and cleanup timer.
  */
 export function stopPeriodicSync(): void {
+<<<<<<< HEAD
   if (activePeriodicSyncToken) {
     activePeriodicSyncToken.stopped = true;
     activePeriodicSyncToken = null;
@@ -828,6 +987,8 @@ export function stopPeriodicSync(): void {
     activeSyncAbortController = null;
   }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (syncTimer) {
     clearInterval(syncTimer);
     syncTimer = null;

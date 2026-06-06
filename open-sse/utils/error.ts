@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { CORS_HEADERS } from "./cors.ts";
 import { getDefaultErrorMessage, getErrorInfo } from "../config/errorConfig.ts";
 import { normalizePayloadForLog } from "@/lib/logPayloads";
@@ -7,6 +8,11 @@ import { getCorsOrigin } from "./cors.ts";
 import { ERROR_TYPES, DEFAULT_ERROR_MESSAGES } from "../config/constants.ts";
 import { normalizePayloadForLog } from "@/lib/logPayloads";
 >>>>>>> Stashed changes
+=======
+import { getCorsOrigin } from "./cors.ts";
+import { ERROR_TYPES, DEFAULT_ERROR_MESSAGES } from "../config/constants.ts";
+import { normalizePayloadForLog } from "@/lib/logPayloads";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * Build OpenAI-compatible error response body
@@ -15,11 +21,23 @@ import { normalizePayloadForLog } from "@/lib/logPayloads";
  * @returns {object} Error response object
  */
 export function buildErrorBody(statusCode, message) {
+<<<<<<< HEAD
   const errorInfo = getErrorInfo(statusCode);
 
   return {
     error: {
       message: message || getDefaultErrorMessage(statusCode),
+=======
+  const errorInfo =
+    ERROR_TYPES[statusCode] ||
+    (statusCode >= 500
+      ? { type: "server_error", code: "internal_server_error" }
+      : { type: "invalid_request_error", code: "" });
+
+  return {
+    error: {
+      message: message || DEFAULT_ERROR_MESSAGES[statusCode] || "An error occurred",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       type: errorInfo.type,
       code: errorInfo.code,
     },
@@ -37,6 +55,10 @@ export function errorResponse(statusCode, message) {
     status: statusCode,
     headers: {
       "Content-Type": "application/json",
+<<<<<<< HEAD
+=======
+      "Access-Control-Allow-Origin": getCorsOrigin(),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     },
   });
 }
@@ -53,6 +75,7 @@ export async function writeStreamError(writer, statusCode, message) {
   await writer.write(encoder.encode(`data: ${JSON.stringify(errorBody)}\n\n`));
 }
 
+<<<<<<< HEAD
 function normalizeRetryAfterSeconds(retryAfter?: string | number | Date | null): number {
   if (typeof retryAfter === "number" && Number.isFinite(retryAfter)) {
     if (retryAfter > 0 && retryAfter < 1_000_000_000) {
@@ -75,6 +98,8 @@ function normalizeRetryAfterSeconds(retryAfter?: string | number | Date | null):
   return 1;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Parse Antigravity error message to extract retry time
  * Example: "You have exhausted your capacity on this model. Your quota will reset after 2h7m23s."
@@ -140,6 +165,7 @@ export async function parseUpstreamError(response, provider = null) {
 
   const messageStr = typeof message === "string" ? message : JSON.stringify(message);
 
+<<<<<<< HEAD
   const retryAfterHeader = response.headers?.get?.("retry-after");
   if (retryAfterHeader && !retryAfterMs) {
     const retryAfterSec = Number.parseInt(retryAfterHeader, 10);
@@ -153,6 +179,8 @@ export async function parseUpstreamError(response, provider = null) {
     }
   }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Parse Antigravity-specific retry time from error message
   if (provider === "antigravity" && response.status === 429) {
     retryAfterMs = parseAntigravityRetryTime(messageStr);
@@ -163,6 +191,7 @@ export async function parseUpstreamError(response, provider = null) {
     retryAfterMs = parseAntigravityRetryTime(messageStr);
   }
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
   // Generic providers: "Please retry after 20s"
   if (response.status === 429 && !retryAfterMs) {
@@ -173,24 +202,32 @@ export async function parseUpstreamError(response, provider = null) {
   }
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Cap maximum retry time at 24 hours to prevent infinite wait
   const MAX_RETRY_MS = 24 * 60 * 60 * 1000;
   if (retryAfterMs && retryAfterMs > MAX_RETRY_MS) {
     retryAfterMs = MAX_RETRY_MS;
   }
 
+<<<<<<< HEAD
   const responseHeaders: Record<string, string> | null = response.headers
     ? Object.fromEntries(response.headers.entries())
     : null;
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return {
     statusCode: response.status,
     message: messageStr,
     retryAfterMs,
     responseBody,
+<<<<<<< HEAD
     responseHeaders,
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 }
 
@@ -241,7 +278,12 @@ export function unavailableResponse(
   retryAfter?: string | number | Date | null,
   retryAfterHuman?: string
 ) {
+<<<<<<< HEAD
   const retryAfterSec = normalizeRetryAfterSeconds(retryAfter);
+=======
+  const retryTimeMs = retryAfter ? new Date(retryAfter).getTime() : Date.now() + 1000;
+  const retryAfterSec = Math.max(Math.ceil((retryTimeMs - Date.now()) / 1000), 1);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const msg = retryAfterHuman ? `${message} (${retryAfterHuman})` : message;
   return new Response(JSON.stringify({ error: { message: msg } }), {
     status: statusCode,
@@ -252,6 +294,7 @@ export function unavailableResponse(
   });
 }
 
+<<<<<<< HEAD
 export function providerCircuitOpenResponse(
   provider: string,
   retryAfter?: string | number | Date | null
@@ -325,6 +368,8 @@ export function modelCooldownResponse({
   );
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Format provider error with context
  * @param {Error} error - Original error

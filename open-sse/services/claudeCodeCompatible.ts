@@ -1,5 +1,6 @@
 import { createHash, randomUUID } from "node:crypto";
 
+<<<<<<< HEAD
 import { getStainlessTimeoutSeconds } from "@/shared/utils/runtimeTimeouts";
 import { ANTHROPIC_VERSION_HEADER } from "../config/anthropicHeaders.ts";
 import { supportsXHighEffort } from "../config/providerModels.ts";
@@ -55,6 +56,10 @@ export const CLAUDE_CODE_COMPATIBLE_STAINLESS_TIMEOUT_SECONDS = getStainlessTime
   process.env
 );
 =======
+=======
+import { prepareClaudeRequest } from "../translator/helpers/claudeHelper.ts";
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export const CLAUDE_CODE_COMPATIBLE_PREFIX = "anthropic-compatible-cc-";
 export const CLAUDE_CODE_COMPATIBLE_DEFAULT_CHAT_PATH = "/v1/messages?beta=true";
 export const CLAUDE_CODE_COMPATIBLE_DEFAULT_MODELS_PATH = "/models";
@@ -65,7 +70,10 @@ export const CLAUDE_CODE_COMPATIBLE_ANTHROPIC_BETA =
 export const CLAUDE_CODE_COMPATIBLE_USER_AGENT = "claude-cli/2.1.89 (external, sdk-cli)";
 export const CLAUDE_CODE_COMPATIBLE_BILLING_HEADER =
   "x-anthropic-billing-header: cc_version=2.1.89.728; cc_entrypoint=sdk-cli; cch=00000;";
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 type HeaderLike =
   | Headers
@@ -83,6 +91,17 @@ type BuildRequestOptions = {
   sourceBody?: Record<string, unknown> | null;
   normalizedBody?: Record<string, unknown> | null;
   claudeBody?: Record<string, unknown> | null;
+<<<<<<< HEAD
+=======
+  model: string;
+  stream?: boolean;
+  cwd?: string;
+  now?: Date;
+  sessionId?: string | null;
+  preserveCacheControl?: boolean;
+};
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export function isClaudeCodeCompatibleProvider(provider: string | null | undefined): boolean {
   return typeof provider === "string" && provider.startsWith(CLAUDE_CODE_COMPATIBLE_PREFIX);
 }
@@ -128,6 +147,7 @@ export function joinClaudeCodeCompatibleUrl(baseUrl: string, path: string): stri
   return joinNormalizedBaseUrlAndPath(stripClaudeCodeCompatibleEndpointSuffix(baseUrl), path);
 }
 
+<<<<<<< HEAD
 export function appendAnthropicBetaHeader(
   headers: Record<string, string>,
   betaHeader: string
@@ -159,12 +179,24 @@ export function modelSupportsContext1mBeta(model: string | null | undefined): bo
   );
 }
 
+=======
+export function buildClaudeCodeCompatibleHeaders(
+  apiKey: string,
+  stream = false,
+  sessionId?: string | null
+): Record<string, string> {
+  return {
+    "Content-Type": "application/json",
+    Accept: stream ? "text/event-stream" : "application/json",
+    "x-api-key": apiKey,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     "anthropic-version": CLAUDE_CODE_COMPATIBLE_ANTHROPIC_VERSION,
     "anthropic-beta": CLAUDE_CODE_COMPATIBLE_ANTHROPIC_BETA,
     "anthropic-dangerous-direct-browser-access": "true",
     "x-app": "cli",
     "User-Agent": CLAUDE_CODE_COMPATIBLE_USER_AGENT,
     "X-Stainless-Retry-Count": "0",
+<<<<<<< HEAD
     "X-Stainless-Timeout": String(CLAUDE_CODE_COMPATIBLE_STAINLESS_TIMEOUT_SECONDS),
     "X-Stainless-Lang": "js",
     "X-Stainless-Package-Version": CLAUDE_CODE_COMPATIBLE_STAINLESS_PACKAGE_VERSION,
@@ -173,6 +205,18 @@ export function modelSupportsContext1mBeta(model: string | null | undefined): bo
     "X-Stainless-Runtime": "node",
     "X-Stainless-Runtime-Version": CLAUDE_CODE_COMPATIBLE_STAINLESS_RUNTIME_VERSION,
     "accept-encoding": "gzip, deflate, br, zstd",
+=======
+    "X-Stainless-Timeout": "300",
+    "X-Stainless-Lang": "js",
+    "X-Stainless-Package-Version": "0.74.0",
+    "X-Stainless-OS": "MacOS",
+    "X-Stainless-Arch": "arm64",
+    "X-Stainless-Runtime": "node",
+    "X-Stainless-Runtime-Version": "v25.8.1",
+    "accept-language": "*",
+    "sec-fetch-mode": "cors",
+    "accept-encoding": "identity",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ...(sessionId ? { "X-Claude-Code-Session-Id": sessionId } : {}),
   };
 }
@@ -211,6 +255,10 @@ export function buildClaudeCodeCompatibleRequest({
   model,
   stream = false,
   cwd = process.cwd(),
+<<<<<<< HEAD
+=======
+  now = new Date(),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   sessionId,
   preserveCacheControl = false,
 }: BuildRequestOptions) {
@@ -218,6 +266,7 @@ export function buildClaudeCodeCompatibleRequest({
   const preparedClaudeBody = claudeBody
     ? prepareClaudeCodeCompatibleBody(claudeBody, preserveCacheControl)
     : null;
+<<<<<<< HEAD
   const normalizedMessages = Array.isArray(normalized.messages)
     ? (normalized.messages as MessageLike[])
     : [];
@@ -235,6 +284,21 @@ export function buildClaudeCodeCompatibleRequest({
   const system = buildClaudeCodeCompatibleSystemBlocks({
     messages: normalizedMessages,
     systemBlocks: effectiveClaudeBody?.system as Record<string, unknown>[] | undefined,
+=======
+  const messages = preparedClaudeBody
+    ? buildClaudeCodeCompatibleMessagesFromClaude(
+        preparedClaudeBody.messages as MessageLike[],
+        preserveCacheControl
+      )
+    : Array.isArray(normalized.messages)
+      ? buildClaudeCodeCompatibleMessages(normalized.messages as MessageLike[])
+      : [];
+  const system = buildClaudeCodeCompatibleSystemBlocks({
+    messages: normalized.messages as MessageLike[],
+    systemBlocks: preparedClaudeBody?.system as Record<string, unknown>[] | undefined,
+    cwd,
+    now,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     preserveCacheControl,
   });
   const resolvedSessionId = sessionId || randomUUID();
@@ -252,6 +316,7 @@ export function buildClaudeCodeCompatibleRequest({
           normalizedBody?.["tool_choice"] ?? sourceBody?.["tool_choice"]
         )
       : undefined;
+<<<<<<< HEAD
   const metadata = resolveClaudeCodeCompatibleMetadata({
     claudeBody,
     sourceBody,
@@ -271,11 +336,45 @@ export function buildClaudeCodeCompatibleRequest({
     model,
     effort,
   });
+=======
+
+  return {
+    model,
+    messages,
+    system,
+    tools,
+    metadata: {
+      user_id: JSON.stringify({
+        device_id: createHash("sha256")
+          .update(String(cwd || ""))
+          .digest("hex")
+          .slice(0, 24),
+        account_uuid: "",
+        session_id: resolvedSessionId,
+      }),
+    },
+    max_tokens: maxTokens,
+    thinking: {
+      type: "adaptive",
+    },
+    context_management: {
+      edits: [
+        {
+          type: "clear_thinking_20251015",
+          keep: "all",
+        },
+      ],
+    },
+    output_config: {
+      effort,
+    },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ...(toolChoice ? { tool_choice: toolChoice } : {}),
     ...(stream ? { stream: true } : {}),
   };
 }
 
+<<<<<<< HEAD
 /**
  * Full Claude Code request processing pipeline.
  *
@@ -340,6 +439,13 @@ export {
   enforceCacheControlLimit,
 } from "./claudeCodeConstraints.ts";
 
+=======
+export function resolveClaudeCodeCompatibleEffort(
+  sourceBody?: Record<string, unknown> | null,
+  normalizedBody?: Record<string, unknown> | null,
+  model?: string | null
+): "low" | "medium" | "high" {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const raw =
     readNestedString(sourceBody, ["output_config", "effort"]) ||
     readNestedString(sourceBody, ["reasoning", "effort"]) ||
@@ -350,14 +456,21 @@ export {
     "";
 
   const normalizedEffort = raw.toLowerCase();
+<<<<<<< HEAD
 
   if (!normalizedEffort) {
     return supportsClaudeXHighEffort(model) ? "xhigh" : "high";
   }
+=======
+  void model;
+
+  if (!normalizedEffort) return "high";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (normalizedEffort === "low") return "low";
   if (normalizedEffort === "medium") return "medium";
   if (normalizedEffort === "high") return "high";
   if (normalizedEffort === "none" || normalizedEffort === "disabled") return "low";
+<<<<<<< HEAD
   if (normalizedEffort === "xhigh") {
     return supportsClaudeXHighEffort(model) ? "xhigh" : "high";
   }
@@ -365,6 +478,12 @@ export {
     return supportsClaudeXHighEffort(model) ? "xhigh" : "high";
   }
   return supportsClaudeXHighEffort(model) ? "xhigh" : "high";
+=======
+  if (normalizedEffort === "max" || normalizedEffort === "xhigh") {
+    return "high";
+  }
+  return "high";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 export function resolveClaudeCodeCompatibleMaxTokens(
@@ -396,6 +515,7 @@ function buildClaudeCodeCompatibleMessages(messages: MessageLike[]) {
     .filter(
       (
         message
+<<<<<<< HEAD
       ): message is {
         role: "user" | "assistant";
         content: Array<{ type: string; text: string }>;
@@ -406,6 +526,13 @@ function buildClaudeCodeCompatibleMessages(messages: MessageLike[]) {
     role: "user" | "assistant";
     content: Array<{ type: string; text: string }>;
   }> = [];
+=======
+      ): message is { role: "user" | "assistant"; content: Array<Record<string, unknown>> } =>
+        !!message && message.content.length > 0
+    );
+
+  const merged: Array<{ role: "user" | "assistant"; content: Array<Record<string, unknown>> }> = [];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   for (const message of converted) {
     const last = merged[merged.length - 1];
@@ -460,6 +587,7 @@ function buildClaudeCodeCompatibleMessagesFromClaude(
     : [];
 
   const merged: Array<{ role: "user" | "assistant"; content: Array<Record<string, unknown>> }> = [];
+<<<<<<< HEAD
   let previousAssistantHadToolUse = false;
 
   for (const message of converted) {
@@ -488,6 +616,19 @@ function buildClaudeCodeCompatibleMessagesFromClaude(
     if (last.role !== "assistant" || hasToolUse) {
       break;
     }
+=======
+
+  for (const message of converted) {
+    const last = merged[merged.length - 1];
+    if (last && last.role === message.role) {
+      last.content.push(...message.content);
+      continue;
+    }
+    merged.push({ role: message.role, content: [...message.content] });
+  }
+
+  while (merged.length > 0 && merged[merged.length - 1].role === "assistant") {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     merged.pop();
   }
 
@@ -520,16 +661,27 @@ function buildClaudeCodeCompatibleMessagesFromClaude(
 function buildClaudeCodeCompatibleSystemBlocks({
   messages,
   systemBlocks,
+<<<<<<< HEAD
+=======
+  cwd,
+  now,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   preserveCacheControl,
 }: {
   messages: MessageLike[] | undefined;
   systemBlocks?: Array<Record<string, unknown>> | undefined;
+<<<<<<< HEAD
+=======
+  cwd: string;
+  now: Date;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   preserveCacheControl: boolean;
 }) {
   const customSystemBlocks =
     Array.isArray(systemBlocks) && systemBlocks.length > 0
       ? systemBlocks.map((block) => ({ ...block }))
       : extractCustomSystemBlocks(messages);
+<<<<<<< HEAD
   const useLongSystemTtl =
     !preserveCacheControl ||
     customSystemBlocks.some((block) => readCacheControlTtl(block) === "1h");
@@ -568,6 +720,34 @@ function containsDefaultSystemSkeleton(blocks: Array<Record<string, unknown>>) {
       return Object.entries(defaultBlock).every(([key, value]) => candidateBlock[key] === value);
     })
   );
+=======
+
+  const dateText = formatDate(now);
+  const blocks: Array<Record<string, unknown>> = [
+    {
+      type: "text",
+      text: CLAUDE_CODE_COMPATIBLE_BILLING_HEADER,
+    },
+    {
+      type: "text",
+      text: "You are a Claude agent, built on Anthropic's Claude Agent SDK.",
+    },
+    {
+      type: "text",
+      text: `You are Claude Code, Anthropic's official CLI for Claude.\n\nCWD: ${cwd}\nDate: ${dateText}`,
+    },
+  ];
+
+  for (const systemBlock of customSystemBlocks) {
+    const preparedBlock = { ...systemBlock };
+    if (!preserveCacheControl) {
+      delete preparedBlock.cache_control;
+    }
+    blocks.push(preparedBlock);
+  }
+
+  return blocks;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 function convertClaudeCodeCompatibleMessage(message: MessageLike | null | undefined) {
@@ -679,7 +859,10 @@ function buildClaudeCodeCompatibleToolChoice(choice: unknown) {
   return null;
 }
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function prepareClaudeCodeCompatibleBody(
   claudeBody: Record<string, unknown>,
   preserveCacheControl: boolean
@@ -688,12 +871,18 @@ function prepareClaudeCodeCompatibleBody(
   const prepared = prepareClaudeRequest(
     {
       system: normalizeClaudeSystemInput(claudeBody.system),
+<<<<<<< HEAD
       messages: normalizeClaudeMessageInput(claudeBody.messages) as Array<{
         role?: string;
         content?: string | Array<Record<string, unknown>>;
       }>,
       tools: normalizeClaudeToolInput(claudeBody.tools),
       thinking: (readRecord(claudeBody.thinking) || null) as Record<string, unknown> | null,
+=======
+      messages: normalizeClaudeMessageInput(claudeBody.messages),
+      tools: normalizeClaudeToolInput(claudeBody.tools),
+      thinking: readRecord(claudeBody.thinking) || claudeBody.thinking,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     },
     CLAUDE_CODE_COMPATIBLE_PREFIX,
     true
@@ -702,6 +891,7 @@ function prepareClaudeCodeCompatibleBody(
   return readRecord(prepared);
 }
 
+<<<<<<< HEAD
 function extractClaudeBodyFromSource(
   sourceBody: Record<string, unknown>,
   preserveCacheControl: boolean
@@ -736,6 +926,8 @@ function extractClaudeBodyFromSource(
   );
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function normalizeClaudeSystemInput(system: unknown) {
   if (typeof system === "string") {
     const text = system.trim();
@@ -760,7 +952,11 @@ function normalizeClaudeMessageInput(messages: unknown) {
         content: normalizeClaudeContentInput(record.content),
       };
     })
+<<<<<<< HEAD
     .filter((message): message is Record<string, unknown> & { content: unknown } => !!message);
+=======
+    .filter((message): message is Record<string, unknown> => !!message);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 function normalizeClaudeToolInput(tools: unknown) {
@@ -855,6 +1051,7 @@ function stripCacheControlFromContentBlocks(content: Array<Record<string, unknow
   }
 }
 
+<<<<<<< HEAD
 function resolveClaudeCodeCompatibleMetadata({
   claudeBody,
   sourceBody,
@@ -935,6 +1132,8 @@ function resolveClaudeCodeCompatibleOutputConfig({
   };
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function cloneValue<T>(value: T): T {
   if (typeof structuredClone === "function") {
     return structuredClone(value);
@@ -942,7 +1141,10 @@ function cloneValue<T>(value: T): T {
   return JSON.parse(JSON.stringify(value)) as T;
 }
 
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function contentToText(content: unknown): string {
   if (typeof content === "string") {
     return content.trim();
@@ -991,6 +1193,23 @@ function getHeader(headers: HeaderLike, name: string): string | null {
   return null;
 }
 
+<<<<<<< HEAD
+=======
+function formatDate(date: Date): string {
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+
+  const parts = formatter.formatToParts(date);
+  const year = parts.find((part) => part.type === "year")?.value || "1970";
+  const month = parts.find((part) => part.type === "month")?.value || "01";
+  const day = parts.find((part) => part.type === "day")?.value || "01";
+  return `${year}-${month}-${day}`;
+}
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function toNonEmptyString(value: unknown): string | null {
   if (typeof value !== "string") return null;
   const trimmed = value.trim();

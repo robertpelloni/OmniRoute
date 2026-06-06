@@ -45,14 +45,20 @@ export async function GET(request: Request) {
     const bucketMinutes = BUCKET_SIZES[range];
     const aggregateByParam = searchParams.get("aggregateBy");
     const aggregateBy = aggregateByParam === "connection" ? "connection" : "provider";
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     const data = getAggregatedSnapshots({
       provider: providerParam || undefined,
       since,
       bucketMinutes,
       aggregateBy,
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     });
 
     const providers = Array.from(new Set(data.map((d) => d.provider)));

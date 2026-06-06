@@ -1,4 +1,5 @@
 import {
+<<<<<<< HEAD
   BACKOFF_STEPS_MS,
   PROVIDER_PROFILES,
   RateLimitReason,
@@ -68,6 +69,17 @@ const CONNECTION_FAILURE_DEDUP_MS = 5000;
 const lastConnectionFailure = new Map<string, number>();
 
 =======
+=======
+  COOLDOWN_MS,
+  BACKOFF_CONFIG,
+  BACKOFF_STEPS_MS,
+  RateLimitReason,
+  HTTP_STATUS,
+  PROVIDER_PROFILES,
+} from "../config/constants.ts";
+import { getProviderCategory } from "../config/providerRegistry.ts";
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // T06 (sub2api PR #1037): Signals that indicate permanent account deactivation.
 // When a 401 body contains these strings, the account is permanently dead
 // and should NOT be retried after token refresh.
@@ -105,6 +117,7 @@ export const OAUTH_INVALID_TOKEN_SIGNALS = [
   "invalid credentials",
 ];
 
+<<<<<<< HEAD
 // Context overflow patterns — the prompt exceeds the model's maximum context length.
 // Different providers phrase this differently. Used to decide whether a 400 error
 // should trigger combo fallback (a different model may have a larger context window).
@@ -135,6 +148,8 @@ const MALFORMED_REQUEST_PATTERNS = [
 ];
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * T06: Returns true if response body indicates the account is permanently deactivated.
  */
@@ -151,10 +166,24 @@ export function isCreditsExhausted(errorText: string): boolean {
   return CREDITS_EXHAUSTED_SIGNALS.some((sig) => lower.includes(sig));
 }
 
+<<<<<<< HEAD
+=======
+/**
+ * T11: Returns true if response body indicates OAuth token is invalid/expired.
+ * This is different from permanent account deactivation - token refresh can recover.
+ */
+export function isOAuthInvalidToken(errorText: string): boolean {
+  const lower = String(errorText || "").toLowerCase();
+  return OAUTH_INVALID_TOKEN_SIGNALS.some((sig) => lower.includes(sig));
+}
+
+// ─── Provider Profile Helper ────────────────────────────────────────────────
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * Get the resilience profile for a provider (oauth or apikey).
  * @param {string} provider - Provider ID or alias
+<<<<<<< HEAD
  */
 export function getProviderProfile(provider) {
   const category = getProviderCategory(provider);
@@ -175,10 +204,18 @@ export async function getRuntimeProviderProfile(provider: string | null | undefi
   } catch {
     return getProviderProfile(provider);
   }
+=======
+ * @returns {import('../config/constants.js').PROVIDER_PROFILES['oauth']}
+ */
+export function getProviderProfile(provider) {
+  const category = getProviderCategory(provider);
+  return PROVIDER_PROFILES[category] ?? PROVIDER_PROFILES.apikey;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 // ─── Per-Model Lockout Tracking ─────────────────────────────────────────────
 // In-memory map: "provider:connectionId:model" → { reason, until, lockedAt }
+<<<<<<< HEAD
 const modelLockouts = new Map<string, ModelLockoutEntry>();
 const modelFailureState = new Map<string, ModelFailureState>();
 
@@ -227,6 +264,9 @@ function getScaledCooldown(
   const exponent = Math.min(Math.max(0, failureCount - 1), Math.max(0, maxBackoffLevel));
   return safeBase * Math.pow(2, exponent);
 }
+=======
+const modelLockouts = new Map();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 // Auto-cleanup expired lockouts every 15 seconds (lazy init for Cloudflare Workers compatibility)
 let _cleanupTimer: ReturnType<typeof setInterval> | null = null;
@@ -236,8 +276,14 @@ function ensureCleanupTimer() {
   try {
     _cleanupTimer = setInterval(() => {
       const now = Date.now();
+<<<<<<< HEAD
       for (const key of modelLockouts.keys()) cleanupModelLockKey(key, now);
       for (const key of modelFailureState.keys()) cleanupModelLockKey(key, now);
+=======
+      for (const [key, entry] of modelLockouts) {
+        if (now > entry.until) modelLockouts.delete(key);
+      }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }, 15_000);
     if (typeof _cleanupTimer === "object" && "unref" in _cleanupTimer) {
       (_cleanupTimer as { unref?: () => void }).unref?.(); // Don't prevent process exit (Node.js only)
@@ -255,6 +301,7 @@ function ensureCleanupTimer() {
  * @param {string} reason - from RateLimitReason
  * @param {number} cooldownMs
  */
+<<<<<<< HEAD
 export function lockModel(
   provider,
   connectionId,
@@ -267,11 +314,18 @@ export function lockModel(
   ensureCleanupTimer();
   const key = getModelLockKey(provider, connectionId, model);
   cleanupModelLockKey(key);
+=======
+export function lockModel(provider, connectionId, model, reason, cooldownMs) {
+  if (!model) return; // No model → skip model-level locking
+  ensureCleanupTimer();
+  const key = `${provider}:${connectionId}:${model}`;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const newUntil = Date.now() + cooldownMs;
   // Preserve the longer cooldown if an existing lock has more time remaining.
   // Safe without a mutex: no await between get/set, so this runs atomically
   // within Node.js's single-threaded event loop.
   const existing = modelLockouts.get(key);
+<<<<<<< HEAD
   if (existing && existing.until > newUntil) {
     if (metadata.failureCount && metadata.failureCount > existing.failureCount) {
       existing.failureCount = metadata.failureCount;
@@ -412,6 +466,16 @@ export function shouldMarkAccountExhaustedFrom429(
   );
 }
 
+=======
+  if (existing && existing.until > newUntil) return;
+  modelLockouts.set(key, {
+    reason,
+    until: newUntil,
+    lockedAt: Date.now(),
+  });
+}
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Whether a provider should use per-model lockouts instead of connection-wide cooldowns.
  * Gemini AI Studio has per-model quotas; passthrough providers have independent model limits.
@@ -448,10 +512,21 @@ export function lockModelIfPerModelQuota(
  */
 export function isModelLocked(provider, connectionId, model) {
   if (!model) return false;
+<<<<<<< HEAD
   const key = getModelLockKey(provider, connectionId, model);
   cleanupModelLockKey(key);
   const entry = modelLockouts.get(key);
   return Boolean(entry);
+=======
+  const key = `${provider}:${connectionId}:${model}`;
+  const entry = modelLockouts.get(key);
+  if (!entry) return false;
+  if (Date.now() > entry.until) {
+    modelLockouts.delete(key);
+    return false;
+  }
+  return true;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 /**
@@ -459,15 +534,24 @@ export function isModelLocked(provider, connectionId, model) {
  */
 export function getModelLockoutInfo(provider, connectionId, model) {
   if (!model) return null;
+<<<<<<< HEAD
   const key = getModelLockKey(provider, connectionId, model);
   cleanupModelLockKey(key);
   const entry = modelLockouts.get(key);
   if (!entry) return null;
+=======
+  const key = `${provider}:${connectionId}:${model}`;
+  const entry = modelLockouts.get(key);
+  if (!entry || Date.now() > entry.until) return null;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return {
     reason: entry.reason,
     remainingMs: entry.until - Date.now(),
     lockedAt: new Date(entry.lockedAt).toISOString(),
+<<<<<<< HEAD
     failureCount: entry.failureCount,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 }
 
@@ -477,6 +561,7 @@ export function getModelLockoutInfo(provider, connectionId, model) {
 export function getAllModelLockouts() {
   const now = Date.now();
   const active = [];
+<<<<<<< HEAD
   for (const key of modelLockouts.keys()) {
     cleanupModelLockKey(key, now);
   }
@@ -490,10 +575,24 @@ export function getAllModelLockouts() {
       remainingMs: entry.until - now,
       failureCount: entry.failureCount,
     });
+=======
+  for (const [key, entry] of modelLockouts) {
+    if (now <= entry.until) {
+      const [provider, connectionId, model] = key.split(":");
+      active.push({
+        provider,
+        connectionId,
+        model,
+        reason: entry.reason,
+        remainingMs: entry.until - now,
+      });
+    }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
   return active;
 }
 
+<<<<<<< HEAD
 // ─── Provider Breaker Compatibility Wrappers ────────────────────────────────
 // Legacy helpers now delegate to the shared provider circuit breaker.
 
@@ -621,6 +720,8 @@ export function isProviderFailureCode(status: number): boolean {
   return PROVIDER_FAILURE_ERROR_CODES.has(status);
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // ─── Retry-After Parsing ────────────────────────────────────────────────────
 
 /**
@@ -750,10 +851,27 @@ export function classifyErrorText(errorText) {
   if (isAccountDeactivated(errorText)) {
     return RateLimitReason.AUTH_ERROR;
   }
+<<<<<<< HEAD
   const configuredRule = matchErrorRuleByText(errorText);
   if (configuredRule?.reason) return configuredRule.reason;
   if (lower.includes("rate_limit")) return RateLimitReason.RATE_LIMIT_EXCEEDED;
   if (lower.includes("resource exhausted")) return RateLimitReason.MODEL_CAPACITY;
+=======
+  if (
+    lower.includes("rate limit") ||
+    lower.includes("too many requests") ||
+    lower.includes("rate_limit")
+  ) {
+    return RateLimitReason.RATE_LIMIT_EXCEEDED;
+  }
+  if (
+    lower.includes("capacity") ||
+    lower.includes("overloaded") ||
+    lower.includes("resource exhausted")
+  ) {
+    return RateLimitReason.MODEL_CAPACITY;
+  }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (
     lower.includes("unauthorized") ||
     lower.includes("invalid api key") ||
@@ -794,6 +912,7 @@ export function classifyError(status, errorText) {
   return RateLimitReason.UNKNOWN;
 }
 
+<<<<<<< HEAD
 // ─── Daily Quota Helpers ────────────────────────────────────────────────────
 
 /**
@@ -829,6 +948,8 @@ export function isDailyQuotaExhausted(errorText: string): boolean {
   );
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // ─── Configurable Backoff ───────────────────────────────────────────────────
 
 /**
@@ -850,7 +971,12 @@ export function getBackoffDuration(failureCount) {
  * @returns {number} Cooldown in milliseconds
  */
 export function getQuotaCooldown(backoffLevel = 0) {
+<<<<<<< HEAD
   return calculateBackoffCooldown(backoffLevel);
+=======
+  const cooldown = BACKOFF_CONFIG.base * Math.pow(2, backoffLevel);
+  return Math.min(cooldown, BACKOFF_CONFIG.max);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 /**
@@ -866,6 +992,7 @@ export function checkFallbackError(
   status,
   errorText,
   backoffLevel = 0,
+<<<<<<< HEAD
     HTTP_STATUS.REQUEST_TIMEOUT,
     HTTP_STATUS.RATE_LIMITED,
     HTTP_STATUS.SERVER_ERROR,
@@ -909,6 +1036,50 @@ export function checkFallbackError(
 
   // Check error message FIRST - specific patterns take priority over status codes
   if (errorText) {
+=======
+  model = null,
+  provider = null,
+  headers = null
+) {
+  const errorStr = (errorText || "").toString();
+
+  function parseResetFromHeaders(headers, errorStr = "") {
+    if (!headers) return null;
+
+    // Retry-After header
+    const retryAfter =
+      typeof headers.get === "function"
+        ? headers.get("retry-after")
+        : headers["retry-after"] || headers["Retry-After"];
+
+    if (retryAfter) {
+      const seconds = parseInt(retryAfter, 10);
+      if (!isNaN(seconds) && String(seconds) === String(retryAfter).trim()) {
+        return Date.now() + seconds * 1000;
+      }
+      const date = new Date(retryAfter);
+      if (!isNaN(date.getTime())) return date.getTime();
+    }
+
+    // X-RateLimit-Reset
+    const rlReset =
+      typeof headers.get === "function"
+        ? headers.get("x-ratelimit-reset")
+        : headers["x-ratelimit-reset"] || headers["X-RateLimit-Reset"];
+
+    if (rlReset) {
+      const ts = parseInt(rlReset, 10);
+      if (!isNaN(ts)) {
+        return ts > 10000000000 ? ts : ts * 1000;
+      }
+    }
+    return null;
+  }
+  // Check error message FIRST - specific patterns take priority over status codes
+  if (errorText) {
+    const lowerError = errorStr.toLowerCase();
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     // T06 (sub2api #1037): Permanent account deactivation — do NOT retry, mark as permanent failure
     if (isAccountDeactivated(errorStr)) {
       return {
@@ -920,7 +1091,11 @@ export function checkFallbackError(
     }
 
     // T10 (sub2api #1169): Credits/quota exhausted — long cooldown, distinct from rate limit
+<<<<<<< HEAD
     if (shouldUseQuotaSignal && isCreditsExhausted(errorStr)) {
+=======
+    if (isCreditsExhausted(errorStr)) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       return {
         shouldFallback: true,
         cooldownMs: COOLDOWN_MS.paymentRequired ?? 3600 * 1000, // 1h cooldown
@@ -929,6 +1104,7 @@ export function checkFallbackError(
       };
     }
 
+<<<<<<< HEAD
     // Daily quota exhausted — lock model until tomorrow
     if (shouldUseQuotaSignal && isDailyQuotaExhausted(errorStr)) {
       const msUntilTomorrow = getMsUntilTomorrow();
@@ -988,14 +1164,165 @@ export function checkFallbackError(
 
     // Generic 400 is not account-fallback-worthy. Combo routing may still try a
     // different provider/model because combo fallback is target-level orchestration.
+=======
+    if (lowerError.includes("no credentials")) {
+      return {
+        shouldFallback: true,
+        cooldownMs: COOLDOWN_MS.notFound,
+        reason: RateLimitReason.AUTH_ERROR,
+      };
+    }
+
+    if (lowerError.includes("request not allowed")) {
+      return {
+        shouldFallback: true,
+        cooldownMs: COOLDOWN_MS.requestNotAllowed,
+        reason: RateLimitReason.RATE_LIMIT_EXCEEDED,
+      };
+    }
+
+    // Rate limit keywords - exponential backoff
+    if (
+      lowerError.includes("rate limit") ||
+      lowerError.includes("too many requests") ||
+      lowerError.includes("quota exceeded") ||
+      lowerError.includes("quota will reset") ||
+      lowerError.includes("exhausted your capacity") ||
+      lowerError.includes("quota exhausted") ||
+      lowerError.includes("capacity") ||
+      lowerError.includes("overloaded")
+    ) {
+      const resetTime = parseResetFromHeaders(headers);
+      if (resetTime) {
+        const waitMs = resetTime - Date.now();
+        if (waitMs > 60_000) {
+          return {
+            shouldFallback: true,
+            cooldownMs: waitMs,
+            newBackoffLevel: 0,
+            reason: RateLimitReason.RATE_LIMIT_EXCEEDED,
+          };
+        }
+      }
+      const retryFromBody = parseRetryFromErrorText(errorStr);
+      if (retryFromBody && retryFromBody > 60_000) {
+        return {
+          shouldFallback: true,
+          cooldownMs: retryFromBody,
+          newBackoffLevel: 0,
+          reason: RateLimitReason.RATE_LIMIT_EXCEEDED,
+        };
+      }
+      const newLevel = Math.min(backoffLevel + 1, BACKOFF_CONFIG.maxLevel);
+      const reason = classifyErrorText(errorStr);
+      return {
+        shouldFallback: true,
+        cooldownMs: getQuotaCooldown(backoffLevel),
+        newBackoffLevel: newLevel,
+        reason,
+      };
+    }
+  }
+
+  if (status === HTTP_STATUS.UNAUTHORIZED) {
+    return {
+      shouldFallback: true,
+      cooldownMs: COOLDOWN_MS.unauthorized,
+      reason: RateLimitReason.AUTH_ERROR,
+    };
+  }
+
+  if (status === HTTP_STATUS.PAYMENT_REQUIRED || status === HTTP_STATUS.FORBIDDEN) {
+    return {
+      shouldFallback: true,
+      cooldownMs: COOLDOWN_MS.paymentRequired,
+      reason: RateLimitReason.QUOTA_EXHAUSTED,
+    };
+  }
+
+  if (status === HTTP_STATUS.NOT_FOUND) {
+    return {
+      shouldFallback: true,
+      cooldownMs: COOLDOWN_MS.notFound,
+      reason: RateLimitReason.UNKNOWN,
+    };
+  }
+
+  // 429 - Rate limit with exponential backoff
+  if (status === HTTP_STATUS.RATE_LIMITED) {
+    const resetTime = parseResetFromHeaders(headers);
+    if (resetTime) {
+      const waitMs = resetTime - Date.now();
+      if (waitMs > 60_000) {
+        return {
+          shouldFallback: true,
+          cooldownMs: waitMs,
+          newBackoffLevel: 0,
+          reason: RateLimitReason.RATE_LIMIT_EXCEEDED,
+        };
+      }
+    }
+
+    const newLevel = Math.min(backoffLevel + 1, BACKOFF_CONFIG.maxLevel);
+    return {
+      shouldFallback: true,
+      cooldownMs: getQuotaCooldown(backoffLevel),
+      newBackoffLevel: newLevel,
+      reason: RateLimitReason.RATE_LIMIT_EXCEEDED,
+    };
+  }
+
+  // Transient / server errors — exponential backoff with provider profile
+  const transientStatuses = [
+    HTTP_STATUS.NOT_ACCEPTABLE,
+    HTTP_STATUS.REQUEST_TIMEOUT,
+    HTTP_STATUS.SERVER_ERROR,
+    HTTP_STATUS.BAD_GATEWAY,
+    HTTP_STATUS.SERVICE_UNAVAILABLE,
+    HTTP_STATUS.GATEWAY_TIMEOUT,
+  ];
+  if (transientStatuses.includes(status)) {
+    const resetTime = parseResetFromHeaders(headers, errorStr);
+    if (resetTime) {
+      const waitMs = resetTime - Date.now();
+      if (waitMs > 60_000) {
+        return {
+          shouldFallback: true,
+          cooldownMs: waitMs,
+          newBackoffLevel: 0,
+          reason: RateLimitReason.SERVER_ERROR,
+        };
+      }
+    }
+
+    const profile = provider ? getProviderProfile(provider) : null;
+    const baseCooldown = profile?.transientCooldown ?? COOLDOWN_MS.transientInitial;
+    const maxLevel = profile?.maxBackoffLevel ?? BACKOFF_CONFIG.maxLevel;
+    const cooldownMs = Math.min(baseCooldown * Math.pow(2, backoffLevel), COOLDOWN_MS.transientMax);
+    const newLevel = Math.min(backoffLevel + 1, maxLevel);
+    return {
+      shouldFallback: true,
+      cooldownMs,
+      newBackoffLevel: newLevel,
+      reason: RateLimitReason.SERVER_ERROR,
+    };
+  }
+
+  // 400 Bad Request - don't fallback (same request will fail on all accounts)
+  if (status === HTTP_STATUS.BAD_REQUEST) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return { shouldFallback: false, cooldownMs: 0, reason: RateLimitReason.UNKNOWN };
   }
 
   // All other errors - fallback with transient cooldown
   return {
     shouldFallback: true,
+<<<<<<< HEAD
     cooldownMs: profile?.baseCooldownMs ?? COOLDOWN_MS.transient,
     baseCooldownMs: profile?.baseCooldownMs ?? COOLDOWN_MS.transient,
+=======
+    cooldownMs: COOLDOWN_MS.transient,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     reason: RateLimitReason.UNKNOWN,
   };
 }
@@ -1087,10 +1414,20 @@ export function applyErrorState(account, status, errorText, provider = null) {
   if (!account) return account;
 
   const backoffLevel = account.backoffLevel || 0;
+<<<<<<< HEAD
   const fallbackDecision = checkFallbackError(status, errorText, backoffLevel, null, provider);
   const { cooldownMs, reason } = fallbackDecision;
   const newBackoffLevel =
     "newBackoffLevel" in fallbackDecision ? fallbackDecision.newBackoffLevel : undefined;
+=======
+  const { cooldownMs, newBackoffLevel, reason } = checkFallbackError(
+    status,
+    errorText,
+    backoffLevel,
+    null,
+    provider
+  );
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   return {
     ...account,

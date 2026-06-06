@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+<<<<<<< HEAD
 import {
   isClaudeCodeCompatibleProvider,
   isAnthropicCompatibleProvider,
@@ -80,23 +81,41 @@ const antigravityDiscoveryInflight = new Map<
   string,
   Promise<Array<{ id: string; name: string }>>
 >();
+=======
+import { getProviderConnectionById } from "@/models";
+import {
+  isClaudeCodeCompatibleProvider,
+  isOpenAICompatibleProvider,
+  isAnthropicCompatibleProvider,
+} from "@/shared/constants/providers";
+import { PROVIDER_MODELS } from "@/shared/constants/models";
+import { getModelIsHidden, resolveProxyForProvider } from "@/lib/localDb";
+import { getStaticQoderModels } from "@omniroute/open-sse/services/qoderCli.ts";
+import { runWithProxyContext } from "@omniroute/open-sse/utils/proxyFetch.ts";
+
+type JsonRecord = Record<string, unknown>;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 function asRecord(value: unknown): JsonRecord {
   return value && typeof value === "object" && !Array.isArray(value) ? (value as JsonRecord) : {};
 }
 
+<<<<<<< HEAD
 function toNonEmptyString(value: unknown): string | null {
   if (typeof value !== "string") return null;
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : null;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function getProviderBaseUrl(providerSpecificData: unknown): string | null {
   const data = asRecord(providerSpecificData);
   const baseUrl = data.baseUrl;
   return typeof baseUrl === "string" && baseUrl.trim().length > 0 ? baseUrl : null;
 }
 
+<<<<<<< HEAD
 function normalizeAzureOpenAIBaseUrl(baseUrl: string) {
   return baseUrl
     .trim()
@@ -338,6 +357,16 @@ function normalizeSapModelsResponse(
       return { id, name, owned_by: ownedBy };
     })
     .filter((value): value is { id: string; name: string; owned_by: string } => Boolean(value));
+=======
+const GLM_MODELS_URLS = {
+  international: "https://api.z.ai/api/coding/paas/v4/models",
+  china: "https://open.bigmodel.cn/api/coding/paas/v4/models",
+} as const;
+
+function getGlmApiRegion(providerSpecificData: unknown): keyof typeof GLM_MODELS_URLS {
+  const data = asRecord(providerSpecificData);
+  return data.apiRegion === "china" ? "china" : "international";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 type ProviderModelsConfigEntry = {
@@ -377,9 +406,22 @@ const STATIC_MODEL_PROVIDERS: Record<string, () => Array<{ id: string; name: str
     { id: "nanobanana-flash", name: "NanoBanana Flash (Gemini 2.5 Flash)" },
     { id: "nanobanana-pro", name: "NanoBanana Pro (Gemini 3 Pro)" },
   ],
+<<<<<<< HEAD
   antigravity: () => ANTIGRAVITY_PUBLIC_MODELS.map((model) => ({ ...model })),
   claude: () => [
     { id: "claude-opus-4-7", name: "Claude Opus 4.7" },
+=======
+  antigravity: () => [
+    { id: "claude-opus-4-6-thinking", name: "Claude Opus 4.6 Thinking" },
+    { id: "claude-sonnet-4-6", name: "Claude Sonnet 4.6" },
+    { id: "gemini-3-flash", name: "Gemini 3 Flash" },
+    { id: "gemini-3.1-flash-image", name: "Gemini 3.1 Flash Image" },
+    { id: "gemini-3.1-pro-high", name: "Gemini 3.1 Pro (High)" },
+    { id: "gemini-3.1-pro-low", name: "Gemini 3.1 Pro (Low)" },
+    { id: "gpt-oss-120b-medium", name: "GPT OSS 120B Medium" },
+  ],
+  claude: () => [
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     { id: "claude-opus-4-6", name: "Claude Opus 4.6" },
     { id: "claude-sonnet-4-6", name: "Claude Sonnet 4.6" },
     { id: "claude-opus-4-5-20251101", name: "Claude Opus 4.5 (2025-11-01)" },
@@ -403,12 +445,15 @@ const STATIC_MODEL_PROVIDERS: Record<string, () => Array<{ id: string; name: str
     { id: "glm-4.7", name: "GLM 4.7" },
     { id: "kimi-k2.5", name: "Kimi K2.5" },
   ],
+<<<<<<< HEAD
   gitlab: () => [{ id: "gitlab-duo-code-suggestions", name: "GitLab Duo Code Suggestions" }],
   nlpcloud: () =>
     getModelsByProviderId("nlpcloud").map((model) => ({
       id: model.id,
       name: model.name || model.id,
     })),
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   qoder: () => getStaticQoderModels(),
 };
 
@@ -418,6 +463,7 @@ const STATIC_MODEL_PROVIDERS: Record<string, () => Array<{ id: string; name: str
  * @param provider - Provider ID
  * @returns Array of models or undefined if provider doesn't use static models
  */
+<<<<<<< HEAD
 export function getStaticModelsForProvider(provider: string): LocalCatalogModel[] | undefined {
   const staticModelsFn = STATIC_MODEL_PROVIDERS[provider];
   if (staticModelsFn) {
@@ -476,6 +522,13 @@ export function getStaticModelsForProvider(provider: string): LocalCatalogModel[
   }
 
   return specialtyModels.length > 0 ? specialtyModels : undefined;
+=======
+export function getStaticModelsForProvider(
+  provider: string
+): Array<{ id: string; name: string }> | undefined {
+  const staticModelsFn = STATIC_MODEL_PROVIDERS[provider];
+  return staticModelsFn ? staticModelsFn() : undefined;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 // Provider models endpoints configuration
@@ -550,9 +603,15 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
     parseResponse: (data) => data.data || [],
   },
   antigravity: {
+<<<<<<< HEAD
     url: getAntigravityModelsDiscoveryUrls()[0],
     method: "POST",
     headers: getAntigravityHeaders("models"),
+=======
+    url: "https://daily-cloudcode-pa.sandbox.googleapis.com/v1internal:models",
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     authHeader: "Authorization",
     authPrefix: "Bearer ",
     body: {},
@@ -574,6 +633,7 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
     authPrefix: "Bearer ",
     parseResponse: (data) => data.data || [],
   },
+<<<<<<< HEAD
   glhf: {
     url: "https://glhf.chat/api/openai/v1/models",
     method: "GET",
@@ -622,6 +682,8 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
     authPrefix: "Key ",
     parseResponse: (data) => normalizeOpenAiLikeModelsResponse(data, "clarifai"),
   },
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   kimi: {
     url: "https://api.moonshot.ai/v1/models",
     method: "GET",
@@ -751,6 +813,7 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
     authPrefix: "Bearer ",
     parseResponse: (data) => data.models || data.data || [],
   },
+<<<<<<< HEAD
   "cloudflare-ai": {
     url: "https://api.cloudflare.com/client/v4/accounts/{accountId}/ai/models/search",
     method: "GET",
@@ -759,6 +822,8 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
     authPrefix: "Bearer ",
     parseResponse: (data) => data.result || [],
   },
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   synthetic: {
     url: "https://api.synthetic.new/openai/v1/models",
     method: "GET",
@@ -783,6 +848,7 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
     authPrefix: "Bearer ",
     parseResponse: (data) => data.data || data.models || [],
   },
+<<<<<<< HEAD
   "opencode-go": {
     url: "https://opencode.ai/zen/go/v1/models",
     method: "GET",
@@ -806,6 +872,99 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
             models = isNamedOpenAIStyleProvider(provider)
               ? normalizeOpenAiLikeModelsResponse(data, provider)
               : data.data || data.models || [];
+=======
+};
+
+/**
+ * GET /api/providers/[id]/models - Get models list from provider
+ */
+export async function GET(
+  request: Request,
+  context: { params: Promise<{ id: string }> | { id: string } }
+) {
+  try {
+    const params = await context.params;
+    const { id } = params;
+
+    // Check if we should exclude hidden models (used by MCP tools to prevent hidden model leaks)
+    const { searchParams } = new URL(request.url);
+    const excludeHidden = searchParams.get("excludeHidden") === "true";
+
+    const connection = await getProviderConnectionById(id);
+
+    if (!connection) {
+      return NextResponse.json({ error: "Connection not found" }, { status: 404 });
+    }
+
+    const provider =
+      typeof connection.provider === "string" && connection.provider.trim().length > 0
+        ? connection.provider
+        : null;
+    if (!provider) {
+      return NextResponse.json({ error: "Invalid connection provider" }, { status: 400 });
+    }
+
+    // Resolve proxy for this provider (provider-level → global → direct)
+    const proxy = await resolveProxyForProvider(provider);
+
+    const buildResponse = (payload: any, statusConfig?: ResponseInit) => {
+      if (excludeHidden && payload.models && Array.isArray(payload.models)) {
+        payload.models = payload.models.filter((m: any) => !getModelIsHidden(provider, m.id));
+      }
+      return NextResponse.json(payload, statusConfig);
+    };
+
+    const connectionId = typeof connection.id === "string" ? connection.id : id;
+    const apiKey = typeof connection.apiKey === "string" ? connection.apiKey : "";
+    const accessToken = typeof connection.accessToken === "string" ? connection.accessToken : "";
+
+    if (isOpenAICompatibleProvider(provider)) {
+      const baseUrl = getProviderBaseUrl(connection.providerSpecificData);
+      if (!baseUrl) {
+        return NextResponse.json(
+          { error: "No base URL configured for OpenAI compatible provider" },
+          { status: 400 }
+        );
+      }
+
+      let base = baseUrl.replace(/\/$/, "");
+      if (base.endsWith("/chat/completions")) {
+        base = base.slice(0, -17);
+      } else if (base.endsWith("/completions")) {
+        base = base.slice(0, -12);
+      } else if (base.endsWith("/v1")) {
+        base = base.slice(0, -3);
+      }
+
+      // T39: Try multiple endpoint formats
+      const endpoints = [
+        `${base}/v1/models`,
+        `${base}/models`,
+        `${baseUrl.replace(/\/$/, "")}/models`, // Original fallback
+      ];
+
+      // Remove duplicates
+      const uniqueEndpoints = [...new Set(endpoints)];
+      let models = null;
+      let lastErrorStatus = null;
+
+      for (const modelsUrl of uniqueEndpoints) {
+        try {
+          const response = await runWithProxyContext(proxy, () =>
+            fetch(modelsUrl, {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${apiKey}`,
+              },
+              signal: AbortSignal.timeout(5000), // Quick timeout for fallbacks
+            })
+          );
+
+          if (response.ok) {
+            const data = await response.json();
+            models = data.data || data.models || [];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             break; // Success!
           }
 
@@ -815,10 +974,75 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
           }
         } catch (err: any) {
           if (err.message === "auth_failed") break; // Don't try other endpoints if auth failed
+<<<<<<< HEAD
           const status = getSafeOutboundFetchErrorStatus(err);
           if (status) {
             throw err;
           }
+=======
+        }
+      }
+
+      // If all endpoints failed (but not because of auth), fallback to local catalog
+      if (!models) {
+        if (lastErrorStatus === 401 || lastErrorStatus === 403) {
+          return NextResponse.json(
+            { error: `Auth failed: ${lastErrorStatus}` },
+            { status: lastErrorStatus }
+          );
+        }
+
+        console.warn(`[models] All endpoints failed for ${provider}, using local catalog`);
+        const localModels = PROVIDER_MODELS[provider] || [];
+        models = localModels.map((m: any) => ({
+          id: m.id,
+          name: m.name || m.id,
+          owned_by: provider,
+        }));
+      }
+
+      // Track source for MCP tool T39 requirement
+      const source =
+        models === null || (models && models.length > 0 && models[0].owned_by === provider)
+          ? "local_catalog"
+          : "api";
+
+      return buildResponse({
+        provider,
+        connectionId,
+        models,
+        source,
+        ...(source === "local_catalog"
+          ? { warning: "API unavailable — using cached catalog" }
+          : {}),
+      });
+    }
+
+    if (provider === "claude") {
+      return buildResponse({
+        provider,
+        connectionId,
+        models: STATIC_MODEL_PROVIDERS.claude(),
+      });
+    }
+
+    if (provider === "glm") {
+      const region = getGlmApiRegion(connection.providerSpecificData);
+      const url = GLM_MODELS_URLS[region];
+      const token = apiKey || accessToken;
+
+      const response = await runWithProxyContext(proxy, () =>
+        fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        })
+      );
+
+      if (!response.ok) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         return NextResponse.json(
           { error: `Failed to fetch models: ${response.status}` },
           { status: response.status }
@@ -828,6 +1052,7 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
       const data = await response.json();
       const models = data.data || data.models || [];
 
+<<<<<<< HEAD
       return buildApiDiscoveryResponse(models);
     }
 
@@ -838,6 +1063,12 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
       const autoFetchDisabledResponse = maybeReturnAutoFetchDisabled();
       if (autoFetchDisabledResponse) return autoFetchDisabledResponse;
 
+=======
+      return buildResponse({ provider, connectionId, models });
+    }
+
+    if (provider === "gemini-cli") {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       // Gemini CLI doesn't have a /models endpoint. Instead, query the quota
       // endpoint to discover available models from the quota buckets.
       if (!accessToken) {
@@ -858,28 +1089,41 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
       }
 
       try {
+<<<<<<< HEAD
         const quotaRes = await safeOutboundFetch(
           "https://cloudcode-pa.googleapis.com/v1internal:retrieveUserQuota",
           {
             ...SAFE_OUTBOUND_FETCH_PRESETS.modelsDiscovery,
             guard: getProviderOutboundGuard(),
             proxyConfig: proxy,
+=======
+        const quotaRes = await runWithProxyContext(proxy, () =>
+          fetch("https://cloudcode-pa.googleapis.com/v1internal:retrieveUserQuota", {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             method: "POST",
             headers: {
               Authorization: `Bearer ${accessToken}`,
               "Content-Type": "application/json",
             },
             body: JSON.stringify({ project: projectId }),
+<<<<<<< HEAD
           }
+=======
+            signal: AbortSignal.timeout(10000),
+          })
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         );
 
         if (!quotaRes.ok) {
           const errText = await quotaRes.text();
           console.log(`[models] Gemini CLI quota fetch failed (${quotaRes.status}):`, errText);
+<<<<<<< HEAD
 <<<<<<< Updated upstream
           const fallback = buildDiscoveryFallbackResponse();
           if (fallback) return fallback;
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           return NextResponse.json(
             { error: `Failed to fetch Gemini CLI models: ${quotaRes.status}` },
             { status: quotaRes.status }
@@ -897,6 +1141,7 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
             owned_by: "google",
           }));
 
+<<<<<<< HEAD
     }
 
     if (isAnthropicCompatibleProvider(provider)) {
@@ -906,6 +1151,17 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
       const autoFetchDisabledResponse = maybeReturnAutoFetchDisabled();
       if (autoFetchDisabledResponse) return autoFetchDisabledResponse;
 
+=======
+        return buildResponse({ provider, connectionId, models });
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : String(err);
+        console.log("[models] Gemini CLI model fetch error:", msg);
+        return NextResponse.json({ error: "Failed to fetch Gemini CLI models" }, { status: 500 });
+      }
+    }
+
+    if (isAnthropicCompatibleProvider(provider)) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       if (isClaudeCodeCompatibleProvider(provider)) {
         return NextResponse.json(
           { error: `Provider ${provider} does not support models listing` },
@@ -915,11 +1171,14 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
 
       let baseUrl = getProviderBaseUrl(connection.providerSpecificData);
       if (!baseUrl) {
+<<<<<<< HEAD
         const fallback = buildDiscoveryFallbackResponse({
           cacheWarning: "Base URL unavailable — using cached catalog",
           localWarning: "Base URL unavailable — using local catalog",
         });
         if (fallback) return fallback;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         return NextResponse.json(
           { error: "No base URL configured for Anthropic compatible provider" },
           { status: 400 }
@@ -931,12 +1190,31 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
         baseUrl = baseUrl.slice(0, -9);
       }
 
+<<<<<<< HEAD
+=======
+      const url = `${baseUrl}/models`;
+      const token = accessToken || apiKey;
+      const response = await runWithProxyContext(proxy, () =>
+        fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            ...(apiKey ? { "x-api-key": apiKey } : {}),
+            "anthropic-version": "2023-06-01",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        })
+      );
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
       if (!response.ok) {
         const errorText = await response.text();
         console.log(`Error fetching models from ${provider}:`, errorText);
+<<<<<<< HEAD
         const fallback = buildDiscoveryFallbackResponse();
         if (fallback) return fallback;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         return NextResponse.json(
           { error: `Failed to fetch models: ${response.status}` },
           { status: response.status }
@@ -946,6 +1224,7 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
       const data = await response.json();
       const models = data.data || data.models || [];
 
+<<<<<<< HEAD
     }
 
     const config =
@@ -957,6 +1236,31 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
     // Qwen OAuth Fallback: The Dashscope /models API rejects OAuth tokens with 401
     if (provider === "qwen" && connection.authType === "oauth") {
       const qwenModels = getModelsByProviderId("qwen");
+=======
+      return buildResponse({
+        provider,
+        connectionId,
+        models,
+      });
+    }
+
+    // Static model providers (no remote /models API)
+    const staticModelsFn =
+      provider in STATIC_MODEL_PROVIDERS
+        ? STATIC_MODEL_PROVIDERS[provider as keyof typeof STATIC_MODEL_PROVIDERS]
+        : undefined;
+    if (staticModelsFn) {
+      return buildResponse({
+        provider,
+        connectionId,
+        models: staticModelsFn(),
+      });
+    }
+
+    // Qwen OAuth Fallback: The Dashscope /models API rejects OAuth tokens with 401
+    if (provider === "qwen" && connection.authType === "oauth") {
+      const qwenModels = PROVIDER_MODELS["qwen"] || [];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       return buildResponse({
         provider,
         connectionId,
@@ -969,6 +1273,7 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
       });
     }
 
+<<<<<<< HEAD
     const localCatalog = mergeLocalCatalogModels(registryCatalogModels, specialtyCatalogModels);
     if (!config && localCatalog.length > 0) {
       return buildResponse({
@@ -985,6 +1290,12 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
         warning: "API unavailable — using local catalog",
       });
     }
+=======
+    const config =
+      provider in PROVIDER_MODELS_CONFIG
+        ? PROVIDER_MODELS_CONFIG[provider as keyof typeof PROVIDER_MODELS_CONFIG]
+        : undefined;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (!config) {
       return NextResponse.json(
         { error: `Provider ${provider} does not support models listing` },
@@ -992,6 +1303,7 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
       );
     }
 
+<<<<<<< HEAD
     const cachedResponse = maybeReturnCachedDiscovery();
     if (cachedResponse) return cachedResponse;
 
@@ -1006,6 +1318,11 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
         localWarning: "No token configured — using local catalog",
       });
       if (fallback) return fallback;
+=======
+    // Get auth token
+    const token = accessToken || apiKey;
+    if (!token) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       return NextResponse.json(
         {
           error:
@@ -1017,6 +1334,7 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
 
     // Build request URL
     let url = config.url;
+<<<<<<< HEAD
     if (provider === "cloudflare-ai") {
       const pData = asRecord(connection.providerSpecificData);
       const accountId =
@@ -1030,6 +1348,8 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
       }
       url = url.replace("{accountId}", accountId);
     }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (config.authQuery) {
       url += `${url.includes("?") ? "&" : "?"}${config.authQuery}=${token}`;
     }
@@ -1058,6 +1378,7 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
 
     while (pageUrl && pageCount < MAX_PAGES) {
       pageCount++;
+<<<<<<< HEAD
       let response: Response;
       try {
         response = await safeOutboundFetch(pageUrl, {
@@ -1073,12 +1394,23 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
         if (fallback) return fallback;
         throw error;
       }
+=======
+      const response = await runWithProxyContext(proxy, () =>
+        fetch(pageUrl, {
+          ...fetchOptions,
+          signal: AbortSignal.timeout(15_000),
+        })
+      );
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
       if (!response.ok) {
         const errorText = await response.text();
         console.log(`Error fetching models from ${provider}:`, errorText);
+<<<<<<< HEAD
         const fallback = buildDiscoveryFallbackResponse();
         if (fallback) return fallback;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         return NextResponse.json(
           { error: `Failed to fetch models: ${response.status}` },
           { status: response.status }
@@ -1108,6 +1440,7 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
       );
     }
 
+<<<<<<< HEAD
   } catch (error) {
     if (error instanceof SafeOutboundFetchError && error.code === "URL_GUARD_BLOCKED") {
       return NextResponse.json({ error: error.message }, { status: 400 });
@@ -1118,6 +1451,14 @@ const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
       const message = error instanceof Error ? error.message : "Failed to fetch models";
       return NextResponse.json({ error: message }, { status });
     }
+=======
+    return buildResponse({
+      provider,
+      connectionId,
+      models: allModels,
+    });
+  } catch (error) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     console.log("Error fetching provider models:", error);
     return NextResponse.json({ error: "Failed to fetch models" }, { status: 500 });
   }

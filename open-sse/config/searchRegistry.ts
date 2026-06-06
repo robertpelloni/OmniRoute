@@ -15,7 +15,11 @@ export interface SearchProviderConfig {
   name: string;
   baseUrl: string;
   method: "GET" | "POST";
+<<<<<<< HEAD
   authType: "apikey" | "none";
+=======
+  authType: "apikey";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   authHeader: string;
   costPerQuery: number;
   freeMonthlyQuota: number;
@@ -106,6 +110,7 @@ export const SEARCH_PROVIDERS: Record<string, SearchProviderConfig> = {
     timeoutMs: 10_000,
     cacheTTLMs: 5 * 60 * 1000,
   },
+<<<<<<< HEAD
 
   "google-pse-search": {
     id: "google-pse-search",
@@ -186,6 +191,8 @@ export const SEARCH_PROVIDERS: Record<string, SearchProviderConfig> = {
     timeoutMs: 10_000,
     cacheTTLMs: 3 * 60 * 1000,
   },
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 };
 
 /**
@@ -203,6 +210,7 @@ export function getSearchProvider(providerId: string): SearchProviderConfig | nu
   return SEARCH_PROVIDERS[providerId] || null;
 }
 
+<<<<<<< HEAD
 export function supportsSearchType(
   providerOrId: SearchProviderConfig | string | null | undefined,
   searchType: string
@@ -213,6 +221,8 @@ export function supportsSearchType(
   return provider.searchTypes.includes(searchType);
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Get all search providers as a flat list
  */
@@ -233,6 +243,7 @@ export function getAllSearchProviders(): Array<{
  * If an explicit provider is given, validate and return it.
  * Otherwise, return the cheapest by costPerQuery.
  */
+<<<<<<< HEAD
 export function selectProvider(
   explicitProvider?: string,
   searchType?: string
@@ -247,6 +258,14 @@ export function selectProvider(
   const providers = Object.values(SEARCH_PROVIDERS).filter((provider) =>
     searchType ? supportsSearchType(provider, searchType) : true
   );
+=======
+export function selectProvider(explicitProvider?: string): SearchProviderConfig | null {
+  if (explicitProvider) {
+    return SEARCH_PROVIDERS[explicitProvider] || null;
+  }
+
+  const providers = Object.values(SEARCH_PROVIDERS);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (providers.length === 0) return null;
 
   return providers.reduce((cheapest, p) => (p.costPerQuery < cheapest.costPerQuery ? p : cheapest));

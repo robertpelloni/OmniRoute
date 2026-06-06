@@ -1,8 +1,11 @@
 // CLI Tools configuration
+<<<<<<< HEAD
 import { getClaudeCodeDefaultModels } from "@omniroute/open-sse/config/providerRegistry";
 
 const _cc = getClaudeCodeDefaultModels();
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export const CLI_TOOLS = {
   claude: {
     id: "claude",
@@ -24,6 +27,7 @@ export const CLI_TOOLS = {
     defaultCommand: "claude",
     defaultModels: [
       {
+<<<<<<< HEAD
         id: "model",
         name: "Default Model",
         alias: "model",
@@ -40,25 +44,39 @@ export const CLI_TOOLS = {
         isTopLevel: true,
       },
       {
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         id: "opus",
         name: "Claude Opus",
         alias: "opus",
         envKey: "ANTHROPIC_DEFAULT_OPUS_MODEL",
+<<<<<<< HEAD
         defaultValue: _cc.opus ? `cc/${_cc.opus}` : "cc/claude-opus-4-5-20251101",
+=======
+        defaultValue: "cc/claude-opus-4-5-20251101",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       },
       {
         id: "sonnet",
         name: "Claude Sonnet",
         alias: "sonnet",
         envKey: "ANTHROPIC_DEFAULT_SONNET_MODEL",
+<<<<<<< HEAD
         defaultValue: _cc.sonnet ? `cc/${_cc.sonnet}` : "cc/claude-sonnet-4-5-20250929",
+=======
+        defaultValue: "cc/claude-sonnet-4-5-20250929",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       },
       {
         id: "haiku",
         name: "Claude Haiku",
         alias: "haiku",
         envKey: "ANTHROPIC_DEFAULT_HAIKU_MODEL",
+<<<<<<< HEAD
         defaultValue: _cc.haiku ? `cc/${_cc.haiku}` : "cc/claude-haiku-4-5-20251001",
+=======
+        defaultValue: "cc/claude-haiku-4-5-20251001",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       },
     ],
   },
@@ -242,17 +260,24 @@ export const CLI_TOOLS = {
   opencode: {
     id: "opencode",
     name: "OpenCode",
+<<<<<<< HEAD
     imageLight: "/providers/opencode-light.svg",
     imageDark: "/providers/opencode-dark.svg",
+=======
+    image: "/providers/opencode.png",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     icon: "terminal",
     color: "#FF6B35",
     description: "OpenCode AI coding agent (Terminal)",
     docsUrl: "/docs?section=cli-tools&tool=opencode",
     configType: "guide",
     defaultCommand: "opencode",
+<<<<<<< HEAD
     modelSelectionMode: "multiple",
     hideComboModels: true,
     previewConfigMode: "opencode",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     notes: [
       {
         type: "warning",
@@ -277,6 +302,7 @@ export const CLI_TOOLS = {
     codeBlock: {
       language: "json",
       code: `{
+<<<<<<< HEAD
   "$schema": "https://opencode.ai/config.json",
   "provider": {
     "omniroute": {
@@ -292,11 +318,26 @@ export const CLI_TOOLS = {
         "gemini-3.1-pro-high": { "name": "gemini-3.1-pro-high" },
         "gemini-3-flash": { "name": "gemini-3-flash" }
       }
+=======
+  "providers": {
+    "omniroute": {
+      "name": "OmniRoute",
+      "api": "openai",
+      "baseURL": "{{baseUrl}}",
+      "apiKey": "{{apiKey}}",
+      "models": [
+        "{{model}}",
+        "claude-sonnet-4-5-thinking",
+        "gemini-3.1-pro-high",
+        "gemini-3-flash"
+      ]
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
   }
 }`,
     },
   },
+<<<<<<< HEAD
   hermes: {
     id: "hermes",
     name: "Hermes",
@@ -378,6 +419,8 @@ amp --model "{{model}}"
 # cs45 -> cc/claude-sonnet-4-5-20250929`,
     },
   },
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   kiro: {
     id: "kiro",
     name: "Kiro AI",
@@ -394,6 +437,7 @@ amp --model "{{model}}"
       { step: 4, title: "Select Model", type: "modelSelector" },
     ],
   },
+<<<<<<< HEAD
   qwen: {
     id: "qwen",
     name: "Qwen Code",
@@ -528,6 +572,25 @@ amp --model "{{model}}"
     docsUrl: "/docs?section=cli-tools",
     configType: "custom-builder",
   },
+=======
+  // HIDDEN: gemini-cli
+  // "gemini-cli": {
+  //   id: "gemini-cli",
+  //   name: "Gemini CLI",
+  //   icon: "terminal",
+  //   color: "#4285F4",
+  //   description: "Google Gemini CLI",
+  //   configType: "env",
+  //   envVars: {
+  //     baseUrl: "GEMINI_API_BASE_URL",
+  //     model: "GEMINI_MODEL",
+  //   },
+  //   defaultModels: [
+  //     { id: "gemini-2.5-pro", name: "Gemini 2.5 Pro", alias: "pro" },
+  //     { id: "gemini-2.5-flash", name: "Gemini 2.5 Flash", alias: "flash" },
+  //   ],
+  // },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 };
 
 // Get all provider models for mapping dropdown

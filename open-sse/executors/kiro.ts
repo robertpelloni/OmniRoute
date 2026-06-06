@@ -15,14 +15,20 @@ type UsageSummary = {
   prompt_tokens: number;
   completion_tokens: number;
   total_tokens: number;
+<<<<<<< HEAD
   cache_read_input_tokens?: number;
   cache_creation_input_tokens?: number;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 };
 
 type KiroStreamState = {
   endDetected: boolean;
   finishEmitted: boolean;
+<<<<<<< HEAD
   stopSeen: boolean;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   hasToolCalls: boolean;
   toolCallIndex: number;
   seenToolIds: Map<string, number>;
@@ -38,6 +44,7 @@ type EventFrame = {
   payload: JsonRecord | null;
 };
 
+<<<<<<< HEAD
 class ByteQueue {
   private chunks: Uint8Array[] = [];
   private headOffset = 0;
@@ -102,6 +109,10 @@ class ByteQueue {
 const CRC32_TABLE = new Uint32Array(256);
 const TEXT_ENCODER = new TextEncoder();
 const TEXT_DECODER = new TextDecoder();
+=======
+// ── CRC32 lookup table (IEEE polynomial, no dependency) ──
+const CRC32_TABLE = new Uint32Array(256);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 for (let i = 0; i < 256; i++) {
   let c = i;
   for (let j = 0; j < 8; j++) {
@@ -118,6 +129,7 @@ function crc32(buf: Uint8Array) {
   return (crc ^ 0xffffffff) >>> 0;
 }
 
+<<<<<<< HEAD
 function buildKiroFinishChunk(
   state: KiroStreamState,
   responseId: string,
@@ -168,13 +180,20 @@ function ensureKiroUsage(state: KiroStreamState) {
   };
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * KiroExecutor - Executor for Kiro AI (AWS CodeWhisperer)
  * Uses AWS CodeWhisperer streaming API with AWS EventStream binary format
  */
 export class KiroExecutor extends BaseExecutor {
+<<<<<<< HEAD
   constructor(providerId = "kiro") {
     super(providerId, PROVIDERS[providerId] || PROVIDERS.kiro);
+=======
+  constructor() {
+    super("kiro", PROVIDERS.kiro);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   buildHeaders(credentials: ProviderCredentials, stream = true) {
@@ -244,14 +263,21 @@ export class KiroExecutor extends BaseExecutor {
    * Using TransformStream instead of ReadableStream.pull() to avoid Workers timeout
    */
   transformEventStreamToSSE(response: Response, model: string) {
+<<<<<<< HEAD
     const buffer = new ByteQueue();
+=======
+    let buffer = new Uint8Array(0);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     let chunkIndex = 0;
     const responseId = `chatcmpl-${Date.now()}`;
     const created = Math.floor(Date.now() / 1000);
     const state: KiroStreamState = {
       endDetected: false,
       finishEmitted: false,
+<<<<<<< HEAD
       stopSeen: false,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       hasToolCalls: false,
       toolCallIndex: 0,
       seenToolIds: new Map(),
@@ -259,19 +285,37 @@ export class KiroExecutor extends BaseExecutor {
 
     const transformStream = new TransformStream({
       async transform(chunk, controller) {
+<<<<<<< HEAD
         buffer.push(chunk);
+=======
+        // Append to buffer
+        const newBuffer = new Uint8Array(buffer.length + chunk.length);
+        newBuffer.set(buffer);
+        newBuffer.set(chunk, buffer.length);
+        buffer = newBuffer;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
         // Parse events from buffer
         let iterations = 0;
         const maxIterations = 1000;
         while (buffer.length >= 16 && iterations < maxIterations) {
           iterations++;
+<<<<<<< HEAD
           const totalLength = buffer.peekUint32BE(0);
 
           if (!totalLength || totalLength < 16 || totalLength > buffer.length) break;
 
           const eventData = buffer.read(totalLength);
           if (!eventData) break;
+=======
+          const view = new DataView(buffer.buffer, buffer.byteOffset);
+          const totalLength = view.getUint32(0, false);
+
+          if (totalLength < 16 || totalLength > buffer.length || buffer.length < totalLength) break;
+
+          const eventData = buffer.slice(0, totalLength);
+          buffer = buffer.slice(totalLength);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
           const event = parseEventFrame(eventData);
           if (!event) continue;
@@ -304,7 +348,11 @@ export class KiroExecutor extends BaseExecutor {
               ],
             };
             chunkIndex++;
+<<<<<<< HEAD
             controller.enqueue(TEXT_ENCODER.encode(`data: ${JSON.stringify(chunk)}\n\n`));
+=======
+            controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify(chunk)}\n\n`));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           }
 
           // Handle codeEvent
@@ -323,7 +371,11 @@ export class KiroExecutor extends BaseExecutor {
               ],
             };
             chunkIndex++;
+<<<<<<< HEAD
             controller.enqueue(TEXT_ENCODER.encode(`data: ${JSON.stringify(chunk)}\n\n`));
+=======
+            controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify(chunk)}\n\n`));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           }
 
           // Handle toolUseEvent
@@ -371,7 +423,13 @@ export class KiroExecutor extends BaseExecutor {
                   ],
                 };
                 chunkIndex++;
+<<<<<<< HEAD
                 controller.enqueue(TEXT_ENCODER.encode(`data: ${JSON.stringify(startChunk)}\n\n`));
+=======
+                controller.enqueue(
+                  new TextEncoder().encode(`data: ${JSON.stringify(startChunk)}\n\n`)
+                );
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               } else {
                 toolIndex = state.seenToolIds.get(toolCallId);
               }
@@ -410,14 +468,38 @@ export class KiroExecutor extends BaseExecutor {
                   ],
                 };
                 chunkIndex++;
+<<<<<<< HEAD
                 controller.enqueue(TEXT_ENCODER.encode(`data: ${JSON.stringify(argsChunk)}\n\n`));
+=======
+                controller.enqueue(
+                  new TextEncoder().encode(`data: ${JSON.stringify(argsChunk)}\n\n`)
+                );
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               }
             }
           }
 
           // Handle messageStopEvent
           if (eventType === "messageStopEvent") {
+<<<<<<< HEAD
             state.stopSeen = true;
+=======
+            const chunk: JsonRecord = {
+              id: responseId,
+              object: "chat.completion.chunk",
+              created,
+              model,
+              choices: [
+                {
+                  index: 0,
+                  delta: {},
+                  finish_reason: state.hasToolCalls ? "tool_calls" : "stop",
+                },
+              ],
+            };
+            state.finishEmitted = true;
+            controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify(chunk)}\n\n`));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           }
 
           // Handle contextUsageEvent to extract contextUsagePercentage
@@ -476,6 +558,59 @@ export class KiroExecutor extends BaseExecutor {
               }
             }
           }
+<<<<<<< HEAD
+=======
+
+          // Emit final chunk only after receiving BOTH meteringEvent AND contextUsageEvent
+          if (state.hasMeteringEvent && state.hasContextUsage && !state.finishEmitted) {
+            state.finishEmitted = true;
+
+            // Estimate tokens if not available from events
+            if (!state.usage) {
+              // Estimate output tokens from content length
+              const estimatedOutputTokens =
+                state.totalContentLength > 0
+                  ? Math.max(1, Math.floor(state.totalContentLength / 4))
+                  : 0;
+
+              // Estimate input tokens from contextUsagePercentage
+              // Kiro models typically have 200k context window
+              const estimatedInputTokens =
+                state.contextUsagePercentage > 0
+                  ? Math.floor((state.contextUsagePercentage * 200000) / 100)
+                  : 0;
+
+              state.usage = {
+                prompt_tokens: estimatedInputTokens,
+                completion_tokens: estimatedOutputTokens,
+                total_tokens: estimatedInputTokens + estimatedOutputTokens,
+              };
+            }
+
+            const finishChunk: JsonRecord = {
+              id: responseId,
+              object: "chat.completion.chunk",
+              created,
+              model,
+              choices: [
+                {
+                  index: 0,
+                  delta: {},
+                  finish_reason: state.hasToolCalls ? "tool_calls" : "stop",
+                },
+              ],
+            };
+
+            // Include usage in final chunk if available
+            if (state.usage) {
+              finishChunk.usage = state.usage;
+            }
+
+            controller.enqueue(
+              new TextEncoder().encode(`data: ${JSON.stringify(finishChunk)}\n\n`)
+            );
+          }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         }
 
         if (iterations >= maxIterations) {
@@ -487,6 +622,7 @@ export class KiroExecutor extends BaseExecutor {
         // Emit finish chunk if not already sent
         if (!state.finishEmitted) {
           state.finishEmitted = true;
+<<<<<<< HEAD
           ensureKiroUsage(state);
           const finishChunk = buildKiroFinishChunk(state, responseId, created, model, true);
           controller.enqueue(TEXT_ENCODER.encode(`data: ${JSON.stringify(finishChunk)}\n\n`));
@@ -494,6 +630,26 @@ export class KiroExecutor extends BaseExecutor {
 
         // Send final done message
         controller.enqueue(TEXT_ENCODER.encode("data: [DONE]\n\n"));
+=======
+          const finishChunk = {
+            id: responseId,
+            object: "chat.completion.chunk",
+            created,
+            model,
+            choices: [
+              {
+                index: 0,
+                delta: {},
+                finish_reason: state.hasToolCalls ? "tool_calls" : "stop",
+              },
+            ],
+          };
+          controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify(finishChunk)}\n\n`));
+        }
+
+        // Send final done message
+        controller.enqueue(new TextEncoder().encode("data: [DONE]\n\n"));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       },
     });
 
@@ -570,7 +726,11 @@ function parseEventFrame(data: Uint8Array): EventFrame | null {
       offset++;
       if (offset + nameLen > data.length) break;
 
+<<<<<<< HEAD
       const name = TEXT_DECODER.decode(data.subarray(offset, offset + nameLen));
+=======
+      const name = new TextDecoder().decode(data.slice(offset, offset + nameLen));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       offset += nameLen;
 
       const headerType = data[offset];
@@ -582,7 +742,11 @@ function parseEventFrame(data: Uint8Array): EventFrame | null {
         offset += 2;
         if (offset + valueLen > data.length) break;
 
+<<<<<<< HEAD
         const value = TEXT_DECODER.decode(data.subarray(offset, offset + valueLen));
+=======
+        const value = new TextDecoder().decode(data.slice(offset, offset + valueLen));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         offset += valueLen;
         headers[name] = value;
       } else {
@@ -596,7 +760,11 @@ function parseEventFrame(data: Uint8Array): EventFrame | null {
 
     let payload: JsonRecord | null = null;
     if (payloadEnd > payloadStart) {
+<<<<<<< HEAD
       const payloadStr = TEXT_DECODER.decode(data.subarray(payloadStart, payloadEnd));
+=======
+      const payloadStr = new TextDecoder().decode(data.slice(payloadStart, payloadEnd));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
       // Skip empty or whitespace-only payloads
       if (!payloadStr || !payloadStr.trim()) {

@@ -1,4 +1,5 @@
 import createNextIntlPlugin from "next-intl/plugin";
+<<<<<<< HEAD
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -50,19 +51,28 @@ const securityHeaders = [
     value: "max-age=63072000; includeSubDomains; preload",
   },
 ];
+=======
+
+const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
+const distDir = process.env.NEXT_DIST_DIR || ".next";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   distDir,
   // Turbopack config: redirect native modules to stubs at build time
   turbopack: {
+<<<<<<< HEAD
     root: projectRoot,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     resolveAlias: {
       // Point mitm/manager to a stub during build (native child_process/fs can't be bundled)
       "@/mitm/manager": "./src/mitm/manager.stub.ts",
     },
   },
   output: "standalone",
+<<<<<<< HEAD
   // OmniRoute is a proxy for AI APIs — request bodies routinely include
   // multi-MB payloads (vision models, image edits, base64-encoded files,
   // long chat histories with embedded images). Next.js's Server Action
@@ -104,22 +114,30 @@ const nextConfig = {
       "./logs/**/*",
     ],
   },
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   serverExternalPackages: [
     "pino",
     "pino-pretty",
     "thread-stream",
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     "pino-abstract-transport",
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     "better-sqlite3",
     "keytar",
     "wreq-js",
     "zod",
+<<<<<<< HEAD
     "tls-client-node",
     "koffi",
     "tough-cookie",
     "@ngrok/ngrok",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     "child_process",
     "fs",
     "path",
@@ -132,9 +150,14 @@ const nextConfig = {
     "stream",
     "buffer",
     "util",
+<<<<<<< HEAD
     "process",
   ],
   transpilePackages: ["@omniroute/open-sse", "@lobehub/icons"],
+=======
+  ],
+  transpilePackages: ["@omniroute/open-sse"],
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   allowedDevOrigins: ["localhost", "127.0.0.1", "192.168.*"],
   typescript: {
     // TODO: Re-enable after fixing all sub-component useTranslations scope issues
@@ -143,6 +166,7 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 
   async headers() {
@@ -153,6 +177,8 @@ const nextConfig = {
       },
     ];
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   webpack: (config, { isServer, webpack }) => {
     if (isServer) {
       // Webpack IgnorePlugin: skip thread-stream test files that contain
@@ -235,7 +261,10 @@ const nextConfig = {
       };
     }
     return config;
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   },
 
   async rewrites() {

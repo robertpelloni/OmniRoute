@@ -6,7 +6,11 @@ import { useCopyToClipboard } from "@/shared/hooks/useCopyToClipboard";
 import { useTranslations } from "next-intl";
 
 // Constants for validation
+<<<<<<< HEAD
 const MAX_KEY_NAME_LENGTH = 200;
+=======
+const MAX_KEY_NAME_LENGTH = 100;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 const MAX_SELECTED_MODELS = 500;
 
 // Debounce hook for search optimization
@@ -107,9 +111,13 @@ export default function ApiManagerPageClient() {
   const [editingKey, setEditingKey] = useState<ApiKey | null>(null);
   const [showPermissionsModal, setShowPermissionsModal] = useState(false);
   const [searchModel, setSearchModel] = useState("");
+<<<<<<< HEAD
   const [pageError, setPageError] = useState<string | null>(null);
   const [nameError, setNameError] = useState<string | null>(null);
   const [createError, setCreateError] = useState<string | null>(null);
+=======
+  const [error, setError] = useState<string | null>(null);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [usageStats, setUsageStats] = useState<Record<string, KeyUsageStats>>({});
   const [sessionCounts, setSessionCounts] = useState<Record<string, number>>({});
@@ -168,6 +176,7 @@ export default function ApiManagerPageClient() {
   const fetchUsageStats = async (apiKeys: ApiKey[]) => {
     if (apiKeys.length === 0) return;
     try {
+<<<<<<< HEAD
       // Fetch analytics (accurate aggregated counts) and recent call-logs
       // (for lastUsed timestamps) in parallel.
       // The previous approach matched call-logs by key.id === log.apiKeyId,
@@ -195,6 +204,26 @@ export default function ApiManagerPageClient() {
         stats[key.id] = {
           totalRequests: analyticsMatch?.requests ?? 0,
           lastUsed,
+=======
+      const res = await fetch("/api/usage/call-logs?limit=1000");
+      if (!res.ok) return;
+      const logs = await res.json();
+      const stats: Record<string, KeyUsageStats> = {};
+
+      for (const key of apiKeys) {
+        const keyLogs = (logs || []).filter(
+          (log: any) => log.apiKeyId === key.id || log.apiKeyName === key.name
+        );
+        stats[key.id] = {
+          totalRequests: keyLogs.length,
+          lastUsed:
+            keyLogs.length > 0
+              ? keyLogs.sort(
+                  (a: any, b: any) =>
+                    new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+                )[0]?.timestamp
+              : null,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         };
       }
       setUsageStats(stats);
@@ -228,6 +257,7 @@ export default function ApiManagerPageClient() {
     }
   };
 
+<<<<<<< HEAD
   const clearPageError = useCallback(() => setPageError(null), []);
 
   const handleCreateKey = async () => {
@@ -242,6 +272,22 @@ export default function ApiManagerPageClient() {
     setIsSubmitting(true);
     setNameError(null);
     setCreateError(null);
+=======
+  const clearError = useCallback(() => setError(null), []);
+
+  const handleCreateKey = async () => {
+    // Validate and sanitize input
+    const sanitizedName = sanitizeInput(newKeyName);
+    const validation = validateKeyName(sanitizedName, t);
+
+    if (!validation.valid) {
+      setError(validation.error || t("invalidKeyName"));
+      return;
+    }
+
+    setIsSubmitting(true);
+    clearError();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     try {
       const res = await fetch("/api/keys", {
@@ -257,11 +303,19 @@ export default function ApiManagerPageClient() {
         setNewKeyName("");
         setShowAddModal(false);
       } else {
+<<<<<<< HEAD
         setCreateError(data.error || t("failedCreateKey"));
       }
     } catch (error) {
       console.error("Error creating key:", error);
       setCreateError(t("failedCreateKeyRetry"));
+=======
+        setError(data.error || t("failedCreateKey"));
+      }
+    } catch (error) {
+      console.error("Error creating key:", error);
+      setError(t("failedCreateKeyRetry"));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     } finally {
       setIsSubmitting(false);
     }
@@ -270,14 +324,22 @@ export default function ApiManagerPageClient() {
   const handleDeleteKey = async (id: string) => {
     // Validate ID format to prevent injection
     if (!id || typeof id !== "string" || !/^[a-zA-Z0-9_-]+$/.test(id)) {
+<<<<<<< HEAD
       setPageError(t("invalidKeyId"));
+=======
+      setError(t("invalidKeyId"));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       return;
     }
 
     if (!confirm(t("deleteConfirm"))) return;
 
     setIsSubmitting(true);
+<<<<<<< HEAD
     clearPageError();
+=======
+    clearError();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     try {
       const res = await fetch(`/api/keys/${encodeURIComponent(id)}`, { method: "DELETE" });
@@ -285,11 +347,19 @@ export default function ApiManagerPageClient() {
         setKeys((prev) => prev.filter((k) => k.id !== id));
       } else {
         const data = await res.json();
+<<<<<<< HEAD
         setPageError(data.error || t("failedDeleteKey"));
       }
     } catch (error) {
       console.error("Error deleting key:", error);
       setPageError(t("failedDeleteKeyRetry"));
+=======
+        setError(data.error || t("failedDeleteKey"));
+      }
+    } catch (error) {
+      console.error("Error deleting key:", error);
+      setError(t("failedDeleteKeyRetry"));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     } finally {
       setIsSubmitting(false);
     }
@@ -321,7 +391,10 @@ export default function ApiManagerPageClient() {
   };
 
   const handleUpdatePermissions = async (
+<<<<<<< HEAD
     name: string,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     allowedModels: string[],
     noLog: boolean,
     allowedConnections: string[],
@@ -332,15 +405,25 @@ export default function ApiManagerPageClient() {
   ) => {
     if (!editingKey || !editingKey.id) return;
 
+<<<<<<< HEAD
     const sanitizedName = sanitizeInput(name);
 
     // Validate models array
     if (!Array.isArray(allowedModels)) {
+=======
+    // Validate models array
+    if (!Array.isArray(allowedModels)) {
+      setError(t("invalidModelsSelection"));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       return;
     }
 
     // Limit number of selected models to prevent abuse
     if (allowedModels.length > MAX_SELECTED_MODELS) {
+<<<<<<< HEAD
+=======
+      setError(t("cannotSelectMoreThanModels", { max: MAX_SELECTED_MODELS }));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       return;
     }
 
@@ -359,14 +442,21 @@ export default function ApiManagerPageClient() {
         : 0;
 
     setIsSubmitting(true);
+<<<<<<< HEAD
     clearPageError();
+=======
+    clearError();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     try {
       const res = await fetch(`/api/keys/${encodeURIComponent(editingKey.id)}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+<<<<<<< HEAD
           name: sanitizedName,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           allowedModels: validModels,
           allowedConnections: validConnections,
           noLog,
@@ -383,11 +473,19 @@ export default function ApiManagerPageClient() {
         setEditingKey(null);
       } else {
         const data = await res.json();
+<<<<<<< HEAD
         setPageError(data.error || t("failedUpdatePermissions"));
       }
     } catch (error) {
       console.error("Error updating permissions:", error);
       setPageError(t("failedUpdatePermissionsRetry"));
+=======
+        setError(data.error || t("failedUpdatePermissions"));
+      }
+    } catch (error) {
+      console.error("Error updating permissions:", error);
+      setError(t("failedUpdatePermissionsRetry"));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     } finally {
       setIsSubmitting(false);
     }
@@ -436,12 +534,21 @@ export default function ApiManagerPageClient() {
   return (
     <div className="flex flex-col gap-8">
       {/* Error Banner */}
+<<<<<<< HEAD
       {pageError && (
         <div className="flex items-center gap-3 p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
           <span className="material-symbols-outlined text-red-500">error</span>
           <p className="text-sm text-red-700 dark:text-red-300 flex-1">{pageError}</p>
           <button
             onClick={clearPageError}
+=======
+      {error && (
+        <div className="flex items-center gap-3 p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
+          <span className="material-symbols-outlined text-red-500">error</span>
+          <p className="text-sm text-red-700 dark:text-red-300 flex-1">{error}</p>
+          <button
+            onClick={clearError}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             className="text-red-500 hover:text-red-700 transition-colors"
           >
             <span className="material-symbols-outlined">close</span>
@@ -515,6 +622,7 @@ export default function ApiManagerPageClient() {
             <h2 className="text-lg font-semibold">{t("keyManagement")}</h2>
             <p className="text-sm text-text-muted">{t("keyManagementDesc")}</p>
           </div>
+<<<<<<< HEAD
           <Button
             icon="add"
             onClick={() => {
@@ -524,6 +632,9 @@ export default function ApiManagerPageClient() {
               setShowAddModal(true);
             }}
           >
+=======
+          <Button icon="add" onClick={() => setShowAddModal(true)}>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             {t("createKey")}
           </Button>
         </div>
@@ -557,6 +668,7 @@ export default function ApiManagerPageClient() {
             </div>
             <p className="text-text-main font-medium mb-2">{t("noKeys")}</p>
             <p className="text-sm text-text-muted mb-4">{t("noKeysDesc")}</p>
+<<<<<<< HEAD
             <Button
               icon="add"
               onClick={() => {
@@ -565,6 +677,9 @@ export default function ApiManagerPageClient() {
                 setShowAddModal(true);
               }}
             >
+=======
+            <Button icon="add" onClick={() => setShowAddModal(true)}>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               {t("createFirstKey")}
             </Button>
           </div>
@@ -769,8 +884,11 @@ export default function ApiManagerPageClient() {
         onClose={() => {
           setShowAddModal(false);
           setNewKeyName("");
+<<<<<<< HEAD
           setNameError(null);
           setCreateError(null);
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         }}
       >
         <div className="flex flex-col gap-4">
@@ -780,6 +898,7 @@ export default function ApiManagerPageClient() {
             </label>
             <Input
               value={newKeyName}
+<<<<<<< HEAD
               onChange={(e) => {
                 setNewKeyName(e.target.value);
                 setNameError(null);
@@ -787,35 +906,49 @@ export default function ApiManagerPageClient() {
               placeholder={t("keyNamePlaceholder")}
               maxLength={MAX_KEY_NAME_LENGTH}
               error={nameError}
+=======
+              onChange={(e) => setNewKeyName(e.target.value)}
+              placeholder={t("keyNamePlaceholder")}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               autoFocus
             />
             <p className="text-xs text-text-muted mt-1.5">{t("keyNameDesc")}</p>
           </div>
+<<<<<<< HEAD
           {createError && (
             <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/30">
               <span className="material-symbols-outlined text-red-500 text-sm">error</span>
               <p className="text-sm text-red-700 dark:text-red-300 flex-1">{createError}</p>
             </div>
           )}
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           <div className="flex gap-2">
             <Button
               onClick={() => {
                 setShowAddModal(false);
                 setNewKeyName("");
+<<<<<<< HEAD
                 setNameError(null);
                 setCreateError(null);
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               }}
               variant="ghost"
               fullWidth
             >
               {tc("cancel")}
             </Button>
+<<<<<<< HEAD
             <Button
               onClick={handleCreateKey}
               fullWidth
               disabled={!newKeyName.trim()}
               loading={isSubmitting}
             >
+=======
+            <Button onClick={handleCreateKey} fullWidth disabled={!newKeyName.trim()}>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               {t("createKey")}
             </Button>
           </div>
@@ -898,7 +1031,10 @@ const PermissionsModal = memo(function PermissionsModal({
   searchModel: string;
   onSearchChange: (v: string) => void;
   onSave: (
+<<<<<<< HEAD
     name: string,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     models: string[],
     noLog: boolean,
     connections: string[],
@@ -916,7 +1052,10 @@ const PermissionsModal = memo(function PermissionsModal({
   const initialConnections = Array.isArray(apiKey?.allowedConnections)
     ? apiKey.allowedConnections
     : [];
+<<<<<<< HEAD
   const [keyName, setKeyName] = useState(apiKey?.name ?? "");
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [selectedModels, setSelectedModels] = useState<string[]>(initialModels);
   const [allowAll, setAllowAll] = useState(initialModels.length === 0);
   const [noLogEnabled, setNoLogEnabled] = useState(apiKey?.noLog === true);
@@ -934,8 +1073,11 @@ const PermissionsModal = memo(function PermissionsModal({
   const [scheduleTz, setScheduleTz] = useState(
     apiKey?.accessSchedule?.tz ?? Intl.DateTimeFormat().resolvedOptions().timeZone
   );
+<<<<<<< HEAD
   const [nameError, setNameError] = useState<string | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [selectedConnections, setSelectedConnections] = useState<string[]>(initialConnections);
   const [allowAllConnections, setAllowAllConnections] = useState(initialConnections.length === 0);
   const [expandedProviders, setExpandedProviders] = useState<Set<string>>(() => {
@@ -1023,6 +1165,7 @@ const PermissionsModal = memo(function PermissionsModal({
   );
 
   const handleSave = useCallback(() => {
+<<<<<<< HEAD
     // Clear previous inline errors
     setNameError(null);
     setSaveError(null);
@@ -1046,6 +1189,8 @@ const PermissionsModal = memo(function PermissionsModal({
       return;
     }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const schedule: AccessSchedule | null = scheduleEnabled
       ? {
           enabled: true,
@@ -1056,7 +1201,10 @@ const PermissionsModal = memo(function PermissionsModal({
         }
       : null;
     onSave(
+<<<<<<< HEAD
       keyName,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       allowAll ? [] : selectedModels,
       noLogEnabled,
       allowAllConnections ? [] : selectedConnections,
@@ -1067,7 +1215,10 @@ const PermissionsModal = memo(function PermissionsModal({
     );
   }, [
     onSave,
+<<<<<<< HEAD
     keyName,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     allowAll,
     selectedModels,
     noLogEnabled,
@@ -1081,7 +1232,10 @@ const PermissionsModal = memo(function PermissionsModal({
     scheduleUntil,
     scheduleDays,
     scheduleTz,
+<<<<<<< HEAD
     t,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   ]);
 
   const selectedCount = selectedModels.length;
@@ -1094,6 +1248,7 @@ const PermissionsModal = memo(function PermissionsModal({
       onClose={onClose}
     >
       <div className="flex flex-col gap-4">
+<<<<<<< HEAD
         {/* Key Name */}
         <div className="flex items-start justify-between gap-3 p-3 rounded-lg border border-border bg-surface/40">
           <div className="flex flex-col gap-1">
@@ -1122,6 +1277,8 @@ const PermissionsModal = memo(function PermissionsModal({
           </div>
         )}
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         {/* Access Mode Toggle */}
         <div className="flex gap-2 p-1 bg-surface rounded-lg">
           <button

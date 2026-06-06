@@ -4,11 +4,17 @@
 
 ---
 
+<<<<<<< HEAD
 > **Agent-to-Agent Protocol v0.3** — Enables any AI agent to use OmniRoute as an intelligent routing agent via JSON-RPC 2.0.
 
 The A2A Server exposes OmniRoute as a **first-class agent** that other agents can discover, delegate tasks to, and collaborate with using the [A2A Protocol](https://google.github.io/A2A/).
 
 ---
+=======
+> **代理到代理协议 v0.3**— 使任何 AI 代理能够通过 JSON-RPC 2.0 使用 OmniRoute 作为智能路由代理。
+
+A2A 服务器将 OmniRoute 公开为**一流代理**，其他代理可以使用 [A2A 协议](https://google.github.io/A2A/) 发现、委派任务并与之协作。---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## 架构
 
@@ -43,6 +49,7 @@ The A2A Server exposes OmniRoute as a **first-class agent** that other agents ca
 
 ### Agent Discovery
 
+<<<<<<< HEAD
 Every A2A-compatible agent exposes an **Agent Card** at `/.well-known/agent.json`:
 
 ```bash
@@ -52,6 +59,14 @@ curl http://localhost:20128/.well-known/agent.json
 **Response:**
 
 ```json
+=======
+每个 A2A 兼容代理都会在“/.well-known/agent.json”处公开一个**代理卡**：```bash
+curl http://localhost:20128/.well-known/agent.json
+
+````
+
+**回复：**```json
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 {
   "name": "OmniRoute",
   "description": "Intelligent AI gateway with auto-routing across 50+ providers",
@@ -88,7 +103,11 @@ curl http://localhost:20128/.well-known/agent.json
     "apiKeyHeader": "Authorization"
   }
 }
+<<<<<<< HEAD
 ```
+=======
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ---
 
@@ -96,6 +115,7 @@ curl http://localhost:20128/.well-known/agent.json
 
 ### `message/send` — Synchronous Execution
 
+<<<<<<< HEAD
 Send a message to a skill and receive the complete response.
 
 ```bash
@@ -117,6 +137,26 @@ curl -X POST http://localhost:20128/a2a \
 **Response:**
 
 ```json
+=======
+向技能发送消息并接收完整回复。```bash
+curl -X POST http://localhost:20128/a2a \
+ -H "Content-Type: application/json" \
+ -H "Authorization: Bearer YOUR_KEY" \
+ -d '{
+"jsonrpc": "2.0",
+"id": "1",
+"method": "message/send",
+"params": {
+"skill": "smart-routing",
+"messages": [{"role": "user", "content": "Write a Python hello world"}],
+"metadata": {"model": "auto", "combo": "fast-coding"}
+}
+}'
+
+````
+
+**回复：**```json
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 {
   "jsonrpc": "2.0",
   "id": "1",
@@ -133,6 +173,7 @@ curl -X POST http://localhost:20128/a2a \
     }
   }
 }
+<<<<<<< HEAD
 ```
 
 ### `message/stream` — SSE Streaming
@@ -157,12 +198,39 @@ curl -N -X POST http://localhost:20128/a2a \
 **SSE Events:**
 
 ```
+=======
+````
+
+### `message/stream` — SSE Streaming
+
+与“消息/发送”相同，但返回服务器发送的事件以进行实时流处理。```bash
+curl -N -X POST http://localhost:20128/a2a \
+ -H "Content-Type: application/json" \
+ -H "Authorization: Bearer YOUR_KEY" \
+ -d '{
+"jsonrpc": "2.0",
+"id": "1",
+"method": "message/stream",
+"params": {
+"skill": "smart-routing",
+"messages": [{"role": "user", "content": "Explain quantum computing"}]
+}
+}'
+
+````
+
+**上交所活动：**```
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 data: {"jsonrpc":"2.0","method":"message/stream","params":{"task":{"id":"...","state":"working"},"chunk":{"type":"text","content":"Quantum computing..."}}}
 
 : heartbeat 2026-03-04T21:00:00Z
 
 data: {"jsonrpc":"2.0","method":"message/stream","params":{"task":{"id":"...","state":"completed"},"metadata":{...}}}
+<<<<<<< HEAD
 ```
+=======
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ### `tasks/get` — Query Task Status
 
@@ -188,6 +256,7 @@ curl -X POST http://localhost:20128/a2a \
 
 ### `smart-routing`
 
+<<<<<<< HEAD
 Routes prompts through OmniRoute's intelligent pipeline with full observability.
 
 **Parameters (in `metadata`):**
@@ -222,6 +291,38 @@ Answers natural-language queries about provider quotas.
 | Default                                        | Full quota summary with warnings for low-quota providers |
 
 ---
+=======
+路由通过具有完全可观察性的 OmniRoute 智能管道进行提示。
+
+**参数（在“元数据”中）：**
+
+| 参数   | 类型     | 默认     | 描述                                                         |
+| ------ | -------- | -------- | ------------------------------------------------------------ |
+| `模型` | `字符串` | `“自动”` | 目标模型（例如“claude-sonnet-4”、“gpt-4o”、“auto”）          |
+| `组合` | `字符串` | 主动组合 | 特定组合路线                                                 |
+| `预算` | `数字`   | 无       | 此请求的最高费用（美元）                                     |
+| `角色` | `字符串` | 无       | 任务角色提示：`编码`、`审阅`、`规划`、`分析`、`调试`、`文档` |
+
+**退货：**
+
+| 领域                           | 描述                                             |
+| ------------------------------ | ------------------------------------------------ | ---------------------- |
+| `工件[].内容`                  | LLM 回复文本                                     |
+| `metadata.routing_explanation` | 路由决策的人类可读解释                           |
+| `metadata.cost_envelope`       | 预计成本与实际成本（以货币计算）                 |
+| `metadata.resilience_trace`    | 事件数组（primary_selected、fallback_needed 等） |
+| `metadata.policy_verdict`      | 请求是否被允许以及原因                           | ### `quota-management` |
+
+回答有关提供商配额的自然语言查询。
+
+**查询类型（从消息内容推断）：**
+
+| 查询模式                            | 响应类型                               |
+| ----------------------------------- | -------------------------------------- | --- |
+| 包含`“排名”`、`“最多名额”`、“最佳”` | 按剩余配额排名的提供商                 |
+| 包含“免费”、“建议”                  | 列出免费组合或建议免费套餐提供商       |
+| 默认                                | 完整配额摘要，并对低配额供应商发出警告 | --- |
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## Task Lifecycle
 
@@ -231,6 +332,7 @@ submitted ──→ working ──→ completed
               ──────────→ cancelled
 ```
 
+<<<<<<< HEAD
 | State       | Description                                           |
 | ----------- | ----------------------------------------------------- |
 | `submitted` | Task created, queued for execution                    |
@@ -244,6 +346,19 @@ submitted ──→ working ──→ completed
 - Tasks are garbage-collected after 2× TTL
 
 ---
+=======
+| 状态     | 描述                                   |
+| -------- | -------------------------------------- |
+| `已提交` | 任务已创建，排队等待执行               |
+| `工作`   | 技能处理程序正在执行                   |
+| `已完成` | 执行成功，工件可用                     |
+| `失败`   | 执行失败或任务过期（TTL：默认 5 分钟） |
+| `已取消` | 客户端通过“tasks/cancel”取消           |
+
+- 终端状态：“已完成”、“失败”、“已取消”（无进一步转换）
+- “已提交”或“正在处理”中过期的任务会自动标记为“失败”
+- 任务在 2× TTL 后被垃圾收集---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## Client Examples
 
@@ -541,6 +656,7 @@ func main() {
 
 ### 🤖 Use Case 1: Multi-Agent Coding Pipeline
 
+<<<<<<< HEAD
 An orchestrator agent delegates code generation to OmniRoute, then passes the output to a review agent.
 
 ```python
@@ -550,6 +666,14 @@ def coding_pipeline(task: str):
         {"role": "user", "content": f"Write production-quality code: {task}"}
     ], metadata={"model": "auto", "role": "coding"})
     code = code_result["artifacts"][0]["content"]
+=======
+协调器代理将代码生成委托给 OmniRoute，然后将输出传递给审核代理。```python
+def coding_pipeline(task: str): # Step 1: Generate code via OmniRoute A2A
+code_result = a2a_send("smart-routing", [
+{"role": "user", "content": f"Write production-quality code: {task}"}
+], metadata={"model": "auto", "role": "coding"})
+code = code_result["artifacts"][0]["content"]
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     # Step 2: Review the code via OmniRoute A2A (different model)
     review_result = a2a_send("smart-routing", [
@@ -562,6 +686,7 @@ def coding_pipeline(task: str):
     print(f"Review cost: ${review_result['metadata']['cost_envelope']['actual']}")
 
     return {"code": code, "review": review}
+<<<<<<< HEAD
 ```
 
 ### 💡 Use Case 2: Quota-Aware Agent Swarm
@@ -569,6 +694,14 @@ def coding_pipeline(task: str):
 Multiple agents share quota through OmniRoute, using the quota skill to coordinate.
 
 ```python
+=======
+
+````
+
+### 💡 Use Case 2: Quota-Aware Agent Swarm
+
+多个代理通过 OmniRoute 共享配额，使用配额技能进行协调。```python
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 async def quota_aware_agent(agent_name: str, task: str):
     # Check quota before starting
     quota = a2a_send("quota-management", [
@@ -591,6 +724,7 @@ async def quota_aware_agent(agent_name: str, task: str):
         print(f"[{agent_name}] Free alternatives: {quota['artifacts'][0]['content']}")
 
     return result
+<<<<<<< HEAD
 ```
 
 ### 📊 Use Case 3: Real-Time Streaming Dashboard
@@ -598,10 +732,18 @@ async def quota_aware_agent(agent_name: str, task: str):
 A monitoring agent streams responses and displays progress in real-time.
 
 ```typescript
+=======
+````
+
+### 📊 Use Case 3: Real-Time Streaming Dashboard
+
+监控代理实时传输响应并显示进度。```typescript
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 async function streamingDashboard(prompt: string) {
   const response = await fetch(`${BASE_URL}/a2a`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${API_KEY}` },
+<<<<<<< HEAD
     body: JSON.stringify({
       jsonrpc: "2.0",
       id: "dash-1",
@@ -617,6 +759,23 @@ async function streamingDashboard(prompt: string) {
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
+=======
+body: JSON.stringify({
+jsonrpc: "2.0",
+id: "dash-1",
+method: "message/stream",
+params: { skill: "smart-routing", messages: [{ role: "user", content: prompt }] },
+}),
+});
+
+let totalChunks = 0;
+const reader = response.body!.getReader();
+const decoder = new TextDecoder();
+
+while (true) {
+const { done, value } = await reader.read();
+if (done) break;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     for (const line of decoder.decode(value).split("\n")) {
       if (line.startsWith("data: ")) {
@@ -640,6 +799,7 @@ async function streamingDashboard(prompt: string) {
         }
       }
     }
+<<<<<<< HEAD
   }
 }
 ```
@@ -649,6 +809,17 @@ async function streamingDashboard(prompt: string) {
 For long-running tasks, poll the task status instead of waiting synchronously.
 
 ```python
+=======
+
+}
+}
+
+````
+
+### 🔁 Use Case 4: Task Polling Pattern
+
+对于长时间运行的任务，轮询任务状态而不是同步等待。```python
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import time
 
 def poll_task(task_id: str, timeout: int = 60):
@@ -678,12 +849,17 @@ def poll_task(task_id: str, timeout: int = 60):
         "params": {"taskId": task_id},
     })
     raise TimeoutError(f"Task {task_id} timed out after {timeout}s")
+<<<<<<< HEAD
 ```
+=======
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ---
 
 ## Error Codes
 
+<<<<<<< HEAD
 | Code   | Constant                 | Meaning                                  |
 | ------ | ------------------------ | ---------------------------------------- |
 | -32700 | —                        | Parse error (invalid JSON)               |
@@ -710,10 +886,34 @@ Authorization: Bearer YOUR_OMNIROUTE_API_KEY
 If no API key is configured on the server (`OMNIROUTE_API_KEY` is empty), authentication is bypassed.
 
 ---
+=======
+| 代码   | 恒定                     | 意义                           |
+| ------ | ------------------------ | ------------------------------ | --- |
+| -32700 | -32700 —                 | 解析错误（无效 JSON）          |
+| -32600 | -32600 `INVALID_REQUEST` | 无效的 JSON-RPC 请求或未经授权 |
+| -32601 | `METHOD_NOT_FOUND`       | 未知的方法或技巧               |
+| -32602 | -32602 `INVALID_PARAMS`  | 参数缺失或无效                 |
+| -32603 | -32603 `内部错误`        | 技能执行失败                   |
+| -32001 | `任务未找到`             | 未找到任务 ID                  |
+| -32002 | `任务已完成`             | 无法修改已完成的任务           |
+| -32003 | `未经授权`               | API 密钥无效或丢失             |
+| -32004 | `预算_超出`              | 请求超出配置的预算             |
+| -32005 | `PROVIDER_UNAVAILABLE`   | 没有可用的提供商               | --- |
+
+## Authentication
+
+所有“/a2a”请求都需要通过“Authorization”标头获得承载令牌：```
+Authorization: Bearer YOUR_OMNIROUTE_API_KEY
+
+```
+
+如果服务器上未配置 API 密钥（“OMNIROUTE_API_KEY”为空），则会绕过身份验证。---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## File Structure
 
 ```
+<<<<<<< HEAD
 src/lib/a2a/
 ├── taskManager.ts         # Task lifecycle (create/update/cancel/list), TTL, cleanup
 ├── taskExecution.ts       # Generic task executor with state management
@@ -728,12 +928,31 @@ src/app/a2a/
 
 open-sse/mcp-server/
 └── schemas/a2a.ts         # Zod schemas (AgentCard, Task, JSON-RPC, SSE events)
+=======
+
+src/lib/a2a/
+├── taskManager.ts # Task lifecycle (create/update/cancel/list), TTL, cleanup
+├── taskExecution.ts # Generic task executor with state management
+├── streaming.ts # SSE stream formatting, heartbeat, chunk/completion events
+├── routingLogger.ts # Routing decision logger (stats, history, retention)
+└── skills/
+├── smartRouting.ts # Smart routing skill (routes via /v1/chat/completions)
+└── quotaManagement.ts # Quota management skill (natural-language quota queries)
+
+src/app/a2a/
+└── route.ts # Next.js API route handler (JSON-RPC 2.0 dispatch)
+
+open-sse/mcp-server/
+└── schemas/a2a.ts # Zod schemas (AgentCard, Task, JSON-RPC, SSE events)
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 ```
 
 ---
 
 ## Comparison: MCP vs A2A
 
+<<<<<<< HEAD
 | Feature           | MCP Server                   | A2A Server                                        |
 | ----------------- | ---------------------------- | ------------------------------------------------- |
 | **Protocol**      | Model Context Protocol       | Agent-to-Agent Protocol v0.3                      |
@@ -750,3 +969,20 @@ open-sse/mcp-server/
 ## 许可证
 
 Part of [OmniRoute](https://github.com/diegosouzapw/OmniRoute) — MIT License.
+=======
+|特色 | MCP Server                   | A2A服务器|
+| ----------------- | ---------------------------- | ------------------------------------------------- |
+|**协议**| Model Context Protocol       |代理间协议 v0.3 |
+|**交通**| stdio / HTTP                 | HTTP（JSON-RPC 2.0）|
+|**发现**| Tool listing via MCP         | `/.well-known/agent.json` |
+|**粒度**| 16 individual tools          | 2 高级技能 |
+|**最适合**| IDE agents (Cursor, VS Code) |多智能体系统（LangChain、CrewAI）|
+|**流媒体**| Not supported                |通过“消息/流”的 SSE |
+|**任务跟踪**| No                           |完整生命周期（已提交→已完成）|
+|**可观察性**| Audit log per tool call      |成本包络+弹性轨迹+政策判决|---
+
+## 许可证
+
+[OmniRoute](https://github.com/diegosouzapw/OmniRoute) 的一部分 — MIT 许可证。
+```
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

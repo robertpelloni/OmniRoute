@@ -4,6 +4,7 @@
  * OmniRoute — Postinstall Native Module Fix
  *
  * The npm package ships with a Next.js standalone build that includes
+<<<<<<< HEAD
  * native modules compiled for the build platform (Linux x64) inside
  * app/node_modules/. However, npm also installs these as top-level
  * dependencies (in the root node_modules/), correctly compiled for
@@ -23,11 +24,30 @@
  */
 
 import { copyFileSync, cpSync, existsSync, mkdirSync, readdirSync } from "node:fs";
+=======
+ * better-sqlite3 compiled for the build platform (Linux x64) inside
+ * app/node_modules/. However, npm also installs better-sqlite3 as a
+ * top-level dependency (in the root node_modules/), correctly compiled
+ * for the user's platform.
+ *
+ * This script copies the correctly-built native binary from the root
+ * into the standalone app directory — no rebuild or build tools needed.
+ *
+ * Fixes: https://github.com/diegosouzapw/OmniRoute/issues/129
+ * Fixes: https://github.com/diegosouzapw/OmniRoute/issues/321
+ * Fixes: https://github.com/diegosouzapw/OmniRoute/issues/426
+ */
+
+import { copyFileSync, existsSync, mkdirSync } from "node:fs";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { PUBLISHED_BUILD_ARCH, PUBLISHED_BUILD_PLATFORM } from "./native-binary-compat.mjs";
+<<<<<<< HEAD
 import { hasStandaloneAppBundle } from "./postinstallSupport.mjs";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -134,6 +154,7 @@ async function fixBetterSqliteBinary() {
 
   try {
     const { execSync } = await import("node:child_process");
+<<<<<<< HEAD
 
     // On Android/Termux, rebuild from source with --build-from-source flag
     const isAndroid = process.platform === "android";
@@ -145,6 +166,12 @@ async function fixBetterSqliteBinary() {
       cwd: join(ROOT, "app"),
       stdio: "inherit",
       timeout: 300_000, // 5 minutes for source builds
+=======
+    execSync("npm rebuild better-sqlite3", {
+      cwd: join(ROOT, "app"),
+      stdio: "inherit",
+      timeout: 120_000,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     });
 
     process.dlopen({ exports: {} }, appBinary);
@@ -153,7 +180,11 @@ async function fixBetterSqliteBinary() {
   } catch (err) {
     const isTimeout = err.killed || err.signal === "SIGTERM";
     if (isTimeout) {
+<<<<<<< HEAD
       console.warn("  ⚠️  npm rebuild timed out after 300s.");
+=======
+      console.warn("  ⚠️  npm rebuild timed out after 120s.");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     } else {
       console.warn(`  ⚠️  npm rebuild failed: ${err.message}`);
     }
@@ -179,6 +210,7 @@ async function fixBetterSqliteBinary() {
   console.warn("");
 }
 
+<<<<<<< HEAD
 /**
  * Fix wreq-js native binary for the standalone app directory.
  *
@@ -275,6 +307,9 @@ async function ensureSwcHelpers() {
     return;
   }
 
+=======
+async function ensureSwcHelpers() {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const swcHelpersApp = join(ROOT, "app", "node_modules", "@swc", "helpers");
   const swcHelpersRoot = join(ROOT, "node_modules", "@swc", "helpers");
 
@@ -311,6 +346,9 @@ async function syncProjectEnv() {
 }
 
 await fixBetterSqliteBinary();
+<<<<<<< HEAD
 await fixWreqJsBinary();
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 await ensureSwcHelpers();
 await syncProjectEnv();

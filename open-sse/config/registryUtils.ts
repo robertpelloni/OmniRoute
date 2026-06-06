@@ -16,7 +16,11 @@ export interface BaseProvider<M extends BaseModel = BaseModel> {
   id: string;
   baseUrl: string;
   authType: string; // "apikey" | "oauth" | "none"
+<<<<<<< HEAD
   authHeader: string; // "bearer" | "key" | "token" | "xi-api-key" | "x-api-key" | "none"
+=======
+  authHeader: string; // "bearer" | "token" | "xi-api-key" | "x-api-key" | "none"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   format?: string;
   models: M[];
 }
@@ -76,7 +80,11 @@ export function getAllModelsFromRegistry<P extends BaseProvider>(
 
 /**
  * Build auth headers for a provider.
+<<<<<<< HEAD
  * Handles bearer, key, token, xi-api-key, x-api-key, and none.
+=======
+ * Handles bearer, token, xi-api-key, x-api-key, and none.
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  */
 export function buildAuthHeaders(
   provider: BaseProvider,
@@ -87,8 +95,11 @@ export function buildAuthHeaders(
   }
 
   switch (provider.authHeader) {
+<<<<<<< HEAD
     case "key":
       return { Authorization: `Key ${token}` };
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     case "token":
       return { Authorization: `Token ${token}` };
     case "xi-api-key":

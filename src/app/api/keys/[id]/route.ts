@@ -10,7 +10,10 @@ import { syncToCloud } from "@/lib/cloudSync";
 import { updateKeyPermissionsSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
+<<<<<<< HEAD
 import * as log from "@/sse/utils/logger";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 // GET /api/keys/[id] - Get single API key
 export async function GET(request, { params }) {
@@ -32,7 +35,11 @@ export async function GET(request, { params }) {
       key: keyValue ? keyValue.slice(0, 8) + "****" + keyValue.slice(-4) : null,
     });
   } catch (error) {
+<<<<<<< HEAD
     log.error("keys", "Error fetching key", error);
+=======
+    console.log("Error fetching key:", error);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return NextResponse.json({ error: "Failed to fetch key" }, { status: 500 });
   }
 }
@@ -104,7 +111,11 @@ export async function PATCH(request, { params }) {
       ...(accessSchedule !== undefined && { accessSchedule }),
     });
   } catch (error) {
+<<<<<<< HEAD
     log.error("keys", "Error updating key permissions", error);
+=======
+    console.log("Error updating key permissions:", error);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return NextResponse.json({ error: "Failed to update permissions" }, { status: 500 });
   }
 }
@@ -127,7 +138,11 @@ export async function DELETE(request, { params }) {
 
     return NextResponse.json({ message: "Key deleted successfully" });
   } catch (error) {
+<<<<<<< HEAD
     log.error("keys", "Error deleting key", error);
+=======
+    console.log("Error deleting key:", error);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return NextResponse.json({ error: "Failed to delete key" }, { status: 500 });
   }
 }
@@ -143,6 +158,10 @@ async function syncKeysToCloudIfEnabled() {
     const machineId = await getConsistentMachineId();
     await syncToCloud(machineId);
   } catch (error) {
+<<<<<<< HEAD
     log.error("keys", "Error syncing keys to cloud", error);
+=======
+    console.log("Error syncing keys to cloud:", error);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 }

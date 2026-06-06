@@ -17,21 +17,29 @@ import {
   formatSSE,
   unwrapGeminiChunk,
 } from "./streamHelpers.ts";
+<<<<<<< HEAD
 import { calculateCost } from "@/lib/usage/costCalculator";
 import { buildOmniRouteSseMetadataComment } from "@/domain/omnirouteResponseMeta";
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import {
   createStructuredSSECollector,
   buildStreamSummaryFromEvents,
 } from "./streamPayloadCollector.ts";
+<<<<<<< HEAD
 import { STREAM_IDLE_TIMEOUT_MS, FETCH_BODY_TIMEOUT_MS, HTTP_STATUS } from "../config/constants.ts";
 =======
 import { STREAM_IDLE_TIMEOUT_MS, HTTP_STATUS } from "../config/constants.ts";
 >>>>>>> Stashed changes
+=======
+import { STREAM_IDLE_TIMEOUT_MS, HTTP_STATUS } from "../config/constants.ts";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import {
   sanitizeStreamingChunk,
   extractThinkingFromContent,
 } from "../handlers/responseSanitizer.ts";
+<<<<<<< HEAD
 import {
   rememberResponseConversationState,
   rememberResponseFunctionCalls,
@@ -58,10 +66,15 @@ export function withBodyTimeout<T>(
   return Promise.race([promise, timeout]).finally(() => clearTimeout(timer)) as Promise<T>;
 }
 
+=======
+import { buildErrorBody } from "./error.ts";
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export { COLORS, formatSSE };
 
 type JsonRecord = Record<string, unknown>;
 
+<<<<<<< HEAD
 const PENDING_REQUEST_CLEARED_MARKER = "__omniroutePendingRequestCleared";
 
 function markPendingRequestCleared(error: Error): Error {
@@ -111,6 +124,8 @@ function pushUniqueResponsesOutputItems(target: unknown[], items: readonly unkno
   }
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 type StreamLogger = {
   appendProviderChunk?: (value: string) => void;
   appendConvertedChunk?: (value: string) => void;
@@ -126,11 +141,216 @@ type StreamCompletePayload = {
   clientPayload?: unknown;
 };
 
+<<<<<<< HEAD
 type StreamFailurePayload = {
   status: number;
   message: string;
   code?: string;
   type?: string;
+=======
+type StreamOptions = {
+  mode?: string;
+  targetFormat?: string;
+  sourceFormat?: string;
+  provider?: string | null;
+  reqLogger?: StreamLogger | null;
+  toolNameMap?: unknown;
+  model?: string | null;
+  connectionId?: string | null;
+  apiKeyInfo?: unknown;
+  body?: unknown;
+  onComplete?: ((payload: StreamCompletePayload) => void) | null;
+};
+
+type TranslateState = ReturnType<typeof initState> & {
+  provider?: string | null;
+  toolNameMap?: unknown;
+  usage?: unknown;
+  finishReason?: unknown;
+  /** Accumulated message content for call log response body */
+  accumulatedContent?: string;
+  upstreamError?: {
+    status: number;
+    type: string;
+    code: string;
+    message: string;
+  } | null;
+};
+
+type ToolCall = {
+  id: string | null;
+  index: number;
+  type: string;
+  function: { name: string; arguments: string };
+};
+
+type UsageTokenRecord = Record<string, number>;
+
+function getOpenAIIntermediateChunks(value: unknown): unknown[] {
+  if (!value || typeof value !== "object") return [];
+  const candidate = (value as JsonRecord)._openaiIntermediate;
+  return Array.isArray(candidate) ? candidate : [];
+}
+
+function restoreClaudePassthroughToolUseName(parsed: JsonRecord, toolNameMap: unknown): boolean {
+  if (!(toolNameMap instanceof Map)) return false;
+  if (!parsed || typeof parsed !== "object") return false;
+
+  const block =
+    parsed.content_block && typeof parsed.content_block === "object"
+      ? (parsed.content_block as JsonRecord)
+      : null;
+  if (!block || block.type !== "tool_use" || typeof block.name !== "string") return false;
+
+  const restoredName = toolNameMap.get(block.name) ?? block.name;
+  if (restoredName === block.name) return false;
+  block.name = restoredName;
+  return true;
+}
+
+// Note: TextDecoder/TextEncoder are created per-stream inside createSSEStream()
+// to avoid shared state issues with concurrent streams (TextDecoder with {stream:true}
+// maintains internal buffering state between decode() calls).
+
+/**
+ * Stream modes
+ */
+const STREAM_MODE = {
+  TRANSLATE: "translate", // Full translation between formats
+  PASSTHROUGH: "passthrough", // No translation, normalize output, extract usage
+};
+
+/**
+ * Create unified SSE transform stream with idle timeout protection.
+ * If the upstream provider stops sending data for STREAM_IDLE_TIMEOUT_MS,
+ * the stream emits an error event and closes to prevent indefinite hanging.
+ *
+ * @param {object} options
+ * @param {string} options.mode - Stream mode: translate, passthrough
+ * @param {string} options.targetFormat - Provider format (for translate mode)
+ * @param {string} options.sourceFormat - Client format (for translate mode)
+ * @param {string} options.provider - Provider name
+ * @param {object} options.reqLogger - Request logger instance
+ * @param {string} options.model - Model name
+ * @param {string} options.connectionId - Connection ID for usage tracking
+ * @param {object|null} options.apiKeyInfo - API key metadata for usage attribution
+ * @param {object} options.body - Request body (for input token estimation)
+ * @param {function} options.onComplete - Callback when stream finishes: ({ status, usage }) => void
+ */
+export function createSSEStream(options: StreamOptions = {}) {
+  const {
+    mode = STREAM_MODE.TRANSLATE,
+    targetFormat,
+    sourceFormat,
+    provider = null,
+    reqLogger = null,
+    toolNameMap = null,
+    model = null,
+    connectionId = null,
+    apiKeyInfo = null,
+    body = null,
+    onComplete = null,
+  } = options;
+
+  let buffer = "";
+  let usage: UsageTokenRecord | null = null;
+  /** Passthrough (OpenAI CC shape): saw tool_calls in stream before finish_reason */
+  let passthroughHasToolCalls = false;
+  /** Passthrough: accumulate tool_calls deltas for call log responseBody */
+  const passthroughToolCalls = new Map<string, ToolCall>();
+  let passthroughToolCallSeq = 0;
+
+  // State for translate mode (accumulatedContent for call log response body)
+  const state: TranslateState | null =
+    mode === STREAM_MODE.TRANSLATE
+      ? {
+          ...(initState(sourceFormat) as TranslateState),
+          provider,
+          toolNameMap,
+          accumulatedContent: "",
+        }
+      : null;
+
+  // Track content length for usage estimation (both modes)
+  let totalContentLength = 0;
+  // Passthrough: accumulate content and reasoning separately for call log response body
+  let passthroughAccumulatedContent = "";
+  let passthroughAccumulatedReasoning = "";
+
+  // Guard against duplicate [DONE] events — ensures exactly one per stream
+  let doneSent = false;
+  const providerPayloadCollector = createStructuredSSECollector({
+    stage: "provider_response",
+  });
+  const clientPayloadCollector = createStructuredSSECollector({
+    stage: "client_response",
+  });
+
+  // Per-stream instances to avoid shared state with concurrent streams
+  const decoder = new TextDecoder();
+  const encoder = new TextEncoder();
+
+  // Idle timeout state — closes stream if provider stops sending data
+  let lastChunkTime = Date.now();
+  let idleTimer: ReturnType<typeof setInterval> | null = null;
+  let streamTimedOut = false;
+
+  return new TransformStream(
+    {
+      start(controller) {
+        // Start idle watchdog — checks every 10s if provider has stopped sending
+        if (STREAM_IDLE_TIMEOUT_MS > 0) {
+          idleTimer = setInterval(() => {
+            if (!streamTimedOut && Date.now() - lastChunkTime > STREAM_IDLE_TIMEOUT_MS) {
+              streamTimedOut = true;
+              clearInterval(idleTimer);
+              idleTimer = null;
+              const timeoutMsg = `[STREAM] Idle timeout: no data from ${provider || "provider"} for ${STREAM_IDLE_TIMEOUT_MS}ms (model: ${model || "unknown"})`;
+              console.warn(timeoutMsg);
+              trackPendingRequest(model, provider, connectionId, false);
+              appendRequestLog({
+                model,
+                provider,
+                connectionId,
+                status: `FAILED ${HTTP_STATUS.GATEWAY_TIMEOUT}`,
+              }).catch(() => {});
+              const timeoutError = new Error(timeoutMsg);
+              timeoutError.name = "StreamIdleTimeoutError";
+              controller.error(timeoutError);
+            }
+          }, 10_000);
+        }
+      },
+
+      transform(chunk, controller) {
+        if (streamTimedOut) return;
+        lastChunkTime = Date.now();
+        const text = decoder.decode(chunk, { stream: true });
+        buffer += text;
+        reqLogger?.appendProviderChunk?.(text);
+
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || "";
+
+        for (const line of lines) {
+          const trimmed = line.trim();
+
+          // Passthrough mode: normalize and forward
+          if (mode === STREAM_MODE.PASSTHROUGH) {
+            let output;
+            let injectedUsage = false;
+            let clientPayload: unknown = null;
+
+            if (trimmed.startsWith("data:")) {
+              const providerPayload = parseSSELine(trimmed);
+              if (providerPayload) {
+                providerPayloadCollector.push(providerPayload);
+                if ((providerPayload as { done?: unknown }).done === true) {
+                  clientPayloadCollector.push(providerPayload);
+                }
+              }
+            }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
             if (trimmed.startsWith("data:") && trimmed.slice(5).trim() !== "[DONE]") {
               try {
@@ -156,6 +376,7 @@ type StreamFailurePayload = {
                     parsed.type === "error");
 
                 if (isResponsesSSE) {
+<<<<<<< HEAD
                   const responseId =
                     typeof parsed.response?.id === "string"
                       ? parsed.response.id
@@ -165,11 +386,14 @@ type StreamFailurePayload = {
                   if (responseId) {
                     passthroughResponsesId = responseId;
                   }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   // Responses SSE: only extract usage, forward payload as-is
                   const extracted = extractUsage(parsed);
                   if (extracted) {
                     usage = extracted;
                   }
+<<<<<<< HEAD
                   // Keep generic Responses deltas for fallback usage estimates,
                   // but only visible text deltas may become assistant content in
                   // logs/replay payloads.
@@ -306,6 +530,12 @@ type StreamFailurePayload = {
                   if (stripped || backfilled) {
                     output = `data: ${JSON.stringify(parsed)}\n`;
                     injectedUsage = true;
+=======
+                  // Track content length and accumulate for call log
+                  if (parsed.delta && typeof parsed.delta === "string") {
+                    totalContentLength += parsed.delta.length;
+                    passthroughAccumulatedContent += parsed.delta;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   }
                 } else if (isClaudeSSE) {
                   // Claude SSE: extract usage, track content, forward as-is
@@ -324,6 +554,7 @@ type StreamFailurePayload = {
                     if (eu.cache_creation_input_tokens)
                       u.cache_creation_input_tokens = eu.cache_creation_input_tokens;
                   }
+<<<<<<< HEAD
                   if (
                     shouldInjectClaudeEmptyResponseBeforeCurrentEvent(
                       claudeEmptyResponseLifecycle,
@@ -339,6 +570,64 @@ type StreamFailurePayload = {
                     });
                   }
                   updateClaudeEmptyResponseLifecycle(claudeEmptyResponseLifecycle, parsed);
+=======
+                  const restoredToolName = restoreClaudePassthroughToolUseName(parsed, toolNameMap);
+                  // Track content length and accumulate from Claude format
+                  if (parsed.delta?.text) {
+                    totalContentLength += parsed.delta.text.length;
+                    passthroughAccumulatedContent += parsed.delta.text;
+                  }
+                  if (parsed.delta?.thinking) {
+                    totalContentLength += parsed.delta.thinking.length;
+                    passthroughAccumulatedContent += parsed.delta.thinking;
+                  }
+                  if (restoredToolName) {
+                    output = `data: ${JSON.stringify(parsed)}
+`;
+                    injectedUsage = true;
+                  }
+                } else {
+                  // Chat Completions: full sanitization pipeline
+
+                  // Detect reasoning alias before sanitization strips it
+                  const hadReasoningAlias = !!(
+                    parsed.choices?.[0]?.delta?.reasoning &&
+                    typeof parsed.choices[0].delta.reasoning === "string" &&
+                    !parsed.choices[0].delta.reasoning_content
+                  );
+
+                  parsed = sanitizeStreamingChunk(parsed);
+
+                  const idFixed = fixInvalidId(parsed);
+
+                  if (!hasValuableContent(parsed, FORMATS.OPENAI)) {
+                    continue;
+                  }
+
+                  const delta = parsed.choices?.[0]?.delta;
+
+                  // Extract <think> tags from streaming content
+                  if (delta?.content && typeof delta.content === "string") {
+                    const { content, thinking } = extractThinkingFromContent(delta.content);
+                    delta.content = content;
+                    if (thinking && !delta.reasoning_content) {
+                      delta.reasoning_content = thinking;
+                    }
+                  }
+
+                  // Split combined reasoning+content deltas into separate SSE events.
+                  // Standard OpenAI streaming never mixes both fields in one delta;
+                  // clients (e.g. LobeChat) may skip content when reasoning_content
+                  // is present, causing the first content token to be lost.
+                  if (delta?.reasoning_content && delta?.content) {
+                    const reasoningChunk = JSON.parse(JSON.stringify(parsed));
+                    const rDelta = reasoningChunk.choices[0].delta;
+                    delete rDelta.content;
+                    reasoningChunk.choices[0].finish_reason = null;
+                    delete reasoningChunk.usage;
+                    const rOutput = `data: ${JSON.stringify(reasoningChunk)}\n`;
+                    passthroughAccumulatedReasoning += delta.reasoning_content;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     totalContentLength += delta.reasoning_content.length;
                     clientPayloadCollector.push(reasoningChunk);
                     reqLogger?.appendConvertedChunk?.(rOutput);
@@ -392,6 +681,7 @@ type StreamFailurePayload = {
                     totalContentLength += content.length;
                   }
                   if (typeof delta?.content === "string")
+<<<<<<< HEAD
                     passthroughAccumulatedContent = appendBoundedText(
                       passthroughAccumulatedContent,
                       delta.content
@@ -401,6 +691,11 @@ type StreamFailurePayload = {
                       passthroughAccumulatedReasoning,
                       delta.reasoning_content
                     );
+=======
+                    passthroughAccumulatedContent += delta.content;
+                  if (typeof delta?.reasoning_content === "string")
+                    passthroughAccumulatedReasoning += delta.reasoning_content;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
                   const extracted = extractUsage(parsed);
                   if (extracted) {
@@ -451,6 +746,7 @@ type StreamFailurePayload = {
               }
             }
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
             if (!trimmed && pendingPassthroughEventLine && !pendingPassthroughEventEmitted) {
               output = `${pendingPassthroughEventLine}\n${output}`;
@@ -460,12 +756,15 @@ type StreamFailurePayload = {
             output = maybePrefixPendingPassthroughEvent(output, line);
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             if (clientPayload) {
               clientPayloadCollector.push(clientPayload);
             }
 
             reqLogger?.appendConvertedChunk?.(output);
             controller.enqueue(encoder.encode(output));
+<<<<<<< HEAD
             if (failurePayload) {
               if (onFailure) {
                 try {
@@ -482,6 +781,8 @@ type StreamFailurePayload = {
             if (!trimmed) {
               clearPendingPassthroughEvent();
             }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             continue;
           }
 
@@ -497,6 +798,16 @@ type StreamFailurePayload = {
           providerPayloadCollector.push(parsed);
 
           if (parsed && parsed.done) {
+<<<<<<< HEAD
+=======
+            if (!doneSent) {
+              doneSent = true;
+              clientPayloadCollector.push({ done: true });
+              const output = "data: [DONE]\n\n";
+              reqLogger?.appendConvertedChunk?.(output);
+              controller.enqueue(encoder.encode(output));
+            }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             continue;
           }
 
@@ -508,13 +819,21 @@ type StreamFailurePayload = {
             const t = parsed.delta.text;
             totalContentLength += t.length;
             if (state?.accumulatedContent !== undefined && typeof t === "string")
+<<<<<<< HEAD
               state.accumulatedContent = appendBoundedText(state.accumulatedContent, t);
+=======
+              state.accumulatedContent += t;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           }
           if (parsed.delta?.thinking) {
             const t = parsed.delta.thinking;
             totalContentLength += t.length;
             if (state?.accumulatedContent !== undefined && typeof t === "string")
+<<<<<<< HEAD
               state.accumulatedContent = appendBoundedText(state.accumulatedContent, t);
+=======
+              state.accumulatedContent += t;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           }
 
           // OpenAI format
@@ -522,17 +841,25 @@ type StreamFailurePayload = {
             const c = parsed.choices[0].delta.content;
             if (typeof c === "string") {
               totalContentLength += c.length;
+<<<<<<< HEAD
               if (state?.accumulatedContent !== undefined)
                 state.accumulatedContent = appendBoundedText(state.accumulatedContent, c);
+=======
+              if (state?.accumulatedContent !== undefined) state.accumulatedContent += c;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             } else if (Array.isArray(c)) {
               for (const part of c) {
                 if (part?.text && typeof part.text === "string") {
                   totalContentLength += part.text.length;
                   if (state?.accumulatedContent !== undefined)
+<<<<<<< HEAD
                     state.accumulatedContent = appendBoundedText(
                       state.accumulatedContent,
                       part.text
                     );
+=======
+                    state.accumulatedContent += part.text;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 }
               }
             }
@@ -541,6 +868,7 @@ type StreamFailurePayload = {
             const r = parsed.choices[0].delta.reasoning_content;
             if (typeof r === "string") {
               totalContentLength += r.length;
+<<<<<<< HEAD
               if (state?.accumulatedContent !== undefined)
                 state.accumulatedContent = appendBoundedText(state.accumulatedContent, r);
             }
@@ -569,6 +897,8 @@ type StreamFailurePayload = {
               parsed.choices[0].delta.reasoning_content = r;
               delete parsed.choices[0].delta.reasoning;
               totalContentLength += r.length;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               if (state?.accumulatedContent !== undefined) state.accumulatedContent += r;
             }
           }
@@ -598,8 +928,12 @@ type StreamFailurePayload = {
             for (const part of geminiChunk.candidates[0].content.parts) {
               if (part.text && typeof part.text === "string") {
                 totalContentLength += part.text.length;
+<<<<<<< HEAD
                 if (state?.accumulatedContent !== undefined)
                   state.accumulatedContent = appendBoundedText(state.accumulatedContent, part.text);
+=======
+                if (state?.accumulatedContent !== undefined) state.accumulatedContent += part.text;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               }
             }
           }
@@ -608,17 +942,29 @@ type StreamFailurePayload = {
           if (state?.accumulatedContent !== undefined) {
             if (typeof (parsed as JsonRecord).delta === "string") {
               const d = (parsed as JsonRecord).delta as string;
+<<<<<<< HEAD
               state.accumulatedContent = appendBoundedText(state.accumulatedContent, d);
+=======
+              state.accumulatedContent += d;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               totalContentLength += d.length;
             }
             if (typeof (parsed as JsonRecord).content === "string") {
               const c = (parsed as JsonRecord).content as string;
+<<<<<<< HEAD
               state.accumulatedContent = appendBoundedText(state.accumulatedContent, c);
+=======
+              state.accumulatedContent += c;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               totalContentLength += c.length;
             }
             if (typeof (parsed as JsonRecord).text === "string") {
               const t = (parsed as JsonRecord).text as string;
+<<<<<<< HEAD
               state.accumulatedContent = appendBoundedText(state.accumulatedContent, t);
+=======
+              state.accumulatedContent += t;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               totalContentLength += t.length;
             }
           }
@@ -638,15 +984,79 @@ type StreamFailurePayload = {
 
           if (translated?.length > 0) {
             for (const item of translated) {
+<<<<<<< HEAD
+=======
+              // Content for call log is accumulated only from parsed (above) to avoid double-counting;
+              // do not add again from item here.
+
+              // #723, #727: Sanitize only when the client-facing stream is OpenAI Chat format.
+              // When translating Responses -> Claude, `item` is already a Claude SSE event;
+              // sanitizing it as an OpenAI chunk strips message_start/content_block_delta/message_stop
+              // and causes Claude Code to drop the assistant message.
+              // #761: Responses API events have {event, data} structure — skip sanitization
+              // entirely as it strips them to {"object":"chat.completion.chunk"}, losing all content.
+              let itemSanitized: Record<string, unknown> = item;
+              const isResponsesEvent =
+                typeof item?.event === "string" && item.event.startsWith("response.");
+              if (sourceFormat === FORMATS.OPENAI && !isResponsesEvent) {
+                itemSanitized = sanitizeStreamingChunk(itemSanitized) as Record<string, unknown>;
+
+                // Extract reasoning tags from content if translation generated them
+                const delta = itemSanitized?.choices?.[0]?.delta;
+                if (delta?.content && typeof delta.content === "string") {
+                  const { content, thinking } = extractThinkingFromContent(delta.content);
+                  delta.content = content;
+                  if (thinking && !delta.reasoning_content) {
+                    delta.reasoning_content = thinking;
+                  }
+                }
+              }
+
+              // Filter empty chunks
+              if (!hasValuableContent(itemSanitized, sourceFormat)) {
+                continue; // Skip this empty chunk
+              }
+
+              // Inject estimated usage if finish chunk has no valid usage
+              const isFinishChunk =
+                itemSanitized.type === "message_delta" || itemSanitized.choices?.[0]?.finish_reason;
+              if (
+                state.finishReason &&
+                isFinishChunk &&
+                !hasValidUsage(itemSanitized.usage) &&
+                totalContentLength > 0
+              ) {
+                const estimated = estimateUsage(body, totalContentLength, sourceFormat);
+                itemSanitized.usage = filterUsageForFormat(estimated, sourceFormat); // Filter + already has buffer
+                state.usage = estimated;
+              } else if (state.finishReason && isFinishChunk && state.usage) {
+                // Add buffer and filter usage for client (but keep original in state.usage for logging)
+                const buffered = addBufferToUsage(state.usage);
+                itemSanitized.usage = filterUsageForFormat(buffered, sourceFormat);
+              }
+
+              const output = formatSSE(itemSanitized, sourceFormat);
+              clientPayloadCollector.push(itemSanitized);
+              reqLogger?.appendConvertedChunk?.(output);
+              controller.enqueue(encoder.encode(output));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             }
           }
         }
       },
 
+<<<<<<< HEAD
       async flush(controller) {
         // Clean up idle watchdog timer
         if (idleTimer) {
           clearIdleTimer();
+=======
+      flush(controller) {
+        // Clean up idle watchdog timer
+        if (idleTimer) {
+          clearInterval(idleTimer);
+          idleTimer = null;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         }
         if (streamTimedOut) {
           return;
@@ -657,19 +1067,32 @@ type StreamFailurePayload = {
           if (remaining) buffer += remaining;
 
           if (mode === STREAM_MODE.PASSTHROUGH) {
+<<<<<<< HEAD
             const bufferedLine = buffer.trim();
             if (skipPassthroughEvent || /^event:\s*keepalive\b/i.test(bufferedLine)) {
               skipPassthroughEvent = false;
               clearPendingPassthroughEvent();
             } else if (buffer) {
+=======
+            if (buffer) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               let output = buffer;
               if (buffer.startsWith("data:") && !buffer.startsWith("data: ")) {
                 output = "data: " + buffer.slice(5);
               }
+<<<<<<< HEAD
+=======
+              const bufferedPayload = parseSSELine(buffer.trim());
+              if (bufferedPayload) {
+                providerPayloadCollector.push(bufferedPayload);
+                clientPayloadCollector.push(bufferedPayload);
+              }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               reqLogger?.appendConvertedChunk?.(output);
               controller.enqueue(encoder.encode(output));
             }
 
+<<<<<<< HEAD
             if (shouldInjectClaudeEmptyResponseOnFlush(claudeEmptyResponseLifecycle)) {
               emitSyntheticClaudeEmptyResponse(controller, {
                 includeContentBlock: true,
@@ -704,6 +1127,8 @@ type StreamFailurePayload = {
               );
             }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             // Estimate usage if provider didn't return valid usage
             if (!hasValidUsage(usage) && totalContentLength > 0) {
               usage = estimateUsage(body, totalContentLength, sourceFormat || FORMATS.OPENAI);
@@ -720,6 +1145,7 @@ type StreamFailurePayload = {
                 status: "200 OK",
               }).catch(() => {});
             }
+<<<<<<< HEAD
             if (!doneSent) {
               await emitFinalSseMetadata(controller, usage);
               doneSent = true;
@@ -730,6 +1156,8 @@ type StreamFailurePayload = {
                 controller.enqueue(encoder.encode(doneOutput));
               }
             }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             // Notify caller for call log persistence (include full response body with accumulated content)
             if (onComplete) {
               try {
@@ -825,6 +1253,13 @@ type StreamFailurePayload = {
 
               if (translated?.length > 0) {
                 for (const item of translated) {
+<<<<<<< HEAD
+=======
+                  const output = formatSSE(item, sourceFormat);
+                  clientPayloadCollector.push(item);
+                  reqLogger?.appendConvertedChunk?.(output);
+                  controller.enqueue(encoder.encode(output));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 }
               }
             }
@@ -833,6 +1268,7 @@ type StreamFailurePayload = {
           if (state?.upstreamError) {
             const err = state.upstreamError;
             trackPendingRequest(model, provider, connectionId, false);
+<<<<<<< HEAD
             if (onFailure) {
               try {
                 void onFailure({
@@ -843,6 +1279,8 @@ type StreamFailurePayload = {
                 });
               } catch {}
             }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
             const errorBody = buildErrorBody(err.status, err.message);
             if (onComplete) {
@@ -866,10 +1304,14 @@ type StreamFailurePayload = {
               } catch {}
             }
 
+<<<<<<< HEAD
             clearIdleTimer();
             controller.error(
               markPendingRequestCleared(new Error(err.message || "Upstream failure"))
             );
+=======
+            controller.error(new Error(err.message || "Upstream failure"));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             return;
           }
 
@@ -884,6 +1326,13 @@ type StreamFailurePayload = {
 
           if (flushed?.length > 0) {
             for (const item of flushed) {
+<<<<<<< HEAD
+=======
+              const output = formatSSE(item, sourceFormat);
+              clientPayloadCollector.push(item);
+              reqLogger?.appendConvertedChunk?.(output);
+              controller.enqueue(encoder.encode(output));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             }
           }
 
@@ -899,8 +1348,16 @@ type StreamFailurePayload = {
 
           // Send [DONE] (only if not already sent during transform)
           if (!doneSent) {
+<<<<<<< HEAD
             await emitFinalSseMetadata(controller, state?.usage as Record<string, unknown> | null);
             doneSent = true;
+=======
+            doneSent = true;
+            clientPayloadCollector.push({ done: true });
+            const doneOutput = "data: [DONE]\n\n";
+            reqLogger?.appendConvertedChunk?.(doneOutput);
+            controller.enqueue(encoder.encode(doneOutput));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           }
 
           // Estimate usage if provider didn't return valid usage (for translate mode)
@@ -1002,9 +1459,13 @@ export function createSSETransformStreamWithLogger(
   connectionId: string | null = null,
   body: unknown = null,
   onComplete: ((payload: StreamCompletePayload) => void) | null = null,
+<<<<<<< HEAD
   apiKeyInfo: unknown = null,
   onFailure: ((payload: StreamFailurePayload) => void | Promise<void>) | null = null,
   copilotCompatibleReasoning = false
+=======
+  apiKeyInfo: unknown = null
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 ) {
   return createSSEStream({
     mode: STREAM_MODE.TRANSLATE,
@@ -1018,8 +1479,11 @@ export function createSSETransformStreamWithLogger(
     apiKeyInfo,
     body,
     onComplete,
+<<<<<<< HEAD
     onFailure,
     copilotCompatibleReasoning,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   });
 }
 
@@ -1031,9 +1495,13 @@ export function createPassthroughStreamWithLogger(
   connectionId: string | null = null,
   body: unknown = null,
   onComplete: ((payload: StreamCompletePayload) => void) | null = null,
+<<<<<<< HEAD
   apiKeyInfo: unknown = null,
   onFailure: ((payload: StreamFailurePayload) => void | Promise<void>) | null = null,
   clientResponseFormat: string | null = null
+=======
+  apiKeyInfo: unknown = null
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 ) {
   return createSSEStream({
     mode: STREAM_MODE.PASSTHROUGH,
@@ -1045,7 +1513,10 @@ export function createPassthroughStreamWithLogger(
     apiKeyInfo,
     body,
     onComplete,
+<<<<<<< HEAD
     onFailure,
     clientResponseFormat,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   });
 }

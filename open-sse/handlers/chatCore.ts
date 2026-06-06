@@ -1,7 +1,11 @@
+<<<<<<< HEAD
 import { CORS_HEADERS } from "../utils/cors.ts";
 =======
 import { getCorsOrigin } from "../utils/cors.ts";
 >>>>>>> Stashed changes
+=======
+import { getCorsOrigin } from "../utils/cors.ts";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { detectFormatFromEndpoint, getTargetFormat } from "../services/provider.ts";
 import { translateRequest, needsTranslation } from "../translator/index.ts";
 import { FORMATS } from "../translator/formats.ts";
@@ -9,14 +13,19 @@ import {
   createSSETransformStreamWithLogger,
   createPassthroughStreamWithLogger,
   COLORS,
+<<<<<<< HEAD
   withBodyTimeout,
 } from "../utils/stream.ts";
 import { ensureStreamReadiness } from "../utils/streamReadiness.ts";
+=======
+} from "../utils/stream.ts";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { createStreamController, pipeWithDisconnect } from "../utils/streamHandler.ts";
 import { addBufferToUsage, filterUsageForFormat, estimateUsage } from "../utils/usageTracking.ts";
 import { refreshWithRetry } from "../services/tokenRefresh.ts";
 import { createRequestLogger } from "../utils/requestLogger.ts";
 import { getModelTargetFormat, PROVIDER_ID_TO_ALIAS } from "../config/providerModels.ts";
+<<<<<<< HEAD
 import {
   getStripTypesForProviderModel,
   stripIncompatibleMessageContent,
@@ -24,18 +33,28 @@ import {
 import { resolveModelAlias } from "../services/modelDeprecation.ts";
 import { getUnsupportedParams } from "../config/providerRegistry.ts";
 import { supportsMaxTokens } from "@/lib/modelCapabilities.ts";
+=======
+import { resolveModelAlias } from "../services/modelDeprecation.ts";
+import { getUnsupportedParams } from "../config/providerRegistry.ts";
+import { hasPerModelQuota, lockModelIfPerModelQuota } from "../services/accountFallback.ts";
+import { COOLDOWN_MS } from "../config/constants.ts";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import {
   buildErrorBody,
   createErrorResult,
   parseUpstreamError,
   formatProviderError,
 } from "../utils/error.ts";
+<<<<<<< HEAD
 import {
   COOLDOWN_MS,
   HTTP_STATUS,
   PROVIDER_MAX_TOKENS,
   STREAM_IDLE_TIMEOUT_MS,
 } from "../config/constants.ts";
+=======
+import { HTTP_STATUS, PROVIDER_MAX_TOKENS } from "../config/constants.ts";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import {
   classifyProviderError,
   PROVIDER_ERROR_TYPES,
@@ -43,14 +62,21 @@ import {
 } from "../services/errorClassifier.ts";
 import { updateProviderConnection } from "@/lib/db/providers";
 import { isDetailedLoggingEnabled } from "@/lib/db/detailedLogs";
+<<<<<<< HEAD
 import { getCallLogPipelineCaptureStreamChunks } from "@/lib/logEnv";
 import { logAuditEvent } from "@/lib/compliance";
 import { extractProviderWarnings } from "@/lib/compliance/providerAudit";
+=======
+import { logAuditEvent } from "@/lib/compliance";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { handleBypassRequest } from "../utils/bypassHandler.ts";
 import {
   saveRequestUsage,
   trackPendingRequest,
+<<<<<<< HEAD
   updatePendingRequest,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   appendRequestLog,
   saveCallLog,
 } from "@/lib/usageDb";
@@ -61,12 +87,25 @@ import {
 } from "@/lib/usage/tokenAccounting";
 import { recordCost } from "@/domain/costRules";
 import { calculateCost } from "@/lib/usage/costCalculator";
+<<<<<<< HEAD
 import { buildOmniRouteResponseMetaHeaders } from "@/domain/omnirouteResponseMeta";
+=======
+import { CLAUDE_OAUTH_TOOL_PREFIX } from "../translator/request/openai-to-claude.ts";
+import {
+  getModelNormalizeToolCallId,
+  getModelPreserveOpenAIDeveloperRole,
+  getModelUpstreamExtraHeaders,
+  getUpstreamProxyConfig,
+} from "@/lib/localDb";
+import { getExecutor } from "../executors/index.ts";
+import { getCacheControlSettings } from "@/lib/cacheControlSettings";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import {
   shouldPreserveCacheControl,
   providerSupportsCaching,
 } from "../utils/cacheControlPolicy.ts";
 import { getCacheMetrics } from "@/lib/db/settings.ts";
+<<<<<<< HEAD
 import { getCachedSettings } from "@/lib/db/readCache";
 import { cacheReasoningFromAssistantMessage } from "../services/reasoningCache.ts";
 import { sanitizeOpenAITool } from "../services/toolSchemaSanitizer.ts";
@@ -76,6 +115,14 @@ import {
   getCodexModelScope,
   getCodexDualWindowCooldownMs,
   isCompactResponsesEndpoint,
+=======
+
+import {
+  parseCodexQuotaHeaders,
+  getCodexResetTime,
+  getCodexModelScope,
+  getCodexDualWindowCooldownMs,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 } from "../executors/codex.ts";
 import { invalidateCodexQuotaCache } from "../services/codexQuotaFetcher.ts";
 import { translateNonStreamingResponse } from "./responseTranslator.ts";
@@ -85,6 +132,7 @@ import {
   parseSSEToOpenAIResponse,
   parseSSEToResponsesOutput,
 } from "./sseParser.ts";
+<<<<<<< HEAD
 import { sanitizeOpenAIResponse, sanitizeResponsesApiResponse } from "./responseSanitizer.ts";
 import {
   withRateLimit,
@@ -104,6 +152,19 @@ import {
   setCachedResponse,
   isCacheableForRead,
   isCacheableForWrite,
+=======
+import { sanitizeOpenAIResponse } from "./responseSanitizer.ts";
+import {
+  withRateLimit,
+  updateFromHeaders,
+  initializeRateLimits,
+} from "../services/rateLimitManager.ts";
+import {
+  generateSignature,
+  getCachedResponse,
+  setCachedResponse,
+  isCacheable,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 } from "@/lib/semanticCache";
 import { getIdempotencyKey, checkIdempotency, saveIdempotency } from "@/lib/idempotencyLayer";
 import { createProgressTransform, wantsProgress } from "../utils/progressTracker.ts";
@@ -115,6 +176,7 @@ import {
   getModelFamily,
 } from "../services/modelFamilyFallback.ts";
 import { computeRequestHash, deduplicate, shouldDeduplicate } from "../services/requestDedup.ts";
+<<<<<<< HEAD
 import { compressContext, estimateTokens, getTokenLimit } from "../services/contextManager.ts";
 import {
   getBackgroundTaskReason,
@@ -126,6 +188,8 @@ import {
   getDegradedModel,
   getBackgroundDegradationConfig,
 } from "../services/backgroundTaskDetector.ts";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import {
   getBackgroundTaskReason,
   getDegradedModel,
@@ -136,8 +200,11 @@ import {
   isFallbackDecision,
   EMERGENCY_FALLBACK_CONFIG,
 } from "../services/emergencyFallback.ts";
+<<<<<<< HEAD
 import type { CompressionConfig } from "../services/compression/types.ts";
 import { prepareWebSearchFallbackBody } from "../services/webSearchFallback.ts";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import {
   resolveExplicitStreamAlias,
   resolveStreamFlag,
@@ -155,12 +222,16 @@ import {
 } from "@/lib/memory/settings";
 import { injectSkills } from "@/lib/skills/injection";
 import { handleToolCallExecution } from "@/lib/skills/interception";
+<<<<<<< HEAD
 import { OMNIROUTE_RESPONSE_HEADERS } from "@/shared/constants/headers";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import {
   buildClaudeCodeCompatibleRequest,
   isClaudeCodeCompatibleProvider,
   resolveClaudeCodeCompatibleSessionId,
 } from "../services/claudeCodeCompatible.ts";
+<<<<<<< HEAD
 import { setGeminiThoughtSignatureMode } from "../services/geminiThoughtSignatureStore.ts";
 import { fetchLiveProviderLimits } from "@/lib/usage/providerLimits";
 import { isClaudeExtraUsageBlockEnabled } from "@/lib/providers/claudeExtraUsage";
@@ -224,6 +295,8 @@ function isSmallEnoughForSemanticCache(value: unknown): boolean {
     return false;
   }
 }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 function extractMemoryTextFromResponse(
   response: Record<string, unknown> | null | undefined
@@ -232,7 +305,11 @@ function extractMemoryTextFromResponse(
 
   const openAIText = response?.choices?.[0]?.message?.content;
   if (typeof openAIText === "string") {
+<<<<<<< HEAD
     return capMemoryExtractionText(openAIText.trim());
+=======
+    return openAIText.trim();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   if (Array.isArray(response?.content)) {
@@ -243,16 +320,25 @@ function extractMemoryTextFromResponse(
       .map((part: Record<string, unknown>) => String(part.text).trim())
       .filter(Boolean)
       .join("\n");
+<<<<<<< HEAD
     if (contentText) return capMemoryExtractionText(contentText);
   }
 
   if (typeof response?.output_text === "string") {
     return capMemoryExtractionText(response.output_text.trim());
+=======
+    if (contentText) return contentText;
+  }
+
+  if (typeof response?.output_text === "string") {
+    return response.output_text.trim();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   return "";
 }
 
+<<<<<<< HEAD
 function extractMemoryTextFromRequestBody(
   body: Record<string, unknown> | null | undefined
 ): string {
@@ -377,6 +463,21 @@ function resolveMemoryOwnerId(apiKeyInfo: Record<string, unknown> | null): strin
   }
   return null;
 }
+=======
+export function shouldUseNativeCodexPassthrough({
+  provider,
+  sourceFormat,
+  endpointPath,
+}: {
+  provider?: string | null;
+  sourceFormat?: string | null;
+  endpointPath?: string | null;
+}): boolean {
+  if (provider !== "codex") return false;
+  if (sourceFormat !== FORMATS.OPENAI_RESPONSES) return false;
+  let normalizedEndpoint = String(endpointPath || "");
+  while (normalizedEndpoint.endsWith("/")) normalizedEndpoint = normalizedEndpoint.slice(0, -1);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const segments = normalizedEndpoint.split("/");
   return segments.includes("responses");
 }
@@ -426,6 +527,7 @@ function restoreClaudePassthroughToolNames(
   };
 }
 
+<<<<<<< HEAD
 function mergeResponseToolNameMap(
   baseToolNameMap: Map<string, string> | null,
   transformedBody: Record<string, unknown> | null | undefined
@@ -445,6 +547,8 @@ function mergeResponseToolNameMap(
   return merged;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function materializeDeduplicatedExecutionResult<T extends Record<string, unknown>>(result: T): T {
   const snapshot =
     result && typeof result === "object"
@@ -492,6 +596,7 @@ function getSkillsModelIdForFormat(format: string): string {
   }
 }
 
+<<<<<<< HEAD
 function parseNonStreamingSSEPayload(
   rawBody: string,
   preferredFormat: string,
@@ -546,6 +651,280 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
   return rawBody;
 }
 
+=======
+function getHeaderValueCaseInsensitive(
+  headers: Record<string, unknown> | null | undefined,
+  targetName: string
+) {
+  if (!headers || typeof headers !== "object") return null;
+  const lowered = targetName.toLowerCase();
+  for (const [key, value] of Object.entries(headers)) {
+    if (key.toLowerCase() === lowered && typeof value === "string" && value.trim()) {
+      return value.trim();
+    }
+  }
+  return null;
+}
+
+function buildClaudePromptCacheLogMeta(
+  targetFormat: string,
+  finalBody: Record<string, unknown> | null | undefined,
+  providerHeaders: Record<string, unknown> | null | undefined
+) {
+  if (targetFormat !== FORMATS.CLAUDE || !finalBody || typeof finalBody !== "object") return null;
+
+  const describeCacheControl = (cacheControl: Record<string, unknown> | undefined, extra = {}) => ({
+    type:
+      cacheControl && typeof cacheControl.type === "string" && cacheControl.type.trim()
+        ? cacheControl.type.trim()
+        : "ephemeral",
+    ttl:
+      cacheControl && typeof cacheControl.ttl === "string" && cacheControl.ttl.trim()
+        ? cacheControl.ttl.trim()
+        : null,
+    ...extra,
+  });
+
+  const systemBreakpoints = Array.isArray(finalBody.system)
+    ? finalBody.system.flatMap((block, index) => {
+        if (!block || typeof block !== "object") return [];
+        const cacheControl =
+          block.cache_control && typeof block.cache_control === "object"
+            ? block.cache_control
+            : null;
+        return cacheControl ? [describeCacheControl(cacheControl, { index })] : [];
+      })
+    : [];
+
+  const toolBreakpoints = Array.isArray(finalBody.tools)
+    ? finalBody.tools.flatMap((tool, index) => {
+        if (!tool || typeof tool !== "object") return [];
+        const cacheControl =
+          tool.cache_control && typeof tool.cache_control === "object" ? tool.cache_control : null;
+        const name = typeof tool.name === "string" && tool.name.trim() ? tool.name.trim() : null;
+        return cacheControl ? [describeCacheControl(cacheControl, { index, name })] : [];
+      })
+    : [];
+
+  const messageBreakpoints = Array.isArray(finalBody.messages)
+    ? finalBody.messages.flatMap((message, messageIndex) => {
+        if (!message || typeof message !== "object" || !Array.isArray(message.content)) return [];
+        const role =
+          typeof message.role === "string" && message.role.trim() ? message.role.trim() : "unknown";
+        return message.content.flatMap((block, contentIndex) => {
+          if (!block || typeof block !== "object") return [];
+          const cacheControl =
+            block.cache_control && typeof block.cache_control === "object"
+              ? block.cache_control
+              : null;
+          if (!cacheControl) return [];
+          return [
+            describeCacheControl(cacheControl, {
+              messageIndex,
+              contentIndex,
+              role,
+              blockType:
+                typeof block.type === "string" && block.type.trim() ? block.type.trim() : "unknown",
+            }),
+          ];
+        });
+      })
+    : [];
+
+  const totalBreakpoints =
+    systemBreakpoints.length + toolBreakpoints.length + messageBreakpoints.length;
+  const anthropicBeta = getHeaderValueCaseInsensitive(providerHeaders, "Anthropic-Beta");
+
+  if (totalBreakpoints === 0 && !anthropicBeta) return null;
+
+  return {
+    applied: totalBreakpoints > 0,
+    totalBreakpoints,
+    anthropicBeta,
+    systemBreakpoints,
+    toolBreakpoints,
+    messageBreakpoints,
+  };
+}
+
+function toPositiveNumber(value: unknown) {
+  return typeof value === "number" && Number.isFinite(value) && value > 0 ? value : 0;
+}
+
+function buildCacheUsageLogMeta(usage: Record<string, unknown> | null | undefined) {
+  if (!usage || typeof usage !== "object") return null;
+  const promptTokenDetails =
+    usage.prompt_tokens_details && typeof usage.prompt_tokens_details === "object"
+      ? (usage.prompt_tokens_details as Record<string, unknown>)
+      : undefined;
+  const hasCacheFields =
+    "cache_read_input_tokens" in usage ||
+    "cached_tokens" in usage ||
+    "cache_creation_input_tokens" in usage ||
+    (!!promptTokenDetails &&
+      ("cached_tokens" in promptTokenDetails || "cache_creation_tokens" in promptTokenDetails));
+  const cacheReadTokens = toPositiveNumber(
+    usage.cache_read_input_tokens ?? usage.cached_tokens ?? promptTokenDetails?.cached_tokens
+  );
+  const cacheCreationTokens = toPositiveNumber(
+    usage.cache_creation_input_tokens ?? promptTokenDetails?.cache_creation_tokens
+  );
+  if (!hasCacheFields) return null;
+  return {
+    cacheReadTokens,
+    cacheCreationTokens,
+  };
+}
+
+function attachLogMeta(
+  payload: Record<string, unknown> | null | undefined,
+  meta: Record<string, unknown> | null | undefined
+) {
+  if (!meta || typeof meta !== "object") return payload;
+  const compactMeta = Object.fromEntries(
+    Object.entries(meta).filter(([, value]) => value !== null && value !== undefined)
+  );
+  if (Object.keys(compactMeta).length === 0) return payload;
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+    return { _omniroute: compactMeta, _payload: payload ?? null };
+  }
+  const existing =
+    payload._omniroute &&
+    typeof payload._omniroute === "object" &&
+    !Array.isArray(payload._omniroute)
+      ? payload._omniroute
+      : {};
+  return {
+    ...payload,
+    _omniroute: {
+      ...existing,
+      ...compactMeta,
+    },
+  };
+}
+
+/**
+ * Core chat handler - shared between SSE and Worker
+ * Returns { success, response, status, error } for caller to handle fallback
+ * @param {object} options
+ * @param {object} options.body - Request body
+ * @param {object} options.modelInfo - { provider, model }
+ * @param {object} options.credentials - Provider credentials
+ * @param {object} options.log - Logger instance (optional)
+ * @param {function} options.onCredentialsRefreshed - Callback when credentials are refreshed
+ * @param {function} options.onRequestSuccess - Callback when request succeeds (to clear error status)
+ * @param {function} options.onDisconnect - Callback when client disconnects
+ * @param {string} options.connectionId - Connection ID for usage tracking
+ * @param {object} options.apiKeyInfo - API key metadata for usage attribution
+ * @param {string} options.userAgent - Client user agent for caching decisions
+ * @param {string} options.comboName - Combo name if this is a combo request
+ * @param {string} options.comboStrategy - Combo routing strategy (e.g., 'priority', 'cost-optimized')
+ * @param {boolean} options.isCombo - Whether this request is from a combo
+ * @param {string} options.connectionId - Connection ID for settings lookup
+ */
+
+/**
+ * Module-level cache for upstream proxy config (shared across all requests).
+ * 10s TTL prevents per-request DB lookups while staying fresh enough for setting changes.
+ */
+const _proxyConfigCache = new Map<string, { mode: string; enabled: boolean; ts: number }>();
+const PROXY_CONFIG_CACHE_TTL = 10_000;
+
+export function clearUpstreamProxyConfigCache(providerId?: string) {
+  if (providerId) {
+    _proxyConfigCache.delete(providerId);
+    return;
+  }
+  _proxyConfigCache.clear();
+}
+
+async function getUpstreamProxyConfigCached(providerId: string) {
+  const cached = _proxyConfigCache.get(providerId);
+  if (cached && Date.now() - cached.ts < PROXY_CONFIG_CACHE_TTL) return cached;
+  const cfg = await getUpstreamProxyConfig(providerId).catch(() => null);
+  const result = cfg
+    ? { mode: cfg.mode, enabled: cfg.enabled, ts: Date.now() }
+    : { mode: "native" as const, enabled: false, ts: Date.now() };
+  _proxyConfigCache.set(providerId, result);
+  return result;
+}
+
+export async function handleChatCore({
+  body,
+  modelInfo,
+  credentials,
+  log,
+  onCredentialsRefreshed,
+  onRequestSuccess,
+  onDisconnect,
+  clientRawRequest,
+  connectionId,
+  apiKeyInfo = null,
+  userAgent,
+  comboName,
+  comboStrategy = null,
+  isCombo = false,
+  disableEmergencyFallback = false,
+}) {
+  let { provider, model, extendedContext } = modelInfo;
+  const requestedModel =
+    typeof body?.model === "string" && body.model.trim().length > 0 ? body.model : model;
+  const startTime = Date.now();
+  const persistFailureUsage = (statusCode: number, errorCode?: string | null) => {
+    saveRequestUsage({
+      provider: provider || "unknown",
+      model: model || "unknown",
+      tokens: { input: 0, output: 0, cacheRead: 0, cacheCreation: 0, reasoning: 0 },
+      status: String(statusCode),
+      success: false,
+      latencyMs: Date.now() - startTime,
+      timeToFirstTokenMs: 0,
+      errorCode: errorCode || String(statusCode),
+      timestamp: new Date().toISOString(),
+      connectionId: connectionId || undefined,
+      apiKeyId: apiKeyInfo?.id || undefined,
+      apiKeyName: apiKeyInfo?.name || undefined,
+    }).catch(() => {});
+  };
+
+  const persistCodexQuotaState = async (
+    headers: Headers | Record<string, string> | null,
+    status = 0
+  ) => {
+    if (provider !== "codex" || !connectionId || !headers) return;
+
+    try {
+      const quota = parseCodexQuotaHeaders(headers as Headers);
+      if (!quota) return;
+
+      const existingProviderData =
+        credentials?.providerSpecificData && typeof credentials.providerSpecificData === "object"
+          ? credentials.providerSpecificData
+          : {};
+      const scope = getCodexModelScope(model || requestedModel || "");
+      const quotaState = {
+        usage5h: quota.usage5h,
+        limit5h: quota.limit5h,
+        resetAt5h: quota.resetAt5h,
+        usage7d: quota.usage7d,
+        limit7d: quota.limit7d,
+        resetAt7d: quota.resetAt7d,
+        scope,
+        updatedAt: new Date().toISOString(),
+      };
+
+      const nextProviderData: Record<string, unknown> = {
+        ...existingProviderData,
+        codexQuotaState: quotaState,
+      };
+
+      // T03/T09: on 429, persist exact reset time per scope to avoid global over-blocking.
+      // Item 3: Use dual-window cooldown to distinguish 5h vs 7d exhaustion.
+      if (status === 429) {
+        const { cooldownMs, window: exhaustedWindow } = getCodexDualWindowCooldownMs(quota);
+        if (cooldownMs > 0) {
+          const scopeUntil = new Date(Date.now() + cooldownMs).toISOString();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           const scopeMapRaw =
             existingProviderData &&
             typeof existingProviderData === "object" &&
@@ -569,6 +948,124 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
         // isModelAvailable check fetches fresh quota data.
         if (connectionId) {
           invalidateCodexQuotaCache(connectionId);
+<<<<<<< HEAD
+=======
+        }
+      }
+
+      await updateProviderConnection(connectionId, {
+        providerSpecificData: nextProviderData,
+      });
+
+      credentials.providerSpecificData = nextProviderData;
+    } catch (err) {
+      const errMessage = err instanceof Error ? err.message : String(err);
+      log?.debug?.("CODEX", `Failed to persist codex quota state: ${errMessage}`);
+    }
+  };
+
+  // ── Phase 9.2: Idempotency check ──
+  const idempotencyKey = getIdempotencyKey(clientRawRequest?.headers);
+  const cachedIdemp = checkIdempotency(idempotencyKey);
+  if (cachedIdemp) {
+    log?.debug?.("IDEMPOTENCY", `Hit for key=${idempotencyKey?.slice(0, 12)}...`);
+    return {
+      success: true,
+      response: new Response(JSON.stringify(cachedIdemp.response), {
+        status: cachedIdemp.status,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": getCorsOrigin(),
+          "X-OmniRoute-Idempotent": "true",
+        },
+      }),
+    };
+  }
+
+  // Initialize rate limit settings from persisted DB (once, lazy)
+  await initializeRateLimits();
+
+  // T07: Inject connectionId into credentials so executors can rotate API keys
+  // using providerSpecificData.extraApiKeys (API Key Round-Robin feature)
+  if (connectionId && credentials && !credentials.connectionId) {
+    credentials.connectionId = connectionId;
+  }
+
+  const endpointPath = String(clientRawRequest?.endpoint || "");
+  const sourceFormat = detectFormatFromEndpoint(body, endpointPath);
+  const isResponsesEndpoint =
+    /\/responses(?=\/|$)/i.test(endpointPath) || /^responses(?=\/|$)/i.test(endpointPath);
+  const nativeCodexPassthrough = shouldUseNativeCodexPassthrough({
+    provider,
+    sourceFormat,
+    endpointPath,
+  });
+  const isDroidCLI =
+    userAgent?.toLowerCase().includes("droid") || userAgent?.toLowerCase().includes("codex-cli");
+  const clientResponseFormat =
+    sourceFormat === FORMATS.OPENAI_RESPONSES && !isResponsesEndpoint && !isDroidCLI
+      ? FORMATS.OPENAI
+      : sourceFormat;
+
+  // Check for bypass patterns (warmup, skip) - return fake response
+  const bypassResponse = handleBypassRequest(body, model, userAgent);
+  if (bypassResponse) {
+    return bypassResponse;
+  }
+
+  // Detect source format and get target format
+  // Model-specific targetFormat takes priority over provider default
+
+  // ── Background Task Redirection (T41) ──
+  const bgConfig = getBackgroundDegradationConfig();
+  const backgroundReason = bgConfig.enabled
+    ? getBackgroundTaskReason(body, clientRawRequest?.headers)
+    : null;
+  if (backgroundReason) {
+    const degradedModel = getDegradedModel(model);
+    if (degradedModel !== model) {
+      const originalModel = model;
+      log?.info?.(
+        "BACKGROUND",
+        `Background task redirect (${backgroundReason}): ${originalModel} → ${degradedModel}`
+      );
+      model = degradedModel;
+      if (body && typeof body === "object") {
+        body.model = model;
+      }
+
+      logAuditEvent({
+        action: "routing.background_task_redirect",
+        actor: apiKeyInfo?.name || "system",
+        target: connectionId || provider || "chat",
+        details: {
+          original_model: originalModel,
+          redirected_to: degradedModel,
+          reason: backgroundReason,
+        },
+      });
+    }
+  }
+
+  // Apply custom model aliases (Settings → Model Aliases → Pattern→Target) before routing (#315, #472)
+  // Custom aliases take priority over built-in and must be resolved here so the
+  // downstream getModelTargetFormat() lookup AND the actual provider request use
+  // the correct, aliased model ID. Without this, aliases only affect format detection.
+  const resolvedModel = resolveModelAlias(model);
+  // Use resolvedModel for all downstream operations (routing, provider requests, logging)
+  const effectiveModel = resolvedModel !== model ? resolvedModel : model;
+  if (resolvedModel !== model) {
+    log?.info?.("ALIAS", `Model alias applied: ${model} → ${resolvedModel}`);
+  }
+
+  const alias = PROVIDER_ID_TO_ALIAS[provider] || provider;
+  const modelTargetFormat = getModelTargetFormat(alias, resolvedModel);
+  const targetFormat =
+    modelTargetFormat || getTargetFormat(provider, credentials?.providerSpecificData);
+  const noLogEnabled = apiKeyInfo?.noLog === true;
+  const detailedLoggingEnabled = !noLogEnabled && (await isDetailedLoggingEnabled());
+  const skillRequestId = generateRequestId();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const persistAttemptLogs = ({
     status,
     tokens,
@@ -579,12 +1076,30 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
     clientResponse,
     claudeCacheMeta,
     claudeCacheUsageMeta,
+<<<<<<< HEAD
     cacheSource,
+=======
+  }: {
+    status: number;
+    tokens?: unknown;
+    responseBody?: unknown;
+    error?: string | null;
+    providerRequest?: unknown;
+    providerResponse?: unknown;
+    clientResponse?: unknown;
+    claudeCacheMeta?: Record<string, unknown>;
+    claudeCacheUsageMeta?: Record<string, unknown>;
+  }) => {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const callLogId = generateRequestId();
     const pipelinePayloads = detailedLoggingEnabled ? reqLogger?.getPipelinePayloads?.() : null;
 
     if (pipelinePayloads) {
+<<<<<<< HEAD
       if (providerResponse !== undefined && !pipelinePayloads.providerResponse) {
+=======
+      if (providerResponse !== undefined) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         pipelinePayloads.providerResponse = providerResponse as Record<string, unknown>;
       }
       if (clientResponse !== undefined) {
@@ -611,6 +1126,7 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
       connectionId,
       duration: Date.now() - startTime,
       tokens: tokens || {},
+<<<<<<< HEAD
       requestBody: cloneBoundedChatLogPayload(
         attachLogMeta((body as Record<string, unknown>) ?? undefined, {
           claudePromptCache: claudeCacheMeta,
@@ -628,14 +1144,72 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
           claudePromptCacheUsage: claudeCacheUsageMeta,
         })
       ),
+=======
+      requestBody: attachLogMeta((body as Record<string, unknown>) ?? undefined, {
+        claudePromptCache: claudeCacheMeta,
+      }),
+      responseBody: attachLogMeta((responseBody as Record<string, unknown>) ?? undefined, {
+        claudePromptCache: claudeCacheMeta
+          ? {
+              applied: claudeCacheMeta.applied,
+              totalBreakpoints: claudeCacheMeta.totalBreakpoints,
+              anthropicBeta: claudeCacheMeta.anthropicBeta,
+            }
+          : null,
+        claudePromptCacheUsage: claudeCacheUsageMeta,
+      }),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       error: error || null,
       sourceFormat,
       targetFormat,
       comboName,
+<<<<<<< HEAD
       comboStepId,
       comboExecutionKey,
       tokensCompressed,
       cacheSource: cacheSource === "semantic" ? "semantic" : "upstream",
+=======
+      apiKeyId: apiKeyInfo?.id || null,
+      apiKeyName: apiKeyInfo?.name || null,
+      noLog: noLogEnabled,
+      pipelinePayloads,
+    }).catch(() => {});
+  };
+
+  // Primary path: merge client model id + alias target so config on either key applies; resolved
+  // id wins on same header name. T5 family fallback uses only (nextModel, resolveModelAlias(next))
+  // so A-model headers are not sent to B — see buildUpstreamHeadersForExecute.
+  const connectionCustomUserAgent =
+    credentials?.providerSpecificData &&
+    typeof credentials.providerSpecificData === "object" &&
+    typeof credentials.providerSpecificData.customUserAgent === "string"
+      ? credentials.providerSpecificData.customUserAgent.trim()
+      : "";
+
+  const buildUpstreamHeadersForExecute = (modelToCall: string): Record<string, string> => {
+    const upstreamHeaders =
+      modelToCall === effectiveModel
+        ? {
+            ...getModelUpstreamExtraHeaders(provider || "", model || "", sourceFormat),
+            ...getModelUpstreamExtraHeaders(provider || "", resolvedModel || "", sourceFormat),
+          }
+        : (() => {
+            const r = resolveModelAlias(modelToCall);
+            return {
+              ...getModelUpstreamExtraHeaders(provider || "", modelToCall || "", sourceFormat),
+              ...getModelUpstreamExtraHeaders(provider || "", r || "", sourceFormat),
+            };
+          })();
+
+    if (connectionCustomUserAgent) {
+      upstreamHeaders["User-Agent"] = connectionCustomUserAgent;
+      if ("user-agent" in upstreamHeaders) {
+        upstreamHeaders["user-agent"] = connectionCustomUserAgent;
+      }
+    }
+
+    return upstreamHeaders;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 
   // Default to false unless client explicitly sets stream: true (OpenAI spec compliant)
@@ -643,10 +1217,13 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
     clientRawRequest?.headers && typeof clientRawRequest.headers.get === "function"
       ? clientRawRequest.headers.get("accept") || clientRawRequest.headers.get("Accept")
       : (clientRawRequest?.headers || {})["accept"] || (clientRawRequest?.headers || {})["Accept"];
+<<<<<<< HEAD
 =======
 
   const stream = resolveStreamFlag(body?.stream, acceptHeader);
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const explicitStreamAlias = resolveExplicitStreamAlias(body);
 
@@ -664,6 +1241,7 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
     delete b.streaming;
   }
 
+<<<<<<< HEAD
   // Codex /responses/compact is JSON-only: Codex CLI does not send stream=false,
   // so route shape must override the usual Accept/header fallback.
   const stream =
@@ -679,6 +1257,31 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
     enabled: detailedLoggingEnabled,
     captureStreamChunks: capturePipelineStreamChunks,
   });
+=======
+  const stream = resolveStreamFlag(body?.stream, acceptHeader);
+
+  // ── Phase 9.1: Semantic cache check (non-streaming, temp=0 only) ──
+  if (isCacheable(body, clientRawRequest?.headers)) {
+    const signature = generateSignature(model, body.messages, body.temperature, body.top_p);
+    const cached = getCachedResponse(signature);
+    if (cached) {
+      log?.debug?.("CACHE", `Semantic cache HIT for ${model}`);
+      return {
+        success: true,
+        response: new Response(JSON.stringify(cached), {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": getCorsOrigin(),
+            "X-OmniRoute-Cache": "HIT",
+          },
+        }),
+      };
+    }
+  }
+
+  // Create request logger for this session: sourceFormat_targetFormat_model
+  const reqLogger = await createRequestLogger(sourceFormat, targetFormat, model);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // 0. Log client raw request (before format conversion)
   if (clientRawRequest) {
@@ -691,6 +1294,7 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
 
   log?.debug?.("FORMAT", `${sourceFormat} → ${targetFormat} | stream=${stream}`);
 
+<<<<<<< HEAD
   // ── Phase 9.1: Semantic cache check (temp=0, any streaming mode) ──
   // Streaming responses are cached after assembly; cache hits return JSON regardless of stream flag.
   if (semanticCacheEnabled && isCacheableForRead(body, clientRawRequest?.headers)) {
@@ -758,6 +1362,11 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
       }
     }
   } else if (body.max_output_tokens !== undefined) {
+=======
+  // ── Common input sanitization (runs for ALL paths including passthrough) ──
+  // #994: Normalize max_output_tokens to max_tokens for universal compatibility
+  if (body.max_output_tokens !== undefined) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (body.max_tokens === undefined) {
       body.max_tokens = body.max_output_tokens;
     }
@@ -795,6 +1404,31 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
       if (toolType && toolType !== "function" && !tool.function && tool.name === undefined) {
         return true;
       }
+<<<<<<< HEAD
+=======
+      const fn = tool.function as Record<string, unknown> | undefined;
+      const name = fn?.name ?? tool.name;
+      return name && String(name).trim().length > 0;
+    });
+  }
+
+  const memorySettings = apiKeyInfo?.id
+    ? await getMemorySettings().catch(() => DEFAULT_MEMORY_SETTINGS)
+    : null;
+
+  if (
+    apiKeyInfo?.id &&
+    memorySettings &&
+    shouldInjectMemory(body as Parameters<typeof shouldInjectMemory>[0], {
+      enabled: memorySettings.enabled && memorySettings.maxTokens > 0,
+    })
+  ) {
+    try {
+      const memories = await retrieveMemories(
+        apiKeyInfo.id,
+        toMemoryRetrievalConfig(memorySettings)
+      );
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       if (memories.length > 0) {
         const injected = injectMemory(
           body as Parameters<typeof injectMemory>[0],
@@ -802,7 +1436,11 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
           provider
         );
         body = injected as typeof body;
+<<<<<<< HEAD
         log?.debug?.("MEMORY", `Injected ${memories.length} memories for key=${memoryOwnerId}`);
+=======
+        log?.debug?.("MEMORY", `Injected ${memories.length} memories for key=${apiKeyInfo.id}`);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     } catch (memErr) {
       log?.debug?.(
@@ -812,11 +1450,16 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
     }
   }
 
+<<<<<<< HEAD
   if (memoryOwnerId && memorySettings?.skillsEnabled) {
+=======
+  if (apiKeyInfo?.id && memorySettings?.skillsEnabled) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const existingTools = Array.isArray(body.tools) ? body.tools : [];
     const mergedTools = injectSkills({
       provider: getSkillsProviderForFormat(sourceFormat),
       existingTools,
+<<<<<<< HEAD
       apiKeyId: memoryOwnerId,
       model: typeof effectiveModel === "string" ? effectiveModel : undefined,
       sourceFormat,
@@ -827,6 +1470,9 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
         : Array.isArray(body.input)
           ? body.input
           : undefined,
+=======
+      apiKeyId: apiKeyInfo.id,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     });
 
     if (mergedTools.length > existingTools.length) {
@@ -838,6 +1484,7 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
     }
   }
 
+<<<<<<< HEAD
   trace("post_injection", { provider, model });
 
   // Translate request (pass reqLogger for intermediate logging)
@@ -1341,11 +1988,15 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
     );
   }
 
+=======
+  // Translate request (pass reqLogger for intermediate logging)
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let translatedBody = body;
   const isClaudePassthrough = sourceFormat === FORMATS.CLAUDE && targetFormat === FORMATS.CLAUDE;
   const isClaudeCodeCompatible = isClaudeCodeCompatibleProvider(provider);
   const upstreamStream = stream || isClaudeCodeCompatible;
   let ccSessionId: string | null = null;
+<<<<<<< HEAD
   const stripTypes = getStripTypesForProviderModel(provider || "", model || "");
 
   if (Array.isArray(translatedBody?.messages) && stripTypes.length > 0) {
@@ -1361,6 +2012,8 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
       );
     }
   }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Determine if we should preserve client-side cache_control headers
   // Fetch settings from DB to get user preference
@@ -1381,6 +2034,7 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
     );
   }
 
+<<<<<<< HEAD
   type ClaudeContentBlock = Record<string, unknown>;
   type ClaudeMessage = {
     role?: unknown;
@@ -1495,6 +2149,8 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
     }
   };
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     if (nativeCodexPassthrough) {
       translatedBody = { ...body, _nativeCodexPassthrough: true };
@@ -1541,6 +2197,7 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
         preserveCacheControl,
       });
       log?.debug?.("FORMAT", "claude-code-compatible bridge enabled");
+<<<<<<< HEAD
     } else if (isClaudePassthrough) {
       // Pure passthrough: forward the body as-is without OpenAI round-trip.
       // The Claude→OpenAI→Claude double translation was lossy and corrupted
@@ -1567,6 +2224,54 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
           delete translatedBody.output_config;
         }
       }
+=======
+    } else if (isClaudePassthrough && preserveCacheControl) {
+      // Pure passthrough: when preserveCacheControl is true, forward the body
+      // as-is without prior normalization. The OpenAI round-trip would strip
+      // cache_control markers; even prepareClaudeRequest can alter structure.
+      // Claude Code sends well-formed Messages API payloads — trust it.
+      translatedBody = { ...body };
+      translatedBody._disableToolPrefix = true;
+
+      log?.debug?.("FORMAT", "claude passthrough with cache_control preservation");
+    } else if (isClaudePassthrough) {
+      // Claude OAuth expects the same Claude Code prompt + structural normalization
+      // as the OpenAI-compatible chat path. Round-trip through OpenAI to reuse the
+      // working Claude translator instead of forwarding raw Messages payloads.
+      const normalizeToolCallId = getModelNormalizeToolCallId(
+        provider || "",
+        model || "",
+        sourceFormat
+      );
+      const preserveDeveloperRole = getModelPreserveOpenAIDeveloperRole(
+        provider || "",
+        model || "",
+        sourceFormat
+      );
+      translatedBody = translateRequest(
+        FORMATS.CLAUDE,
+        FORMATS.OPENAI,
+        model,
+        { ...body },
+        stream,
+        credentials,
+        provider,
+        reqLogger,
+        { normalizeToolCallId, preserveDeveloperRole, preserveCacheControl }
+      );
+      translatedBody = translateRequest(
+        FORMATS.OPENAI,
+        FORMATS.CLAUDE,
+        model,
+        { ...translatedBody, _disableToolPrefix: true },
+        stream,
+        credentials,
+        provider,
+        reqLogger,
+        { normalizeToolCallId, preserveDeveloperRole, preserveCacheControl }
+      );
+      log?.debug?.("FORMAT", "claude->openai->claude normalized passthrough");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     } else {
       translatedBody = { ...body };
 
@@ -1577,6 +2282,7 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
       // "proxy_Bash", which Claude rejects ("No such tool available: proxy_Bash").
       if (targetFormat === FORMATS.CLAUDE) {
         translatedBody._disableToolPrefix = true;
+<<<<<<< HEAD
         normalizeClaudeUpstreamMessages(translatedBody);
       }
 
@@ -1611,6 +2317,90 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
             "TOOLS",
             `Dropped ${dropped} unconvertible tool(s) for openai-compatible provider`
           );
+=======
+      }
+
+      // Strip empty text content blocks from messages.
+      // Anthropic API rejects {"type":"text","text":""} with 400 "text content blocks must be non-empty".
+      // Some clients (LiteLLM passthrough, @ai-sdk/anthropic) may forward these empty blocks as-is.
+      if (Array.isArray(translatedBody.messages)) {
+        for (const msg of translatedBody.messages) {
+          if (Array.isArray(msg.content)) {
+            msg.content = msg.content.filter(
+              (block: Record<string, unknown>) =>
+                block.type !== "text" || (typeof block.text === "string" && block.text.length > 0)
+            );
+          }
+        }
+      }
+
+      // ── #409: Normalize unsupported content part types ──
+      // Cursor and other clients send {type:"file"} when attaching .md or other files.
+      // Providers (Copilot, OpenAI) only accept "text" and "image_url" in content arrays.
+      // Convert: file → text (extract content), drop unrecognized types with a warning.
+      if (Array.isArray(translatedBody.messages)) {
+        for (const msg of translatedBody.messages) {
+          if (msg.role === "user" && Array.isArray(msg.content)) {
+            msg.content = (msg.content as Record<string, unknown>[]).flatMap(
+              (block: Record<string, unknown>) => {
+                if (
+                  block.type === "text" ||
+                  block.type === "image_url" ||
+                  block.type === "image" ||
+                  block.type === "file_url" ||
+                  block.type === "file" ||
+                  block.type === "document"
+                ) {
+                  // Only extract text if it's explicitly a text-only representation without data
+                  const fileData = (block.file_url ?? block.file ?? block.document) as
+                    | Record<string, unknown>
+                    | undefined;
+                  if (
+                    (block.type === "file" || block.type === "document") &&
+                    !fileData?.url &&
+                    !fileData?.data
+                  ) {
+                    const fileContent =
+                      (block.file as Record<string, unknown>)?.content ??
+                      (block.file as Record<string, unknown>)?.text ??
+                      block.content ??
+                      block.text;
+                    const fileName =
+                      (block.file as Record<string, unknown>)?.name ?? block.name ?? "attachment";
+                    if (typeof fileContent === "string" && fileContent.length > 0) {
+                      return [{ type: "text", text: `[${fileName}]\n${fileContent}` }];
+                    }
+                  }
+                  return [block];
+                }
+                // (#527) tool_result → convert to text instead of dropping.
+                // When Claude Code + superpowers routes through Codex, it sends tool_result
+                // blocks in user messages. Silently dropping them causes Codex to loop
+                // because it never receives the tool response and keeps re-requesting it.
+                if (block.type === "tool_result") {
+                  const toolId = block.tool_use_id ?? block.id ?? "unknown";
+                  const resultContent = block.content ?? block.text ?? block.output ?? "";
+                  const resultText =
+                    typeof resultContent === "string"
+                      ? resultContent
+                      : Array.isArray(resultContent)
+                        ? resultContent
+                            .filter((c: Record<string, unknown>) => c.type === "text")
+                            .map((c: Record<string, unknown>) => c.text)
+                            .join("\n")
+                        : JSON.stringify(resultContent);
+                  if (resultText.length > 0) {
+                    return [{ type: "text", text: `[Tool Result: ${toolId}]\n${resultText}` }];
+                  }
+                  return [];
+                }
+                // Unknown types: drop silently
+                log?.debug?.("CONTENT", `Dropped unsupported content part type="${block.type}"`);
+                return [];
+              }
+            );
+          }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         }
       }
 
@@ -1664,6 +2454,10 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
             status: statusCode,
             headers: {
               "Content-Type": "application/json",
+<<<<<<< HEAD
+=======
+              "Access-Control-Allow-Origin": getCorsOrigin(),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             },
           }
         ),
@@ -1673,8 +2467,11 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
     return createErrorResult(statusCode, message);
   }
 
+<<<<<<< HEAD
   trace("post_translation");
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Extract toolNameMap for response translation (Claude OAuth)
   const translatedToolNameMap = translatedBody._toolNameMap;
   const nativeClaudeToolNameMap = isClaudePassthrough
@@ -1688,6 +2485,7 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
   delete translatedBody._disableToolPrefix;
 
   // Update model in body — use resolved alias so the provider gets the correct model ID (#472)
+<<<<<<< HEAD
   // Strip provider/alias prefix if it exactly matches the routing prefix so upstream receives the raw model name (#1261)
   let finalModelToUpstream = effectiveModel;
   if (finalModelToUpstream.startsWith(`${provider}/`)) {
@@ -1718,6 +2516,9 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
       }
     }
   }
+=======
+  translatedBody.model = effectiveModel;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Strip unsupported parameters for reasoning models (o1, o3, etc.)
   const unsupported = getUnsupportedParams(provider, model);
@@ -1734,6 +2535,7 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
     }
   }
 
+<<<<<<< HEAD
   // Rename max_tokens to max_completion_tokens if not supported (#1961)
   if (!supportsMaxTokens({ provider, model })) {
     if (translatedBody.max_tokens !== undefined) {
@@ -1750,6 +2552,88 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
     delete translatedBody.store;
   }
 
+=======
+  // Provider-specific max_tokens caps (#711)
+  // Some providers reject requests when max_tokens exceeds their API limit.
+  // Cap before sending to avoid upstream HTTP 400 errors.
+  const providerCap = PROVIDER_MAX_TOKENS[provider];
+  if (providerCap) {
+    for (const field of ["max_tokens", "max_completion_tokens"] as const) {
+      if (typeof translatedBody[field] === "number" && translatedBody[field] > providerCap) {
+        log?.debug?.(
+          "PARAMS",
+          `Capping ${field} from ${translatedBody[field]} to ${providerCap} for ${provider}`
+        );
+        translatedBody[field] = providerCap;
+      }
+    }
+  }
+
+  // Resolve executor with optional upstream proxy (CLIProxyAPI) routing.
+  // mode="native" (default): returns the native executor unchanged.
+  // mode="cliproxyapi": returns the CLIProxyAPI executor instead.
+  // mode="fallback": returns a wrapper that tries native first, falls back to CLIProxyAPI on 5xx/network errors.
+
+  const resolveExecutorWithProxy = async (prov: string) => {
+    const cfg = await getUpstreamProxyConfigCached(prov);
+    if (!cfg.enabled || cfg.mode === "native") return getExecutor(prov);
+
+    if (cfg.mode === "cliproxyapi") {
+      log?.info?.("UPSTREAM_PROXY", `${prov} routed through CLIProxyAPI (passthrough)`);
+      return getExecutor("cliproxyapi");
+    }
+
+    // mode === "fallback": try native first, retry via CLIProxyAPI on specific failures
+    const nativeExec = getExecutor(prov);
+    const proxyExec = getExecutor("cliproxyapi");
+    const isRetryableStatus = (s: number) => s >= 500 || s === 429 || s === 0;
+
+    const wrapper = Object.create(nativeExec);
+    wrapper.execute = async (input: {
+      model: string;
+      body: unknown;
+      stream: boolean;
+      credentials: unknown;
+      signal?: AbortSignal | null;
+      log?: unknown;
+      upstreamExtraHeaders?: Record<string, string> | null;
+    }) => {
+      let result;
+      try {
+        result = await nativeExec.execute(input);
+      } catch (err) {
+        const errMsg = err instanceof Error ? err.message : String(err);
+        log?.info?.("UPSTREAM_PROXY", `${prov} native error (${errMsg}), retrying via CLIProxyAPI`);
+        try {
+          return await proxyExec.execute(input);
+        } catch (proxyErr) {
+          const proxyMsg = proxyErr instanceof Error ? proxyErr.message : String(proxyErr);
+          log?.error?.("UPSTREAM_PROXY", `${prov} CLIProxyAPI fallback also failed: ${proxyMsg}`);
+          throw proxyErr;
+        }
+      }
+
+      if (!isRetryableStatus(result.response.status)) {
+        return result;
+      }
+      log?.info?.(
+        "UPSTREAM_PROXY",
+        `${prov} native failed (${result.response.status}), retrying via CLIProxyAPI`
+      );
+      try {
+        return await proxyExec.execute(input);
+      } catch (proxyErr) {
+        const proxyMsg = proxyErr instanceof Error ? proxyErr.message : String(proxyErr);
+        log?.error?.("UPSTREAM_PROXY", `${prov} CLIProxyAPI fallback also failed: ${proxyMsg}`);
+        throw proxyErr;
+      }
+    };
+    return wrapper;
+  };
+
+  // Get executor for this provider (with optional upstream proxy routing)
+  const executor = await resolveExecutorWithProxy(provider);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const getExecutionCredentials = () => {
     const nextCredentials = nativeCodexPassthrough
       ? { ...credentials, requestEndpointPath: endpointPath }
@@ -1767,6 +2651,7 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
   };
 
   // Create stream controller for disconnect detection
+<<<<<<< HEAD
   const streamController = createStreamController({
     onDisconnect,
     log,
@@ -1774,6 +2659,9 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
     model,
     connectionId,
   });
+=======
+  const streamController = createStreamController({ onDisconnect, log, provider, model });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const dedupRequestBody = { ...translatedBody, model: `${provider}/${model}`, stream };
   const dedupEnabled = shouldDeduplicate(dedupRequestBody);
@@ -1781,6 +2669,7 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
 
   const executeProviderRequest = async (modelToCall = effectiveModel, allowDedup = false) => {
     const execute = async () => {
+<<<<<<< HEAD
       const executionCredentials = getExecutionCredentials();
       const accountSemaphoreMaxConcurrency =
         resolveAccountSemaphoreMaxConcurrency(executionCredentials);
@@ -1823,6 +2712,12 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
         bodyToSend = { ...bodyToSend, user: "omniroute-qwen-oauth" };
         log?.debug?.("QWEN", "Injected fallback user for OAuth request");
       }
+=======
+      let bodyToSend =
+        translatedBody.model === modelToCall
+          ? translatedBody
+          : { ...translatedBody, model: modelToCall };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
       // Inject prompt_cache_key only for providers that support it
       if (
@@ -1839,6 +2734,7 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
         }
       }
 
+<<<<<<< HEAD
       trace("pre_semaphore", {
         semaphoreKey: accountSemaphoreKey,
         max: accountSemaphoreMaxConcurrency,
@@ -2035,6 +2931,60 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
         acquireAccountSemaphoreRelease();
         throw error;
       }
+=======
+      const rawResult = await withRateLimit(provider, connectionId, modelToCall, async () => {
+        let attempts = 0;
+        const maxAttempts = provider === "qwen" ? 3 : 1;
+
+        while (attempts < maxAttempts) {
+          const res = await executor.execute({
+            model: modelToCall,
+            body: bodyToSend,
+            stream: upstreamStream,
+            credentials: getExecutionCredentials(),
+            signal: streamController.signal,
+            log,
+            extendedContext,
+            upstreamExtraHeaders: buildUpstreamHeadersForExecute(modelToCall),
+          });
+
+          // Qwen 429 strict quota backoff (wait 1.5s, 3s and retry)
+          if (provider === "qwen" && res.response.status === 429 && attempts < maxAttempts - 1) {
+            const bodyPeek = await res.response
+              .clone()
+              .text()
+              .catch(() => "");
+            if (bodyPeek.toLowerCase().includes("exceeded your current quota")) {
+              const delay = 1500 * (attempts + 1);
+              log?.warn?.("QWEN_RETRY", `Quota 429 hit. Retrying in ${delay}ms...`);
+              await new Promise((r) => setTimeout(r, delay));
+              attempts++;
+              continue;
+            }
+          }
+          return res;
+        }
+      });
+
+      if (stream) return rawResult;
+
+      // Non-stream responses need cloning for shared dedup consumers.
+      const status = rawResult.response.status;
+      const statusText = rawResult.response.statusText;
+      const headers = Array.from(rawResult.response.headers.entries()) as [string, string][];
+      const payload = await rawResult.response.text();
+
+      return {
+        ...rawResult,
+        response: new Response(payload, { status, statusText, headers }),
+        _dedupSnapshot: {
+          status,
+          statusText,
+          headers,
+          payload,
+        },
+      };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     };
 
     if (allowDedup && dedupEnabled && dedupHash) {
@@ -2049,10 +2999,14 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
   };
 
   // Track pending request
+<<<<<<< HEAD
   trackPendingRequest(model, provider, connectionId, true, {
     clientEndpoint: clientRawRequest?.endpoint || "/v1/chat/completions",
     clientRequest: clientRawRequest?.body ?? body,
   });
+=======
+  trackPendingRequest(model, provider, connectionId, true);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // T5: track which models we've tried for intra-family fallback
   const triedModels = new Set<string>([effectiveModel]);
@@ -2065,8 +3019,11 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
     translatedBody.messages?.length ||
     translatedBody.contents?.length ||
     translatedBody.request?.contents?.length ||
+<<<<<<< HEAD
     (translatedBody.conversationState?.history?.length ?? 0) +
       (translatedBody.conversationState?.currentMessage ? 1 : 0) ||
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     0;
   log?.debug?.("REQUEST", `${provider.toUpperCase()} | ${model} | ${msgCount} msgs`);
 
@@ -2092,10 +3049,13 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
 
     // Log target request (final request to provider)
     reqLogger.logTargetRequest(providerUrl, providerHeaders, finalBody);
+<<<<<<< HEAD
     updatePendingRequest(model, provider, connectionId, {
       providerRequest: finalBody,
       providerUrl,
     });
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     // Update rate limiter from response headers (learn limits dynamically)
     updateFromHeaders(
@@ -2107,6 +3067,7 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
     );
   } catch (error) {
     trackPendingRequest(model, provider, connectionId, false);
+<<<<<<< HEAD
     if (isSemaphoreTimeoutError(error)) {
       appendRequestLog({
         model,
@@ -2133,6 +3094,12 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
       error.name === "AbortError"
         ? 499
         : error.name === "TimeoutError" || error.name === "BodyTimeoutError"
+=======
+    const failureStatus =
+      error.name === "AbortError"
+        ? 499
+        : error.name === "TimeoutError"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           ? HTTP_STATUS.GATEWAY_TIMEOUT
           : HTTP_STATUS.BAD_GATEWAY;
     const failureMessage =
@@ -2151,7 +3118,36 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
       providerRequest: finalBody || translatedBody,
       clientResponse: buildErrorBody(failureStatus, failureMessage),
       claudeCacheMeta: claudePromptCacheLogMeta,
+<<<<<<< HEAD
       cacheSource: "upstream",
+=======
+    });
+    if (error.name === "AbortError") {
+      streamController.handleError(error);
+      return createErrorResult(499, "Request aborted");
+    }
+    persistFailureUsage(
+      failureStatus,
+      error instanceof Error && error.name ? error.name : "upstream_error"
+    );
+    console.log(`${COLORS.red}[ERROR] ${failureMessage}${COLORS.reset}`);
+    return createErrorResult(failureStatus, failureMessage);
+  }
+  // We need to peek at the error text if it's 400 for Qwen
+  let upstreamErrorParsed = false;
+  let parsedStatusCode = providerResponse.status;
+  let parsedMessage = "";
+  let parsedRetryAfterMs: number | null = null;
+  let upstreamErrorBody: unknown = null;
+
+  if (provider === "qwen" && providerResponse.status === HTTP_STATUS.BAD_REQUEST) {
+    const errorDetails = await parseUpstreamError(providerResponse, provider);
+    parsedStatusCode = errorDetails.statusCode;
+    parsedMessage = errorDetails.message;
+    parsedRetryAfterMs = errorDetails.retryAfterMs;
+    upstreamErrorBody = errorDetails.responseBody;
+    upstreamErrorParsed = true;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   const isQwenExpiredError =
@@ -2172,8 +3168,12 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
     const newCredentials = (await refreshWithRetry(
       () => executor.refreshCredentials(credentials, log),
       3,
+<<<<<<< HEAD
       log,
       provider // Explicitly pass the provider to avoid universally tripping the "unknown" circuit breaker
+=======
+      log
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     )) as null | {
       accessToken?: string;
       copilotToken?: string;
@@ -2203,8 +3203,56 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
           log,
           extendedContext,
           upstreamExtraHeaders: buildUpstreamHeadersForExecute(retryModelId),
+<<<<<<< HEAD
           clientHeaders: buildExecutorClientHeaders(clientRawRequest?.headers, userAgent),
           onCredentialsRefreshed,
+=======
+        });
+
+        if (retryResult.response.ok) {
+          providerResponse = retryResult.response;
+          providerUrl = retryResult.url;
+          providerHeaders = retryResult.headers;
+          finalBody = retryResult.transformedBody;
+          reqLogger.logTargetRequest(providerUrl, providerHeaders, finalBody);
+          upstreamErrorParsed = false; // Reset since new response is OK
+        } else {
+          providerResponse = retryResult.response;
+          upstreamErrorParsed = false; // Let it be parsed downstream
+        }
+      } catch {
+        log?.warn?.("TOKEN", `${provider.toUpperCase()} | retry after refresh failed`);
+      }
+    } else {
+      log?.warn?.("TOKEN", `${provider.toUpperCase()} | refresh failed`);
+    }
+  }
+
+  await persistCodexQuotaState(providerResponse.headers, providerResponse.status);
+
+  // Check provider response - return error info for fallback handling
+  if (!providerResponse.ok) {
+    trackPendingRequest(model, provider, connectionId, false);
+
+    let statusCode = providerResponse.status;
+    let message = "";
+    let retryAfterMs: number | null = null;
+
+    if (upstreamErrorParsed) {
+      statusCode = parsedStatusCode;
+      message = parsedMessage;
+      retryAfterMs = parsedRetryAfterMs;
+    } else {
+      const details = await parseUpstreamError(providerResponse, provider);
+      statusCode = details.statusCode;
+      message = details.message;
+      retryAfterMs = details.retryAfterMs;
+      upstreamErrorBody = details.responseBody;
+    }
+
+    // T06/T10/T36: classify provider errors and persist terminal account states.
+    const errorType = classifyProviderError(statusCode, message);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (connectionId && errorType) {
       try {
         if (errorType === PROVIDER_ERROR_TYPES.FORBIDDEN) {
@@ -2229,6 +3277,7 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
           console.warn(
             `[provider] Node ${connectionId} account deactivated (${statusCode}) — disabling permanently`
           );
+<<<<<<< HEAD
         } else if (errorType === PROVIDER_ERROR_TYPES.QUOTA_EXHAUSTED) {
           // Providers with per-model quotas — lock the model only, not the connection
           const quotaCooldownMs = retryAfterMs || COOLDOWN_MS.rateLimit;
@@ -2241,17 +3290,60 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
           if (accountSemaphoreKey) {
             markAccountSemaphoreBlocked(accountSemaphoreKey, quotaCooldownMs);
           }
+=======
+        } else if (errorType === PROVIDER_ERROR_TYPES.RATE_LIMITED) {
+          // For providers with per-model quotas (passthrough providers, Gemini),
+          // each model has independent quota. A 429 on one model must NOT lock out
+          // the entire connection — other models may still have quota available.
+          if (
+            lockModelIfPerModelQuota(
+              provider,
+              connectionId,
+              model,
+              "rate_limited",
+              retryAfterMs || COOLDOWN_MS.rateLimit
+            )
+          ) {
+            console.warn(
+              `[provider] Node ${connectionId} model-only rate limited (${statusCode}) for ${model} - ${Math.ceil((retryAfterMs || COOLDOWN_MS.rateLimit) / 1000)}s (connection stays active)`
+            );
+          } else {
+            const rateLimitedUntil = new Date(Date.now() + retryAfterMs).toISOString();
+            await updateProviderConnection(connectionId, {
+              rateLimitedUntil: rateLimitedUntil,
+              testStatus: "credits_exhausted",
+              lastErrorType: errorType,
+              lastError: message,
+              errorCode: statusCode,
+              healthCheckInterval: null,
+              lastHealthCheckAt: null,
+            });
+            console.warn(
+              `[provider] Node ${connectionId} rate limited (${statusCode}) - Next available at ${rateLimitedUntil}`
+            );
+          }
+        } else if (errorType === PROVIDER_ERROR_TYPES.QUOTA_EXHAUSTED) {
+          // Providers with per-model quotas — lock the model only, not the connection
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           if (
             lockModelIfPerModelQuota(
               provider,
               connectionId,
               model,
               "quota_exhausted",
+<<<<<<< HEAD
               quotaCooldownMs
             )
           ) {
             console.warn(
               `[provider] Node ${connectionId} model-only quota exhausted (${statusCode}) for ${model} - ${Math.ceil(quotaCooldownMs / 1000)}s (connection stays active)`
+=======
+              retryAfterMs || COOLDOWN_MS.rateLimit
+            )
+          ) {
+            console.warn(
+              `[provider] Node ${connectionId} model-only quota exhausted (${statusCode}) for ${model} - ${Math.ceil((retryAfterMs || COOLDOWN_MS.rateLimit) / 1000)}s (connection stays active)`
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             );
           } else {
             await updateProviderConnection(connectionId, {
@@ -2290,6 +3382,111 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
           console.warn(
             `[provider] Node ${connectionId} OAuth token invalid (${statusCode}) — token refresh available`
           );
+<<<<<<< HEAD
+=======
+        } else if (errorType === PROVIDER_ERROR_TYPES.PROJECT_ROUTE_ERROR) {
+          // Cloud Code 403 with stale project: not a ban, keep account active.
+          await updateProviderConnection(connectionId, {
+            lastErrorType: errorType,
+            lastError: message,
+            errorCode: statusCode,
+          });
+          console.warn(
+            `[provider] Node ${connectionId} project routing error (${statusCode}) — not banning`
+          );
+        }
+      } catch {
+        // Best-effort state update; request flow should continue with fallback handling.
+      }
+    }
+
+    appendRequestLog({ model, provider, connectionId, status: `FAILED ${statusCode}` }).catch(
+      () => {}
+    );
+
+    const errMsg = formatProviderError(new Error(message), provider, model, statusCode);
+    console.log(`${COLORS.red}[ERROR] ${errMsg}${COLORS.reset}`);
+
+    // Log Antigravity retry time if available
+    if (retryAfterMs && provider === "antigravity") {
+      const retrySeconds = Math.ceil(retryAfterMs / 1000);
+      log?.debug?.("RETRY", `Antigravity quota reset in ${retrySeconds}s (${retryAfterMs}ms)`);
+    }
+
+    // Log error with full request body for debugging
+    reqLogger.logError(new Error(message), finalBody || translatedBody);
+    reqLogger.logProviderResponse(
+      providerResponse.status,
+      providerResponse.statusText,
+      providerResponse.headers,
+      upstreamErrorBody
+    );
+
+    // Update rate limiter from error response headers
+    updateFromHeaders(provider, connectionId, providerResponse.headers, statusCode, model);
+
+    // ── T5: Intra-family model fallback ──────────────────────────────────────
+    // Before returning a model-unavailable error upstream, try sibling models
+    // from the same family. This keeps the request alive on the same account
+    // instead of failing the entire combo.
+    if (isModelUnavailableError(statusCode, message)) {
+      const nextModel = getNextFamilyFallback(currentModel, triedModels);
+      if (nextModel) {
+        triedModels.add(nextModel);
+        currentModel = nextModel;
+        translatedBody.model = nextModel;
+        log?.info?.("MODEL_FALLBACK", `${model} unavailable (${statusCode}) → trying ${nextModel}`);
+        // Re-execute with the fallback model
+        try {
+          const fallbackResult = await executeProviderRequest(nextModel, false);
+          if (fallbackResult.response.ok) {
+            providerResponse = fallbackResult.response;
+            providerUrl = fallbackResult.url;
+            providerHeaders = fallbackResult.headers;
+            finalBody = fallbackResult.transformedBody;
+            reqLogger.logTargetRequest(providerUrl, providerHeaders, finalBody);
+            // Continue processing with the fallback response — skip error return
+            log?.info?.("MODEL_FALLBACK", `Serving ${nextModel} as fallback for ${model}`);
+            // Jump to streaming/non-streaming handling below
+            // We fall through by NOT returning here
+          } else {
+            // Fallback also failed — return original error
+            persistAttemptLogs({
+              status: statusCode,
+              error: errMsg,
+              providerRequest: finalBody || translatedBody,
+              providerResponse: upstreamErrorBody,
+              clientResponse: buildErrorBody(statusCode, errMsg),
+            });
+            persistFailureUsage(statusCode, "model_unavailable");
+            return createErrorResult(statusCode, errMsg, retryAfterMs);
+          }
+        } catch {
+          persistAttemptLogs({
+            status: statusCode,
+            error: errMsg,
+            providerRequest: finalBody || translatedBody,
+            providerResponse: upstreamErrorBody,
+            clientResponse: buildErrorBody(statusCode, errMsg),
+          });
+          persistFailureUsage(statusCode, "model_unavailable");
+          return createErrorResult(statusCode, errMsg, retryAfterMs);
+        }
+      } else {
+        persistAttemptLogs({
+          status: statusCode,
+          error: errMsg,
+          providerRequest: finalBody || translatedBody,
+          providerResponse: upstreamErrorBody,
+          clientResponse: buildErrorBody(statusCode, errMsg),
+        });
+        persistFailureUsage(statusCode, "model_unavailable");
+        return createErrorResult(statusCode, errMsg, retryAfterMs);
+      }
+    } else if (isContextOverflowError(statusCode, message)) {
+      const familyCandidates = getModelFamily(currentModel).filter(
+        (m) => m !== currentModel && !triedModels.has(m)
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       );
       const nextModel =
         findLargerContextModel(currentModel, familyCandidates) ??
@@ -2318,7 +3515,10 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
               providerRequest: finalBody || translatedBody,
               providerResponse: upstreamErrorBody,
               clientResponse: buildErrorBody(statusCode, errMsg),
+<<<<<<< HEAD
               cacheSource: "upstream",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             });
             persistFailureUsage(statusCode, "context_overflow");
             return createErrorResult(statusCode, errMsg, retryAfterMs);
@@ -2330,7 +3530,10 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
             providerRequest: finalBody || translatedBody,
             providerResponse: upstreamErrorBody,
             clientResponse: buildErrorBody(statusCode, errMsg),
+<<<<<<< HEAD
             cacheSource: "upstream",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           });
           persistFailureUsage(statusCode, "context_overflow");
           return createErrorResult(statusCode, errMsg, retryAfterMs);
@@ -2342,7 +3545,10 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
           providerRequest: finalBody || translatedBody,
           providerResponse: upstreamErrorBody,
           clientResponse: buildErrorBody(statusCode, errMsg),
+<<<<<<< HEAD
           cacheSource: "upstream",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         });
         persistFailureUsage(statusCode, "context_overflow");
         return createErrorResult(statusCode, errMsg, retryAfterMs);
@@ -2354,7 +3560,10 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
         providerRequest: finalBody || translatedBody,
         providerResponse: upstreamErrorBody,
         clientResponse: buildErrorBody(statusCode, errMsg),
+<<<<<<< HEAD
         cacheSource: "upstream",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       });
       persistFailureUsage(statusCode, `upstream_${statusCode}`);
 
@@ -2439,6 +3648,7 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
     trackPendingRequest(model, provider, connectionId, false);
     const contentType = (providerResponse.headers.get("content-type") || "").toLowerCase();
     let responseBody;
+<<<<<<< HEAD
     let responsePayloadFormat = targetFormat;
     const rawBody = await withBodyTimeout<string>(providerResponse.text());
     const normalizedProviderPayload = normalizePayloadForLog(rawBody);
@@ -2456,6 +3666,21 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
       );
       // Upstream returned SSE even though stream=false; convert best-effort to JSON.
       const parsedFromSSE = parseNonStreamingSSEPayload(streamPayload, targetFormat, model);
+=======
+    const rawBody = await providerResponse.text();
+    const normalizedProviderPayload = normalizePayloadForLog(rawBody);
+    const looksLikeSSE =
+      contentType.includes("text/event-stream") || /(^|\n)\s*(event|data):/m.test(rawBody);
+
+    if (looksLikeSSE) {
+      // Upstream returned SSE even though stream=false; convert best-effort to JSON.
+      const parsedFromSSE =
+        targetFormat === FORMATS.OPENAI_RESPONSES
+          ? parseSSEToResponsesOutput(rawBody, model)
+          : targetFormat === FORMATS.CLAUDE
+            ? parseSSEToClaudeResponse(rawBody, model)
+            : parseSSEToOpenAIResponse(rawBody, model);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
       if (!parsedFromSSE) {
         appendRequestLog({
@@ -2471,7 +3696,33 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
           providerRequest: finalBody || translatedBody,
           providerResponse: normalizedProviderPayload,
           clientResponse: buildErrorBody(HTTP_STATUS.BAD_GATEWAY, invalidSseMessage),
+<<<<<<< HEAD
           cacheSource: "upstream",
+=======
+        });
+        persistFailureUsage(HTTP_STATUS.BAD_GATEWAY, "invalid_sse_payload");
+        return createErrorResult(HTTP_STATUS.BAD_GATEWAY, invalidSseMessage);
+      }
+
+      responseBody = parsedFromSSE;
+    } else {
+      try {
+        responseBody = rawBody ? JSON.parse(rawBody) : {};
+      } catch {
+        appendRequestLog({
+          model,
+          provider,
+          connectionId,
+          status: `FAILED ${HTTP_STATUS.BAD_GATEWAY}`,
+        }).catch(() => {});
+        const invalidJsonMessage = "Invalid JSON response from provider";
+        persistAttemptLogs({
+          status: HTTP_STATUS.BAD_GATEWAY,
+          error: invalidJsonMessage,
+          providerRequest: finalBody || translatedBody,
+          providerResponse: normalizedProviderPayload,
+          clientResponse: buildErrorBody(HTTP_STATUS.BAD_GATEWAY, invalidJsonMessage),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         });
         persistFailureUsage(HTTP_STATUS.BAD_GATEWAY, "invalid_json_payload");
         return createErrorResult(HTTP_STATUS.BAD_GATEWAY, invalidJsonMessage);
@@ -2493,7 +3744,10 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
         providerRequest: finalBody || translatedBody,
         providerResponse: normalizedProviderPayload,
         clientResponse: buildErrorBody(HTTP_STATUS.BAD_GATEWAY, emptyContentMessage),
+<<<<<<< HEAD
         cacheSource: "upstream",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       });
       persistFailureUsage(HTTP_STATUS.BAD_GATEWAY, "empty_content");
 
@@ -2510,7 +3764,11 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
         try {
           const fallbackResult = await executeProviderRequest(nextModel, false);
           if (fallbackResult.response.ok) {
+<<<<<<< HEAD
             const fallbackRaw = await withBodyTimeout<string>(fallbackResult.response.text());
+=======
+            const fallbackRaw = await fallbackResult.response.text();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             try {
               responseBody = fallbackRaw ? JSON.parse(fallbackRaw) : {};
               providerUrl = fallbackResult.url;
@@ -2536,6 +3794,7 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
       }
     }
 
+<<<<<<< HEAD
     const responseToolNameMap = mergeResponseToolNameMap(
       toolNameMap,
       (finalBody as Record<string, unknown> | null | undefined) ?? null
@@ -2543,6 +3802,10 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
 
     if (sourceFormat === FORMATS.CLAUDE && targetFormat === FORMATS.CLAUDE) {
       responseBody = restoreClaudePassthroughToolNames(responseBody, responseToolNameMap);
+=======
+    if (sourceFormat === FORMATS.CLAUDE && targetFormat === FORMATS.CLAUDE) {
+      responseBody = restoreClaudePassthroughToolNames(responseBody, toolNameMap);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
     reqLogger.logProviderResponse(
       providerResponse.status,
@@ -2561,6 +3824,7 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
     if (onRequestSuccess) {
       await onRequestSuccess();
     }
+<<<<<<< HEAD
     await maybeSyncClaudeExtraUsageState({
       provider,
       connectionId,
@@ -2573,6 +3837,11 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
     if (usage && typeof usage === "object") {
       attachCompressionUsageReceiptAfterAnalytics(usage as Record<string, unknown>, "provider");
     }
+=======
+
+    // Log usage for non-streaming responses
+    const usage = extractUsageFromResponse(responseBody, provider);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     appendRequestLog({ model, provider, connectionId, tokens: usage, status: "200 OK" }).catch(
       () => {}
     );
@@ -2583,6 +3852,10 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
       const msg = `[${new Date().toLocaleTimeString("en-US", { hour12: false, hour: "2-digit", minute: "2-digit" })}] 📊 [USAGE] ${provider.toUpperCase()} | ${formatUsageLog(usage)}${connectionId ? ` | account=${connectionId.slice(0, 8)}...` : ""}`;
       console.log(`${COLORS.green}${msg}${COLORS.reset}`);
 
+<<<<<<< HEAD
+=======
+      // Track cache token metrics
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       const inputTokens = usage.prompt_tokens || 0;
       const cachedTokens = toPositiveNumber(
         usage.cache_read_input_tokens ??
@@ -2624,6 +3897,7 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
       const estimatedCost = await calculateCost(provider, model, usage);
       if (estimatedCost > 0) recordCost(apiKeyInfo.id, estimatedCost);
     }
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 
     // Translate response to client's expected format (usually OpenAI)
@@ -2634,6 +3908,17 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
           responsePayloadFormat,
           clientResponseFormat,
           responseToolNameMap as Map<string, string> | null
+=======
+
+    // Translate response to client's expected format (usually OpenAI)
+    // Pass toolNameMap so Claude OAuth proxy_ prefix is stripped in tool_use blocks (#605)
+    let translatedResponse = needsTranslation(targetFormat, clientResponseFormat)
+      ? translateNonStreamingResponse(
+          responseBody,
+          targetFormat,
+          clientResponseFormat,
+          toolNameMap as Map<string, string> | null
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         )
       : responseBody;
     const memoryExtractionResponse = translatedResponse;
@@ -2660,6 +3945,7 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
       }
     }
 
+<<<<<<< HEAD
     // Reasoning Replay Cache (#1628): Capture reasoning_content from non-streaming responses
     // with tool_calls so it can be replayed on subsequent turns (DeepSeek V4, Kimi K2, etc.)
     try {
@@ -2669,13 +3955,22 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
     } catch {
       // Cache capture is non-critical — never block the response
     }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     // Sanitize response for OpenAI SDK compatibility
     // Strips non-standard fields (x_groq, usage_breakdown, service_tier, etc.)
     // Extracts <think> and <thinking> tags into reasoning_content
     // Source format determines output shape. If we are outputting OpenAI shape or pseudo-OpenAI shape, sanitize.
+<<<<<<< HEAD
     if (clientResponseFormat === FORMATS.OPENAI_RESPONSES) {
       translatedResponse = sanitizeResponsesApiResponse(translatedResponse);
     } else if (clientResponseFormat === FORMATS.OPENAI) {
+=======
+    if (
+      clientResponseFormat === FORMATS.OPENAI ||
+      clientResponseFormat === FORMATS.OPENAI_RESPONSES
+    ) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       translatedResponse = sanitizeOpenAIResponse(translatedResponse);
     }
 
@@ -2694,6 +3989,7 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
       }
     }
 
+<<<<<<< HEAD
     if (memoryOwnerId && memorySettings?.enabled && memorySettings.maxTokens > 0) {
       const requestMemoryText = extractMemoryTextFromRequestBody(body as Record<string, unknown>);
       if (requestMemoryText) {
@@ -2710,21 +4006,46 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
       Boolean(memoryOwnerId) && memorySettings?.skillsEnabled === true;
     const builtinToolNames = webSearchFallbackPlan.toolName ? [webSearchFallbackPlan.toolName] : [];
     if (customSkillExecutionEnabled || builtinToolNames.length > 0) {
+=======
+    const pipelineSessionId =
+      (clientRawRequest?.headers && typeof clientRawRequest.headers.get === "function"
+        ? clientRawRequest.headers.get("x-omniroute-session-id")
+        : getHeaderValueCaseInsensitive(
+            clientRawRequest?.headers ?? null,
+            "x-omniroute-session-id"
+          )) || skillRequestId;
+
+    if (apiKeyInfo?.id && memorySettings?.enabled && memorySettings.maxTokens > 0) {
+      const memoryText = extractMemoryTextFromResponse(memoryExtractionResponse);
+      if (memoryText) {
+        extractFacts(memoryText, apiKeyInfo.id, pipelineSessionId);
+      }
+    }
+
+    if (apiKeyInfo?.id && memorySettings?.skillsEnabled) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       const skillSessionId = pipelineSessionId;
 
       translatedResponse = await handleToolCallExecution(
         translatedResponse,
         getSkillsModelIdForFormat(sourceFormat),
         {
+<<<<<<< HEAD
           apiKeyId: memoryOwnerId || "local",
           sessionId: skillSessionId,
           requestId: skillRequestId,
           builtinToolNames,
           customSkillExecutionEnabled,
+=======
+          apiKeyId: apiKeyInfo.id,
+          sessionId: skillSessionId,
+          requestId: skillRequestId,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         }
       );
     }
 
+<<<<<<< HEAD
     const guardrailContext = {
       apiKeyInfo,
       disabledGuardrails: resolveDisabledGuardrails({
@@ -2796,6 +4117,11 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
         body.temperature,
         body.top_p
       );
+=======
+    // ── Phase 9.1: Cache store (non-streaming, temp=0) ──
+    if (isCacheable(body, clientRawRequest?.headers)) {
+      const signature = generateSignature(model, body.messages, body.temperature, body.top_p);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       const tokensSaved = usage?.prompt_tokens + usage?.completion_tokens || 0;
       setCachedResponse(signature, model, translatedResponse, tokensSaved);
       log?.debug?.("CACHE", `Stored response for ${model} (${tokensSaved} tokens)`);
@@ -2819,17 +4145,22 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
       clientResponse: translatedResponse,
       claudeCacheMeta: claudePromptCacheLogMeta,
       claudeCacheUsageMeta: cacheUsageLogMeta,
+<<<<<<< HEAD
       cacheSource: "upstream",
     });
     if (apiKeyInfo?.id && estimatedCost > 0) {
       recordCost(apiKeyInfo.id, estimatedCost);
     }
+=======
+    });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     return {
       success: true,
       response: new Response(JSON.stringify(translatedResponse), {
         headers: {
           "Content-Type": "application/json",
+<<<<<<< HEAD
           [OMNIROUTE_RESPONSE_HEADERS.cache]: "MISS",
           ...buildOmniRouteResponseMetaHeaders({
             provider,
@@ -2839,12 +4170,17 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
             usage: responseUsage,
             costUsd: estimatedCost,
           }),
+=======
+          "Access-Control-Allow-Origin": getCorsOrigin(),
+          "X-OmniRoute-Cache": "MISS",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         },
       }),
     };
   }
 
   // Streaming response
+<<<<<<< HEAD
   const streamReadiness = await ensureStreamReadiness(providerResponse, {
     timeoutMs: STREAM_IDLE_TIMEOUT_MS,
     provider,
@@ -2887,6 +4223,8 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
     };
   }
   providerResponse = streamReadiness.response;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Notify success - caller can clear error status if needed
   if (onRequestSuccess) {
@@ -2897,6 +4235,7 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
     "Content-Type": "text/event-stream",
     "Cache-Control": "no-cache",
     Connection: "keep-alive",
+<<<<<<< HEAD
     [OMNIROUTE_RESPONSE_HEADERS.cache]: "MISS",
     ...buildOmniRouteResponseMetaHeaders({
       provider,
@@ -2906,14 +4245,20 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
       usage: null,
       costUsd: 0,
     }),
+=======
+    "Access-Control-Allow-Origin": getCorsOrigin(),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 
   // Create transform stream with logger for streaming response
   let transformStream;
+<<<<<<< HEAD
   const responseToolNameMap = mergeResponseToolNameMap(
     toolNameMap,
     (finalBody as Record<string, unknown> | null | undefined) ?? null
   );
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Callback to save call log when stream completes (include responseBody when provided by stream)
   const onStreamComplete = ({
@@ -2926,6 +4271,7 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
   }) => {
     const cacheUsageLogMeta = buildCacheUsageLogMeta(streamUsage);
 
+<<<<<<< HEAD
     if (streamStatus === 200) {
       void maybeSyncClaudeExtraUsageState({
         provider,
@@ -2951,6 +4297,10 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
     // Track cache token metrics for streaming responses
     if (streamUsage && typeof streamUsage === "object") {
       attachCompressionUsageReceiptAfterAnalytics(streamUsage as Record<string, unknown>, "stream");
+=======
+    // Track cache token metrics for streaming responses
+    if (streamUsage && typeof streamUsage === "object") {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       const inputTokens = streamUsage.prompt_tokens || 0;
       const cachedTokens = toPositiveNumber(
         streamUsage.cache_read_input_tokens ??
@@ -2997,9 +4347,12 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
       clientResponse: clientPayload ?? streamResponseBody ?? undefined,
       claudeCacheMeta: claudePromptCacheLogMeta,
       claudeCacheUsageMeta: cacheUsageLogMeta,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
       cacheSource: "upstream",
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     });
 
     if (apiKeyInfo?.id && streamUsage) {
@@ -3009,12 +4362,22 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
         })
         .catch(() => {});
     }
+<<<<<<< HEAD
+=======
+  };
+
+  // For providers using Responses API format, translate stream back to openai (Chat Completions) format
+  // UNLESS client is Droid CLI which expects openai-responses format back
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const needsResponsesTranslation =
     targetFormat === FORMATS.OPENAI_RESPONSES &&
     clientResponseFormat === FORMATS.OPENAI &&
     !isResponsesEndpoint &&
     !isDroidCLI;
+<<<<<<< HEAD
   const streamStateBody = finalBody || body;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   if (needsResponsesTranslation) {
     // Provider returns openai-responses, translate to openai (Chat Completions) that clients expect
@@ -3024,6 +4387,7 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
       "openai",
       provider,
       reqLogger,
+<<<<<<< HEAD
       responseToolNameMap,
       model,
       connectionId,
@@ -3032,6 +4396,14 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
       apiKeyInfo,
       handleStreamFailure,
       copilotCompatibleReasoning
+=======
+      toolNameMap,
+      model,
+      connectionId,
+      body,
+      onStreamComplete,
+      apiKeyInfo
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     );
   } else if (needsTranslation(targetFormat, clientResponseFormat)) {
     // Standard translation for other providers
@@ -3041,6 +4413,7 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
       clientResponseFormat,
       provider,
       reqLogger,
+<<<<<<< HEAD
       responseToolNameMap,
       model,
       connectionId,
@@ -3049,12 +4422,21 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
       apiKeyInfo,
       handleStreamFailure,
       copilotCompatibleReasoning
+=======
+      toolNameMap,
+      model,
+      connectionId,
+      body,
+      onStreamComplete,
+      apiKeyInfo
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     );
   } else {
     log?.debug?.("STREAM", `Standard passthrough mode`);
     transformStream = createPassthroughStreamWithLogger(
       provider,
       reqLogger,
+<<<<<<< HEAD
       model,
       connectionId,
       streamStateBody,
@@ -3062,6 +4444,14 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
       apiKeyInfo,
       handleStreamFailure,
       clientResponseFormat
+=======
+      toolNameMap,
+      model,
+      connectionId,
+      body,
+      onStreamComplete,
+      apiKeyInfo
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     );
   }
 
@@ -3073,7 +4463,11 @@ function normalizeNonStreamingEventPayload(rawBody: string, contentType: string)
     // Chain: provider → transform → progress → client
     const transformedBody = pipeWithDisconnect(providerResponse, transformStream, streamController);
     finalStream = transformedBody.pipeThrough(progressTransform);
+<<<<<<< HEAD
     responseHeaders[OMNIROUTE_RESPONSE_HEADERS.progress] = "enabled";
+=======
+    responseHeaders["X-OmniRoute-Progress"] = "enabled";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   } else {
     finalStream = pipeWithDisconnect(providerResponse, transformStream, streamController);
   }

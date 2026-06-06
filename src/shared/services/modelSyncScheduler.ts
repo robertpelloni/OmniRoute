@@ -48,7 +48,11 @@ export function buildModelSyncInternalHeaders(): Record<string, string> {
   return { [MODEL_SYNC_INTERNAL_AUTH_HEADER]: getInternalAuthToken() };
 }
 
+<<<<<<< HEAD
 export function isModelSyncInternalRequest(request: { headers: Headers }): boolean {
+=======
+export function isModelSyncInternalRequest(request: Request): boolean {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (!internalAuthToken && globalState.__omnirouteModelSyncInternalAuthToken) {
     internalAuthToken = globalState.__omnirouteModelSyncInternalAuthToken;
   }

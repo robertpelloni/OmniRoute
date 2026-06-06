@@ -28,6 +28,7 @@ export interface ProviderNode {
   isActive: boolean;
   priority: number;
 }
+<<<<<<< HEAD
 
 export interface ModelCooldownErrorPayload {
   error: {
@@ -38,3 +39,5 @@ export interface ModelCooldownErrorPayload {
     reset_seconds: number;
   };
 }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

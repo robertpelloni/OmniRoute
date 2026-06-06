@@ -4,18 +4,27 @@ test.describe("API Health Checks", () => {
   test("GET /api/monitoring/health returns OK", async ({ request }) => {
     const res = await request.get("/api/monitoring/health");
     expect(res.ok()).toBeTruthy();
+<<<<<<< HEAD
     const body = (await res.json()) as any;
+=======
+    const body = await res.json();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     expect(body).toHaveProperty("status");
   });
 
   test("GET /api/v1/models returns model list", async ({ request }) => {
     const res = await request.get("/api/v1/models");
     expect(res.ok()).toBeTruthy();
+<<<<<<< HEAD
     const body = (await res.json()) as any;
+=======
+    const body = await res.json();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     expect(body).toHaveProperty("data");
     expect(Array.isArray(body.data)).toBe(true);
   });
 
+<<<<<<< HEAD
   test("GET /api/providers returns provider list or requires auth", async ({ request }) => {
     const res = await request.get("/api/providers");
     // In CI with auth enabled, 401 is acceptable — endpoint is reachable
@@ -26,5 +35,13 @@ test.describe("API Health Checks", () => {
     } else {
       expect([401, 403, 307]).toContain(res.status());
     }
+=======
+  test("GET /api/providers returns provider list", async ({ request }) => {
+    const res = await request.get("/api/providers");
+    expect(res.ok()).toBeTruthy();
+    const body = await res.json();
+    expect(body).toHaveProperty("connections");
+    expect(Array.isArray(body.connections)).toBe(true);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   });
 });

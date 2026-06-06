@@ -80,8 +80,11 @@ class TlsClient {
   async getSession() {
     if (!this.available) return null;
     if (this.session) return this.session;
+<<<<<<< HEAD
     const createSessionFn = createSession;
     if (!createSessionFn) return null;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     const proxy = getProxyFromEnv();
     const sessionOpts: Record<string, unknown> = {
@@ -93,7 +96,11 @@ class TlsClient {
       console.log(`[TlsClient] Using proxy: ${proxy}`);
     }
 
+<<<<<<< HEAD
     this.session = await createSessionFn(sessionOpts);
+=======
+    this.session = await createSession(sessionOpts);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     console.log("[TlsClient] Session created (Chrome 124 TLS fingerprint)");
     return this.session;
   }

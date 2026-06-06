@@ -40,6 +40,7 @@ type RequestLogger = {
   getPipelinePayloads: () => RequestPipelinePayloads | null;
 };
 
+<<<<<<< HEAD
 type RequestLoggerOptions = {
   enabled?: boolean;
   captureStreamChunks?: boolean;
@@ -54,6 +55,8 @@ const MAX_LOG_ARRAY_ITEMS = 24;
 const MAX_LOG_OBJECT_KEYS = 80;
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function maskSensitiveHeaders(headers: HeaderInput): Record<string, unknown> {
   if (!headers) return {};
 
@@ -90,6 +93,7 @@ function createEmptyStreamChunks() {
   };
 }
 
+<<<<<<< HEAD
 function truncateLogString(value: string, maxLength = MAX_LOG_STRING_LENGTH): string {
   if (value.length <= maxLength) return value;
   return `${value.slice(0, Math.floor(maxLength / 2))}\n[...truncated ${value.length - maxLength} chars...]\n${value.slice(-Math.ceil(maxLength / 2))}`;
@@ -164,6 +168,8 @@ function appendBoundedChunk(
 }
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function hasOwnValues(value: unknown): boolean {
   return Boolean(value && typeof value === "object" && Object.keys(value as JsonRecord).length > 0);
 }
@@ -218,6 +224,14 @@ function createNoOpLogger(): RequestLogger {
 export async function createRequestLogger(
   _sourceFormat?: string,
   _targetFormat?: string,
+<<<<<<< HEAD
+=======
+  _model?: string
+): Promise<RequestLogger> {
+  const streamChunks = createEmptyStreamChunks();
+  const payloads: RequestPipelinePayloads = {
+    streamChunks,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 
   return {
@@ -228,12 +242,20 @@ export async function createRequestLogger(
         timestamp: new Date().toISOString(),
         endpoint,
         headers: maskSensitiveHeaders(headers),
+<<<<<<< HEAD
+=======
+        body,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       };
     },
 
     logOpenAIRequest(body) {
       payloads.openaiRequest = {
         timestamp: new Date().toISOString(),
+<<<<<<< HEAD
+=======
+        body,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       };
     },
 
@@ -242,6 +264,10 @@ export async function createRequestLogger(
         timestamp: new Date().toISOString(),
         url,
         headers: maskSensitiveHeaders(headers),
+<<<<<<< HEAD
+=======
+        body,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       };
     },
 
@@ -251,6 +277,47 @@ export async function createRequestLogger(
         status,
         statusText,
         headers: maskSensitiveHeaders(headers),
+<<<<<<< HEAD
+=======
+        body,
+      };
+    },
+
+    appendProviderChunk(chunk) {
+      if (typeof chunk === "string" && chunk.length > 0) {
+        streamChunks.provider.push(chunk);
+      }
+    },
+
+    appendOpenAIChunk(chunk) {
+      if (typeof chunk === "string" && chunk.length > 0) {
+        streamChunks.openai.push(chunk);
+      }
+    },
+
+    logConvertedResponse(body) {
+      payloads.clientResponse = {
+        timestamp: new Date().toISOString(),
+        body,
+      };
+    },
+
+    appendConvertedChunk(chunk) {
+      if (typeof chunk === "string" && chunk.length > 0) {
+        streamChunks.client.push(chunk);
+      }
+    },
+
+    logError(error, requestBody = null) {
+      payloads.error = {
+        timestamp: new Date().toISOString(),
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+        requestBody,
+      };
+    },
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     getPipelinePayloads() {
       return compactPipelinePayloads(payloads);
     },

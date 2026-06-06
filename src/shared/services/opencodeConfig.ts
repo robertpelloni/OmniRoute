@@ -1,11 +1,17 @@
+<<<<<<< HEAD
 import { applyEdits, modify, parse } from "jsonc-parser";
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 type OpenCodeConfigInput = {
   baseUrl?: string;
   apiKey?: string;
   model?: string;
+<<<<<<< HEAD
   models?: string[];
   modelLabels?: Record<string, string>;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 };
 
 const OPENCODE_DEFAULT_MODELS = [
@@ -20,6 +26,7 @@ const normalizeValue = (value: unknown) =>
     .trim()
     .replace(/^\/+/, "");
 
+<<<<<<< HEAD
 const normalizeModels = (models: unknown): string[] => {
   if (!Array.isArray(models)) return [];
   return [...new Set(models.map((model) => normalizeValue(model)).filter(Boolean))];
@@ -38,17 +45,23 @@ const normalizeModelLabels = (labels: unknown): Record<string, string> => {
 const getModelEntryName = (modelId: string, labels: Record<string, string>) =>
   labels[modelId] || modelId;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export const buildOpenCodeProviderConfig = ({
   baseUrl,
   apiKey,
   model,
+<<<<<<< HEAD
   models,
   modelLabels,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }: OpenCodeConfigInput): Record<string, any> => {
   const normalizedBaseUrl = String(baseUrl || "")
     .trim()
     .replace(/\/+$/, "");
   const normalizedModel = normalizeValue(model);
+<<<<<<< HEAD
   const normalizedModels = normalizeModels(models);
   const normalizedLabels = normalizeModelLabels(modelLabels);
 
@@ -56,11 +69,19 @@ export const buildOpenCodeProviderConfig = ({
     normalizedModels.length > 0
       ? normalizedModels
       : [...new Set([normalizedModel, ...OPENCODE_DEFAULT_MODELS].filter(Boolean))];
+=======
+
+  const uniqueModels = [...new Set([normalizedModel, ...OPENCODE_DEFAULT_MODELS].filter(Boolean))];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const modelsRecord: Record<string, { name: string }> = {};
   for (const m of uniqueModels) {
     if (m) {
+<<<<<<< HEAD
       modelsRecord[m] = { name: getModelEntryName(m, normalizedLabels) };
+=======
+      modelsRecord[m] = { name: m };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
   }
 
@@ -75,6 +96,7 @@ export const buildOpenCodeProviderConfig = ({
   };
 };
 
+<<<<<<< HEAD
 export const buildOpenCodeConfigDocument = (input: OpenCodeConfigInput) => ({
   $schema: "https://opencode.ai/config.json",
   provider: {
@@ -82,6 +104,8 @@ export const buildOpenCodeConfigDocument = (input: OpenCodeConfigInput) => ({
   },
 });
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export const mergeOpenCodeConfig = (
   existingConfig: Record<string, any> | null | undefined,
   input: OpenCodeConfigInput
@@ -93,13 +117,17 @@ export const mergeOpenCodeConfig = (
 
   return {
     ...safeConfig,
+<<<<<<< HEAD
     $schema: safeConfig.$schema || "https://opencode.ai/config.json",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     provider: {
       ...((safeConfig as any).provider || {}),
       omniroute: buildOpenCodeProviderConfig(input),
     },
   };
 };
+<<<<<<< HEAD
 
 export const mergeOpenCodeConfigText = (
   existingText: string | null | undefined,
@@ -138,3 +166,5 @@ export const mergeOpenCodeConfigText = (
 
   return applyEdits(nextText, providerEdits);
 };
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

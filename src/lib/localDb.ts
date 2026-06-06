@@ -64,7 +64,10 @@ export {
   getAllSyncedAvailableModels,
   replaceSyncedAvailableModelsForConnection,
   deleteSyncedAvailableModelsForConnection,
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 } from "./db/models";
 
 export type { ModelCompatPerProtocol, ModelCompatPatch, SyncedAvailableModel } from "./db/models";
@@ -80,9 +83,12 @@ export {
   deleteCombo,
 } from "./db/combos";
 
+<<<<<<< HEAD
 export * from "./db/compressionCacheStats";
 export * from "./db/compressionCombos";
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export {
   // API Keys
   getApiKeys,
@@ -98,6 +104,7 @@ export {
 } from "./db/apiKeys";
 
 export {
+<<<<<<< HEAD
   // Evals
   saveEvalRun,
   listEvalRuns,
@@ -119,6 +126,8 @@ export type {
 } from "./db/evals";
 
 export {
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Settings
   getSettings,
   updateSettings,
@@ -130,7 +139,10 @@ export {
 
   // Pricing
   getPricing,
+<<<<<<< HEAD
   getPricingWithSources,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   getPricingForModel,
   updatePricing,
   resetPricing,
@@ -145,6 +157,7 @@ export {
   setProxyConfig,
 } from "./db/settings";
 
+<<<<<<< HEAD
 export type { PricingSource, PricingSourceMap } from "./db/settings";
 
 export {
@@ -155,13 +168,18 @@ export {
 
 export type { UserDatabaseSettings } from "./db/databaseSettings";
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export {
   // Proxy Registry
   listProxies,
   getProxyById,
   createProxy,
   updateProxy,
+<<<<<<< HEAD
   upsertProxy,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   deleteProxyById,
   getProxyAssignments,
   getProxyWhereUsed,
@@ -188,15 +206,22 @@ export {
 export {
   // Backup Management
   backupDbFile,
+<<<<<<< HEAD
   cleanupDbBackups,
   getDbBackupMaxFiles,
   getDbBackupRetentionDays,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   listDbBackups,
   restoreDbBackup,
 } from "./db/backup";
 
 export {
+<<<<<<< HEAD
   // Read Cache (cached wrappers for hot-read paths)
+=======
+  // Read Cache (cached wrappers for hot read paths)
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   getCachedSettings,
   getCachedPricing,
   getCachedProviderConnections,
@@ -239,6 +264,7 @@ export {
   resolveComboForModel,
 } from "./db/modelComboMappings";
 
+<<<<<<< HEAD
 export {
   // Files
   createFile,
@@ -264,6 +290,8 @@ export type { FileRecord } from "./db/files";
 export type { BatchRecord } from "./db/batches";
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export type { ModelComboMapping } from "./db/modelComboMappings";
 
 export {
@@ -287,8 +315,11 @@ export {
   cleanupOldSnapshots,
 } from "./db/quotaSnapshots";
 
+<<<<<<< HEAD
 export * from "./db/sessionAccountAffinity";
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export type { QuotaSnapshotRow, ProviderUtilizationPoint } from "@/shared/types/utilization";
 
 export {
@@ -303,6 +334,7 @@ export {
 } from "./db/versionManager";
 
 export {
+<<<<<<< HEAD
   listSyncTokens,
   getSyncTokenById,
   getSyncTokenByHash,
@@ -312,6 +344,8 @@ export {
 } from "./db/syncTokens";
 
 export {
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   getUpstreamProxyConfigs,
   getUpstreamProxyConfig,
   upsertUpstreamProxyConfig,
@@ -323,11 +357,14 @@ export {
 } from "./db/upstreamProxy";
 
 export {
+<<<<<<< HEAD
 =======
 export type { QuotaSnapshotRow, ProviderUtilizationPoint } from "@/shared/types/utilization";
 
 export {
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   getProviderLimitsCache,
   getAllProviderLimitsCache,
   setProviderLimitsCache,
@@ -336,6 +373,7 @@ export {
 } from "./db/providerLimits";
 
 export type { ProviderLimitsCacheEntry } from "./db/providerLimits";
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 
 export {
@@ -378,3 +416,5 @@ export {
 
 export type { OneproxyProxyRecord, OneproxyStats } from "./db/oneproxy";
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

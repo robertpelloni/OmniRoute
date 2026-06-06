@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import fs from "node:fs/promises";
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 import os from "node:os";
 import path from "node:path";
@@ -10,6 +11,11 @@ import { pathToFileURL } from "node:url";
 import path from "node:path";
 import { spawn } from "node:child_process";
 >>>>>>> Stashed changes
+=======
+import path from "node:path";
+import { spawn } from "node:child_process";
+import { pathToFileURL } from "node:url";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * This repository contains a legacy `app/` snapshot (packaging/runtime artifacts)
@@ -19,6 +25,7 @@ import { spawn } from "node:child_process";
  */
 
 const projectRoot = process.cwd();
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 const backupRoot = path.join(os.tmpdir(), `omniroute-build-isolated-${process.pid}-${Date.now()}`);
 
@@ -50,6 +57,10 @@ export function getTransientBuildPaths(rootDir = projectRoot, env = process.env)
 const legacyAppDir = path.join(projectRoot, "app");
 const backupDir = path.join(projectRoot, `.app-build-backup-${process.pid}-${Date.now()}`);
 >>>>>>> Stashed changes
+=======
+const legacyAppDir = path.join(projectRoot, "app");
+const backupDir = path.join(projectRoot, `.app-build-backup-${process.pid}-${Date.now()}`);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 async function exists(targetPath) {
   try {
@@ -60,11 +71,15 @@ async function exists(targetPath) {
   }
 }
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 export async function movePath(sourcePath, destinationPath, fsImpl = fs) {
   const mkdir = typeof fsImpl.mkdir === "function" ? fsImpl.mkdir.bind(fsImpl) : fs.mkdir.bind(fs);
   await mkdir(path.dirname(destinationPath), { recursive: true });
 
+=======
+export async function movePath(sourcePath, destinationPath, fsImpl = fs) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     await fsImpl.rename(sourcePath, destinationPath);
   } catch (error) {
@@ -88,6 +103,7 @@ export async function movePath(sourcePath, destinationPath, fsImpl = fs) {
 function runNextBuild() {
   return new Promise((resolve) => {
     const nextBin = path.join(projectRoot, "node_modules", "next", "dist", "bin", "next");
+<<<<<<< HEAD
     const child = spawn(process.execPath, [nextBin, "build", resolveNextBuildBundlerFlag()], {
       cwd: projectRoot,
       stdio: "inherit",
@@ -96,11 +112,16 @@ function runNextBuild() {
 function runNextBuild() {
   return new Promise((resolve) => {
     const nextBin = path.join(projectRoot, "node_modules", "next", "dist", "bin", "next");
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const child = spawn(process.execPath, [nextBin, "build"], {
       cwd: projectRoot,
       stdio: "inherit",
       env: process.env,
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     });
 
     const forward = (signal) => {
@@ -122,6 +143,7 @@ function runNextBuild() {
   });
 }
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 export function resolveNextBuildBundlerFlag(baseEnv = process.env) {
   return baseEnv.OMNIROUTE_USE_TURBOPACK === "1" ? "--turbopack" : "--webpack";
@@ -214,6 +236,15 @@ export async function main() {
         "[build-next-isolated] Docs index generation failed (non-fatal):",
         docGenErr?.message
       );
+=======
+export async function main() {
+  let moved = false;
+
+  try {
+    if (await exists(legacyAppDir)) {
+      await movePath(legacyAppDir, backupDir);
+      moved = true;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
 
     const result = await runNextBuild();
@@ -221,6 +252,14 @@ export async function main() {
       console.log("[build-next-isolated] Copying static assets for standalone server...");
       try {
         await fs.cp(
+<<<<<<< HEAD
+=======
+          path.join(projectRoot, "public"),
+          path.join(projectRoot, ".next", "standalone", "public"),
+          { recursive: true }
+        );
+        await fs.cp(
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           path.join(projectRoot, ".next", "static"),
           path.join(projectRoot, ".next", "standalone", ".next", "static"),
           { recursive: true }
@@ -228,6 +267,7 @@ export async function main() {
       } catch (copyErr) {
         console.warn("[build-next-isolated] Non-fatal error copying static assets:", copyErr);
       }
+<<<<<<< HEAD
 
       try {
         await fs.cp(
@@ -270,11 +310,15 @@ async function main() {
 
     const result = await runNextBuild();
 >>>>>>> Stashed changes
+=======
+    }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     process.exitCode = result.code;
   } catch (error) {
     console.error("[build-next-isolated] Build failed:", error);
     process.exitCode = 1;
   } finally {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     while (movedPaths.length > 0) {
       const entry = movedPaths.pop();
@@ -292,11 +336,20 @@ async function main() {
         console.error(
           `[build-next-isolated] Failed to restore legacy app dir from ${backupDir}:`,
 >>>>>>> Stashed changes
+=======
+    if (moved) {
+      try {
+        await movePath(backupDir, legacyAppDir);
+      } catch (restoreError) {
+        console.error(
+          `[build-next-isolated] Failed to restore legacy app dir from ${backupDir}:`,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           restoreError
         );
         process.exitCode = 1;
       }
     }
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 
     try {
@@ -304,6 +357,8 @@ async function main() {
     } catch (cleanupError) {
       console.warn("[build-next-isolated] Failed to clean temporary backup root:", cleanupError);
     }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 }
 
@@ -312,9 +367,12 @@ const entryScript = process.argv[1] ? pathToFileURL(process.argv[1]).href : null
 if (entryScript === import.meta.url) {
   await main();
 }
+<<<<<<< HEAD
 =======
   }
 }
 
 await main();
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

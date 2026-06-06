@@ -23,9 +23,12 @@ describe("MCP Essential Tools", () => {
 
   describe("Tool schema validation", () => {
     it("should have exactly 9 essential tools (includes web_search)", () => {
+<<<<<<< HEAD
 =======
     it("should have exactly 9 essential tools", () => {
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       const schemas = MCP_ESSENTIAL_TOOLS;
       expect(schemas).toHaveLength(9);
     });
@@ -297,6 +300,7 @@ describe("omniroute_web_search handler (via MCP dispatch)", () => {
 
     expect(result.isError).toBe(true);
   });
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 });
 
@@ -452,4 +456,6 @@ describe("omniroute_web_search handler (via MCP dispatch)", () => {
     expect(result.isError).toBe(true);
   });
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 });

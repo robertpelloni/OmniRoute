@@ -1,9 +1,12 @@
 import { getDbInstance } from "../db/core";
 import { Memory, MemoryConfig, MemoryType } from "./types";
 import { MemoryConfigSchema } from "./schemas";
+<<<<<<< HEAD
 import { logger } from "../../../open-sse/utils/logger.ts";
 
 const log = logger("MEMORY_RETRIEVAL");
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 interface MemoryRow {
   id: string;
@@ -27,7 +30,10 @@ interface RetrievalOptions extends Partial<MemoryConfig> {
   query?: string;
   sessionId?: string;
 }
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * Simple token estimation function (roughly 1 token per 4 characters)
@@ -107,16 +113,28 @@ function getRelevanceScore(memory: Memory, query: string): number {
   return score;
 }
 
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Retrieve memories with token budget enforcement
  */
 export async function retrieveMemories(
   apiKeyId: string,
+<<<<<<< HEAD
+=======
+  config: RetrievalOptions = {}
+): Promise<Memory[]> {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Validate and normalize config
   const normalizedConfig = MemoryConfigSchema.parse({
     enabled: true,
     maxTokens: 2000,
+<<<<<<< HEAD
+=======
+    retrievalStrategy: "exact",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     autoSummarize: false,
     persistAcrossModels: false,
     retentionDays: 30,
@@ -124,6 +142,92 @@ export async function retrieveMemories(
     ...config,
   });
 
+<<<<<<< HEAD
+=======
+  if (!normalizedConfig.enabled || normalizedConfig.maxTokens <= 0) {
+    return [];
+  }
+
+  const maxTokens = Math.min(Math.max(normalizedConfig.maxTokens, 1), 8000);
+  const strategy = normalizedConfig.retrievalStrategy;
+
+  const db = getDbInstance();
+  const memories: Array<{ memory: Memory; score: number }> = [];
+  let totalTokens = 0;
+
+  const useModernTable = hasTable("memories");
+  const tableName = useModernTable ? "memories" : "memory";
+  const columns = useModernTable
+    ? {
+        apiKeyId: "api_key_id",
+        sessionId: "session_id",
+        createdAt: "created_at",
+        expiresAt: "expires_at",
+      }
+    : {
+        apiKeyId: "apiKeyId",
+        sessionId: "sessionId",
+        createdAt: "createdAt",
+        expiresAt: "expiresAt",
+      };
+
+  // Build base query
+  let query =
+    `SELECT * FROM ${tableName} WHERE ${columns.apiKeyId} = ? ` +
+    `AND (${columns.expiresAt} IS NULL OR datetime(${columns.expiresAt}) > datetime('now'))`;
+  const params: any[] = [apiKeyId];
+
+  if (normalizedConfig.scope === "session" && config.sessionId) {
+    query += ` AND ${columns.sessionId} = ?`;
+    params.push(config.sessionId);
+  }
+
+  if (normalizedConfig.retentionDays > 0) {
+    const cutoff = new Date(
+      Date.now() - normalizedConfig.retentionDays * 24 * 60 * 60 * 1000
+    ).toISOString();
+    query += ` AND datetime(${columns.createdAt}) >= datetime(?)`;
+    params.push(cutoff);
+  }
+
+  // Add ordering based on strategy
+  switch (strategy) {
+    case "semantic":
+      // For now, semantic search is same as exact (FTS5 not implemented yet)
+      query += ` ORDER BY ${columns.createdAt} DESC`;
+      break;
+    case "hybrid":
+      // Hybrid is same as exact for now
+      query += ` ORDER BY ${columns.createdAt} DESC`;
+      break;
+    case "exact":
+    default:
+      query += ` ORDER BY ${columns.createdAt} DESC`;
+  }
+
+  // Add limit for performance
+  query += " LIMIT 100";
+
+  // Execute query
+  const stmt = db.prepare(query);
+  const rows = stmt.all(...params) as MemoryRow[];
+
+  const rankedRows = rows
+    .map((row) => {
+      const memory = rowToMemory(row);
+      const score = config.query ? getRelevanceScore(memory, config.query) : 0;
+      return { memory, score };
+    })
+    .filter((entry) => !config.query || entry.score > 0)
+    .sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      return b.memory.createdAt.getTime() - a.memory.createdAt.getTime();
+    });
+
+  // Process memories until budget exceeded
+  for (const entry of rankedRows) {
+    const memory = entry.memory;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     // Estimate tokens for this memory
     const memoryTokens = estimateTokens(memory.content);
 
@@ -131,10 +235,22 @@ export async function retrieveMemories(
     if (totalTokens + memoryTokens > maxTokens) {
       // If we haven't added any memories yet, add this one anyway
       if (memories.length === 0) {
+<<<<<<< HEAD
+=======
+        memories.push(entry);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         totalTokens += memoryTokens;
       }
       break;
     }
 
     // Add memory to results
+<<<<<<< HEAD
+=======
+    memories.push(entry);
+    totalTokens += memoryTokens;
+  }
+
+  return memories.map((entry) => entry.memory);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }

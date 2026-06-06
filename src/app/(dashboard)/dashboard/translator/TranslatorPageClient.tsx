@@ -2,12 +2,18 @@
 
 import { useTranslations } from "next-intl";
 
+<<<<<<< HEAD
 import { useCallback, useState } from "react";
 import { Badge, Card, SegmentedControl } from "@/shared/components";
+=======
+import { useState } from "react";
+import { SegmentedControl } from "@/shared/components";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import PlaygroundMode from "./components/PlaygroundMode";
 import ChatTesterMode from "./components/ChatTesterMode";
 import TestBenchMode from "./components/TestBenchMode";
 import LiveMonitorMode from "./components/LiveMonitorMode";
+<<<<<<< HEAD
 import StreamTransformerMode from "./components/StreamTransformerMode";
 
 export default function TranslatorPageClient() {
@@ -69,6 +75,23 @@ export default function TranslatorPageClient() {
       "modeDescriptionLiveMonitor",
       "Watch translation events in real time as requests flow through OmniRoute."
     ),
+=======
+
+export default function TranslatorPageClient() {
+  const t = useTranslations("translator");
+  const [mode, setMode] = useState("playground");
+  const modes = [
+    { value: "playground", label: t("playground"), icon: "code" },
+    { value: "chat-tester", label: t("chatTester"), icon: "chat" },
+    { value: "test-bench", label: t("testBench"), icon: "science" },
+    { value: "live-monitor", label: t("liveMonitor"), icon: "monitoring" },
+  ];
+  const modeDescriptions: Record<string, string> = {
+    playground: t("modeDescriptionPlayground"),
+    "chat-tester": t("modeDescriptionChatTester"),
+    "test-bench": t("modeDescriptionTestBench"),
+    "live-monitor": t("modeDescriptionLiveMonitor"),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 
   return (
@@ -95,6 +118,7 @@ export default function TranslatorPageClient() {
         </div>
       </div>
 
+<<<<<<< HEAD
       <Card className="border-primary/10 bg-primary/5">
         <button
           onClick={() => setShowFeatures((prev) => !prev)}
@@ -168,15 +192,21 @@ export default function TranslatorPageClient() {
         )}
       </Card>
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       {/* Mode Content */}
       {mode === "playground" && <PlaygroundMode />}
       {mode === "chat-tester" && <ChatTesterMode />}
       {mode === "test-bench" && <TestBenchMode />}
+<<<<<<< HEAD
       {mode === "stream-transformer" && <StreamTransformerMode />}
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       {mode === "live-monitor" && <LiveMonitorMode />}
     </div>
   );
 }
+<<<<<<< HEAD
 
 function FeatureChip({
   icon,
@@ -234,3 +264,5 @@ function FeatureChip({
     </div>
   );
 }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

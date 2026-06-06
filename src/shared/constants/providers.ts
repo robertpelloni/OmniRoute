@@ -3,6 +3,7 @@
 // Free Providers
 export const FREE_PROVIDERS = {
   qoder: { id: "qoder", alias: "if", name: "Qoder AI", icon: "water_drop", color: "#6366F1" },
+<<<<<<< HEAD
   qwen: {
     id: "qwen",
     alias: "qw",
@@ -13,12 +14,16 @@ export const FREE_PROVIDERS = {
     deprecationReason:
       "Qwen OAuth free tier was discontinued on 2026-04-15. Use 'alicode', 'alicode-intl', or 'openrouter' provider with API key instead.",
   },
+=======
+  qwen: { id: "qwen", alias: "qw", name: "Qwen Code", icon: "psychology", color: "#10B981" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   "gemini-cli": {
     id: "gemini-cli",
     alias: "gemini-cli",
     name: "Gemini CLI",
     icon: "terminal",
     color: "#4285F4",
+<<<<<<< HEAD
     authHint:
       "Uses Gemini CLI OAuth / Cloud Code credentials. Pro models require an eligible Google account or paid plan.",
   },
@@ -34,12 +39,24 @@ export const FREE_PROVIDERS = {
     authHint:
       "Uses the same AWS Builder ID or imported refresh-token flow as Kiro, but keeps Amazon Q connections separate.",
   },
+=======
+    deprecated: true,
+    deprecationReason:
+      "Google restricts third-party OAuth usage for Gemini CLI (Mar 2026). Pro models require paid plans. Use 'gemini' (API key) provider instead.",
+  },
+  kiro: { id: "kiro", alias: "kr", name: "Kiro AI", icon: "psychology_alt", color: "#FF6B35" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 };
 
 export const FREE_APIKEY_PROVIDER_IDS = new Set(["qoder"]);
 
+<<<<<<< HEAD
 export function supportsApiKeyOnFreeProvider(providerId: unknown): boolean {
   return typeof providerId === "string" && FREE_APIKEY_PROVIDER_IDS.has(providerId);
+=======
+export function supportsApiKeyOnFreeProvider(providerId) {
+  return FREE_APIKEY_PROVIDER_IDS.has(providerId);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 // OAuth Providers
@@ -54,6 +71,7 @@ export const OAUTH_PROVIDERS = {
   },
   codex: { id: "codex", alias: "cx", name: "OpenAI Codex", icon: "code", color: "#3B82F6" },
   github: { id: "github", alias: "gh", name: "GitHub Copilot", icon: "code", color: "#333333" },
+<<<<<<< HEAD
   "gitlab-duo": {
     id: "gitlab-duo",
     alias: "gitlab-duo",
@@ -65,6 +83,8 @@ export const OAUTH_PROVIDERS = {
     authHint:
       "OAuth application with ai_features + read_user scopes. Configure GITLAB_DUO_OAUTH_CLIENT_ID and optionally GITLAB_DUO_OAUTH_CLIENT_SECRET on this OmniRoute instance.",
   },
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   cursor: { id: "cursor", alias: "cu", name: "Cursor IDE", icon: "edit_note", color: "#00D4AA" },
   "kimi-coding": {
     id: "kimi-coding",
@@ -92,6 +112,7 @@ export const OAUTH_PROVIDERS = {
   },
 };
 
+<<<<<<< HEAD
 // Web / Cookie Providers
 export const WEB_COOKIE_PROVIDERS = {
   "chatgpt-web": {
@@ -162,6 +183,10 @@ export const APIKEY_PROVIDERS = {
     freeNote: "$200 free credits on signup - multi-model routing gateway",
     apiHint: "Get $200 free credits at https://agentrouter.org/register — no credit card required.",
   },
+=======
+// API Key Providers
+export const APIKEY_PROVIDERS = {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   openrouter: {
     id: "openrouter",
     alias: "openrouter",
@@ -171,6 +196,7 @@ export const APIKEY_PROVIDERS = {
     textIcon: "OR",
     passthroughModels: true,
     website: "https://openrouter.ai",
+<<<<<<< HEAD
     hasFree: true,
     freeNote: "Free models at $0/token with :free suffix - 20 RPM / 200 RPD",
   },
@@ -185,6 +211,8 @@ export const APIKEY_PROVIDERS = {
     passthroughModels: true,
     apiHint:
       "Use a Qianfan API key from Baidu AI Cloud. The default endpoint is OpenAI-compatible v2.",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   },
   glm: {
     id: "glm",
@@ -195,6 +223,7 @@ export const APIKEY_PROVIDERS = {
     textIcon: "GL",
     website: "https://open.bigmodel.cn",
   },
+<<<<<<< HEAD
   "glm-cn": {
     id: "glm-cn",
     alias: "glmcn",
@@ -214,6 +243,8 @@ export const APIKEY_PROVIDERS = {
     website: "https://open.bigmodel.cn",
     apiHint: "Preset GLM profile with higher token budget, thinking enabled, and longer timeout.",
   },
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   "bailian-coding-plan": {
     id: "bailian-coding-plan",
     alias: "bcp",
@@ -259,6 +290,7 @@ export const APIKEY_PROVIDERS = {
     textIcon: "MC",
     website: "https://www.minimaxi.com",
   },
+<<<<<<< HEAD
   crof: {
     id: "crof",
     alias: "crof",
@@ -268,6 +300,8 @@ export const APIKEY_PROVIDERS = {
     textIcon: "CR",
     website: "https://crof.ai",
   },
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   alicode: {
     id: "alicode",
     alias: "alicode",
@@ -295,6 +329,7 @@ export const APIKEY_PROVIDERS = {
     textIcon: "OA",
     website: "https://platform.openai.com",
   },
+<<<<<<< HEAD
   "azure-openai": {
     id: "azure-openai",
     alias: "azure",
@@ -437,6 +472,8 @@ export const APIKEY_PROVIDERS = {
     apiHint:
       "Runway video generation is task-based. OmniRoute submits text-to-video or image-to-video jobs, polls /v1/tasks/{id}, and normalizes the finished video outputs back into the OpenAI-like /v1/videos/generations response.",
   },
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   anthropic: {
     id: "anthropic",
     alias: "anthropic",
@@ -466,8 +503,11 @@ export const APIKEY_PROVIDERS = {
     color: "#4D6BFE",
     textIcon: "DS",
     website: "https://deepseek.com",
+<<<<<<< HEAD
     hasFree: true,
     freeNote: "5M free tokens on signup - no credit card required",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   },
   groq: {
     id: "groq",
@@ -488,8 +528,11 @@ export const APIKEY_PROVIDERS = {
     color: "#1A1A2E",
     textIcon: "BB",
     website: "https://blackbox.ai",
+<<<<<<< HEAD
     hasFree: true,
     freeNote: "Free tier: unlimited basic chat plus Minimax-M2.5, no credit card required",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   },
   xai: {
     id: "xai",
@@ -508,8 +551,11 @@ export const APIKEY_PROVIDERS = {
     color: "#FF7000",
     textIcon: "MI",
     website: "https://mistral.ai",
+<<<<<<< HEAD
     hasFree: true,
     freeNote: "Free Experiment tier: rate-limited access to all models, no credit card required",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   },
   perplexity: {
     id: "perplexity",
@@ -540,8 +586,11 @@ export const APIKEY_PROVIDERS = {
     color: "#7B2EF2",
     textIcon: "FW",
     website: "https://fireworks.ai",
+<<<<<<< HEAD
     hasFree: true,
     freeNote: "$1 free starter credits on signup for API testing",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   },
   cerebras: {
     id: "cerebras",
@@ -562,8 +611,11 @@ export const APIKEY_PROVIDERS = {
     color: "#39594D",
     textIcon: "CO",
     website: "https://cohere.com",
+<<<<<<< HEAD
     hasFree: true,
     freeNote: "Free Trial: 1,000 API calls/month for testing, no credit card required",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   },
   nvidia: {
     id: "nvidia",
@@ -584,8 +636,11 @@ export const APIKEY_PROVIDERS = {
     color: "#6C5CE7",
     textIcon: "NB",
     website: "https://nebius.com",
+<<<<<<< HEAD
     hasFree: true,
     freeNote: "~$1 trial credits on signup for API testing",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   },
   siliconflow: {
     id: "siliconflow",
@@ -595,8 +650,11 @@ export const APIKEY_PROVIDERS = {
     color: "#5B6EF5",
     textIcon: "SF",
     website: "https://cloud.siliconflow.com",
+<<<<<<< HEAD
     hasFree: true,
     freeNote: "$1 free credits plus permanently free models after identity verification",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   },
   hyperbolic: {
     id: "hyperbolic",
@@ -606,8 +664,29 @@ export const APIKEY_PROVIDERS = {
     color: "#00D4FF",
     textIcon: "HY",
     website: "https://hyperbolic.xyz",
+<<<<<<< HEAD
     hasFree: true,
     freeNote: "$1-5 trial credits on signup for serverless inference",
+=======
+  },
+  deepgram: {
+    id: "deepgram",
+    alias: "dg",
+    name: "Deepgram",
+    icon: "mic",
+    color: "#13EF93",
+    textIcon: "DG",
+    website: "https://deepgram.com",
+  },
+  assemblyai: {
+    id: "assemblyai",
+    alias: "aai",
+    name: "AssemblyAI",
+    icon: "record_voice_over",
+    color: "#0062FF",
+    textIcon: "AA",
+    website: "https://assemblyai.com",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   },
   nanobanana: {
     id: "nanobanana",
@@ -627,6 +706,63 @@ export const APIKEY_PROVIDERS = {
     textIcon: "OC",
     website: "https://ollama.com/settings/api-keys",
   },
+<<<<<<< HEAD
+=======
+  elevenlabs: {
+    id: "elevenlabs",
+    alias: "el",
+    name: "ElevenLabs",
+    icon: "record_voice_over",
+    color: "#6C47FF",
+    textIcon: "EL",
+    website: "https://elevenlabs.io",
+  },
+  cartesia: {
+    id: "cartesia",
+    alias: "cartesia",
+    name: "Cartesia",
+    icon: "spatial_audio",
+    color: "#FF4F8B",
+    textIcon: "CA",
+    website: "https://cartesia.ai",
+  },
+  playht: {
+    id: "playht",
+    alias: "playht",
+    name: "PlayHT",
+    icon: "play_circle",
+    color: "#00B4D8",
+    textIcon: "PH",
+    website: "https://play.ht",
+  },
+  inworld: {
+    id: "inworld",
+    alias: "inworld",
+    name: "Inworld",
+    icon: "voice_chat",
+    color: "#7B2EF2",
+    textIcon: "IW",
+    website: "https://inworld.ai",
+  },
+  sdwebui: {
+    id: "sdwebui",
+    alias: "sdwebui",
+    name: "SD WebUI",
+    icon: "brush",
+    color: "#FF7043",
+    textIcon: "SD",
+    website: "https://github.com/AUTOMATIC1111/stable-diffusion-webui",
+  },
+  comfyui: {
+    id: "comfyui",
+    alias: "comfyui",
+    name: "ComfyUI",
+    icon: "account_tree",
+    color: "#4CAF50",
+    textIcon: "CF",
+    website: "https://github.com/comfyanonymous/ComfyUI",
+  },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   huggingface: {
     id: "huggingface",
     alias: "hf",
@@ -668,6 +804,7 @@ export const APIKEY_PROVIDERS = {
     website: "https://cloud.google.com/vertex-ai",
     authHint: "Provide Service Account JSON or OAuth access_token",
   },
+<<<<<<< HEAD
   "vertex-partner": {
     id: "vertex-partner",
     alias: "vp",
@@ -678,6 +815,8 @@ export const APIKEY_PROVIDERS = {
     website: "https://cloud.google.com/vertex-ai",
     authHint: "Provide the same Service Account JSON used for Vertex AI partner models.",
   },
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   zai: {
     id: "zai",
     alias: "zai",
@@ -688,6 +827,7 @@ export const APIKEY_PROVIDERS = {
     website: "https://open.bigmodel.cn",
     apiHint: "API key from https://open.bigmodel.cn/usercenter/apikeys",
   },
+<<<<<<< HEAD
   "opencode-zen": {
     id: "opencode-zen",
     alias: "opencode-zen",
@@ -1544,6 +1684,8 @@ export const LOCAL_PROVIDERS = {
 
 // Search Providers
 export const SEARCH_PROVIDERS = {
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   "perplexity-search": {
     id: "perplexity-search",
     alias: "pplx-search",
@@ -1594,6 +1736,7 @@ export const SEARCH_PROVIDERS = {
     website: "https://tavily.com",
     authHint: "API key from app.tavily.com (format: tvly-...)",
   },
+<<<<<<< HEAD
   "google-pse-search": {
     id: "google-pse-search",
     alias: "google-pse",
@@ -1713,6 +1856,108 @@ export const AUDIO_ONLY_PROVIDERS = {
     website: "https://aws.amazon.com/polly/",
     authHint:
       "Use AWS Secret Access Key as API key; set providerSpecificData.accessKeyId and optional region.",
+=======
+  "opencode-zen": {
+    id: "opencode-zen",
+    alias: "opencode-zen",
+    name: "OpenCode Zen",
+    icon: "opencode",
+    color: "#6366f1",
+    website: "https://opencode.ai/zen",
+  },
+  "opencode-go": {
+    id: "opencode-go",
+    alias: "opencode-go",
+    name: "OpenCode Go",
+    icon: "opencode",
+    color: "#6366f1",
+    website: "https://opencode.ai/zen/go",
+  },
+  alibaba: {
+    id: "alibaba",
+    alias: "ali",
+    name: "Alibaba Cloud (DashScope)",
+    icon: "cloud_queue",
+    color: "#FF6600",
+    textIcon: "AL",
+    website: "https://dashscope-intl.aliyuncs.com",
+    hasFree: false,
+  },
+  longcat: {
+    id: "longcat",
+    alias: "lc",
+    name: "LongCat AI",
+    icon: "auto_awesome",
+    color: "#FF6B9D",
+    textIcon: "LC",
+    website: "https://longcat.chat",
+    hasFree: true,
+    freeNote:
+      "50M tokens/day (Flash-Lite) + 500K/day (Chat/Thinking) — 100% free while public beta",
+  },
+  pollinations: {
+    id: "pollinations",
+    alias: "pol",
+    name: "Pollinations AI",
+    icon: "local_florist",
+    color: "#4CAF50",
+    textIcon: "PO",
+    website: "https://pollinations.ai",
+    hasFree: true,
+    freeNote:
+      "No API key needed — access GPT-5, Claude, Gemini, DeepSeek V3, Llama 4 free (1 req/15s)",
+  },
+  puter: {
+    id: "puter",
+    alias: "pu",
+    name: "Puter AI",
+    icon: "cloud_circle",
+    color: "#6366F1",
+    textIcon: "PU",
+    website: "https://puter.com",
+    hasFree: true,
+    freeNote:
+      "500+ models (GPT-5, Claude Opus 4, Gemini 3 Pro, Grok 4, DeepSeek V3...) — Users pay via free Puter account",
+    passthroughModels: true,
+    authHint: "Get token at puter.com/dashboard → Copy Auth Token",
+  },
+  "cloudflare-ai": {
+    id: "cloudflare-ai",
+    alias: "cf",
+    name: "Cloudflare Workers AI",
+    icon: "cloud",
+    color: "#F48120",
+    textIcon: "CF",
+    website: "https://developers.cloudflare.com/workers-ai/",
+    hasFree: true,
+    freeNote:
+      "Free 10K Neurons/day: ~150 LLM responses or 500s Whisper audio — edge inference globally",
+    authHint: "Requires API Token AND Account ID (found at dash.cloudflare.com)",
+  },
+  scaleway: {
+    id: "scaleway",
+    alias: "scw",
+    name: "Scaleway AI",
+    icon: "cloud",
+    color: "#4F0599",
+    textIcon: "SCW",
+    website: "https://www.scaleway.com/en/ai/generative-apis/",
+    hasFree: true,
+    freeNote: "1M free tokens for new accounts — EU/GDPR compliant (Paris), Qwen3 235B & Llama 70B",
+  },
+  aimlapi: {
+    id: "aimlapi",
+    alias: "aiml",
+    name: "AI/ML API",
+    icon: "hub",
+    color: "#6366F1",
+    textIcon: "AI",
+    website: "https://aimlapi.com",
+    hasFree: true,
+    freeNote:
+      "$0.025/day free credits — 200+ models (GPT-4o, Claude, Gemini, Llama) via single endpoint",
+    passthroughModels: true,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   },
   novita: {
     id: "novita",
@@ -1760,11 +2005,19 @@ export const OPENAI_COMPATIBLE_PREFIX = "openai-compatible-";
 export const ANTHROPIC_COMPATIBLE_PREFIX = "anthropic-compatible-";
 export const CLAUDE_CODE_COMPATIBLE_PREFIX = "anthropic-compatible-cc-";
 
+<<<<<<< HEAD
 export function isOpenAICompatibleProvider(providerId: unknown): providerId is string {
   return typeof providerId === "string" && providerId.startsWith(OPENAI_COMPATIBLE_PREFIX);
 }
 
 export function isAnthropicCompatibleProvider(providerId: unknown): providerId is string {
+=======
+export function isOpenAICompatibleProvider(providerId) {
+  return typeof providerId === "string" && providerId.startsWith(OPENAI_COMPATIBLE_PREFIX);
+}
+
+export function isAnthropicCompatibleProvider(providerId) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return typeof providerId === "string" && providerId.startsWith(ANTHROPIC_COMPATIBLE_PREFIX);
 }
 
@@ -1786,6 +2039,7 @@ export const UPSTREAM_PROXY_PROVIDERS = {
   },
 };
 
+<<<<<<< HEAD
 export function isClaudeCodeCompatibleProvider(providerId: unknown): providerId is string {
   return typeof providerId === "string" && providerId.startsWith(CLAUDE_CODE_COMPATIBLE_PREFIX);
 }
@@ -1812,11 +2066,18 @@ export function isSelfHostedChatProvider(providerId: unknown): boolean {
   return typeof providerId === "string" && SELF_HOSTED_CHAT_PROVIDER_IDS.has(providerId);
 }
 
+=======
+export function isClaudeCodeCompatibleProvider(providerId) {
+  return typeof providerId === "string" && providerId.startsWith(CLAUDE_CODE_COMPATIBLE_PREFIX);
+}
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // All providers (combined)
 export const AI_PROVIDERS = {
   ...FREE_PROVIDERS,
   ...OAUTH_PROVIDERS,
   ...APIKEY_PROVIDERS,
+<<<<<<< HEAD
   ...WEB_COOKIE_PROVIDERS,
   ...LOCAL_PROVIDERS,
   ...SEARCH_PROVIDERS,
@@ -1827,6 +2088,11 @@ export const AI_PROVIDERS = {
 export type AiProviderId = keyof typeof AI_PROVIDERS;
 export type AiProviderDefinition = (typeof AI_PROVIDERS)[AiProviderId];
 
+=======
+  ...UPSTREAM_PROXY_PROVIDERS,
+};
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // Auth methods
 export const AUTH_METHODS = {
   oauth: { id: "oauth", name: "OAuth", icon: "lock" },
@@ -1834,7 +2100,11 @@ export const AUTH_METHODS = {
 };
 
 // Helper: Get provider by alias
+<<<<<<< HEAD
 export function getProviderByAlias(alias: string): AiProviderDefinition | null {
+=======
+export function getProviderByAlias(alias) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   for (const provider of Object.values(AI_PROVIDERS)) {
     if (provider.alias === alias || provider.id === alias) {
       return provider;
@@ -1844,27 +2114,44 @@ export function getProviderByAlias(alias: string): AiProviderDefinition | null {
 }
 
 // Helper: Get provider ID from alias
+<<<<<<< HEAD
 export function resolveProviderId(aliasOrId: string): string {
+=======
+export function resolveProviderId(aliasOrId) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const provider = getProviderByAlias(aliasOrId);
   return provider?.id || aliasOrId;
 }
 
 // Helper: Get alias from provider ID
+<<<<<<< HEAD
 export function getProviderAlias(providerId: string): string {
   const provider = Object.prototype.hasOwnProperty.call(AI_PROVIDERS, providerId)
     ? AI_PROVIDERS[providerId as AiProviderId]
     : undefined;
+=======
+export function getProviderAlias(providerId) {
+  const provider = AI_PROVIDERS[providerId];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return provider?.alias || providerId;
 }
 
 // Alias to ID mapping (for quick lookup)
+<<<<<<< HEAD
 export const ALIAS_TO_ID = Object.values(AI_PROVIDERS).reduce<Record<string, string>>((acc, p) => {
+=======
+export const ALIAS_TO_ID = Object.values(AI_PROVIDERS).reduce((acc, p) => {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (p.alias) acc[p.alias] = p.id;
   return acc;
 }, {});
 
 // ID to Alias mapping
+<<<<<<< HEAD
 export const ID_TO_ALIAS = Object.values(AI_PROVIDERS).reduce<Record<string, string>>((acc, p) => {
+=======
+export const ID_TO_ALIAS = Object.values(AI_PROVIDERS).reduce((acc, p) => {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   acc[p.id] = p.alias || p.id;
   return acc;
 }, {});
@@ -1874,17 +2161,23 @@ export const USAGE_SUPPORTED_PROVIDERS = [
   "antigravity",
   "gemini-cli",
   "kiro",
+<<<<<<< HEAD
   "amazon-q",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   "github",
   "codex",
   "claude",
   "kimi-coding",
   "glm",
+<<<<<<< HEAD
   "glmt",
   "minimax",
   "minimax-cn",
   "crof",
   "nanogpt",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 ];
 
 // ── Zod validation at module load (Phase 7.2) ──
@@ -1893,8 +2186,11 @@ import { validateProviders } from "../validation/providerSchema";
 validateProviders(FREE_PROVIDERS, "FREE_PROVIDERS");
 validateProviders(OAUTH_PROVIDERS, "OAUTH_PROVIDERS");
 validateProviders(APIKEY_PROVIDERS, "APIKEY_PROVIDERS");
+<<<<<<< HEAD
 validateProviders(WEB_COOKIE_PROVIDERS, "WEB_COOKIE_PROVIDERS");
 validateProviders(LOCAL_PROVIDERS, "LOCAL_PROVIDERS");
 validateProviders(SEARCH_PROVIDERS, "SEARCH_PROVIDERS");
 validateProviders(AUDIO_ONLY_PROVIDERS, "AUDIO_ONLY_PROVIDERS");
 validateProviders(UPSTREAM_PROXY_PROVIDERS, "UPSTREAM_PROXY_PROVIDERS");
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

@@ -1,11 +1,19 @@
 "use client";
 
 import { useState, useEffect } from "react";
+<<<<<<< HEAD
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/shared/utils/cn";
 import { getActiveSidebarHref } from "@/shared/utils/sidebarRouteMatch";
 import { APP_CONFIG } from "@/shared/constants/appConfig";
+=======
+import PropTypes from "prop-types";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/shared/utils/cn";
+import { APP_CONFIG } from "@/shared/constants/config";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import OmniRouteLogo from "./OmniRouteLogo";
 import Button from "./Button";
 import { ConfirmModal } from "./Modal";
@@ -20,6 +28,7 @@ import {
 
 const isE2EMode = process.env.NEXT_PUBLIC_OMNIROUTE_E2E_MODE === "1";
 
+<<<<<<< HEAD
 type SidebarProps = {
   onClose?: () => void;
   collapsed?: boolean;
@@ -27,12 +36,23 @@ type SidebarProps = {
   isMacElectron?: boolean;
 };
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export default function Sidebar({
   onClose,
   collapsed = false,
   onToggleCollapse,
   isMacElectron = false,
+<<<<<<< HEAD
 }: SidebarProps) {
+=======
+}: {
+  onClose?: any;
+  collapsed?: boolean;
+  onToggleCollapse?: any;
+  isMacElectron?: boolean;
+}) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const pathname = usePathname();
   const t = useTranslations("sidebar");
   const tc = useTranslations("common");
@@ -93,6 +113,16 @@ export default function Sidebar({
     };
   }, []);
 
+<<<<<<< HEAD
+=======
+  const isActive = (href, exact) => {
+    if (exact) {
+      return pathname === href;
+    }
+    return pathname.startsWith(href);
+  };
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const handleShutdown = async () => {
     setIsShuttingDown(true);
     try {
@@ -135,6 +165,7 @@ export default function Sidebar({
         .filter((item) => !hiddenSidebarSet.has(item.id)),
     }))
     .filter((section) => section.items.length > 0);
+<<<<<<< HEAD
   const activeHref = getActiveSidebarHref(
     pathname,
     visibleSections.flatMap((section) => section.items)
@@ -142,6 +173,11 @@ export default function Sidebar({
 
   const renderNavLink = (item) => {
     const active = !item.external && activeHref === item.href;
+=======
+
+  const renderNavLink = (item) => {
+    const active = !item.external && isActive(item.href, item.exact);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const className = cn(
       "flex items-center gap-3 rounded-lg transition-all group",
       collapsed ? "justify-center px-2 py-2.5" : "px-4 py-2",
@@ -193,7 +229,11 @@ export default function Sidebar({
     <>
       <aside
         className={cn(
+<<<<<<< HEAD
           "flex h-full min-h-0 flex-col border-r border-black/5 bg-sidebar transition-all duration-300 ease-in-out dark:border-white/5",
+=======
+          "flex h-full min-h-0 flex-col border-r border-black/5 bg-vibrancy backdrop-blur-xl transition-all duration-300 ease-in-out dark:border-white/5",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           collapsed ? "w-16" : "w-80"
         )}
         style={{
@@ -304,7 +344,13 @@ export default function Sidebar({
             collapsed ? "p-2 flex flex-col gap-1" : "p-3 flex gap-2"
           )}
           style={{
+<<<<<<< HEAD
             paddingBottom: isMacElectron ? "calc(0.75rem + var(--desktop-safe-bottom))" : undefined,
+=======
+            paddingBottom: isMacElectron
+              ? "calc(0.75rem + var(--desktop-safe-bottom))"
+              : undefined,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           }}
         >
           <button
@@ -377,3 +423,13 @@ export default function Sidebar({
     </>
   );
 }
+<<<<<<< HEAD
+=======
+
+Sidebar.propTypes = {
+  onClose: PropTypes.func,
+  collapsed: PropTypes.bool,
+  onToggleCollapse: PropTypes.func,
+  isMacElectron: PropTypes.bool,
+};
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

@@ -2,14 +2,21 @@
  * Cost Rules — Domain Layer (T-19)
  *
  * Business rules for cost management: budget thresholds,
+<<<<<<< HEAD
  * scheduled reset windows, and cost summaries per API key.
  *
  * State is persisted in SQLite via domainState.ts.
+=======
+ * quota checking, and cost summaries per API key.
+ *
+ * State is persisted in SQLite via domainState.js.
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  *
  * @module domain/costRules
  */
 
 import {
+<<<<<<< HEAD
   deleteAllCostData,
   deleteBudget as dbDeleteBudget,
   deleteCostEntries,
@@ -52,6 +59,21 @@ interface NormalizedBudgetConfig {
   lastBudgetResetAt: number | null;
   warningEmittedAt: number | null;
   warningPeriodStart: number | null;
+=======
+  saveBudget,
+  loadBudget,
+  saveCostEntry,
+  loadCostEntries,
+  deleteAllCostData,
+  deleteBudget as dbDeleteBudget,
+  deleteCostEntries,
+} from "../lib/db/domainState";
+
+interface BudgetConfig {
+  dailyLimitUsd: number;
+  monthlyLimitUsd?: number;
+  warningThreshold?: number;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 interface CostEntry {
@@ -59,6 +81,7 @@ interface CostEntry {
   timestamp: number;
 }
 
+<<<<<<< HEAD
 interface BudgetWindow {
   periodStartAt: number;
   nextResetAt: number;
@@ -105,20 +128,29 @@ function toNumber(value: unknown, fallback = 0): number {
   return fallback;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function toCostEntries(value: unknown): CostEntry[] {
   if (!Array.isArray(value)) return [];
   const entries: CostEntry[] = [];
   for (const item of value) {
     if (!item || typeof item !== "object" || Array.isArray(item)) continue;
     const record = item as Record<string, unknown>;
+<<<<<<< HEAD
     const cost = toNumber(record.cost, Number.NaN);
     const timestamp = toNumber(record.timestamp, Number.NaN);
+=======
+    const cost = typeof record.cost === "number" ? record.cost : Number(record.cost ?? 0);
+    const timestamp =
+      typeof record.timestamp === "number" ? record.timestamp : Number(record.timestamp ?? 0);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (!Number.isFinite(cost) || !Number.isFinite(timestamp)) continue;
     entries.push({ cost, timestamp });
   }
   return entries;
 }
 
+<<<<<<< HEAD
 function sumEntries(entries: CostEntry[]): number {
   return entries.reduce((sum, entry) => sum + entry.cost, 0);
 }
@@ -338,6 +370,26 @@ function syncBudgetSchedule(
   budgets.set(apiKeyId, updated);
   return updated;
 }
+=======
+/**
+ * @typedef {Object} BudgetConfig
+ * @property {number} dailyLimitUsd - Max daily spend in USD
+ * @property {number} [monthlyLimitUsd] - Max monthly spend in USD
+ * @property {number} [warningThreshold=0.8] - Alert when usage reaches this fraction
+ */
+
+/**
+ * @typedef {Object} CostEntry
+ * @property {number} cost - Cost in USD
+ * @property {number} timestamp - Unix timestamp
+ */
+
+/** @type {Map<string, BudgetConfig>} In-memory cache for budgets */
+const budgets = new Map<string, BudgetConfig>();
+
+/** @type {boolean} */
+let _budgetsLoaded = false;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * Set budget for an API key.
@@ -346,13 +398,28 @@ function syncBudgetSchedule(
  * @param {BudgetConfig} config
  */
 export function setBudget(apiKeyId: string, config: BudgetConfig) {
+<<<<<<< HEAD
   return syncBudgetSchedule(apiKeyId, config, Date.now(), { logReset: false, persist: true });
+=======
+  const normalized = {
+    dailyLimitUsd: config.dailyLimitUsd,
+    monthlyLimitUsd: config.monthlyLimitUsd || 0,
+    warningThreshold: config.warningThreshold ?? 0.8,
+  };
+  budgets.set(apiKeyId, normalized);
+  try {
+    saveBudget(apiKeyId, normalized);
+  } catch {
+    // Non-critical: in-memory still works
+  }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 /**
  * Get budget config for an API key.
  *
  * @param {string} apiKeyId
+<<<<<<< HEAD
  * @returns {NormalizedBudgetConfig | null}
  */
 export function getBudget(apiKeyId: string): NormalizedBudgetConfig | null {
@@ -370,10 +437,30 @@ export function getBudget(apiKeyId: string): NormalizedBudgetConfig | null {
     // DB may not be ready.
   }
 
+=======
+ * @returns {BudgetConfig | null}
+ */
+export function getBudget(apiKeyId: string): BudgetConfig | null {
+  // Check in-memory cache first
+  if (budgets.has(apiKeyId)) {
+    return budgets.get(apiKeyId);
+  }
+  // Try loading from DB
+  try {
+    const fromDb = loadBudget(apiKeyId) as BudgetConfig | null;
+    if (fromDb) {
+      budgets.set(apiKeyId, fromDb);
+      return fromDb;
+    }
+  } catch {
+    // DB may not be ready
+  }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return null;
 }
 
 /**
+<<<<<<< HEAD
  * Delete budget config and recorded spend for an API key.
  *
  * @param {string} apiKeyId
@@ -390,20 +477,31 @@ export function deleteBudget(apiKeyId: string) {
 }
 
 /**
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  * Record a cost for an API key.
  *
  * @param {string} apiKeyId
  * @param {number} cost - Cost in USD
  */
 export function recordCost(apiKeyId: string, cost: number): void {
+<<<<<<< HEAD
   try {
     spendBatchWriter.increment(apiKeyId, cost, Date.now());
   } catch {
     // Non-critical.
+=======
+  const timestamp = Date.now();
+  try {
+    saveCostEntry(apiKeyId, cost, timestamp);
+  } catch {
+    // Non-critical
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 }
 
 /**
+<<<<<<< HEAD
  * Sync all budgets against the current clock so overdue resets get persisted.
  */
 export function syncAllBudgetSchedules(now = Date.now()) {
@@ -427,15 +525,22 @@ export function syncAllBudgetSchedules(now = Date.now()) {
 }
 
 /**
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  * Check if an API key has remaining budget.
  *
  * @param {string} apiKeyId
  * @param {number} [additionalCost=0] - Projected cost to check
+<<<<<<< HEAD
  * @returns {{ allowed: boolean, reason?: string, dailyUsed: number, dailyLimit: number, warningReached: boolean, remaining: number, periodUsed: number, activeLimitUsd: number, resetInterval: BudgetResetInterval | null, resetTime: string | null, budgetResetAt: number | null, lastBudgetResetAt: number | null, periodStartAt: number | null }}
+=======
+ * @returns {{ allowed: boolean, reason?: string, dailyUsed: number, dailyLimit: number, warningReached: boolean }}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  */
 export function checkBudget(apiKeyId: string, additionalCost = 0) {
   const budget = getBudget(apiKeyId);
   if (!budget) {
+<<<<<<< HEAD
     return {
       allowed: true,
       dailyUsed: 0,
@@ -496,11 +601,28 @@ export function checkBudget(apiKeyId: string, additionalCost = 0) {
       budgetResetAt: window.nextResetAt,
       lastBudgetResetAt: window.periodStartAt,
       periodStartAt: window.periodStartAt,
+=======
+    return { allowed: true, dailyUsed: 0, dailyLimit: 0, warningReached: false };
+  }
+
+  const dailyUsed = getDailyTotal(apiKeyId);
+  const projectedTotal = dailyUsed + additionalCost;
+  const warningReached = projectedTotal >= budget.dailyLimitUsd * budget.warningThreshold;
+
+  if (projectedTotal > budget.dailyLimitUsd) {
+    return {
+      allowed: false,
+      reason: `Daily budget exceeded: $${projectedTotal.toFixed(4)} / $${budget.dailyLimitUsd.toFixed(2)}`,
+      dailyUsed,
+      dailyLimit: budget.dailyLimitUsd,
+      warningReached: true,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     };
   }
 
   return {
     allowed: true,
+<<<<<<< HEAD
     dailyUsed: periodUsed,
     dailyLimit: activeLimitUsd,
     warningReached,
@@ -512,6 +634,11 @@ export function checkBudget(apiKeyId: string, additionalCost = 0) {
     budgetResetAt: window.nextResetAt,
     lastBudgetResetAt: window.periodStartAt,
     periodStartAt: window.periodStartAt,
+=======
+    dailyUsed,
+    dailyLimit: budget.dailyLimitUsd,
+    warningReached,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 }
 
@@ -524,12 +651,20 @@ export function checkBudget(apiKeyId: string, additionalCost = 0) {
 export function getDailyTotal(apiKeyId: string): number {
   const todayStart = new Date();
   todayStart.setHours(0, 0, 0, 0);
+<<<<<<< HEAD
 
   try {
     return (
       sumEntries(toCostEntries(loadCostEntries(apiKeyId, todayStart.getTime()))) +
       spendBatchWriter.getPendingCostTotal(apiKeyId, todayStart.getTime())
     );
+=======
+  const startMs = todayStart.getTime();
+
+  try {
+    const entries = toCostEntries(loadCostEntries(apiKeyId, startMs));
+    return entries.reduce((sum, e) => sum + e.cost, 0);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   } catch {
     return 0;
   }
@@ -539,6 +674,7 @@ export function getDailyTotal(apiKeyId: string): number {
  * Get cost summary for an API key.
  *
  * @param {string} apiKeyId
+<<<<<<< HEAD
  * @returns {BudgetSummary}
  */
 export function getCostSummary(apiKeyId: string): BudgetSummary {
@@ -571,11 +707,30 @@ export function getCostSummary(apiKeyId: string): BudgetSummary {
     const monthlyTotal = sumEntries(monthlyEntries);
     const periodTotal = sumEntries(periodEntries);
     const activeLimitUsd = budget ? getActiveBudgetLimit(budget) : 0;
+=======
+ * @returns {{ dailyTotal: number, monthlyTotal: number, totalEntries: number, budget: BudgetConfig | null }}
+ */
+export function getCostSummary(apiKeyId: string) {
+  const now = new Date();
+
+  const todayStart = new Date(now);
+  todayStart.setHours(0, 0, 0, 0);
+
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  try {
+    const dailyEntries = toCostEntries(loadCostEntries(apiKeyId, todayStart.getTime()));
+    const monthlyEntries = toCostEntries(loadCostEntries(apiKeyId, monthStart.getTime()));
+
+    const dailyTotal = dailyEntries.reduce((sum, e) => sum + e.cost, 0);
+    const monthlyTotal = monthlyEntries.reduce((sum, e) => sum + e.cost, 0);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     return {
       dailyTotal,
       monthlyTotal,
       totalEntries: monthlyEntries.length,
+<<<<<<< HEAD
       budget,
       totalCostToday: dailyTotal,
       totalCostMonth: monthlyTotal,
@@ -591,12 +746,16 @@ export function getCostSummary(apiKeyId: string): BudgetSummary {
       weeklyLimitUsd: budget?.weeklyLimitUsd ?? 0,
       monthlyLimitUsd: budget?.monthlyLimitUsd ?? 0,
       warningThreshold: budget?.warningThreshold ?? null,
+=======
+      budget: getBudget(apiKeyId),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     };
   } catch {
     return {
       dailyTotal: 0,
       monthlyTotal: 0,
       totalEntries: 0,
+<<<<<<< HEAD
       budget,
       totalCostToday: 0,
       totalCostMonth: 0,
@@ -612,6 +771,9 @@ export function getCostSummary(apiKeyId: string): BudgetSummary {
       weeklyLimitUsd: budget?.weeklyLimitUsd ?? 0,
       monthlyLimitUsd: budget?.monthlyLimitUsd ?? 0,
       warningThreshold: budget?.warningThreshold ?? null,
+=======
+      budget: getBudget(apiKeyId),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     };
   }
 }
@@ -621,10 +783,18 @@ export function getCostSummary(apiKeyId: string): BudgetSummary {
  */
 export function resetCostData() {
   budgets.clear();
+<<<<<<< HEAD
   resetSpendBatchWriterForTests();
   try {
     deleteAllCostData();
   } catch {
     // Non-critical.
+=======
+  _budgetsLoaded = false;
+  try {
+    deleteAllCostData();
+  } catch {
+    // Non-critical
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 }

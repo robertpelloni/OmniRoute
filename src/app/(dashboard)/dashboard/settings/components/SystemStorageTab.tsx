@@ -4,12 +4,15 @@ import { useState, useEffect, useRef } from "react";
 import { Card, Button, Badge } from "@/shared/components";
 import { useLocale, useTranslations } from "next-intl";
 
+<<<<<<< HEAD
 const rowCountFormatter = new Intl.NumberFormat("en-US");
 
 function formatRows(rows: number | null | undefined) {
   return typeof rows === "number" ? rowCountFormatter.format(rows) : "100K";
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export default function SystemStorageTab() {
   const [backups, setBackups] = useState([]);
   const [backupsLoading, setBackupsLoading] = useState(false);
@@ -28,6 +31,7 @@ export default function SystemStorageTab() {
   const [clearCacheStatus, setClearCacheStatus] = useState({ type: "", message: "" });
   const [purgeLogsLoading, setPurgeLogsLoading] = useState(false);
   const [purgeLogsStatus, setPurgeLogsStatus] = useState({ type: "", message: "" });
+<<<<<<< HEAD
   const [cleanupBackupsLoading, setCleanupBackupsLoading] = useState(false);
   const [cleanupBackupsStatus, setCleanupBackupsStatus] = useState({ type: "", message: "" });
   const [purgeQuotaSnapshotsLoading, setPurgeQuotaSnapshotsLoading] = useState(false);
@@ -39,6 +43,8 @@ export default function SystemStorageTab() {
   const [purgeCallLogsStatus, setPurgeCallLogsStatus] = useState({ type: "", message: "" });
   const [purgeDetailedLogsLoading, setPurgeDetailedLogsLoading] = useState(false);
   const [purgeDetailedLogsStatus, setPurgeDetailedLogsStatus] = useState({ type: "", message: "" });
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const fileInputRef = useRef<HTMLInputElement>(null);
   const jsonInputRef = useRef<HTMLInputElement>(null);
   const locale = useLocale();
@@ -52,6 +58,7 @@ export default function SystemStorageTab() {
       app: 7,
       call: 7,
     },
+<<<<<<< HEAD
     tableMaxRows: {
       callLogs: 100000,
       proxyLogs: 100000,
@@ -74,6 +81,10 @@ export default function SystemStorageTab() {
   const [dbSettingsLoading, setDbSettingsLoading] = useState(true);
   const [dbSettingsSaving, setDbSettingsSaving] = useState(false);
   const [dbStatsRefreshing, setDbStatsRefreshing] = useState(false);
+=======
+    lastBackupAt: null,
+  });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const loadBackups = async () => {
     setBackupsLoading(true);
@@ -94,15 +105,19 @@ export default function SystemStorageTab() {
       if (!res.ok) return;
       const data = await res.json();
       setStorageHealth((prev) => ({ ...prev, ...data }));
+<<<<<<< HEAD
       setBackupCleanupOptions({
         keepLatest: data.backupRetention?.maxFiles || 20,
         retentionDays: data.backupRetention?.days || 0,
       });
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     } catch (err) {
       console.error("Failed to fetch storage health:", err);
     }
   };
 
+<<<<<<< HEAD
   const loadDatabaseSettings = async () => {
     setDbSettingsLoading(true);
     try {
@@ -180,6 +195,8 @@ export default function SystemStorageTab() {
     }
   };
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const handleManualBackup = async () => {
     setManualBackupLoading(true);
     setManualBackupStatus({ type: "", message: "" });
@@ -245,7 +262,10 @@ export default function SystemStorageTab() {
 
   useEffect(() => {
     loadStorageHealth();
+<<<<<<< HEAD
     loadDatabaseSettings();
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }, []);
 
   /** Triggers a browser file download from an existing Blob. */
@@ -310,7 +330,11 @@ export default function SystemStorageTab() {
       });
       return;
     }
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     // Auto import JSON
     const reader = new FileReader();
     reader.onload = async (e) => {
@@ -486,6 +510,7 @@ export default function SystemStorageTab() {
         </div>
       </div>
 
+<<<<<<< HEAD
       {/* Logs Settings Section */}
       <div className="p-3 rounded-lg bg-bg border border-border mb-4">
         <div className="flex items-start justify-between gap-3 flex-wrap">
@@ -579,11 +604,14 @@ export default function SystemStorageTab() {
       </div>
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       <div className="p-3 rounded-lg bg-bg border border-border mb-4">
         <div className="flex items-start justify-between gap-3 flex-wrap">
           <div>
             <p className="text-sm font-medium text-text-main">Log retention policy</p>
             <p className="text-xs text-text-muted">
+<<<<<<< HEAD
               Request logs retain up to <code>CALL_LOGS_TABLE_MAX_ROWS</code> rows (default:
               100,000). Proxy logs retain up to <code>PROXY_LOGS_TABLE_MAX_ROWS</code> rows. Older
               entries auto-deleted.
@@ -591,6 +619,10 @@ export default function SystemStorageTab() {
               Request logs follow <code>CALL_LOG_RETENTION_DAYS</code>. Application and audit logs
               follow <code>APP_LOG_RETENTION_DAYS</code>.
 >>>>>>> Stashed changes
+=======
+              Request logs follow <code>CALL_LOG_RETENTION_DAYS</code>. Application and audit logs
+              follow <code>APP_LOG_RETENTION_DAYS</code>.
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -600,15 +632,19 @@ export default function SystemStorageTab() {
             <Badge variant="default" size="sm">
               App {storageHealth.retentionDays.app}d
             </Badge>
+<<<<<<< HEAD
 <<<<<<< Updated upstream
             <Badge variant="default" size="sm">
               {formatRows(storageHealth.tableMaxRows?.callLogs)} rows
             </Badge>
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           </div>
         </div>
       </div>
 
+<<<<<<< HEAD
       <div className="p-3 rounded-lg bg-bg border border-border mb-4">
         <div className="flex items-start justify-between gap-3 flex-wrap mb-3">
           <div>
@@ -699,6 +735,8 @@ export default function SystemStorageTab() {
       </div>
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       {/* Export / Import */}
       <div className="flex flex-wrap items-center gap-2 mb-4">
         <Button variant="outline" size="sm" onClick={handleExport} loading={exportLoading}>
@@ -912,6 +950,7 @@ export default function SystemStorageTab() {
             </span>
             {t("clearCache") || "Clear Cache"}
           </Button>
+<<<<<<< HEAD
           {clearCacheStatus.message && (
             <div
               className={`p-3 rounded-lg text-sm ${
@@ -931,6 +970,8 @@ export default function SystemStorageTab() {
           )}
         </div>
         <div className="flex flex-wrap items-center gap-2">
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           <Button
             variant="outline"
             size="sm"
@@ -966,6 +1007,7 @@ export default function SystemStorageTab() {
             </span>
             {t("purgeExpiredLogs") || "Purge Expired Logs"}
           </Button>
+<<<<<<< HEAD
           {purgeLogsStatus.message && (
             <div
               className={`p-3 rounded-lg text-sm ${
@@ -1113,6 +1155,15 @@ export default function SystemStorageTab() {
               <div
                 className={`p-3 rounded-lg text-sm ${
                   purgeQuotaSnapshotsStatus.type === "success"
+=======
+        </div>
+        {(clearCacheStatus.message || purgeLogsStatus.message) && (
+          <div className="flex flex-col gap-2">
+            {clearCacheStatus.message && (
+              <div
+                className={`p-3 rounded-lg text-sm ${
+                  clearCacheStatus.type === "success"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     ? "bg-green-500/10 text-green-500 border border-green-500/20"
                     : "bg-red-500/10 text-red-500 border border-red-500/20"
                 }`}
@@ -1120,6 +1171,7 @@ export default function SystemStorageTab() {
               >
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-[16px]" aria-hidden="true">
+<<<<<<< HEAD
                     {purgeQuotaSnapshotsStatus.type === "success" ? "check_circle" : "error"}
                   </span>
                   {purgeQuotaSnapshotsStatus.message}
@@ -1130,6 +1182,18 @@ export default function SystemStorageTab() {
               <div
                 className={`p-3 rounded-lg text-sm ${
                   purgeCallLogsStatus.type === "success"
+=======
+                    {clearCacheStatus.type === "success" ? "check_circle" : "error"}
+                  </span>
+                  {clearCacheStatus.message}
+                </div>
+              </div>
+            )}
+            {purgeLogsStatus.message && (
+              <div
+                className={`p-3 rounded-lg text-sm ${
+                  purgeLogsStatus.type === "success"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     ? "bg-green-500/10 text-green-500 border border-green-500/20"
                     : "bg-red-500/10 text-red-500 border border-red-500/20"
                 }`}
@@ -1137,6 +1201,7 @@ export default function SystemStorageTab() {
               >
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-[16px]" aria-hidden="true">
+<<<<<<< HEAD
                     {purgeCallLogsStatus.type === "success" ? "check_circle" : "error"}
                   </span>
                   {purgeCallLogsStatus.message}
@@ -1157,6 +1222,11 @@ export default function SystemStorageTab() {
                     {purgeDetailedLogsStatus.type === "success" ? "check_circle" : "error"}
                   </span>
                   {purgeDetailedLogsStatus.message}
+=======
+                    {purgeLogsStatus.type === "success" ? "check_circle" : "error"}
+                  </span>
+                  {purgeLogsStatus.message}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 </div>
               </div>
             )}
@@ -1324,6 +1394,7 @@ export default function SystemStorageTab() {
           </div>
         )}
       </div>
+<<<<<<< HEAD
 
       {/* Task 23: Retention Policy Settings */}
       {!dbSettingsLoading && dbSettings && (
@@ -1783,6 +1854,8 @@ export default function SystemStorageTab() {
           </div>
         </div>
       )}
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     </Card>
   );
 }

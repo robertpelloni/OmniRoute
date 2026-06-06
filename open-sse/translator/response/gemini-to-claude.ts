@@ -80,8 +80,11 @@ export function geminiToClaudeResponse(chunk, state) {
           state.openTextBlockIdx = null;
         }
         const fc = part.functionCall;
+<<<<<<< HEAD
         const rawToolName = fc.name;
         const restoredToolName = state.toolNameMap?.get(rawToolName) || rawToolName;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         const idx = state.contentBlockIndex++;
         const toolId = fc.id || `toolu_${Date.now()}_${idx}`;
 
@@ -91,7 +94,11 @@ export function geminiToClaudeResponse(chunk, state) {
           content_block: {
             type: "tool_use",
             id: toolId,
+<<<<<<< HEAD
             name: restoredToolName,
+=======
+            name: fc.name,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             input: {},
           },
         });

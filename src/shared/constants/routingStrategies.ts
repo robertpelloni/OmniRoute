@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 export const ROUTING_STRATEGY_VALUES = [
   "priority",
   "weighted",
@@ -50,6 +51,22 @@ export function normalizeRoutingStrategy(value: unknown): RoutingStrategyValue {
     ? (normalized as RoutingStrategyValue)
     : "priority";
 }
+=======
+export type RoutingStrategyValue =
+  | "priority"
+  | "weighted"
+  | "round-robin"
+  | "context-relay"
+  | "fill-first"
+  | "p2c"
+  | "random"
+  | "least-used"
+  | "cost-optimized"
+  | "strict-random"
+  | "auto"
+  | "context-optimized"
+  | "lkgp";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 type RoutingStrategyOption = {
   value: RoutingStrategyValue;
@@ -153,4 +170,21 @@ export const ROUTING_STRATEGIES: RoutingStrategyOption[] = [
   },
 ];
 
+<<<<<<< HEAD
 export const SETTINGS_FALLBACK_STRATEGY_VALUES = ACCOUNT_FALLBACK_STRATEGY_VALUES;
+=======
+export const SETTINGS_FALLBACK_STRATEGY_VALUES: RoutingStrategyValue[] = [
+  "priority",
+  "weighted",
+  "fill-first",
+  "round-robin",
+  "p2c",
+  "random",
+  "least-used",
+  "cost-optimized",
+  "strict-random",
+  "auto",
+  "context-optimized",
+  "lkgp",
+];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

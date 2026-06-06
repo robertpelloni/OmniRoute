@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 import type { A2ATask, TaskArtifact } from "./taskManager";
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 type TaskManagerLike = {
   updateTask: (
     taskId: string,
@@ -9,6 +12,7 @@ type TaskManagerLike = {
   ) => unknown;
 };
 
+<<<<<<< HEAD
 type StreamTaskResult = {
   artifacts: TaskArtifact[];
   metadata: Record<string, unknown>;
@@ -37,12 +41,26 @@ export const A2A_SKILL_HANDLERS: Record<string, A2ASkillHandler> = {
     const skillModule = await import("./skills/healthReport");
     return skillModule.executeHealthReport(task);
   },
+=======
+type StreamTaskLike = {
+  id: string;
+};
+
+type StreamTaskResult = {
+  artifacts: Array<{ type: string; content: string }>;
+  metadata: Record<string, unknown>;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 };
 
 export async function executeA2ATaskWithState(
   tm: TaskManagerLike,
+<<<<<<< HEAD
   task: A2ATask,
   handler: (task: A2ATask) => Promise<StreamTaskResult>
+=======
+  task: StreamTaskLike,
+  handler: (task: StreamTaskLike) => Promise<StreamTaskResult>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 ) {
   try {
     const result = await handler(task);

@@ -14,11 +14,15 @@ function getDataDir() {
 
 // Configuration
 const TARGET_HOST = "daily-cloudcode-pa.googleapis.com";
+<<<<<<< HEAD
 const parsedLocalPort = Number.parseInt(process.env.MITM_LOCAL_PORT || "443", 10);
 const LOCAL_PORT =
   Number.isInteger(parsedLocalPort) && parsedLocalPort > 0 && parsedLocalPort <= 65535
     ? parsedLocalPort
     : 443;
+=======
+const LOCAL_PORT = 443;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 const ROUTER_BASE_URL = (
   process.env.OMNIROUTE_BASE_URL ||
   process.env.BASE_URL ||
@@ -44,6 +48,7 @@ if (!API_KEY) {
 
 // Load SSL certificates
 const certDir = path.join(DATA_DIR, "mitm");
+<<<<<<< HEAD
 const STATS_FILE = path.join(certDir, "stats.json");
 const stats = {
   startedAt: null,
@@ -62,6 +67,8 @@ function writeStats() {
   }
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 const sslOptions = {
   key: fs.readFileSync(path.join(certDir, "server.key")),
   cert: fs.readFileSync(path.join(certDir, "server.crt")),
@@ -270,10 +277,13 @@ async function intercept(req, res, bodyBuffer, mappedModel) {
 }
 
 const server = https.createServer(sslOptions, async (req, res) => {
+<<<<<<< HEAD
   stats.totalRequests++;
   stats.lastRequestAt = new Date().toISOString();
   writeStats();
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const bodyBuffer = await collectBodyRaw(req);
 
   // Save request log if enabled
@@ -297,15 +307,19 @@ const server = https.createServer(sslOptions, async (req, res) => {
     return passthrough(req, res, bodyBuffer);
   }
 
+<<<<<<< HEAD
   stats.interceptedRequests++;
   stats.lastInterceptAt = new Date().toISOString();
   writeStats();
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   console.log(`🔀 ${model} → ${mappedModel}`);
   return intercept(req, res, bodyBuffer, mappedModel);
 });
 
 server.listen(LOCAL_PORT, () => {
+<<<<<<< HEAD
   stats.startedAt = new Date().toISOString();
   writeStats();
   console.log(`🚀 MITM ready on :${LOCAL_PORT} → ${ROUTER_URL}`);
@@ -320,6 +334,11 @@ server.on("connection", (socket) => {
   });
 });
 
+=======
+  console.log(`🚀 MITM ready on :${LOCAL_PORT} → ${ROUTER_URL}`);
+});
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 server.on("error", (error) => {
   if (error.code === "EADDRINUSE") {
     console.error(`❌ Port ${LOCAL_PORT} already in use`);

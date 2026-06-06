@@ -9,7 +9,10 @@
  */
 
 import { registerQuotaFetcher, type QuotaFetcher } from "./quotaPreflight.ts";
+<<<<<<< HEAD
 import { getSessionInfo } from "./sessionManager.ts";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 export { registerQuotaFetcher };
 export type { QuotaFetcher };
@@ -25,6 +28,7 @@ interface MonitorState {
   stopped: boolean;
   provider: string;
   accountId: string;
+<<<<<<< HEAD
   connectionSnapshot: Record<string, unknown> | null;
   sessionBound: boolean;
   status: "starting" | "idle" | "healthy" | "warning" | "exhausted" | "error";
@@ -74,6 +78,8 @@ export interface QuotaMonitorSummary {
   errors: number;
   statusCounts: Record<QuotaMonitorSnapshot["status"], number>;
   byProvider: Record<string, number>;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 const activeMonitors = new Map<string, MonitorState>();
@@ -95,14 +101,22 @@ function suppressedAlert(
   provider: string,
   accountId: string,
   percentUsed: number
+<<<<<<< HEAD
 ): boolean {
   const key = `${sessionId}:${provider}:${accountId}`;
   const last = alertSuppression.get(key) ?? 0;
   if (Date.now() - last < ALERT_SUPPRESS_WINDOW_MS) return false;
+=======
+): void {
+  const key = `${sessionId}:${provider}:${accountId}`;
+  const last = alertSuppression.get(key) ?? 0;
+  if (Date.now() - last < ALERT_SUPPRESS_WINDOW_MS) return;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   alertSuppression.set(key, Date.now());
   console.warn(
     `[QuotaMonitor] session=${sessionId} ${provider}/${accountId}: ${(percentUsed * 100).toFixed(1)}% quota used`
   );
+<<<<<<< HEAD
   return true;
 }
 
@@ -161,26 +175,35 @@ function sortSnapshots(snapshots: QuotaMonitorSnapshot[]): QuotaMonitorSnapshot[
       (left.lastPolledAt ? Date.parse(left.lastPolledAt) : 0)
     );
   });
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 function scheduleNextPoll(sessionId: string, intervalMs: number): void {
   const state = activeMonitors.get(sessionId);
   if (!state || state.stopped) return;
+<<<<<<< HEAD
   state.nextPollDelayMs = intervalMs;
   state.nextPollAt = Date.now() + intervalMs;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const { provider, accountId } = state;
   const timer = setTimeout(async () => {
     const current = activeMonitors.get(sessionId);
     if (!current || current.stopped) return;
+<<<<<<< HEAD
     if (current.sessionBound && !getSessionInfo(sessionId)) {
       stopQuotaMonitor(sessionId);
       return;
     }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     try {
       const fetcher = quotaFetcherRegistry.get(provider);
       if (!fetcher) {
+<<<<<<< HEAD
         current.status = current.lastQuotaPercent === null ? "idle" : current.status;
         scheduleNextPoll(sessionId, NORMAL_INTERVAL_MS);
         return;
@@ -228,15 +251,35 @@ function scheduleNextPoll(sessionId: string, intervalMs: number): void {
           current.lastAlertAt = Date.now();
           current.totalAlerts += 1;
         }
+=======
+        scheduleNextPoll(sessionId, NORMAL_INTERVAL_MS);
+        return;
+      }
+      const quota = await fetcher(accountId);
+      const percentUsed = quota?.percentUsed ?? 0;
+
+      if (percentUsed >= EXHAUSTION_THRESHOLD) {
+        suppressedAlert(sessionId, provider, accountId, percentUsed);
+        console.info(
+          `[QuotaMonitor] session=${sessionId}: marking ${accountId} for next-session cooldown`
+        );
+        scheduleNextPoll(sessionId, CRITICAL_INTERVAL_MS);
+      } else if (percentUsed >= WARN_THRESHOLD) {
+        suppressedAlert(sessionId, provider, accountId, percentUsed);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         scheduleNextPoll(sessionId, CRITICAL_INTERVAL_MS);
       } else {
         scheduleNextPoll(sessionId, NORMAL_INTERVAL_MS);
       }
+<<<<<<< HEAD
     } catch (error) {
       current.lastErrorAt = Date.now();
       current.lastError = error instanceof Error ? error.message : String(error);
       current.consecutiveFailures += 1;
       current.status = "error";
+=======
+    } catch {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       scheduleNextPoll(sessionId, NORMAL_INTERVAL_MS);
     }
   }, intervalMs);
@@ -252,6 +295,7 @@ export function startQuotaMonitor(
   connection: Record<string, unknown>
 ): void {
   if (!isQuotaMonitorEnabled(connection)) return;
+<<<<<<< HEAD
   const current = activeMonitors.get(sessionId);
   if (current && !current.stopped) {
     if (current.provider === provider && current.accountId === accountId) {
@@ -286,6 +330,11 @@ export function startQuotaMonitor(
     totalAlerts: 0,
     consecutiveFailures: 0,
   });
+=======
+  if (activeMonitors.has(sessionId)) return;
+
+  activeMonitors.set(sessionId, { timer: null, stopped: false, provider, accountId });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   scheduleNextPoll(sessionId, NORMAL_INTERVAL_MS);
 }
 
@@ -306,6 +355,7 @@ export function stopQuotaMonitor(sessionId: string): void {
 export function getActiveMonitorCount(): number {
   return activeMonitors.size;
 }
+<<<<<<< HEAD
 
 export function getQuotaMonitorSnapshot(sessionId: string): QuotaMonitorSnapshot | null {
   const state = activeMonitors.get(sessionId);
@@ -355,3 +405,5 @@ export function clearQuotaMonitors(): void {
   }
   alertSuppression.clear();
 }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

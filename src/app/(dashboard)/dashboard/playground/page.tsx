@@ -1,5 +1,6 @@
 "use client";
 
+<<<<<<< HEAD
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { Card, Button, Select, Badge } from "@/shared/components";
@@ -7,15 +8,23 @@ import { ALIAS_TO_ID } from "@/shared/constants/providers";
 import { pickMaskedDisplayValue, pickDisplayValue } from "@/shared/utils/maskEmail";
 import useEmailPrivacyStore from "@/store/emailPrivacyStore";
 =======
+=======
+import { useState, useEffect, useCallback, useRef } from "react";
+import { Card, Button, Select, Badge } from "@/shared/components";
+import { ALIAS_TO_ID } from "@/shared/constants/providers";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import dynamic from "next/dynamic";
 
 const Editor = dynamic(() => import("@monaco-editor/react"), { ssr: false });
 const SearchPlayground = dynamic(() => import("./SearchPlayground"), {
   ssr: false,
 });
+<<<<<<< HEAD
 const ChatPlayground = dynamic(() => import("./ChatPlayground"), {
   ssr: false,
 });
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 interface ModelInfo {
   id: string;
@@ -31,12 +40,30 @@ interface ProviderOption {
 interface ConnectionOption {
   id: string;
   name: string;
+<<<<<<< HEAD
   email?: string;
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   provider: string;
   authType: string;
 }
 
+<<<<<<< HEAD
+=======
+const ENDPOINT_OPTIONS = [
+  { value: "chat", label: "Chat Completions" },
+  { value: "responses", label: "Responses" },
+  { value: "images", label: "Image Generation" },
+  { value: "embeddings", label: "Embeddings" },
+  { value: "speech", label: "Text to Speech" },
+  { value: "transcription", label: "Audio Transcription" },
+  { value: "video", label: "Video Generation" },
+  { value: "music", label: "Music Generation" },
+  { value: "rerank", label: "Rerank" },
+  { value: "search", label: "Web Search" },
+];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const DEFAULT_BODIES: Record<string, object> = {
   chat: {
@@ -148,14 +175,21 @@ async function fileToBase64(file: File): Promise<string> {
 
 /** Render image results from OpenAI-compatible format */
 function ImageResultsInline({ data }: { data: any }) {
+<<<<<<< HEAD
   const t = useTranslations("playground");
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const images: Array<{ url?: string; b64_json?: string; revised_prompt?: string }> =
     data?.data || [];
   if (images.length === 0) return null;
   return (
     <div className="p-4 space-y-3">
       <p className="text-xs text-text-muted font-medium uppercase tracking-wider">
+<<<<<<< HEAD
         {t("imagesGenerated", { count: images.length })}
+=======
+        {images.length} image{images.length > 1 ? "s" : ""} generated
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {images.map((img, i) => {
@@ -166,7 +200,11 @@ function ImageResultsInline({ data }: { data: any }) {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={src}
+<<<<<<< HEAD
                 alt={img.revised_prompt || t("generatedImage", { index: i + 1 })}
+=======
+                alt={img.revised_prompt || `Generated image ${i + 1}`}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 className="w-full"
               />
               <a
@@ -175,7 +213,11 @@ function ImageResultsInline({ data }: { data: any }) {
                 className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1"
               >
                 <span className="material-symbols-outlined text-[13px]">download</span>
+<<<<<<< HEAD
                 {t("save")}
+=======
+                Save
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               </a>
             </div>
           );
@@ -186,6 +228,7 @@ function ImageResultsInline({ data }: { data: any }) {
 }
 
 export default function PlaygroundPage() {
+<<<<<<< HEAD
   const t = useTranslations("playground");
 
   // Get translated endpoint options
@@ -206,6 +249,8 @@ export default function PlaygroundPage() {
     [t]
   );
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [models, setModels] = useState<ModelInfo[]>([]);
   const [providers, setProviders] = useState<ProviderOption[]>([]);
   const [allConnections, setAllConnections] = useState<ConnectionOption[]>([]);
@@ -228,12 +273,27 @@ export default function PlaygroundPage() {
   const [uploadedImages, setUploadedImages] = useState<string[]>([]); // base64 URIs for vision
 
   const isSearchEndpoint = selectedEndpoint === "search";
+<<<<<<< HEAD
   const isConversationalEndpoint = selectedEndpoint === "conversational";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const isTranscriptionEndpoint = selectedEndpoint === "transcription";
   const isChatEndpoint = selectedEndpoint === "chat";
   const isImageEndpoint = selectedEndpoint === "images";
   const supportsVision = isChatEndpoint && isVisionModel(selectedModel);
 
+<<<<<<< HEAD
+=======
+  // Load connections for a given provider — filtered from allConnections
+  const providerConnections = allConnections.filter((c) => {
+    if (!selectedProvider) return false;
+    const resolvedProvider = ALIAS_TO_ID[selectedProvider] || selectedProvider;
+    return c.provider === resolvedProvider || c.provider === selectedProvider;
+  });
+
+  // Fetch models and ALL connections at startup
+  useEffect(() => {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     // Fetch models
     fetch("/v1/models")
       .then((res) => res.json())
@@ -264,6 +324,10 @@ export default function PlaygroundPage() {
         for (const conn of data?.connections || []) {
           conns.push({
             id: conn.id,
+<<<<<<< HEAD
+=======
+            name: conn.name || conn.email || conn.id,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             provider: conn.provider,
             authType: conn.authType || "apiKey",
           });
@@ -467,8 +531,11 @@ export default function PlaygroundPage() {
     }
   };
 
+<<<<<<< HEAD
   const emailsVisible = useEmailPrivacyStore((s) => s.emailsVisible);
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return (
     <div className="space-y-5">
       {/* Info Banner */}
@@ -477,8 +544,16 @@ export default function PlaygroundPage() {
           science
         </span>
         <div>
+<<<<<<< HEAD
           <p className="font-medium text-text-main mb-0.5">{t("title")}</p>
           <p>{t("description")}</p>
+=======
+          <p className="font-medium text-text-main mb-0.5">Model Playground</p>
+          <p>
+            Test any model directly from the dashboard. Pick a provider, model, and endpoint type,
+            then send a request to see the raw response.
+          </p>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         </div>
       </div>
 
@@ -488,21 +563,36 @@ export default function PlaygroundPage() {
           {/* Endpoint — always first */}
           <div className="flex-1 w-full">
             <label className="block text-xs font-medium text-text-muted mb-1.5 uppercase tracking-wider">
+<<<<<<< HEAD
               {t("endpoint")}
+=======
+              Endpoint
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             </label>
             <Select
               value={selectedEndpoint}
               onChange={(e: any) => handleEndpointChange(e.target.value)}
+<<<<<<< HEAD
               options={endpointOptions}
+=======
+              options={ENDPOINT_OPTIONS}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               className="w-full"
             />
           </div>
 
           {/* Provider — hidden in search mode */}
+<<<<<<< HEAD
           {!isSearchEndpoint && !isConversationalEndpoint && (
             <div className="flex-1 w-full">
               <label className="block text-xs font-medium text-text-muted mb-1.5 uppercase tracking-wider">
                 {t("provider")}
+=======
+          {!isSearchEndpoint && (
+            <div className="flex-1 w-full">
+              <label className="block text-xs font-medium text-text-muted mb-1.5 uppercase tracking-wider">
+                Provider
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               </label>
               <Select
                 value={selectedProvider}
@@ -514,10 +604,17 @@ export default function PlaygroundPage() {
           )}
 
           {/* Model — hidden in search mode */}
+<<<<<<< HEAD
           {!isSearchEndpoint && !isConversationalEndpoint && (
             <div className="flex-1 w-full">
               <label className="block text-xs font-medium text-text-muted mb-1.5 uppercase tracking-wider">
                 {t("model")}
+=======
+          {!isSearchEndpoint && (
+            <div className="flex-1 w-full">
+              <label className="block text-xs font-medium text-text-muted mb-1.5 uppercase tracking-wider">
+                Model
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               </label>
               <Select
                 value={selectedModel}
@@ -529,6 +626,13 @@ export default function PlaygroundPage() {
           )}
 
           {/* Account/Key — always shown when provider is selected */}
+<<<<<<< HEAD
+=======
+          {!isSearchEndpoint && (
+            <div className="flex-1 w-full">
+              <label className="block text-xs font-medium text-text-muted mb-1.5 uppercase tracking-wider">
+                Account / Key
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               </label>
               <Select
                 value={selectedConnection}
@@ -538,6 +642,15 @@ export default function PlaygroundPage() {
                     value: "",
                     label:
                       providerConnections.length > 0
+<<<<<<< HEAD
+=======
+                        ? `Auto (${providerConnections.length} accounts)`
+                        : "No accounts",
+                  },
+                  ...providerConnections.map((c) => ({
+                    value: c.id,
+                    label: c.name,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   })),
                 ]}
                 className="w-full"
@@ -546,11 +659,19 @@ export default function PlaygroundPage() {
           )}
 
           {/* Send Button — hidden in search mode (SearchPlayground has its own) */}
+<<<<<<< HEAD
           {!isSearchEndpoint && !isConversationalEndpoint && (
             <div className="shrink-0">
               {loading ? (
                 <Button icon="stop" variant="secondary" onClick={handleCancel}>
                   {t("cancel")}
+=======
+          {!isSearchEndpoint && (
+            <div className="shrink-0">
+              {loading ? (
+                <Button icon="stop" variant="secondary" onClick={handleCancel}>
+                  Cancel
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 </Button>
               ) : (
                 <Button
@@ -561,7 +682,11 @@ export default function PlaygroundPage() {
                     (!selectedModel && !isTranscriptionEndpoint)
                   }
                 >
+<<<<<<< HEAD
                   {t("send")}
+=======
+                  Send
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 </Button>
               )}
             </div>
@@ -569,6 +694,7 @@ export default function PlaygroundPage() {
         </div>
       </Card>
 
+<<<<<<< HEAD
       {/* Isolated sub-components */}
       {isSearchEndpoint ? (
         <SearchPlayground />
@@ -590,6 +716,11 @@ export default function PlaygroundPage() {
               : ""
           }
         />
+=======
+      {/* Search mode — isolated sub-component */}
+      {isSearchEndpoint ? (
+        <SearchPlayground />
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       ) : (
         <>
           {/* File Upload Zone — shown for transcription and vision models */}
@@ -601,16 +732,28 @@ export default function PlaygroundPage() {
                     attach_file
                   </span>
                   <h3 className="text-sm font-semibold text-text-main">
+<<<<<<< HEAD
                     {isTranscriptionEndpoint ? t("audioFile") : t("attachImages")}
                   </h3>
                   {isTranscriptionEndpoint && (
                     <Badge variant="info" size="sm">
                       {t("multipartFormData")}
+=======
+                    {isTranscriptionEndpoint ? "Audio File" : "Attach Images (Vision)"}
+                  </h3>
+                  {isTranscriptionEndpoint && (
+                    <Badge variant="info" size="sm">
+                      multipart/form-data
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     </Badge>
                   )}
                   {supportsVision && (
                     <Badge variant="info" size="sm">
+<<<<<<< HEAD
                       {t("upToImages")}
+=======
+                      up to 4 images
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     </Badge>
                   )}
                 </div>
@@ -633,7 +776,11 @@ export default function PlaygroundPage() {
                     {!uploadedFile && (
                       <p className="text-xs text-amber-500 mt-1 flex items-center gap-1">
                         <span className="material-symbols-outlined text-[12px]">info</span>
+<<<<<<< HEAD
                         {t("selectAudioFile")}
+=======
+                        Select an audio file to transcribe (mp3, wav, m4a, ogg, flac…)
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                       </p>
                     )}
                   </div>
@@ -674,7 +821,11 @@ export default function PlaygroundPage() {
                           onClick={() => setUploadedImages([])}
                           className="text-xs text-text-muted hover:text-red-500 self-center ml-1"
                         >
+<<<<<<< HEAD
                           {t("clearAll")}
+=======
+                          Clear all
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                         </button>
                       </div>
                     )}
@@ -694,7 +845,11 @@ export default function PlaygroundPage() {
                     <span className="material-symbols-outlined text-[18px] text-text-muted">
                       upload
                     </span>
+<<<<<<< HEAD
                     <h3 className="text-sm font-semibold text-text-main">{t("request")}</h3>
+=======
+                    <h3 className="text-sm font-semibold text-text-main">Request</h3>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     <Badge variant="info" size="sm">
                       POST {ENDPOINT_PATHS[selectedEndpoint]}
                     </Badge>
@@ -703,7 +858,11 @@ export default function PlaygroundPage() {
                     <button
                       onClick={() => handleCopy(requestBody)}
                       className="p-1.5 rounded hover:bg-black/5 dark:hover:bg-white/5 text-text-muted hover:text-text-main transition-colors"
+<<<<<<< HEAD
                       title={t("copy")}
+=======
+                      title="Copy"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     >
                       <span className="material-symbols-outlined text-[16px]">content_copy</span>
                     </button>
@@ -714,7 +873,11 @@ export default function PlaygroundPage() {
                         setRequestBody(JSON.stringify(template, null, 2));
                       }}
                       className="p-1.5 rounded hover:bg-black/5 dark:hover:bg-white/5 text-text-muted hover:text-text-main transition-colors"
+<<<<<<< HEAD
                       title={t("resetToDefault")}
+=======
+                      title="Reset to default"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     >
                       <span className="material-symbols-outlined text-[16px]">restart_alt</span>
                     </button>
@@ -725,7 +888,12 @@ export default function PlaygroundPage() {
                     <span className="material-symbols-outlined text-[12px] text-amber-500 mt-0.5">
                       info
                     </span>
+<<<<<<< HEAD
                     {t("transcriptionHint")}
+=======
+                    Transcription uses multipart/form-data. Upload the audio file above — JSON below
+                    controls extra params (model, language).
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   </p>
                 )}
                 <div className="border border-border rounded-lg overflow-hidden">
@@ -757,7 +925,11 @@ export default function PlaygroundPage() {
                     <span className="material-symbols-outlined text-[18px] text-text-muted">
                       download
                     </span>
+<<<<<<< HEAD
                     <h3 className="text-sm font-semibold text-text-main">{t("response")}</h3>
+=======
+                    <h3 className="text-sm font-semibold text-text-main">Response</h3>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     {responseStatus !== null && (
                       <Badge
                         variant={
@@ -781,7 +953,11 @@ export default function PlaygroundPage() {
                     <button
                       onClick={() => handleCopy(responseBody)}
                       className="p-1.5 rounded hover:bg-black/5 dark:hover:bg-white/5 text-text-muted hover:text-text-main transition-colors"
+<<<<<<< HEAD
                       title={t("copy")}
+=======
+                      title="Copy"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     >
                       <span className="material-symbols-outlined text-[16px]">content_copy</span>
                     </button>
@@ -797,7 +973,11 @@ export default function PlaygroundPage() {
                         className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
                       >
                         <span className="material-symbols-outlined text-[16px]">download</span>
+<<<<<<< HEAD
                         {t("downloadAudio")}
+=======
+                        Download audio
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                       </a>
                     </div>
                   ) : imageData ? (
@@ -805,7 +985,11 @@ export default function PlaygroundPage() {
                   ) : transcriptionText !== null ? (
                     <div className="p-4 space-y-2">
                       <p className="text-xs text-text-muted font-medium uppercase tracking-wider">
+<<<<<<< HEAD
                         {t("transcription")}
+=======
+                        Transcription
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                       </p>
                       <div className="bg-surface/50 rounded p-3 text-sm text-text-main leading-relaxed whitespace-pre-wrap">
                         {transcriptionText}
@@ -815,7 +999,11 @@ export default function PlaygroundPage() {
                         className="text-xs text-primary hover:underline flex items-center gap-1"
                       >
                         <span className="material-symbols-outlined text-[12px]">content_copy</span>
+<<<<<<< HEAD
                         {t("copyText")}
+=======
+                        Copy text
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                       </button>
                     </div>
                   ) : (

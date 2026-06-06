@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { CORS_HEADERS } from "./cors.ts";
+=======
+import { getCorsOrigin } from "./cors.ts";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { detectFormat } from "../services/provider.ts";
 import { translateResponse, initState } from "../translator/index.ts";
 import { FORMATS } from "../translator/formats.ts";
@@ -124,6 +128,10 @@ function createNonStreamingResponse(sourceFormat, model) {
       response: new Response(JSON.stringify(openaiResponse), {
         headers: {
           "Content-Type": "application/json",
+<<<<<<< HEAD
+=======
+          "Access-Control-Allow-Origin": getCorsOrigin(),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         },
       }),
     };
@@ -157,6 +165,10 @@ function createNonStreamingResponse(sourceFormat, model) {
     response: new Response(JSON.stringify(finalResponse), {
       headers: {
         "Content-Type": "application/json",
+<<<<<<< HEAD
+=======
+        "Access-Control-Allow-Origin": getCorsOrigin(),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       },
     }),
   };
@@ -204,6 +216,10 @@ function createStreamingResponse(sourceFormat, model) {
         "Content-Type": "text/event-stream",
         "Cache-Control": "no-cache",
         Connection: "keep-alive",
+<<<<<<< HEAD
+=======
+        "Access-Control-Allow-Origin": getCorsOrigin(),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       },
     }),
   };

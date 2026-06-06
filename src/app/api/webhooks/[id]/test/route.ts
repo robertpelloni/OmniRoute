@@ -6,6 +6,11 @@
 import { NextResponse } from "next/server";
 import { getWebhook, recordWebhookDelivery } from "@/lib/localDb";
 import { deliverWebhook } from "@/lib/webhookDispatcher";
+<<<<<<< HEAD
+=======
+
+export async function POST(_: Request, { params }: { params: Promise<{ id: string }> }) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const { id } = await params;
     const webhook = getWebhook(id);

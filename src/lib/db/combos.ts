@@ -5,7 +5,10 @@
 import { v4 as uuidv4 } from "uuid";
 import { getDbInstance } from "./core";
 import { backupDbFile } from "./backup";
+<<<<<<< HEAD
 import { normalizeComboRecord } from "@/lib/combos/steps";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 type JsonRecord = Record<string, unknown>;
 
@@ -31,6 +34,7 @@ function withSortOrder(payload: string, sortOrder: number | null): JsonRecord {
   return parsed;
 }
 
+<<<<<<< HEAD
 function getComboNameSet(
   db: ReturnType<typeof getDbInstance>,
   extraNames: string[] = []
@@ -70,6 +74,8 @@ function parseComboRow(row: unknown): JsonRecord | null {
   return withSortOrder(payload, getSortOrder(row));
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function getNextSortOrder() {
   const db = getDbInstance();
   const row = db.prepare("SELECT COALESCE(MAX(sort_order), 0) AS sort_order FROM combos").get();
@@ -79,6 +85,7 @@ function getNextSortOrder() {
 
 export async function getCombos() {
   const db = getDbInstance();
+<<<<<<< HEAD
   const rawCombos = db
     .prepare("SELECT data, sort_order FROM combos ORDER BY sort_order ASC, name COLLATE NOCASE ASC")
     .all()
@@ -94,28 +101,50 @@ export async function getCombos() {
       allCombos: comboNames,
     })
   );
+=======
+  return db
+    .prepare("SELECT data, sort_order FROM combos ORDER BY sort_order ASC, name COLLATE NOCASE ASC")
+    .all()
+    .map((row) => {
+      const payload = getSerializedData(row);
+      if (!payload) return null;
+      return withSortOrder(payload, getSortOrder(row));
+    })
+    .filter((row): row is JsonRecord => row !== null);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 export async function getComboById(id: string) {
   const db = getDbInstance();
   const row = db.prepare("SELECT data, sort_order FROM combos WHERE id = ?").get(id);
+<<<<<<< HEAD
   const combo = parseComboRow(row);
   if (!combo) return null;
   return normalizeStoredCombo(combo, db, typeof combo.name === "string" ? [combo.name] : []);
+=======
+  const payload = getSerializedData(row);
+  return payload ? withSortOrder(payload, getSortOrder(row)) : null;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 export async function getComboByName(name: string) {
   const db = getDbInstance();
   const row = db.prepare("SELECT data, sort_order FROM combos WHERE name = ?").get(name);
+<<<<<<< HEAD
   const combo = parseComboRow(row);
   if (!combo) return null;
   return normalizeStoredCombo(combo, db, [name]);
+=======
+  const payload = getSerializedData(row);
+  return payload ? withSortOrder(payload, getSortOrder(row)) : null;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 export async function createCombo(data: JsonRecord) {
   const db = getDbInstance();
   const now = new Date().toISOString();
   const sortOrder = typeof data.sortOrder === "number" ? data.sortOrder : getNextSortOrder();
+<<<<<<< HEAD
   const comboId = typeof data.id === "string" && data.id.trim().length > 0 ? data.id : uuidv4();
   const combo = normalizeStoredCombo(
     {
@@ -134,6 +163,8 @@ export async function createCombo(data: JsonRecord) {
     typeof data.name === "string" ? [data.name] : []
   );
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const combo = {
     id: uuidv4(),
@@ -142,10 +173,17 @@ export async function createCombo(data: JsonRecord) {
     strategy: data.strategy || "priority",
     config: data.config || {},
     isHidden: Boolean(data.isHidden),
+<<<<<<< HEAD
     createdAt: now,
     updatedAt: now,
   };
 >>>>>>> Stashed changes
+=======
+    sortOrder,
+    createdAt: now,
+    updatedAt: now,
+  };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   db.prepare(
     "INSERT INTO combos (id, name, data, sort_order, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)"
@@ -160,8 +198,14 @@ export async function updateCombo(id: string, data: JsonRecord) {
   const existing = db.prepare("SELECT data, sort_order FROM combos WHERE id = ?").get(id);
   if (!existing) return null;
 
+<<<<<<< HEAD
   const current = parseComboRow(existing);
   if (!current) return null;
+=======
+  const serializedCurrent = getSerializedData(existing);
+  if (!serializedCurrent) return null;
+  const current = withSortOrder(serializedCurrent, getSortOrder(existing));
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const sortOrder =
     typeof data.sortOrder === "number"
       ? data.sortOrder
@@ -179,6 +223,7 @@ export async function updateCombo(id: string, data: JsonRecord) {
     typeof merged["name"] === "string" && merged["name"].trim().length > 0
       ? merged["name"]
       : currentName;
+<<<<<<< HEAD
   const normalizedMerged = normalizeStoredCombo({ ...merged, name: nextName }, db, [nextName]);
 
   db.prepare(
@@ -190,6 +235,17 @@ export async function updateCombo(id: string, data: JsonRecord) {
 }
 
 <<<<<<< Updated upstream
+=======
+
+  db.prepare(
+    "UPDATE combos SET name = ?, data = ?, sort_order = ?, updated_at = ? WHERE id = ?"
+  ).run(nextName, JSON.stringify({ ...merged, name: nextName }), sortOrder, merged.updatedAt, id);
+
+  backupDbFile("pre-write");
+  return { ...merged, name: nextName };
+}
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export async function reorderCombos(comboIds: string[]) {
   const db = getDbInstance();
   const rows = db
@@ -235,16 +291,20 @@ export async function reorderCombos(comboIds: string[]) {
       return [String(record.id), row];
     })
   );
+<<<<<<< HEAD
   const comboNames = rows
     .map((row) => {
       const combo = parseComboRow(row);
       return combo && typeof combo.name === "string" ? combo.name.trim() : "";
     })
     .filter((name): name is string => name.length > 0);
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const reorderTransaction = db.transaction(() => {
     orderedIds.forEach((id, index) => {
       const row = rowById.get(id);
+<<<<<<< HEAD
       const combo = row ? parseComboRow(row) : null;
       if (!combo) return;
       const sortOrder = index + 1;
@@ -252,6 +312,13 @@ export async function reorderCombos(comboIds: string[]) {
         { ...combo, sortOrder, updatedAt: now },
         { allCombos: comboNames }
       );
+=======
+      const payload = row ? getSerializedData(row) : null;
+      if (!payload) return;
+      const combo = withSortOrder(payload, getSortOrder(row));
+      const sortOrder = index + 1;
+      const updatedCombo = { ...combo, sortOrder, updatedAt: now };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       update.run(JSON.stringify(updatedCombo), sortOrder, now, id);
     });
   });
@@ -261,7 +328,10 @@ export async function reorderCombos(comboIds: string[]) {
   return getCombos();
 }
 
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export async function deleteCombo(id: string) {
   const db = getDbInstance();
   const result = db.prepare("DELETE FROM combos WHERE id = ?").run(id);

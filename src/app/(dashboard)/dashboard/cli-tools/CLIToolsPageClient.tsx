@@ -1,7 +1,11 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+<<<<<<< HEAD
 import { Card, CardSkeleton, SegmentedControl } from "@/shared/components";
+=======
+import { Card, CardSkeleton } from "@/shared/components";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { CLI_TOOLS } from "@/shared/constants/cliTools";
 import {
   PROVIDER_MODELS,
@@ -18,6 +22,7 @@ import {
   DefaultToolCard,
   AntigravityToolCard,
   CopilotToolCard,
+<<<<<<< HEAD
   CustomCliCard,
 } from "./components";
 import { useTranslations } from "next-intl";
@@ -46,6 +51,14 @@ const MITM_TOOL_IDS = new Set(["antigravity", "kiro"]);
 const CUSTOM_TOOL_IDS = new Set(["custom"]);
 
 export default function CLIToolsPageClient({ machineId: _machineId }) {
+=======
+} from "./components";
+import { useTranslations } from "next-intl";
+
+const CLOUD_URL = process.env.NEXT_PUBLIC_CLOUD_URL;
+
+export default function CLIToolsPageClient({ machineId }) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const t = useTranslations("cliTools");
   const [connections, setConnections] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -56,6 +69,7 @@ export default function CLIToolsPageClient({ machineId: _machineId }) {
   const [toolStatuses, setToolStatuses] = useState({});
   const [statusesLoaded, setStatusesLoaded] = useState(false);
   const [dynamicModels, setDynamicModels] = useState([]);
+<<<<<<< HEAD
   const [activeCategory, setActiveCategory] = useState("auto");
   const translateOrFallback = useCallback(
     (key, fallback, values = undefined) => {
@@ -63,11 +77,16 @@ export default function CLIToolsPageClient({ machineId: _machineId }) {
         const translated = t(key, values);
         return translated === key || translated === `cliTools.${key}` ? fallback : translated;
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const translateOrFallback = useCallback(
     (key, fallback, values = undefined) => {
       try {
         return t(key, values);
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       } catch {
         return fallback;
       }
@@ -97,7 +116,11 @@ export default function CLIToolsPageClient({ machineId: _machineId }) {
 
   const fetchApiKeys = async () => {
     try {
+<<<<<<< HEAD
       const res = await fetch("/api/cli-tools/keys");
+=======
+      const res = await fetch("/api/keys");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       if (res.ok) {
         const data = await res.json();
         setApiKeys(data.keys || []);
@@ -233,7 +256,11 @@ export default function CLIToolsPageClient({ machineId: _machineId }) {
     if (typeof window !== "undefined") {
       return window.location.origin;
     }
+<<<<<<< HEAD
     return DEFAULT_DISPLAY_BASE_URL;
+=======
+    return "http://localhost:20128";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 
   if (loading || !statusesLoaded) {
@@ -250,6 +277,7 @@ export default function CLIToolsPageClient({ machineId: _machineId }) {
 
   const availableModels = getAllAvailableModels();
   const hasActiveProviders = availableModels.length > 0;
+<<<<<<< HEAD
   const toolEntries = Object.entries(CLI_TOOLS).filter(([toolId]) => {
     if (activeCategory === "all") return true;
     if (activeCategory === "auto") return AUTO_CONFIGURED_TOOL_IDS.has(toolId);
@@ -258,6 +286,8 @@ export default function CLIToolsPageClient({ machineId: _machineId }) {
     if (activeCategory === "custom") return CUSTOM_TOOL_IDS.has(toolId);
     return true;
   });
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const renderToolCard = (toolId, tool) => {
     const commonProps = {
@@ -354,6 +384,7 @@ export default function CLIToolsPageClient({ machineId: _machineId }) {
             cloudEnabled={cloudEnabled}
           />
         );
+<<<<<<< HEAD
       case "custom":
         return (
           <CustomCliCard
@@ -364,6 +395,8 @@ export default function CLIToolsPageClient({ machineId: _machineId }) {
             cloudEnabled={cloudEnabled}
           />
         );
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       default:
         // #487: Any tool with configType "mitm" should use the MITM card (Start/Stop controls)
         if (tool.configType === "mitm") {
@@ -425,6 +458,7 @@ export default function CLIToolsPageClient({ machineId: _machineId }) {
         </div>
       </Card>
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
       <Card>
         <div className="flex flex-col gap-4">
@@ -455,6 +489,8 @@ export default function CLIToolsPageClient({ machineId: _machineId }) {
       </Card>
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       {!hasActiveProviders && (
         <Card className="border-yellow-500/50 bg-yellow-500/5">
           <div className="flex items-center gap-3">
@@ -470,6 +506,10 @@ export default function CLIToolsPageClient({ machineId: _machineId }) {
       )}
 
       <div className="flex flex-col gap-4">
+<<<<<<< HEAD
+=======
+        {Object.entries(CLI_TOOLS).map(([toolId, tool]) => {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           const docsHref = getToolDocsHref(toolId, tool);
           const isExternalDocs = /^https?:\/\//i.test(docsHref);
           return (

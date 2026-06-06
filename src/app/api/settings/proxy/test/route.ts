@@ -9,8 +9,11 @@ import { testProxySchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
 import { createErrorResponse, createErrorResponseFromUnknown } from "@/lib/api/errorResponse";
 import { getProxyById } from "@/lib/localDb";
+<<<<<<< HEAD
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const BASE_SUPPORTED_PROXY_TYPES = new Set(["http", "https"]);
 
@@ -38,9 +41,12 @@ function supportedTypesMessage() {
  * Returns: { success, publicIp?, latencyMs?, error? }
  */
 export async function POST(request: Request) {
+<<<<<<< HEAD
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody: unknown;
   try {
     rawBody = await request.json();
@@ -142,7 +148,11 @@ export async function POST(request: Request) {
     const dispatcher = createProxyDispatcher(proxyUrl);
 
     try {
+<<<<<<< HEAD
       const result = await undiciRequest("https://api64.ipify.org?format=json", {
+=======
+      const result = await undiciRequest("https://api.ipify.org?format=json", {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         method: "GET",
         dispatcher,
         signal: controller.signal,

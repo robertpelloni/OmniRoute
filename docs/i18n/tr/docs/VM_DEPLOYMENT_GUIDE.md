@@ -1,5 +1,6 @@
 # OmniRoute — Deployment Guide on VM with Cloudflare (Türkçe)
 
+<<<<<<< HEAD
 🌐 **Languages:** 🇺🇸 [English](../../../../docs/VM_DEPLOYMENT_GUIDE.md) · 🇸🇦 [ar](../../ar/docs/VM_DEPLOYMENT_GUIDE.md) · 🇧🇬 [bg](../../bg/docs/VM_DEPLOYMENT_GUIDE.md) · 🇧🇩 [bn](../../bn/docs/VM_DEPLOYMENT_GUIDE.md) · 🇨🇿 [cs](../../cs/docs/VM_DEPLOYMENT_GUIDE.md) · 🇩🇰 [da](../../da/docs/VM_DEPLOYMENT_GUIDE.md) · 🇩🇪 [de](../../de/docs/VM_DEPLOYMENT_GUIDE.md) · 🇪🇸 [es](../../es/docs/VM_DEPLOYMENT_GUIDE.md) · 🇮🇷 [fa](../../fa/docs/VM_DEPLOYMENT_GUIDE.md) · 🇫🇮 [fi](../../fi/docs/VM_DEPLOYMENT_GUIDE.md) · 🇫🇷 [fr](../../fr/docs/VM_DEPLOYMENT_GUIDE.md) · 🇮🇳 [gu](../../gu/docs/VM_DEPLOYMENT_GUIDE.md) · 🇮🇱 [he](../../he/docs/VM_DEPLOYMENT_GUIDE.md) · 🇮🇳 [hi](../../hi/docs/VM_DEPLOYMENT_GUIDE.md) · 🇭🇺 [hu](../../hu/docs/VM_DEPLOYMENT_GUIDE.md) · 🇮🇩 [id](../../id/docs/VM_DEPLOYMENT_GUIDE.md) · 🇮🇹 [it](../../it/docs/VM_DEPLOYMENT_GUIDE.md) · 🇯🇵 [ja](../../ja/docs/VM_DEPLOYMENT_GUIDE.md) · 🇰🇷 [ko](../../ko/docs/VM_DEPLOYMENT_GUIDE.md) · 🇮🇳 [mr](../../mr/docs/VM_DEPLOYMENT_GUIDE.md) · 🇲🇾 [ms](../../ms/docs/VM_DEPLOYMENT_GUIDE.md) · 🇳🇱 [nl](../../nl/docs/VM_DEPLOYMENT_GUIDE.md) · 🇳🇴 [no](../../no/docs/VM_DEPLOYMENT_GUIDE.md) · 🇵🇭 [phi](../../phi/docs/VM_DEPLOYMENT_GUIDE.md) · 🇵🇱 [pl](../../pl/docs/VM_DEPLOYMENT_GUIDE.md) · 🇵🇹 [pt](../../pt/docs/VM_DEPLOYMENT_GUIDE.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/VM_DEPLOYMENT_GUIDE.md) · 🇷🇴 [ro](../../ro/docs/VM_DEPLOYMENT_GUIDE.md) · 🇷🇺 [ru](../../ru/docs/VM_DEPLOYMENT_GUIDE.md) · 🇸🇰 [sk](../../sk/docs/VM_DEPLOYMENT_GUIDE.md) · 🇸🇪 [sv](../../sv/docs/VM_DEPLOYMENT_GUIDE.md) · 🇰🇪 [sw](../../sw/docs/VM_DEPLOYMENT_GUIDE.md) · 🇮🇳 [ta](../../ta/docs/VM_DEPLOYMENT_GUIDE.md) · 🇮🇳 [te](../../te/docs/VM_DEPLOYMENT_GUIDE.md) · 🇹🇭 [th](../../th/docs/VM_DEPLOYMENT_GUIDE.md) · 🇹🇷 [tr](../../tr/docs/VM_DEPLOYMENT_GUIDE.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/VM_DEPLOYMENT_GUIDE.md) · 🇵🇰 [ur](../../ur/docs/VM_DEPLOYMENT_GUIDE.md) · 🇻🇳 [vi](../../vi/docs/VM_DEPLOYMENT_GUIDE.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/VM_DEPLOYMENT_GUIDE.md)
 
 ---
@@ -22,11 +23,32 @@ Complete guide to install and configure OmniRoute on a VM (VPS) with domain mana
 **Tested providers**: Akamai (Linode), DigitalOcean, Vultr, Hetzner, AWS Lightsail.
 
 ---
+=======
+🌐 **Languages:** 🇺🇸 [English](../../../../docs/VM_DEPLOYMENT_GUIDE.md) · 🇪🇸 [es](../../es/docs/VM_DEPLOYMENT_GUIDE.md) · 🇫🇷 [fr](../../fr/docs/VM_DEPLOYMENT_GUIDE.md) · 🇩🇪 [de](../../de/docs/VM_DEPLOYMENT_GUIDE.md) · 🇮🇹 [it](../../it/docs/VM_DEPLOYMENT_GUIDE.md) · 🇷🇺 [ru](../../ru/docs/VM_DEPLOYMENT_GUIDE.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/VM_DEPLOYMENT_GUIDE.md) · 🇯🇵 [ja](../../ja/docs/VM_DEPLOYMENT_GUIDE.md) · 🇰🇷 [ko](../../ko/docs/VM_DEPLOYMENT_GUIDE.md) · 🇸🇦 [ar](../../ar/docs/VM_DEPLOYMENT_GUIDE.md) · 🇮🇳 [hi](../../hi/docs/VM_DEPLOYMENT_GUIDE.md) · 🇮🇳 [in](../../in/docs/VM_DEPLOYMENT_GUIDE.md) · 🇹🇭 [th](../../th/docs/VM_DEPLOYMENT_GUIDE.md) · 🇻🇳 [vi](../../vi/docs/VM_DEPLOYMENT_GUIDE.md) · 🇮🇩 [id](../../id/docs/VM_DEPLOYMENT_GUIDE.md) · 🇲🇾 [ms](../../ms/docs/VM_DEPLOYMENT_GUIDE.md) · 🇳🇱 [nl](../../nl/docs/VM_DEPLOYMENT_GUIDE.md) · 🇵🇱 [pl](../../pl/docs/VM_DEPLOYMENT_GUIDE.md) · 🇸🇪 [sv](../../sv/docs/VM_DEPLOYMENT_GUIDE.md) · 🇳🇴 [no](../../no/docs/VM_DEPLOYMENT_GUIDE.md) · 🇩🇰 [da](../../da/docs/VM_DEPLOYMENT_GUIDE.md) · 🇫🇮 [fi](../../fi/docs/VM_DEPLOYMENT_GUIDE.md) · 🇵🇹 [pt](../../pt/docs/VM_DEPLOYMENT_GUIDE.md) · 🇷🇴 [ro](../../ro/docs/VM_DEPLOYMENT_GUIDE.md) · 🇭🇺 [hu](../../hu/docs/VM_DEPLOYMENT_GUIDE.md) · 🇧🇬 [bg](../../bg/docs/VM_DEPLOYMENT_GUIDE.md) · 🇸🇰 [sk](../../sk/docs/VM_DEPLOYMENT_GUIDE.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/VM_DEPLOYMENT_GUIDE.md) · 🇮🇱 [he](../../he/docs/VM_DEPLOYMENT_GUIDE.md) · 🇵🇭 [phi](../../phi/docs/VM_DEPLOYMENT_GUIDE.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/VM_DEPLOYMENT_GUIDE.md) · 🇨🇿 [cs](../../cs/docs/VM_DEPLOYMENT_GUIDE.md) · 🇹🇷 [tr](../../tr/docs/VM_DEPLOYMENT_GUIDE.md)
+
+---
+
+OmniRoute'u Cloudflare aracılığıyla yönetilen etki alanına sahip bir VM'ye (VPS) yüklemek ve yapılandırmak için eksiksiz kılavuz.---
+
+## Prerequisites
+
+| Ürün                | Asgari               | Önerilen         |
+| ------------------- | -------------------- | ---------------- |
+| **CPU**             | 1 vCPU               | 2 vCPU           |
+| **RAM**             | 1GB                  | 2GB              |
+| **Disk**            | 10GB SSD             | 25GB SSD         |
+| **İşletim Sistemi** | Ubuntu 22.04LTS      | Ubuntu 24.04LTS  |
+| **Alan adı**        | Cloudflare'e Kayıtlı | —                |
+| **Docker**          | Docker Motoru 24+    | Liman işçisi 27+ |
+
+**Test edilen sağlayıcılar**: Akamai (Linode), DigitalOcean, Vultr, Hetzner, AWS Lightsail.---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## 1. Configure the VM
 
 ### 1.1 Create the instance
 
+<<<<<<< HEAD
 On your preferred VPS provider:
 
 - Choose Ubuntu 24.04 LTS
@@ -35,6 +57,13 @@ On your preferred VPS provider:
 - Note the **public IP** (e.g., `203.0.113.10`)
 
 ### 1.2 Connect via SSH
+=======
+Tercih ettiğiniz VPS sağlayıcısında:
+
+- Ubuntu 24.04 LTS'yi seçin
+- Minimum planı seçin (1 vCPU / 1 GB RAM)
+- Güçlü bir kök şifresi belirleyin veya SSH anahtarını yapılandırın -**genel IP'ye**dikkat edin (ör. '203.0.113.10')### 1.2 Connect via SSH
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ```bash
 ssh root@203.0.113.10
@@ -78,9 +107,13 @@ ufw allow 443/tcp   # HTTPS
 ufw enable
 ```
 
+<<<<<<< HEAD
 > **Tip**: For maximum security, restrict ports 80 and 443 to Cloudflare IPs only. See the [Advanced Security](#advanced-security) section.
 
 ---
+=======
+> **İpucu**: Maksimum güvenlik için 80 ve 443 numaralı bağlantı noktalarını yalnızca Cloudflare IP'leriyle sınırlayın. [Gelişmiş Güvenlik](#gelişmiş güvenlik) bölümüne bakın.---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## 2. Install OmniRoute
 
@@ -122,9 +155,13 @@ NEXT_PUBLIC_BASE_URL=https://llms.seudominio.com
 EOF
 ```
 
+<<<<<<< HEAD
 > ⚠️ **IMPORTANT**: Generate unique secret keys! Use `openssl rand -hex 32` for each key.
 
 ### 2.3 Start the container
+=======
+> ⚠️**ÖNEMLİ**: Benzersiz gizli anahtarlar oluşturun! Her anahtar için 'openssl rand -hex 32' kullanın.### 2.3 Start the container
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ```bash
 docker pull diegosouzapw/omniroute:latest
@@ -145,14 +182,19 @@ docker ps | grep omniroute
 docker logs omniroute --tail 20
 ```
 
+<<<<<<< HEAD
 It should display: `[DB] SQLite database ready` and `listening on port 20128`.
 
 ---
+=======
+Şunu görüntülemelidir: `[DB] SQLite veritabanı hazır` ve `20128 numaralı bağlantı noktasında dinleniliyor`.---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## 3. Configure nginx (Reverse Proxy)
 
 ### 3.1 Generate SSL certificate (Cloudflare Origin)
 
+<<<<<<< HEAD
 In the Cloudflare dashboard:
 
 1. Go to **SSL/TLS → Origin Server**
@@ -171,6 +213,24 @@ nano /etc/nginx/ssl/origin.key
 
 chmod 600 /etc/nginx/ssl/origin.key
 ```
+=======
+Cloudflare kontrol panelinde:
+
+1.**SSL/TLS → Origin Sunucusu**'na gidin 2.**Sertifika Oluştur**'a tıklayın 3. Varsayılanları koruyun (15 yıl, \*.alaniniz.com) 4.**Menşe Sertifikasını**ve**Özel Anahtarı**kopyalayın```bash
+mkdir -p /etc/nginx/ssl
+
+# Paste the certificate
+
+nano /etc/nginx/ssl/origin.crt
+
+# Paste the private key
+
+nano /etc/nginx/ssl/origin.key
+
+chmod 600 /etc/nginx/ssl/origin.key
+
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ### 3.2 Nginx Configuration
 
@@ -228,6 +288,7 @@ server {
     return 301 https://$server_name$request_uri;
 }
 NGINX
+<<<<<<< HEAD
 ```
 
 Keep reverse-proxy stream timeouts aligned with your OmniRoute timeout env vars. If you raise
@@ -235,6 +296,13 @@ Keep reverse-proxy stream timeouts aligned with your OmniRoute timeout env vars.
 above the same threshold.
 
 ### 3.3 Enable and Test
+=======
+````
+
+Ters proxy akış zaman aşımlarını OmniRoute zaman aşımı ortamı değişkenlerinizle uyumlu tutun. Eğer yükseltirsen
+`FETCH_TIMEOUT_MS` / `STREAM_IDLE_TIMEOUT_MS`, `proxy_read_timeout` / `proxy_send_timeout`u artır
+aynı eşiğin üstünde.### 3.3 Enable and Test
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ```bash
 # Remove default configuration
@@ -253,6 +321,7 @@ nginx -t && systemctl reload nginx
 
 ### 4.1 Add DNS record
 
+<<<<<<< HEAD
 In the Cloudflare dashboard → DNS:
 
 | Type | Name   | Content                | Proxy      |
@@ -272,6 +341,23 @@ Under **SSL/TLS → Edge Certificates**:
 - Automatic HTTPS Rewrites: ✅ On
 
 ### 4.3 Testing
+=======
+Cloudflare kontrol panelinde → DNS:
+
+| Tür | İsim  | İçerik                    | Vekil        |
+| --- | ----- | ------------------------- | ------------ | --------------------- |
+| bir | `llm' | '203.0.113.10' (VM IP'si) | ✅ Vekaleten | ### 4.2 Configure SSL |
+
+**SSL/TLS → Genel Bakış**altında:
+
+- Mod:**Tam (Katı)**
+
+**SSL/TLS → Edge Sertifikaları**altında:
+
+- Her Zaman HTTPS Kullan: ✅ Açık
+- Minimum TLS Sürümü: TLS 1.2
+- Otomatik HTTPS Yeniden Yazmaları: ✅ Açık### 4.3 Testing
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ```bash
 curl -sI https://llms.seudominio.com/health
@@ -350,11 +436,18 @@ real_ip_header CF-Connecting-IP;
 CF
 ```
 
+<<<<<<< HEAD
 Add the following to `nginx.conf` inside the `http {}` block:
 
 ```nginx
 include /etc/nginx/cloudflare-ips.conf;
 ```
+=======
+`http {}` bloğunun içindeki `nginx.conf` dosyasına aşağıdakini ekleyin:```nginx
+include /etc/nginx/cloudflare-ips.conf;
+
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ### Install fail2ban
 
@@ -365,7 +458,11 @@ systemctl start fail2ban
 
 # Check status
 fail2ban-client status sshd
+<<<<<<< HEAD
 ```
+=======
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ### Block direct access to the Docker port
 
@@ -383,14 +480,22 @@ netfilter-persistent save
 
 ## 7. Deploy to Cloudflare Workers (Optional)
 
+<<<<<<< HEAD
 For remote access via Cloudflare Workers (without exposing the VM directly):
 
 ```bash
 # In the local repository
+=======
+Cloudflare Workers aracılığıyla uzaktan erişim için (VM'yi doğrudan açığa çıkarmadan):```bash
+
+# In the local repository
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 cd omnirouteCloud
 npm install
 npx wrangler login
 npx wrangler deploy
+<<<<<<< HEAD
 ```
 
 See the full documentation at [omnirouteCloud/README.md](../omnirouteCloud/README.md).
@@ -405,3 +510,19 @@ See the full documentation at [omnirouteCloud/README.md](../omnirouteCloud/READM
 | 80    | nginx HTTP  | Redirect → HTTPS           |
 | 443   | nginx HTTPS | Via Cloudflare Proxy       |
 | 20128 | OmniRoute   | Localhost only (via nginx) |
+=======
+
+```
+
+[omnirouteCloud/README.md](../omnirouteCloud/README.md) adresindeki belgelerin tamamına bakın.---
+
+## Port Summary
+
+| Liman | Hizmet | Erişim |
+| ----- | ----------- | -------------------------- |
+| 22 | SSH | Genel (fail2ban ile) |
+| 80 | nginx HTTP | Yönlendir → HTTPS |
+| 443 | nginx HTTPS | Cloudflare Proxy aracılığıyla |
+| 20128 | OmniRoute | Yalnızca Localhost (nginx aracılığıyla) |
+```
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

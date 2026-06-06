@@ -38,7 +38,11 @@ interface Message {
 // by combo.ts streaming around the <omniModel> tag (#531). Non-global so that
 // .exec() and .test() stay stateless; callers that need full replacement use
 // String.prototype.replace() which replaces all non-overlapping matches.
+<<<<<<< HEAD
 const CACHE_TAG_PATTERN = /(?:\\n|\n|\r)*<omniModel>([^<]+)<\/omniModel>(?:\\n|\n|\r)*/;
+=======
+const CACHE_TAG_PATTERN = /(?:\\n|\n)?<omniModel>([^<]+)<\/omniModel>(?:\\n|\n)?/;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * Inject the model tag into the last assistant message (or append a new one).
@@ -60,7 +64,14 @@ export function injectModelTag(messages: Message[], providerModel: string): Mess
   // #474: If no assistant message exists yet (first turn), append a synthetic one
   // so the tag is present when the client sends the next request with the response.
   if (lastAssistantIdx === -1) {
+<<<<<<< HEAD
     return [...cleaned, { role: "assistant", content: `<omniModel>${providerModel}</omniModel>` }];
+=======
+    return [
+      ...cleaned,
+      { role: "assistant", content: `\n<omniModel>${providerModel}</omniModel>` },
+    ];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   const msg = cleaned[lastAssistantIdx];
@@ -70,12 +81,23 @@ export function injectModelTag(messages: Message[], providerModel: string): Mess
   if (typeof msg.content !== "string") {
     // If the message has tool_calls but no string content, append a new assistant
     // message with the tag rather than silently failing.
+<<<<<<< HEAD
+=======
+    return [
+      ...cleaned,
+      { role: "assistant", content: `\n<omniModel>${providerModel}</omniModel>` },
+    ];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   const tagged = [...cleaned];
   tagged[lastAssistantIdx] = {
     ...msg,
+<<<<<<< HEAD
     content: `${msg.content}<omniModel>${providerModel}</omniModel>`,
+=======
+    content: `${msg.content}\n<omniModel>${providerModel}</omniModel>`,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
   return tagged;
 }

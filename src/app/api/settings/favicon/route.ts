@@ -87,6 +87,10 @@ export async function GET() {
           const response = await fetch(customFaviconUrl, {
             signal: controller.signal,
             headers: {
+<<<<<<< HEAD
+=======
+              "User-Agent": "OmniRoute/1.0",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             },
           });
           clearTimeout(timeoutId);

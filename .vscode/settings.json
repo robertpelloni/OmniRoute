@@ -16,6 +16,7 @@
     "javascript:S3776": {
       "level": "off"
     }
+<<<<<<< HEAD
   },
   "git.ignoreLimitWarning": true,
   // "files.exclude": {
@@ -45,5 +46,7 @@
     "**/.next": true,
     "**/coverage": true,
     "**/_tasks": true
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 }

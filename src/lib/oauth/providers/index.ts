@@ -18,7 +18,10 @@ import { qoder } from "./qoder";
 import { qwen } from "./qwen";
 import { kimiCoding } from "./kimi-coding";
 import { github } from "./github";
+<<<<<<< HEAD
 import { gitlabDuo } from "./gitlab-duo";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { kiro } from "./kiro";
 import { cursor } from "./cursor";
 import { kilocode } from "./kilocode";
@@ -33,9 +36,13 @@ export const PROVIDERS = {
   qwen,
   "kimi-coding": kimiCoding,
   github,
+<<<<<<< HEAD
   "gitlab-duo": gitlabDuo,
   kiro,
   "amazon-q": kiro,
+=======
+  kiro,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   cursor,
   kilocode,
   cline,

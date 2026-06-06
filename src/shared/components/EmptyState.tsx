@@ -1,7 +1,10 @@
 "use client";
 
+<<<<<<< HEAD
 import { useTranslations } from "next-intl";
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * EmptyState — FASE-07 UX
  *
@@ -28,13 +31,20 @@ interface EmptyStateProps {
 
 export default function EmptyState({
   icon = "📭",
+<<<<<<< HEAD
   title,
+=======
+  title = "Nothing here yet",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   description = "",
   actionLabel = "",
   onAction = null,
 }: EmptyStateProps) {
+<<<<<<< HEAD
   const t = useTranslations("common");
   const resolvedTitle = title ?? t("nothingHere");
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return (
     <div
       style={{
@@ -68,7 +78,11 @@ export default function EmptyState({
           margin: 0,
         }}
       >
+<<<<<<< HEAD
         {resolvedTitle}
+=======
+        {title}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       </h3>
       {description && (
         <p

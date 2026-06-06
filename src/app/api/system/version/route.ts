@@ -11,13 +11,19 @@ import { promisify } from "util";
 import { isAuthenticated } from "@/shared/utils/apiAuth";
 import {
   ensureGitTagExists,
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   getAutoUpdateConfig,
   launchAutoUpdate,
   validateAutoUpdateRuntime,
 } from "@/lib/system/autoUpdate";
+<<<<<<< HEAD
 import { NEWS_JSON_URL, parseActiveNewsPayload } from "@/shared/utils/releaseNotes";
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const execFileAsync = promisify(execFile);
 
@@ -53,6 +59,7 @@ function isNewer(a: string | null, b: string): boolean {
   return aPat > bPat;
 }
 
+<<<<<<< HEAD
 async function getNews() {
   try {
     const res = await fetch(NEWS_JSON_URL, { next: { revalidate: 3600 } });
@@ -64,12 +71,15 @@ async function getNews() {
   }
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export async function GET(req: NextRequest) {
   if (!(await isAuthenticated(req))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const current = getCurrentVersion();
+<<<<<<< HEAD
   const config = getAutoUpdateConfig();
 
   const [latest, news, validation] = await Promise.all([
@@ -78,6 +88,9 @@ export async function GET(req: NextRequest) {
     validateAutoUpdateRuntime(config),
   ]);
 
+=======
+  const latest = await getLatestNpmVersion();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const updateAvailable = isNewer(latest, current);
   const config = getAutoUpdateConfig();
   const validation = await validateAutoUpdateRuntime(config);
@@ -89,8 +102,11 @@ export async function GET(req: NextRequest) {
     channel: config.mode,
     autoUpdateSupported: validation.supported,
     autoUpdateError: validation.reason,
+<<<<<<< HEAD
     news,
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   });
 }
 
@@ -300,7 +316,10 @@ export async function POST(req: NextRequest) {
     });
   }
 
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Stream progress events so the frontend can show real-time status for NPM/PM2 mode
   const encoder = new TextEncoder();
   const stream = new ReadableStream({

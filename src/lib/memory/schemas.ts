@@ -6,6 +6,10 @@ import { MemoryType } from "./types";
  */
 export const MemoryConfigSchema = z.object({
   enabled: z.boolean(),
+<<<<<<< HEAD
+=======
+  maxTokens: z.number().int().nonnegative(),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   retrievalStrategy: z.enum(["exact", "semantic", "hybrid"]).optional(),
   autoSummarize: z.boolean(),
   persistAcrossModels: z.boolean(),

@@ -7,6 +7,7 @@ import {
   CLAUDE_CODE_COMPATIBLE_DEFAULT_CHAT_PATH,
   joinClaudeCodeCompatibleUrl,
 } from "../services/claudeCodeCompatible.ts";
+<<<<<<< HEAD
 import { getGigachatAccessToken } from "../services/gigachatAuth.ts";
 import { getRegistryEntry } from "../config/providerRegistry.ts";
 import { applyProviderRequestDefaults } from "../services/providerRequestDefaults.ts";
@@ -97,6 +98,9 @@ function normalizeOpenAIChatUrl(baseUrl) {
 =======
 import { isClaudeCodeCompatible } from "../services/provider.ts";
 >>>>>>> Stashed changes
+=======
+import { getOpenAICompatibleType, isClaudeCodeCompatible } from "../services/provider.ts";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 export class DefaultExecutor extends BaseExecutor {
   constructor(provider) {
@@ -133,6 +137,7 @@ export class DefaultExecutor extends BaseExecutor {
       return `${normalized}${customPath || "/messages"}`;
     }
     switch (this.provider) {
+<<<<<<< HEAD
       case "bailian-coding-plan": {
         const baseUrl = credentials?.providerSpecificData?.baseUrl || this.config.baseUrl;
         return normalizeBailianMessagesUrl(baseUrl);
@@ -210,6 +215,10 @@ export class DefaultExecutor extends BaseExecutor {
       case "claude":
       case "glm":
       case "glmt":
+=======
+      case "claude":
+      case "glm":
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       case "kimi-coding":
       case "minimax":
       case "minimax-cn":
@@ -220,17 +229,23 @@ export class DefaultExecutor extends BaseExecutor {
         const resourceUrl = credentials?.providerSpecificData?.resourceUrl;
         return `https://${resourceUrl || "portal.qwen.ai"}/v1/chat/completions`;
       }
+<<<<<<< HEAD
       default: {
         const url = this.config.baseUrl;
         const entry = getRegistryEntry(this.provider);
         return entry?.urlSuffix ? `${url}${entry.urlSuffix}` : url;
       }
+=======
+      default:
+        return this.config.baseUrl;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
   }
 
   buildHeaders(credentials, stream = true) {
     const headers = { "Content-Type": "application/json", ...this.config.headers };
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     // Allow per-provider User-Agent override via environment variable.
     const providerId = this.config?.id || this.provider;
@@ -246,6 +261,8 @@ export class DefaultExecutor extends BaseExecutor {
     }
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     // T07: resolve extra keys round-robin locally since DefaultExecutor overrides BaseExecutor buildHeaders
     const extraKeys =
       (credentials.providerSpecificData?.extraApiKeys as string[] | undefined) ?? [];
@@ -260,6 +277,7 @@ export class DefaultExecutor extends BaseExecutor {
           ? (headers["x-goog-api-key"] = effectiveKey)
           : (headers["Authorization"] = `Bearer ${credentials.accessToken}`);
         break;
+<<<<<<< HEAD
       case "snowflake": {
         const rawToken = effectiveKey || credentials.accessToken || "";
         const usesProgrammaticAccessToken = rawToken.startsWith("pat/");
@@ -326,12 +344,18 @@ export class DefaultExecutor extends BaseExecutor {
       case "claude":
       case "anthropic":
 =======
+=======
+      case "claude":
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         effectiveKey
           ? (headers["x-api-key"] = effectiveKey)
           : (headers["Authorization"] = `Bearer ${credentials.accessToken}`);
         break;
       case "glm":
+<<<<<<< HEAD
       case "glmt":
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       case "kimi-coding":
       case "bailian-coding-plan":
       case "kimi-coding-apikey":
@@ -355,10 +379,18 @@ export class DefaultExecutor extends BaseExecutor {
             headers["anthropic-version"] = "2023-06-01";
           }
         } else {
+<<<<<<< HEAD
         }
     }
 
     headers["Accept"] = stream ? "text/event-stream" : "application/json";
+=======
+          headers["Authorization"] = `Bearer ${effectiveKey || credentials.accessToken}`;
+        }
+    }
+
+    if (stream) headers["Accept"] = "text/event-stream";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     // Qwen header cleanup: Remove X-Dashscope-* headers if using an API key (DashScope compatible mode).
     // If using OAuth (Qwen Code), we MUST keep them for portal.qwen.ai to accept the request.
@@ -382,6 +414,7 @@ export class DefaultExecutor extends BaseExecutor {
    * "org/model-name") — we must NOT strip path segments. (Fix #493)
    */
   transformRequest(model, body, stream, credentials) {
+<<<<<<< HEAD
     const cleanedBody = super.transformRequest(model, body, stream, credentials);
     let withDefaults = applyProviderRequestDefaults(cleanedBody, this.config.requestDefaults);
 
@@ -431,6 +464,9 @@ export class DefaultExecutor extends BaseExecutor {
       );
     }
     return withDefaults;
+=======
+    return body;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   /**
@@ -439,6 +475,7 @@ export class DefaultExecutor extends BaseExecutor {
    * race-condition protection (deduplication via refreshPromiseCache).
    */
   async refreshCredentials(credentials, log) {
+<<<<<<< HEAD
     if (this.provider === "gigachat") {
       if (!credentials.apiKey) return null;
       try {
@@ -450,6 +487,8 @@ export class DefaultExecutor extends BaseExecutor {
         return null;
       }
     }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (!credentials.refreshToken) return null;
     try {
       return await getAccessToken(this.provider, credentials, log);
@@ -458,6 +497,7 @@ export class DefaultExecutor extends BaseExecutor {
       return null;
     }
   }
+<<<<<<< HEAD
 
   needsRefresh(credentials) {
     if (this.provider === "gigachat") {
@@ -466,6 +506,8 @@ export class DefaultExecutor extends BaseExecutor {
     }
     return super.needsRefresh(credentials);
   }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 export default DefaultExecutor;

@@ -121,6 +121,7 @@ export function getUpstreamTimeoutConfig(
   };
 }
 
+<<<<<<< HEAD
 export function getStainlessTimeoutSeconds(
   env: EnvSource = process.env,
   logger?: TimeoutLogger
@@ -129,6 +130,8 @@ export function getStainlessTimeoutSeconds(
   return Math.max(1, Math.ceil(fetchTimeoutMs / 1_000));
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export function getTlsClientTimeoutConfig(
   env: EnvSource = process.env,
   logger?: TimeoutLogger

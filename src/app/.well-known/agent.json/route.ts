@@ -63,6 +63,7 @@ export async function GET() {
         ],
       },
       {
+<<<<<<< HEAD
         id: "provider-discovery",
         name: "Provider Discovery",
         description:
@@ -100,6 +101,32 @@ export async function GET() {
           "Is everything healthy?",
           "Report degraded providers and retry timing",
           "Summarize active rate limits and lockouts",
+=======
+        id: "auto-combo",
+        name: "Auto-Managed Model Combos",
+        description:
+          "Self-healing model chains that dynamically adapt to provider " +
+          "health and quota availability. Uses a scoring function based on " +
+          "quota, health, cost, latency, task fitness, and stability.",
+        tags: ["combo", "auto", "self-healing", "adaptive"],
+        examples: [
+          "Create an auto-managed combo for coding tasks",
+          "Switch to cost-saver mode",
+          "Show the Auto-Combo scoring breakdown",
+        ],
+      },
+      {
+        id: "format-translation",
+        name: "Format Translation",
+        description:
+          "Transparently translates between OpenAI, Claude (Anthropic), " +
+          "Gemini (Google), and Responses API formats. Supports streaming " +
+          "translation for all format pairs.",
+        tags: ["translation", "openai", "claude", "gemini", "responses"],
+        examples: [
+          "Send an OpenAI-format request to Claude",
+          "Translate this Gemini response to OpenAI format",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         ],
       },
     ],

@@ -59,6 +59,7 @@ function getDispatcherOptions() {
   };
 }
 
+<<<<<<< HEAD
 function getProxyDispatcherOptions() {
   const options = getDispatcherOptions();
   // Disable keep-alive and pipelining for proxy connections.
@@ -73,6 +74,8 @@ function getProxyDispatcherOptions() {
   };
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export function getDefaultDispatcher(): Dispatcher {
   const globalWithCache = globalThis as GlobalWithDispatcherCache;
   if (!globalWithCache[DEFAULT_DISPATCHER_KEY]) {
@@ -88,6 +91,7 @@ export function getDefaultDispatcher(): Dispatcher {
  */
 function extractExplicitPort(urlStr: string): string | null {
   try {
+<<<<<<< HEAD
     const idx = urlStr.indexOf("://");
     if (idx === -1) return null;
     const authorityStart = idx + 3;
@@ -98,6 +102,15 @@ function extractExplicitPort(urlStr: string): string | null {
         : urlStr.slice(authorityStart, authorityEnd);
     const lastColon = authority.lastIndexOf(":");
     const atSign = authority.lastIndexOf("@");
+=======
+    const idx = urlStr.indexOf('://');
+    if (idx === -1) return null;
+    const authorityStart = idx + 3;
+    const authorityEnd = urlStr.indexOf('/', authorityStart);
+    const authority = authorityEnd === -1 ? urlStr.slice(authorityStart) : urlStr.slice(authorityStart, authorityEnd);
+    const lastColon = authority.lastIndexOf(':');
+    const atSign = authority.lastIndexOf('@');
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (lastColon !== -1 && lastColon > atSign) {
       const portStr = authority.slice(lastColon + 1);
       if (/^\d+$/.test(portStr)) {
@@ -232,7 +245,11 @@ export function proxyConfigToUrl(
 export function createProxyDispatcher(proxyUrl: string): Dispatcher {
   const normalizedUrl = normalizeProxyUrl(proxyUrl, "proxy dispatcher");
   const dispatcherCache = getDispatcherCache();
+<<<<<<< HEAD
   const proxyDispatcherOptions = getProxyDispatcherOptions();
+=======
+  const dispatcherOptions = getDispatcherOptions();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   let dispatcher = dispatcherCache.get(normalizedUrl);
   if (dispatcher) return dispatcher;
@@ -251,12 +268,20 @@ export function createProxyDispatcher(proxyUrl: string): Dispatcher {
     if (parsed.password) socksOptions.password = decodeURIComponent(parsed.password);
     dispatcher = socksDispatcher(
       socksOptions as Parameters<typeof socksDispatcher>[0],
+<<<<<<< HEAD
       proxyDispatcherOptions
+=======
+      dispatcherOptions
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     ) as Dispatcher;
   } else {
     dispatcher = new ProxyAgent({
       uri: normalizedUrl,
+<<<<<<< HEAD
       ...proxyDispatcherOptions,
+=======
+      ...dispatcherOptions,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     });
   }
 

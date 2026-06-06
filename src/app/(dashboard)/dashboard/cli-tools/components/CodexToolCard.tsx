@@ -25,6 +25,7 @@ export default function CodexToolCard({
   const [message, setMessage] = useState(null);
   const [showInstallGuide, setShowInstallGuide] = useState(false);
   const [selectedApiKey, setSelectedApiKey] = useState("");
+<<<<<<< HEAD
   const [selectedModel, setSelectedModel] = useState("gpt-5.5");
   const CODEX_DEFAULT_MODELS = [
     "gpt-5.5",
@@ -40,6 +41,10 @@ export default function CodexToolCard({
   const [wireApi, setWireApi] = useState("chat");
   const [modalOpen, setModalOpen] = useState(false);
   const [modalTarget, setModalTarget] = useState<string | null>(null); // null = default model, string = mapping key
+=======
+  const [selectedModel, setSelectedModel] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [modelAliases, setModelAliases] = useState({});
   const [showManualConfigModal, setShowManualConfigModal] = useState(false);
   const [customBaseUrl, setCustomBaseUrl] = useState("");
@@ -56,9 +61,14 @@ export default function CodexToolCard({
   const cliReady = !!(codexStatus?.installed && codexStatus?.runnable);
 
   useEffect(() => {
+<<<<<<< HEAD
     // Store the key *id* so the backend can resolve the real secret from DB
     if (apiKeys?.length > 0 && !selectedApiKey) {
       setSelectedApiKey(apiKeys[0].id);
+=======
+    if (apiKeys?.length > 0 && !selectedApiKey) {
+      setSelectedApiKey(apiKeys[0].key);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
   }, [apiKeys, selectedApiKey]);
 
@@ -81,6 +91,7 @@ export default function CodexToolCard({
     }
   };
 
+<<<<<<< HEAD
   // Parse config content
   useEffect(() => {
     if (codexStatus?.config) {
@@ -106,6 +117,13 @@ export default function CodexToolCard({
         }
       }
       setModelMappings(newMappings);
+=======
+  // Parse model from config content (don't sync URL - always use baseUrl from props)
+  useEffect(() => {
+    if (codexStatus?.config) {
+      const modelMatch = codexStatus.config.match(/^model\s*=\s*"([^"]+)"/m);
+      if (modelMatch) setSelectedModel(modelMatch[1]);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
   }, [codexStatus]);
 
@@ -125,6 +143,7 @@ export default function CodexToolCard({
   const effectiveConfigStatus = configStatus || batchStatus?.configStatus || null;
 
   const getEffectiveBaseUrl = () => {
+<<<<<<< HEAD
     const url = customBaseUrl || baseUrl;
     return url.replace(/\/v1\/?$/, "").replace(/\/api\/?$/, "") + "/api/v1";
   };
@@ -133,6 +152,14 @@ export default function CodexToolCard({
     const url = customBaseUrl || baseUrl;
     return url.replace(/\/v1\/?$/, "").replace(/\/api\/?$/, "") + "/api/v1";
   };
+=======
+    const url = customBaseUrl || `${baseUrl}/v1`;
+    // Ensure URL ends with /v1
+    return url.endsWith("/v1") ? url : `${url}/v1`;
+  };
+
+  const getDisplayUrl = () => customBaseUrl || `${baseUrl}/v1`;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const checkCodexStatus = async () => {
     setCheckingCodex(true);
@@ -159,18 +186,25 @@ export default function CodexToolCard({
             ? "sk_omniroute"
             : selectedApiKey;
 
+<<<<<<< HEAD
       // Send both apiKey (as fallback) and keyId to look up the unmasked string natively
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       const res = await fetch("/api/cli-tools/codex-settings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           baseUrl: getEffectiveBaseUrl(),
           apiKey: keyToUse,
+<<<<<<< HEAD
           keyId: selectedApiKey,
           model: selectedModel || CODEX_DEFAULT_MODELS[0],
           reasoningEffort,
           wireApi,
           modelMappings,
+=======
+          model: selectedModel,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         }),
       });
       const data = await res.json();
@@ -178,12 +212,16 @@ export default function CodexToolCard({
         setMessage({ type: "success", text: t("settingsApplied") });
         checkCodexStatus();
       } else {
+<<<<<<< HEAD
         setMessage({
           type: "error",
           text:
             (typeof data.error === "string" ? data.error : data.error?.message) ||
             t("failedApplySettings"),
         });
+=======
+        setMessage({ type: "error", text: data.error || t("failedApplySettings") });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     } catch (error) {
       setMessage({ type: "error", text: error.message });
@@ -203,12 +241,16 @@ export default function CodexToolCard({
         setSelectedModel("");
         checkCodexStatus();
       } else {
+<<<<<<< HEAD
         setMessage({
           type: "error",
           text:
             (typeof data.error === "string" ? data.error : data.error?.message) ||
             t("failedResetSettings"),
         });
+=======
+        setMessage({ type: "error", text: data.error || t("failedResetSettings") });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     } catch (error) {
       setMessage({ type: "error", text: error.message });
@@ -218,6 +260,7 @@ export default function CodexToolCard({
   };
 
   const handleModelSelect = (model) => {
+<<<<<<< HEAD
     if (modalTarget) {
       // Writing to a model mapping alias
       setModelMappings({ ...modelMappings, [modalTarget]: model.value });
@@ -227,6 +270,10 @@ export default function CodexToolCard({
     }
     setModalOpen(false);
     setModalTarget(null);
+=======
+    setSelectedModel(model.value);
+    setModalOpen(false);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 
   // ── Profiles ──
@@ -256,12 +303,16 @@ export default function CodexToolCard({
         setNewProfileName("");
         fetchProfiles();
       } else {
+<<<<<<< HEAD
         setMessage({
           type: "error",
           text:
             (typeof data.error === "string" ? data.error : data.error?.message) ||
             t("failedSaveProfile"),
         });
+=======
+        setMessage({ type: "error", text: data.error || t("failedSaveProfile") });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     } catch (error) {
       setMessage({ type: "error", text: error.message });
@@ -285,12 +336,16 @@ export default function CodexToolCard({
         checkCodexStatus();
         fetchBackups();
       } else {
+<<<<<<< HEAD
         setMessage({
           type: "error",
           text:
             (typeof data.error === "string" ? data.error : data.error?.message) ||
             t("failedActivateProfile"),
         });
+=======
+        setMessage({ type: "error", text: data.error || t("failedActivateProfile") });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     } catch (error) {
       setMessage({ type: "error", text: error.message });
@@ -338,12 +393,16 @@ export default function CodexToolCard({
         checkCodexStatus();
         fetchBackups();
       } else {
+<<<<<<< HEAD
         setMessage({
           type: "error",
           text:
             (typeof data.error === "string" ? data.error : data.error?.message) ||
             t("failedRestore"),
         });
+=======
+        setMessage({ type: "error", text: data.error || t("failedRestore") });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     } catch (error) {
       setMessage({ type: "error", text: error.message });
@@ -353,6 +412,7 @@ export default function CodexToolCard({
   };
 
   const getManualConfigs = () => {
+<<<<<<< HEAD
     const keyToUse = !cloudEnabled ? "sk_omniroute" : "<YOUR_OMNIROUTE_API_KEY>";
 
     let configContent = `# OmniRoute Configuration for Codex CLI
@@ -364,12 +424,24 @@ model = "${selectedModel || CODEX_DEFAULT_MODELS[0]}"`;
 
     if (wireApi === "responses") {
       configContent += `
+=======
+    const keyToUse =
+      selectedApiKey && selectedApiKey.trim()
+        ? selectedApiKey
+        : !cloudEnabled
+          ? "sk_omniroute"
+          : "<API_KEY_FROM_DASHBOARD>";
+
+    const configContent = `# OmniRoute Configuration for Codex CLI
+model = "${selectedModel}"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 model_provider = "omniroute"
 
 [model_providers.omniroute]
 name = "OmniRoute"
 base_url = "${getEffectiveBaseUrl()}"
 wire_api = "responses"
+<<<<<<< HEAD
 env_key = "OPENAI_API_KEY"
 `;
     } else {
@@ -390,6 +462,17 @@ openai_base_url = "${getEffectiveBaseUrl()}"
     }
 
     const authContent = JSON.stringify({ OPENAI_API_KEY: keyToUse }, null, 2);
+=======
+`;
+
+    const authContent = JSON.stringify(
+      {
+        OPENAI_API_KEY: keyToUse,
+      },
+      null,
+      2
+    );
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     return [
       {
@@ -576,7 +659,11 @@ openai_base_url = "${getEffectiveBaseUrl()}"
                       className="flex-1 px-2 py-1.5 bg-surface rounded text-xs border border-border focus:outline-none focus:ring-1 focus:ring-primary/50"
                     >
                       {apiKeys.map((key) => (
+<<<<<<< HEAD
                         <option key={key.id} value={key.id}>
+=======
+                        <option key={key.id} value={key.key}>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                           {key.key}
                         </option>
                       ))}
@@ -588,7 +675,11 @@ openai_base_url = "${getEffectiveBaseUrl()}"
                   )}
                 </div>
 
+<<<<<<< HEAD
                 {/* Default Model */}
+=======
+                {/* Model */}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 <div className="flex items-center gap-2">
                   <span className="w-32 shrink-0 text-sm font-semibold text-text-main text-right">
                     {t("model")}
@@ -596,16 +687,29 @@ openai_base_url = "${getEffectiveBaseUrl()}"
                   <span className="material-symbols-outlined text-text-muted text-[14px]">
                     arrow_forward
                   </span>
+<<<<<<< HEAD
                   <button
                     onClick={() => {
                       setModalTarget(null);
                       setModalOpen(true);
                     }}
+=======
+                  <input
+                    type="text"
+                    value={selectedModel}
+                    onChange={(e) => setSelectedModel(e.target.value)}
+                    placeholder={t("providerModelPlaceholder")}
+                    className="flex-1 px-2 py-1.5 bg-surface rounded border border-border text-xs focus:outline-none focus:ring-1 focus:ring-primary/50"
+                  />
+                  <button
+                    onClick={() => setModalOpen(true)}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     disabled={!activeProviders?.length}
                     className={`px-2 py-1.5 rounded border text-xs transition-colors shrink-0 whitespace-nowrap ${activeProviders?.length ? "bg-surface border-border text-text-main hover:border-primary cursor-pointer" : "opacity-50 cursor-not-allowed border-border"}`}
                   >
                     {t("selectModel")}
                   </button>
+<<<<<<< HEAD
                   <input
                     type="text"
                     value={selectedModel}
@@ -613,6 +717,8 @@ openai_base_url = "${getEffectiveBaseUrl()}"
                     placeholder="gpt-5.5"
                     className="flex-1 px-2 py-1.5 bg-surface rounded border border-border text-xs focus:outline-none focus:ring-1 focus:ring-primary/50"
                   />
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   {selectedModel && (
                     <button
                       onClick={() => setSelectedModel("")}
@@ -623,6 +729,7 @@ openai_base_url = "${getEffectiveBaseUrl()}"
                     </button>
                   )}
                 </div>
+<<<<<<< HEAD
 
                 {/* Reasoning Effort */}
                 <div className="flex items-center gap-2">
@@ -710,6 +817,8 @@ openai_base_url = "${getEffectiveBaseUrl()}"
                     )}
                   </div>
                 ))}
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               </div>
 
               {message && (

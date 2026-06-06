@@ -10,6 +10,7 @@ const eslintConfig = [
       "no-eval": "error",
       "no-implied-eval": "error",
       "no-new-func": "error",
+<<<<<<< HEAD
       "no-restricted-imports": [
         "error",
         {
@@ -21,6 +22,8 @@ const eslintConfig = [
           ],
         },
       ],
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     },
   },
   // Relaxed rules for open-sse and tests (incremental adoption)
@@ -43,7 +46,10 @@ const eslintConfig = [
       "src/.next/**",
       "out/**",
       "build/**",
+<<<<<<< HEAD
       "coverage/**",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       "next-env.d.ts",
       // Scripts and binaries
       "scripts/**",
@@ -52,8 +58,11 @@ const eslintConfig = [
       "node_modules/**",
       // VS Code extension and its large test fixtures
       "vscode-extension/**",
+<<<<<<< HEAD
       "_references/**",
       "_mono_repo/**",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       // Electron app
       "electron/**",
       // Docs
@@ -64,11 +73,15 @@ const eslintConfig = [
       "playwright-report/**",
       "test-results/**",
       // Subdirectory .next build output (app/ subdir)
+<<<<<<< HEAD
       "app/**",
       "app/.next/**",
       "app/bin/**",
       "app.__qa_backup/**",
       "app/app.__qa_backup/**",
+=======
+      "app/.next/**",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       // CLI package copy directory
       "clipr/**",
     ],

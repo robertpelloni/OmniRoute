@@ -4,8 +4,11 @@ import { useState, Suspense } from "react";
 import { UsageAnalytics, CardSkeleton, SegmentedControl } from "@/shared/components";
 import EvalsTab from "../usage/components/EvalsTab";
 import SearchAnalyticsTab from "./SearchAnalyticsTab";
+<<<<<<< HEAD
 import CompressionAnalyticsTab from "./CompressionAnalyticsTab";
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import DiversityScoreCard from "./components/DiversityScoreCard";
 import ProviderUtilizationTab from "./ProviderUtilizationTab";
 import ComboHealthTab from "./ComboHealthTab";
@@ -21,8 +24,11 @@ export default function AnalyticsPage() {
     search: "Search request analytics — provider breakdown, cache hit rate, and cost tracking.",
     utilization: t("utilizationDescription"),
     comboHealth: t("comboHealthDescription"),
+<<<<<<< HEAD
     compression: t("compressionAnalyticsDescription"),
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 
   return (
@@ -43,8 +49,11 @@ export default function AnalyticsPage() {
           { value: "search", label: "Search" },
           { value: "utilization", label: t("utilization") },
           { value: "comboHealth", label: t("comboHealth") },
+<<<<<<< HEAD
           { value: "compression", label: t("compressionAnalyticsTitle") },
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         ]}
         value={activeTab}
         onChange={setActiveTab}
@@ -57,6 +66,7 @@ export default function AnalyticsPage() {
           </Suspense>
           <DiversityScoreCard />
         </>
+<<<<<<< HEAD
 =======
         <div className="flex flex-col gap-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -68,14 +78,19 @@ export default function AnalyticsPage() {
           <DiversityScoreCard />
         </div>
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       )}
       {activeTab === "evals" && <EvalsTab />}
       {activeTab === "search" && <SearchAnalyticsTab />}
       {activeTab === "utilization" && <ProviderUtilizationTab />}
       {activeTab === "comboHealth" && <ComboHealthTab />}
+<<<<<<< HEAD
 <<<<<<< Updated upstream
       {activeTab === "compression" && <CompressionAnalyticsTab />}
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     </div>
   );
 }

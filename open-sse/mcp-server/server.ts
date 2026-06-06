@@ -12,11 +12,14 @@
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+<<<<<<< HEAD
 import {
   getComboModelProvider,
   getComboModelString,
   getComboStepTarget,
 } from "../../src/lib/combos/steps.ts";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 import {
   MCP_TOOLS,
@@ -38,6 +41,7 @@ import {
   bestComboForTaskInput,
   explainRouteInput,
   getSessionSnapshotInput,
+<<<<<<< HEAD
   dbHealthCheckInput,
   syncPricingInput,
   cacheStatsInput,
@@ -49,6 +53,13 @@ import {
 import { startMcpHeartbeat } from "./runtimeHeartbeat.ts";
 
 import { closeAuditDb, logToolCall } from "./audit.ts";
+=======
+  syncPricingInput,
+} from "./schemas/tools.ts";
+import { startMcpHeartbeat } from "./runtimeHeartbeat.ts";
+
+import { logToolCall } from "./audit.ts";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import {
   evaluateToolScopes,
   resolveCallerScopeContext,
@@ -65,6 +76,7 @@ import {
   handleBestComboForTask,
   handleExplainRoute,
   handleGetSessionSnapshot,
+<<<<<<< HEAD
   handleDbHealthCheck,
   handleSyncPricing,
   handleCacheStats,
@@ -79,6 +91,12 @@ import { compressionTools } from "./tools/compressionTools.ts";
 import { compressMcpRegistryMetadata } from "./descriptionCompressor.ts";
 import { getDbInstance } from "../../src/lib/db/core.ts";
 =======
+=======
+  handleSyncPricing,
+} from "./tools/advancedTools.ts";
+import { memoryTools } from "./tools/memoryTools.ts";
+import { skillTools } from "./tools/skillTools.ts";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { normalizeQuotaResponse } from "../../src/shared/contracts/quota.ts";
 import { resolveOmniRouteBaseUrl } from "../../src/shared/utils/resolveOmniRouteBaseUrl.ts";
 
@@ -93,6 +111,7 @@ const MCP_ALLOWED_SCOPES = new Set(
     .map((s) => s.trim())
     .filter(Boolean)
 );
+<<<<<<< HEAD
 const TOTAL_MCP_TOOL_COUNT =
   MCP_TOOLS.length + Object.keys(memoryTools).length + Object.keys(skillTools).length;
 
@@ -110,6 +129,11 @@ function readMcpDescriptionCompressionEnabled(): boolean {
   }
 }
 
+=======
+
+type JsonRecord = Record<string, unknown>;
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 type TextToolResult = {
   content: Array<{ type: "text"; text: string }>;
   isError?: boolean;
@@ -140,6 +164,7 @@ function normalizeComboModels(
   rawModels: unknown
 ): Array<{ provider: string; model: string; priority: number }> {
   return toArray(rawModels).map((rawModel, index) => {
+<<<<<<< HEAD
     const modelRecord = toRecord(rawModel);
     const modelString = getComboModelString(rawModel);
     const target = getComboStepTarget(rawModel);
@@ -151,6 +176,13 @@ function normalizeComboModels(
       provider,
       model: modelString || target || toString(modelRecord.model, "unknown"),
       priority: toNumber(modelRecord.priority, index + 1),
+=======
+    const model = toRecord(rawModel);
+    return {
+      provider: toString(model.provider, "unknown"),
+      model: toString(model.model, "unknown"),
+      priority: toNumber(model.priority, index + 1),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     };
   });
 }
@@ -166,8 +198,12 @@ async function omniRouteFetch(path: string, options: RequestInit = {}): Promise<
     ...((options.headers as Record<string, string>) || {}),
   };
 
+<<<<<<< HEAD
   const signal = options.signal || AbortSignal.timeout(10000);
   const response = await fetch(url, { ...options, headers, signal });
+=======
+  const response = await fetch(url, { ...options, headers, signal: AbortSignal.timeout(10000) });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   if (!response.ok) {
     const errorText = await response.text().catch(() => "Unknown error");
@@ -553,11 +589,15 @@ async function handleWebSearch(args: {
     | "brave-search"
     | "perplexity-search"
     | "exa-search"
+<<<<<<< HEAD
     | "tavily-search"
     | "google-pse-search"
     | "linkup-search"
     | "searchapi-search"
     | "searxng-search";
+=======
+    | "tavily-search";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }) {
   const start = Date.now();
   try {
@@ -571,7 +611,10 @@ async function handleWebSearch(args: {
     const result = await omniRouteFetch("/v1/search", {
       method: "POST",
       body: JSON.stringify(body),
+<<<<<<< HEAD
       signal: AbortSignal.timeout(60000),
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     });
     await logToolCall("omniroute_web_search", args, result, Date.now() - start, true);
     return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
@@ -592,6 +635,7 @@ export function createMcpServer(): McpServer {
     name: "omniroute",
     version: process.env.npm_package_version || "1.8.1",
   });
+<<<<<<< HEAD
   const mcpDescriptionCompressionEnabled = readMcpDescriptionCompressionEnabled();
   const registerTool = server.registerTool.bind(server);
   server.registerTool = ((name: string, config: Record<string, unknown>, handler: unknown) => {
@@ -619,6 +663,8 @@ export function createMcpServer(): McpServer {
     });
     return registerResource(name, uriOrTemplate as never, metadata as never, readCallback as never);
   }) as typeof server.registerResource;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Register essential tools
   server.registerTool(
@@ -823,6 +869,7 @@ export function createMcpServer(): McpServer {
   );
 
   server.registerTool(
+<<<<<<< HEAD
     "omniroute_db_health_check",
     {
       description:
@@ -835,6 +882,8 @@ export function createMcpServer(): McpServer {
   );
 
   server.registerTool(
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     "omniroute_sync_pricing",
     {
       description:
@@ -858,6 +907,7 @@ export function createMcpServer(): McpServer {
     )
   );
 
+<<<<<<< HEAD
   server.registerTool(
     "omniroute_cache_stats",
     {
@@ -919,16 +969,28 @@ export function createMcpServer(): McpServer {
   );
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // ── Memory Tools ──────────────────────────────
   Object.values(memoryTools).forEach((toolDef) => {
     server.registerTool(
       toolDef.name,
       {
         description: toolDef.description,
+<<<<<<< HEAD
+=======
+        // @ts-ignore: dynamic zod access
+        inputSchema: toolDef.inputSchema,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       },
       withScopeEnforcement(toolDef.name, async (args) => {
         try {
           const parsedArgs = toolDef.inputSchema.parse(args ?? {});
+<<<<<<< HEAD
+=======
+          // @ts-ignore: handler expected specific object
+          const result = await toolDef.handler(parsedArgs);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
         } catch (err) {
           const msg = err instanceof Error ? err.message : String(err);
@@ -944,10 +1006,20 @@ export function createMcpServer(): McpServer {
       toolDef.name,
       {
         description: toolDef.description,
+<<<<<<< HEAD
+=======
+        // @ts-ignore: dynamic zod access
+        inputSchema: toolDef.inputSchema,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       },
       withScopeEnforcement(toolDef.name, async (args) => {
         try {
           const parsedArgs = toolDef.inputSchema.parse(args ?? {});
+<<<<<<< HEAD
+=======
+          // @ts-ignore: handler expected specific object
+          const result = await toolDef.handler(parsedArgs);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
         } catch (err) {
           const msg = err instanceof Error ? err.message : String(err);
@@ -974,7 +1046,11 @@ export async function startMcpStdio(): Promise<void> {
     version,
     scopesEnforced: MCP_ENFORCE_SCOPES,
     allowedScopes: Array.from(MCP_ALLOWED_SCOPES),
+<<<<<<< HEAD
     toolCount: TOTAL_MCP_TOOL_COUNT,
+=======
+    toolCount: MCP_TOOLS.length,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   });
   const stopHeartbeatOnce = () => {
     stopHeartbeat();
@@ -988,9 +1064,12 @@ export async function startMcpStdio(): Promise<void> {
     await server.connect(transport);
     console.error("[MCP] OmniRoute MCP Server connected and ready.");
   } finally {
+<<<<<<< HEAD
     if (closeAuditDb()) {
       console.error("[MCP] Audit database checkpointed and closed.");
     }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     stopHeartbeatOnce();
     process.off("exit", stopHeartbeatOnce);
     process.off("SIGINT", stopHeartbeatOnce);

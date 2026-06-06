@@ -4,6 +4,7 @@ export const kiro = {
   config: KIRO_CONFIG,
   flowType: "device_code",
   requestDeviceCode: async (config) => {
+<<<<<<< HEAD
     const regionMatch = String(config.tokenUrl || "").match(/oidc\.([a-z0-9-]+)\.amazonaws\.com/i);
     const resolvedRegion = regionMatch?.[1] || "us-east-1";
     const registerPayload: {
@@ -25,6 +26,8 @@ export const kiro = {
       registerPayload.issuerUrl = config.issuerUrl;
     }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     // Step 1: Register client with AWS SSO OIDC
     const registerRes = await fetch(config.registerClientUrl, {
       method: "POST",
@@ -32,7 +35,17 @@ export const kiro = {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
+<<<<<<< HEAD
       body: JSON.stringify(registerPayload),
+=======
+      body: JSON.stringify({
+        clientName: config.clientName,
+        clientType: config.clientType,
+        scopes: config.scopes,
+        grantTypes: config.grantTypes,
+        issuerUrl: config.issuerUrl,
+      }),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     });
 
     if (!registerRes.ok) {
@@ -72,6 +85,7 @@ export const kiro = {
       interval: deviceData.interval || 5,
       _clientId: clientInfo.clientId,
       _clientSecret: clientInfo.clientSecret,
+<<<<<<< HEAD
       _region: resolvedRegion,
     };
   },
@@ -80,6 +94,12 @@ export const kiro = {
     const tokenUrl = `https://oidc.${tokenRegion}.amazonaws.com/token`;
 
     const response = await fetch(tokenUrl, {
+=======
+    };
+  },
+  pollToken: async (config, deviceCode, codeVerifier, extraData) => {
+    const response = await fetch(config.tokenUrl, {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -110,7 +130,10 @@ export const kiro = {
           expires_in: data.expiresIn,
           _clientId: extraData?._clientId,
           _clientSecret: extraData?._clientSecret,
+<<<<<<< HEAD
           _region: tokenRegion,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         },
       };
     }
@@ -130,7 +153,10 @@ export const kiro = {
     providerSpecificData: {
       clientId: tokens._clientId,
       clientSecret: tokens._clientSecret,
+<<<<<<< HEAD
       region: tokens._region,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     },
   }),
 };

@@ -4,11 +4,17 @@
 
 ---
 
+<<<<<<< HEAD
 > **Agent-to-Agent Protocol v0.3** — Enables any AI agent to use OmniRoute as an intelligent routing agent via JSON-RPC 2.0.
 
 The A2A Server exposes OmniRoute as a **first-class agent** that other agents can discover, delegate tasks to, and collaborate with using the [A2A Protocol](https://google.github.io/A2A/).
 
 ---
+=======
+> **Agent-to-Agent Protocol v0.3**— Hiermee kan elke AI-agent OmniRoute gebruiken als een intelligente routeringsagent via JSON-RPC 2.0.
+
+De A2A Server presenteert OmniRoute als een**eersteklas agent**die andere agenten kunnen ontdekken, taken kunnen delegeren en waarmee kunnen samenwerken met behulp van het [A2A Protocol](https://google.github.io/A2A/).---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## Architectuur
 
@@ -43,6 +49,7 @@ The A2A Server exposes OmniRoute as a **first-class agent** that other agents ca
 
 ### Agent Discovery
 
+<<<<<<< HEAD
 Every A2A-compatible agent exposes an **Agent Card** at `/.well-known/agent.json`:
 
 ```bash
@@ -52,6 +59,14 @@ curl http://localhost:20128/.well-known/agent.json
 **Response:**
 
 ```json
+=======
+Elke A2A-compatibele agent stelt een**Agent Card**beschikbaar op `/.well-known/agent.json`:```bash
+curl http://localhost:20128/.well-known/agent.json
+
+````
+
+**Antwoord:**```json
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 {
   "name": "OmniRoute",
   "description": "Intelligent AI gateway with auto-routing across 50+ providers",
@@ -88,7 +103,11 @@ curl http://localhost:20128/.well-known/agent.json
     "apiKeyHeader": "Authorization"
   }
 }
+<<<<<<< HEAD
 ```
+=======
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ---
 
@@ -96,6 +115,7 @@ curl http://localhost:20128/.well-known/agent.json
 
 ### `message/send` — Synchronous Execution
 
+<<<<<<< HEAD
 Send a message to a skill and receive the complete response.
 
 ```bash
@@ -117,6 +137,26 @@ curl -X POST http://localhost:20128/a2a \
 **Response:**
 
 ```json
+=======
+Stuur een bericht naar een vaardigheid en ontvang het volledige antwoord.```bash
+curl -X POST http://localhost:20128/a2a \
+ -H "Content-Type: application/json" \
+ -H "Authorization: Bearer YOUR_KEY" \
+ -d '{
+"jsonrpc": "2.0",
+"id": "1",
+"method": "message/send",
+"params": {
+"skill": "smart-routing",
+"messages": [{"role": "user", "content": "Write a Python hello world"}],
+"metadata": {"model": "auto", "combo": "fast-coding"}
+}
+}'
+
+````
+
+**Antwoord:**```json
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 {
   "jsonrpc": "2.0",
   "id": "1",
@@ -133,6 +173,7 @@ curl -X POST http://localhost:20128/a2a \
     }
   }
 }
+<<<<<<< HEAD
 ```
 
 ### `message/stream` — SSE Streaming
@@ -157,12 +198,39 @@ curl -N -X POST http://localhost:20128/a2a \
 **SSE Events:**
 
 ```
+=======
+````
+
+### `message/stream` — SSE Streaming
+
+Hetzelfde als 'bericht/verzenden', maar retourneert door de server verzonden gebeurtenissen voor realtime streaming.```bash
+curl -N -X POST http://localhost:20128/a2a \
+ -H "Content-Type: application/json" \
+ -H "Authorization: Bearer YOUR_KEY" \
+ -d '{
+"jsonrpc": "2.0",
+"id": "1",
+"method": "message/stream",
+"params": {
+"skill": "smart-routing",
+"messages": [{"role": "user", "content": "Explain quantum computing"}]
+}
+}'
+
+````
+
+**SSE-evenementen:**```
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 data: {"jsonrpc":"2.0","method":"message/stream","params":{"task":{"id":"...","state":"working"},"chunk":{"type":"text","content":"Quantum computing..."}}}
 
 : heartbeat 2026-03-04T21:00:00Z
 
 data: {"jsonrpc":"2.0","method":"message/stream","params":{"task":{"id":"...","state":"completed"},"metadata":{...}}}
+<<<<<<< HEAD
 ```
+=======
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ### `tasks/get` — Query Task Status
 
@@ -188,6 +256,7 @@ curl -X POST http://localhost:20128/a2a \
 
 ### `smart-routing`
 
+<<<<<<< HEAD
 Routes prompts through OmniRoute's intelligent pipeline with full observability.
 
 **Parameters (in `metadata`):**
@@ -222,6 +291,38 @@ Answers natural-language queries about provider quotas.
 | Default                                        | Full quota summary with warnings for low-quota providers |
 
 ---
+=======
+Routes vragen via de intelligente pijplijn van OmniRoute met volledige waarneembaarheid.
+
+**Parameters (in `metagegevens`):**
+
+| Parameter    | Typ          | Standaard       | Beschrijving                                                                         |
+| ------------ | ------------ | --------------- | ------------------------------------------------------------------------------------ |
+| `model`      | `tekenreeks` | `"automatisch"` | Doelmodel (bijv. `claude-sonnet-4`, `gpt-4o`, `auto`)                                |
+| `combinatie` | `tekenreeks` | actieve combo   | Specifieke combo om doorheen te rijden                                               |
+| `begroting`  | `nummer`     | geen            | Maximale kosten in USD voor dit verzoek                                              |
+| `rol`        | `tekenreeks` | geen            | Taakrolhint: `coderen`, `review`, `planning`, `analyse`, `debugging`, `documentatie` |
+
+**Retourzendingen:**
+
+| Veld                           | Beschrijving                                                       |
+| ------------------------------ | ------------------------------------------------------------------ | ---------------------- |
+| `artefacten[].inhoud`          | De LLM-antwoordtekst                                               |
+| `metadata.routing_explanation` | Voor mensen leesbare uitleg van routeringsbeslissing               |
+| `metadata.kosten_envelop`      | Geschatte versus werkelijke kosten met valuta                      |
+| `metadata.resilience_trace`    | Array van gebeurtenissen (primary_selected, fallback_needed, etc.) |
+| `metadata.policy_verdict`      | Of het verzoek is toegestaan ​​en waarom                           | ### `quota-management` |
+
+Beantwoordt vragen in natuurlijke taal over providerquota.
+
+**Querytypen (afgeleid uit berichtinhoud):**
+
+| Zoekpatroon                                    | Reactietype                                                               |
+| ---------------------------------------------- | ------------------------------------------------------------------------- | --- |
+| Bevat `"ranking"`, `"meeste quota"`, `"beste"` | Aanbieders gerangschikt op resterende quota                               |
+| Bevat `"gratis"`, `"suggesteren"`              | Geeft gratis combo's weer of stelt gratis aanbieders voor                 |
+| Standaard                                      | Volledig quotaoverzicht met waarschuwingen voor aanbieders met lage quota | --- |
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## Task Lifecycle
 
@@ -231,6 +332,7 @@ submitted ──→ working ──→ completed
               ──────────→ cancelled
 ```
 
+<<<<<<< HEAD
 | State       | Description                                           |
 | ----------- | ----------------------------------------------------- |
 | `submitted` | Task created, queued for execution                    |
@@ -244,6 +346,19 @@ submitted ──→ working ──→ completed
 - Tasks are garbage-collected after 2× TTL
 
 ---
+=======
+| Staat         | Beschrijving                                                   |
+| ------------- | -------------------------------------------------------------- |
+| `ingediend`   | Taak gemaakt, in wachtrij geplaatst voor uitvoering            |
+| `werken`      | Vaardigheidshandler voert                                      |
+| `voltooid`    | Uitvoering geslaagd, artefacten beschikbaar                    |
+| `mislukt`     | Uitvoering mislukt of taak verlopen (TTL: standaard 5 minuten) |
+| `geannuleerd` | Geannuleerd door klant via `taken/annuleren`                   |
+
+- Terminalstatussen: `voltooid`, `mislukt`, `geannuleerd` (geen verdere overgangen)
+- Verlopen taken in 'ingediend' of 'werkend' worden automatisch gemarkeerd als 'mislukt'
+- Taken worden verzameld na 2× TTL---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## Client Examples
 
@@ -541,6 +656,7 @@ func main() {
 
 ### 🤖 Use Case 1: Multi-Agent Coding Pipeline
 
+<<<<<<< HEAD
 An orchestrator agent delegates code generation to OmniRoute, then passes the output to a review agent.
 
 ```python
@@ -550,6 +666,14 @@ def coding_pipeline(task: str):
         {"role": "user", "content": f"Write production-quality code: {task}"}
     ], metadata={"model": "auto", "role": "coding"})
     code = code_result["artifacts"][0]["content"]
+=======
+Een Orchestrator-agent delegeert het genereren van code aan OmniRoute en geeft de uitvoer vervolgens door aan een beoordelingsagent.```python
+def coding_pipeline(task: str): # Step 1: Generate code via OmniRoute A2A
+code_result = a2a_send("smart-routing", [
+{"role": "user", "content": f"Write production-quality code: {task}"}
+], metadata={"model": "auto", "role": "coding"})
+code = code_result["artifacts"][0]["content"]
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     # Step 2: Review the code via OmniRoute A2A (different model)
     review_result = a2a_send("smart-routing", [
@@ -562,6 +686,7 @@ def coding_pipeline(task: str):
     print(f"Review cost: ${review_result['metadata']['cost_envelope']['actual']}")
 
     return {"code": code, "review": review}
+<<<<<<< HEAD
 ```
 
 ### 💡 Use Case 2: Quota-Aware Agent Swarm
@@ -569,6 +694,14 @@ def coding_pipeline(task: str):
 Multiple agents share quota through OmniRoute, using the quota skill to coordinate.
 
 ```python
+=======
+
+````
+
+### 💡 Use Case 2: Quota-Aware Agent Swarm
+
+Meerdere agenten delen quota via OmniRoute, waarbij ze de quotavaardigheid gebruiken om te coördineren.```python
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 async def quota_aware_agent(agent_name: str, task: str):
     # Check quota before starting
     quota = a2a_send("quota-management", [
@@ -591,6 +724,7 @@ async def quota_aware_agent(agent_name: str, task: str):
         print(f"[{agent_name}] Free alternatives: {quota['artifacts'][0]['content']}")
 
     return result
+<<<<<<< HEAD
 ```
 
 ### 📊 Use Case 3: Real-Time Streaming Dashboard
@@ -598,10 +732,18 @@ async def quota_aware_agent(agent_name: str, task: str):
 A monitoring agent streams responses and displays progress in real-time.
 
 ```typescript
+=======
+````
+
+### 📊 Use Case 3: Real-Time Streaming Dashboard
+
+Een monitoringagent streamt reacties en geeft de voortgang in realtime weer.```typescript
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 async function streamingDashboard(prompt: string) {
   const response = await fetch(`${BASE_URL}/a2a`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${API_KEY}` },
+<<<<<<< HEAD
     body: JSON.stringify({
       jsonrpc: "2.0",
       id: "dash-1",
@@ -617,6 +759,23 @@ async function streamingDashboard(prompt: string) {
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
+=======
+body: JSON.stringify({
+jsonrpc: "2.0",
+id: "dash-1",
+method: "message/stream",
+params: { skill: "smart-routing", messages: [{ role: "user", content: prompt }] },
+}),
+});
+
+let totalChunks = 0;
+const reader = response.body!.getReader();
+const decoder = new TextDecoder();
+
+while (true) {
+const { done, value } = await reader.read();
+if (done) break;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     for (const line of decoder.decode(value).split("\n")) {
       if (line.startsWith("data: ")) {
@@ -640,6 +799,7 @@ async function streamingDashboard(prompt: string) {
         }
       }
     }
+<<<<<<< HEAD
   }
 }
 ```
@@ -649,6 +809,17 @@ async function streamingDashboard(prompt: string) {
 For long-running tasks, poll the task status instead of waiting synchronously.
 
 ```python
+=======
+
+}
+}
+
+````
+
+### 🔁 Use Case 4: Task Polling Pattern
+
+Voor langlopende taken kunt u de taakstatus opvragen in plaats van synchroon te wachten.```python
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import time
 
 def poll_task(task_id: str, timeout: int = 60):
@@ -678,12 +849,17 @@ def poll_task(task_id: str, timeout: int = 60):
         "params": {"taskId": task_id},
     })
     raise TimeoutError(f"Task {task_id} timed out after {timeout}s")
+<<<<<<< HEAD
 ```
+=======
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ---
 
 ## Error Codes
 
+<<<<<<< HEAD
 | Code   | Constant                 | Meaning                                  |
 | ------ | ------------------------ | ---------------------------------------- |
 | -32700 | —                        | Parse error (invalid JSON)               |
@@ -710,10 +886,34 @@ Authorization: Bearer YOUR_OMNIROUTE_API_KEY
 If no API key is configured on the server (`OMNIROUTE_API_KEY` is empty), authentication is bypassed.
 
 ---
+=======
+| Code   | Constante                | Betekenis                                        |
+| ------ | ------------------------ | ------------------------------------------------ | --- |
+| -32700 | —                        | Parseerfout (ongeldige JSON)                     |
+| -32600 | `INVALID_REQUEST`        | Ongeldig JSON-RPC-verzoek of ongeautoriseerd     |
+| -32601 | `METHOD_NOT_FOUND`       | Onbekende methode of vaardigheid                 |
+| -32602 | `INVALID_PARAMS`         | Ontbrekende of ongeldige parameters              |
+| -32603 | `INTERNAL_ERROR`         | Uitvoering van vaardigheden mislukt              |
+| -32001 | `TASK_NOT_FOUND`         | Taak-ID niet gevonden                            |
+| -32002 | `TASK_ALREADY_COMPLETED` | Kan een voltooide taak niet wijzigen             |
+| -32003 | `ONGEAUTORISEERD`        | Ongeldige of ontbrekende API-sleutel             |
+| -32004 | `BUDGET_OVERSCHREDEN`    | Aanvraag overschrijdt het geconfigureerde budget |
+| -32005 | `PROVIDER_UNAVAILABLE`   | Geen beschikbare providers                       | --- |
+
+## Authentication
+
+Alle `/a2a`-verzoeken vereisen een Bearer-token via de `Authorization`-header:```
+Authorization: Bearer YOUR_OMNIROUTE_API_KEY
+
+```
+
+Als er geen API-sleutel op de server is geconfigureerd (`OMNIROUTE_API_KEY` is leeg), wordt de authenticatie omzeild.---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## File Structure
 
 ```
+<<<<<<< HEAD
 src/lib/a2a/
 ├── taskManager.ts         # Task lifecycle (create/update/cancel/list), TTL, cleanup
 ├── taskExecution.ts       # Generic task executor with state management
@@ -728,12 +928,31 @@ src/app/a2a/
 
 open-sse/mcp-server/
 └── schemas/a2a.ts         # Zod schemas (AgentCard, Task, JSON-RPC, SSE events)
+=======
+
+src/lib/a2a/
+├── taskManager.ts # Task lifecycle (create/update/cancel/list), TTL, cleanup
+├── taskExecution.ts # Generic task executor with state management
+├── streaming.ts # SSE stream formatting, heartbeat, chunk/completion events
+├── routingLogger.ts # Routing decision logger (stats, history, retention)
+└── skills/
+├── smartRouting.ts # Smart routing skill (routes via /v1/chat/completions)
+└── quotaManagement.ts # Quota management skill (natural-language quota queries)
+
+src/app/a2a/
+└── route.ts # Next.js API route handler (JSON-RPC 2.0 dispatch)
+
+open-sse/mcp-server/
+└── schemas/a2a.ts # Zod schemas (AgentCard, Task, JSON-RPC, SSE events)
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 ```
 
 ---
 
 ## Comparison: MCP vs A2A
 
+<<<<<<< HEAD
 | Feature           | MCP Server                   | A2A Server                                        |
 | ----------------- | ---------------------------- | ------------------------------------------------- |
 | **Protocol**      | Model Context Protocol       | Agent-to-Agent Protocol v0.3                      |
@@ -750,3 +969,20 @@ open-sse/mcp-server/
 ## Licentie
 
 Part of [OmniRoute](https://github.com/diegosouzapw/OmniRoute) — MIT License.
+=======
+| Kenmerk | MCP-server | A2A-server |
+| ----------------- | -------------------------- | -------------------------------------------- |
+|**Protocol**| Modelcontextprotocol | Agent-naar-agent-protocol v0.3 |
+|**Vervoer**| stdio / HTTP | HTTP (JSON-RPC 2.0) |
+|**Ontdekking**| Gereedschapslijst via MCP | `/.bekend/agent.json` |
+|**Granulariteit**| 16 individuele gereedschappen | 2 vaardigheden op hoog niveau |
+|**Beste voor**| IDE-agents (Cursor, VS-code) | Multi-agentsystemen (LangChain, CrewAI) |
+|**Streamen**| Niet ondersteund | SSE via `bericht/stream` |
+|**Taakregistratie**| Nee | Volledige levenscyclus (ingediend → voltooid) |
+|**Waarneembaarheid**| Auditlogboek per tooloproep | Kostenenvelop + veerkrachtspoor + beleidsoordeel |---
+
+## Licentie
+
+Onderdeel van [OmniRoute](https://github.com/diegosouzapw/OmniRoute) — MIT-licentie.
+```
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

@@ -20,12 +20,15 @@ export function getExampleTemplates(t: TranslatorMessage) {
   const systemPromptInstruction = t("templatePayloads.systemPrompt.systemInstruction");
   const systemPromptQuestion = t("templatePayloads.systemPrompt.question");
   const streamingPrompt = t("templatePayloads.streaming.prompt");
+<<<<<<< HEAD
   const visionSystem = t("templatePayloads.vision.system");
   const visionUserPrompt = t("templatePayloads.vision.userPrompt");
   const visionImageUrl = t("templatePayloads.vision.imageUrl");
   const schemaCoercionPrompt = t("templatePayloads.schemaCoercion.userPrompt");
   const schemaCoercionDescription = t("templatePayloads.schemaCoercion.toolDescription");
   const schemaCoercionFieldDescription = t("templatePayloads.schemaCoercion.cityDescription");
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   return [
     {
@@ -297,6 +300,7 @@ export function getExampleTemplates(t: TranslatorMessage) {
         },
       },
     },
+<<<<<<< HEAD
     {
       id: "vision",
       name: t("templateNames.vision"),
@@ -388,6 +392,8 @@ export function getExampleTemplates(t: TranslatorMessage) {
         },
       },
     },
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   ];
 }
 
@@ -402,6 +408,10 @@ export const FORMAT_META = {
   antigravity: { label: "Antigravity", color: "purple", icon: "rocket_launch" },
   kiro: { label: "Kiro", color: "cyan", icon: "terminal" },
   cursor: { label: "Cursor", color: "pink", icon: "edit" },
+<<<<<<< HEAD
+=======
+  codex: { label: "Codex", color: "yellow", icon: "code" },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 };
 
 /**

@@ -2,13 +2,20 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { copyToClipboard } from "@/shared/utils/clipboard";
+<<<<<<< HEAD
 import { useDisplayBaseUrl } from "@/shared/hooks";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 export default function GetStarted() {
   const t = useTranslations("landing");
   const [copied, setCopied] = useState(false);
 
+<<<<<<< HEAD
   const endpoint = useDisplayBaseUrl();
+=======
+  const endpoint = "http://localhost:20128";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const dashboardUrl = `${endpoint}/dashboard`;
   const command = "npx omniroute";
 

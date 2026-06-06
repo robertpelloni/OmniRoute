@@ -8,8 +8,11 @@ const SENSITIVE_KEYS = new Set([
   "Authorization",
   "x-api-key",
   "X-Api-Key",
+<<<<<<< HEAD
   "x-goog-api-key",
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   "access_token",
   "accessToken",
   "refresh_token",

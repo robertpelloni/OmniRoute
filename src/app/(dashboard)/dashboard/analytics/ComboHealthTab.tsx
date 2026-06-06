@@ -20,11 +20,14 @@ function formatShare(value: number) {
   return formatPercent(value * 100, 1);
 }
 
+<<<<<<< HEAD
 function formatPercentOrDash(value: number | null, digits = 1) {
   return typeof value === "number" ? formatPercent(value, digits) : "n/a";
 }
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function formatLatency(value: number) {
   return `${Math.round(value).toLocaleString()}ms`;
 }
@@ -100,8 +103,11 @@ function ComboHealthCard({ combo }: { combo: ComboHealthMetrics }) {
       ),
     [combo.usageSkew.modelDistribution]
   );
+<<<<<<< HEAD
   const targetHealth = combo.targetHealth || [];
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   return (
     <Card className="overflow-hidden p-0">
@@ -258,6 +264,7 @@ function ComboHealthCard({ combo }: { combo: ComboHealthMetrics }) {
           </div>
         </section>
       </div>
+<<<<<<< HEAD
 
       {targetHealth.length > 0 ? (
         <div className="border-t border-black/5 px-6 py-5 dark:border-white/5">
@@ -326,6 +333,8 @@ function ComboHealthCard({ combo }: { combo: ComboHealthMetrics }) {
         </div>
       ) : null}
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     </Card>
   );
 }

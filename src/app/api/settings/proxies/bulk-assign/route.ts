@@ -3,12 +3,17 @@ import { bulkProxyAssignmentSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
 import { createErrorResponse, createErrorResponseFromUnknown } from "@/lib/api/errorResponse";
 import { clearDispatcherCache } from "@omniroute/open-sse/utils/proxyDispatcher";
+<<<<<<< HEAD
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
 
 export async function PUT(request: Request) {
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
 
+=======
+
+export async function PUT(request: Request) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody: unknown;
   try {
     rawBody = await request.json();

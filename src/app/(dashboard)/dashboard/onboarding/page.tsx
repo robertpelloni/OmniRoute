@@ -3,7 +3,10 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+<<<<<<< HEAD
 import { useDisplayBaseUrl } from "@/shared/hooks";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const STEP_IDS = ["welcome", "security", "provider", "test", "done"];
 const STEP_ICONS = ["waving_hand", "lock", "dns", "play_circle", "check_circle"];
@@ -21,10 +24,16 @@ export default function OnboardingWizard() {
   const router = useRouter();
   const t = useTranslations("onboarding");
   const tc = useTranslations("common");
+<<<<<<< HEAD
   const baseUrl = useDisplayBaseUrl();
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(true);
   const [apiEndpoint, setApiEndpoint] = useState(`${baseUrl}/api/v1`);
+=======
+  const [step, setStep] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [apiEndpoint, setApiEndpoint] = useState("http://localhost:20128/api/v1");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Security step state
   const [password, setPassword] = useState("");
@@ -115,6 +124,7 @@ export default function OnboardingWizard() {
         setErrorMessage(data.error || t("failedSetPassword"));
         return;
       }
+<<<<<<< HEAD
       const loginRes = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -125,6 +135,8 @@ export default function OnboardingWizard() {
         setErrorMessage(data.error || t("connectionError"));
         return;
       }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       handleNext();
     } catch {
       setErrorMessage(t("connectionError"));

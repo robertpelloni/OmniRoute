@@ -1,5 +1,6 @@
 "use client";
 
+<<<<<<< HEAD
 import type { ReactNode } from "react";
 import ThemeToggle from "../ThemeToggle";
 
@@ -8,6 +9,12 @@ type AuthLayoutProps = {
 };
 
 export default function AuthLayout({ children }: AuthLayoutProps) {
+=======
+import PropTypes from "prop-types";
+import ThemeToggle from "../ThemeToggle";
+
+export default function AuthLayout({ children }) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return (
     <div className="min-h-screen flex flex-col relative bg-bg transition-colors duration-500 overflow-x-hidden selection:bg-primary/20 selection:text-primary">
       {/* Background effects */}
@@ -26,3 +33,10 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
     </div>
   );
 }
+<<<<<<< HEAD
+=======
+
+AuthLayout.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

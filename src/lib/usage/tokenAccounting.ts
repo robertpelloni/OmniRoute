@@ -65,6 +65,7 @@ export function getLoggedInputTokens(tokens: unknown): number {
   //   - Claude non-streaming: extractUsageFromResponse sums input + cache_read + cache_creation
   //   - Claude streaming: extractUsage (after fix) sums input + cache_read + cache_creation
   // Do NOT add cache fields here — would double-count.
+<<<<<<< HEAD
 =======
     return toFiniteNumber(tokenRecord.input_tokens);
   }
@@ -72,6 +73,8 @@ export function getLoggedInputTokens(tokens: unknown): number {
   // prompt_tokens from translator already includes input + cache_read + cache_creation
   // Do NOT subtract cached tokens - we want the total billable prompt tokens
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const promptTokens = toFiniteNumber(tokenRecord.prompt_tokens);
   return promptTokens;
 }
@@ -84,7 +87,10 @@ export function getLoggedOutputTokens(tokens: unknown): number {
   return toFiniteNumber(tokenRecord.completion_tokens ?? tokenRecord.output_tokens);
 }
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Return the reasoning/thinking output token count.
  * Checks multiple field locations used by different providers:
@@ -156,14 +162,20 @@ export function getReasoningTokensOrNull(tokens: unknown): number | null {
   return null;
 }
 
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export function formatUsageLog(tokens: unknown): string {
   const input = getLoggedInputTokens(tokens);
   const output = getLoggedOutputTokens(tokens);
   const cacheRead = getPromptCacheReadTokens(tokens);
   const cacheWrite = getPromptCacheCreationTokens(tokens);
   const reasoning = getReasoningTokens(tokens);
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   let msg = `in=${input} | out=${output}`;
   if (cacheRead > 0) {
@@ -175,6 +187,9 @@ export function formatUsageLog(tokens: unknown): string {
   if (reasoning > 0) {
     msg += ` | R=${reasoning}`;
   }
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return msg;
 }

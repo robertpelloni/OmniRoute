@@ -1,16 +1,23 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+<<<<<<< HEAD
 import { useTranslations } from "next-intl";
+=======
+import PropTypes from "prop-types";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import Modal from "./Modal";
 import { getModelsByProviderId, PROVIDER_ID_TO_ALIAS } from "@/shared/constants/models";
 import { getCompatibleFallbackModels } from "@/lib/providers/managedAvailableModels";
 import {
+<<<<<<< HEAD
   getModelCatalogSourceLabel,
   matchesModelCatalogQuery,
   normalizeModelCatalogSource,
 } from "@/shared/utils/modelCatalogSearch";
 import {
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   OAUTH_PROVIDERS,
   FREE_PROVIDERS,
   APIKEY_PROVIDERS,
@@ -25,6 +32,7 @@ const PROVIDER_ORDER = [
   ...Object.keys(APIKEY_PROVIDERS),
 ];
 
+<<<<<<< HEAD
 type ModelSelectModalProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -39,11 +47,14 @@ type ModelSelectModalProps = {
   showCombos?: boolean;
 };
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export default function ModelSelectModal({
   isOpen,
   onClose,
   onSelect,
   selectedModel,
+<<<<<<< HEAD
   selectedModels = [],
   activeProviders = [],
   title,
@@ -54,6 +65,13 @@ export default function ModelSelectModal({
 }: ModelSelectModalProps) {
   const t = useTranslations("common");
   const resolvedTitle = title ?? t("selectModel");
+=======
+  activeProviders = [],
+  title = "Select Model",
+  modelAliases = {},
+  addedModelValues = [],
+}) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [searchQuery, setSearchQuery] = useState("");
   const [combos, setCombos] = useState<any[]>([]);
   const [providerNodes, setProviderNodes] = useState<any[]>([]);
@@ -147,7 +165,10 @@ export default function ModelSelectModal({
             id: fullModel.replace(`${alias}/`, ""),
             name: aliasName,
             value: fullModel,
+<<<<<<< HEAD
             source: "alias",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           }));
 
         // Merge custom models for passthrough providers
@@ -158,7 +179,10 @@ export default function ModelSelectModal({
             name: cm.name || cm.id,
             value: `${alias}/${cm.id}`,
             isCustom: true,
+<<<<<<< HEAD
             source: normalizeModelCatalogSource(cm.source) === "imported" ? "imported" : "custom",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           }));
 
         const allModels = [...aliasModels, ...customEntries];
@@ -185,6 +209,7 @@ export default function ModelSelectModal({
             id: fullModel.replace(`${providerId}/`, ""),
             name: aliasName,
             value: `${nodePrefix}/${fullModel.replace(`${providerId}/`, "")}`,
+<<<<<<< HEAD
             source: "alias",
           }));
 
@@ -198,6 +223,8 @@ export default function ModelSelectModal({
             value: `${nodePrefix}/${fm.id}`,
             isFallback: true,
             source: "fallback",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           }));
 
         const fallbackEntries = (
@@ -223,7 +250,10 @@ export default function ModelSelectModal({
             name: cm.name || cm.id,
             value: `${nodePrefix}/${cm.id}`,
             isCustom: true,
+<<<<<<< HEAD
             source: normalizeModelCatalogSource(cm.source) === "imported" ? "imported" : "custom",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           }));
 
         const allModels = [...nodeModels, ...fallbackEntries, ...customEntries];
@@ -246,7 +276,10 @@ export default function ModelSelectModal({
           id: m.id,
           name: m.name,
           value: `${alias}/${m.id}`,
+<<<<<<< HEAD
           source: "system",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         }));
 
         const customEntries = providerCustomModels
@@ -256,7 +289,10 @@ export default function ModelSelectModal({
             name: cm.name || cm.id,
             value: `${alias}/${cm.id}`,
             isCustom: true,
+<<<<<<< HEAD
             source: normalizeModelCatalogSource(cm.source) === "imported" ? "imported" : "custom",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           }));
 
         const allModels = [...systemEntries, ...customEntries];
@@ -290,12 +326,17 @@ export default function ModelSelectModal({
     const filtered: Record<string, any> = {};
 
     Object.entries(groupedModels).forEach(([providerId, group]: [string, any]) => {
+<<<<<<< HEAD
       const matchedModels = group.models.filter((model) =>
         matchesModelCatalogQuery(query, {
           modelId: model.id,
           modelName: model.name,
           source: model.source,
         })
+=======
+      const matchedModels = group.models.filter(
+        (m) => m.name.toLowerCase().includes(query) || m.id.toLowerCase().includes(query)
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       );
 
       const providerNameMatches = group.name.toLowerCase().includes(query);
@@ -303,7 +344,11 @@ export default function ModelSelectModal({
       if (matchedModels.length > 0 || providerNameMatches) {
         filtered[providerId] = {
           ...group,
+<<<<<<< HEAD
           models: matchedModels.length > 0 ? matchedModels : group.models,
+=======
+          models: matchedModels,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         };
       }
     });
@@ -311,6 +356,7 @@ export default function ModelSelectModal({
     return filtered;
   }, [groupedModels, searchQuery]);
 
+<<<<<<< HEAD
   const resolvedSelectedModels = multiSelect
     ? selectedModels
     : selectedModel
@@ -325,6 +371,12 @@ export default function ModelSelectModal({
       onClose();
       setSearchQuery("");
     }
+=======
+  const handleSelect = (model: any) => {
+    onSelect(model);
+    onClose();
+    setSearchQuery("");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 
   return (
@@ -334,7 +386,11 @@ export default function ModelSelectModal({
         onClose();
         setSearchQuery("");
       }}
+<<<<<<< HEAD
       title={resolvedTitle}
+=======
+      title={title}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       size="md"
       className="p-4!"
     >
@@ -346,7 +402,11 @@ export default function ModelSelectModal({
           </span>
           <input
             type="text"
+<<<<<<< HEAD
             placeholder={t("search")}
+=======
+            placeholder="Search..."
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-8 pr-3 py-1.5 bg-surface border border-border rounded text-xs focus:outline-none focus:ring-1 focus:ring-primary/50"
@@ -357,16 +417,28 @@ export default function ModelSelectModal({
       {/* Models grouped by provider - compact */}
       <div className="max-h-[300px] overflow-y-auto space-y-3">
         {/* Combos section - always first */}
+<<<<<<< HEAD
         {showCombos && filteredCombos.length > 0 && (
           <div>
             <div className="flex items-center gap-1.5 mb-1.5 sticky top-0 bg-surface py-0.5">
               <span className="material-symbols-outlined text-primary text-[14px]">layers</span>
               <span className="text-xs font-medium text-primary">{t("combos")}</span>
+=======
+        {filteredCombos.length > 0 && (
+          <div>
+            <div className="flex items-center gap-1.5 mb-1.5 sticky top-0 bg-surface py-0.5">
+              <span className="material-symbols-outlined text-primary text-[14px]">layers</span>
+              <span className="text-xs font-medium text-primary">Combos</span>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               <span className="text-[10px] text-text-muted">({filteredCombos.length})</span>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {filteredCombos.map((combo) => {
+<<<<<<< HEAD
                 const isSelected = isValueSelected(combo.name);
+=======
+                const isSelected = selectedModel === combo.name;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 return (
                   <button
                     key={combo.id}
@@ -402,7 +474,11 @@ export default function ModelSelectModal({
 
             <div className="flex flex-wrap gap-1.5">
               {group.models.map((model) => {
+<<<<<<< HEAD
                 const isSelected = isValueSelected(model.value);
+=======
+                const isSelected = selectedModel === model.value;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 const isAdded = addedModelValues.includes(model.value);
                 return (
                   <button
@@ -421,11 +497,15 @@ export default function ModelSelectModal({
                   >
                     {isAdded && <span className="mr-0.5 opacity-70">✓</span>}
                     {model.name}
+<<<<<<< HEAD
                     {model.source && (
                       <span className="ml-1 text-[10px] uppercase opacity-70">
                         {getModelCatalogSourceLabel(model.source)}
                       </span>
                     )}
+=======
+                    {model.isCustom ? " ★" : ""}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   </button>
                 );
               })}
@@ -436,6 +516,7 @@ export default function ModelSelectModal({
         {Object.keys(filteredGroups).length === 0 && filteredCombos.length === 0 && (
           <div className="text-center py-4 text-text-muted">
             <span className="material-symbols-outlined text-2xl mb-1 block">search_off</span>
+<<<<<<< HEAD
             <p className="text-xs">{t("noModelsFound")}</p>
           </div>
         )}
@@ -467,3 +548,27 @@ export default function ModelSelectModal({
     </Modal>
   );
 }
+=======
+            <p className="text-xs">No models found</p>
+          </div>
+        )}
+      </div>
+    </Modal>
+  );
+}
+
+ModelSelectModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onSelect: PropTypes.func.isRequired,
+  selectedModel: PropTypes.string,
+  activeProviders: PropTypes.arrayOf(
+    PropTypes.shape({
+      provider: PropTypes.string.isRequired,
+    })
+  ),
+  title: PropTypes.string,
+  modelAliases: PropTypes.object,
+  addedModelValues: PropTypes.arrayOf(PropTypes.string),
+};
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

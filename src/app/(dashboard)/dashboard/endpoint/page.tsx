@@ -1,7 +1,11 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+<<<<<<< HEAD
 import { Card, SegmentedControl } from "@/shared/components";
+=======
+import { SegmentedControl } from "@/shared/components";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import EndpointPageClient from "./EndpointPageClient";
 import McpDashboardPage from "./components/MCPDashboard";
 import A2ADashboardPage from "./components/A2ADashboard";
@@ -30,14 +34,18 @@ function ServiceToggle({
   onToggle: () => void;
   toggling: boolean;
 }) {
+<<<<<<< HEAD
   const online = enabled && status.online;
   const loading = enabled && status.loading;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return (
     <div className="flex items-center gap-3 ml-auto">
       <div
         className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border"
         style={{
+<<<<<<< HEAD
           borderColor: loading
             ? "var(--color-border)"
             : online
@@ -49,11 +57,29 @@ function ServiceToggle({
               ? "rgba(34,197,94,0.1)"
               : "rgba(239,68,68,0.1)",
           color: loading ? "var(--color-text-muted)" : online ? "rgb(34,197,94)" : "rgb(239,68,68)",
+=======
+          borderColor: status.loading
+            ? "var(--color-border)"
+            : status.online
+              ? "rgba(34,197,94,0.3)"
+              : "rgba(239,68,68,0.3)",
+          background: status.loading
+            ? "transparent"
+            : status.online
+              ? "rgba(34,197,94,0.1)"
+              : "rgba(239,68,68,0.1)",
+          color: status.loading
+            ? "var(--color-text-muted)"
+            : status.online
+              ? "rgb(34,197,94)"
+              : "rgb(239,68,68)",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         }}
       >
         <span
           className="inline-block w-2 h-2 rounded-full"
           style={{
+<<<<<<< HEAD
             background: loading
               ? "var(--color-text-muted)"
               : online
@@ -63,6 +89,17 @@ function ServiceToggle({
           }}
         />
         {loading ? "..." : online ? "Online" : "Offline"}
+=======
+            background: status.loading
+              ? "var(--color-text-muted)"
+              : status.online
+                ? "rgb(34,197,94)"
+                : "rgb(239,68,68)",
+            animation: status.online ? "pulse 2s infinite" : "none",
+          }}
+        />
+        {status.loading ? "..." : status.online ? "Online" : "Offline"}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       </div>
 
       <button
@@ -96,6 +133,7 @@ function ServiceToggle({
   );
 }
 
+<<<<<<< HEAD
 function DisabledServicePanel({ title, description }: { title: string; description: string }) {
   return (
     <Card className="p-6">
@@ -128,6 +166,8 @@ function DisabledServicePanel({ title, description }: { title: string; descripti
   );
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /* ────── Transport Selector ────── */
 function TransportSelector({
   value,
@@ -409,6 +449,7 @@ export default function EndpointPage() {
 
       {activeTab === "endpoint-proxy" && <EndpointPageClient machineId="" />}
       {activeTab === "mcp" && <McpDashboardPage />}
+<<<<<<< HEAD
       {activeTab === "a2a" &&
         (a2aEnabled ? (
           <A2ADashboardPage />
@@ -418,6 +459,9 @@ export default function EndpointPage() {
             description="Enable A2A above to view task telemetry, agent details, and validation tools."
           />
         ))}
+=======
+      {activeTab === "a2a" && <A2ADashboardPage />}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       {activeTab === "api-endpoints" && <ApiEndpointsTab />}
     </div>
   );

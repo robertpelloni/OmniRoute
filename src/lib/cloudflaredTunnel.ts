@@ -1,6 +1,9 @@
 import { spawn, execFile } from "child_process";
+<<<<<<< HEAD
 import { createHash } from "crypto";
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { promisify } from "util";
 import fs from "fs/promises";
 import fsSync from "fs";
@@ -11,12 +14,17 @@ import { getRuntimePorts } from "@/lib/runtime/ports";
 
 const execFileAsync = promisify(execFile);
 
+<<<<<<< HEAD
 const CLOUDFLARED_RELEASE_API_URL =
   "https://api.github.com/repos/cloudflare/cloudflared/releases/latest";
 =======
 const CLOUDFLARED_RELEASE_BASE =
   "https://github.com/cloudflare/cloudflared/releases/latest/download";
 >>>>>>> Stashed changes
+=======
+const CLOUDFLARED_RELEASE_BASE =
+  "https://github.com/cloudflare/cloudflared/releases/latest/download";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 const START_TIMEOUT_MS = 30000;
 const STOP_TIMEOUT_MS = 5000;
 const GENERIC_EXIT_ERROR_PREFIX = "cloudflared exited";
@@ -39,11 +47,15 @@ type AssetSpec = {
   assetName: string;
   binaryName: string;
   archive: "none" | "tgz";
+<<<<<<< HEAD
 };
 
 type ResolvedAssetSpec = AssetSpec & {
   downloadUrl: string;
   expectedSha256: string;
+=======
+  downloadUrl: string;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 };
 
 type CloudflaredRuntimeDirs = {
@@ -68,6 +80,212 @@ type PersistedTunnelState = {
   binaryPath?: string | null;
   installSource?: CloudflaredInstallSource | null;
   ownerPid?: number | null;
+<<<<<<< HEAD
+=======
+  pid?: number | null;
+  publicUrl?: string | null;
+  apiUrl?: string | null;
+  targetUrl?: string | null;
+  status?: TunnelPhase;
+  lastError?: string | null;
+  startedAt?: string | null;
+  installedAt?: string | null;
+};
+
+export type CloudflaredTunnelStatus = {
+  supported: boolean;
+  installed: boolean;
+  managedInstall: boolean;
+  installSource: CloudflaredInstallSource | null;
+  binaryPath: string | null;
+  running: boolean;
+  pid: number | null;
+  publicUrl: string | null;
+  apiUrl: string | null;
+  targetUrl: string;
+  phase: TunnelPhase;
+  lastError: string | null;
+  logPath: string;
+};
+
+const CLOUDFLARED_SAFE_ENV_KEYS = [
+  "PATH",
+  "HOME",
+  "USERPROFILE",
+  "APPDATA",
+  "LOCALAPPDATA",
+  "PROGRAMDATA",
+  "ProgramData",
+  "SYSTEMROOT",
+  "SystemRoot",
+  "WINDIR",
+  "ComSpec",
+  "COMSPEC",
+  "PATHEXT",
+  "TMPDIR",
+  "TMP",
+  "TEMP",
+  "USER",
+  "USERNAME",
+  "LOGNAME",
+  "SHELL",
+  "LANG",
+  "LC_ALL",
+  "LC_CTYPE",
+  "SSL_CERT_FILE",
+  "SSL_CERT_DIR",
+  "NODE_EXTRA_CA_CERTS",
+  "XDG_CONFIG_HOME",
+  "XDG_CACHE_HOME",
+  "XDG_DATA_HOME",
+  "XDG_RUNTIME_DIR",
+  "HTTP_PROXY",
+  "HTTPS_PROXY",
+  "ALL_PROXY",
+  "NO_PROXY",
+  "http_proxy",
+  "https_proxy",
+  "all_proxy",
+  "no_proxy",
+] as const;
+
+let tunnelProcess: ReturnType<typeof spawn> | null = null;
+let tunnelPid: number | null = null;
+let installPromise: Promise<string> | null = null;
+let startPromise: Promise<CloudflaredTunnelStatus> | null = null;
+const NON_ACTIONABLE_CLOUDFLARED_WARNING_PATTERNS = [
+  /failed to sufficiently increase receive buffer size/i,
+] as const;
+
+function getTunnelDir() {
+  return path.join(resolveDataDir(), "cloudflared");
+}
+
+function getManagedBinaryPath(platform = process.platform) {
+  return path.join(getTunnelDir(), "bin", platform === "win32" ? "cloudflared.exe" : "cloudflared");
+}
+
+function getStateFilePath() {
+  return path.join(getTunnelDir(), "quick-tunnel-state.json");
+}
+
+function getPidFilePath() {
+  return path.join(getTunnelDir(), ".quick-tunnel.pid");
+}
+
+function getLogFilePath() {
+  return path.join(getTunnelDir(), "quick-tunnel.log");
+}
+
+export function getCloudflaredRuntimeDirs(): CloudflaredRuntimeDirs {
+  const runtimeRoot = path.join(getTunnelDir(), "runtime");
+  const homeDir = path.join(runtimeRoot, "home");
+  const userProfileDir = path.join(runtimeRoot, "userprofile");
+
+  return {
+    runtimeRoot,
+    homeDir,
+    configDir: path.join(runtimeRoot, "config"),
+    cacheDir: path.join(runtimeRoot, "cache"),
+    dataDir: path.join(runtimeRoot, "data"),
+    tempDir: path.join(runtimeRoot, "tmp"),
+    userProfileDir,
+    appDataDir: path.join(userProfileDir, "AppData", "Roaming"),
+    localAppDataDir: path.join(userProfileDir, "AppData", "Local"),
+  };
+}
+
+function getLocalTargetUrl() {
+  const { apiPort } = getRuntimePorts();
+  return `http://127.0.0.1:${apiPort}`;
+}
+
+function getTunnelApiUrl(publicUrl: string | null) {
+  return publicUrl ? `${publicUrl.replace(/\/$/, "")}/v1` : null;
+}
+
+async function ensureTunnelDir() {
+  await fs.mkdir(path.join(getTunnelDir(), "bin"), { recursive: true });
+}
+
+async function ensureTunnelRuntimeDirs() {
+  const runtimeDirs = getCloudflaredRuntimeDirs();
+  await Promise.all(
+    Object.values(runtimeDirs).map((dirPath) => fs.mkdir(dirPath, { recursive: true }))
+  );
+}
+
+async function readStateFile(): Promise<PersistedTunnelState> {
+  try {
+    const content = await fs.readFile(getStateFilePath(), "utf8");
+    return JSON.parse(content) as PersistedTunnelState;
+  } catch {
+    return {};
+  }
+}
+
+async function writeStateFile(state: PersistedTunnelState) {
+  await ensureTunnelDir();
+  await fs.writeFile(getStateFilePath(), JSON.stringify(state, null, 2) + "\n", "utf8");
+}
+
+async function updateStateFile(patch: PersistedTunnelState) {
+  const current = await readStateFile();
+  await writeStateFile({ ...current, ...patch });
+}
+
+async function clearPidFile() {
+  try {
+    await fs.unlink(getPidFilePath());
+  } catch {
+    // Ignore missing/stale pid files.
+  }
+}
+
+async function writePidFile(pid: number) {
+  await ensureTunnelDir();
+  await fs.writeFile(getPidFilePath(), String(pid), "utf8");
+}
+
+async function readPidFile() {
+  try {
+    const content = await fs.readFile(getPidFilePath(), "utf8");
+    const pid = Number.parseInt(content.trim(), 10);
+    return Number.isFinite(pid) ? pid : null;
+  } catch {
+    return null;
+  }
+}
+
+function isProcessAlive(pid: number | null) {
+  if (!pid || pid <= 0) return false;
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function appendTunnelLog(source: "stdout" | "stderr", message: string) {
+  await ensureTunnelDir();
+  const timestamp = new Date().toISOString();
+  await fs.appendFile(getLogFilePath(), `[${timestamp}] [${source}] ${message}\n`, "utf8");
+}
+
+export function extractTryCloudflareUrl(text: string) {
+  const match = text.match(/https:\/\/[a-z0-9-]+\.trycloudflare\.com\b/i);
+  if (!match) return null;
+
+  try {
+    const hostname = new URL(match[0]).hostname.toLowerCase();
+    if (hostname === "api.trycloudflare.com") return null;
+  } catch {
+    return null;
+  }
+
+  return match[0];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 function normalizeCloudflaredLogLine(line: string) {
@@ -87,6 +305,131 @@ export function extractCloudflaredErrorMessage(text: string) {
     if (NON_ACTIONABLE_CLOUDFLARED_WARNING_PATTERNS.some((pattern) => pattern.test(lines[i]))) {
       continue;
     }
+<<<<<<< HEAD
+=======
+    if (/(?:\berror\b|\bfailed\b|\btls:\b|\bx509\b|\bcertificate\b)/i.test(lines[i])) {
+      return lines[i];
+    }
+  }
+
+  return null;
+}
+
+function isSpecificCloudflaredError(error: string | null | undefined) {
+  return !!error && !error.startsWith(GENERIC_EXIT_ERROR_PREFIX);
+}
+
+function getGenericExitError(code: number | null, signal: NodeJS.Signals | null) {
+  return `cloudflared exited unexpectedly (${code ?? "signal"}${signal ? `/${signal}` : ""})`;
+}
+
+export function getDefaultCloudflaredCertEnv(
+  existsSync: (candidate: string) => boolean = fsSync.existsSync,
+  certFileCandidates: readonly string[] = DEFAULT_CERT_FILE_CANDIDATES,
+  certDirCandidates: readonly string[] = DEFAULT_CERT_DIR_CANDIDATES
+) {
+  const certEnv: NodeJS.ProcessEnv = {};
+  const certFile = certFileCandidates.find((candidate) => existsSync(candidate));
+  const certDir = certDirCandidates.find((candidate) => existsSync(candidate));
+
+  if (certFile) certEnv.SSL_CERT_FILE = certFile;
+  if (certDir) certEnv.SSL_CERT_DIR = certDir;
+
+  return certEnv;
+}
+
+export function buildCloudflaredChildEnv(
+  sourceEnv: NodeJS.ProcessEnv = process.env,
+  runtimeDirs: CloudflaredRuntimeDirs = getCloudflaredRuntimeDirs(),
+  defaultCertEnv: NodeJS.ProcessEnv = getDefaultCloudflaredCertEnv()
+): NodeJS.ProcessEnv {
+  const childEnv: NodeJS.ProcessEnv = {};
+
+  for (const key of CLOUDFLARED_SAFE_ENV_KEYS) {
+    const value = sourceEnv[key];
+    if (typeof value === "string" && value.length > 0) {
+      childEnv[key] = value;
+    }
+  }
+
+  childEnv.HOME = runtimeDirs.homeDir;
+  childEnv.XDG_CONFIG_HOME = runtimeDirs.configDir;
+  childEnv.XDG_CACHE_HOME = runtimeDirs.cacheDir;
+  childEnv.XDG_DATA_HOME = runtimeDirs.dataDir;
+  childEnv.USERPROFILE = runtimeDirs.userProfileDir;
+  childEnv.APPDATA = runtimeDirs.appDataDir;
+  childEnv.LOCALAPPDATA = runtimeDirs.localAppDataDir;
+
+  if (!childEnv.TMPDIR) childEnv.TMPDIR = runtimeDirs.tempDir;
+  if (!childEnv.TMP) childEnv.TMP = runtimeDirs.tempDir;
+  if (!childEnv.TEMP) childEnv.TEMP = runtimeDirs.tempDir;
+  if (!childEnv.SSL_CERT_FILE && defaultCertEnv.SSL_CERT_FILE) {
+    childEnv.SSL_CERT_FILE = defaultCertEnv.SSL_CERT_FILE;
+  }
+  if (!childEnv.SSL_CERT_DIR && defaultCertEnv.SSL_CERT_DIR) {
+    childEnv.SSL_CERT_DIR = defaultCertEnv.SSL_CERT_DIR;
+  }
+
+  const requestedProtocol = String(
+    sourceEnv.CLOUDFLARED_PROTOCOL || sourceEnv.TUNNEL_TRANSPORT_PROTOCOL || "http2"
+  )
+    .trim()
+    .toLowerCase();
+  const protocol =
+    requestedProtocol === "quic" || requestedProtocol === "auto" ? requestedProtocol : "http2";
+
+  if (protocol !== "auto") {
+    childEnv.TUNNEL_TRANSPORT_PROTOCOL = protocol;
+  }
+
+  return childEnv;
+}
+
+export function getCloudflaredStartArgs(targetUrl: string) {
+  return ["tunnel", "--url", targetUrl, "--no-autoupdate"];
+}
+
+function isStateOwnedByCurrentProcess(state: PersistedTunnelState) {
+  return !!state.ownerPid && state.ownerPid === process.pid;
+}
+
+function hasTransientRuntimeState(state: PersistedTunnelState) {
+  return !!(
+    state.ownerPid ||
+    state.pid ||
+    state.publicUrl ||
+    state.apiUrl ||
+    state.startedAt ||
+    state.status === "running" ||
+    state.status === "starting" ||
+    state.status === "error"
+  );
+}
+
+function buildStoppedState(
+  state: PersistedTunnelState,
+  binaryResolved: boolean,
+  targetUrl = getLocalTargetUrl()
+): PersistedTunnelState {
+  return {
+    ...state,
+    ownerPid: null,
+    pid: null,
+    publicUrl: null,
+    apiUrl: null,
+    targetUrl,
+    status: binaryResolved ? "stopped" : "not_installed",
+    lastError: null,
+    startedAt: null,
+  };
+}
+
+export function getCloudflaredAssetSpec(
+  platform = process.platform,
+  arch = process.arch
+): AssetSpec | null {
+  const matrix: Record<string, Record<string, Omit<AssetSpec, "downloadUrl">>> = {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     linux: {
       x64: {
         assetName: "cloudflared-linux-amd64",
@@ -128,6 +471,7 @@ export function extractCloudflaredErrorMessage(text: string) {
   const spec = matrix[platform]?.[arch];
   if (!spec) return null;
 
+<<<<<<< HEAD
   return spec;
 }
 
@@ -197,6 +541,11 @@ async function resolveCloudflaredDownloadSpec(spec: AssetSpec): Promise<Resolved
     ...spec,
     downloadUrl,
     expectedSha256,
+=======
+  return {
+    ...spec,
+    downloadUrl: `${CLOUDFLARED_RELEASE_BASE}/${spec.assetName}`,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 }
 
@@ -239,19 +588,57 @@ async function extractArchive(archivePath: string, destinationDir: string) {
   await execFileAsync("tar", ["-xzf", archivePath, "-C", destinationDir], { timeout: 15000 });
 }
 
+<<<<<<< HEAD
 async function downloadToFile(
   url: string,
   destinationPath: string,
   expectedSha256: string,
   assetName: string
 ) {
+=======
+async function downloadToFile(url: string, destinationPath: string) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const response = await proxyFetch(url, { redirect: "follow" });
   if (!response.ok) {
     throw new Error(`Download failed with status ${response.status}`);
   }
 
   const buffer = Buffer.from(await response.arrayBuffer());
+<<<<<<< HEAD
   verifyCloudflaredDownloadDigest(buffer, expectedSha256, assetName);
+=======
+  await fs.writeFile(destinationPath, buffer);
+}
+
+async function ensureExecutable(binaryPath: string) {
+  if (process.platform !== "win32") {
+    await fs.chmod(binaryPath, 0o755);
+  }
+}
+
+async function installManagedBinary() {
+  if (installPromise) return installPromise;
+
+  installPromise = (async () => {
+    const spec = getCloudflaredAssetSpec();
+    if (!spec) {
+      throw new Error(
+        `Unsupported platform for managed cloudflared install: ${process.platform}/${process.arch}`
+      );
+    }
+
+    await ensureTunnelDir();
+    const managedBinaryPath = getManagedBinaryPath();
+    const tempDownloadPath = path.join(getTunnelDir(), `${spec.assetName}.download`);
+
+    await updateStateFile({
+      status: "starting",
+      lastError: null,
+    });
+
+    try {
+      await downloadToFile(spec.downloadUrl, tempDownloadPath);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
       if (spec.archive === "tgz") {
         await extractArchive(tempDownloadPath, path.dirname(managedBinaryPath));
@@ -344,6 +731,32 @@ async function stopExistingTunnel() {
     return;
   }
 
+<<<<<<< HEAD
+=======
+  const pid = await readPidFile();
+  if (pid && isProcessAlive(pid)) {
+    await killPid(pid);
+  }
+}
+
+export async function getCloudflaredTunnelStatus(): Promise<CloudflaredTunnelStatus> {
+  const state = await readStateFile();
+  const resolved = await resolveBinary();
+  const pidFromState =
+    tunnelPid || (isStateOwnedByCurrentProcess(state) ? state.pid || (await readPidFile()) : null);
+  const running = isProcessAlive(pidFromState);
+  const needsColdStartReset =
+    !running && !isStateOwnedByCurrentProcess(state) && hasTransientRuntimeState(state);
+  const effectiveState = needsColdStartReset
+    ? buildStoppedState(state, !!resolved.binaryPath)
+    : state;
+
+  if (needsColdStartReset) {
+    await writeStateFile(effectiveState);
+  }
+
+  const publicUrl = running ? effectiveState.publicUrl || null : null;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const phase =
     !getCloudflaredAssetSpec() && !resolved.binaryPath
       ? "unsupported"
@@ -402,9 +815,13 @@ export async function startCloudflaredTunnel(): Promise<CloudflaredTunnelStatus>
     await writeStateFile({
       binaryPath: binary.binaryPath,
       installSource: binary.source,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
       ownerPid: process.pid,
 =======
+=======
+      ownerPid: process.pid,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       pid: null,
       publicUrl: null,
       apiUrl: null,
@@ -449,7 +866,10 @@ export async function startCloudflaredTunnel(): Promise<CloudflaredTunnelStatus>
         if (errorMessage) {
           await updateStateFile({
             ownerPid: process.pid,
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             pid: child.pid,
             status: "error",
             lastError: errorMessage,
@@ -461,7 +881,10 @@ export async function startCloudflaredTunnel(): Promise<CloudflaredTunnelStatus>
         const apiUrl = getTunnelApiUrl(url);
         await updateStateFile({
           ownerPid: process.pid,
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           pid: child.pid,
           publicUrl: url,
           apiUrl,
@@ -512,7 +935,10 @@ export async function startCloudflaredTunnel(): Promise<CloudflaredTunnelStatus>
 
     await updateStateFile({
       ownerPid: process.pid,
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       status: "error",
       lastError: message,
     });
@@ -526,6 +952,11 @@ export async function stopCloudflaredTunnel() {
   await stopExistingTunnel();
   const current = await readStateFile();
   await writeStateFile({
+<<<<<<< HEAD
+=======
+    ...buildStoppedState(current, !!(await resolveBinary()).binaryPath),
+    ownerPid: null,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   });
   tunnelProcess = null;
   tunnelPid = null;

@@ -1,5 +1,8 @@
 import { expect, test } from "@playwright/test";
+<<<<<<< HEAD
 import { gotoDashboardRoute } from "./helpers/dashboardAuth";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const DEFAULT_BAILIAN_URL = "https://coding-intl.dashscope.aliyuncs.com/apps/anthropic/v1";
 
@@ -58,9 +61,18 @@ test.describe("Bailian Coding Plan Provider", () => {
       });
     });
 
+<<<<<<< HEAD
     await gotoDashboardRoute(page, "/dashboard/providers/bailian-coding-plan");
     await page.waitForLoadState("networkidle");
 
+=======
+    await page.goto("/dashboard/providers/bailian-coding-plan");
+    await page.waitForLoadState("networkidle");
+
+    const redirectedToLogin = page.url().includes("/login");
+    test.skip(redirectedToLogin, "Authentication enabled without a login fixture.");
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     // Dismiss any pre-existing dialog/overlay that may appear on page load
     const preExistingDialog = page.getByRole("dialog").first();
     if (await preExistingDialog.isVisible({ timeout: 2000 }).catch(() => false)) {
@@ -69,6 +81,7 @@ test.describe("Bailian Coding Plan Provider", () => {
     }
 
     const addKeyButton = page.getByRole("button", {
+<<<<<<< HEAD
       name: /add.*api.*key|add.*key|add.*connection|connect|adicionar.*chave/i,
     });
 
@@ -76,6 +89,19 @@ test.describe("Bailian Coding Plan Provider", () => {
     await addKeyButton.first().waitFor({ state: "visible", timeout: 15000 });
     await expect(addKeyButton.first()).toBeEnabled({ timeout: 5000 });
     await addKeyButton.first().click();
+=======
+      name: /add.*api.*key|add.*key|add.*connection|connect/i,
+    });
+
+    if (
+      await addKeyButton
+        .first()
+        .isVisible({ timeout: 5000 })
+        .catch(() => false)
+    ) {
+      await addKeyButton.first().click();
+    }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     const dialog = page.getByRole("dialog").first();
     await expect(dialog).toBeVisible({ timeout: 10000 });
@@ -84,7 +110,11 @@ test.describe("Bailian Coding Plan Provider", () => {
       .getByLabel(/base.*url/i)
       .or(dialog.locator("input").filter({ has: page.locator("..").getByText(/base.*url/i) }));
 
+<<<<<<< HEAD
     await expect(baseUrlInput).toBeVisible({ timeout: 15000 });
+=======
+    await expect(baseUrlInput).toBeVisible({ timeout: 5000 });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     const inputValue = await baseUrlInput.inputValue();
     expect(inputValue).toBe(DEFAULT_BAILIAN_URL);
@@ -105,7 +135,11 @@ test.describe("Bailian Coding Plan Provider", () => {
         name: /save|add|create|connect/i,
       })
       .last();
+<<<<<<< HEAD
     await expect(saveButton).toBeEnabled({ timeout: 15000 });
+=======
+    await expect(saveButton).toBeEnabled({ timeout: 5000 });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     await saveButton.click();
 
     await expect(dialog)
@@ -169,9 +203,18 @@ test.describe("Bailian Coding Plan Provider", () => {
       });
     });
 
+<<<<<<< HEAD
     await gotoDashboardRoute(page, "/dashboard/providers/bailian-coding-plan");
     await page.waitForLoadState("networkidle");
 
+=======
+    await page.goto("/dashboard/providers/bailian-coding-plan");
+    await page.waitForLoadState("networkidle");
+
+    const redirectedToLogin = page.url().includes("/login");
+    test.skip(redirectedToLogin, "Authentication enabled without a login fixture.");
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     // Dismiss any pre-existing dialog/overlay that may appear on page load
     const preExistingDialog = page.getByRole("dialog").first();
     if (await preExistingDialog.isVisible({ timeout: 2000 }).catch(() => false)) {
@@ -180,6 +223,7 @@ test.describe("Bailian Coding Plan Provider", () => {
     }
 
     const addKeyButton = page.getByRole("button", {
+<<<<<<< HEAD
       name: /add.*api.*key|add.*key|add.*connection|connect|adicionar.*chave/i,
     });
 
@@ -187,6 +231,19 @@ test.describe("Bailian Coding Plan Provider", () => {
     await addKeyButton.first().waitFor({ state: "visible", timeout: 15000 });
     await expect(addKeyButton.first()).toBeEnabled({ timeout: 5000 });
     await addKeyButton.first().click();
+=======
+      name: /add.*api.*key|add.*key|add.*connection|connect/i,
+    });
+
+    if (
+      await addKeyButton
+        .first()
+        .isVisible({ timeout: 5000 })
+        .catch(() => false)
+    ) {
+      await addKeyButton.first().click();
+    }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     const dialog = page.getByRole("dialog").first();
     await expect(dialog).toBeVisible({ timeout: 10000 });
@@ -194,7 +251,11 @@ test.describe("Bailian Coding Plan Provider", () => {
     const baseUrlInput = dialog
       .getByLabel(/base.*url/i)
       .or(dialog.locator("input").filter({ has: page.locator("..").getByText(/base.*url/i) }));
+<<<<<<< HEAD
     await expect(baseUrlInput).toBeVisible({ timeout: 15000 });
+=======
+    await expect(baseUrlInput).toBeVisible({ timeout: 5000 });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     const nameInput = dialog.getByLabel(/name/i).or(dialog.locator("input").first());
     await nameInput.fill("Test Invalid URL Connection");

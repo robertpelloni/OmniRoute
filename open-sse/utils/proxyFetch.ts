@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // @ts-nocheck
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { AsyncLocalStorage } from "node:async_hooks";
 import { fetch as undiciFetch } from "undici";
 import {
@@ -79,6 +82,7 @@ function noProxyMatch(targetUrl) {
     if (patternPort && patternPort !== port) return false;
 
     if (!patternHost) return false;
+<<<<<<< HEAD
 
     // Support wildcard matching (e.g. 192.168.* or *.local)
     if (patternHost.includes("*")) {
@@ -92,6 +96,8 @@ function noProxyMatch(targetUrl) {
       if (new RegExp(regexStr).test(hostname)) return true;
     }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (patternHost.startsWith(".")) {
       return hostname.endsWith(patternHost) || hostname === patternHost.slice(1);
     }
@@ -99,6 +105,7 @@ function noProxyMatch(targetUrl) {
   });
 }
 
+<<<<<<< HEAD
 function isLocalAddress(hostname: string): boolean {
   if (hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1") return true;
   if (hostname.startsWith("192.168.")) return true;
@@ -108,6 +115,8 @@ function isLocalAddress(hostname: string): boolean {
   return false;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function resolveEnvProxyUrl(targetUrl) {
   if (noProxyMatch(targetUrl)) return null;
 
@@ -134,6 +143,7 @@ function resolveEnvProxyUrl(targetUrl) {
 }
 
 function resolveProxyForRequest(targetUrl) {
+<<<<<<< HEAD
   let target;
   try {
     target = new URL(targetUrl);
@@ -146,6 +156,8 @@ function resolveProxyForRequest(targetUrl) {
     return { source: "direct", proxyUrl: null };
   }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const contextProxy = proxyContext.getStore();
   if (contextProxy) {
     return { source: "context", proxyUrl: proxyConfigToUrl(contextProxy) };
@@ -170,6 +182,7 @@ export async function runWithProxyContext(proxyConfig, fn) {
     throw new TypeError("runWithProxyContext requires a callback function");
   }
 
+<<<<<<< HEAD
   // Inherit existing context if no specific proxyConfig is provided
   const currentContext = proxyContext.getStore();
   const effectiveProxyConfig = proxyConfig || currentContext || null;
@@ -177,6 +190,10 @@ export async function runWithProxyContext(proxyConfig, fn) {
   const resolvedProxyUrl = effectiveProxyConfig ? proxyConfigToUrl(effectiveProxyConfig) : null;
 
 =======
+=======
+  const resolvedProxyUrl = proxyConfig ? proxyConfigToUrl(proxyConfig) : null;
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // T14: Proxy Fast-Fail
   // Perform a short TCP reachability check before issuing upstream requests.
   if (resolvedProxyUrl) {
@@ -193,6 +210,11 @@ export async function runWithProxyContext(proxyConfig, fn) {
     }
   }
 
+<<<<<<< HEAD
+=======
+  return proxyContext.run(proxyConfig || null, async () => {
+    if (resolvedProxyUrl) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       console.log(
         `[ProxyFetch] Applied request proxy context: ${proxyUrlForLogs(resolvedProxyUrl)}`
       );
@@ -203,9 +225,12 @@ export async function runWithProxyContext(proxyConfig, fn) {
 
 async function patchedFetch(input: RequestInfo | URL, options: FetchWithDispatcherOptions = {}) {
   if (options?.dispatcher) {
+<<<<<<< HEAD
     // When a dispatcher is present, we MUST use the undici library fetch
     // to ensure version compatibility. Node 22 built-in fetch (undici v6)
     // is incompatible with undici v8 dispatchers (missing onRequestStart, etc.)
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return (undiciFetch as unknown as (...args: unknown[]) => Promise<Response>)(input, options);
   }
 
@@ -229,7 +254,10 @@ async function patchedFetch(input: RequestInfo | URL, options: FetchWithDispatch
         return await tlsClient.fetch(targetUrl, {
           ...options,
           headers: options.headers,
+<<<<<<< HEAD
           signal: options.signal ?? undefined,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         });
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
@@ -248,6 +276,7 @@ async function patchedFetch(input: RequestInfo | URL, options: FetchWithDispatch
         dispatcher: getDefaultDispatcher(),
       });
     } catch (dispatcherError) {
+<<<<<<< HEAD
       const msg =
         dispatcherError instanceof Error ? dispatcherError.message : String(dispatcherError);
       // CAUTION: Do NOT fallback to native fetch if the error is a version mismatch (invalid onRequestStart)
@@ -258,6 +287,9 @@ async function patchedFetch(input: RequestInfo | URL, options: FetchWithDispatch
         );
         throw dispatcherError;
       }
+=======
+      const msg = dispatcherError instanceof Error ? dispatcherError.message : String(dispatcherError);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       // Only fallback for connection/dispatcher errors, not HTTP errors
       if (msg.includes("fetch failed") || msg.includes("ECONNREFUSED") || msg.includes("UND_ERR")) {
         console.warn(`[ProxyFetch] Undici dispatcher failed, falling back to native fetch: ${msg}`);

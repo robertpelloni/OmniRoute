@@ -15,7 +15,11 @@ import { runJsonMigration, type LegacyJsonData } from "@/lib/db/jsonMigration";
  * 🔒 A pre-import backup is created automatically before any data is written.
  */
 export async function POST(request: Request) {
+<<<<<<< HEAD
   if (await isAuthRequired(request)) {
+=======
+  if (await isAuthRequired()) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (!(await isAuthenticated(request))) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -44,9 +48,13 @@ export async function POST(request: Request) {
       data = JSON.parse(rawText) as LegacyJsonData;
     } catch {
       return NextResponse.json(
+<<<<<<< HEAD
         {
           error: "Invalid JSON: the file could not be parsed. Please upload a valid .json backup.",
         },
+=======
+        { error: "Invalid JSON: the file could not be parsed. Please upload a valid .json backup." },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         { status: 400 }
       );
     }
@@ -67,9 +75,13 @@ export async function POST(request: Request) {
 
     console.log(
       `[JSON Import] Imported ${counts.connections} connections, ${counts.nodes} nodes, ` +
+<<<<<<< HEAD
         `${counts.combos} combos, ${counts.apiKeys} API keys, ` +
         `${counts.usageHistory} usage rows, ${counts.domainCostHistory} cost rows, ` +
         `${counts.domainBudgets} budgets`
+=======
+        `${counts.combos} combos, ${counts.apiKeys} API keys`
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     );
 
     return NextResponse.json({

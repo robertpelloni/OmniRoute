@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server";
+<<<<<<< HEAD
 import { getAuditRequestContext, logAuditEvent } from "@/lib/compliance/index";
 import {
   getProviderAuditTarget,
   summarizeProviderConnectionForAudit,
 } from "@/lib/compliance/providerAudit";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import {
   getProviderConnectionById,
   updateProviderConnection,
@@ -14,6 +17,7 @@ import { getConsistentMachineId } from "@/shared/utils/machineId";
 import { syncToCloud } from "@/lib/cloudSync";
 import { updateProviderConnectionSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
+<<<<<<< HEAD
 import {
   normalizeProviderSpecificData,
   sanitizeProviderSpecificDataForResponse,
@@ -23,6 +27,8 @@ import {
   isClaudeExtraUsageBlockEnabled,
 } from "@/lib/providers/claudeExtraUsage";
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 function normalizeCodexLimitPolicy(
   incoming: unknown,
@@ -50,9 +56,12 @@ function normalizeCodexLimitPolicy(
 
 // GET /api/providers/[id] - Get single connection
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
+<<<<<<< HEAD
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const { id } = await params;
     const connection = await getProviderConnectionById(id);
@@ -67,11 +76,14 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
     delete result.accessToken;
     delete result.refreshToken;
     delete result.idToken;
+<<<<<<< HEAD
     if (result.providerSpecificData) {
       result.providerSpecificData = sanitizeProviderSpecificDataForResponse(
         result.providerSpecificData
       );
     }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     return NextResponse.json({ connection: result });
   } catch (error) {
@@ -82,10 +94,13 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
 
 // PUT /api/providers/[id] - Update connection
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
+<<<<<<< HEAD
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
 
   const auditContext = getAuditRequestContext(request);
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody;
   try {
     rawBody = await request.json();
@@ -124,12 +139,19 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       rateLimitedUntil,
       lastTested,
       healthCheckInterval,
+<<<<<<< HEAD
       group,
       maxConcurrent,
       providerSpecificData: incomingPsd,
     } = body;
 
     const existing = (await getProviderConnectionById(id)) as Record<string, any> | null;
+=======
+      providerSpecificData: incomingPsd,
+    } = body;
+
+    const existing = await getProviderConnectionById(id);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (!existing) {
       return NextResponse.json({ error: "Connection not found" }, { status: 404 });
     }
@@ -150,8 +172,11 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     if (rateLimitedUntil !== undefined) updateData.rateLimitedUntil = rateLimitedUntil;
     if (lastTested !== undefined) updateData.lastTested = lastTested;
     if (healthCheckInterval !== undefined) updateData.healthCheckInterval = healthCheckInterval;
+<<<<<<< HEAD
     if (group !== undefined) updateData.group = group;
     if (maxConcurrent !== undefined) updateData.maxConcurrent = maxConcurrent;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     // Merge providerSpecificData (partial update — preserve existing keys not sent by caller)
     if (incomingPsd !== undefined && incomingPsd !== null && typeof incomingPsd === "object") {
@@ -172,6 +197,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         }
       }
 
+<<<<<<< HEAD
       updateData.providerSpecificData =
         normalizeProviderSpecificData(existing.provider, mergedPsd) || {};
 
@@ -191,6 +217,9 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
           Object.assign(updateData, clearExtraUsageUpdate);
         }
       }
+=======
+      updateData.providerSpecificData = mergedPsd;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
 
     const updated = await updateProviderConnection(id, updateData);
@@ -201,15 +230,19 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     delete result.accessToken;
     delete result.refreshToken;
     delete result.idToken;
+<<<<<<< HEAD
     if (result.providerSpecificData) {
       result.providerSpecificData = sanitizeProviderSpecificDataForResponse(
         result.providerSpecificData
       );
     }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     // Auto sync to Cloud if enabled
     await syncToCloudIfEnabled();
 
+<<<<<<< HEAD
     logAuditEvent({
       action: "provider.credentials.updated",
       actor: "admin",
@@ -226,6 +259,8 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       },
     });
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return NextResponse.json({ connection: result });
   } catch (error) {
     console.log("Error updating connection:", error);
@@ -235,16 +270,23 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
 // DELETE /api/providers/[id] - Delete connection
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+<<<<<<< HEAD
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
 
   const auditContext = getAuditRequestContext(request);
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const { id } = await params;
 
     // Fetch connection before deleting to check provider type
+<<<<<<< HEAD
     const connection = (await getProviderConnectionById(id)) as Record<string, any> | null;
+=======
+    const connection = await getProviderConnectionById(id);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (!connection) {
       return NextResponse.json({ error: "Connection not found" }, { status: 404 });
     }
@@ -255,6 +297,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     }
 
     // Clean up synced available models for this connection
+<<<<<<< HEAD
     try {
       const { deleteSyncedAvailableModelsForConnection } = await import("@/lib/db/models");
       await deleteSyncedAvailableModelsForConnection(connection.provider, id);
@@ -263,11 +306,21 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
         `Failed to clean up synced models for deleted ${connection.provider} connection:`,
         e
       );
+=======
+    if (connection.provider === "gemini") {
+      try {
+        const { deleteSyncedAvailableModelsForConnection } = await import("@/lib/db/models");
+        await deleteSyncedAvailableModelsForConnection("gemini", id);
+      } catch (e) {
+        console.error("Failed to clean up synced models for deleted gemini connection:", e);
+      }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
 
     // Auto sync to Cloud if enabled
     await syncToCloudIfEnabled();
 
+<<<<<<< HEAD
     logAuditEvent({
       action: "provider.credentials.revoked",
       actor: "admin",
@@ -282,6 +335,8 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
       },
     });
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return NextResponse.json({ message: "Connection deleted successfully" });
   } catch (error) {
     console.log("Error deleting connection:", error);

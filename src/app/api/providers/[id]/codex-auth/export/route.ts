@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { buildCodexAuthFile, CodexAuthFileError } from "@/lib/oauth/utils/codexAuthFile";
+<<<<<<< HEAD
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 function toErrorResponse(error: unknown) {
   if (error instanceof CodexAuthFileError) {
@@ -19,10 +22,13 @@ function toErrorResponse(error: unknown) {
 }
 
 export async function POST(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+<<<<<<< HEAD
   const authError = await requireManagementAuth(_request);
   if (authError) return authError;
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const { id } = await params;
     const built = await buildCodexAuthFile(id);

@@ -12,11 +12,14 @@ import { bootstrapTranslatorRegistry } from "./bootstrap.ts";
 import { normalizeThinkingConfig } from "../services/provider.ts";
 import { applyThinkingBudget } from "../services/thinkingBudget.ts";
 import { normalizeRoles } from "../services/roleNormalizer.ts";
+<<<<<<< HEAD
 import {
   lookupReasoning,
   recordReplay,
   requiresReasoningReplay,
 } from "../services/reasoningCache.ts";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 bootstrapTranslatorRegistry();
 export { register } from "./registry.ts";
@@ -209,6 +212,22 @@ export function translateRequest(
     result.tools = sanitizeToolDescriptions(result.tools);
   }
 
+<<<<<<< HEAD
+=======
+  // Inject reasoning_content = "" for DeepSeek/Reasoning models assistant messages with tool_calls
+  // if omitted by the client, to avoid upstream 400 errors (e.g. "Messages with role 'assistant' that contain tool_calls must also include reasoning_content")
+  const isReasoner =
+    provider === "deepseek" || (typeof model === "string" && /r1|reason/i.test(model));
+  if (isReasoner && result.messages && Array.isArray(result.messages)) {
+    for (const msg of result.messages) {
+      if (
+        msg.role === "assistant" &&
+        Array.isArray(msg.tool_calls) &&
+        msg.tool_calls.length > 0 &&
+        msg.reasoning_content === undefined
+      ) {
+        msg.reasoning_content = "";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     }
   }

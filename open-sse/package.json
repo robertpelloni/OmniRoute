@@ -1,5 +1,9 @@
 {
   "name": "@omniroute/open-sse",
+<<<<<<< HEAD
+=======
+  "version": "3.5.9",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   "description": "Express SSE sidecar for OmniRoute — handles streaming, protocol translation, and provider orchestration",
   "type": "module",
   "main": "index.js",

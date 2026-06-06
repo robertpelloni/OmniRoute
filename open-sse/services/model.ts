@@ -1,5 +1,8 @@
 import { PROVIDER_ID_TO_ALIAS, PROVIDER_MODELS } from "../config/providerModels.ts";
+<<<<<<< HEAD
 import { ANTIGRAVITY_MODEL_ALIASES } from "../config/antigravityModelAliases.ts";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { resolveWildcardAlias } from "./wildcardRouter.ts";
 
 // Derive alias→provider mapping from the single source of truth (PROVIDER_ID_TO_ALIAS)
@@ -26,16 +29,26 @@ const PROVIDER_MODEL_ALIASES = {
     "raptor-mini": "oswe-vscode-prime",
   },
   gemini: {
+<<<<<<< HEAD
     "gemini-3.1-pro": "gemini-3.1-pro-preview",
     "gemini-3-1-pro": "gemini-3.1-pro-preview",
   },
   "gemini-cli": {
     "gemini-3.1-pro": "gemini-3.1-pro-preview",
     "gemini-3-1-pro": "gemini-3.1-pro-preview",
+=======
+    "gemini-3.1-pro-preview": "gemini-3.1-pro",
+    "gemini-3-1-pro": "gemini-3.1-pro",
+  },
+  "gemini-cli": {
+    "gemini-3.1-pro-preview": "gemini-3.1-pro",
+    "gemini-3-1-pro": "gemini-3.1-pro",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   },
   nvidia: {
     "gpt-oss-120b": "openai/gpt-oss-120b",
     "nvidia/gpt-oss-120b": "openai/gpt-oss-120b",
+<<<<<<< HEAD
     "gpt-oss-20b": "openai/gpt-oss-20b",
     "nvidia/gpt-oss-20b": "openai/gpt-oss-20b",
   },
@@ -58,6 +71,12 @@ const CROSS_PROXY_MODEL_ALIASES_LOWER = Object.fromEntries(
   ])
 );
 
+=======
+  },
+  antigravity: {},
+};
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // Reverse index: modelId -> providerIds that expose this model
 const MODEL_TO_PROVIDERS = new Map();
 for (const [aliasOrId, models] of Object.entries(PROVIDER_MODELS)) {
@@ -72,8 +91,11 @@ for (const [aliasOrId, models] of Object.entries(PROVIDER_MODELS)) {
     }
   }
 }
+<<<<<<< HEAD
 const KNOWN_MODEL_IDS = new Set(MODEL_TO_PROVIDERS.keys());
 const CODEX_PREFERRED_UNPREFIXED_MODELS = new Set(["gpt-5.5"]);
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * Resolve provider alias to provider ID
@@ -82,6 +104,7 @@ export function resolveProviderAlias(aliasOrId) {
   return ALIAS_TO_PROVIDER_ID[aliasOrId] || aliasOrId;
 }
 
+<<<<<<< HEAD
 function isCrossProxyModelCompatEnabled() {
   const raw = process.env.MODEL_ALIAS_COMPAT_ENABLED;
   return raw !== "false" && raw !== "0";
@@ -103,6 +126,8 @@ export function normalizeCrossProxyModelId(modelId) {
   return { modelId: normalized, applied: true, original: modelId };
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Resolve provider-specific legacy model alias to canonical model ID.
  */
@@ -113,6 +138,7 @@ function resolveProviderModelAlias(providerOrAlias, modelId) {
   return aliases?.[modelId] || modelId;
 }
 
+<<<<<<< HEAD
 function hasKnownProviderModel(providerOrAlias, modelId) {
   if (!providerOrAlias || !modelId) return false;
 
@@ -155,6 +181,8 @@ export function resolveCanonicalProviderModel(providerOrAlias, modelId) {
   };
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Parse model string: "alias/model" or "provider/model" or just alias
  * Supports [1m] suffix for extended 1M context window (e.g. "claude-sonnet-4-6[1m]")
@@ -191,6 +219,7 @@ export function parseModel(modelStr) {
   }
   cleanStr = cleanStr.trim();
 
+<<<<<<< HEAD
   // Normalize known cross-proxy provider/model dialects before deciding whether
   // the slash belongs to a provider prefix or to the model ID itself.
   if (cleanStr.includes("/")) {
@@ -202,6 +231,8 @@ export function parseModel(modelStr) {
     return { provider: null, model: cleanStr, isAlias: true, providerAlias: null, extendedContext };
   }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Check if standard format: provider/model or alias/model
   if (cleanStr.includes("/")) {
     const firstSlash = cleanStr.indexOf("/");
@@ -220,6 +251,7 @@ export function parseModel(modelStr) {
  * Format: { "alias": "provider/model" }
  */
 export function resolveModelAliasFromMap(alias, aliases) {
+<<<<<<< HEAD
   const resolved = resolveModelAliasTarget(alias, aliases);
   if (!resolved?.provider) return null;
   return {
@@ -249,12 +281,36 @@ function resolveModelAliasTarget(alias, aliases) {
     return {
       provider: resolveProviderAlias(resolved.provider),
       model: normalizeCrossProxyModelId(resolved.model).modelId,
+=======
+  if (!aliases) return null;
+
+  // Check if alias exists
+  const resolved = aliases[alias];
+  if (!resolved) return null;
+
+  // Resolved value is "provider/model" format
+  if (typeof resolved === "string" && resolved.includes("/")) {
+    const firstSlash = resolved.indexOf("/");
+    const providerOrAlias = resolved.slice(0, firstSlash);
+    return {
+      provider: resolveProviderAlias(providerOrAlias),
+      model: resolved.slice(firstSlash + 1),
+    };
+  }
+
+  // Or object { provider, model }
+  if (typeof resolved === "object" && resolved.provider && resolved.model) {
+    return {
+      provider: resolveProviderAlias(resolved.provider),
+      model: resolved.model,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     };
   }
 
   return null;
 }
 
+<<<<<<< HEAD
 function parseAliasTarget(target) {
   const normalizedTarget = normalizeCrossProxyModelId(target).modelId;
   if (!normalizedTarget || typeof normalizedTarget !== "string") return null;
@@ -283,10 +339,68 @@ function resolveModelByProviderInference(modelId, extendedContext) {
     return {
       provider: "codex",
       model: modelId,
+=======
+/**
+ * Get full model info (parse or resolve)
+ * @param {string} modelStr - Model string
+ * @param {object|function} aliasesOrGetter - Aliases object or async function to get aliases
+ */
+export async function getModelInfoCore(modelStr, aliasesOrGetter) {
+  const parsed = parseModel(modelStr);
+  const { extendedContext } = parsed;
+
+  if (!parsed.isAlias) {
+    const canonicalModel = resolveProviderModelAlias(parsed.provider, parsed.model);
+    return {
+      provider: parsed.provider,
+      model: canonicalModel,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       extendedContext,
     };
   }
 
+<<<<<<< HEAD
+=======
+  // Get aliases (from object or function)
+  const aliases = typeof aliasesOrGetter === "function" ? await aliasesOrGetter() : aliasesOrGetter;
+
+  // Resolve exact alias
+  const resolved = resolveModelAliasFromMap(parsed.model, aliases);
+  if (resolved) {
+    const canonicalModel = resolveProviderModelAlias(resolved.provider, resolved.model);
+    return {
+      provider: resolved.provider,
+      model: canonicalModel,
+      extendedContext,
+    };
+  }
+
+  // T13: Try wildcard alias (glob patterns like "claude-sonnet-*" → "anthropic/claude-sonnet-4-...")
+  if (aliases && typeof aliases === "object") {
+    const aliasEntries = Object.entries(aliases).map(([pattern, target]) => ({ pattern, target }));
+    const wildcardMatch = resolveWildcardAlias(parsed.model, aliasEntries);
+    if (wildcardMatch) {
+      const target = wildcardMatch.target as string;
+      if (target.includes("/")) {
+        const firstSlash = target.indexOf("/");
+        const providerOrAlias = target.slice(0, firstSlash);
+        const targetModel = target.slice(firstSlash + 1);
+        const provider = resolveProviderAlias(providerOrAlias);
+        const canonicalModel = resolveProviderModelAlias(provider, targetModel);
+        return {
+          provider,
+          model: canonicalModel,
+          extendedContext,
+          wildcardPattern: wildcardMatch.pattern,
+        };
+      }
+    }
+  }
+
+  const modelId = parsed.model;
+  const providers = MODEL_TO_PROVIDERS.get(modelId) || [];
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Preserve historical behavior: OpenAI stays default when model exists there
   if (providers.includes("openai")) {
     return {
@@ -296,6 +410,10 @@ function resolveModelByProviderInference(modelId, extendedContext) {
     };
   }
 
+<<<<<<< HEAD
+=======
+  const nonOpenAIProviders = providers.filter((p) => p !== "openai");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (nonOpenAIProviders.length === 1) {
     const provider = nonOpenAIProviders[0];
     const canonicalModel = resolveProviderModelAlias(provider, modelId);
@@ -336,6 +454,7 @@ function resolveModelByProviderInference(modelId, extendedContext) {
     extendedContext,
   };
 }
+<<<<<<< HEAD
 
 /**
  * Get full model info (parse or resolve)
@@ -401,3 +520,5 @@ export async function getModelInfoCore(modelStr, aliasesOrGetter) {
   const normalizedModelId = normalizeCrossProxyModelId(parsed.model).modelId;
   return resolveModelByProviderInference(normalizedModelId, extendedContext);
 }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

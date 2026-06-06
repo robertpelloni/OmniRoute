@@ -6,12 +6,16 @@
  * at runtime (see: https://github.com/vercel/next.js/issues/12557).
  */
 import { z } from "zod";
+<<<<<<< HEAD
 import { COMBO_CONFIG_MODES } from "@/shared/constants/comboConfigMode";
 import { MAX_REQUEST_BODY_LIMIT_MB, MIN_REQUEST_BODY_LIMIT_MB } from "@/shared/constants/bodySize";
 import { HIDEABLE_SIDEBAR_ITEM_IDS } from "@/shared/constants/sidebarVisibility";
 import { ACCOUNT_FALLBACK_STRATEGY_VALUES } from "@/shared/constants/routingStrategies";
 
 const signatureCacheModeValues = ["enabled", "bypass", "bypass-strict"] as const;
+=======
+import { HIDEABLE_SIDEBAR_ITEM_IDS } from "@/shared/constants/sidebarVisibility";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 export const updateSettingsSchema = z.object({
   newPassword: z.string().min(1).max(200).optional(),
@@ -29,6 +33,7 @@ export const updateSettingsSchema = z.object({
   cloudUrl: z.string().max(500).optional(),
   baseUrl: z.string().max(500).optional(),
   setupComplete: z.boolean().optional(),
+<<<<<<< HEAD
   blockedProviders: z.array(z.string().max(100)).optional(),
   hideHealthCheckLogs: z.boolean().optional(),
   hideEndpointCloudflaredTunnel: z.boolean().optional(),
@@ -49,6 +54,19 @@ export const updateSettingsSchema = z.object({
     .min(MIN_REQUEST_BODY_LIMIT_MB)
     .max(MAX_REQUEST_BODY_LIMIT_MB)
     .optional(),
+=======
+  requireAuthForModels: z.boolean().optional(),
+  blockedProviders: z.array(z.string().max(100)).optional(),
+  hideHealthCheckLogs: z.boolean().optional(),
+  debugMode: z.boolean().optional(),
+  hiddenSidebarItems: z.array(z.enum(HIDEABLE_SIDEBAR_ITEM_IDS)).optional(),
+  // Routing settings (#134)
+  fallbackStrategy: z
+    .enum(["fill-first", "round-robin", "p2c", "random", "least-used", "cost-optimized"])
+    .optional(),
+  wildcardAliases: z.array(z.object({ pattern: z.string(), target: z.string() })).optional(),
+  stickyRoundRobinLimit: z.number().int().min(0).max(1000).optional(),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Auto intent classifier settings (multilingual routing)
   intentDetectionEnabled: z.boolean().optional(),
   intentSimpleMaxWords: z.number().int().min(1).max(500).optional(),
@@ -59,14 +77,20 @@ export const updateSettingsSchema = z.object({
   mcpEnabled: z.boolean().optional(),
   mcpTransport: z.enum(["stdio", "sse", "streamable-http"]).optional(),
   a2aEnabled: z.boolean().optional(),
+<<<<<<< HEAD
   wsAuth: z.boolean().optional(),
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // CLI Fingerprint compatibility (per-provider)
   cliCompatProviders: z.array(z.string().max(100)).optional(),
   // Strip provider/model prefix at proxy layer (e.g. "openai/gpt-4" → "gpt-4")
   stripModelPrefix: z.boolean().optional(),
   // Cache control preservation mode
   alwaysPreserveClientCache: z.enum(["auto", "always", "never"]).optional(),
+<<<<<<< HEAD
   antigravitySignatureCacheMode: z.enum(signatureCacheModeValues).optional(),
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Adaptive Volume Routing
   adaptiveVolumeRouting: z.boolean().optional(),
   // Usage token buffer — safety margin added to reported prompt/input token counts.
@@ -88,6 +112,7 @@ export const updateSettingsSchema = z.object({
     .optional(),
   // SkillsMP marketplace API key
   skillsmpApiKey: z.string().max(200).optional(),
+<<<<<<< HEAD
   // Active skills provider (single source of truth for skills page)
   skillsProvider: z.enum(["skillsmp", "skillssh"]).optional(),
   // models.dev sync settings
@@ -175,3 +200,9 @@ export const databaseSettingsSchema = z.object(
 );
 
 export type DatabaseSettingsSchema = z.infer<typeof databaseSettingsSchema>;
+=======
+  // models.dev sync settings
+  modelsDevSyncEnabled: z.boolean().optional(),
+  modelsDevSyncInterval: z.number().int().min(3600).max(604800).optional(),
+});
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

@@ -3,14 +3,20 @@
 import { NextResponse } from "next/server";
 import fs from "fs/promises";
 import path from "path";
+<<<<<<< HEAD
 import { requireCliToolsAuth } from "@/lib/api/requireCliToolsAuth";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import {
   ensureCliConfigWriteAllowed,
   getCliPrimaryConfigPath,
   getCliRuntimeStatus,
 } from "@/shared/services/cliRuntime";
 import { createBackup } from "@/shared/services/backupService";
+<<<<<<< HEAD
 import { normalizeClaudeBaseUrl } from "@/shared/services/claudeCliConfig";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { saveCliToolLastConfigured, deleteCliToolLastConfigured } from "@/lib/db/cliToolState";
 import { cliSettingsEnvSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
@@ -34,10 +40,14 @@ const readSettings = async () => {
 };
 
 // GET - Check claude CLI and read current settings
+<<<<<<< HEAD
 export async function GET(request: Request) {
   const authError = await requireCliToolsAuth(request);
   if (authError) return authError;
 
+=======
+export async function GET() {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const runtime = await getCliRuntimeStatus("claude");
 
@@ -79,9 +89,12 @@ export async function GET(request: Request) {
 
 // POST - Backup old fields and write new settings
 export async function POST(request: Request) {
+<<<<<<< HEAD
   const authError = await requireCliToolsAuth(request);
   if (authError) return authError;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody;
   try {
     rawBody = await request.json();
@@ -103,19 +116,30 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: writeGuard }, { status: 403 });
     }
 
+<<<<<<< HEAD
     // (#523/#526) Extract keyId BEFORE validation — Zod strips unknown fields!
     // The /api/keys list endpoint returns masked key strings — sending those to
     // disk would save an unusable half-hidden token. Resolving by ID guarantees
     // we always write the full key value to the config file.
     const keyId = typeof rawBody?.keyId === "string" ? rawBody.keyId.trim() : null;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const validation = validateBody(cliSettingsEnvSchema, rawBody);
     if (isValidationFailure(validation)) {
       return NextResponse.json({ error: validation.error }, { status: 400 });
     }
     const { env } = validation.data;
 
+<<<<<<< HEAD
     // Resolve the real API key from DB by ID
+=======
+    // (#523/#526) If a keyId was provided, resolve the real API key from DB.
+    // The /api/keys list endpoint returns masked key strings — sending those to
+    // disk would save an unusable half-hidden token. Resolving by ID guarantees
+    // we always write the full key value to the config file.
+    const keyId = typeof rawBody?.keyId === "string" ? rawBody.keyId.trim() : null;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (keyId) {
       try {
         const keyRecord = await getApiKeyById(keyId);
@@ -123,7 +147,11 @@ export async function POST(request: Request) {
           env.ANTHROPIC_AUTH_TOKEN = keyRecord.key as string;
         }
       } catch {
+<<<<<<< HEAD
         // Non-critical: fall back to whatever value was already provided in env.
+=======
+        // Non-critical: fall back to whatever value was in env (e.g. sk_omniroute)
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     }
 
@@ -147,9 +175,17 @@ export async function POST(request: Request) {
       }
     }
 
+<<<<<<< HEAD
     // Claude Code gateway mode expects the unified root endpoint, not a forced /v1 suffix.
     if (env.ANTHROPIC_BASE_URL) {
       env.ANTHROPIC_BASE_URL = normalizeClaudeBaseUrl(env.ANTHROPIC_BASE_URL);
+=======
+    // Normalize ANTHROPIC_BASE_URL to ensure /v1 suffix
+    if (env.ANTHROPIC_BASE_URL) {
+      env.ANTHROPIC_BASE_URL = env.ANTHROPIC_BASE_URL.endsWith("/v1")
+        ? env.ANTHROPIC_BASE_URL
+        : `${env.ANTHROPIC_BASE_URL}/v1`;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
 
     // Merge new env with existing settings
@@ -185,7 +221,10 @@ export async function POST(request: Request) {
 const RESET_ENV_KEYS = [
   "ANTHROPIC_BASE_URL",
   "ANTHROPIC_AUTH_TOKEN",
+<<<<<<< HEAD
   "ANTHROPIC_API_KEY",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   "ANTHROPIC_DEFAULT_OPUS_MODEL",
   "ANTHROPIC_DEFAULT_SONNET_MODEL",
   "ANTHROPIC_DEFAULT_HAIKU_MODEL",
@@ -193,10 +232,14 @@ const RESET_ENV_KEYS = [
 ];
 
 // DELETE - Reset settings (remove env fields)
+<<<<<<< HEAD
 export async function DELETE(request: Request) {
   const authError = await requireCliToolsAuth(request);
   if (authError) return authError;
 
+=======
+export async function DELETE() {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const writeGuard = ensureCliConfigWriteAllowed();
     if (writeGuard) {

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { isAuthRequired, isDashboardSessionAuthenticated } from "@/shared/utils/apiAuth";
 import { createErrorResponse } from "@/lib/api/errorResponse";
 
@@ -7,6 +8,17 @@ export async function requireManagementAuth(request: Request): Promise<Response 
   }
 
   if (await isDashboardSessionAuthenticated(request)) {
+=======
+import { isAuthenticated, isAuthRequired } from "@/shared/utils/apiAuth";
+import { createErrorResponse } from "@/lib/api/errorResponse";
+
+export async function requireManagementAuth(request: Request): Promise<Response | null> {
+  if (!(await isAuthRequired())) {
+    return null;
+  }
+
+  if (await isAuthenticated(request)) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return null;
   }
 

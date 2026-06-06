@@ -1,8 +1,15 @@
 /**
+<<<<<<< HEAD
  * MCP Tool Schemas — Contracts for all 22 core and advanced OmniRoute MCP tools.
  *
  * Defines input/output Zod schemas, descriptions, scopes, and audit levels
  * for both essential (Phase 1) and advanced (Phase 2) MCP tools.
+=======
+ * MCP Tool Schemas — Contracts for all 16 OmniRoute MCP tools.
+ *
+ * Defines input/output Zod schemas, descriptions, scopes, and audit levels
+ * for both essential (Phase 1) and advanced (Phase 3) MCP tools.
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  *
  * Each tool wraps existing OmniRoute API endpoints and exposes them through
  * the Model Context Protocol, enabling AI agents in IDEs (VS Code, Cursor,
@@ -10,10 +17,13 @@
  */
 
 import { z } from "zod";
+<<<<<<< HEAD
 import {
   AUTO_ROUTING_STRATEGY_VALUES,
   ROUTING_STRATEGY_VALUES,
 } from "../../../src/shared/constants/routingStrategies.ts";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 // ============ Shared Types ============
 
@@ -113,7 +123,21 @@ export const listCombosOutput = z.object({
           priority: z.number(),
         })
       ),
+<<<<<<< HEAD
       strategy: z.enum(ROUTING_STRATEGY_VALUES),
+=======
+      strategy: z.enum([
+        "priority",
+        "weighted",
+        "round-robin",
+        "context-relay",
+        "strict-random",
+        "random",
+        "least-used",
+        "cost-optimized",
+        "auto",
+      ]),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       enabled: z.boolean(),
       metrics: z
         .object({
@@ -401,9 +425,12 @@ export const webSearchInput = z.object({
     .string()
     .min(1, "Query is required")
     .max(500, "Query must be 500 characters or fewer")
+<<<<<<< HEAD
 =======
     .max(1000, "Query must be 1000 characters or fewer")
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     .describe("The search query string"),
   max_results: z
     .number()
@@ -414,6 +441,7 @@ export const webSearchInput = z.object({
     .describe("Maximum number of search results to return"),
   search_type: z.enum(["web", "news"]).default("web").describe("Type of search to perform"),
   provider: z
+<<<<<<< HEAD
     .enum([
       "serper-search",
       "brave-search",
@@ -425,6 +453,9 @@ export const webSearchInput = z.object({
       "searchapi-search",
       "searxng-search",
     ])
+=======
+    .enum(["serper-search", "brave-search", "perplexity-search", "exa-search", "tavily-search"])
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     .optional()
     .describe("Specific search provider to use"),
 });
@@ -452,7 +483,11 @@ export const webSearchOutput = z.object({
 export const webSearchTool: McpToolDefinition<typeof webSearchInput, typeof webSearchOutput> = {
   name: "omniroute_web_search",
   description:
+<<<<<<< HEAD
     "Performs a web search using OmniRoute's search gateway. Supports multiple providers (Serper, Brave, Perplexity, Exa, Tavily, Google PSE, Linkup, SearchAPI, SearXNG) with automatic failover. Returns search results with titles, URLs, snippets, and position data.",
+=======
+    "Performs a web search using OmniRoute's search gateway. Supports multiple providers (Serper, Brave, Perplexity, Exa, Tavily) with automatic failover. Returns search results with titles, URLs, snippets, and position data.",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   inputSchema: webSearchInput,
   outputSchema: webSearchOutput,
   scopes: ["execute:search"],
@@ -541,9 +576,27 @@ export const setBudgetGuardTool: McpToolDefinition<
 // --- Tool 11: omniroute_set_routing_strategy ---
 export const setRoutingStrategyInput = z.object({
   comboId: z.string().describe("Combo ID or name to update"),
+<<<<<<< HEAD
   strategy: z.enum(ROUTING_STRATEGY_VALUES).describe("Routing strategy to apply"),
   autoRoutingStrategy: z
     .enum(AUTO_ROUTING_STRATEGY_VALUES)
+=======
+  strategy: z
+    .enum([
+      "priority",
+      "weighted",
+      "round-robin",
+      "context-relay",
+      "strict-random",
+      "random",
+      "least-used",
+      "cost-optimized",
+      "auto",
+    ])
+    .describe("Routing strategy to apply"),
+  autoRoutingStrategy: z
+    .enum(["rules", "cost", "eco", "latency", "fast"])
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     .optional()
     .describe("Optional strategy used by auto mode (only used when strategy='auto')"),
 });
@@ -826,6 +879,7 @@ export const getSessionSnapshotTool: McpToolDefinition<
   sourceEndpoints: ["/api/usage/analytics", "/api/telemetry/summary"],
 };
 
+<<<<<<< HEAD
 // --- Tool 18: omniroute_db_health_check ---
 export const dbHealthCheckInput = z.object({
   autoRepair: z
@@ -871,6 +925,9 @@ export const dbHealthCheckTool: McpToolDefinition<
 };
 
 // --- Tool 19: omniroute_sync_pricing ---
+=======
+// --- Tool 18: omniroute_sync_pricing ---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export const syncPricingInput = z.object({
   sources: z
     .array(z.string())
@@ -923,10 +980,15 @@ export const cacheStatsOutput = z.object({
     .object({
       totalRequests: z.number(),
       requestsWithCacheControl: z.number(),
+<<<<<<< HEAD
       totalInputTokens: z.number(),
       totalCachedTokens: z.number(),
       totalCacheCreationTokens: z.number(),
       tokensSaved: z.number(),
+=======
+      totalCachedTokens: z.number(),
+      totalCacheCreationTokens: z.number(),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       estimatedCostSaved: z.number(),
     })
     .nullable(),
@@ -934,6 +996,7 @@ export const cacheStatsOutput = z.object({
     activeKeys: z.number(),
     windowMs: z.number(),
   }),
+<<<<<<< HEAD
 <<<<<<< Updated upstream
   config: z
     .object({
@@ -941,6 +1004,8 @@ export const cacheStatsOutput = z.object({
     })
     .optional(),
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 });
 
 export const cacheStatsTool: McpToolDefinition<typeof cacheStatsInput, typeof cacheStatsOutput> = {
@@ -978,6 +1043,7 @@ export const cacheFlushTool: McpToolDefinition<typeof cacheFlushInput, typeof ca
   sourceEndpoints: ["/api/cache"],
 };
 
+<<<<<<< HEAD
 // ============ Compression Tools ============
 
 export const compressionStatusInput = z.object({}).describe("No parameters required");
@@ -1273,6 +1339,8 @@ export const oneproxyStatsTool: McpToolDefinition<
 };
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // ============ Tool Registry ============
 
 /** All MCP tool definitions, ordered by phase then name */
@@ -1295,6 +1363,7 @@ export const MCP_TOOLS = [
   bestComboForTaskTool,
   explainRouteTool,
   getSessionSnapshotTool,
+<<<<<<< HEAD
   dbHealthCheckTool,
   syncPricingTool,
   cacheStatsTool,
@@ -1308,6 +1377,11 @@ export const MCP_TOOLS = [
   oneproxyRotateTool,
   oneproxyStatsTool,
 =======
+=======
+  syncPricingTool,
+  cacheStatsTool,
+  cacheFlushTool,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 ] as const;
 
 /** Essential tools only (Phase 1) */

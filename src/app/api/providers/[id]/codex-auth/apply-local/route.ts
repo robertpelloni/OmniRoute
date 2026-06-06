@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
+<<<<<<< HEAD
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { ensureCliConfigWriteAllowed } from "@/shared/services/cliRuntime";
 import { CodexAuthFileError, writeCodexAuthFileToLocalCli } from "@/lib/oauth/utils/codexAuthFile";
 
@@ -19,6 +22,10 @@ function toErrorResponse(error: unknown) {
   return NextResponse.json({ error: message }, { status: 500 });
 }
 
+<<<<<<< HEAD
+=======
+export async function POST(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const writeGuard = ensureCliConfigWriteAllowed();
     if (writeGuard) {

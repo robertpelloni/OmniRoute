@@ -184,6 +184,7 @@ export function openaiToClaudeResponse(chunk, state) {
       if (tc.function?.arguments) {
         const toolInfo = state.toolCalls.get(idx);
         if (toolInfo) {
+<<<<<<< HEAD
           let deltaStr = tc.function.arguments;
 
           // Fix #1852: Strip empty string and array placeholders from streaming tool arguments
@@ -199,6 +200,12 @@ export function openaiToClaudeResponse(chunk, state) {
             type: "content_block_delta",
             index: toolInfo.blockIndex,
             delta: { type: "input_json_delta", partial_json: deltaStr },
+=======
+          results.push({
+            type: "content_block_delta",
+            index: toolInfo.blockIndex,
+            delta: { type: "input_json_delta", partial_json: tc.function.arguments },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           });
         }
       }

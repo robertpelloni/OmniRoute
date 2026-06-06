@@ -4,11 +4,17 @@
 
 ---
 
+<<<<<<< HEAD
 > **Agent-to-Agent Protocol v0.3** — Enables any AI agent to use OmniRoute as an intelligent routing agent via JSON-RPC 2.0.
 
 The A2A Server exposes OmniRoute as a **first-class agent** that other agents can discover, delegate tasks to, and collaborate with using the [A2A Protocol](https://google.github.io/A2A/).
 
 ---
+=======
+> **Agent-to-Agent Protocol v0.3**— Lehetővé teszi bármely AI-ügynök számára, hogy az OmniRoute-ot intelligens útválasztó ügynökként használja a JSON-RPC 2.0-n keresztül.
+
+Az A2A szerver az OmniRoute-ot**első osztályú ügynökként**teszi elérhetővé, amelyet más ügynökök felfedezhetnek, feladatokat delegálhatnak rá, és együttműködhetnek vele az [A2A protokoll](https://google.github.io/A2A/) használatával.---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## Architektúra
 
@@ -43,6 +49,7 @@ The A2A Server exposes OmniRoute as a **first-class agent** that other agents ca
 
 ### Agent Discovery
 
+<<<<<<< HEAD
 Every A2A-compatible agent exposes an **Agent Card** at `/.well-known/agent.json`:
 
 ```bash
@@ -52,6 +59,14 @@ curl http://localhost:20128/.well-known/agent.json
 **Response:**
 
 ```json
+=======
+Minden A2A-kompatibilis ügynök egy**ügynökkártyát**tesz elérhetővé a `/.well-known/agent.json' címen:```bash
+curl http://localhost:20128/.well-known/agent.json
+
+````
+
+**Válasz:**```json
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 {
   "name": "OmniRoute",
   "description": "Intelligent AI gateway with auto-routing across 50+ providers",
@@ -88,7 +103,11 @@ curl http://localhost:20128/.well-known/agent.json
     "apiKeyHeader": "Authorization"
   }
 }
+<<<<<<< HEAD
 ```
+=======
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ---
 
@@ -96,6 +115,7 @@ curl http://localhost:20128/.well-known/agent.json
 
 ### `message/send` — Synchronous Execution
 
+<<<<<<< HEAD
 Send a message to a skill and receive the complete response.
 
 ```bash
@@ -117,6 +137,26 @@ curl -X POST http://localhost:20128/a2a \
 **Response:**
 
 ```json
+=======
+Küldjön üzenetet egy készségnek, és kapja meg a teljes választ.```bash
+curl -X POST http://localhost:20128/a2a \
+ -H "Content-Type: application/json" \
+ -H "Authorization: Bearer YOUR_KEY" \
+ -d '{
+"jsonrpc": "2.0",
+"id": "1",
+"method": "message/send",
+"params": {
+"skill": "smart-routing",
+"messages": [{"role": "user", "content": "Write a Python hello world"}],
+"metadata": {"model": "auto", "combo": "fast-coding"}
+}
+}'
+
+````
+
+**Válasz:**```json
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 {
   "jsonrpc": "2.0",
   "id": "1",
@@ -133,6 +173,7 @@ curl -X POST http://localhost:20128/a2a \
     }
   }
 }
+<<<<<<< HEAD
 ```
 
 ### `message/stream` — SSE Streaming
@@ -157,12 +198,39 @@ curl -N -X POST http://localhost:20128/a2a \
 **SSE Events:**
 
 ```
+=======
+````
+
+### `message/stream` — SSE Streaming
+
+Ugyanaz, mint az "üzenet/küldés", de a szerver által küldött eseményeket adja vissza valós idejű adatfolyamhoz.```bash
+curl -N -X POST http://localhost:20128/a2a \
+ -H "Content-Type: application/json" \
+ -H "Authorization: Bearer YOUR_KEY" \
+ -d '{
+"jsonrpc": "2.0",
+"id": "1",
+"method": "message/stream",
+"params": {
+"skill": "smart-routing",
+"messages": [{"role": "user", "content": "Explain quantum computing"}]
+}
+}'
+
+````
+
+**SSE események:**```
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 data: {"jsonrpc":"2.0","method":"message/stream","params":{"task":{"id":"...","state":"working"},"chunk":{"type":"text","content":"Quantum computing..."}}}
 
 : heartbeat 2026-03-04T21:00:00Z
 
 data: {"jsonrpc":"2.0","method":"message/stream","params":{"task":{"id":"...","state":"completed"},"metadata":{...}}}
+<<<<<<< HEAD
 ```
+=======
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ### `tasks/get` — Query Task Status
 
@@ -188,6 +256,7 @@ curl -X POST http://localhost:20128/a2a \
 
 ### `smart-routing`
 
+<<<<<<< HEAD
 Routes prompts through OmniRoute's intelligent pipeline with full observability.
 
 **Parameters (in `metadata`):**
@@ -222,6 +291,38 @@ Answers natural-language queries about provider quotas.
 | Default                                        | Full quota summary with warnings for low-quota providers |
 
 ---
+=======
+Az Útvonalak az OmniRoute intelligens csővezetékén keresztül, teljes megfigyelhetőséggel jelzik.
+
+**Paraméterek (a "metaadatokban"):**
+
+| Paraméter      | Típus    | Alapértelmezett | Leírás                                                                                            |
+| -------------- | -------- | --------------- | ------------------------------------------------------------------------------------------------- |
+| "modell"       | "string" | "automatikus"   | Célmodell (pl. "claude-sonnet-4", "gpt-4o", "auto")                                               |
+| "kombó"        | "string" | aktív kombó     | Speciális kombó a                                                                                 |
+| "költségvetés" | "szám"   | egyik sem       | A kérelem maximális költsége USD-ben                                                              |
+| "szerep"       | "string" | egyik sem       | Feladatszerep tipp: `kódolás`, `áttekintés`, `tervezés`, `elemzés`, `hibakeresés`, `dokumentáció' |
+
+**Visszaküldés:**
+
+| Mező                           | Leírás                                                          |
+| ------------------------------ | --------------------------------------------------------------- | ---------------------- |
+| `termékek[].tartalom`          | Az LLM válaszszöveg                                             |
+| `metadata.routing_explanation` | Az útválasztási döntés ember által olvasható magyarázata        |
+| `metadata.cost_envelope`       | Becsült és tényleges költség pénznemben                         |
+| `metadata.resilience_trace`    | Események tömbje (elsődleges_kijelölt, tartalék_szükséges stb.) |
+| `metadata.policy_verdict`      | Megengedték-e a kérést, és miért                                | ### `quota-management` |
+
+Megválaszolja a szolgáltatói kvótákkal kapcsolatos természetes nyelvű kérdéseket.
+
+**Query types (inferred from message content):**
+
+| Lekérdezési minta                                           | Válasz típusa                                                                                      |
+| ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | --- |
+| Tartalmazza a `"rangsort", "legnagyobb kvótát", "legjobbat" | A fennmaradó kvóta szerint rangsorolt ​​szolgáltatók                                               |
+| Tartalmaz `"ingyenes"`, `"javaslat"`                        | Ingyenes kombinációkat sorol fel vagy ingyenes szolgáltatókat javasol                              |
+| Alapértelmezett                                             | Teljes kvóta-összefoglaló figyelmeztetésekkel az alacsony kvótával rendelkező szolgáltatók számára | --- |
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## Task Lifecycle
 
@@ -231,6 +332,7 @@ submitted ──→ working ──→ completed
               ──────────→ cancelled
 ```
 
+<<<<<<< HEAD
 | State       | Description                                           |
 | ----------- | ----------------------------------------------------- |
 | `submitted` | Task created, queued for execution                    |
@@ -244,6 +346,19 @@ submitted ──→ working ──→ completed
 - Tasks are garbage-collected after 2× TTL
 
 ---
+=======
+| állam        | Leírás                                                                       |
+| ------------ | ---------------------------------------------------------------------------- |
+| `benyújtva`  | Feladat létrehozva, végrehajtásra várakozva                                  |
+| "dolgozó"    | A készségkezelő                                                              |
+| "befejezett" | A végrehajtás sikeres, műtermékek elérhetők                                  |
+| `sikertelen` | A végrehajtás sikertelen vagy a feladat lejárt (TTL: 5 perc alapértelmezett) |
+| "törölve"    | Az ügyfél törölte a „tasks/cancel”                                           |
+
+- Terminálállapotok: "befejezett", "sikertelen", "megszakítva" (nincs további átmenet)
+- A „beküldve” vagy „működő” lejárt feladatok automatikusan „sikertelenként” vannak megjelölve
+- A feladatok 2× TTL után szemétgyűjtésre kerülnek---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## Client Examples
 
@@ -541,6 +656,7 @@ func main() {
 
 ### 🤖 Use Case 1: Multi-Agent Coding Pipeline
 
+<<<<<<< HEAD
 An orchestrator agent delegates code generation to OmniRoute, then passes the output to a review agent.
 
 ```python
@@ -550,6 +666,14 @@ def coding_pipeline(task: str):
         {"role": "user", "content": f"Write production-quality code: {task}"}
     ], metadata={"model": "auto", "role": "coding"})
     code = code_result["artifacts"][0]["content"]
+=======
+Az Orchestrator ügynök átadja a kódgenerálást az OmniRoute-nak, majd átadja a kimenetet egy felülvizsgálati ügynöknek.```python
+def coding_pipeline(task: str): # Step 1: Generate code via OmniRoute A2A
+code_result = a2a_send("smart-routing", [
+{"role": "user", "content": f"Write production-quality code: {task}"}
+], metadata={"model": "auto", "role": "coding"})
+code = code_result["artifacts"][0]["content"]
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     # Step 2: Review the code via OmniRoute A2A (different model)
     review_result = a2a_send("smart-routing", [
@@ -562,6 +686,7 @@ def coding_pipeline(task: str):
     print(f"Review cost: ${review_result['metadata']['cost_envelope']['actual']}")
 
     return {"code": code, "review": review}
+<<<<<<< HEAD
 ```
 
 ### 💡 Use Case 2: Quota-Aware Agent Swarm
@@ -569,6 +694,14 @@ def coding_pipeline(task: str):
 Multiple agents share quota through OmniRoute, using the quota skill to coordinate.
 
 ```python
+=======
+
+````
+
+### 💡 Use Case 2: Quota-Aware Agent Swarm
+
+Több ügynök osztozik a kvótán az OmniRoute-on keresztül, a kvótakészséget használva a koordinációhoz.```python
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 async def quota_aware_agent(agent_name: str, task: str):
     # Check quota before starting
     quota = a2a_send("quota-management", [
@@ -591,6 +724,7 @@ async def quota_aware_agent(agent_name: str, task: str):
         print(f"[{agent_name}] Free alternatives: {quota['artifacts'][0]['content']}")
 
     return result
+<<<<<<< HEAD
 ```
 
 ### 📊 Use Case 3: Real-Time Streaming Dashboard
@@ -598,10 +732,18 @@ async def quota_aware_agent(agent_name: str, task: str):
 A monitoring agent streams responses and displays progress in real-time.
 
 ```typescript
+=======
+````
+
+### 📊 Use Case 3: Real-Time Streaming Dashboard
+
+A megfigyelő ügynök streameli a válaszokat, és valós időben jeleníti meg az előrehaladást.```typescript
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 async function streamingDashboard(prompt: string) {
   const response = await fetch(`${BASE_URL}/a2a`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${API_KEY}` },
+<<<<<<< HEAD
     body: JSON.stringify({
       jsonrpc: "2.0",
       id: "dash-1",
@@ -617,6 +759,23 @@ async function streamingDashboard(prompt: string) {
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
+=======
+body: JSON.stringify({
+jsonrpc: "2.0",
+id: "dash-1",
+method: "message/stream",
+params: { skill: "smart-routing", messages: [{ role: "user", content: prompt }] },
+}),
+});
+
+let totalChunks = 0;
+const reader = response.body!.getReader();
+const decoder = new TextDecoder();
+
+while (true) {
+const { done, value } = await reader.read();
+if (done) break;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     for (const line of decoder.decode(value).split("\n")) {
       if (line.startsWith("data: ")) {
@@ -640,6 +799,7 @@ async function streamingDashboard(prompt: string) {
         }
       }
     }
+<<<<<<< HEAD
   }
 }
 ```
@@ -649,6 +809,17 @@ async function streamingDashboard(prompt: string) {
 For long-running tasks, poll the task status instead of waiting synchronously.
 
 ```python
+=======
+
+}
+}
+
+````
+
+### 🔁 Use Case 4: Task Polling Pattern
+
+Hosszan futó feladatok esetén a szinkron várakozás helyett kérje le a feladat állapotát.```python
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import time
 
 def poll_task(task_id: str, timeout: int = 60):
@@ -678,12 +849,17 @@ def poll_task(task_id: str, timeout: int = 60):
         "params": {"taskId": task_id},
     })
     raise TimeoutError(f"Task {task_id} timed out after {timeout}s")
+<<<<<<< HEAD
 ```
+=======
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ---
 
 ## Error Codes
 
+<<<<<<< HEAD
 | Code   | Constant                 | Meaning                                  |
 | ------ | ------------------------ | ---------------------------------------- |
 | -32700 | —                        | Parse error (invalid JSON)               |
@@ -710,10 +886,34 @@ Authorization: Bearer YOUR_OMNIROUTE_API_KEY
 If no API key is configured on the server (`OMNIROUTE_API_KEY` is empty), authentication is bypassed.
 
 ---
+=======
+| Kód    | Állandó                  | Jelentése                                         |
+| ------ | ------------------------ | ------------------------------------------------- | --- |
+| -32700 | —                        | Elemzési hiba (érvénytelen JSON)                  |
+| -32600 | `INVALID_REQUEST`        | Érvénytelen JSON-RPC kérés vagy jogosulatlan      |
+| -32601 | `METHOD_NOT_FOUND`       | Ismeretlen módszer vagy készség                   |
+| -32602 | `INVALID_PARAMS`         | Hiányzó vagy érvénytelen paraméterek              |
+| -32603 | "BELSŐ_HIBA"             | A készségek végrehajtása nem sikerült             |
+| -32001 | `TASK_NOT_FOUND`         | A feladatazonosító nem található                  |
+| -32002 | `TASK_ALREADY_COMPLETED` | A befejezett feladat nem módosítható              |
+| -32003 | "JOGOLTATLAN"            | Érvénytelen vagy hiányzó API-kulcs                |
+| -32004 | `KÖLTSÉGVETÉS_TÁLLÍTÁSA` | A kérelem meghaladja a konfigurált költségkeretet |
+| -32005 | `PROVIDER_UNAVAILABLE`   | Nincs elérhető szolgáltató                        | --- |
+
+## Authentication
+
+Minden `/a2a` kéréshez bearer token szükséges az `Engedélyezés' fejlécen keresztül:```
+Authorization: Bearer YOUR_OMNIROUTE_API_KEY
+
+```
+
+Ha nincs API-kulcs konfigurálva a szerveren ("OMNIROUTE_API_KEY" üres), a hitelesítés megkerüli.---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## File Structure
 
 ```
+<<<<<<< HEAD
 src/lib/a2a/
 ├── taskManager.ts         # Task lifecycle (create/update/cancel/list), TTL, cleanup
 ├── taskExecution.ts       # Generic task executor with state management
@@ -728,12 +928,31 @@ src/app/a2a/
 
 open-sse/mcp-server/
 └── schemas/a2a.ts         # Zod schemas (AgentCard, Task, JSON-RPC, SSE events)
+=======
+
+src/lib/a2a/
+├── taskManager.ts # Task lifecycle (create/update/cancel/list), TTL, cleanup
+├── taskExecution.ts # Generic task executor with state management
+├── streaming.ts # SSE stream formatting, heartbeat, chunk/completion events
+├── routingLogger.ts # Routing decision logger (stats, history, retention)
+└── skills/
+├── smartRouting.ts # Smart routing skill (routes via /v1/chat/completions)
+└── quotaManagement.ts # Quota management skill (natural-language quota queries)
+
+src/app/a2a/
+└── route.ts # Next.js API route handler (JSON-RPC 2.0 dispatch)
+
+open-sse/mcp-server/
+└── schemas/a2a.ts # Zod schemas (AgentCard, Task, JSON-RPC, SSE events)
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 ```
 
 ---
 
 ## Comparison: MCP vs A2A
 
+<<<<<<< HEAD
 | Feature           | MCP Server                   | A2A Server                                        |
 | ----------------- | ---------------------------- | ------------------------------------------------- |
 | **Protocol**      | Model Context Protocol       | Agent-to-Agent Protocol v0.3                      |
@@ -750,3 +969,20 @@ open-sse/mcp-server/
 ## Licenc
 
 Part of [OmniRoute](https://github.com/diegosouzapw/OmniRoute) — MIT License.
+=======
+| Funkció | MCP szerver | A2A szerver |
+| ------------------ | ----------------------------- | -------------------------------------------------- |
+|**Jegyzőkönyv**| Model Context Protocol | Ügynök-ügynök protokoll v0.3 |
+|**Közlekedés**| stdio / HTTP | HTTP (JSON-RPC 2.0) |
+|**Felfedezés**| Eszközlista az MCP-n keresztül | `/.well-known/agent.json` |
+|**Részletezettség**| 16 egyedi szerszám | 2 magas szintű készség |
+|**A legjobb**számára | IDE ügynökök (kurzor, VS kód) | Többügynök rendszerek (LangChain, CrewAI) |
+|**Streaming**| Nem támogatott | SSE "üzeneten/folyamon" |
+|**Feladatkövetés**| Nem | Teljes életciklus (benyújtva → befejezve) |
+|**Megfigyelhetőség**| Audit napló eszközhívásonként | Költségkeret + rugalmassági nyomon követés + szakpolitikai ítélet |---
+
+## Licenc
+
+Az [OmniRoute](https://github.com/diegosouzapw/OmniRoute) része – MIT-licenc.
+```
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

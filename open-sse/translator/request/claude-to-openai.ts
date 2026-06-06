@@ -5,6 +5,7 @@ import { adjustMaxTokens } from "../helpers/maxTokensHelper.ts";
 type JsonRecord = Record<string, unknown>;
 const TOOL_CHOICE_ANY = ["a", "n", "y"].join("");
 
+<<<<<<< HEAD
 /**
  * Normalize tool input schema for OpenAI compatibility.
  * OpenAI strict mode requires `properties: {}` on object-type schemas,
@@ -27,6 +28,8 @@ function normalizeOpenAIReasoningEffort(effort: unknown): string | undefined {
   return normalized || undefined;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // Convert Claude request to OpenAI format
 export function claudeToOpenAIRequest(model, body, stream) {
   const result: {
@@ -101,7 +104,11 @@ export function claudeToOpenAIRequest(model, body, stream) {
           function: {
             name,
             description: typeof tool.description === "string" ? tool.description : "", // fix: never null (#276)
+<<<<<<< HEAD
             parameters: normalizeToolSchema(tool.input_schema),
+=======
+            parameters: tool.input_schema || { type: "object", properties: {} },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           },
         };
       })
@@ -124,6 +131,7 @@ export function claudeToOpenAIRequest(model, body, stream) {
     result.tool_choice = convertToolChoice(body.tool_choice);
   }
 
+<<<<<<< HEAD
   // Reasoning effort: map Claude-side thinking controls to OpenAI reasoning_effort.
   // Priority: output_config.effort (Claude Code) > thinking.budget_tokens (Claude native).
   // Budget buckets match the reverse mapping in thinkingBudget.ts::setCustomBudget.
@@ -145,6 +153,8 @@ export function claudeToOpenAIRequest(model, body, stream) {
     }
   }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return result;
 }
 

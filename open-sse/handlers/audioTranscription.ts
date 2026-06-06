@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { CORS_HEADERS } from "../utils/cors.ts";
+=======
+import { getCorsOrigin } from "../utils/cors.ts";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Audio Transcription Handler
  *
@@ -51,7 +55,11 @@ function upstreamErrorResponse(res, errText) {
     { error: { message: errorMessage, code: res.status } },
     {
       status: res.status,
+<<<<<<< HEAD
       headers: { ...CORS_HEADERS },
+=======
+      headers: { "Access-Control-Allow-Origin": getCorsOrigin() },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
   );
 }
@@ -152,7 +160,11 @@ async function handleDeepgramTranscription(
   // Return it explicitly so the client can distinguish from a credentials error
   return Response.json(
     { text: text ?? "", noSpeechDetected: text === null || text === "" },
+<<<<<<< HEAD
     { headers: { ...CORS_HEADERS } }
+=======
+    { headers: { "Access-Control-Allow-Origin": getCorsOrigin() } }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   );
 }
 
@@ -213,7 +225,14 @@ async function handleAssemblyAITranscription(providerConfig, file, modelId, toke
     const result = await pollRes.json();
 
     if (result.status === "completed") {
+<<<<<<< HEAD
       return Response.json({ text: result.text || "" }, { headers: { ...CORS_HEADERS } });
+=======
+      return Response.json(
+        { text: result.text || "" },
+        { headers: { "Access-Control-Allow-Origin": getCorsOrigin() } }
+      );
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
 
     if (result.status === "error") {
@@ -247,7 +266,11 @@ async function handleNvidiaTranscription(providerConfig, file, modelId, token) {
   // Normalize to { text } — Nvidia may return { text } directly or nested
   const text = data.text || data.transcript || "";
 
+<<<<<<< HEAD
   return Response.json({ text }, { headers: { ...CORS_HEADERS } });
+=======
+  return Response.json({ text }, { headers: { "Access-Control-Allow-Origin": getCorsOrigin() } });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 /**
@@ -278,7 +301,11 @@ async function handleHuggingFaceTranscription(providerConfig, file, modelId, tok
   // HuggingFace returns { text } directly
   const text = data.text || "";
 
+<<<<<<< HEAD
   return Response.json({ text }, { headers: { ...CORS_HEADERS } });
+=======
+  return Response.json({ text }, { headers: { "Access-Control-Allow-Origin": getCorsOrigin() } });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 /**
@@ -386,7 +413,11 @@ export async function handleAudioTranscription({
 
     return new Response(data, {
       status: 200,
+<<<<<<< HEAD
       headers: { "Content-Type": contentType },
+=======
+      headers: { "Content-Type": contentType, "Access-Control-Allow-Origin": getCorsOrigin() },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     });
   } catch (err) {
     const error = err instanceof Error ? err : new Error(String(err));

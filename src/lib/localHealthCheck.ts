@@ -33,6 +33,7 @@ const INITIAL_DELAY_MS = 15_000; // Wait for server boot before first sweep
 const LOG_PREFIX = "[LocalHealthCheck]";
 const TRUE_ENV_VALUES = new Set(["1", "true", "yes", "on"]);
 
+<<<<<<< HEAD
 function isBuildProcess(): boolean {
   return typeof process !== "undefined" && process.env.NEXT_PHASE === "phase-production-build";
 }
@@ -46,6 +47,8 @@ function isAutomatedTestProcess(): boolean {
   );
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // ── State (globalThis survives HMR re-evaluation) ───────────────────────
 
 declare global {
@@ -82,11 +85,15 @@ function isEnvFlagEnabled(name: string): boolean {
 }
 
 function isLocalHealthCheckDisabled(): boolean {
+<<<<<<< HEAD
   return (
     isEnvFlagEnabled("OMNIROUTE_DISABLE_LOCAL_HEALTHCHECK") ||
     isBuildProcess() ||
     isAutomatedTestProcess()
   );
+=======
+  return isEnvFlagEnabled("OMNIROUTE_DISABLE_LOCAL_HEALTHCHECK") || process.env.NODE_ENV === "test";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 function isLocalhostUrl(baseUrl: string): boolean {

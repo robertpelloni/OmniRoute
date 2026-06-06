@@ -1,17 +1,24 @@
 "use server";
 
 import { NextResponse } from "next/server";
+<<<<<<< HEAD
 import { requireCliToolsAuth } from "@/lib/api/requireCliToolsAuth";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import {
   CLI_TOOL_IDS,
   getCliPrimaryConfigPath,
   getCliRuntimeStatus,
 } from "@/shared/services/cliRuntime";
 
+<<<<<<< HEAD
 export async function GET(request, { params }) {
   const authError = await requireCliToolsAuth(request);
   if (authError) return authError;
 
+=======
+export async function GET(_request, { params }) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const { toolId } = await params;
     const normalizedToolId = String(toolId || "")

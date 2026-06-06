@@ -1,5 +1,9 @@
 /**
+<<<<<<< HEAD
  * OmniRoute MCP Advanced Tools — 13 intelligence tools that differentiate
+=======
+ * OmniRoute MCP Advanced Tools — 10 intelligence tools that differentiate
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  * OmniRoute from all other AI gateways.
  *
  * Tools:
@@ -12,15 +16,20 @@
  *   7. omniroute_best_combo_for_task — AI-powered combo recommendation
  *   8. omniroute_explain_route      — Post-hoc routing decision explainer
  *   9. omniroute_get_session_snapshot — Full session state snapshot
+<<<<<<< HEAD
  *  10. omniroute_db_health_check   — Diagnose and repair DB state drift
  *  11. omniroute_sync_pricing      — Sync provider pricing from external source
  *  12. omniroute_cache_stats       — Cache statistics and hit rates
  *  13. omniroute_cache_flush       — Flush/invalidate cache entries
+=======
+ *  10. omniroute_sync_pricing      — Sync provider pricing from external source
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  */
 
 import { logToolCall } from "../audit.ts";
 import { normalizeQuotaResponse } from "../../../src/shared/contracts/quota.ts";
 import { resolveOmniRouteBaseUrl } from "../../../src/shared/utils/resolveOmniRouteBaseUrl.ts";
+<<<<<<< HEAD
 import {
   getComboModelProvider,
   getComboModelString,
@@ -31,6 +40,8 @@ import type {
   RoutingStrategyValue,
 } from "../../../src/shared/constants/routingStrategies.ts";
 import { normalizeRoutingStrategy } from "../../../src/shared/constants/routingStrategies.ts";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const OMNIROUTE_BASE_URL = resolveOmniRouteBaseUrl();
 const OMNIROUTE_API_KEY = process.env.OMNIROUTE_API_KEY || "";
@@ -93,8 +104,13 @@ function getComboModels(combo: JsonRecord): ComboModel[] {
   const nestedModels = toArrayOfRecords(toRecord(combo.data).models);
   const sourceModels = directModels.length > 0 ? directModels : nestedModels;
   return sourceModels.map((model) => ({
+<<<<<<< HEAD
     provider: getComboModelProvider(model) || (getComboModelString(model) ? "unknown" : "combo"),
     model: getComboModelString(model) || getComboStepTarget(model) || "",
+=======
+    provider: toString(model.provider, "unknown"),
+    model: toString(model.model, ""),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     inputCostPer1M: toNumber(model.inputCostPer1M, 3.0),
   }));
 }
@@ -119,6 +135,7 @@ interface BudgetGuardState {
 let activeBudgetGuard: BudgetGuardState | null = null;
 
 type ResilienceProfileConfig = {
+<<<<<<< HEAD
   requestQueue: {
     requestsPerMinute: number;
     minTimeBetweenRequestsMs: number;
@@ -146,10 +163,34 @@ type ResilienceProfileConfig = {
       resetTimeoutMs: number;
     };
   };
+=======
+  profiles: {
+    oauth: {
+      transientCooldown: number;
+      rateLimitCooldown: number;
+      maxBackoffLevel: number;
+      circuitBreakerThreshold: number;
+      circuitBreakerReset: number;
+    };
+    apikey: {
+      transientCooldown: number;
+      rateLimitCooldown: number;
+      maxBackoffLevel: number;
+      circuitBreakerThreshold: number;
+      circuitBreakerReset: number;
+    };
+  };
+  defaults: {
+    requestsPerMinute: number;
+    minTimeBetweenRequests: number;
+    concurrentRequests: number;
+  };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 };
 
 const RESILIENCE_PROFILES = {
   aggressive: {
+<<<<<<< HEAD
     requestQueue: {
       requestsPerMinute: 180,
       minTimeBetweenRequestsMs: 100,
@@ -235,6 +276,75 @@ const RESILIENCE_PROFILES = {
         resetTimeoutMs: 60000,
       },
     },
+=======
+    profiles: {
+      oauth: {
+        transientCooldown: 3000,
+        rateLimitCooldown: 30000,
+        maxBackoffLevel: 4,
+        circuitBreakerThreshold: 2,
+        circuitBreakerReset: 30000,
+      },
+      apikey: {
+        transientCooldown: 2000,
+        rateLimitCooldown: 0,
+        maxBackoffLevel: 3,
+        circuitBreakerThreshold: 3,
+        circuitBreakerReset: 15000,
+      },
+    },
+    defaults: {
+      requestsPerMinute: 180,
+      minTimeBetweenRequests: 100,
+      concurrentRequests: 16,
+    },
+  },
+  balanced: {
+    profiles: {
+      oauth: {
+        transientCooldown: 5000,
+        rateLimitCooldown: 60000,
+        maxBackoffLevel: 8,
+        circuitBreakerThreshold: 3,
+        circuitBreakerReset: 60000,
+      },
+      apikey: {
+        transientCooldown: 3000,
+        rateLimitCooldown: 0,
+        maxBackoffLevel: 5,
+        circuitBreakerThreshold: 5,
+        circuitBreakerReset: 30000,
+      },
+    },
+    defaults: {
+      requestsPerMinute: 100,
+      minTimeBetweenRequests: 200,
+      concurrentRequests: 10,
+    },
+  },
+  conservative: {
+    profiles: {
+      oauth: {
+        transientCooldown: 8000,
+        rateLimitCooldown: 120000,
+        maxBackoffLevel: 10,
+        circuitBreakerThreshold: 8,
+        circuitBreakerReset: 120000,
+      },
+      apikey: {
+        transientCooldown: 5000,
+        rateLimitCooldown: 30000,
+        maxBackoffLevel: 8,
+        circuitBreakerThreshold: 8,
+        circuitBreakerReset: 60000,
+      },
+    },
+    defaults: {
+      requestsPerMinute: 60,
+      minTimeBetweenRequests: 350,
+      concurrentRequests: 6,
+    },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   },
 } satisfies Record<"aggressive" | "balanced" | "conservative", ResilienceProfileConfig>;
 
@@ -377,8 +487,22 @@ export async function handleSetBudgetGuard(args: {
 
 export async function handleSetRoutingStrategy(args: {
   comboId: string;
+<<<<<<< HEAD
   strategy: RoutingStrategyValue;
   autoRoutingStrategy?: AutoRoutingStrategyValue;
+=======
+  strategy:
+    | "priority"
+    | "weighted"
+    | "round-robin"
+    | "context-relay"
+    | "strict-random"
+    | "random"
+    | "least-used"
+    | "cost-optimized"
+    | "auto";
+  autoRoutingStrategy?: "rules" | "cost" | "eco" | "latency" | "fast";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }) {
   const start = Date.now();
   try {
@@ -420,9 +544,14 @@ export async function handleSetRoutingStrategy(args: {
       Object.keys(toRecord(combo.config)).length > 0 ? combo.config : comboData.config
     );
 
+<<<<<<< HEAD
     const normalizedStrategy = normalizeRoutingStrategy(args.strategy);
     let nextConfig: JsonRecord | undefined = undefined;
     if (normalizedStrategy === "auto" && args.autoRoutingStrategy) {
+=======
+    let nextConfig: JsonRecord | undefined = undefined;
+    if (args.strategy === "auto" && args.autoRoutingStrategy) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       const currentAutoConfig = toRecord(currentConfig.auto);
       nextConfig = {
         ...currentConfig,
@@ -433,7 +562,11 @@ export async function handleSetRoutingStrategy(args: {
       };
     }
 
+<<<<<<< HEAD
     const payload: JsonRecord = { strategy: normalizedStrategy };
+=======
+    const payload: JsonRecord = { strategy: args.strategy };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (nextConfig && Object.keys(nextConfig).length > 0) {
       payload.config = nextConfig;
     }
@@ -448,18 +581,28 @@ export async function handleSetRoutingStrategy(args: {
     const updatedConfig = toRecord(updatedCombo.config);
     const resolvedAutoStrategy =
       toString(toRecord(updatedConfig.auto).routingStrategy) ||
+<<<<<<< HEAD
       (normalizedStrategy === "auto" ? (args.autoRoutingStrategy ?? "rules") : "");
+=======
+      (args.strategy === "auto" ? (args.autoRoutingStrategy ?? "rules") : "");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     const result = {
       success: true,
       combo: {
         id: toString(updatedCombo.id, comboId),
         name: toString(updatedCombo.name, toString(combo.name, comboId)),
+<<<<<<< HEAD
         strategy: toString(updatedCombo.strategy, normalizedStrategy),
         autoRoutingStrategy:
           toString(updatedCombo.strategy, normalizedStrategy) === "auto"
             ? resolvedAutoStrategy
             : null,
+=======
+        strategy: toString(updatedCombo.strategy, args.strategy),
+        autoRoutingStrategy:
+          toString(updatedCombo.strategy, args.strategy) === "auto" ? resolvedAutoStrategy : null,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       },
     };
 
@@ -485,10 +628,20 @@ export async function handleSetResilienceProfile(args: {
       };
     }
 
+<<<<<<< HEAD
     // Apply to OmniRoute via API using the plan-aligned resilience structure.
     await apiFetch("/api/resilience", {
       method: "PATCH",
       body: JSON.stringify(settings),
+=======
+    // Apply to OmniRoute via API (contract: PATCH + { profiles, defaults })
+    await apiFetch("/api/resilience", {
+      method: "PATCH",
+      body: JSON.stringify({
+        profiles: settings.profiles,
+        defaults: settings.defaults,
+      }),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     });
 
     const result = { applied: true, profile: args.profile, settings };
@@ -886,6 +1039,7 @@ export async function handleGetSessionSnapshot() {
     return { content: [{ type: "text" as const, text: `Error: ${msg}` }], isError: true };
   }
 }
+<<<<<<< HEAD
 
 export async function handleDbHealthCheck(args: { autoRepair?: boolean }) {
   const start = Date.now();
@@ -1115,3 +1269,5 @@ export async function handleOneproxyStats(args: Record<string, never> = {}) {
     return { content: [{ type: "text" as const, text: `Error: ${msg}` }], isError: true };
   }
 }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

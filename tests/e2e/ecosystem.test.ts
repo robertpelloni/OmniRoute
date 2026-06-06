@@ -5,7 +5,11 @@
  * Run with: npm run test:ecosystem
  */
 
+<<<<<<< HEAD
 import { describe, it, expect, beforeAll } from "vitest";
+=======
+import { describe, it, expect } from "vitest";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const BASE_URL = process.env.OMNIROUTE_BASE_URL || "http://localhost:20128";
 const API_KEY = process.env.OMNIROUTE_API_KEY || "";
@@ -38,21 +42,33 @@ describe("E2E: MCP Server (16 tools)", () => {
   itCase("should respond to health check", async () => {
     const res = await apiFetch("/api/monitoring/health");
     expect(res.ok).toBe(true);
+<<<<<<< HEAD
     const data = (await res.json()) as any;
+=======
+    const data = await res.json();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     expect(data).toHaveProperty("status");
   });
 
   itCase("should list combos", async () => {
     const res = await apiFetch("/api/combos");
     expect(res.ok).toBe(true);
+<<<<<<< HEAD
     const data = (await res.json()) as any;
+=======
+    const data = await res.json();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     expect(Array.isArray(data?.combos)).toBe(true);
   });
 
   itCase("should return quota data", async () => {
     const res = await apiFetch("/api/usage/quota");
     expect(res.ok).toBe(true);
+<<<<<<< HEAD
     const data = (await res.json()) as any;
+=======
+    const data = await res.json();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     expect(Array.isArray(data?.providers)).toBe(true);
     expect(data).toHaveProperty("meta");
   });
@@ -74,7 +90,11 @@ describe("E2E: Quota Contract (/api/usage/quota)", () => {
     const res = await apiFetch("/api/usage/quota");
     expect(res.ok).toBe(true);
 
+<<<<<<< HEAD
     const data = (await res.json()) as any;
+=======
+    const data = await res.json();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     expect(Array.isArray(data.providers)).toBe(true);
     expect(data).toHaveProperty("meta");
     expect(typeof data.meta.generatedAt).toBe("string");
@@ -96,13 +116,21 @@ describe("E2E: Quota Contract (/api/usage/quota)", () => {
   itCase("should filter quota by provider", async () => {
     const allRes = await apiFetch("/api/usage/quota");
     expect(allRes.ok).toBe(true);
+<<<<<<< HEAD
     const allData = (await allRes.json()) as any;
+=======
+    const allData = await allRes.json();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (!Array.isArray(allData.providers) || allData.providers.length === 0) return;
 
     const provider = allData.providers[0].provider;
     const filteredRes = await apiFetch(`/api/usage/quota?provider=${encodeURIComponent(provider)}`);
     expect(filteredRes.ok).toBe(true);
+<<<<<<< HEAD
     const filteredData = (await filteredRes.json()) as any;
+=======
+    const filteredData = await filteredRes.json();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     expect(filteredData.meta.filters.provider).toBe(provider);
     expect(Array.isArray(filteredData.providers)).toBe(true);
     expect(filteredData.providers.every((p: any) => p.provider === provider)).toBe(true);
@@ -111,7 +139,11 @@ describe("E2E: Quota Contract (/api/usage/quota)", () => {
   itCase("should filter quota by connectionId", async () => {
     const allRes = await apiFetch("/api/usage/quota");
     expect(allRes.ok).toBe(true);
+<<<<<<< HEAD
     const allData = (await allRes.json()) as any;
+=======
+    const allData = await allRes.json();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (!Array.isArray(allData.providers) || allData.providers.length === 0) return;
 
     const connectionId = allData.providers[0].connectionId;
@@ -119,7 +151,11 @@ describe("E2E: Quota Contract (/api/usage/quota)", () => {
       `/api/usage/quota?connectionId=${encodeURIComponent(connectionId)}`
     );
     expect(filteredRes.ok).toBe(true);
+<<<<<<< HEAD
     const filteredData = (await filteredRes.json()) as any;
+=======
+    const filteredData = await filteredRes.json();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     expect(filteredData.meta.filters.connectionId).toBe(connectionId);
     expect(Array.isArray(filteredData.providers)).toBe(true);
     expect(filteredData.providers.every((p: any) => p.connectionId === connectionId)).toBe(true);
@@ -128,6 +164,7 @@ describe("E2E: Quota Contract (/api/usage/quota)", () => {
 
 // ─── Scenario 2: A2A Server Complete ─────────────────────────────
 describe("E2E: A2A Server (lifecycle)", () => {
+<<<<<<< HEAD
   beforeAll(async () => {
     await apiFetch("/api/settings", {
       method: "PATCH",
@@ -138,6 +175,12 @@ describe("E2E: A2A Server (lifecycle)", () => {
     const res = await apiFetch("/.well-known/agent.json");
     expect(res.ok).toBe(true);
     const card = (await res.json()) as any;
+=======
+  itCase("should serve Agent Card", async () => {
+    const res = await apiFetch("/.well-known/agent.json");
+    expect(res.ok).toBe(true);
+    const card = await res.json();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     expect(card).toHaveProperty("name");
     expect(card).toHaveProperty("skills");
     expect(card).toHaveProperty("version");
@@ -158,7 +201,11 @@ describe("E2E: A2A Server (lifecycle)", () => {
       }),
     });
     expect(res.ok).toBe(true);
+<<<<<<< HEAD
     const data = (await res.json()) as any;
+=======
+    const data = await res.json();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     expect(data).toHaveProperty("result");
     expect(data.result.task).toHaveProperty("id");
     expect(data.result.task).toHaveProperty("state");
@@ -174,7 +221,11 @@ describe("E2E: A2A Server (lifecycle)", () => {
         params: {},
       }),
     });
+<<<<<<< HEAD
     const data = (await res.json()) as any;
+=======
+    const data = await res.json();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     expect(data).toHaveProperty("error");
     expect(data.error.code).toBe(-32601);
   });
@@ -203,7 +254,11 @@ describe("E2E: Auto-Combo (routing + self-healing)", () => {
     const res = await apiFetch("/api/combos");
     if (!res.ok) console.error("GET /api/combos failed:", await res.text());
     expect(res.ok).toBe(true);
+<<<<<<< HEAD
     const data = (await res.json()) as any;
+=======
+    const data = await res.json();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     expect(Array.isArray(data?.combos)).toBe(true);
     const autoCombos = data.combos.filter((c: any) => c.strategy === "auto");
     expect(autoCombos.length).toBeGreaterThanOrEqual(0);
@@ -215,7 +270,11 @@ describe("E2E: OpenClaw Integration", () => {
   itCase("should return dynamic provider.order", async () => {
     const res = await apiFetch("/api/cli-tools/openclaw/auto-order");
     expect(res.ok).toBe(true);
+<<<<<<< HEAD
     const data = (await res.json()) as any;
+=======
+    const data = await res.json();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     expect(data).toHaveProperty("provider");
     expect(data.provider).toHaveProperty("order");
     expect(Array.isArray(data.provider.order)).toBe(true);
@@ -255,7 +314,12 @@ describe("E2E: Stress (100 parallel requests)", () => {
 
 // ─── Scenario 6: Security ────────────────────────────────────────
 describe("E2E: Security", () => {
+<<<<<<< HEAD
   itCase("should handle missing A2A auth according to server configuration", async () => {
+=======
+  itCase("should reject A2A requests without auth when auth is configured", async () => {
+    if (!API_KEY) return; // skip if no auth configured
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const res = await fetch(`${BASE_URL}/a2a`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -267,6 +331,7 @@ describe("E2E: Security", () => {
         params: { skill: "quota-management", messages: [] },
       }),
     });
+<<<<<<< HEAD
     if (API_KEY) {
       expect(res.status).toBeGreaterThanOrEqual(401);
       return;
@@ -279,6 +344,13 @@ describe("E2E: Security", () => {
   });
 
   itCase("should handle invalid API keys according to server configuration", async () => {
+=======
+    expect(res.status).toBeGreaterThanOrEqual(401);
+  });
+
+  itCase("should reject invalid API keys", async () => {
+    if (!API_KEY) return;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const res = await fetch(`${BASE_URL}/a2a`, {
       method: "POST",
       headers: {
@@ -292,6 +364,7 @@ describe("E2E: Security", () => {
         params: { skill: "quota-management", messages: [] },
       }),
     });
+<<<<<<< HEAD
     if (API_KEY) {
       expect(res.status).toBeGreaterThanOrEqual(401);
       return;
@@ -301,6 +374,9 @@ describe("E2E: Security", () => {
       console.log("SEC-2 FAILED STATUS:", res.status, "BODY:", await res.text());
     }
     expect(res.status).toBe(200);
+=======
+    expect(res.status).toBeGreaterThanOrEqual(401);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   });
 
   itCase("should not expose internal errors in API responses", async () => {
@@ -318,7 +394,11 @@ describe("E2E: Security", () => {
       method: "POST",
       body: "not-json",
     });
+<<<<<<< HEAD
     const data = (await res.json()) as any;
+=======
+    const data = await res.json();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (data.error) {
       expect(data.error.code).toBe(-32700); // Parse error
     }

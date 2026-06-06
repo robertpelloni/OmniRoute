@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getCombos, createCombo, getComboByName, isCloudEnabled } from "@/lib/localDb";
 import { getConsistentMachineId } from "@/shared/utils/machineId";
 import { syncToCloud } from "@/lib/cloudSync";
+<<<<<<< HEAD
 import { validateCompositeTiersConfig } from "@/lib/combos/compositeTiers";
 import { normalizeComboModels } from "@/lib/combos/steps";
 import { validateComboDAG } from "@omniroute/open-sse/services/combo.ts";
@@ -14,6 +15,14 @@ export async function GET(request: Request) {
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
 
+=======
+import { validateComboDAG } from "@omniroute/open-sse/services/combo.ts";
+import { createComboSchema } from "@/shared/validation/schemas";
+import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
+
+// GET /api/combos - Get all combos
+export async function GET() {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const combos = await getCombos();
     return NextResponse.json({ combos });
@@ -25,9 +34,12 @@ export async function GET(request: Request) {
 
 // POST /api/combos - Create new combo
 export async function POST(request) {
+<<<<<<< HEAD
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const body = await request.json();
 
@@ -36,6 +48,7 @@ export async function POST(request) {
     if (isValidationFailure(validation)) {
       return NextResponse.json({ error: validation.error }, { status: 400 });
     }
+<<<<<<< HEAD
     const allCombos = await getCombos();
     const normalizedModels = normalizeComboModels(validation.data.models, {
       comboName: validation.data.name,
@@ -50,6 +63,9 @@ export async function POST(request) {
     if (!compositeValidation.success) {
       return NextResponse.json({ error: compositeValidation.error }, { status: 400 });
     }
+=======
+    const { name, models, strategy, config } = validation.data;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     // Check if name already exists
     const existing = await getComboByName(name);
@@ -58,6 +74,7 @@ export async function POST(request) {
     }
 
     // Validate nested combo DAG (no circular references, max depth)
+<<<<<<< HEAD
     // Temporarily add the new combo to validate its graph
     const tempCombo = {
       ...comboInput,
@@ -65,13 +82,22 @@ export async function POST(request) {
       strategy,
       config,
     };
+=======
+    const allCombos = await getCombos();
+    // Temporarily add the new combo to validate its graph
+    const tempCombo = { name, models: models || [], strategy, config };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     try {
       validateComboDAG(name, [...allCombos, tempCombo]);
     } catch (dagError) {
       return NextResponse.json({ error: dagError.message }, { status: 400 });
     }
 
+<<<<<<< HEAD
     const combo = await createCombo(comboInput);
+=======
+    const combo = await createCombo({ name, models: models || [], strategy, config });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     // Auto sync to Cloud if enabled
     await syncToCloudIfEnabled();

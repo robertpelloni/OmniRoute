@@ -70,10 +70,17 @@ async function main() {
     console.log("ℹ️  No password is currently set.");
   }
 
+<<<<<<< HEAD
   const password = await ask("Enter new password (min 8 chars): ");
 
   if (!password || password.length < 8) {
     console.error("\n❌ Password must be at least 8 characters.\n");
+=======
+  const password = await ask("Enter new password (min 4 chars): ");
+
+  if (!password || password.length < 4) {
+    console.error("\n❌ Password must be at least 4 characters.\n");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     db.close();
     rl.close();
     process.exit(1);

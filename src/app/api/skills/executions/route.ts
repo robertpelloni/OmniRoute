@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { skillExecutor } from "@/lib/skills/executor";
+<<<<<<< HEAD
 import { parsePaginationParams, buildPaginatedResponse } from "@/shared/types/pagination";
 import { z } from "zod";
 import { validateBody, isValidationFailure } from "@/shared/validation/helpers";
@@ -21,6 +22,8 @@ export async function GET(request: Request) {
     );
     return NextResponse.json(buildPaginatedResponse(executions, total, params));
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 export async function GET(request: Request) {
   if (!(await isAuthenticated(request))) {
@@ -29,13 +32,23 @@ export async function GET(request: Request) {
   try {
     const executions = skillExecutor.listExecutions();
     return NextResponse.json({ executions });
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   } catch (err: unknown) {
     const error = err instanceof Error ? err.message : String(err);
     return NextResponse.json({ error }, { status: 500 });
   }
 }
+<<<<<<< HEAD
 <<<<<<< Updated upstream
+=======
+
+import { z } from "zod";
+import { validateBody, isValidationFailure } from "@/shared/validation/helpers";
+import { isAuthenticated } from "@/shared/utils/apiAuth";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const executionSchema = z.object({
   skillName: z.string().min(1),
@@ -69,4 +82,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error }, { status: 500 });
   }
 }
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

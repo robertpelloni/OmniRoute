@@ -6,7 +6,10 @@ on:
   pull_request:
     branches: [main]
     types: [opened, synchronize, reopened, ready_for_review]
+<<<<<<< HEAD
   workflow_dispatch:
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -15,16 +18,20 @@ concurrency:
 permissions:
   contents: read
 
+<<<<<<< HEAD
 env:
   CI_NODE_VERSION: "24"
   CI_NODE_24_VERSION: "24"
   CI_NODE_26_VERSION: "26"
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
     steps:
+<<<<<<< HEAD
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
@@ -33,6 +40,14 @@ jobs:
       - run: npm ci
       - run: npm run check:node-runtime
       - run: npm run audit:deps
+=======
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       - run: npm run lint
       - run: npm run check:cycles
       - run: npm run check:route-validation:t06
@@ -47,6 +62,7 @@ jobs:
     outputs:
       langs: ${{ steps.langs.outputs.langs }}
     steps:
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
       - uses: actions/checkout@v6
@@ -56,10 +72,14 @@ jobs:
 =======
       - uses: actions/checkout@v4
 >>>>>>> Stashed changes
+=======
+      - uses: actions/checkout@v6
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       - id: langs
         run: |
           LANG_DIR="src/i18n/messages"
           LANGS=$(ls "$LANG_DIR"/*.json | xargs -n1 basename | sed 's/.json$//' | grep -v '^en$' | jq -R . | jq -s . | jq -c .)
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
           echo "langs=${LANGS}" >> "$GITHUB_OUTPUT"
@@ -69,6 +89,9 @@ jobs:
 =======
           echo "langs=${LANGS}" >> $GITHUB_OUTPUT
 >>>>>>> Stashed changes
+=======
+          echo "langs=${LANGS}" >> "$GITHUB_OUTPUT"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   i18n:
     name: i18n Validation
@@ -80,6 +103,7 @@ jobs:
         lang: ${{ fromJson(needs.i18n-matrix.outputs.langs) }}
     needs: i18n-matrix
     steps:
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
       - uses: actions/checkout@v6
@@ -92,6 +116,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v6.2.0
 >>>>>>> Stashed changes
+=======
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6.2.0
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         with:
           python-version: "3.12"
 
@@ -101,6 +129,7 @@ jobs:
 
       - name: Upload result
         if: always()
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
         uses: actions/upload-artifact@v7
@@ -110,12 +139,18 @@ jobs:
 =======
         uses: actions/upload-artifact@v4
 >>>>>>> Stashed changes
+=======
+        uses: actions/upload-artifact@v4
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         with:
           name: i18n-${{ matrix.lang }}
           path: result.txt
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   pr-test-policy:
     name: PR Test Policy
     if: ${{ github.event_name == 'pull_request' }}
@@ -125,6 +160,7 @@ jobs:
         with:
           fetch-depth: 0
       - uses: actions/setup-node@v6
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> Stashed changes
@@ -140,6 +176,10 @@ jobs:
 >>>>>>> Stashed changes
         with:
           node-version: ${{ env.CI_NODE_VERSION }}
+=======
+        with:
+          node-version: 22
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       - name: Fetch base branch
         run: git fetch --no-tags origin "${GITHUB_BASE_REF}" --depth=1
       - name: Validate source changes include tests
@@ -151,6 +191,7 @@ jobs:
             cat .artifacts/pr-test-policy.md >> "$GITHUB_STEP_SUMMARY"
           fi
 
+<<<<<<< HEAD
   build:
     name: Build
     runs-on: ubuntu-latest
@@ -211,10 +252,66 @@ jobs:
 
   test-unit:
     name: Unit Tests (${{ matrix.shard }}/2)
+=======
+  advanced-security:
+    name: Advanced Security Scans
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: TruffleHog Secret Scan
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --only-verified
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Dependency audit
+        run: npm audit --audit-level=high --omit=dev || true
+
+      - name: Check for known vulnerabilities
+        run: npx is-my-node-vulnerable || true
+
+      - name: Run Snyk Vulnerability checks
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20, 22]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+
+  test-unit:
+    name: Unit Tests
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs: build
     strategy:
+<<<<<<< HEAD
       fail-fast: false
       matrix:
         shard: [1, 2]
@@ -279,15 +376,35 @@ jobs:
       - run: npm run check:node-runtime
       - run: npm run build
       - run: node --import tsx/esm --test --test-concurrency=1 --test-shard=${{ matrix.shard }}/2 tests/unit/*.test.ts
+=======
+      matrix:
+        node-version: [20, 22]
+    env:
+      JWT_SECRET: ci-test-secret-with-sufficient-length-for-validation
+      API_KEY_SECRET: ci-test-api-key-secret-long
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+      - run: npm ci
+      - run: npm run test:unit
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   test-coverage:
     name: Coverage
     runs-on: ubuntu-latest
+<<<<<<< HEAD
     timeout-minutes: 30
+=======
+    timeout-minutes: 15
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     needs: build
     env:
       JWT_SECRET: ci-test-secret-with-sufficient-length-for-validation
       API_KEY_SECRET: ci-test-api-key-secret-long
+<<<<<<< HEAD
       DISABLE_SQLITE_AUTO_BACKUP: "true"
     steps:
       - uses: actions/checkout@v4
@@ -299,6 +416,15 @@ jobs:
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
       - run: npm run check:node-runtime
+=======
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       - name: Run coverage gate
         run: npm run test:coverage
       - name: Build coverage summary
@@ -320,7 +446,11 @@ jobs:
           cat coverage/coverage-report.md >> "$GITHUB_STEP_SUMMARY"
       - name: Upload coverage artifacts
         if: always()
+<<<<<<< HEAD
         uses: actions/upload-artifact@v7
+=======
+        uses: actions/upload-artifact@v4
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         with:
           name: coverage-report
           path: |
@@ -341,11 +471,16 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+<<<<<<< HEAD
       - uses: actions/download-artifact@v8
+=======
+      - uses: actions/download-artifact@v4
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         with:
           name: coverage-report
           path: .
       - name: Explain SonarQube skip
+<<<<<<< HEAD
         if: ${{ github.event_name != 'pull_request' || env.SONAR_TOKEN == '' || env.SONAR_HOST_URL == '' }}
         run: |
           if [ "${{ github.event_name }}" != "pull_request" ]; then
@@ -356,6 +491,14 @@ jobs:
       - name: SonarQube Scan
         if: ${{ github.event_name == 'pull_request' && env.SONAR_TOKEN != '' && env.SONAR_HOST_URL != '' }}
         uses: SonarSource/sonarqube-scan-action@v8
+=======
+        if: ${{ env.SONAR_TOKEN == '' || env.SONAR_HOST_URL == '' }}
+        run: |
+          echo "SonarQube scan skipped because SONAR_TOKEN or SONAR_HOST_URL is not configured." >> "$GITHUB_STEP_SUMMARY"
+      - name: SonarQube Scan
+        if: ${{ env.SONAR_TOKEN != '' && env.SONAR_HOST_URL != '' }}
+        uses: SonarSource/sonarqube-scan-action@v7
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         env:
           SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ env.SONAR_HOST_URL }}
@@ -375,7 +518,11 @@ jobs:
       - name: Download coverage artifact
         if: ${{ needs.test-coverage.result != 'cancelled' }}
         continue-on-error: true
+<<<<<<< HEAD
         uses: actions/download-artifact@v8
+=======
+        uses: actions/download-artifact@v4
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         with:
           name: coverage-report
           path: .
@@ -404,7 +551,11 @@ jobs:
               echo "This PR changes production code in \`src/\`, \`open-sse/\`, \`electron/\`, or \`bin/\` without accompanying automated tests."
             fi
           } > .artifacts/pr-coverage-comment.md
+<<<<<<< HEAD
       - uses: actions/github-script@v9
+=======
+      - uses: actions/github-script@v8
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         with:
           script: |
             const fs = require("fs");
@@ -437,6 +588,7 @@ jobs:
                 body,
               });
             }
+<<<<<<< HEAD
 =======
       - run: npm run test:coverage
 >>>>>>> Stashed changes
@@ -472,17 +624,46 @@ jobs:
 
   test-integration:
     name: Integration Tests (${{ matrix.shard }}/2)
+=======
+
+  test-e2e:
+    name: E2E Tests (${{ matrix.shard }}/4)
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs: build
     strategy:
       fail-fast: false
       matrix:
+<<<<<<< HEAD
         shard: [1, 2]
+=======
+        shard: [1, 2, 3, 4]
+    env:
+      JWT_SECRET: ci-test-secret-with-sufficient-length-for-validation
+      API_KEY_SECRET: ci-test-api-key-secret-long
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - run: npx playwright test tests/e2e/*.spec.ts --shard=${{ matrix.shard }}/4
+
+  test-integration:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: build
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     env:
       JWT_SECRET: ci-test-secret-with-sufficient-length-for-validation
       API_KEY_SECRET: ci-test-api-key-secret-long
       INITIAL_PASSWORD: ci-test-password-for-integration
+<<<<<<< HEAD
       DATA_DIR: /tmp/omniroute-ci-${{ matrix.shard }}
       DISABLE_SQLITE_AUTO_BACKUP: "true"
     steps:
@@ -494,6 +675,17 @@ jobs:
       - run: npm ci
       - run: npm run check:node-runtime
       - run: node --import tsx/esm --test --test-shard=${{ matrix.shard }}/2 tests/integration/*.test.ts
+=======
+      DATA_DIR: /tmp/omniroute-ci
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run test:integration
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   test-security:
     name: Security Tests
@@ -502,6 +694,7 @@ jobs:
     env:
       JWT_SECRET: ci-test-secret-with-sufficient-length-for-validation
       API_KEY_SECRET: ci-test-api-key-secret-long
+<<<<<<< HEAD
       DISABLE_SQLITE_AUTO_BACKUP: "true"
     steps:
       - uses: actions/checkout@v4
@@ -521,12 +714,24 @@ jobs:
 =======
   # 🔥 DASHBOARD
 >>>>>>> Stashed changes
+=======
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run test:security
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   ci-summary:
     name: CI Dashboard
     runs-on: ubuntu-latest
     if: always()
     needs:
       - lint
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
       - i18n
@@ -538,6 +743,13 @@ jobs:
       - test-unit
       - node-24-compat
       - node-26-compat
+=======
+      - i18n
+      - pr-test-policy
+      - advanced-security
+      - build
+      - test-unit
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       - test-coverage
       - sonarqube
       - coverage-pr-comment
@@ -547,7 +759,11 @@ jobs:
     steps:
       - name: Download i18n results
         continue-on-error: true
+<<<<<<< HEAD
         uses: actions/download-artifact@v8
+=======
+        uses: actions/download-artifact@v4
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         with:
           pattern: i18n-*
           path: results
@@ -556,6 +772,7 @@ jobs:
       - name: Generate dashboard
         env:
           EVENT_NAME: ${{ github.event_name }}
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> Stashed changes
@@ -579,12 +796,15 @@ jobs:
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         run: |
           status() {
             case "$1" in
               success) echo "🟢 PASS" ;;
               failure) echo "🔴 FAIL" ;;
               cancelled) echo "⚫ CANCELLED" ;;
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
               skipped) echo "⚪ SKIPPED" ;;
@@ -592,12 +812,18 @@ jobs:
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+              skipped) echo "⚪ SKIPPED" ;;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               *) echo "🟡 UNKNOWN" ;;
             esac
           }
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           echo "# 🚀 CI Dashboard" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
 
@@ -606,7 +832,11 @@ jobs:
           echo "|-----|--------|" >> "$GITHUB_STEP_SUMMARY"
           echo "| Lint | $(status '${{ needs.lint.result }}') |" >> "$GITHUB_STEP_SUMMARY"
           echo "| PR Test Policy | $(status '${{ needs.pr-test-policy.result }}') |" >> "$GITHUB_STEP_SUMMARY"
+<<<<<<< HEAD
 
+=======
+          echo "| Advanced Security | $(status '${{ needs.advanced-security.result }}') |" >> "$GITHUB_STEP_SUMMARY"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           echo "| SonarQube | $(status '${{ needs.sonarqube.result }}') |" >> "$GITHUB_STEP_SUMMARY"
 
           echo "" >> "$GITHUB_STEP_SUMMARY"
@@ -614,16 +844,22 @@ jobs:
           echo "| Job | Status |" >> "$GITHUB_STEP_SUMMARY"
           echo "|-----|--------|" >> "$GITHUB_STEP_SUMMARY"
           echo "| Build Matrix | $(status '${{ needs.build.result }}') |" >> "$GITHUB_STEP_SUMMARY"
+<<<<<<< HEAD
           echo "| Package Artifact | $(status '${{ needs.package-artifact.result }}') |" >> "$GITHUB_STEP_SUMMARY"
           echo "| Electron Package Smoke | $(status '${{ needs.electron-package-smoke.result }}') |" >> "$GITHUB_STEP_SUMMARY"
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "## 🧪 Tests" >> "$GITHUB_STEP_SUMMARY"
           echo "| Suite | Status |" >> "$GITHUB_STEP_SUMMARY"
           echo "|-------|--------|" >> "$GITHUB_STEP_SUMMARY"
           echo "| Unit | $(status '${{ needs.test-unit.result }}') |" >> "$GITHUB_STEP_SUMMARY"
+<<<<<<< HEAD
           echo "| Node 24 Compatibility | $(status '${{ needs.node-24-compat.result }}') |" >> "$GITHUB_STEP_SUMMARY"
           echo "| Node 26 Compatibility | $(status '${{ needs.node-26-compat.result }}') |" >> "$GITHUB_STEP_SUMMARY"
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           echo "| Coverage | $(status '${{ needs.test-coverage.result }}') |" >> "$GITHUB_STEP_SUMMARY"
           echo "| PR Coverage Comment | $(status '${{ needs.coverage-pr-comment.result }}') |" >> "$GITHUB_STEP_SUMMARY"
           echo "| E2E | $(status '${{ needs.test-e2e.result }}') |" >> "$GITHUB_STEP_SUMMARY"
@@ -632,6 +868,7 @@ jobs:
 
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "## 🌍 Translations" >> "$GITHUB_STEP_SUMMARY"
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> Stashed changes
@@ -670,12 +907,17 @@ jobs:
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
           total=0
           langs=0
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           if [ -d results ]; then
             for file in results/*.txt; do
               [ -f "$file" ] || continue
@@ -698,6 +940,7 @@ jobs:
           else
             echo "" >> "$GITHUB_STEP_SUMMARY"
             echo "✅ **All translations complete**" >> "$GITHUB_STEP_SUMMARY"
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> Stashed changes
@@ -725,4 +968,6 @@ jobs:
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           fi

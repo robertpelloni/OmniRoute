@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+<<<<<<< HEAD
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
 import { getSuite } from "@/lib/evals/evalRunner";
 
@@ -6,6 +7,11 @@ export async function GET(request: Request, { params }: { params: Promise<{ suit
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
 
+=======
+import { getSuite } from "@/lib/evals/evalRunner";
+
+export async function GET(request, { params }) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const { suiteId } = await params;
     const suite = getSuite(suiteId);

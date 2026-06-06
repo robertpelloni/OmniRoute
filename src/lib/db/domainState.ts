@@ -10,6 +10,7 @@
  * @module lib/db/domainState
  */
 
+<<<<<<< HEAD
 import { getDbInstance } from "./core";
 
 type JsonRecord = Record<string, unknown>;
@@ -39,6 +40,11 @@ interface BudgetResetLogRecord {
 }
 
 let _budgetSchemaChecked = false;
+=======
+import { getDbInstance, isBuildPhase, isCloud } from "./core";
+
+type JsonRecord = Record<string, unknown>;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 function asRecord(value: unknown): JsonRecord {
   return value && typeof value === "object" && !Array.isArray(value) ? (value as JsonRecord) : {};
@@ -53,6 +59,7 @@ function toNumber(value: unknown, fallback = 0): number {
   return fallback;
 }
 
+<<<<<<< HEAD
 function ensureBudgetSchema() {
   if (_budgetSchemaChecked) return;
 
@@ -107,6 +114,8 @@ function ensureBudgetSchema() {
   _budgetSchemaChecked = true;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // ──────────────── Fallback Chains ────────────────
 
 /**
@@ -179,6 +188,7 @@ export function deleteAllFallbackChains() {
  * @param {{ dailyLimitUsd: number, monthlyLimitUsd?: number, warningThreshold?: number }} config
  */
 export function saveBudget(apiKeyId, config) {
+<<<<<<< HEAD
   ensureBudgetSchema();
   const db = getDbInstance();
   db.prepare(
@@ -208,6 +218,17 @@ export function saveBudget(apiKeyId, config) {
     config.lastBudgetResetAt ?? null,
     config.warningEmittedAt ?? null,
     config.warningPeriodStart ?? null
+=======
+  const db = getDbInstance();
+  db.prepare(
+    `INSERT OR REPLACE INTO domain_budgets (api_key_id, daily_limit_usd, monthly_limit_usd, warning_threshold)
+     VALUES (?, ?, ?, ?)`
+  ).run(
+    apiKeyId,
+    config.dailyLimitUsd,
+    config.monthlyLimitUsd || 0,
+    config.warningThreshold ?? 0.8
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   );
 }
 
@@ -217,13 +238,17 @@ export function saveBudget(apiKeyId, config) {
  * @returns {{ dailyLimitUsd: number, monthlyLimitUsd: number, warningThreshold: number } | null}
  */
 export function loadBudget(apiKeyId) {
+<<<<<<< HEAD
   ensureBudgetSchema();
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const db = getDbInstance();
   const row = db.prepare("SELECT * FROM domain_budgets WHERE api_key_id = ?").get(apiKeyId);
   const record = asRecord(row);
   if (!row) return null;
   return {
     dailyLimitUsd: toNumber(record.daily_limit_usd),
+<<<<<<< HEAD
     weeklyLimitUsd: toNumber(record.weekly_limit_usd),
     monthlyLimitUsd: toNumber(record.monthly_limit_usd),
     warningThreshold: toNumber(record.warning_threshold, 0.8),
@@ -234,10 +259,15 @@ export function loadBudget(apiKeyId) {
     lastBudgetResetAt: toNumber(record.last_budget_reset_at, 0) || null,
     warningEmittedAt: toNumber(record.warning_emitted_at, 0) || null,
     warningPeriodStart: toNumber(record.warning_period_start, 0) || null,
+=======
+    monthlyLimitUsd: toNumber(record.monthly_limit_usd),
+    warningThreshold: toNumber(record.warning_threshold, 0.8),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 }
 
 /**
+<<<<<<< HEAD
  * Load all budget configs.
  * @returns {Record<string, BudgetConfigRecord>}
  */
@@ -332,14 +362,21 @@ export function loadBudgetResetLogs(apiKeyId: string, limit = 10) {
 }
 
 /**
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  * Delete a budget config.
  * @param {string} apiKeyId
  */
 export function deleteBudget(apiKeyId) {
+<<<<<<< HEAD
   ensureBudgetSchema();
   const db = getDbInstance();
   db.prepare("DELETE FROM domain_budgets WHERE api_key_id = ?").run(apiKeyId);
   db.prepare("DELETE FROM domain_budget_reset_logs WHERE api_key_id = ?").run(apiKeyId);
+=======
+  const db = getDbInstance();
+  db.prepare("DELETE FROM domain_budgets WHERE api_key_id = ?").run(apiKeyId);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 // ──────────────── Cost History ────────────────
@@ -351,7 +388,10 @@ export function deleteBudget(apiKeyId) {
  * @param {number} [timestamp]
  */
 export function saveCostEntry(apiKeyId, cost, timestamp = Date.now()) {
+<<<<<<< HEAD
   ensureBudgetSchema();
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const db = getDbInstance();
   db.prepare("INSERT INTO domain_cost_history (api_key_id, cost, timestamp) VALUES (?, ?, ?)").run(
     apiKeyId,
@@ -360,6 +400,7 @@ export function saveCostEntry(apiKeyId, cost, timestamp = Date.now()) {
   );
 }
 
+<<<<<<< HEAD
 export function batchSaveCostEntries(
   entries: Array<{ apiKeyId: string; cost: number; timestamp: number }>
 ) {
@@ -381,6 +422,8 @@ export function batchSaveCostEntries(
   tx(entries);
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Load cost entries for an API key within a time window.
  * @param {string} apiKeyId
@@ -388,7 +431,10 @@ export function batchSaveCostEntries(
  * @returns {Array<{cost: number, timestamp: number}>}
  */
 export function loadCostEntries(apiKeyId, sinceTimestamp) {
+<<<<<<< HEAD
   ensureBudgetSchema();
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const db = getDbInstance();
   return db
     .prepare(
@@ -398,6 +444,7 @@ export function loadCostEntries(apiKeyId, sinceTimestamp) {
 }
 
 /**
+<<<<<<< HEAD
  * Load cost entries for an API key within a bounded time window.
  * @param {string} apiKeyId
  * @param {number} sinceTimestamp
@@ -422,12 +469,17 @@ export function loadCostEntriesInRange(
 }
 
 /**
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  * Delete old cost entries (cleanup).
  * @param {number} olderThanTimestamp
  * @returns {number} deleted count
  */
 export function cleanOldCostEntries(olderThanTimestamp) {
+<<<<<<< HEAD
   ensureBudgetSchema();
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const db = getDbInstance();
   const info = db
     .prepare("DELETE FROM domain_cost_history WHERE timestamp < ?")
@@ -440,7 +492,10 @@ export function cleanOldCostEntries(olderThanTimestamp) {
  * @param {string} apiKeyId
  */
 export function deleteCostEntries(apiKeyId) {
+<<<<<<< HEAD
   ensureBudgetSchema();
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const db = getDbInstance();
   db.prepare("DELETE FROM domain_cost_history WHERE api_key_id = ?").run(apiKeyId);
 }
@@ -449,11 +504,17 @@ export function deleteCostEntries(apiKeyId) {
  * Delete all cost data.
  */
 export function deleteAllCostData() {
+<<<<<<< HEAD
   ensureBudgetSchema();
   const db = getDbInstance();
   db.prepare("DELETE FROM domain_cost_history").run();
   db.prepare("DELETE FROM domain_budgets").run();
   db.prepare("DELETE FROM domain_budget_reset_logs").run();
+=======
+  const db = getDbInstance();
+  db.prepare("DELETE FROM domain_cost_history").run();
+  db.prepare("DELETE FROM domain_budgets").run();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 // ──────────────── Lockout State ────────────────

@@ -4,11 +4,17 @@
 
 ---
 
+<<<<<<< HEAD
 > **Agent-to-Agent Protocol v0.3** — Enables any AI agent to use OmniRoute as an intelligent routing agent via JSON-RPC 2.0.
 
 The A2A Server exposes OmniRoute as a **first-class agent** that other agents can discover, delegate tasks to, and collaborate with using the [A2A Protocol](https://google.github.io/A2A/).
 
 ---
+=======
+> **에이전트 간 프로토콜 v0.3**— 모든 AI 에이전트가 JSON-RPC 2.0을 통해 OmniRoute를 지능형 라우팅 에이전트로 사용할 수 있도록 합니다.
+
+A2A 서버는 OmniRoute를 다른 에이전트가 [A2A 프로토콜](https://google.github.io/A2A/)을 사용하여 검색하고, 작업을 위임하고, 협업할 수 있는**일류 에이전트**로 노출합니다.---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## 아키텍처
 
@@ -43,6 +49,7 @@ The A2A Server exposes OmniRoute as a **first-class agent** that other agents ca
 
 ### Agent Discovery
 
+<<<<<<< HEAD
 Every A2A-compatible agent exposes an **Agent Card** at `/.well-known/agent.json`:
 
 ```bash
@@ -52,6 +59,14 @@ curl http://localhost:20128/.well-known/agent.json
 **Response:**
 
 ```json
+=======
+모든 A2A 호환 에이전트는 `/.well-known/agent.json`에**에이전트 카드**를 노출합니다.```bash
+curl http://localhost:20128/.well-known/agent.json
+
+````
+
+**응답:**```json
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 {
   "name": "OmniRoute",
   "description": "Intelligent AI gateway with auto-routing across 50+ providers",
@@ -88,7 +103,11 @@ curl http://localhost:20128/.well-known/agent.json
     "apiKeyHeader": "Authorization"
   }
 }
+<<<<<<< HEAD
 ```
+=======
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ---
 
@@ -96,6 +115,7 @@ curl http://localhost:20128/.well-known/agent.json
 
 ### `message/send` — Synchronous Execution
 
+<<<<<<< HEAD
 Send a message to a skill and receive the complete response.
 
 ```bash
@@ -117,6 +137,26 @@ curl -X POST http://localhost:20128/a2a \
 **Response:**
 
 ```json
+=======
+스킬에 메시지를 보내고 완전한 응답을 받습니다.```bash
+curl -X POST http://localhost:20128/a2a \
+ -H "Content-Type: application/json" \
+ -H "Authorization: Bearer YOUR_KEY" \
+ -d '{
+"jsonrpc": "2.0",
+"id": "1",
+"method": "message/send",
+"params": {
+"skill": "smart-routing",
+"messages": [{"role": "user", "content": "Write a Python hello world"}],
+"metadata": {"model": "auto", "combo": "fast-coding"}
+}
+}'
+
+````
+
+**응답:**```json
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 {
   "jsonrpc": "2.0",
   "id": "1",
@@ -133,6 +173,7 @@ curl -X POST http://localhost:20128/a2a \
     }
   }
 }
+<<<<<<< HEAD
 ```
 
 ### `message/stream` — SSE Streaming
@@ -157,12 +198,39 @@ curl -N -X POST http://localhost:20128/a2a \
 **SSE Events:**
 
 ```
+=======
+````
+
+### `message/stream` — SSE Streaming
+
+`message/send`와 동일하지만 실시간 스트리밍을 위해 서버에서 보낸 이벤트를 반환합니다.```bash
+curl -N -X POST http://localhost:20128/a2a \
+ -H "Content-Type: application/json" \
+ -H "Authorization: Bearer YOUR_KEY" \
+ -d '{
+"jsonrpc": "2.0",
+"id": "1",
+"method": "message/stream",
+"params": {
+"skill": "smart-routing",
+"messages": [{"role": "user", "content": "Explain quantum computing"}]
+}
+}'
+
+````
+
+**SSE 이벤트:**```
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 data: {"jsonrpc":"2.0","method":"message/stream","params":{"task":{"id":"...","state":"working"},"chunk":{"type":"text","content":"Quantum computing..."}}}
 
 : heartbeat 2026-03-04T21:00:00Z
 
 data: {"jsonrpc":"2.0","method":"message/stream","params":{"task":{"id":"...","state":"completed"},"metadata":{...}}}
+<<<<<<< HEAD
 ```
+=======
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ### `tasks/get` — Query Task Status
 
@@ -188,6 +256,7 @@ curl -X POST http://localhost:20128/a2a \
 
 ### `smart-routing`
 
+<<<<<<< HEAD
 Routes prompts through OmniRoute's intelligent pipeline with full observability.
 
 **Parameters (in `metadata`):**
@@ -222,6 +291,38 @@ Answers natural-language queries about provider quotas.
 | Default                                        | Full quota summary with warnings for low-quota providers |
 
 ---
+=======
+완전한 관찰 기능을 갖춘 OmniRoute의 지능형 파이프라인을 통해 프롬프트를 라우팅합니다.
+
+**매개변수(`메타데이터`):**
+
+| 매개변수 | 유형     | 기본값    | 설명                                                               |
+| -------- | -------- | --------- | ------------------------------------------------------------------ |
+| '모델'   | `문자열` | ``자동'`  | 대상 모델(예: `claude-sonnet-4`, `gpt-4o`, `auto`)                 |
+| `콤보`   | `문자열` | 활성 콤보 | 라우팅할 특정 콤보                                                 |
+| '예산'   | '숫자'   | 없음      | 이 요청에 대한 최대 비용(USD)                                      |
+| '역할'   | `문자열` | 없음      | 작업 역할 힌트: `코딩`, `검토`, `계획`, `분석`, `디버깅`, `문서화` |
+
+**반품:**
+
+| 필드                           | 설명                                              |
+| ------------------------------ | ------------------------------------------------- | ---------------------- |
+| `아티팩트[].content`           | LLM 응답 텍스트                                   |
+| `metadata.routing_explanation` | 라우팅 결정에 대한 사람이 읽을 수 있는 설명       |
+| `metadata.cost_envelope`       | 통화별 예상 비용과 실제 비용                      |
+| `metadata.resilience_trace`    | 이벤트 배열(primary_selected, fallback_needed 등) |
+| `metadata.policy_verdict`      | 요청 허용 여부 및 이유                            | ### `quota-management` |
+
+공급자 할당량에 대한 자연어 쿼리에 답변합니다.
+
+**쿼리 유형(메시지 콘텐츠에서 추론됨):**
+
+| 쿼리 패턴                                | 응답 유형                                                  |
+| ---------------------------------------- | ---------------------------------------------------------- | --- |
+| `"순위"`, `"최대 할당량"`, `"최고"` 포함 | 남은 할당량에 따라 순위가 매겨진 공급자                    |
+| `"무료"`, `"제안"` 포함                  | 무료 콤보를 나열하거나 무료 계층 공급자를 제안합니다       |
+| 기본값                                   | 할당량이 적은 공급자에 대한 경고가 포함된 전체 할당량 요약 | --- |
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## Task Lifecycle
 
@@ -231,6 +332,7 @@ submitted ──→ working ──→ completed
               ──────────→ cancelled
 ```
 
+<<<<<<< HEAD
 | State       | Description                                           |
 | ----------- | ----------------------------------------------------- |
 | `submitted` | Task created, queued for execution                    |
@@ -244,6 +346,19 @@ submitted ──→ working ──→ completed
 - Tasks are garbage-collected after 2× TTL
 
 ---
+=======
+| 상태     | 설명                                           |
+| -------- | ---------------------------------------------- |
+| '제출됨' | 작업이 생성되어 실행 대기 중                   |
+| '일'     | 스킬 핸들러가 실행 중                          |
+| `완료`   | 실행 성공, 아티팩트 사용 가능                  |
+| '실패'   | 실행 실패 또는 작업 만료(TTL: 기본값 5분)      |
+| '취소됨' | `tasks/cancel`을 통해 클라이언트에 의해 취소됨 |
+
+- 터미널 상태: `완료`, `실패`, `취소`(추가 전환 없음)
+- '제출됨' 또는 '작업 중'에서 만료된 작업은 자동으로 '실패'로 표시됩니다.
+- 작업은 2× TTL 후에 가비지 수집됩니다.---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## Client Examples
 
@@ -541,6 +656,7 @@ func main() {
 
 ### 🤖 Use Case 1: Multi-Agent Coding Pipeline
 
+<<<<<<< HEAD
 An orchestrator agent delegates code generation to OmniRoute, then passes the output to a review agent.
 
 ```python
@@ -550,6 +666,14 @@ def coding_pipeline(task: str):
         {"role": "user", "content": f"Write production-quality code: {task}"}
     ], metadata={"model": "auto", "role": "coding"})
     code = code_result["artifacts"][0]["content"]
+=======
+오케스트레이터 에이전트는 코드 생성을 OmniRoute에 위임한 다음 출력을 검토 에이전트에 전달합니다.```python
+def coding_pipeline(task: str): # Step 1: Generate code via OmniRoute A2A
+code_result = a2a_send("smart-routing", [
+{"role": "user", "content": f"Write production-quality code: {task}"}
+], metadata={"model": "auto", "role": "coding"})
+code = code_result["artifacts"][0]["content"]
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     # Step 2: Review the code via OmniRoute A2A (different model)
     review_result = a2a_send("smart-routing", [
@@ -562,6 +686,7 @@ def coding_pipeline(task: str):
     print(f"Review cost: ${review_result['metadata']['cost_envelope']['actual']}")
 
     return {"code": code, "review": review}
+<<<<<<< HEAD
 ```
 
 ### 💡 Use Case 2: Quota-Aware Agent Swarm
@@ -569,6 +694,14 @@ def coding_pipeline(task: str):
 Multiple agents share quota through OmniRoute, using the quota skill to coordinate.
 
 ```python
+=======
+
+````
+
+### 💡 Use Case 2: Quota-Aware Agent Swarm
+
+여러 에이전트는 할당량 기술을 사용하여 조정하여 OmniRoute를 통해 할당량을 공유합니다.```python
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 async def quota_aware_agent(agent_name: str, task: str):
     # Check quota before starting
     quota = a2a_send("quota-management", [
@@ -591,6 +724,7 @@ async def quota_aware_agent(agent_name: str, task: str):
         print(f"[{agent_name}] Free alternatives: {quota['artifacts'][0]['content']}")
 
     return result
+<<<<<<< HEAD
 ```
 
 ### 📊 Use Case 3: Real-Time Streaming Dashboard
@@ -598,10 +732,18 @@ async def quota_aware_agent(agent_name: str, task: str):
 A monitoring agent streams responses and displays progress in real-time.
 
 ```typescript
+=======
+````
+
+### 📊 Use Case 3: Real-Time Streaming Dashboard
+
+모니터링 에이전트는 응답을 스트리밍하고 진행 상황을 실시간으로 표시합니다.```typescript
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 async function streamingDashboard(prompt: string) {
   const response = await fetch(`${BASE_URL}/a2a`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${API_KEY}` },
+<<<<<<< HEAD
     body: JSON.stringify({
       jsonrpc: "2.0",
       id: "dash-1",
@@ -617,6 +759,23 @@ async function streamingDashboard(prompt: string) {
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
+=======
+body: JSON.stringify({
+jsonrpc: "2.0",
+id: "dash-1",
+method: "message/stream",
+params: { skill: "smart-routing", messages: [{ role: "user", content: prompt }] },
+}),
+});
+
+let totalChunks = 0;
+const reader = response.body!.getReader();
+const decoder = new TextDecoder();
+
+while (true) {
+const { done, value } = await reader.read();
+if (done) break;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     for (const line of decoder.decode(value).split("\n")) {
       if (line.startsWith("data: ")) {
@@ -640,6 +799,7 @@ async function streamingDashboard(prompt: string) {
         }
       }
     }
+<<<<<<< HEAD
   }
 }
 ```
@@ -649,6 +809,17 @@ async function streamingDashboard(prompt: string) {
 For long-running tasks, poll the task status instead of waiting synchronously.
 
 ```python
+=======
+
+}
+}
+
+````
+
+### 🔁 Use Case 4: Task Polling Pattern
+
+장기 실행 작업의 경우 동기적으로 기다리는 대신 작업 상태를 폴링합니다.```python
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import time
 
 def poll_task(task_id: str, timeout: int = 60):
@@ -678,12 +849,17 @@ def poll_task(task_id: str, timeout: int = 60):
         "params": {"taskId": task_id},
     })
     raise TimeoutError(f"Task {task_id} timed out after {timeout}s")
+<<<<<<< HEAD
 ```
+=======
+````
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ---
 
 ## Error Codes
 
+<<<<<<< HEAD
 | Code   | Constant                 | Meaning                                  |
 | ------ | ------------------------ | ---------------------------------------- |
 | -32700 | —                        | Parse error (invalid JSON)               |
@@ -710,10 +886,34 @@ Authorization: Bearer YOUR_OMNIROUTE_API_KEY
 If no API key is configured on the server (`OMNIROUTE_API_KEY` is empty), authentication is bypassed.
 
 ---
+=======
+| 코드   | 상수                     | 의미                                    |
+| ------ | ------------------------ | --------------------------------------- | --- |
+| -32700 | —                        | 구문 분석 오류(잘못된 JSON)             |
+| -32600 | `INVALID_REQUEST`        | 잘못된 JSON-RPC 요청 또는 승인되지 않은 |
+| -32601 | `METHOD_NOT_FOUND`       | 알려지지 않은 방법이나 기술             |
+| -32602 | 'INVALID_PARAMS'         | 누락되거나 잘못된 매개변수              |
+| -32603 | `내부_오류`              | 스킬 실행 실패                          |
+| -32001 | `TASK_NOT_FOUND`         | 작업 ID를 찾을 수 없음                  |
+| -32002 | `TASK_ALREADY_COMPLETED` | 완료된 작업을 수정할 수 없습니다        |
+| -32003 | '승인되지 않음'          | 유효하지 않거나 누락된 API 키           |
+| -32004 | `예산_초과`              | 요청이 구성된 예산을 초과했습니다       |
+| -32005 | `PROVIDER_UNAVAILABLE`   | 사용 가능한 제공업체 없음               | --- |
+
+## Authentication
+
+모든 `/a2a` 요청에는 `Authorization` 헤더를 통한 Bearer 토큰이 필요합니다.```
+Authorization: Bearer YOUR_OMNIROUTE_API_KEY
+
+```
+
+서버에 API 키가 구성되어 있지 않으면(`OMNIROUTE_API_KEY`가 비어 있음) 인증이 우회됩니다.---
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 ## File Structure
 
 ```
+<<<<<<< HEAD
 src/lib/a2a/
 ├── taskManager.ts         # Task lifecycle (create/update/cancel/list), TTL, cleanup
 ├── taskExecution.ts       # Generic task executor with state management
@@ -728,12 +928,31 @@ src/app/a2a/
 
 open-sse/mcp-server/
 └── schemas/a2a.ts         # Zod schemas (AgentCard, Task, JSON-RPC, SSE events)
+=======
+
+src/lib/a2a/
+├── taskManager.ts # Task lifecycle (create/update/cancel/list), TTL, cleanup
+├── taskExecution.ts # Generic task executor with state management
+├── streaming.ts # SSE stream formatting, heartbeat, chunk/completion events
+├── routingLogger.ts # Routing decision logger (stats, history, retention)
+└── skills/
+├── smartRouting.ts # Smart routing skill (routes via /v1/chat/completions)
+└── quotaManagement.ts # Quota management skill (natural-language quota queries)
+
+src/app/a2a/
+└── route.ts # Next.js API route handler (JSON-RPC 2.0 dispatch)
+
+open-sse/mcp-server/
+└── schemas/a2a.ts # Zod schemas (AgentCard, Task, JSON-RPC, SSE events)
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 ```
 
 ---
 
 ## Comparison: MCP vs A2A
 
+<<<<<<< HEAD
 | Feature           | MCP Server                   | A2A Server                                        |
 | ----------------- | ---------------------------- | ------------------------------------------------- |
 | **Protocol**      | Model Context Protocol       | Agent-to-Agent Protocol v0.3                      |
@@ -750,3 +969,20 @@ open-sse/mcp-server/
 ## 라이선스
 
 Part of [OmniRoute](https://github.com/diegosouzapw/OmniRoute) — MIT License.
+=======
+| 기능 | MCP 서버 | A2A 서버 |
+| ----------------- | --------------- | ------------------------------------------------- |
+|**프로토콜**| 모델 컨텍스트 프로토콜 | 에이전트 간 프로토콜 v0.3 |
+|**교통**| stdio / HTTP | HTTP(JSON-RPC 2.0) |
+|**발견**| MCP를 통한 도구 목록 | `/.well-known/agent.json` |
+|**세분성**| 16개의 개별 도구 | 2개의 고급 스킬 |
+|**최고의 대상**| IDE 에이전트(커서, VS Code) | 다중 에이전트 시스템(LangChain, CrewAI) |
+|**스트리밍**| 지원되지 않음 | '메시지/스트림'을 통한 SSE |
+|**작업 추적**| 아니요 | 전체 수명주기(제출 → 완료) |
+|**관측성**| 도구 호출당 감사 로그 | 비용 봉투 + 탄력성 추적 + 정책 판정 |---
+
+## 라이선스
+
+[OmniRoute](https://github.com/diegosouzapw/OmniRoute)의 일부 — MIT 라이선스.
+```
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

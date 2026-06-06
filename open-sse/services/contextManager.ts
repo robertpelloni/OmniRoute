@@ -6,8 +6,12 @@
  */
 
 import { REGISTRY } from "../config/providerRegistry.ts";
+<<<<<<< HEAD
 import { getModelContextLimit } from "../../src/lib/modelCapabilities.ts";
 =======
+=======
+import { getModelContextLimit } from "../../src/lib/modelsDevSync";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 // Default token limits per provider (fallbacks when not in registry)
 const DEFAULT_LIMITS: Record<string, number> = {
@@ -35,6 +39,7 @@ function getEnvOverride(provider: string): number | null {
   return null;
 }
 
+<<<<<<< HEAD
 // Reserve tokens override from environment variable
 function getReserveTokensOverride(): number | null {
   const envValue = process.env.CONTEXT_RESERVE_TOKENS;
@@ -46,13 +51,19 @@ function getReserveTokensOverride(): number | null {
 }
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // Rough chars-per-token ratio for quick estimation
 const CHARS_PER_TOKEN = 4;
 
 /**
  * Estimate token count from text length
  */
+<<<<<<< HEAD
 export function estimateTokens(text: string | object | null | undefined): number {
+=======
+export function estimateTokens(text) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (!text) return 0;
   const str = typeof text === "string" ? text : JSON.stringify(text);
   return Math.ceil(str.length / CHARS_PER_TOKEN);
@@ -60,15 +71,35 @@ export function estimateTokens(text: string | object | null | undefined): number
 
 /**
  * Get token limit for a provider/model combination
+<<<<<<< HEAD
+=======
+ * Priority: Env override > models.dev DB > Registry defaultContextLength > DEFAULT_LIMITS
+ */
+export function getTokenLimit(provider, model = null) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // 1. Check environment variable override first
   const envOverride = getEnvOverride(provider);
   if (envOverride) return envOverride;
 
+<<<<<<< HEAD
+=======
+  // 2. Check models.dev synced DB for per-model context limit
+  if (model) {
+    const dbLimit = getModelContextLimit(provider, model);
+    if (dbLimit && dbLimit > 0) return dbLimit;
+  }
+
+  // 3. Check registry for provider default
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const registryEntry = REGISTRY[provider];
   if (registryEntry?.defaultContextLength) {
     return registryEntry.defaultContextLength;
   }
 
+<<<<<<< HEAD
+=======
+  // 4. Check if model name hints at a known limit
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (model) {
     const lower = model.toLowerCase();
     if (lower.includes("claude")) return DEFAULT_LIMITS.claude;
@@ -83,6 +114,10 @@ export function estimateTokens(text: string | object | null | undefined): number
       return DEFAULT_LIMITS.codex;
   }
 
+<<<<<<< HEAD
+=======
+  // 5. Fallback to DEFAULT_LIMITS or default
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return DEFAULT_LIMITS[provider] || DEFAULT_LIMITS.default;
 }
 
@@ -99,7 +134,11 @@ export function estimateTokens(text: string | object | null | undefined): number
  * @returns {{ body: object, compressed: boolean, stats: object }}
  */
 export function compressContext(
+<<<<<<< HEAD
   body: Record<string, unknown>,
+=======
+  body,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   options: { provider?: string; model?: string; maxTokens?: number; reserveTokens?: number } = {}
 ) {
   if (!body || !body.messages || !Array.isArray(body.messages)) {
@@ -107,6 +146,7 @@ export function compressContext(
   }
 
   const provider = options.provider || "default";
+<<<<<<< HEAD
   const maxTokens =
     options.maxTokens || getTokenLimit(provider, (body.model as string) || options.model || null);
   const defaultReserveTokens = Math.min(16000, Math.max(256, Math.floor(maxTokens * 0.15)));
@@ -115,6 +155,11 @@ export function compressContext(
     Math.max(0, maxTokens - 1)
   );
   const targetTokens = Math.max(0, maxTokens - reserveTokens);
+=======
+  const maxTokens = options.maxTokens || getTokenLimit(provider, body.model || options.model);
+  const reserveTokens = options.reserveTokens || 16000; // Reserve for response
+  const targetTokens = maxTokens - reserveTokens;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   let messages = [...body.messages];
   let currentTokens = estimateTokens(JSON.stringify(messages));
@@ -165,7 +210,11 @@ export function compressContext(
 
 // ─── Layer 1: Trim Tool Messages ────────────────────────────────────────────
 
+<<<<<<< HEAD
 function trimToolMessages(messages: Record<string, unknown>[], maxChars: number) {
+=======
+function trimToolMessages(messages, maxChars) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return messages.map((msg) => {
     if (msg.role === "tool" && typeof msg.content === "string" && msg.content.length > maxChars) {
       return {
@@ -195,7 +244,11 @@ function trimToolMessages(messages: Record<string, unknown>[], maxChars: number)
 
 // ─── Layer 2: Compress Thinking Blocks ──────────────────────────────────────
 
+<<<<<<< HEAD
 function compressThinking(messages: Record<string, unknown>[]) {
+=======
+function compressThinking(messages) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Find last assistant message index
   let lastAssistantIdx = -1;
   for (let i = messages.length - 1; i >= 0; i--) {
@@ -220,6 +273,7 @@ function compressThinking(messages: Record<string, unknown>[]) {
 
     // Remove thinking XML tags from string content
     if (typeof msg.content === "string") {
+<<<<<<< HEAD
       let cleaned = msg.content;
       for (const [start, end] of [
         ["<thinking>", "</thinking>"],
@@ -237,6 +291,12 @@ function compressThinking(messages: Record<string, unknown>[]) {
         }
       }
       cleaned = cleaned.trim();
+=======
+      const cleaned = msg.content
+        .replace(/<thinking>[\s\S]*?<\/thinking>/g, "")
+        .replace(/<antThinking>[\s\S]*?<\/antThinking>/g, "")
+        .trim();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       return { ...msg, content: cleaned || "[thinking compressed]" };
     }
 
@@ -246,7 +306,11 @@ function compressThinking(messages: Record<string, unknown>[]) {
 
 // ─── Layer 3: Aggressive Purification ───────────────────────────────────────
 
+<<<<<<< HEAD
 function purifyHistory(messages: Record<string, unknown>[], targetTokens: number) {
+=======
+function purifyHistory(messages, targetTokens) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Keep system message(s) and the last N message pairs
   const system = messages.filter((m) => m.role === "system" || m.role === "developer");
   const nonSystem = messages.filter((m) => m.role !== "system" && m.role !== "developer");
@@ -254,15 +318,23 @@ function purifyHistory(messages: Record<string, unknown>[], targetTokens: number
   // Binary search for how many messages to keep from the end
   let keep = nonSystem.length;
   while (keep > 2) {
+<<<<<<< HEAD
     let candidate = [...system, ...nonSystem.slice(-keep)];
     candidate = fixToolPairs(candidate);
+=======
+    const candidate = [...system, ...nonSystem.slice(-keep)];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const tokens = estimateTokens(JSON.stringify(candidate));
     if (tokens <= targetTokens) break;
     keep = Math.max(2, Math.floor(keep * 0.7)); // Drop 30% each iteration
   }
 
+<<<<<<< HEAD
   let result = [...system, ...nonSystem.slice(-keep)];
   result = fixToolPairs(result);
+=======
+  const result = [...system, ...nonSystem.slice(-keep)];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Add summary of dropped messages
   if (keep < nonSystem.length) {
@@ -275,6 +347,7 @@ function purifyHistory(messages: Record<string, unknown>[], targetTokens: number
 
   return result;
 }
+<<<<<<< HEAD
 
 /**
  * Remove orphaned tool_result messages whose preceding tool_use was dropped.
@@ -390,3 +463,5 @@ function fixToolPairs(messages: Record<string, unknown>[]) {
     })
     .filter(Boolean) as Record<string, unknown>[];
 }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

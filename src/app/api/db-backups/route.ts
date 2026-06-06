@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { NextRequest, NextResponse } from "next/server";
 import {
   listDbBackups,
@@ -20,6 +21,17 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+=======
+import { NextResponse } from "next/server";
+import { listDbBackups, restoreDbBackup, backupDbFile } from "@/lib/localDb";
+import { dbBackupRestoreSchema } from "@/shared/validation/schemas";
+import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
+
+/**
+ * PUT /api/db-backups — Trigger a manual backup snapshot.
+ */
+export async function PUT() {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const result = backupDbFile("manual");
     if (!result) {
@@ -34,6 +46,7 @@ export async function PUT(request: NextRequest) {
 
 /**
  * GET /api/db-backups — List available database backups.
+<<<<<<< HEAD
  * Security: Requires admin authentication.
  */
 export async function GET(request: NextRequest) {
@@ -41,6 +54,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+=======
+ */
+export async function GET() {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const backups = await listDbBackups();
     return NextResponse.json({ backups });
@@ -53,6 +70,7 @@ export async function GET(request: NextRequest) {
 /**
  * POST /api/db-backups — Restore a specific backup.
  * Body: { backupId: "db_2026-02-11T14-00-00-000Z_pre-write.json" }
+<<<<<<< HEAD
  * Security: Requires admin authentication.
  */
 export async function POST(request: NextRequest) {
@@ -60,6 +78,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+=======
+ */
+export async function POST(request) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody;
   try {
     rawBody = await request.json();
@@ -89,6 +111,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+<<<<<<< HEAD
 
 /**
  * DELETE /api/db-backups — Cleanup old database backups.
@@ -135,3 +158,5 @@ export async function DELETE(request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

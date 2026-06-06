@@ -1,10 +1,15 @@
 import {
   isAccountDeactivated,
   isCreditsExhausted,
+<<<<<<< HEAD
   isDailyQuotaExhausted,
   isOAuthInvalidToken,
 } from "./accountFallback.ts";
 import { getProviderCategory } from "../config/providerRegistry.ts";
+=======
+  isOAuthInvalidToken,
+} from "./accountFallback.ts";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 export function isEmptyContentResponse(responseBody: unknown): boolean {
   if (!responseBody || typeof responseBody !== "object") return false;
@@ -19,16 +24,23 @@ export function isEmptyContentResponse(responseBody: unknown): boolean {
     const delta = firstChoice.delta as Record<string, unknown> | undefined;
 
     const content = message?.content ?? delta?.content;
+<<<<<<< HEAD
     const reasoningContent = message?.reasoning_content ?? delta?.reasoning_content;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const hasToolCalls =
       (Array.isArray(message?.tool_calls) && (message.tool_calls as unknown[]).length > 0) ||
       (Array.isArray(delta?.tool_calls) && (delta.tool_calls as unknown[]).length > 0);
 
     const hasContent = content !== null && content !== undefined && content !== "";
+<<<<<<< HEAD
     const hasReasoning =
       reasoningContent !== null && reasoningContent !== undefined && reasoningContent !== "";
 
     return !hasContent && !hasReasoning && !hasToolCalls;
+=======
+    return !hasContent && !hasToolCalls;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   if (Array.isArray(body.content)) {
@@ -80,6 +92,7 @@ export function isContextOverflow(errorText: string): boolean {
   return CONTEXT_OVERFLOW_REGEX.test(String(errorText || ""));
 }
 
+<<<<<<< HEAD
 =======
 import { isAccountDeactivated, isCreditsExhausted } from "./accountFallback.ts";
 
@@ -94,6 +107,8 @@ export const PROVIDER_ERROR_TYPES = {
 };
 
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function responseBodyToString(responseBody: unknown): string {
   if (typeof responseBody === "string") return responseBody;
   if (responseBody !== null && typeof responseBody === "object") {
@@ -106,6 +121,7 @@ function responseBodyToString(responseBody: unknown): string {
   return "";
 }
 
+<<<<<<< HEAD
 function shouldPreserveQuotaSignalsFor429(provider?: string | null): boolean {
   if (!provider) return true;
   return getProviderCategory(provider) === "oauth";
@@ -116,10 +132,14 @@ export function classifyProviderError(
   responseBody: unknown,
   provider?: string | null
 ): string | null {
+=======
+export function classifyProviderError(statusCode: number, responseBody: unknown): string | null {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const bodyStr = responseBodyToString(responseBody);
   const creditsExhausted = isCreditsExhausted(bodyStr);
   const accountDeactivated = isAccountDeactivated(bodyStr);
   const oauthInvalid = isOAuthInvalidToken(bodyStr);
+<<<<<<< HEAD
   const preserveQuota429 = shouldPreserveQuotaSignalsFor429(provider);
 
   if (creditsExhausted && [400, 402, 403].includes(statusCode)) {
@@ -137,6 +157,17 @@ export function classifyProviderError(
     if (preserveQuota429 && isDailyQuotaExhausted(bodyStr)) {
       return PROVIDER_ERROR_TYPES.QUOTA_EXHAUSTED;
     }
+=======
+
+  if (
+    creditsExhausted &&
+    (statusCode === 400 || statusCode === 402 || statusCode === 429 || statusCode === 403)
+  ) {
+    return PROVIDER_ERROR_TYPES.QUOTA_EXHAUSTED;
+  }
+
+  if (statusCode === 429) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return PROVIDER_ERROR_TYPES.RATE_LIMITED;
   }
 
@@ -157,18 +188,27 @@ export function classifyProviderError(
     if (bodyStr.includes("has not been used in project")) {
       return PROVIDER_ERROR_TYPES.PROJECT_ROUTE_ERROR;
     }
+<<<<<<< HEAD
     if (provider && getProviderCategory(provider) === "apikey") {
       return null;
     }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return PROVIDER_ERROR_TYPES.FORBIDDEN;
   }
   if (statusCode >= 500) return PROVIDER_ERROR_TYPES.SERVER_ERROR;
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (statusCode === 400 && isContextOverflow(bodyStr)) {
     return PROVIDER_ERROR_TYPES.CONTEXT_OVERFLOW;
   }
 
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return null;
 }

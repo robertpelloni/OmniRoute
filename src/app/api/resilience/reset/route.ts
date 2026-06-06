@@ -1,10 +1,18 @@
 import { NextResponse } from "next/server";
 
 /**
+<<<<<<< HEAD
  * POST /api/resilience/reset — Reset all provider circuit breakers
  */
 export async function POST() {
   try {
+=======
+ * POST /api/resilience/reset — Reset all circuit breakers and clear cooldowns
+ */
+export async function POST() {
+  try {
+    // Reset all circuit breakers
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const { getAllCircuitBreakerStatuses, getCircuitBreaker } =
       await import("@/shared/utils/circuitBreaker");
 

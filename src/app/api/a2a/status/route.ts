@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getTaskManager } from "@/lib/a2a/taskManager";
+<<<<<<< HEAD
 import { getSettings } from "@/lib/db/settings";
 
 export async function GET() {
@@ -25,6 +26,25 @@ export async function GET() {
       status: enabled ? "ok" : "disabled",
       online: enabled,
       enabled,
+=======
+
+export async function GET() {
+  try {
+    const tm = getTaskManager();
+    const stats = tm.getStats();
+
+    let agentCard: any = null;
+    try {
+      const agentModule = await import("@/app/.well-known/agent.json/route");
+      const cardResponse = await agentModule.GET();
+      agentCard = await cardResponse.json();
+    } catch {
+      agentCard = null;
+    }
+
+    return NextResponse.json({
+      status: "ok",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       tasks: stats,
       agent: agentCard
         ? {

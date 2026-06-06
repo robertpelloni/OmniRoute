@@ -81,12 +81,20 @@ export async function exchangeTokens(providerName, code, redirectUri, codeVerifi
 /**
  * Request device code (for device_code flow)
  */
+<<<<<<< HEAD
 export async function requestDeviceCode(providerName, codeChallenge, configOverride = null) {
+=======
+export async function requestDeviceCode(providerName, codeChallenge) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const provider = getProvider(providerName);
   if (provider.flowType !== "device_code") {
     throw new Error(`Provider ${providerName} does not support device code flow`);
   }
+<<<<<<< HEAD
   return await provider.requestDeviceCode(configOverride || provider.config, codeChallenge);
+=======
+  return await provider.requestDeviceCode(provider.config, codeChallenge);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 /**

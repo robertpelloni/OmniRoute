@@ -10,14 +10,18 @@ declare namespace NodeJS {
     JWT_SECRET?: string;
     INITIAL_PASSWORD?: string;
     AUTH_COOKIE_SECURE?: string;
+<<<<<<< HEAD
     API_KEY_SECRET?: string;
     CLOUD_URL?: string;
     BASE_URL?: string;
     NEXT_PUBLIC_BASE_URL?: string;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     PROMPT_CACHE_MAX_SIZE?: string;
     PROMPT_CACHE_TTL_MS?: string;
     NEXT_PUBLIC_CLOUD_URL?: string;
     API_PORT?: string;
+<<<<<<< HEAD
     PORT?: string;
     API_HOST?: string;
     DASHBOARD_PORT?: string;
@@ -28,6 +32,11 @@ declare namespace NodeJS {
     OMNIROUTE_DISABLE_BACKGROUND_SERVICES?: string;
     OMNIROUTE_PORT?: string;
     PRICING_SYNC_ENABLED?: string;
+=======
+    API_HOST?: string;
+    DASHBOARD_PORT?: string;
+    OMNIROUTE_PORT?: string;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     NODE_ENV?: "development" | "production" | "test";
   }
 }
@@ -111,6 +120,7 @@ declare module "chalk" {
   const chalk: ChalkInstance;
   export default chalk;
 }
+<<<<<<< HEAD
 
 declare module "yazl" {
   export class ZipFile {
@@ -120,3 +130,5 @@ declare module "yazl" {
     outputStream: NodeJS.ReadableStream;
   }
 }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

@@ -7,18 +7,24 @@
  * Naming convention: `NNN_description.sql` (e.g., `001_initial_schema.sql`)
  *
  * All migrations run within a single transaction — all-or-nothing per file.
+<<<<<<< HEAD
  *
  * Safety features:
  * - Pre-migration backup before applying any pending migrations
  * - Mass-migration detection (abort if too many pending on existing DB)
  * - Migration name mismatch warning (detects renumbering issues)
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  */
 
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import type Database from "better-sqlite3";
+<<<<<<< HEAD
 import { DEFAULT_DATABASE_SETTINGS } from "@/types/databaseSettings";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * Resolve the migrations directory path safely across platforms.
@@ -26,6 +32,7 @@ import { DEFAULT_DATABASE_SETTINGS } from "@/types/databaseSettings";
  * `file://` URL, causing `fileURLToPath` to throw `ERR_INVALID_FILE_URL_PATH`.
  */
 function resolveMigrationsDir(): string {
+<<<<<<< HEAD
   const configuredDir = process.env.OMNIROUTE_MIGRATIONS_DIR;
   if (typeof configuredDir === "string" && configuredDir.trim().length > 0) {
     return path.resolve(configuredDir);
@@ -82,11 +89,25 @@ function resolveMigrationsDir(): string {
   throw new Error(
     "[Migration] Could not resolve migrations directory. Set OMNIROUTE_MIGRATIONS_DIR."
   );
+=======
+  try {
+    const metaUrl = import.meta.url;
+    if (metaUrl && metaUrl.startsWith("file://")) {
+      const __filename = fileURLToPath(metaUrl);
+      return path.join(path.dirname(__filename), "migrations");
+    }
+  } catch {
+    // fileURLToPath failed (e.g. Windows global install) — use fallback
+  }
+  // Fallback: resolve relative to cwd (works for both dev and global installs)
+  return path.join(process.cwd(), "src", "lib", "db", "migrations");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 const MIGRATIONS_DIR = resolveMigrationsDir();
 
 /**
+<<<<<<< HEAD
  * Maximum number of migrations allowed to run in a single startup on an
  * existing database. If more migrations are pending than this threshold,
  * it likely means the migration tracking table was accidentally wiped,
@@ -146,6 +167,8 @@ const PHYSICAL_SCHEMA_SENTINELS = [
 const INITIAL_SCHEMA_SENTINELS = ["provider_connections", "combos", "call_logs"] as const;
 
 /**
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  * Ensure the schema_migrations tracking table exists.
  */
 function ensureMigrationsTable(db: Database.Database): void {
@@ -191,6 +214,7 @@ function getAppliedVersions(db: Database.Database): Set<string> {
 }
 
 /**
+<<<<<<< HEAD
  * Get applied migration records (version + name) for mismatch detection.
  */
 function getAppliedRecords(db: Database.Database): Array<{ version: string; name: string }> {
@@ -765,6 +789,25 @@ export function runMigrations(db: Database.Database, options?: { isNewDb?: boole
         const sql = fs.readFileSync(migration.path, "utf-8");
         db.exec(sql);
       }
+=======
+ * Run all pending migrations in order.
+ * Returns the number of migrations applied.
+ */
+export function runMigrations(db: Database.Database): number {
+  ensureMigrationsTable(db);
+
+  const files = getMigrationFiles();
+  const applied = getAppliedVersions(db);
+  let count = 0;
+
+  for (const migration of files) {
+    if (applied.has(migration.version)) continue;
+
+    const sql = fs.readFileSync(migration.path, "utf-8");
+
+    const applyMigration = db.transaction(() => {
+      db.exec(sql);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       db.prepare("INSERT INTO _omniroute_migrations (version, name) VALUES (?, ?)").run(
         migration.version,
         migration.name
@@ -777,6 +820,7 @@ export function runMigrations(db: Database.Database, options?: { isNewDb?: boole
       console.log(`[Migration] Applied: ${migration.version}_${migration.name}`);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
+<<<<<<< HEAD
       // "duplicate column name" means the column already exists — end state achieved, mark applied.
       if (message.includes("duplicate column name")) {
         const applyMarkerOnly = db.transaction(() => {
@@ -793,6 +837,10 @@ export function runMigrations(db: Database.Database, options?: { isNewDb?: boole
         console.error(`[Migration] FAILED: ${migration.version}_${migration.name} — ${message}`);
         throw err; // Re-throw to prevent DB from starting in inconsistent state
       }
+=======
+      console.error(`[Migration] FAILED: ${migration.version}_${migration.name} — ${message}`);
+      throw err; // Re-throw to prevent DB from starting in inconsistent state
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     }
   }
 
@@ -800,6 +848,7 @@ export function runMigrations(db: Database.Database, options?: { isNewDb?: boole
     console.log(`[Migration] ${count} migration(s) applied successfully.`);
   }
 
+<<<<<<< HEAD
   // After applying all migrations, insert default settings if we just ran migration 46
   try {
     if (appliedRecords.some((m) => m.name.startsWith("046_"))) {
@@ -838,6 +887,11 @@ function insertDefaultDatabaseSettings(db: Database.Database) {
   }
 }
 
+=======
+  return count;
+}
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Get migration status for diagnostics.
  */

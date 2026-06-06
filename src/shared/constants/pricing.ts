@@ -11,6 +11,7 @@ const GPT_5_3_CODEX_PRICING = {
   cache_creation: 5.0,
 };
 
+<<<<<<< HEAD
 const GPT_5_5_PRICING = {
   input: 5.0,
   output: 30.0,
@@ -19,6 +20,8 @@ const GPT_5_5_PRICING = {
   cache_creation: 5.0,
 };
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 const CLAUDE_OPUS_4_PRICING = {
   input: 15.0,
   output: 75.0,
@@ -51,6 +54,7 @@ const CLAUDE_SONNET_46_PRICING = {
   cache_creation: 3.0,
 };
 
+<<<<<<< HEAD
 const GLM_PRICING = {
   "glm-5.1": {
     input: 1.2,
@@ -124,11 +128,14 @@ const GLM_PRICING = {
   },
 };
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export const DEFAULT_PRICING = {
   // OAuth Providers (using aliases)
 
   // Claude Code (cc)
   cc: {
+<<<<<<< HEAD
     "claude-opus-4-7": {
       input: 5.0,
       output: 25.0,
@@ -136,6 +143,8 @@ export const DEFAULT_PRICING = {
       reasoning: 25.0,
       cache_creation: 5.0,
     },
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     "claude-opus-4-6": {
       input: 5.0,
       output: 25.0,
@@ -175,6 +184,7 @@ export const DEFAULT_PRICING = {
 
   // OpenAI Codex (cx)
   cx: {
+<<<<<<< HEAD
     "codex-auto-review": GPT_5_5_PRICING,
     // GPT 5.5
     "gpt-5.5": GPT_5_5_PRICING,
@@ -184,6 +194,8 @@ export const DEFAULT_PRICING = {
     "gpt-5.5-medium": GPT_5_5_PRICING,
     "gpt-5.5-low": GPT_5_5_PRICING,
     "gpt-5.5-none": GPT_5_5_PRICING,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     // GPT 5.4
     "gpt-5.4": {
       input: 5.0,
@@ -601,7 +613,10 @@ export const DEFAULT_PRICING = {
 
   // OpenAI
   openai: {
+<<<<<<< HEAD
     "gpt-5.5": GPT_5_5_PRICING,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     "gpt-4o": {
       input: 2.5,
       output: 10.0,
@@ -812,6 +827,7 @@ export const DEFAULT_PRICING = {
       reasoning: 2.19,
       cache_creation: 0.55,
     },
+<<<<<<< HEAD
     // DeepSeek V4 Pro — promo until 2026-05-31, then list ($0.145 / $3.48)
     "deepseek-v4-pro": {
       input: 0.435,
@@ -833,6 +849,11 @@ export const DEFAULT_PRICING = {
   agentrouter: {
     auto: { input: 2.0, output: 8.0 },
   },
+=======
+  },
+
+  // OpenRouter
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   openrouter: {
     auto: {
       input: 2.0,
@@ -844,8 +865,83 @@ export const DEFAULT_PRICING = {
   },
 
   // GLM
+<<<<<<< HEAD
   glm: GLM_PRICING,
   glmt: GLM_PRICING,
+=======
+  glm: {
+    "glm-5.1": {
+      input: 1.2,
+      output: 5,
+      cached: 0.3,
+      reasoning: 5,
+      cache_creation: 1.2,
+    },
+    "glm-5": {
+      input: 1.0,
+      output: 3.2,
+      cached: 0.2,
+      reasoning: 4.8,
+      cache_creation: 1.0,
+    },
+    "glm-5-turbo": {
+      input: 1.2,
+      output: 4.0,
+      cached: 0.24,
+      reasoning: 4.0,
+      cache_creation: 1.2,
+    },
+    "glm-4.7-flash": {
+      input: 0,
+      output: 0,
+      cached: 0,
+      reasoning: 0,
+      cache_creation: 0,
+    },
+    "glm-4.7": {
+      input: 0.6,
+      output: 2.2,
+      cached: 0.11,
+      reasoning: 2.2,
+      cache_creation: 0.6,
+    },
+    "glm-4.6": {
+      input: 0.6,
+      output: 2.2,
+      cached: 0.11,
+      reasoning: 2.2,
+      cache_creation: 0.6,
+    },
+    "glm-4.6v": {
+      input: 0.3,
+      output: 0.9,
+      cached: 0.05,
+      reasoning: 0.9,
+      cache_creation: 0.3,
+    },
+    "glm-4.5v": {
+      input: 0.6,
+      output: 1.8,
+      cached: 0.11,
+      reasoning: 1.8,
+      cache_creation: 0.6,
+    },
+    "glm-4.5": {
+      input: 0.6,
+      output: 2.2,
+      cached: 0.11,
+      reasoning: 2.2,
+      cache_creation: 0.6,
+    },
+    "glm-4.5-air": {
+      input: 0.2,
+      output: 1.1,
+      cached: 0.03,
+      reasoning: 1.1,
+      cache_creation: 0.2,
+    },
+  },
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Kimi (Moonshot)
   kimi: {
@@ -1371,7 +1467,19 @@ export function getDefaultPricing() {
   return DEFAULT_PRICING;
 }
 
+<<<<<<< HEAD
 export { formatCost } from "../utils/formatting";
+=======
+/**
+ * Format cost for display
+ * @param {number} cost - Cost in dollars
+ * @returns {string} Formatted cost string
+ */
+export function formatCost(cost: number | null | undefined): string {
+  if (cost === null || cost === undefined || isNaN(cost)) return "$0.00";
+  return `$${cost.toFixed(2)}`;
+}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * Calculate cost from tokens and pricing

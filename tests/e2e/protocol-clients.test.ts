@@ -126,10 +126,18 @@ describe("Protocol clients E2E", () => {
       }
 
       const auditRes = await apiFetch("/api/mcp/audit?limit=50&tool=omniroute_get_health");
+<<<<<<< HEAD
       expect([200, 401]).toContain(auditRes.status);
       if (auditRes.status === 200) {
         expect(auditRes.ok).toBe(true);
         const auditJson = (await auditRes.json()) as any;
+=======
+      if (auditRes.status === 401) {
+        console.warn("Skipping audit log verification (Auth required)");
+      } else {
+        expect(auditRes.ok).toBe(true);
+        const auditJson = await auditRes.json();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         const entries = Array.isArray(auditJson?.entries) ? auditJson.entries : [];
         expect(entries.some((entry: any) => entry.toolName === "omniroute_get_health")).toBe(true);
       }
@@ -142,7 +150,11 @@ describe("Protocol clients E2E", () => {
     async () => {
       const cardRes = await apiFetch("/.well-known/agent.json");
       expect(cardRes.ok).toBe(true);
+<<<<<<< HEAD
       const card = (await cardRes.json()) as any;
+=======
+      const card = await cardRes.json();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       expect(card).toHaveProperty("name");
       expect(Array.isArray(card?.skills)).toBe(true);
 
@@ -155,8 +167,12 @@ describe("Protocol clients E2E", () => {
         "protocol-send"
       );
       if (send.response.status === 401) {
+<<<<<<< HEAD
         expect(API_KEY).toBe("");
         expect(send.json?.error).toBeTruthy();
+=======
+        console.warn("Skipping A2A message send (Auth required)");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         return;
       }
       expect(send.response.ok).toBe(true);
@@ -200,10 +216,18 @@ describe("Protocol clients E2E", () => {
       expect([200, 400, 401, 404]).toContain(cancelRes.status);
 
       const tasksRes = await apiFetch("/api/a2a/tasks?limit=50");
+<<<<<<< HEAD
       expect([200, 401]).toContain(tasksRes.status);
       if (tasksRes.status === 200) {
         expect(tasksRes.ok).toBe(true);
         const tasksJson = (await tasksRes.json()) as any;
+=======
+      if (tasksRes.status === 401) {
+        console.warn("Skipping a2a tasks listing (Auth required)");
+      } else {
+        expect(tasksRes.ok).toBe(true);
+        const tasksJson = await tasksRes.json();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         const tasks = Array.isArray(tasksJson?.tasks) ? tasksJson.tasks : [];
         expect(tasks.some((task: any) => task.id === sendTaskId)).toBe(true);
       }

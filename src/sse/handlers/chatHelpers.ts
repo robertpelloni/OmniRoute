@@ -1,5 +1,9 @@
 import { getModelInfo } from "../services/model";
+<<<<<<< HEAD
 import { clearAccountError, markAccountUnavailable } from "../services/auth";
+=======
+import { clearAccountError } from "../services/auth";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import * as log from "../utils/logger";
 import { updateProviderCredentials } from "../services/tokenRefresh";
 import {
@@ -11,12 +15,16 @@ import {
   PROVIDER_ID_TO_ALIAS,
 } from "@omniroute/open-sse/config/providerModels.ts";
 import { handleChatCore } from "@omniroute/open-sse/handlers/chatCore.ts";
+<<<<<<< HEAD
 import {
   errorResponse,
   modelCooldownResponse,
   providerCircuitOpenResponse,
   unavailableResponse,
 } from "@omniroute/open-sse/utils/error.ts";
+=======
+import { errorResponse, unavailableResponse } from "@omniroute/open-sse/utils/error.ts";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { HTTP_STATUS } from "@omniroute/open-sse/config/constants.ts";
 import {
   runWithProxyContext,
@@ -24,6 +32,7 @@ import {
   isTlsFingerprintActive,
 } from "@omniroute/open-sse/utils/proxyFetch.ts";
 import { resolveProxyForConnection } from "@/lib/localDb";
+<<<<<<< HEAD
 import { CircuitBreakerOpenError, getCircuitBreaker } from "../../shared/utils/circuitBreaker";
 import { logProxyEvent } from "../../lib/proxyLogger";
 import { logTranslationEvent } from "../../lib/translatorEvents";
@@ -110,6 +119,29 @@ export async function resolveModelOrError(modelStr: string, body: any, endpointP
       log.warn("CHAT", "Invalid model format", { model: modelStr });
       return { error: errorResponse(HTTP_STATUS.BAD_REQUEST, "Invalid model format") };
     }
+=======
+import { getCircuitBreaker, CircuitBreakerOpenError } from "../../shared/utils/circuitBreaker";
+import { isModelAvailable } from "../../domain/modelAvailability";
+import { logProxyEvent } from "../../lib/proxyLogger";
+import { logTranslationEvent } from "../../lib/translatorEvents";
+
+export async function resolveModelOrError(modelStr: string, body: any, endpointPath: string = "") {
+  const modelInfo = await getModelInfo(modelStr);
+  if (!modelInfo.provider) {
+    if ((modelInfo as any).errorType === "ambiguous_model") {
+      const message =
+        (modelInfo as any).errorMessage ||
+        `Ambiguous model '${modelStr}'. Use provider/model prefix (ex: gh/${modelStr} or cc/${modelStr}).`;
+      log.warn("CHAT", message, {
+        model: modelStr,
+        candidates:
+          (modelInfo as any).candidateAliases || (modelInfo as any).candidateProviders || [],
+      });
+      return { error: errorResponse(HTTP_STATUS.BAD_REQUEST, message) };
+    }
+    log.warn("CHAT", "Invalid model format", { model: modelStr });
+    return { error: errorResponse(HTTP_STATUS.BAD_REQUEST, "Invalid model format") };
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   const { provider, model, extendedContext } = modelInfo;
@@ -131,6 +163,7 @@ export async function resolveModelOrError(modelStr: string, body: any, endpointP
   return { provider, model, sourceFormat, targetFormat, extendedContext };
 }
 
+<<<<<<< HEAD
 export async function checkPipelineGates(
   provider: string,
   model: string,
@@ -151,16 +184,49 @@ export async function checkPipelineGates(
   const breaker = getCircuitBreaker(provider, {
     failureThreshold: providerProfile.failureThreshold ?? providerProfile.circuitBreakerThreshold,
     resetTimeout: providerProfile.resetTimeoutMs ?? providerProfile.circuitBreakerReset,
+=======
+export function checkPipelineGates(
+  provider: string,
+  model: string,
+  options: { ignoreCircuitBreaker?: boolean; ignoreModelCooldown?: boolean } = {}
+) {
+  const modelAvailable = isModelAvailable(provider, model);
+  if (!modelAvailable && options.ignoreModelCooldown) {
+    log.info("AVAILABILITY", `${provider}/${model} cooldown bypassed for combo live test`);
+  } else if (!modelAvailable) {
+    log.warn("AVAILABILITY", `${provider}/${model} is in cooldown, rejecting request`);
+    return unavailableResponse(
+      HTTP_STATUS.SERVICE_UNAVAILABLE,
+      `Model ${provider}/${model} is temporarily unavailable (cooldown)`,
+      30
+    );
+  }
+
+  const breaker = getCircuitBreaker(provider, {
+    failureThreshold: 5,
+    resetTimeout: 30000,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     onStateChange: (name: string, from: string, to: string) =>
       log.info("CIRCUIT", `${name}: ${from} → ${to}`),
   });
   if (options.ignoreCircuitBreaker && !breaker.canExecute()) {
+<<<<<<< HEAD
     log.info("CIRCUIT", `Bypassing OPEN circuit breaker for ${provider} (${bypassReason})`);
   } else if (!breaker.canExecute()) {
     const retryAfterMs = breaker.getRetryAfterMs();
     const retryAfterSec = Math.max(Math.ceil(retryAfterMs / 1000), 1);
     log.warn("CIRCUIT", `Circuit breaker OPEN for ${provider}, rejecting request`);
     return providerCircuitOpenResponse(provider, retryAfterSec);
+=======
+    log.info("CIRCUIT", `Bypassing OPEN circuit breaker for combo live test: ${provider}`);
+  } else if (!breaker.canExecute()) {
+    log.warn("CIRCUIT", `Circuit breaker OPEN for ${provider}, rejecting request`);
+    return unavailableResponse(
+      HTTP_STATUS.SERVICE_UNAVAILABLE,
+      `Provider ${provider} circuit breaker is open`,
+      30
+    );
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 
   return null;
@@ -182,10 +248,14 @@ export async function executeChatWithBreaker({
   comboName,
   comboStrategy,
   isCombo,
+<<<<<<< HEAD
   comboStepId,
   comboExecutionKey,
   extendedContext,
   providerProfile,
+=======
+  extendedContext,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }: any): Promise<{ result: any; tlsFingerprintUsed: boolean }> {
   let tlsFingerprintUsed = false;
 
@@ -204,12 +274,16 @@ export async function executeChatWithBreaker({
           comboName,
           comboStrategy,
           isCombo,
+<<<<<<< HEAD
           comboStepId,
           comboExecutionKey,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           onCredentialsRefreshed: async (newCreds: any) => {
             await updateProviderCredentials(credentials.connectionId, {
               accessToken: newCreds.accessToken,
               refreshToken: newCreds.refreshToken,
+<<<<<<< HEAD
               expiresIn: newCreds.expiresIn,
               expiresAt: newCreds.expiresAt,
               providerSpecificData: newCreds.providerSpecificData,
@@ -217,12 +291,16 @@ export async function executeChatWithBreaker({
               // apiKey blob mid-request — forward it so the DB credential
               // doesn't go stale after Set-Cookie rotation.
               apiKey: newCreds.apiKey,
+=======
+              providerSpecificData: newCreds.providerSpecificData,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               testStatus: "active",
             });
           },
           onRequestSuccess: async () => {
             await clearAccountError(credentials.connectionId, credentials);
           },
+<<<<<<< HEAD
           onStreamFailure: async (failure: any) => {
             if (!credentials.connectionId) return;
             await markAccountUnavailable(
@@ -234,6 +312,8 @@ export async function executeChatWithBreaker({
               providerProfile
             );
           },
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         })
       );
 
@@ -260,7 +340,15 @@ export async function executeChatWithBreaker({
       return {
         result: {
           success: false,
+<<<<<<< HEAD
           response: providerCircuitOpenResponse(provider, Math.ceil(cbErr.retryAfterMs / 1000)),
+=======
+          response: unavailableResponse(
+            HTTP_STATUS.SERVICE_UNAVAILABLE,
+            `Provider ${provider} circuit breaker is open`,
+            Math.ceil(cbErr.retryAfterMs / 1000)
+          ),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           status: HTTP_STATUS.SERVICE_UNAVAILABLE,
         },
         tlsFingerprintUsed: false,
@@ -297,6 +385,7 @@ export function handleNoCredentials(
     const errorMsg = lastError || credentials.lastError || "Unavailable";
     const status =
       lastStatus || Number(credentials.lastErrorCode) || HTTP_STATUS.SERVICE_UNAVAILABLE;
+<<<<<<< HEAD
     const cooldownModel =
       typeof credentials.cooldownModel === "string" && credentials.cooldownModel.trim().length > 0
         ? credentials.cooldownModel.trim()
@@ -315,6 +404,8 @@ export function handleNoCredentials(
       });
     }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     log.warn("CHAT", `[${provider}/${model}] ${errorMsg} (${credentials.retryAfterHuman})`);
     return unavailableResponse(
       status,
@@ -323,6 +414,7 @@ export function handleNoCredentials(
       credentials.retryAfterHuman
     );
   }
+<<<<<<< HEAD
   if (lastError && lastStatus) {
     log.warn("CHAT", "Preserving last upstream error after credential exhaustion", {
       provider,
@@ -331,6 +423,8 @@ export function handleNoCredentials(
     });
     return errorResponse(lastStatus, lastError);
   }
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (!excludeConnectionId) {
     log.error("AUTH", `No credentials for provider: ${provider}`);
     return errorResponse(HTTP_STATUS.BAD_REQUEST, `No credentials for provider: ${provider}`);
@@ -365,6 +459,7 @@ export function safeLogEvents({
   tlsFingerprintUsed = false,
 }) {
   try {
+<<<<<<< HEAD
     const rawIp =
       clientRawRequest?.headers?.["x-forwarded-for"] ||
       clientRawRequest?.headers?.["x-real-ip"] ||
@@ -372,6 +467,8 @@ export function safeLogEvents({
       null;
     const publicIp = rawIp ? rawIp.split(",")[0].trim() : null;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     logProxyEvent({
       status: result.success
         ? "success"
@@ -383,7 +480,10 @@ export function safeLogEvents({
       levelId: proxyInfo?.levelId || null,
       provider,
       targetUrl: `${provider}/${model}`,
+<<<<<<< HEAD
       publicIp,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       latencyMs: proxyLatency,
       error: result.success ? null : result.error || null,
       connectionId: credentials.connectionId,

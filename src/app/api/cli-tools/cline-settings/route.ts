@@ -4,13 +4,20 @@ import { NextResponse } from "next/server";
 import fs from "fs/promises";
 import path from "path";
 import os from "os";
+<<<<<<< HEAD
 import { requireCliToolsAuth } from "@/lib/api/requireCliToolsAuth";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { ensureCliConfigWriteAllowed, getCliRuntimeStatus } from "@/shared/services/cliRuntime";
 import { createBackup } from "@/shared/services/backupService";
 import { saveCliToolLastConfigured, deleteCliToolLastConfigured } from "@/lib/db/cliToolState";
 import { cliModelConfigSchema } from "@/shared/validation/schemas";
 import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
+<<<<<<< HEAD
 import { resolveApiKey } from "@/shared/services/apiKeyResolver";
+=======
+import { getApiKeyById } from "@/lib/localDb";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const CLINE_DATA_DIR = path.join(os.homedir(), ".cline", "data");
 const GLOBAL_STATE_PATH = path.join(CLINE_DATA_DIR, "globalState.json");
@@ -53,10 +60,14 @@ const hasOmniRouteConfig = (globalState: any) => {
 };
 
 // GET - Check cline CLI and read current settings
+<<<<<<< HEAD
 export async function GET(request: Request) {
   const authError = await requireCliToolsAuth(request);
   if (authError) return authError;
 
+=======
+export async function GET() {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const runtime = await getCliRuntimeStatus("cline");
 
@@ -105,9 +116,12 @@ export async function GET(request: Request) {
 
 // POST - Configure Cline to use OmniRoute as OpenAI-compatible provider
 export async function POST(request: Request) {
+<<<<<<< HEAD
   const authError = await requireCliToolsAuth(request);
   if (authError) return authError;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody;
   try {
     rawBody = await request.json();
@@ -129,15 +143,33 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: writeGuard }, { status: 403 });
     }
 
+<<<<<<< HEAD
     // (#526) Extract keyId BEFORE validation — Zod strips unknown fields!
     const keyId = typeof rawBody?.keyId === "string" ? rawBody.keyId.trim() : null;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const validation = validateBody(cliModelConfigSchema, rawBody);
     if (isValidationFailure(validation)) {
       return NextResponse.json({ error: validation.error }, { status: 400 });
     }
+<<<<<<< HEAD
     const { baseUrl, model } = validation.data;
     const apiKey = await resolveApiKey(keyId, validation.data.apiKey);
+=======
+    let { baseUrl, apiKey, model } = validation.data;
+
+    // (#526) Resolve real key from DB if keyId was provided
+    const keyId = typeof rawBody?.keyId === "string" ? rawBody.keyId.trim() : null;
+    if (keyId) {
+      try {
+        const keyRecord = await getApiKeyById(keyId);
+        if (keyRecord?.key) apiKey = keyRecord.key as string;
+      } catch {
+        /* non-critical */
+      }
+    }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     // Ensure directory exists
     await fs.mkdir(CLINE_DATA_DIR, { recursive: true });
@@ -200,10 +232,14 @@ export async function POST(request: Request) {
 }
 
 // DELETE - Remove OmniRoute OpenAI-compatible provider config
+<<<<<<< HEAD
 export async function DELETE(request: Request) {
   const authError = await requireCliToolsAuth(request);
   if (authError) return authError;
 
+=======
+export async function DELETE() {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const writeGuard = ensureCliConfigWriteAllowed();
     if (writeGuard) {

@@ -20,7 +20,10 @@ import "./usage/migrations";
 // Re-export everything for backward compatibility
 export {
   trackPendingRequest,
+<<<<<<< HEAD
   updatePendingRequest,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   getUsageDb,
   saveRequestUsage,
   getUsageHistory,

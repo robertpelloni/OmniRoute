@@ -1,10 +1,17 @@
 "use client";
 
 /**
+<<<<<<< HEAD
  * ProviderIcon — Renders a provider logo using @lobehub/icons with static asset fallbacks.
  *
  * Strategy (#529):
  * 1. Try @lobehub/icons direct icon components (no @lobehub/ui peer runtime)
+=======
+ * ProviderIcon — Renders a provider logo using @lobehub/icons with PNG fallback.
+ *
+ * Strategy (#529):
+ * 1. Try @lobehub/icons ProviderIcon (130+ providers, React components)
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  * 2. Fall back to /providers/{id}.png (existing static assets)
  * 3. Fall back to /providers/{id}.svg (SVG assets)
  * 4. Fall back to a generic AI icon
@@ -14,10 +21,71 @@
  *   <ProviderIcon providerId="anthropic" size={28} type="color" />
  */
 
+<<<<<<< HEAD
 import { createElement, memo, useState } from "react";
 import Image from "next/image";
 
 import { getLobeProviderIcon } from "./lobeProviderIcons";
+=======
+import { memo, useState, Component, type ReactNode } from "react";
+import Image from "next/image";
+import { ProviderIcon as LobehubProviderIcon } from "@lobehub/icons";
+
+// Mapping from OmniRoute provider IDs → Lobehub icon IDs
+// Lobehub uses lowercase IDs matching ModelProvider enum values
+const LOBEHUB_PROVIDER_MAP: Record<string, string> = {
+  openai: "openai",
+  anthropic: "anthropic",
+  claude: "anthropic",
+  gemini: "google",
+  google: "google",
+  deepseek: "deepseek",
+  groq: "groq",
+  mistral: "mistral",
+  cohere: "cohere",
+  perplexity: "perplexity",
+  xai: "xai",
+  grok: "xai",
+  together: "togetherai",
+  fireworks: "fireworks",
+  "fireworks-ai": "fireworks",
+  cerebras: "cerebras",
+  huggingface: "huggingface",
+  "hugging-face": "huggingface",
+  openrouter: "openrouter",
+  "open-router": "openrouter",
+  ollama: "ollama",
+  minimax: "minimax",
+  qwen: "qwen",
+  alibaba: "qwen",
+  moonshot: "moonshot",
+  kimi: "moonshot",
+  baidu: "baidu",
+  ernie: "baidu",
+  spark: "iflytek",
+  "zhipu-ai": "zhipu",
+  zhipu: "zhipu",
+  lmsys: "lmsys",
+  "stability-ai": "stability",
+  stability: "stability",
+  replicate: "replicate",
+  ai21: "ai21",
+  nvidia: "nvidia",
+  cloudflare: "cloudflare",
+  "cloudflare-ai": "cloudflare",
+  "aws-bedrock": "bedrock",
+  bedrock: "bedrock",
+  azure: "azure",
+  "azure-openai": "azure",
+  copilot: "githubcopilot",
+  "github-copilot": "githubcopilot",
+  mistralai: "mistral",
+  codex: "openai",
+  blackbox: "blackboxai",
+  blackboxai: "blackboxai",
+  pollinations: "pollinations",
+};
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 interface ProviderIconProps {
   providerId: string;
@@ -27,6 +95,33 @@ interface ProviderIconProps {
   style?: React.CSSProperties;
 }
 
+<<<<<<< HEAD
+=======
+/** Error boundary to catch Lobehub component render errors gracefully. */
+class LobehubErrorBoundary extends Component<
+  { children: ReactNode; onError: () => void },
+  { hasError: boolean }
+> {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch() {
+    this.props.onError();
+  }
+
+  render() {
+    if (this.state.hasError) return null;
+    return this.props.children;
+  }
+}
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function GenericProviderIcon({ size }: { size: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" style={{ flex: "none" }}>
@@ -65,8 +160,13 @@ const KNOWN_PNGS = new Set([
   "gemini",
   "github",
   "glm",
+<<<<<<< HEAD
   "glmt",
   "groq",
+=======
+  "groq",
+  "iflow",
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   "ironclaw",
   "kilo-gateway",
   "kilocode",
@@ -100,6 +200,7 @@ const KNOWN_PNGS = new Set([
   "together",
   "xai",
   "zeroclaw",
+<<<<<<< HEAD
   "aws-polly",
   "blackbox-web",
   "cliproxyapi",
@@ -129,6 +230,8 @@ const KNOWN_PNGS = new Set([
   "voyage-ai",
   "wandb",
   "youcom-search",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 ]);
 const KNOWN_SVGS = new Set([
   "apikey",
@@ -150,7 +253,10 @@ const KNOWN_SVGS = new Set([
   "opencode",
   "playht",
   "puter",
+<<<<<<< HEAD
   "qianfan",
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   "scaleway",
   "sdwebui",
   "synthetic",
@@ -167,6 +273,7 @@ const ProviderIcon = memo(function ProviderIcon({
   style,
 }: ProviderIconProps) {
   const normalizedId = providerId.toLowerCase();
+<<<<<<< HEAD
   const lobeIcon = getLobeProviderIcon(normalizedId, type);
   const hasPng = KNOWN_PNGS.has(normalizedId);
   const hasSvg = KNOWN_SVGS.has(normalizedId);
@@ -178,16 +285,33 @@ const ProviderIcon = memo(function ProviderIcon({
   const useSvg = !lobeIcon && hasSvg && !failedAssets[svgKey] && (!hasPng || failedAssets[pngKey]);
 
   if (lobeIcon) {
+=======
+  const lobehubId = LOBEHUB_PROVIDER_MAP[normalizedId] ?? null;
+  const hasPng = KNOWN_PNGS.has(normalizedId);
+  const hasSvg = KNOWN_SVGS.has(normalizedId);
+
+  const [useLobehub, setUseLobehub] = useState(lobehubId !== null);
+  const [usePng, setUsePng] = useState(hasPng);
+  const [useSvg, setUseSvg] = useState(!hasPng && hasSvg);
+
+  if (useLobehub && lobehubId) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     return (
       <span
         className={className}
         style={{ display: "inline-flex", alignItems: "center", ...style }}
       >
+<<<<<<< HEAD
         {createElement(lobeIcon, {
           "aria-label": providerId,
           size,
           style: { flex: "none" },
         })}
+=======
+        <LobehubErrorBoundary onError={() => setUseLobehub(false)}>
+          <LobehubProviderIcon provider={lobehubId} size={size} type={type} />
+        </LobehubErrorBoundary>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       </span>
     );
   }
@@ -205,7 +329,12 @@ const ProviderIcon = memo(function ProviderIcon({
           height={size}
           style={{ objectFit: "contain" }}
           onError={() => {
+<<<<<<< HEAD
             setFailedAssets((current) => ({ ...current, [pngKey]: true }));
+=======
+            setUsePng(false);
+            setUseSvg(hasSvg);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           }}
           unoptimized
         />
@@ -225,7 +354,11 @@ const ProviderIcon = memo(function ProviderIcon({
           width={size}
           height={size}
           style={{ objectFit: "contain" }}
+<<<<<<< HEAD
           onError={() => setFailedAssets((current) => ({ ...current, [svgKey]: true }))}
+=======
+          onError={() => setUseSvg(false)}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           unoptimized
         />
       </span>

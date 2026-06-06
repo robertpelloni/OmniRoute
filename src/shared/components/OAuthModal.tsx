@@ -1,7 +1,12 @@
 "use client";
 
+<<<<<<< HEAD
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useTranslations } from "next-intl";
+=======
+import { useState, useEffect, useRef, useCallback } from "react";
+import PropTypes from "prop-types";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import Modal from "./Modal";
 import Button from "./Button";
 import Input from "./Input";
@@ -12,11 +17,18 @@ const GOOGLE_OAUTH_PROVIDERS = new Set(["antigravity", "gemini-cli"]);
 type OAuthModalProps = {
   isOpen: boolean;
   provider?: string;
+<<<<<<< HEAD
   providerInfo?: { name?: string } | null;
   onSuccess?: () => void;
   onClose: () => void;
   idcConfig?: unknown;
   reauthConnection?: null | { id?: string };
+=======
+  providerInfo?: { name: string } | null;
+  onSuccess?: () => void;
+  onClose: () => void;
+  idcConfig?: unknown;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 };
 
 /**
@@ -31,9 +43,13 @@ export default function OAuthModal({
   onSuccess,
   onClose,
   idcConfig,
+<<<<<<< HEAD
   reauthConnection,
 }: OAuthModalProps) {
   const t = useTranslations("oauthModal");
+=======
+}: OAuthModalProps) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [step, setStep] = useState("waiting"); // waiting | input | success | error
   const [authData, setAuthData] = useState(null);
   const [callbackUrl, setCallbackUrl] = useState("");
@@ -43,6 +59,7 @@ export default function OAuthModal({
   const [polling, setPolling] = useState(false);
   const popupRef = useRef(null);
   const { copied, copy } = useCopyToClipboard();
+<<<<<<< HEAD
   const deviceVerificationUrl =
     deviceData?.verification_uri_complete || deviceData?.verification_uri || "";
 
@@ -76,6 +93,36 @@ export default function OAuthModal({
   const callbackProcessedRef = useRef(false);
   const flowStartedRef = useRef(false);
 
+=======
+
+  // State for client-only values to avoid hydration mismatch
+  const [isLocalhost, setIsLocalhost] = useState(false);
+  const [placeholderUrl, setPlaceholderUrl] = useState("/callback?code=...");
+  const callbackProcessedRef = useRef(false);
+  const flowStartedRef = useRef(false);
+
+  // Detect if running on true localhost vs LAN IP (client-side only)
+  // - True localhost (127.0.0.1/localhost): popup auto-callback works
+  // - LAN IPs (192.168.x, 10.x, 172.x): redirect URI uses localhost but callback
+  //   won't resolve back to the VPS, so use manual paste mode
+  const [isTrueLocalhost, setIsTrueLocalhost] = useState(false);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const hostname = window.location.hostname;
+      const isLocal =
+        hostname === "localhost" ||
+        hostname === "127.0.0.1" ||
+        hostname.startsWith("192.168.") ||
+        hostname.startsWith("10.") ||
+        /^172\.(1[6-9]|2\d|3[01])\./.test(hostname);
+      const isTrulyLocal = hostname === "localhost" || hostname === "127.0.0.1";
+      setIsLocalhost(isLocal);
+      setIsTrueLocalhost(isTrulyLocal);
+      setPlaceholderUrl(`${window.location.origin}/callback?code=...`);
+    }
+  }, []);
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Define all useCallback hooks BEFORE the useEffects that reference them
 
   // Exchange tokens
@@ -97,7 +144,10 @@ export default function OAuthModal({
           body: JSON.stringify({
             code,
             redirectUri: authData.redirectUri,
+<<<<<<< HEAD
             connectionId: reauthConnection?.id,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             codeVerifier: authData.codeVerifier,
             ...(normalizedState ? { state: normalizedState } : {}),
           }),
@@ -146,7 +196,11 @@ export default function OAuthModal({
         setStep("error");
       }
     },
+<<<<<<< HEAD
     [authData, provider, onSuccess, reauthConnection]
+=======
+    [authData, provider, onSuccess]
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   );
 
   // Poll for device code token
@@ -162,12 +216,16 @@ export default function OAuthModal({
           const res = await fetch(`/api/oauth/${provider}/poll`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+<<<<<<< HEAD
             body: JSON.stringify({
               deviceCode,
               connectionId: reauthConnection?.id,
               codeVerifier,
               extraData,
             }),
+=======
+            body: JSON.stringify({ deviceCode, codeVerifier, extraData }),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           });
 
           const data = await res.json();
@@ -198,7 +256,11 @@ export default function OAuthModal({
       setStep("error");
       setPolling(false);
     },
+<<<<<<< HEAD
     [provider, onSuccess, reauthConnection]
+=======
+    [provider, onSuccess]
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   );
 
   // Start OAuth flow
@@ -212,13 +274,17 @@ export default function OAuthModal({
         provider === "github" ||
         provider === "qwen" ||
         provider === "kiro" ||
+<<<<<<< HEAD
         provider === "amazon-q" ||
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         provider === "kimi-coding" ||
         provider === "kilocode"
       ) {
         setIsDeviceCode(true);
         setStep("waiting");
 
+<<<<<<< HEAD
         const deviceCodeUrl = new URL(`/api/oauth/${provider}/device-code`, window.location.origin);
         if (
           (provider === "kiro" || provider === "amazon-q") &&
@@ -235,6 +301,9 @@ export default function OAuthModal({
         }
 
         const res = await fetch(deviceCodeUrl.toString());
+=======
+        const res = await fetch(`/api/oauth/${provider}/device-code`);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         const data = await res.json();
         if (!res.ok) {
           const errMsg =
@@ -253,12 +322,17 @@ export default function OAuthModal({
 
         // Start polling - pass extraData for Kiro (contains _clientId, _clientSecret)
         const extraData =
+<<<<<<< HEAD
           provider === "kiro" || provider === "amazon-q"
             ? {
                 _clientId: data._clientId,
                 _clientSecret: data._clientSecret,
                 _region: data._region,
               }
+=======
+          provider === "kiro"
+            ? { _clientId: data._clientId, _clientSecret: data._clientSecret }
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             : null;
         startPolling(data.device_code, data.codeVerifier, data.interval || 5, extraData);
         return;
@@ -300,7 +374,11 @@ export default function OAuthModal({
               const pollRes = await fetch(`/api/oauth/codex/poll-callback`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
+<<<<<<< HEAD
                 body: JSON.stringify({ connectionId: reauthConnection?.id }),
+=======
+                body: JSON.stringify({}),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               });
               const pollData = await pollRes.json();
 
@@ -400,6 +478,7 @@ export default function OAuthModal({
       setError(err.message);
       setStep("error");
     }
+<<<<<<< HEAD
   }, [
     provider,
     isLocalhost,
@@ -409,6 +488,9 @@ export default function OAuthModal({
     reauthConnection,
     idcConfig,
   ]);
+=======
+  }, [provider, isLocalhost, isTrueLocalhost, startPolling, onSuccess]);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Reset guard when modal closes
   useEffect(() => {
@@ -611,12 +693,16 @@ export default function OAuthModal({
   if (!provider || !providerInfo) return null;
 
   return (
+<<<<<<< HEAD
     <Modal
       isOpen={isOpen}
       title={t("title", { providerName: providerInfo.name })}
       onClose={onClose}
       size="lg"
     >
+=======
+    <Modal isOpen={isOpen} title={`Connect ${providerInfo.name}`} onClose={onClose} size="lg">
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       <div className="flex flex-col gap-4">
         {/* Waiting Step (Localhost - popup mode) */}
         {step === "waiting" && !isDeviceCode && (
@@ -626,11 +712,24 @@ export default function OAuthModal({
                 progress_activity
               </span>
             </div>
+<<<<<<< HEAD
             <h3 className="text-lg font-semibold mb-2">{t("waiting")}</h3>
             <p className="text-sm text-text-muted mb-2">{t("completeAuthInPopup")}</p>
             <p className="text-xs text-text-muted mb-4 opacity-70">{t("popupClosedHint")}</p>
             <Button variant="ghost" onClick={() => setStep("input")}>
               {t("popupBlocked")}
+=======
+            <h3 className="text-lg font-semibold mb-2">Waiting for Authorization</h3>
+            <p className="text-sm text-text-muted mb-2">
+              Complete the authorization in the popup window.
+            </p>
+            <p className="text-xs text-text-muted mb-4 opacity-70">
+              If the popup closes without redirecting back (e.g. Qoder), this dialog will
+              automatically switch to manual URL input mode.
+            </p>
+            <Button variant="ghost" onClick={() => setStep("input")}>
+              Popup blocked? Enter URL manually
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             </Button>
           </div>
         )}
@@ -639,21 +738,39 @@ export default function OAuthModal({
         {step === "waiting" && isDeviceCode && deviceData && (
           <>
             <div className="text-center py-4">
+<<<<<<< HEAD
               <p className="text-sm text-text-muted mb-4">{t("deviceCodeVisitUrl")}</p>
               <div className="bg-sidebar p-4 rounded-lg mb-4">
                 <p className="text-xs text-text-muted mb-1">{t("deviceCodeVerificationUrl")}</p>
                 <div className="flex items-center gap-2">
                   <code className="flex-1 text-sm break-all">{deviceVerificationUrl}</code>
+=======
+              <p className="text-sm text-text-muted mb-4">
+                Visit the URL below and enter the code:
+              </p>
+              <div className="bg-sidebar p-4 rounded-lg mb-4">
+                <p className="text-xs text-text-muted mb-1">Verification URL</p>
+                <div className="flex items-center gap-2">
+                  <code className="flex-1 text-sm break-all">{deviceData.verification_uri}</code>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   <Button
                     size="sm"
                     variant="ghost"
                     icon={copied === "verify_url" ? "check" : "content_copy"}
+<<<<<<< HEAD
                     onClick={() => copy(deviceVerificationUrl, "verify_url")}
+=======
+                    onClick={() => copy(deviceData.verification_uri, "verify_url")}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   />
                 </div>
               </div>
               <div className="bg-primary/10 p-4 rounded-lg">
+<<<<<<< HEAD
                 <p className="text-xs text-text-muted mb-1">{t("deviceCodeYourCode")}</p>
+=======
+                <p className="text-xs text-text-muted mb-1">Your Code</p>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 <div className="flex items-center justify-center gap-2">
                   <p className="text-2xl font-mono font-bold text-primary">
                     {deviceData.user_code}
@@ -670,7 +787,11 @@ export default function OAuthModal({
             {polling && (
               <div className="flex items-center justify-center gap-2 text-sm text-text-muted">
                 <span className="material-symbols-outlined animate-spin">progress_activity</span>
+<<<<<<< HEAD
                 {t("deviceCodeWaiting")}
+=======
+                Waiting for authorization...
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               </div>
             )}
           </>
@@ -686,6 +807,7 @@ export default function OAuthModal({
                   <span className="material-symbols-outlined text-sm align-middle mr-1">
                     warning
                   </span>
+<<<<<<< HEAD
                   <strong>
                     {t.rich("googleOAuthWarning", {
                       code: (c) => <code className="font-mono">{c}</code>,
@@ -701,17 +823,43 @@ export default function OAuthModal({
                       ),
                     })}
                   </strong>
+=======
+                  <strong>Remote access + Google OAuth:</strong> The default credentials only accept
+                  redirects to <code>localhost</code>. After authorizing, your browser will try to
+                  open <code>localhost</code> — copy that full URL and paste it below. For fully
+                  remote use without this manual step,{" "}
+                  <a
+                    href="https://github.com/diegosouzapw/OmniRoute#oauth-on-a-remote-server"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="underline"
+                  >
+                    configure your own OAuth credentials
+                  </a>
+                  .
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 </div>
               )}
               {/* Generic remote info for other providers */}
               {!isTrueLocalhost && !GOOGLE_OAUTH_PROVIDERS.has(provider) && (
                 <div className="rounded-lg border border-blue-500/30 bg-blue-500/10 p-3 text-xs text-blue-200">
                   <span className="material-symbols-outlined text-sm align-middle mr-1">info</span>
+<<<<<<< HEAD
                   {t("remoteAccessInfo")}
                 </div>
               )}
               <div>
                 <p className="text-sm font-medium mb-2">{t("step1OpenUrl")}</p>
+=======
+                  <strong>Remote access:</strong> Since you&apos;re accessing OmniRoute remotely,
+                  after authorizing you&apos;ll see an error page (localhost not found). That&apos;s
+                  expected — just copy the full URL from your browser&apos;s address bar and paste
+                  it below.
+                </div>
+              )}
+              <div>
+                <p className="text-sm font-medium mb-2">Step 1: Open this URL in your browser</p>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 <div className="flex gap-2">
                   <Input
                     value={authData?.authUrl || ""}
@@ -723,17 +871,31 @@ export default function OAuthModal({
                     icon={copied === "auth_url" ? "check" : "content_copy"}
                     onClick={() => copy(authData?.authUrl, "auth_url")}
                   >
+<<<<<<< HEAD
                     {t("copy")}
+=======
+                    Copy
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   </Button>
                 </div>
               </div>
 
               <div>
+<<<<<<< HEAD
                 <p className="text-sm font-medium mb-2">{t("step2PasteCallback")}</p>
                 <p className="text-xs text-text-muted mb-2">
                   {t.rich("step2Hint", {
                     code: (c) => <code className="font-mono">{c}</code>,
                   })}
+=======
+                <p className="text-sm font-medium mb-2">
+                  Step 2: Paste the callback URL or auth code here
+                </p>
+                <p className="text-xs text-text-muted mb-2">
+                  After authorization, paste the full callback URL. For Claude Code and Cline, you
+                  can also paste the Authentication Code directly, for example{" "}
+                  <code>code#state</code>.
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 </p>
                 <Input
                   value={callbackUrl}
@@ -750,10 +912,17 @@ export default function OAuthModal({
 
             <div className="flex gap-2">
               <Button onClick={handleManualSubmit} fullWidth disabled={!callbackUrl || !authData}>
+<<<<<<< HEAD
                 {t("connect")}
               </Button>
               <Button onClick={onClose} variant="ghost" fullWidth>
                 {t("cancel")}
+=======
+                Connect
+              </Button>
+              <Button onClick={onClose} variant="ghost" fullWidth>
+                Cancel
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               </Button>
             </div>
           </>
@@ -767,12 +936,21 @@ export default function OAuthModal({
                 check_circle
               </span>
             </div>
+<<<<<<< HEAD
             <h3 className="text-lg font-semibold mb-2">{t("success")}</h3>
             <p className="text-sm text-text-muted mb-4">
               {t("successMessage", { providerName: providerInfo.name })}
             </p>
             <Button onClick={onClose} fullWidth>
               {t("done")}
+=======
+            <h3 className="text-lg font-semibold mb-2">Connected Successfully!</h3>
+            <p className="text-sm text-text-muted mb-4">
+              Your {providerInfo.name} account has been connected.
+            </p>
+            <Button onClick={onClose} fullWidth>
+              Done
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             </Button>
           </div>
         )}
@@ -783,6 +961,7 @@ export default function OAuthModal({
             <div className="size-16 mx-auto mb-4 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
               <span className="material-symbols-outlined text-3xl text-red-600">error</span>
             </div>
+<<<<<<< HEAD
             <h3 className="text-lg font-semibold mb-2">{t("error")}</h3>
             <p className="text-sm text-red-600 mb-4">{error}</p>
             <div className="flex gap-2">
@@ -791,6 +970,16 @@ export default function OAuthModal({
               </Button>
               <Button onClick={onClose} variant="ghost" fullWidth>
                 {t("cancel")}
+=======
+            <h3 className="text-lg font-semibold mb-2">Connection Failed</h3>
+            <p className="text-sm text-red-600 mb-4">{error}</p>
+            <div className="flex gap-2">
+              <Button onClick={startOAuthFlow} variant="secondary" fullWidth>
+                Try Again
+              </Button>
+              <Button onClick={onClose} variant="ghost" fullWidth>
+                Cancel
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               </Button>
             </div>
           </div>
@@ -799,3 +988,16 @@ export default function OAuthModal({
     </Modal>
   );
 }
+<<<<<<< HEAD
+=======
+
+OAuthModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  provider: PropTypes.string,
+  providerInfo: PropTypes.shape({
+    name: PropTypes.string,
+  }),
+  onSuccess: PropTypes.func,
+  onClose: PropTypes.func.isRequired,
+};
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

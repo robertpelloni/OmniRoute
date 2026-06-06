@@ -1,7 +1,10 @@
 "use client";
 
+<<<<<<< HEAD
 import { useTranslations } from "next-intl";
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * DataTable — Shared UI primitive (T-29)
  *
@@ -56,11 +59,16 @@ export default function DataTable({
   loading = false,
   maxHeight = "calc(100vh - 320px)",
   emptyIcon = "📭",
+<<<<<<< HEAD
   emptyMessage,
 }: DataTableProps) {
   const t = useTranslations("common");
   const resolvedEmptyMessage = emptyMessage ?? t("noData");
 
+=======
+  emptyMessage = "No data found",
+}: DataTableProps) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (loading) {
     return (
       <div
@@ -74,7 +82,11 @@ export default function DataTable({
         }}
       >
         <span style={{ animation: "spin 1s linear infinite", marginRight: "8px" }}>⏳</span>
+<<<<<<< HEAD
         {t("loading")}
+=======
+        Loading...
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
@@ -94,7 +106,11 @@ export default function DataTable({
         }}
       >
         <span style={{ fontSize: "32px", marginBottom: "8px", opacity: 0.6 }}>{emptyIcon}</span>
+<<<<<<< HEAD
         {resolvedEmptyMessage}
+=======
+        {emptyMessage}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       </div>
     );
   }

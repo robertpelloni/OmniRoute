@@ -13,6 +13,7 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import { randomUUID } from "crypto";
 
+<<<<<<< HEAD
 type HeaderReader = {
   get?: (name: string) => string | null | undefined;
 };
@@ -27,6 +28,9 @@ function getHeaderValue(request: RequestLike, name: string): string | null {
   const value = request?.headers?.get?.(name);
   return typeof value === "string" && value.length > 0 ? value : null;
 }
+=======
+const requestIdStore = new AsyncLocalStorage();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 /**
  * Get the current request ID from the async context.
@@ -48,11 +52,16 @@ export function getRequestId() {
  * @param {() => T | Promise<T>} handler - Handler to execute
  * @returns {Promise<T>}
  */
+<<<<<<< HEAD
 export async function withRequestId<T>(
   request: RequestLike,
   handler: () => T | Promise<T>
 ): Promise<T> {
   const existingId = getHeaderValue(request, "x-request-id");
+=======
+export async function withRequestId(request, handler) {
+  const existingId = request?.headers?.get?.("x-request-id");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const requestId = existingId || randomUUID();
   return requestIdStore.run(requestId, handler);
 }
@@ -64,7 +73,11 @@ export async function withRequestId<T>(
  * @param {Record<string, string>} [headers={}] - Existing headers
  * @returns {Record<string, string>} Headers with x-request-id added
  */
+<<<<<<< HEAD
 export function addRequestIdHeader(headers: Record<string, string> = {}): Record<string, string> {
+=======
+export function addRequestIdHeader(headers = {}) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const requestId = getRequestId();
   if (requestId) {
     return { ...headers, "x-request-id": requestId };
@@ -80,8 +93,13 @@ export function addRequestIdHeader(headers: Record<string, string> = {}): Record
  * @param {Response} response
  * @returns {Response} Response with request ID header
  */
+<<<<<<< HEAD
 export function attachRequestIdToResponse(request: RequestLike, response: Response): Response {
   const requestId = getRequestId() || getHeaderValue(request, "x-request-id") || randomUUID();
+=======
+export function attachRequestIdToResponse(request, response) {
+  const requestId = getRequestId() || request?.headers?.get?.("x-request-id") || randomUUID();
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   const headers = new Headers(response.headers);
   headers.set("x-request-id", requestId);

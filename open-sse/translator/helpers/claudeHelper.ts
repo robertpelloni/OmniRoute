@@ -1,6 +1,7 @@
 // Claude helper functions for translator
 import { DEFAULT_THINKING_CLAUDE_SIGNATURE } from "../../config/defaultThinkingSignature.ts";
 
+<<<<<<< HEAD
 type ClaudeContentBlock = {
   type?: string;
   text?: string;
@@ -35,6 +36,10 @@ type ClaudeRequestBody = {
 
 // Check if message has valid non-empty content
 export function hasValidContent(msg: ClaudeMessage): boolean {
+=======
+// Check if message has valid non-empty content
+export function hasValidContent(msg) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (typeof msg.content === "string" && msg.content.trim()) return true;
   if (Array.isArray(msg.content)) {
     return msg.content.some(
@@ -50,7 +55,11 @@ export function hasValidContent(msg: ClaudeMessage): boolean {
 // Fix tool_use/tool_result ordering for Claude API
 // 1. Assistant message with tool_use: remove text AFTER tool_use (Claude doesn't allow)
 // 2. Merge consecutive same-role messages
+<<<<<<< HEAD
 export function fixToolUseOrdering(messages: ClaudeMessage[]): ClaudeMessage[] {
+=======
+export function fixToolUseOrdering(messages) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (messages.length <= 1) return messages;
 
   // Pass 1: Fix assistant messages with tool_use - remove text after tool_use
@@ -59,7 +68,11 @@ export function fixToolUseOrdering(messages: ClaudeMessage[]): ClaudeMessage[] {
       const hasToolUse = msg.content.some((b) => b.type === "tool_use");
       if (hasToolUse) {
         // Keep only: thinking blocks + tool_use blocks (remove text blocks after tool_use)
+<<<<<<< HEAD
         const newContent: ClaudeContentBlock[] = [];
+=======
+        const newContent = [];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         let foundToolUse = false;
 
         for (const block of msg.content) {
@@ -81,7 +94,11 @@ export function fixToolUseOrdering(messages: ClaudeMessage[]): ClaudeMessage[] {
   }
 
   // Pass 2: Merge consecutive same-role messages
+<<<<<<< HEAD
   const merged: ClaudeMessage[] = [];
+=======
+  const merged = [];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   for (const msg of messages) {
     const last = merged[merged.length - 1];
@@ -118,6 +135,10 @@ export function fixToolUseOrdering(messages: ClaudeMessage[]): ClaudeMessage[] {
   return merged;
 }
 
+<<<<<<< HEAD
+=======
+function ensureMessageContentArray(msg) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (Array.isArray(msg?.content)) return msg.content;
   if (typeof msg?.content === "string" && msg.content.trim()) {
     msg.content = [{ type: "text", text: msg.content }];
@@ -126,6 +147,10 @@ export function fixToolUseOrdering(messages: ClaudeMessage[]): ClaudeMessage[] {
   return [];
 }
 
+<<<<<<< HEAD
+=======
+function markMessageCacheControl(msg, ttl) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const content = ensureMessageContentArray(msg);
   if (content.length === 0) return false;
   const lastIndex = content.length - 1;
@@ -139,8 +164,18 @@ export function fixToolUseOrdering(messages: ClaudeMessage[]): ClaudeMessage[] {
 // - Filter empty messages
 // - Add thinking block for Anthropic endpoint (provider === "claude")
 // - Fix tool_use/tool_result ordering
+<<<<<<< HEAD
       const { cache_control, ...rest } = block;
       if (i === systemBlocks.length - 1 && supportsPromptCaching) {
+=======
+export function prepareClaudeRequest(body, provider = null, preserveCacheControl = false) {
+  // 1. System: remove all cache_control, add only to last block with ttl 1h
+  // In passthrough mode, preserve existing cache_control markers
+  if (body.system && Array.isArray(body.system) && !preserveCacheControl) {
+    body.system = body.system.map((block, i) => {
+      const { cache_control, ...rest } = block;
+      if (i === body.system.length - 1) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         return { ...rest, cache_control: { type: "ephemeral", ttl: "1h" } };
       }
       return rest;
@@ -150,7 +185,11 @@ export function fixToolUseOrdering(messages: ClaudeMessage[]): ClaudeMessage[] {
   // 2. Messages: process in optimized passes
   if (body.messages && Array.isArray(body.messages)) {
     const len = body.messages.length;
+<<<<<<< HEAD
     let filtered: ClaudeMessage[] = [];
+=======
+    let filtered = [];
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     // Pass 1: remove cache_control + filter empty messages
     // In passthrough mode, preserve existing cache_control markers
@@ -205,6 +244,11 @@ export function fixToolUseOrdering(messages: ClaudeMessage[]): ClaudeMessage[] {
     // - cache the second-to-last user turn for conversation reuse
     // - cache the last assistant turn so the next user turn can reuse it
     // Skip in passthrough mode to preserve client's cache_control markers
+<<<<<<< HEAD
+=======
+    if (!preserveCacheControl) {
+      const userMessageIndexes = filtered.reduce((indexes, msg, index) => {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         if (msg?.role === "user") indexes.push(index);
         return indexes;
       }, []);
@@ -219,8 +263,16 @@ export function fixToolUseOrdering(messages: ClaudeMessage[]): ClaudeMessage[] {
     let lastAssistantProcessed = false;
     for (let i = filtered.length - 1; i >= 0; i--) {
       const msg = filtered[i];
+<<<<<<< HEAD
       const content = ensureMessageContentArray(msg);
 
+=======
+
+      if (msg.role === "assistant" && Array.isArray(ensureMessageContentArray(msg))) {
+        // Add cache_control to last block of first (from end) assistant with content
+        // Skip in passthrough mode to preserve client's cache_control markers
+        if (!preserveCacheControl && !lastAssistantProcessed && markMessageCacheControl(msg)) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           lastAssistantProcessed = true;
         }
 
@@ -229,6 +281,7 @@ export function fixToolUseOrdering(messages: ClaudeMessage[]): ClaudeMessage[] {
           let hasToolUse = false;
           let hasThinking = false;
 
+<<<<<<< HEAD
           // Convert thinking blocks to redacted_thinking and replace signature.
           // When requests cross provider boundaries (e.g., combo fallback), the
           // original thinking signature is invalid for the new provider, causing
@@ -239,6 +292,12 @@ export function fixToolUseOrdering(messages: ClaudeMessage[]): ClaudeMessage[] {
               block.type = "redacted_thinking";
               block.signature = DEFAULT_THINKING_CLAUDE_SIGNATURE;
               delete block.thinking;
+=======
+          // Always replace signature for all thinking blocks
+          for (const block of msg.content) {
+            if (block.type === "thinking" || block.type === "redacted_thinking") {
+              block.signature = DEFAULT_THINKING_CLAUDE_SIGNATURE;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               hasThinking = true;
             }
             if (block.type === "tool_use") hasToolUse = true;
@@ -246,7 +305,11 @@ export function fixToolUseOrdering(messages: ClaudeMessage[]): ClaudeMessage[] {
 
           // Add thinking block if thinking enabled + has tool_use but no thinking
           if (thinkingEnabled && !hasThinking && hasToolUse) {
+<<<<<<< HEAD
             content.unshift({
+=======
+            msg.content.unshift({
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               type: "thinking",
               thinking: ".",
               signature: DEFAULT_THINKING_CLAUDE_SIGNATURE,
@@ -265,12 +328,19 @@ export function fixToolUseOrdering(messages: ClaudeMessage[]): ClaudeMessage[] {
       const { cache_control, ...rest } = tool;
       return rest;
     });
+<<<<<<< HEAD
     if (supportsPromptCaching) {
       for (let i = body.tools.length - 1; i >= 0; i--) {
         if (!body.tools[i].defer_loading) {
           body.tools[i].cache_control = { type: "ephemeral", ttl: "1h" };
           break;
         }
+=======
+    for (let i = body.tools.length - 1; i >= 0; i--) {
+      if (!body.tools[i].defer_loading) {
+        body.tools[i].cache_control = { type: "ephemeral", ttl: "1h" };
+        break;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     }
   }

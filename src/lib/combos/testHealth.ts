@@ -1,10 +1,13 @@
 type JsonRecord = Record<string, unknown>;
 
+<<<<<<< HEAD
 const COMBO_TEST_MAX_TOKENS = 2048;
 const COMBO_TEST_OPERAND_MIN = 10000;
 const COMBO_TEST_OPERAND_RANGE = 90000;
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function asRecord(value: unknown): JsonRecord {
   return value && typeof value === "object" && !Array.isArray(value) ? (value as JsonRecord) : {};
 }
@@ -108,6 +111,7 @@ function hasReasoningOnlyCompletion(body: JsonRecord): boolean {
   });
 }
 
+<<<<<<< HEAD
 function getRandomFiveDigitNumber() {
   return COMBO_TEST_OPERAND_MIN + Math.floor(Math.random() * COMBO_TEST_OPERAND_RANGE);
 }
@@ -136,6 +140,8 @@ export function buildComboTestRequestBody(modelStr: string, isEmbedding: boolean
     // still emit a visible answer without immediate truncation.
     max_tokens: COMBO_TEST_MAX_TOKENS,
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export function buildComboTestRequestBody(modelStr: string) {
   return {
     model: modelStr,
@@ -144,7 +150,10 @@ export function buildComboTestRequestBody(modelStr: string) {
     // without turning the smoke test into a full-cost real request.
     max_tokens: 64,
     temperature: 0,
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     stream: false,
   };
 }
@@ -156,12 +165,15 @@ export function extractComboTestResponseText(responseBody: unknown): string {
     return body.output_text.trim();
   }
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
   if (Array.isArray(body.data) && body.data[0]?.embedding) {
     return "[Embedding generated successfully]";
   }
 
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (Array.isArray(body.choices)) {
     for (const choice of body.choices) {
       const choiceRecord = asRecord(choice);

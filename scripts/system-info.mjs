@@ -156,12 +156,18 @@ const report = lines.join("\n") + "\n";
 
 // Write to file
 const outArg = process.argv.find((a) => a.startsWith("--output="));
+<<<<<<< HEAD
 const outputIndex = process.argv.indexOf("--output");
 const outFile = outArg
   ? outArg.replace("--output=", "")
   : outputIndex !== -1 && process.argv[outputIndex + 1]
     ? process.argv[outputIndex + 1]
     : "system-info.txt";
+=======
+const outFile = outArg
+  ? outArg.replace("--output=", "")
+  : process.argv[process.argv.indexOf("--output") + 1] || "system-info.txt";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const outPath = join(ROOT, outFile);
 

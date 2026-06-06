@@ -12,6 +12,7 @@ export async function GET(request) {
     }
     const summary = getCostSummary(apiKeyId);
     const budgetCheck = checkBudget(apiKeyId);
+<<<<<<< HEAD
     return NextResponse.json({
       ...summary,
       budgetCheck,
@@ -30,6 +31,9 @@ export async function GET(request) {
       nextResetAt: summary.nextResetAt,
       periodStartAt: summary.periodStartAt,
     });
+=======
+    return NextResponse.json({ ...summary, budgetCheck });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   } catch (error) {
     console.error("Error fetching budget summary:", error);
     return NextResponse.json({ error: "Failed to fetch budget summary" }, { status: 500 });
@@ -57,6 +61,7 @@ export async function POST(request) {
     if (isValidationFailure(validation)) {
       return NextResponse.json({ error: validation.error }, { status: 400 });
     }
+<<<<<<< HEAD
     const {
       apiKeyId,
       dailyLimitUsd,
@@ -76,6 +81,12 @@ export async function POST(request) {
       resetTime,
     });
     return NextResponse.json({ success: true, apiKeyId, budget });
+=======
+    const { apiKeyId, dailyLimitUsd, monthlyLimitUsd, warningThreshold } = validation.data;
+
+    setBudget(apiKeyId, { dailyLimitUsd, monthlyLimitUsd, warningThreshold });
+    return NextResponse.json({ success: true, apiKeyId, dailyLimitUsd });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   } catch (error) {
     console.error("Error setting budget:", error);
     return NextResponse.json({ error: "Failed to set budget" }, { status: 500 });

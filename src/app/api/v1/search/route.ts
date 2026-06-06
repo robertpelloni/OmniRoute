@@ -1,10 +1,17 @@
+<<<<<<< HEAD
+=======
+import { CORS_ORIGIN } from "@/shared/utils/cors";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import { handleSearch } from "@omniroute/open-sse/handlers/search.ts";
 import { getProviderCredentials, extractApiKey, isValidApiKey } from "@/sse/services/auth";
 import {
   getAllSearchProviders,
   getSearchProvider,
   selectProvider,
+<<<<<<< HEAD
   supportsSearchType,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   SEARCH_PROVIDERS,
   SEARCH_CREDENTIAL_FALLBACKS,
 } from "@omniroute/open-sse/config/searchRegistry.ts";
@@ -23,6 +30,10 @@ import {
 } from "@omniroute/open-sse/services/searchCache.ts";
 
 const CORS_HEADERS = {
+<<<<<<< HEAD
+=======
+  "Access-Control-Allow-Origin": CORS_ORIGIN,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
   "Access-Control-Allow-Headers": "*",
 };
@@ -63,6 +74,7 @@ async function resolveSearchCredentials(providerId: string) {
   return null;
 }
 
+<<<<<<< HEAD
 async function resolveSearchExecutionCredentials(providerConfig: {
   id: string;
   authType: string;
@@ -72,6 +84,8 @@ async function resolveSearchExecutionCredentials(providerConfig: {
   return providerConfig.authType === "none" ? {} : null;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // Helper: build domain filter array from filters object
 function buildDomainFilter(filters?: {
   include_domains?: string[];
@@ -102,11 +116,27 @@ export async function POST(request: Request) {
   }
   const body = validation.data;
 
+<<<<<<< HEAD
+=======
+  // Optional API key validation
+  if (process.env.REQUIRE_API_KEY === "true") {
+    const apiKey = extractApiKey(request);
+    if (!apiKey) {
+      return errorResponse(HTTP_STATUS.UNAUTHORIZED, "Missing API key");
+    }
+    const valid = await isValidApiKey(apiKey);
+    if (!valid) {
+      return errorResponse(HTTP_STATUS.UNAUTHORIZED, "Invalid API key");
+    }
+  }
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   // Enforce API key policies — use "search" as model identifier for consistent policy config
   const policy = await enforceApiKeyPolicy(request, "search");
   if (policy.rejection) return policy.rejection;
 
   // Resolve provider and credentials
+<<<<<<< HEAD
   if (body.provider) {
     const explicitProvider = getSearchProvider(body.provider);
     if (!explicitProvider) {
@@ -121,6 +151,9 @@ export async function POST(request: Request) {
   }
 
   let providerConfig = selectProvider(body.provider, body.search_type);
+=======
+  let providerConfig = selectProvider(body.provider);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   if (!providerConfig) {
     return errorResponse(
       HTTP_STATUS.BAD_REQUEST,
@@ -134,7 +167,11 @@ export async function POST(request: Request) {
 
   if (body.provider) {
     // Explicit provider — single credential lookup (with fallback)
+<<<<<<< HEAD
     credentials = await resolveSearchExecutionCredentials(providerConfig);
+=======
+    credentials = await resolveSearchCredentials(providerConfig.id);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (!credentials) {
       return errorResponse(
         HTTP_STATUS.BAD_REQUEST,
@@ -143,19 +180,30 @@ export async function POST(request: Request) {
     }
   } else {
     // Auto-select — try the resolved provider first, then iterate others by cost
+<<<<<<< HEAD
     credentials = await resolveSearchExecutionCredentials(providerConfig);
+=======
+    credentials = await resolveSearchCredentials(providerConfig.id);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     if (!credentials) {
       // Sort by cost to find cheapest with credentials
       const sortedIds = Object.values(SEARCH_PROVIDERS)
+<<<<<<< HEAD
         .filter((provider) => supportsSearchType(provider, body.search_type))
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         .sort((a, b) => a.costPerQuery - b.costPerQuery)
         .map((p) => p.id);
 
       for (const pid of sortedIds) {
         if (pid === providerConfig.id) continue;
         const altConfig = getSearchProvider(pid);
+<<<<<<< HEAD
         const altCreds = altConfig ? await resolveSearchExecutionCredentials(altConfig) : null;
+=======
+        const altCreds = await resolveSearchCredentials(pid);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         if (altConfig && altCreds) {
           providerConfig = altConfig;
           credentials = altCreds;
@@ -173,14 +221,21 @@ export async function POST(request: Request) {
 
     // Find alternate for failover — must bind credentials to the matched provider
     const otherIds = Object.values(SEARCH_PROVIDERS)
+<<<<<<< HEAD
       .filter((provider) => supportsSearchType(provider, body.search_type))
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       .sort((a, b) => a.costPerQuery - b.costPerQuery)
       .map((p) => p.id)
       .filter((id) => id !== providerConfig.id);
 
     for (const pid of otherIds) {
+<<<<<<< HEAD
       const altConfig = getSearchProvider(pid);
       const creds = altConfig ? await resolveSearchExecutionCredentials(altConfig) : null;
+=======
+      const creds = await resolveSearchCredentials(pid);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       if (creds) {
         alternateProviderId = pid;
         alternateCredentials = creds;
@@ -203,7 +258,11 @@ export async function POST(request: Request) {
     { filters: body.filters, offset: body.offset, time_range: body.time_range }
   );
 
+<<<<<<< HEAD
   const ttl = providerConfig.cacheTTLMs ?? SEARCH_CACHE_DEFAULT_TTL_MS;
+=======
+  const ttl = providerConfig.cacheTTLMs || SEARCH_CACHE_DEFAULT_TTL_MS;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   try {
     const { data: searchResult, cached } = await getOrCoalesce(cacheKey, ttl, async () => {

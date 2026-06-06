@@ -1,10 +1,15 @@
+<<<<<<< HEAD
 import { randomUUID, createHash } from "crypto";
+=======
+import { randomUUID } from "crypto";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import {
   getProviderConnections,
   validateApiKey,
   updateProviderConnection,
   getSettings,
   getCachedSettings,
+<<<<<<< HEAD
   getSessionAccountAffinity,
   upsertSessionAccountAffinity,
   touchSessionAccountAffinity,
@@ -16,6 +21,10 @@ import {
   getQuotaWindowStatus,
   isAccountQuotaExhausted,
 } from "@/domain/quotaCache";
+=======
+} from "@/lib/localDb";
+import { getQuotaWindowStatus, isAccountQuotaExhausted } from "@/domain/quotaCache";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import {
   isAccountUnavailable,
   getUnavailableUntil,
@@ -23,17 +32,23 @@ import {
   formatRetryAfter,
   checkFallbackError,
   isModelLocked,
+<<<<<<< HEAD
   getModelLockoutInfo,
   lockModel,
   hasPerModelQuota,
   getRuntimeProviderProfile,
   recordModelLockoutFailure,
+=======
+  lockModel,
+  hasPerModelQuota,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 } from "@omniroute/open-sse/services/accountFallback.ts";
 import {
   isLocalProvider,
   getPassthroughProviders,
 } from "@omniroute/open-sse/config/providerRegistry.ts";
 import { COOLDOWN_MS } from "@omniroute/open-sse/config/constants.ts";
+<<<<<<< HEAD
 import { preflightQuota } from "@omniroute/open-sse/services/quotaPreflight.ts";
 import {
   classifyProviderError,
@@ -42,6 +57,10 @@ import {
 import { getCodexModelScope } from "@omniroute/open-sse/executors/codex.ts";
 import { getProviderAlias, resolveProviderId } from "@/shared/constants/providers";
 import { isModelExcludedByConnection } from "@/domain/connectionModelRules";
+=======
+import { getCodexModelScope } from "@omniroute/open-sse/executors/codex.ts";
+import { getProviderAlias, resolveProviderId } from "@/shared/constants/providers";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import * as log from "../utils/logger";
 import { fisherYatesShuffle, getNextFromDeckSync } from "@/shared/utils/shuffleDeck";
 
@@ -67,7 +86,10 @@ interface ProviderConnectionView {
   lastErrorSource: string | null;
   errorCode: string | number | null;
   backoffLevel: number;
+<<<<<<< HEAD
   maxConcurrent: number | null;
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }
 
 interface RecoverableConnectionState {
@@ -83,6 +105,7 @@ interface RecoverableConnectionState {
 interface CredentialSelectionOptions {
   allowSuppressedConnections?: boolean;
   bypassQuotaPolicy?: boolean;
+<<<<<<< HEAD
   forcedConnectionId?: string | null;
   excludeConnectionIds?: string[] | null;
   sessionKey?: string | null;
@@ -98,6 +121,13 @@ interface CooldownInspectionState {
 const MIN_QUOTA_THRESHOLD_PERCENT = 1;
 const MAX_QUOTA_THRESHOLD_PERCENT = 100;
 const NON_RETRYABLE_MODEL_LOCKOUT_REASONS = new Set(["not_found", "not_found_local"]);
+=======
+}
+
+const CODEX_QUOTA_THRESHOLD_PERCENT = 90;
+const MIN_QUOTA_THRESHOLD_PERCENT = 1;
+const MAX_QUOTA_THRESHOLD_PERCENT = 100;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 function asRecord(value: unknown): JsonRecord {
   return value && typeof value === "object" && !Array.isArray(value) ? (value as JsonRecord) : {};
@@ -116,12 +146,15 @@ function toNumber(value: unknown, fallback = 0): number {
   return fallback;
 }
 
+<<<<<<< HEAD
 function toNullableNumber(value: unknown): number | null {
   if (value === null || value === undefined) return null;
   const parsed = toNumber(value, Number.NaN);
   return Number.isFinite(parsed) ? parsed : null;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function toProviderConnection(value: unknown): ProviderConnectionView {
   const row = asRecord(value);
   return {
@@ -145,7 +178,10 @@ function toProviderConnection(value: unknown): ProviderConnectionView {
     errorCode:
       typeof row.errorCode === "string" || typeof row.errorCode === "number" ? row.errorCode : null,
     backoffLevel: toNumber(row.backoffLevel, 0),
+<<<<<<< HEAD
     maxConcurrent: toNullableNumber(row.maxConcurrent),
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   };
 }
 
@@ -153,6 +189,7 @@ function toBooleanOrDefault(value: unknown, fallback: boolean): boolean {
   return typeof value === "boolean" ? value : fallback;
 }
 
+<<<<<<< HEAD
 function readHeaderValue(
   headers: Headers | { get?: (name: string) => string | null } | null | undefined,
   name: string
@@ -245,6 +282,8 @@ function formatSessionKeyForLog(sessionKey: string): string {
   return `${sessionKey.slice(0, 18)}...`;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 function getCodexLimitPolicy(providerSpecificData: JsonRecord): {
   use5h: boolean;
   useWeekly: boolean;
@@ -262,6 +301,7 @@ interface QuotaLimitPolicy {
   windows: string[];
 }
 
+<<<<<<< HEAD
 interface QuotaCacheView {
   quotas?: Record<
     string,
@@ -276,6 +316,9 @@ function normalizeQuotaThreshold(
   value: unknown,
   fallback = DEFAULT_QUOTA_THRESHOLD_PERCENT
 ): number {
+=======
+function normalizeQuotaThreshold(value: unknown, fallback = CODEX_QUOTA_THRESHOLD_PERCENT): number {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const parsed = toNumber(value, fallback);
   return Math.min(MAX_QUOTA_THRESHOLD_PERCENT, Math.max(MIN_QUOTA_THRESHOLD_PERCENT, parsed));
 }
@@ -370,6 +413,7 @@ function isTerminalConnectionStatus(connection: ProviderConnectionView): boolean
   return status === "credits_exhausted" || status === "banned" || status === "expired";
 }
 
+<<<<<<< HEAD
 function resolveTerminalConnectionStatus(
   status: number,
   result: { permanent?: boolean; creditsExhausted?: boolean },
@@ -395,6 +439,8 @@ function resolveTerminalConnectionStatus(
   return null;
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export function resolveQuotaLimitPolicy(
   provider: string,
   providerSpecificData: JsonRecord
@@ -466,6 +512,7 @@ function getEarliestFutureDate(candidates: Array<string | null>): string | null 
   );
 }
 
+<<<<<<< HEAD
 function isRetryableModelLockoutReason(reason: unknown): boolean {
   return typeof reason === "string" && reason.length > 0
     ? !NON_RETRYABLE_MODEL_LOCKOUT_REASONS.has(reason)
@@ -720,6 +767,8 @@ function buildQuotaPreflightRateLimitedResult(
   };
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 // Mutex to prevent race conditions during account selection
 let selectionMutex = Promise.resolve();
 
@@ -775,6 +824,7 @@ export async function getProviderCredentials(
 
     const allowSuppressedConnections = options.allowSuppressedConnections === true;
     const bypassQuotaPolicy = options.bypassQuotaPolicy === true;
+<<<<<<< HEAD
     const forcedConnectionId =
       typeof options.forcedConnectionId === "string" && options.forcedConnectionId.trim().length > 0
         ? options.forcedConnectionId.trim()
@@ -783,6 +833,8 @@ export async function getProviderCredentials(
       excludeConnectionId,
       options.excludeConnectionIds
     );
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     // Fix #922: Check for aliases (nvidia/nvidia_nim) to ensure credentials are found
     const providersToSearch = getProviderSearchPool(provider);
@@ -798,6 +850,7 @@ export async function getProviderCredentials(
     if (allowedConnections && allowedConnections.length > 0) {
       connections = connections.filter((conn) => allowedConnections.includes(conn.id));
     }
+<<<<<<< HEAD
     if (forcedConnectionId) {
       connections = connections.filter((conn) => conn.id === forcedConnectionId);
     }
@@ -806,6 +859,11 @@ export async function getProviderCredentials(
       `${provider} | total connections: ${connections.length}, excludeIds: ${
         excludedConnectionIds.size > 0 ? Array.from(excludedConnectionIds).join(",") : "none"
       }, forcedId: ${forcedConnectionId || "none"}`
+=======
+    log.debug(
+      "AUTH",
+      `${provider} | total connections: ${connections.length}, excludeId: ${excludeConnectionId || "none"}`
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     );
 
     if (connections.length === 0) {
@@ -814,6 +872,7 @@ export async function getProviderCredentials(
       const allConnectionsResults = await Promise.all(
         providersToSearch.map((p) => getProviderConnections({ provider: p }))
       );
+<<<<<<< HEAD
       let allConnections = (allConnectionsResults.filter(Array.isArray).flat() as unknown[])
         .map(toProviderConnection)
         .filter((conn) => conn.id.length > 0);
@@ -823,6 +882,12 @@ export async function getProviderCredentials(
       if (forcedConnectionId) {
         allConnections = allConnections.filter((conn) => conn.id === forcedConnectionId);
       }
+=======
+      const allConnectionsRaw = allConnectionsResults.filter(Array.isArray).flat();
+      const allConnections = (Array.isArray(allConnectionsRaw) ? allConnectionsRaw : [])
+        .map(toProviderConnection)
+        .filter((conn) => conn.id.length > 0);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       log.debug("AUTH", `${provider} | all connections (incl inactive): ${allConnections.length}`);
       if (allConnections.length > 0) {
         const earliest = getEarliestRateLimitedUntil(allConnections);
@@ -874,10 +939,14 @@ export async function getProviderCredentials(
 
     // Filter out unavailable accounts and excluded connection
     const availableConnections = connections.filter((c) => {
+<<<<<<< HEAD
       if (excludedConnectionIds.has(c.id)) return false;
       if (requestedModel && isModelExcludedByConnection(requestedModel, c.providerSpecificData)) {
         return false;
       }
+=======
+      if (excludeConnectionId && c.id === excludeConnectionId) return false;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       if (!allowSuppressedConnections) {
         if (isAccountUnavailable(c.rateLimitedUntil)) return false;
         if (isTerminalConnectionStatus(c)) return false;
@@ -893,6 +962,7 @@ export async function getProviderCredentials(
       `${provider} | available: ${availableConnections.length}/${connections.length}`
     );
     connections.forEach((c) => {
+<<<<<<< HEAD
       const excluded = excludedConnectionIds.has(c.id);
       const rateLimited = isAccountUnavailable(c.rateLimitedUntil);
       const terminalStatus = isTerminalConnectionStatus(c);
@@ -902,16 +972,25 @@ export async function getProviderCredentials(
       const modelExcluded =
         Boolean(requestedModel) &&
         isModelExcludedByConnection(requestedModel as string, c.providerSpecificData);
+=======
+      const excluded = excludeConnectionId && c.id === excludeConnectionId;
+      const rateLimited = isAccountUnavailable(c.rateLimitedUntil);
+      const terminalStatus = isTerminalConnectionStatus(c);
+      const codexScopeLimited = provider === "codex" && isCodexScopeUnavailable(c, requestedModel);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       if (excluded || rateLimited) {
         log.debug(
           "AUTH",
           `  → ${c.id?.slice(0, 8)} | ${excluded ? "excluded" : ""} ${rateLimited ? `rateLimited until ${c.rateLimitedUntil}` : ""}${allowSuppressedConnections && rateLimited ? " (retained for combo live test)" : ""}`
         );
+<<<<<<< HEAD
       } else if (modelExcluded) {
         log.debug(
           "AUTH",
           `  → ${c.id?.slice(0, 8)} | excluded by per-account model rule for ${requestedModel}`
         );
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       } else if (terminalStatus) {
         log.debug(
           "AUTH",
@@ -927,6 +1006,7 @@ export async function getProviderCredentials(
             ? `  → ${c.id?.slice(0, 8)} | retained codex scope-limited account until ${scopeUntil} for combo live test`
             : `  → ${c.id?.slice(0, 8)} | codex scope-limited until ${scopeUntil}`
         );
+<<<<<<< HEAD
       } else if (modelLocked) {
         const lockout = getModelLockoutInfo(provider, c.id, requestedModel);
         log.debug(
@@ -935,10 +1015,13 @@ export async function getProviderCredentials(
             ? `  → ${c.id?.slice(0, 8)} | retained model lockout for ${requestedModel} (${lockout?.remainingMs || 0}ms remaining) for combo live test`
             : `  → ${c.id?.slice(0, 8)} | model-locked for ${requestedModel} (${lockout?.remainingMs || 0}ms remaining)`
         );
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     });
 
     if (availableConnections.length === 0) {
+<<<<<<< HEAD
       const cooldownStates: CooldownInspectionState[] = connections.map((connection) => {
         const connectionCooldownMs = parseFutureDateMs(connection.rateLimitedUntil);
         const codexScopeCooldownMs =
@@ -1003,15 +1086,39 @@ export async function getProviderCredentials(
           allBlockedByModelCooldown
             ? `${provider} | all ${connections.length} active accounts cooling down for model ${requestedModel} (${formatRetryAfter(earliest)}) | lastErrorCode=${earliestConn?.errorCode}, lastError=${earliestConn?.lastError?.slice(0, 50)}`
             : `${provider} | all ${connections.length} active accounts rate limited (${formatRetryAfter(earliest)}) | lastErrorCode=${earliestConn?.errorCode}, lastError=${earliestConn?.lastError?.slice(0, 50)}`
+=======
+      const earliest =
+        getEarliestRateLimitedUntil(connections) ||
+        (provider === "codex"
+          ? getEarliestCodexScopeRateLimitedUntil(connections, requestedModel)
+          : null);
+      if (earliest) {
+        // Find the connection with the earliest rateLimitedUntil to get its error info
+        const rateLimitedConns = connections.filter(
+          (c) => c.rateLimitedUntil && new Date(c.rateLimitedUntil).getTime() > Date.now()
+        );
+        const earliestConn = rateLimitedConns.sort(
+          (a, b) =>
+            new Date(a.rateLimitedUntil || 0).getTime() -
+            new Date(b.rateLimitedUntil || 0).getTime()
+        )[0];
+        log.warn(
+          "AUTH",
+          `${provider} | all ${connections.length} active accounts rate limited (${formatRetryAfter(earliest)}) | lastErrorCode=${earliestConn?.errorCode}, lastError=${earliestConn?.lastError?.slice(0, 50)}`
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         );
         return {
           allRateLimited: true,
           retryAfter: earliest,
           retryAfterHuman: formatRetryAfter(earliest),
           lastError: earliestConn?.lastError || null,
+<<<<<<< HEAD
           lastErrorCode: allBlockedByModelCooldown ? 429 : earliestConn?.errorCode || null,
           cooldownScope: allBlockedByModelCooldown ? "model" : "connection",
           cooldownModel: allBlockedByModelCooldown ? requestedModel : null,
+=======
+          lastErrorCode: earliestConn?.errorCode || null,
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         };
       }
       log.warn("AUTH", `${provider} | all ${connections.length} accounts unavailable`);
@@ -1067,6 +1174,7 @@ export async function getProviderCredentials(
       };
     }
 
+<<<<<<< HEAD
     // Quota-aware: filter out accounts with exhausted quota
     const withQuota = policyEligibleConnections.filter((c) => !isAccountQuotaExhausted(c.id));
     const exhaustedQuota = policyEligibleConnections.filter((c) => isAccountQuotaExhausted(c.id));
@@ -1102,10 +1210,26 @@ export async function getProviderCredentials(
 
     const orderedConnections = withQuota;
 
+=======
+    // Quota-aware: prioritize accounts with available quota
+    const withQuota = policyEligibleConnections.filter((c) => !isAccountQuotaExhausted(c.id));
+    const exhaustedQuota = policyEligibleConnections.filter((c) => isAccountQuotaExhausted(c.id));
+    const orderedConnections =
+      withQuota.length > 0 ? [...withQuota, ...exhaustedQuota] : policyEligibleConnections;
+
+    if (exhaustedQuota.length > 0) {
+      log.debug(
+        "AUTH",
+        `${provider} | quota-aware: ${withQuota.length} with quota, ${exhaustedQuota.length} exhausted`
+      );
+    }
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const settings = await getSettings();
     const strategy = settings.fallbackStrategy || "fill-first";
 
     let connection;
+<<<<<<< HEAD
     const affinityConnection = await selectSessionAffinityConnection(
       provider,
       options.sessionKey,
@@ -1123,6 +1247,9 @@ export async function getProviderCredentials(
     if (connection) {
       // Session affinity selected a connection before global sticky routing.
     } else if (strategy === "round-robin") {
+=======
+    if (strategy === "round-robin") {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       const stickyLimit = toNumber((settings as Record<string, unknown>).stickyRoundRobinLimit, 3);
 
       // If excluding an account (fallback scenario), skip sticky logic and go straight to LRU
@@ -1207,6 +1334,7 @@ export async function getProviderCredentials(
         });
       }
     } else if (strategy === "p2c") {
+<<<<<<< HEAD
       const candidatePool = withQuota.length > 0 ? withQuota : orderedConnections;
       // Power of Two Choices: sample from the quota-eligible pool and compare
       // health instead of defaulting to random-first selection.
@@ -1221,6 +1349,24 @@ export async function getProviderCredentials(
         const a = candidatePool[i];
         const b = candidatePool[j];
         connection = compareP2CConnections(provider, a, b) <= 0 ? a : b;
+=======
+      // Power of Two Choices: pick 2 random, choose the one with fewer failures
+      if (orderedConnections.length <= 2) {
+        connection = orderedConnections[0];
+      } else {
+        const i =
+          parseInt(randomUUID().replace(/-/g, "").substring(0, 8), 16) % orderedConnections.length;
+        let j =
+          parseInt(randomUUID().replace(/-/g, "").substring(0, 8), 16) %
+          (orderedConnections.length - 1);
+        if (j >= i) j++;
+        const a = orderedConnections[i];
+        const b = orderedConnections[j];
+        // Prefer the one with fewer consecutive uses / better health
+        const scoreA = (a.consecutiveUseCount || 0) + (a.lastError ? 10 : 0);
+        const scoreB = (b.consecutiveUseCount || 0) + (b.lastError ? 10 : 0);
+        connection = scoreA <= scoreB ? a : b;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       }
     } else if (strategy === "random") {
       // Random: Fisher-Yates-inspired random pick
@@ -1272,13 +1418,17 @@ export async function getProviderCredentials(
       lastErrorSource: connection.lastErrorSource,
       errorCode: connection.errorCode,
       rateLimitedUntil: connection.rateLimitedUntil,
+<<<<<<< HEAD
       maxConcurrent: connection.maxConcurrent,
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     };
   } finally {
     if (resolveMutex) resolveMutex();
   }
 }
 
+<<<<<<< HEAD
 export async function getProviderCredentialsWithQuotaPreflight(
   provider: string,
   excludeConnectionId: string | null = null,
@@ -1352,6 +1502,8 @@ export async function getProviderCredentialsWithQuotaPreflight(
   }
 }
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 /**
  * Mark account as unavailable — reads backoffLevel from DB, calculates cooldown with exponential backoff, saves new level
  * @param {string} connectionId
@@ -1366,8 +1518,12 @@ export async function markAccountUnavailable(
   status: number,
   errorText: string,
   provider: string | null = null,
+<<<<<<< HEAD
   model: string | null = null,
   providerProfile = null
+=======
+  model: string | null = null
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 ) {
   const currentMutex = markMutexes.get(connectionId) || Promise.resolve();
   let resolveMutex: (() => void) | undefined;
@@ -1452,13 +1608,18 @@ export async function markAccountUnavailable(
       }
     }
 
+<<<<<<< HEAD
     const effectiveProviderProfile =
       providerProfile || (provider ? await getRuntimeProviderProfile(provider) : null);
     const fallbackResult = checkFallbackError(
+=======
+    const result = checkFallbackError(
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       status,
       errorText,
       backoffLevel,
       model,
+<<<<<<< HEAD
       provider,
       null,
       effectiveProviderProfile
@@ -1536,10 +1697,22 @@ export async function markAccountUnavailable(
     // For local providers (detected by URL), a 404 means the specific model
     // doesn't exist or isn't available for this account — it should NOT lock
     // out the entire connection.
+=======
+      provider // ← Now passes provider for profile-aware cooldowns
+    );
+    const { shouldFallback, cooldownMs, newBackoffLevel, reason } = result;
+    if (!shouldFallback) return { shouldFallback: false, cooldownMs: 0 };
+
+    // ── 404 model-only lockout: connection stays active ──
+    // For local providers (detected by URL) and cloud providers with passthrough models
+    // (like Antigravity), a 404 means the specific model doesn't exist or isn't available
+    // for this account — it should NOT lock out the entire connection.
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const connBaseUrl = (conn?.providerSpecificData as Record<string, unknown>)?.baseUrl as
       | string
       | undefined;
 
+<<<<<<< HEAD
     if (isLocalProvider(connBaseUrl) && status === 404 && provider && model) {
       const lockout = recordModelLockoutFailure(
         provider,
@@ -1565,6 +1738,41 @@ export async function markAccountUnavailable(
       return { shouldFallback: true, cooldownMs: lockout.cooldownMs };
     }
 
+=======
+    const isPassthroughProvider = provider && getPassthroughProviders().has(provider);
+    const isPerModelQuotaProvider = hasPerModelQuota(provider);
+    if (
+      (isLocalProvider(connBaseUrl) || isPerModelQuotaProvider) &&
+      status === 404 &&
+      provider &&
+      model
+    ) {
+      const localCooldown = COOLDOWN_MS.notFoundLocal;
+      lockModel(provider, connectionId, model, "not_found", localCooldown);
+      log.info(
+        "AUTH",
+        `Model-only lockout for ${model} — 404 lockout ${localCooldown / 1000}s (connection stays active)`
+      );
+      return { shouldFallback: true, cooldownMs: localCooldown };
+    }
+
+    // ── 429 model-only lockout for per-model quota providers ──
+    // For providers where each model has independent quota (passthrough providers,
+    // Gemini AI Studio), a 429 on one model should NOT lock out the entire connection
+    // — other models may still have quota available. Use lockModel() instead of
+    // connection-wide rateLimitedUntil.
+    if (isPerModelQuotaProvider && status === 429 && provider && model) {
+      const modelCooldown = cooldownMs || COOLDOWN_MS.rateLimit;
+      lockModel(provider, connectionId, model, reason || "rate_limited", modelCooldown);
+      log.info(
+        "AUTH",
+        `Model-only lockout for ${model} — 429 rate limit ${Math.ceil(modelCooldown / 1000)}s (connection stays active)`
+      );
+      return { shouldFallback: true, cooldownMs: modelCooldown };
+    }
+
+    const rateLimitedUntil = getUnavailableUntil(cooldownMs);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     const errorMsg = typeof errorText === "string" ? errorText.slice(0, 100) : "Provider error";
 
     // T09: Codex per-scope lockout (do not block the whole account globally).
@@ -1572,7 +1780,11 @@ export async function markAccountUnavailable(
       const scope = getCodexModelScope(model);
       const existingScopeMap = asRecord(conn.providerSpecificData.codexScopeRateLimitedUntil);
       const persistedScopeUntil = getCodexScopeRateLimitedUntil(conn.providerSpecificData, model);
+<<<<<<< HEAD
       const scopeRateLimitedUntil = persistedScopeUntil || getUnavailableUntil(cooldownMs);
+=======
+      const scopeRateLimitedUntil = persistedScopeUntil || rateLimitedUntil;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       const scopeCooldownMs = Math.max(new Date(scopeRateLimitedUntil).getTime() - Date.now(), 0);
 
       await updateProviderConnection(connectionId, {
@@ -1601,6 +1813,7 @@ export async function markAccountUnavailable(
       return { shouldFallback: true, cooldownMs: scopeCooldownMs };
     }
 
+<<<<<<< HEAD
     const baseUpdate = {
       lastError: errorMsg,
       lastErrorType: providerErrorType,
@@ -1622,6 +1835,16 @@ export async function markAccountUnavailable(
         ...(terminalStatus ? { testStatus: terminalStatus } : {}),
       });
     }
+=======
+    await updateProviderConnection(connectionId, {
+      rateLimitedUntil,
+      testStatus: "unavailable",
+      lastError: errorMsg,
+      errorCode: status,
+      lastErrorAt: new Date().toISOString(),
+      backoffLevel: newBackoffLevel ?? backoffLevel,
+    });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
     // T-AUTODISABLE: If auto-disable setting is enabled and error is permanent/terminal,
     // mark account as inactive so it is never retried again.
@@ -1645,6 +1868,14 @@ export async function markAccountUnavailable(
       }
     }
 
+<<<<<<< HEAD
+=======
+    // Per-model lockout: lock the specific model if known
+    if (provider && model && cooldownMs > 0) {
+      lockModel(provider, connectionId, model, reason || "unknown", cooldownMs);
+    }
+
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     if (provider && status && errorMsg) {
       console.error(`❌ ${provider} [${status}]: ${errorMsg}`);
     }
@@ -1698,6 +1929,7 @@ export async function clearRecoveredProviderState(
 
 /**
  * Extract API key from request headers
+<<<<<<< HEAD
  * Follows management API standard: case-insensitive bearer matching and full trimming
  */
 export function extractApiKey(request: Request) {
@@ -1707,11 +1939,19 @@ export function extractApiKey(request: Request) {
     if (trimmedHeader.toLowerCase().startsWith("bearer ")) {
       return trimmedHeader.slice(7).trim();
     }
+=======
+ */
+export function extractApiKey(request: Request) {
+  const authHeader = request.headers.get("Authorization");
+  if (authHeader?.startsWith("Bearer ")) {
+    return authHeader.slice(7);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
   return null;
 }
 
 /**
+<<<<<<< HEAD
  * Validate API key (optional - for local use can skip).
  * Feature #1350: Supports OMNIROUTE_API_KEY / ROUTER_API_KEY env vars as
  * persistent passthrough keys that always validate, surviving Docker
@@ -1724,5 +1964,11 @@ export async function isValidApiKey(apiKey: string) {
   const envKey = process.env.OMNIROUTE_API_KEY || process.env.ROUTER_API_KEY;
   if (envKey && apiKey === envKey) return true;
 
+=======
+ * Validate API key (optional - for local use can skip)
+ */
+export async function isValidApiKey(apiKey: string) {
+  if (!apiKey) return false;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return await validateApiKey(apiKey);
 }

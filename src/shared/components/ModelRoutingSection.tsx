@@ -1,7 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+<<<<<<< HEAD
 import { useTranslations } from "next-intl";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 export interface ModelMapping {
   id: string;
@@ -18,6 +21,7 @@ interface Combo {
   name: string;
 }
 
+<<<<<<< HEAD
 export default function ModelRoutingSection({ combos: externalCombos }: { combos?: Combo[] } = {}) {
   const t = useTranslations("settings");
   const [mappings, setMappings] = useState<ModelMapping[]>([]);
@@ -26,6 +30,13 @@ export default function ModelRoutingSection({ combos: externalCombos }: { combos
   const [adding, setAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const combos = externalCombos || internalCombos;
+=======
+export default function ModelRoutingSection({ combos = [] }: { combos?: Combo[] }) {
+  const [mappings, setMappings] = useState<ModelMapping[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [adding, setAdding] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   // Form state
   const [pattern, setPattern] = useState("");
@@ -57,6 +68,7 @@ export default function ModelRoutingSection({ combos: externalCombos }: { combos
     };
   }, []);
 
+<<<<<<< HEAD
   useEffect(() => {
     if (externalCombos !== undefined) return;
     let cancelled = false;
@@ -73,6 +85,8 @@ export default function ModelRoutingSection({ combos: externalCombos }: { combos
     };
   }, [externalCombos]);
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const refetchMappings = async () => {
     const data = await loadMappings();
     setMappings(data);
@@ -120,7 +134,11 @@ export default function ModelRoutingSection({ combos: externalCombos }: { combos
   };
 
   const handleDelete = async (id: string) => {
+<<<<<<< HEAD
     if (!confirm(t("deleteRoutingRule"))) return;
+=======
+    if (!confirm("Delete this model routing rule?")) return;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     try {
       await fetch(`/api/model-combo-mappings/${id}`, { method: "DELETE" });
       setMappings((prev) => prev.filter((m) => m.id !== id));
@@ -146,8 +164,15 @@ export default function ModelRoutingSection({ combos: externalCombos }: { combos
         <div className="flex items-center gap-2">
           <span className="material-symbols-outlined text-primary text-[18px]">route</span>
           <div>
+<<<<<<< HEAD
             <h3 className="text-sm font-semibold">{t("modelRoutingTitle")}</h3>
             <p className="text-[11px] text-text-muted">{t("modelRoutingDesc")}</p>
+=======
+            <h3 className="text-sm font-semibold">Model Routing Rules</h3>
+            <p className="text-[11px] text-text-muted">
+              Automatically route models to specific combos using glob patterns
+            </p>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           </div>
         </div>
         {!adding && (
@@ -157,7 +182,11 @@ export default function ModelRoutingSection({ combos: externalCombos }: { combos
                        bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
           >
             <span className="material-symbols-outlined text-[14px]">add</span>
+<<<<<<< HEAD
             {t("addRule")}
+=======
+            Add Rule
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           </button>
         )}
       </div>
@@ -168,7 +197,11 @@ export default function ModelRoutingSection({ combos: externalCombos }: { combos
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <div>
               <label className="text-[10px] font-medium text-text-muted uppercase tracking-wider">
+<<<<<<< HEAD
                 {t("pattern")}
+=======
+                Pattern
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               </label>
               <input
                 value={pattern}
@@ -177,11 +210,21 @@ export default function ModelRoutingSection({ combos: externalCombos }: { combos
                 className="w-full mt-0.5 px-2.5 py-1.5 text-xs rounded-lg border border-black/10 dark:border-white/10
                            bg-white dark:bg-black/20 focus:outline-none focus:ring-1 focus:ring-primary"
               />
+<<<<<<< HEAD
               <p className="text-[9px] text-text-muted mt-0.5">{t("patternHint")}</p>
             </div>
             <div>
               <label className="text-[10px] font-medium text-text-muted uppercase tracking-wider">
                 {t("routeToCombo")}
+=======
+              <p className="text-[9px] text-text-muted mt-0.5">
+                Use * for any chars, ? for single char. Case-insensitive.
+              </p>
+            </div>
+            <div>
+              <label className="text-[10px] font-medium text-text-muted uppercase tracking-wider">
+                Route to Combo
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               </label>
               <select
                 value={comboId}
@@ -189,7 +232,11 @@ export default function ModelRoutingSection({ combos: externalCombos }: { combos
                 className="w-full mt-0.5 px-2.5 py-1.5 text-xs rounded-lg border border-black/10 dark:border-white/10
                            bg-white dark:bg-black/20 focus:outline-none focus:ring-1 focus:ring-primary"
               >
+<<<<<<< HEAD
                 <option value="">{t("selectCombo")}</option>
+=======
+                <option value="">Select combo...</option>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 {combos.map((c) => (
                   <option key={c.id} value={c.id}>
                     {c.name}
@@ -199,7 +246,11 @@ export default function ModelRoutingSection({ combos: externalCombos }: { combos
             </div>
             <div>
               <label className="text-[10px] font-medium text-text-muted uppercase tracking-wider">
+<<<<<<< HEAD
                 {t("priority")}
+=======
+                Priority
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               </label>
               <input
                 type="number"
@@ -208,11 +259,21 @@ export default function ModelRoutingSection({ combos: externalCombos }: { combos
                 className="w-full mt-0.5 px-2.5 py-1.5 text-xs rounded-lg border border-black/10 dark:border-white/10
                            bg-white dark:bg-black/20 focus:outline-none focus:ring-1 focus:ring-primary"
               />
+<<<<<<< HEAD
               <p className="text-[9px] text-text-muted mt-0.5">{t("priorityHint")}</p>
             </div>
             <div>
               <label className="text-[10px] font-medium text-text-muted uppercase tracking-wider">
                 {t("description")}
+=======
+              <p className="text-[9px] text-text-muted mt-0.5">
+                Higher = checked first. Use 10+ for specific patterns.
+              </p>
+            </div>
+            <div>
+              <label className="text-[10px] font-medium text-text-muted uppercase tracking-wider">
+                Description
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               </label>
               <input
                 value={description}
@@ -230,14 +291,22 @@ export default function ModelRoutingSection({ combos: externalCombos }: { combos
               className="px-3 py-1 text-xs font-medium rounded-lg bg-primary text-white
                          hover:bg-primary/90 disabled:opacity-40 transition-colors"
             >
+<<<<<<< HEAD
               {editingId ? t("update") : t("save")}
+=======
+              {editingId ? "Update" : "Save"}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             </button>
             <button
               onClick={resetForm}
               className="px-3 py-1 text-xs font-medium rounded-lg
                          bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
             >
+<<<<<<< HEAD
               {t("cancel")}
+=======
+              Cancel
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             </button>
           </div>
         </div>
@@ -245,11 +314,26 @@ export default function ModelRoutingSection({ combos: externalCombos }: { combos
 
       {/* Mappings list */}
       {loading ? (
+<<<<<<< HEAD
         <div className="mt-3 text-xs text-text-muted">{t("loading")}</div>
       ) : mappings.length === 0 ? (
         <div className="mt-3 text-center py-4">
           <p className="text-xs text-text-muted">{t("noRoutingRules")}</p>
           <p className="text-[10px] text-text-muted mt-1">{t("routingRuleHint")}</p>
+=======
+        <div className="mt-3 text-xs text-text-muted">Loading...</div>
+      ) : mappings.length === 0 ? (
+        <div className="mt-3 text-center py-4">
+          <p className="text-xs text-text-muted">
+            No routing rules configured. Requests use the global combo by default.
+          </p>
+          <p className="text-[10px] text-text-muted mt-1">
+            Add a rule like{" "}
+            <code className="px-1 py-0.5 rounded bg-black/5 dark:bg-white/5">claude-opus*</code>
+            {" → "} <span className="font-medium">frontier-combo</span> to automatically route
+            requests.
+          </p>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         </div>
       ) : (
         <div className="mt-3 flex flex-col gap-1.5">
@@ -284,7 +368,11 @@ export default function ModelRoutingSection({ combos: externalCombos }: { combos
                 <button
                   onClick={() => handleToggle(m)}
                   className="p-1 rounded hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+<<<<<<< HEAD
                   title={m.enabled ? t("disable") : t("enable")}
+=======
+                  title={m.enabled ? "Disable" : "Enable"}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 >
                   <span
                     className={`material-symbols-outlined text-[14px] ${m.enabled ? "text-emerald-500" : "text-text-muted"}`}

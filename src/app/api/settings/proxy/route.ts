@@ -16,7 +16,10 @@ import {
   type ApiErrorType,
 } from "@/lib/api/errorResponse";
 import type { z } from "zod";
+<<<<<<< HEAD
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
 const BASE_SUPPORTED_PROXY_TYPES = new Set(["http", "https"]);
 type UpdateProxyConfigInput = z.infer<typeof updateProxyConfigSchema>;
@@ -121,9 +124,12 @@ function normalizeProxyPayload(body: UpdateProxyConfigInput): UpdateProxyConfigI
  * Or: ?resolve=connectionId to resolve effective proxy
  */
 export async function GET(request: Request) {
+<<<<<<< HEAD
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const { searchParams } = new URL(request.url);
     const level = searchParams.get("level");
@@ -178,9 +184,12 @@ export async function GET(request: Request) {
  * Body: { level, id?, proxy } or legacy { global?, providers? }
  */
 export async function PUT(request: Request) {
+<<<<<<< HEAD
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   let rawBody: unknown;
   try {
     rawBody = await request.json();
@@ -221,9 +230,12 @@ export async function PUT(request: Request) {
  * Query: ?level=provider&id=xxx
  */
 export async function DELETE(request: Request) {
+<<<<<<< HEAD
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   try {
     const { searchParams } = new URL(request.url);
     const level = searchParams.get("level");

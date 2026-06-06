@@ -1,7 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
+<<<<<<< HEAD
 import { useTranslations } from "next-intl";
+=======
+import PropTypes from "prop-types";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 import Modal from "./Modal";
 import Button from "./Button";
 
@@ -15,6 +19,7 @@ const PROXY_TYPES = SOCKS5_UI_ENABLED
   ? ALL_PROXY_TYPES
   : ALL_PROXY_TYPES.filter((type) => type.value !== "socks5");
 
+<<<<<<< HEAD
 type ProxyConfigLevel = "global" | "provider" | "combo" | "key";
 
 type ProxyConfigModalProps = {
@@ -26,6 +31,26 @@ type ProxyConfigModalProps = {
   onSaved?: () => void;
 };
 
+=======
+const LEVEL_LABELS = {
+  global: "Global",
+  provider: "Provider",
+  combo: "Combo",
+  key: "Key",
+  direct: "Direct (none)",
+};
+
+/**
+ * ProxyConfigModal — Reusable proxy configuration modal for all 4 levels
+ * @param {Object} props
+ * @param {boolean} props.isOpen
+ * @param {Function} props.onClose
+ * @param {"global"|"provider"|"combo"|"key"} props.level
+ * @param {string} [props.levelId] — providerId, comboId, or connectionId
+ * @param {string} [props.levelLabel] — display name for the level
+ * @param {Function} [props.onSaved] — callback after save
+ */
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export default function ProxyConfigModal({
   isOpen,
   onClose,
@@ -33,8 +58,19 @@ export default function ProxyConfigModal({
   levelId,
   levelLabel,
   onSaved,
+<<<<<<< HEAD
 }: ProxyConfigModalProps) {
   const t = useTranslations("proxyConfigModal");
+=======
+}: {
+  isOpen: any;
+  onClose: any;
+  level: any;
+  levelId?: any;
+  levelLabel?: any;
+  onSaved?: any;
+}) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   const [mode, setMode] = useState("saved");
   const [savedProxies, setSavedProxies] = useState([]);
   const [selectedProxyId, setSelectedProxyId] = useState("");
@@ -115,7 +151,13 @@ export default function ProxyConfigModal({
             setShowAuth(!!(proxy.username || proxy.password));
             setHasOwnProxy(true);
             if (normalizedType === "socks5" && !SOCKS5_UI_ENABLED) {
+<<<<<<< HEAD
               setFormError(t("errorSocks5Hidden"));
+=======
+              setFormError(
+                "SOCKS5 is configured but hidden because NEXT_PUBLIC_ENABLE_SOCKS5_PROXY=false."
+              );
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             }
             if (!hasSavedAssignment) setMode("custom");
           } else {
@@ -135,6 +177,7 @@ export default function ProxyConfigModal({
             // Determine inheritance source
             if (level === "key") {
               // Check combo, provider, global
+<<<<<<< HEAD
               if (config.global)
                 setInheritedFrom({ level: t("levelGlobal"), proxy: config.global });
               // Provider info requires more context, showing global as fallback
@@ -144,6 +187,14 @@ export default function ProxyConfigModal({
             } else if (level === "provider") {
               if (config.global)
                 setInheritedFrom({ level: t("levelGlobal"), proxy: config.global });
+=======
+              if (config.global) setInheritedFrom({ level: "Global", proxy: config.global });
+              // Provider info requires more context, showing global as fallback
+            } else if (level === "combo") {
+              if (config.global) setInheritedFrom({ level: "Global", proxy: config.global });
+            } else if (level === "provider") {
+              if (config.global) setInheritedFrom({ level: "Global", proxy: config.global });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             }
           }
         }
@@ -169,10 +220,17 @@ export default function ProxyConfigModal({
 
   const handleSave = async () => {
     if (mode === "saved" && !selectedProxyId) {
+<<<<<<< HEAD
       setFormError(t("errorSelectSavedProxy"));
       return;
     }
     if (mode === "custom" && !String(host || "").trim()) return;
+=======
+      setFormError("Select a saved proxy before saving.");
+      return;
+    }
+    if (mode === "custom" && !host.trim()) return;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     setFormError(null);
     setSaving(true);
     try {
@@ -206,16 +264,27 @@ export default function ProxyConfigModal({
         });
         const clearAssignmentPayload = await clearAssignmentRes.json().catch(() => ({}));
         if (!clearAssignmentRes.ok) {
+<<<<<<< HEAD
           setFormError(clearAssignmentPayload?.error?.message || t("errorClearSavedProxy"));
+=======
+          setFormError(clearAssignmentPayload?.error?.message || "Failed to clear saved proxy");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           return;
         }
 
         const proxy = {
           type: proxyType,
+<<<<<<< HEAD
           host: String(host || "").trim(),
           port: String(port || "").trim() || getDefaultPort(proxyType),
           username: String(username || "").trim(),
           password: String(password || "").trim(),
+=======
+          host: host.trim(),
+          port: port.trim() || getDefaultPort(proxyType),
+          username: username.trim(),
+          password: password.trim(),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         };
         res = await fetch("/api/settings/proxy", {
           method: "PUT",
@@ -225,7 +294,11 @@ export default function ProxyConfigModal({
       }
       const payload = await res.json().catch(() => ({}));
       if (!res.ok) {
+<<<<<<< HEAD
         setFormError(payload?.error?.message || t("errorSaveProxy"));
+=======
+        setFormError(payload?.error?.message || "Failed to save proxy configuration");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         return;
       }
       setHasOwnProxy(true);
@@ -236,7 +309,11 @@ export default function ProxyConfigModal({
       onClose();
     } catch (error) {
       console.error("Error saving proxy:", error);
+<<<<<<< HEAD
       setFormError(error.message || t("errorSaveProxy"));
+=======
+      setFormError(error.message || "Failed to save proxy configuration");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     } finally {
       setSaving(false);
     }
@@ -262,7 +339,11 @@ export default function ProxyConfigModal({
       const res = await fetch(`/api/settings/proxy?${params}`, { method: "DELETE" });
       const payload = await res.json().catch(() => ({}));
       if (!res.ok) {
+<<<<<<< HEAD
         setFormError(payload?.error?.message || t("errorClearProxy"));
+=======
+        setFormError(payload?.error?.message || "Failed to clear proxy configuration");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         return;
       }
       resetFields();
@@ -273,7 +354,11 @@ export default function ProxyConfigModal({
       onClose();
     } catch (error) {
       console.error("Error clearing proxy:", error);
+<<<<<<< HEAD
       setFormError(error.message || t("errorClearProxy"));
+=======
+      setFormError(error.message || "Failed to clear proxy configuration");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     } finally {
       setSaving(false);
     }
@@ -294,13 +379,21 @@ export default function ProxyConfigModal({
 
       if (mode === "saved") {
         if (!selectedProxyId) {
+<<<<<<< HEAD
           setFormError(t("errorSelectProxyFirst"));
+=======
+          setFormError("Select a saved proxy first.");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           setTesting(false);
           return;
         }
         const found = (savedProxies as any[]).find((p: any) => p.id === selectedProxyId);
         if (!found) {
+<<<<<<< HEAD
           setFormError(t("errorProxyNotFound"));
+=======
+          setFormError("Selected proxy not found.");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           setTesting(false);
           return;
         }
@@ -310,16 +403,27 @@ export default function ProxyConfigModal({
           port: String(found.port || 8080),
         };
       } else {
+<<<<<<< HEAD
         if (!String(host || "").trim()) {
+=======
+        if (!host.trim()) {
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
           setTesting(false);
           return;
         }
         proxy = {
           type: proxyType,
+<<<<<<< HEAD
           host: String(host || "").trim(),
           port: String(port || "").trim() || getDefaultPort(proxyType),
           username: String(username || "").trim(),
           password: String(password || "").trim(),
+=======
+          host: host.trim(),
+          port: port.trim() || getDefaultPort(proxyType),
+          username: username.trim(),
+          password: password.trim(),
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         };
       }
 
@@ -330,7 +434,11 @@ export default function ProxyConfigModal({
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
+<<<<<<< HEAD
         const message = data?.error?.message || t("connectionFailed");
+=======
+        const message = data?.error?.message || "Connection failed";
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
         setTestResult({ success: false, error: message });
         setFormError(message);
         return;
@@ -338,7 +446,11 @@ export default function ProxyConfigModal({
       setTestResult(data);
     } catch (error) {
       setTestResult({ success: false, error: error.message });
+<<<<<<< HEAD
       setFormError(error.message || t("connectionFailed"));
+=======
+      setFormError(error.message || "Connection failed");
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
     } finally {
       setTesting(false);
     }
@@ -346,16 +458,27 @@ export default function ProxyConfigModal({
 
   const title =
     level === "global"
+<<<<<<< HEAD
       ? t("titleGlobal")
       : t("titleLevel", {
           level: t(`level${level.charAt(0).toUpperCase() + level.slice(1)}` as any),
           label: levelLabel || levelId || "",
         });
+=======
+      ? "Global Proxy Configuration"
+      : `${LEVEL_LABELS[level]} Proxy — ${levelLabel || levelId || ""}`;
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title} maxWidth="lg">
       {loading ? (
+<<<<<<< HEAD
         <div className="py-8 text-center text-text-muted animate-pulse">{t("loading")}</div>
+=======
+        <div className="py-8 text-center text-text-muted animate-pulse">
+          Loading proxy configuration...
+        </div>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
       ) : (
         <div className="flex flex-col gap-5">
           {/* Inheritance indicator */}
@@ -365,8 +488,12 @@ export default function ProxyConfigModal({
                 subdirectory_arrow_right
               </span>
               <span className="text-blue-300">
+<<<<<<< HEAD
                 {t("inheritingFrom")} <strong>{inheritedFrom.level}</strong>:{" "}
                 {inheritedFrom.proxy?.type}
+=======
+                Inheriting from <strong>{inheritedFrom.level}</strong>: {inheritedFrom.proxy?.type}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 ://{inheritedFrom.proxy?.host}:{inheritedFrom.proxy?.port}
               </span>
             </div>
@@ -375,7 +502,11 @@ export default function ProxyConfigModal({
           {/* Proxy Type Selector */}
           <div>
             <label className="text-xs text-text-muted mb-1.5 block uppercase tracking-wider font-medium">
+<<<<<<< HEAD
               {t("source")}
+=======
+              Source
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
             </label>
             <div className="flex gap-2">
               <button
@@ -386,7 +517,11 @@ export default function ProxyConfigModal({
                     : "bg-bg-subtle text-text-muted border-border"
                 }`}
               >
+<<<<<<< HEAD
                 {t("savedProxy")}
+=======
+                Saved Proxy
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               </button>
               <button
                 onClick={() => setMode("custom")}
@@ -396,7 +531,11 @@ export default function ProxyConfigModal({
                     : "bg-bg-subtle text-text-muted border-border"
                 }`}
               >
+<<<<<<< HEAD
                 {t("custom")}
+=======
+                Custom
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               </button>
             </div>
           </div>
@@ -404,14 +543,22 @@ export default function ProxyConfigModal({
           {mode === "saved" && (
             <div>
               <label className="text-xs text-text-muted mb-1.5 block uppercase tracking-wider font-medium">
+<<<<<<< HEAD
                 {t("savedProxy")}
+=======
+                Saved Proxy
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               </label>
               <select
                 value={selectedProxyId}
                 onChange={(e) => setSelectedProxyId(e.target.value)}
                 className="w-full px-3 py-2.5 rounded-lg bg-bg-subtle border border-border text-sm text-text-primary"
               >
+<<<<<<< HEAD
                 <option value="">{t("selectSavedProxyPlaceholder")}</option>
+=======
+                <option value="">Select saved proxy...</option>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 {savedProxies.map((item: any) => (
                   <option key={item.id} value={item.id}>
                     {item.name} ({item.type}://{item.host}:{item.port})
@@ -425,7 +572,11 @@ export default function ProxyConfigModal({
             <>
               <div>
                 <label className="text-xs text-text-muted mb-1.5 block uppercase tracking-wider font-medium">
+<<<<<<< HEAD
                   {t("proxyType")}
+=======
+                  Proxy Type
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 </label>
                 <div className="flex gap-1 bg-bg-subtle rounded-lg p-1 border border-border">
                   {PROXY_TYPES.map((t) => (
@@ -448,19 +599,31 @@ export default function ProxyConfigModal({
               <div className="grid grid-cols-3 gap-3">
                 <div className="col-span-2">
                   <label className="text-xs text-text-muted mb-1.5 block uppercase tracking-wider font-medium">
+<<<<<<< HEAD
                     {t("host")}
+=======
+                    Host
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   </label>
                   <input
                     type="text"
                     value={host}
                     onChange={(e) => setHost(e.target.value)}
+<<<<<<< HEAD
                     placeholder={t("hostPlaceholder")}
+=======
+                    placeholder="1.2.3.4 or proxy.example.com"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     className="w-full px-3 py-2.5 rounded-lg bg-bg-subtle border border-border text-sm text-text-primary placeholder:text-text-muted/50 focus:outline-none focus:border-primary transition-colors"
                   />
                 </div>
                 <div>
                   <label className="text-xs text-text-muted mb-1.5 block uppercase tracking-wider font-medium">
+<<<<<<< HEAD
                     {t("port")}
+=======
+                    Port
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                   </label>
                   <input
                     type="text"
@@ -481,31 +644,51 @@ export default function ProxyConfigModal({
                   <span className="material-symbols-outlined text-base">
                     {showAuth ? "expand_less" : "expand_more"}
                   </span>
+<<<<<<< HEAD
                   {t("authOptional")}
+=======
+                  Authentication (optional)
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 </button>
                 {showAuth && (
                   <div className="grid grid-cols-2 gap-3 mt-3">
                     <div>
                       <label className="text-xs text-text-muted mb-1.5 block uppercase tracking-wider font-medium">
+<<<<<<< HEAD
                         {t("username")}
+=======
+                        Username
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                       </label>
                       <input
                         type="text"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
+<<<<<<< HEAD
                         placeholder={t("usernamePlaceholder")}
+=======
+                        placeholder="Username"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                         className="w-full px-3 py-2.5 rounded-lg bg-bg-subtle border border-border text-sm text-text-primary placeholder:text-text-muted/50 focus:outline-none focus:border-primary transition-colors"
                       />
                     </div>
                     <div>
                       <label className="text-xs text-text-muted mb-1.5 block uppercase tracking-wider font-medium">
+<<<<<<< HEAD
                         {t("password")}
+=======
+                        Password
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                       </label>
                       <input
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+<<<<<<< HEAD
                         placeholder={t("passwordPlaceholder")}
+=======
+                        placeholder="Password"
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                         className="w-full px-3 py-2.5 rounded-lg bg-bg-subtle border border-border text-sm text-text-primary placeholder:text-text-muted/50 focus:outline-none focus:border-primary transition-colors"
                       />
                     </div>
@@ -540,16 +723,26 @@ export default function ProxyConfigModal({
               <div className="flex-1">
                 {testResult.success ? (
                   <div>
+<<<<<<< HEAD
                     <span className="text-sm font-medium text-emerald-400">{t("connected")}</span>
                     <span className="text-text-muted text-xs ml-2">
                       {t("ip")}{" "}
                       <span className="font-mono text-emerald-300">{testResult.publicIp}</span>
+=======
+                    <span className="text-sm font-medium text-emerald-400">Connected</span>
+                    <span className="text-text-muted text-xs ml-2">
+                      IP: <span className="font-mono text-emerald-300">{testResult.publicIp}</span>
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                       {testResult.latencyMs && ` · ${testResult.latencyMs}ms`}
                     </span>
                   </div>
                 ) : (
                   <div className="text-sm text-red-400">
+<<<<<<< HEAD
                     {testResult.error || t("connectionFailed")}
+=======
+                    {testResult.error || "Connection failed"}
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                     {testResult.latencyMs && (
                       <span className="text-text-muted text-xs ml-2">
                         ({testResult.latencyMs}ms)
@@ -570,9 +763,15 @@ export default function ProxyConfigModal({
                 icon="speed"
                 onClick={handleTest}
                 loading={testing}
+<<<<<<< HEAD
                 disabled={mode === "saved" ? !selectedProxyId : !String(host || "").trim()}
               >
                 {t("testConnection")}
+=======
+                disabled={mode === "saved" ? !selectedProxyId : !host.trim()}
+              >
+                Test Connection
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               </Button>
               {hasOwnProxy && (
                 <Button
@@ -583,22 +782,36 @@ export default function ProxyConfigModal({
                   disabled={saving}
                   className="!text-red-400 hover:!bg-red-500/10"
                 >
+<<<<<<< HEAD
                   {t("clear")}
+=======
+                  Clear
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
                 </Button>
               )}
             </div>
             <div className="flex gap-2">
               <Button size="sm" variant="secondary" onClick={onClose}>
+<<<<<<< HEAD
                 {t("cancel")}
+=======
+                Cancel
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               </Button>
               <Button
                 size="sm"
                 icon="save"
                 onClick={handleSave}
                 loading={saving}
+<<<<<<< HEAD
                 disabled={mode === "saved" ? !selectedProxyId : !String(host || "").trim()}
               >
                 {t("save")}
+=======
+                disabled={mode === "saved" ? !selectedProxyId : !host.trim()}
+              >
+                Save
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
               </Button>
             </div>
           </div>
@@ -607,3 +820,15 @@ export default function ProxyConfigModal({
     </Modal>
   );
 }
+<<<<<<< HEAD
+=======
+
+ProxyConfigModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  level: PropTypes.oneOf(["global", "provider", "combo", "key"]).isRequired,
+  levelId: PropTypes.string,
+  levelLabel: PropTypes.string,
+  onSaved: PropTypes.func,
+};
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139

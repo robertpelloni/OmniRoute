@@ -2,7 +2,11 @@
  * Log Rotation & Cleanup — manages application log file rotation.
  *
  * Handles:
+<<<<<<< HEAD
  *   - Rotating log files when they exceed max size (startup + periodic during runtime)
+=======
+ *   - Rotating log files when they exceed max size
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  *   - Cleaning up old log files past retention period
  *   - Capping the number of rotated log files kept on disk
  *   - Creating the log directory on startup
@@ -13,8 +17,11 @@
  *   - APP_LOG_MAX_FILE_SIZE: max file size before rotation (default: 50MB)
  *   - APP_LOG_RETENTION_DAYS: days to keep old logs (default: 7)
  *   - APP_LOG_MAX_FILES: max number of rotated log files to keep (default: 20)
+<<<<<<< HEAD
  *   - APP_LOG_ROTATION_CHECK_INTERVAL_MS: how often to check log size at runtime (default: 60000ms)
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  */
 
 import { existsSync, mkdirSync, statSync, renameSync, readdirSync, unlinkSync } from "fs";
@@ -27,6 +34,7 @@ import {
   getAppLogToFile,
 } from "./logEnv";
 
+<<<<<<< HEAD
 const DEFAULT_ROTATION_CHECK_INTERVAL_MS = 60_000;
 
 function parsePositiveInt(value: string | undefined, fallback: number): number {
@@ -46,6 +54,8 @@ export function getAppLogRotationCheckInterval(): number {
 /** Module-level timer handle — cleared by closeLogRotation(). */
 let rotationTimer: ReturnType<typeof setInterval> | null = null;
 
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 export function getLogConfig() {
   const logToFile = getAppLogToFile();
   const logFilePath = getAppLogFilePath() || join(process.cwd(), "logs/application/app.log");
@@ -53,6 +63,7 @@ export function getLogConfig() {
   const retentionDays = getAppLogRetentionDays();
   const maxFiles = getAppLogMaxFiles();
 
+<<<<<<< HEAD
 =======
 
 export function getLogConfig() {
@@ -63,6 +74,8 @@ export function getLogConfig() {
   const maxFiles = getAppLogMaxFiles();
 
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   return { logToFile, logFilePath, maxFileSize, retentionDays, maxFiles };
 }
 
@@ -175,12 +188,16 @@ export function cleanupOverflowLogs(logFilePath: string, maxFiles: number): void
 
 /**
  * Initialize log rotation — call once at application startup.
+<<<<<<< HEAD
  * Creates directories, rotates if needed, cleans up old files, and starts
  * a background timer that re-checks rotation at APP_LOG_ROTATION_CHECK_INTERVAL_MS
  * (defaults to every 60 s). This catches log growth that happens during runtime
  * — without this timer, rotation only runs once at startup.
  *
  * Call closeLogRotation() during application shutdown to clear the timer.
+=======
+ * Creates directories, rotates if needed, and cleans up old files.
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
  */
 export function initLogRotation(): void {
   const config = getLogConfig();
@@ -190,6 +207,7 @@ export function initLogRotation(): void {
   rotateIfNeeded(config.logFilePath, config.maxFileSize);
   cleanupOldLogs(config.logFilePath, config.retentionDays);
   cleanupOverflowLogs(config.logFilePath, config.maxFiles);
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 
   const intervalMs = getAppLogRotationCheckInterval();
@@ -216,4 +234,6 @@ export function closeLogRotation(): void {
     rotationTimer = null;
   }
 =======
+=======
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
 }

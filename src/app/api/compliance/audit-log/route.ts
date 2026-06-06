@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+<<<<<<< HEAD
 import { countAuditLog, getAuditLog } from "@/lib/compliance/index";
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
 
@@ -44,5 +45,21 @@ export async function GET(request) {
       { error: error instanceof Error ? error.message : "Failed to fetch audit log" },
       { status: 500 }
     );
+=======
+import { getAuditLog, logAuditEvent } from "@/lib/compliance/index";
+
+export async function GET(request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const action = searchParams.get("action") || undefined;
+    const actor = searchParams.get("actor") || undefined;
+    const limit = parseInt(searchParams.get("limit") || "50", 10);
+    const offset = parseInt(searchParams.get("offset") || "0", 10);
+
+    const logs = getAuditLog({ action, actor, limit, offset });
+    return NextResponse.json(logs);
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+>>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
 }
