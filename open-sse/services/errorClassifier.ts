@@ -97,13 +97,16 @@ export function isContextOverflow(errorText: string): boolean {
 import { isAccountDeactivated, isCreditsExhausted } from "./accountFallback.ts";
 
 export const PROVIDER_ERROR_TYPES = {
-  RATE_LIMITED: "rate_limited", // 429 — transient, retry with backoff
-  UNAUTHORIZED: "unauthorized", // 401 — token expired, refresh
-  ACCOUNT_DEACTIVATED: "account_deactivated", // 401 + deactivation signal
-  FORBIDDEN: "forbidden", // 403 — account banned/revoked, disable node
-  SERVER_ERROR: "server_error", // 500/502/503 — retry limited
-  QUOTA_EXHAUSTED: "quota_exhausted", // 402/429/400 + billing signals
-  PROJECT_ROUTE_ERROR: "project_route_error", // 403 + stale project — transient, not a ban
+  RATE_LIMITED: "rate_limited",
+  UNAUTHORIZED: "unauthorized",
+  ACCOUNT_DEACTIVATED: "account_deactivated",
+  FORBIDDEN: "forbidden",
+  SERVER_ERROR: "server_error",
+  QUOTA_EXHAUSTED: "quota_exhausted",
+  PROJECT_ROUTE_ERROR: "project_route_error",
+  CONTEXT_OVERFLOW: "context_overflow",
+  OAUTH_INVALID_TOKEN: "oauth_invalid_token",
+  EMPTY_CONTENT: "empty_content",
 };
 
 >>>>>>> Stashed changes

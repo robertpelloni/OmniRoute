@@ -237,3 +237,35 @@ export function findLargerContextModel(
 
   return bestModel;
 }
+
+/**
+ * Find a model with larger context window from a list of candidate models.
+ * Uses models.dev synced capabilities to compare context limits.
+ */
+export function findLargerContextModel(
+  currentModel: string,
+  availableModels: string[]
+): string | null {
+  const currentParsed = parseModel(currentModel);
+  const currentProvider = currentParsed.provider || currentParsed.providerAlias || "unknown";
+  const currentModelId = currentParsed.model || currentModel;
+  const currentLimit = getModelContextLimit(currentProvider, currentModelId) ?? 0;
+
+  let bestModel: string | null = null;
+  let bestLimit = currentLimit;
+
+  for (const candidate of availableModels) {
+    if (candidate === currentModel) continue;
+    const parsed = parseModel(candidate);
+    const provider = parsed.provider || parsed.providerAlias || "unknown";
+    const modelId = parsed.model || candidate;
+    const limit = getModelContextLimit(provider, modelId) ?? 0;
+
+    if (limit > bestLimit) {
+      bestLimit = limit;
+      bestModel = candidate;
+    }
+  }
+
+  return bestModel;
+}

@@ -110,9 +110,9 @@ test("buildClaudeCodeCompatibleRequest keeps prior role history while dropping t
   assert.deepEqual(payload.messages[2].content.at(-1).cache_control, { type: "ephemeral" });
   assert.equal(payload.system.length, 4);
   assert.equal(payload.system.at(-1).text, "sys");
-  assert.deepEqual(payload.system[1].cache_control, { type: "ephemeral", ttl: "1h" });
-  assert.deepEqual(payload.system[2].cache_control, { type: "ephemeral", ttl: "1h" });
-  assert.deepEqual(payload.system[3].cache_control, { type: "ephemeral", ttl: "1h" });
+  assert.equal(payload.system[1].cache_control, undefined);
+  assert.equal(payload.system[2].cache_control, undefined);
+  assert.equal(payload.system[3].cache_control, undefined);
   assert.equal(payload.tools.length, 1);
   const { cache_control, ...toolWithoutCacheControl } = payload.tools[0];
   assert.deepEqual(toolWithoutCacheControl, {
@@ -727,9 +727,7 @@ test("handleChatCore preserves client cache markers for Claude Code requests to 
     type: "ephemeral",
 <<<<<<< HEAD
   });
-  assert.deepEqual(calls[0].body.messages[2].content[0].cache_control, {
-    type: "ephemeral",
-  });
+  assert.equal(calls[0].body.messages[2].content[0].cache_control, undefined);
   assert.deepEqual(calls[0].body.tools[0].cache_control, {
     type: "ephemeral",
     ttl: "1h",
