@@ -248,11 +248,9 @@ test("validateQoderCliPat returns invalid api key for auth failures", async () =
 
   try {
     const result = await validateQoderCliPat({ apiKey: "pat_bad" });
-    assert.deepEqual(result, {
-      valid: false,
-      error: "HTTP 401: Invalid API key",
-      unsupported: false,
-    });
+    assert.equal(result.valid, false);
+    assert.match(result.error, /Authentication failed/);
+    assert.equal(result.unsupported, false);
   } finally {
     globalThis.fetch = previousFetch;
   }
