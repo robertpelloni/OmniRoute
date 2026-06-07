@@ -3149,6 +3149,12 @@ export async function handleChatCore({
     upstreamErrorParsed = true;
 >>>>>>> origin/feat/go-port-and-ui-improvements-13710034216498711139
   }
+  // We need to peek at the error text if it's 400 for Qwen
+  let upstreamErrorParsed = false;
+  let parsedStatusCode = providerResponse.status;
+  let parsedMessage = "";
+  let parsedRetryAfterMs: number | null = null;
+  let upstreamErrorBody: unknown = null;
 
   const isQwenExpiredError =
     provider === "qwen" &&
