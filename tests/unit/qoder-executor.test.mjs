@@ -96,6 +96,8 @@ test("QoderExecutor: buildHeaders only keeps generic JSON and stream headers", (
   const executor = new QoderExecutor();
   assert.deepEqual(executor.buildHeaders({ apiKey: "pat" }, true), {
     "Content-Type": "application/json",
+    "User-Agent": "Qoder-Cli",
+    Authorization: "Bearer pat",
     Accept: "text/event-stream",
   });
   assert.deepEqual(executor.buildHeaders({ apiKey: "pat" }, false), {
@@ -241,26 +243,34 @@ test("validateQoderCliPat succeeds when the validation endpoint returns OK", asy
 });
 
 test("validateQoderCliPat returns invalid api key for auth failures", async () => {
-  const prev = process.env.CLI_QODER_BIN;
-  const tmpDir = createTempDir();
-  const script = createQoderCliScript(tmpDir, "qodercli-bad", "invalid");
-  process.env.CLI_QODER_BIN = script;
+  const previousFetch = globalThis.fetch;
+  globalThis.fetch = async () => new Response("Invalid API key", { status: 401 });
 
   try {
     const result = await validateQoderCliPat({ apiKey: "pat_bad" });
-    assert.deepEqual(result, { valid: false, error: "Invalid API key", unsupported: false });
+    assert.deepEqual(result, {
+      valid: false,
+      error: "HTTP 401: Invalid API key",
+      unsupported: false,
+    });
   } finally {
-    if (prev === undefined) delete process.env.CLI_QODER_BIN;
-    else process.env.CLI_QODER_BIN = prev;
-    fs.rmSync(tmpDir, { recursive: true, force: true });
+    globalThis.fetch = previousFetch;
   }
 });
 
 test("QoderExecutor: non-stream calls return an OpenAI-compatible completion payload", async () => {
-  const prev = process.env.CLI_QODER_BIN;
-  const tmpDir = createTempDir();
-  const script = createQoderCliScript(tmpDir, "qodercli-exec", "success");
-  process.env.CLI_QODER_BIN = script;
+  const previousFetch = globalThis.fetch;
+  globalThis.fetch = async () =>
+    new Response(
+      JSON.stringify({
+        id: "chatcmpl-test",
+        object: "chat.completion",
+        choices: [
+          { index: 0, message: { role: "assistant", content: "OK" }, finish_reason: "stop" },
+        ],
+      }),
+      { status: 200, headers: { "Content-Type": "application/json" } }
+    );
 
   try {
     const executor = new QoderExecutor();
@@ -358,10 +368,17 @@ test("QoderExecutor: non-stream calls target DashScope and map alias models", as
 });
 
 test("QoderExecutor: stream calls emit OpenAI-compatible SSE chunks", async () => {
-  const prev = process.env.CLI_QODER_BIN;
-  const tmpDir = createTempDir();
-  const script = createQoderCliScript(tmpDir, "qodercli-stream", "success");
-  process.env.CLI_QODER_BIN = script;
+  const previousFetch = globalThis.fetch;
+  globalThis.fetch = async () =>
+    new Response(
+      'data: {"id":"x","object":"chat.completion.chunk","choices":[{"index":0,"delta":{"role":"assistant","content":"O"},"finish_reason":null}]}\n\n' +
+        'data: {"id":"x","object":"chat.completion.chunk","choices":[{"index":0,"delta":{"content":"K"},"finish_reason":null}]}\n\n' +
+        "data: [DONE]\n\n",
+      {
+        status: 200,
+        headers: { "Content-Type": "text/event-stream" },
+      }
+    );
 
   try {
     const executor = new QoderExecutor();
