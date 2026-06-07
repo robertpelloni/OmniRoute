@@ -301,7 +301,40 @@ async function checkConnection(conn) {
   if (!conn.isActive) return;
   if (!conn.refreshToken || typeof conn.refreshToken !== "string") return;
 
+  const nowMs = Date.now();
+
+  // Proactive pre-expiry check (#631): if token is about to expire, refresh immediately.
+  // When a connection still has a healthy access token, avoid forcing a refresh purely
+  // because the interval elapsed. Some providers may reject older refresh tokens while
+  // the current access token remains valid, and treating that as a hard auth failure
+  // produces false "re-authenticate" warnings.
+  const TOKEN_EXPIRY_BUFFER = 5 * 60 * 1000; // 5 minutes
+  const tokenExpiresAtMs = conn.tokenExpiresAt ? new Date(conn.tokenExpiresAt).getTime() : 0;
+  const hasHealthyAccessToken =
+    tokenExpiresAtMs > 0 && Number.isFinite(tokenExpiresAtMs) && tokenExpiresAtMs - nowMs > TOKEN_EXPIRY_BUFFER;
+  const isAboutToExpire =
+    tokenExpiresAtMs > 0 && Number.isFinite(tokenExpiresAtMs) && tokenExpiresAtMs - nowMs <= TOKEN_EXPIRY_BUFFER;
+
   // Retry expired connections with exponential backoff up to EXPIRED_RETRY_MAX times.
+  if (conn.testStatus === "expired" && hasHealthyAccessToken) {
+    const now = new Date().toISOString();
+    await updateProviderConnection(conn.id, {
+      lastHealthCheckAt: now,
+      testStatus: "active",
+      lastError: null,
+      lastErrorAt: null,
+      lastErrorType: null,
+      lastErrorSource: null,
+      errorCode: null,
+      expiredRetryCount: null,
+      expiredRetryAt: null,
+    });
+    log(
+      `${LOG_PREFIX} ✓ ${conn.provider}/${conn.name || conn.email || conn.id} marked active (access token still valid)`
+    );
+    return;
+  }
+
   if (conn.testStatus === "expired") {
     const retryCount = conn.expiredRetryCount ?? 0;
     if (retryCount >= EXPIRED_RETRY_MAX) return;
@@ -352,8 +385,8 @@ async function checkConnection(conn) {
   const tokenExpiresAt = conn.tokenExpiresAt ? new Date(conn.tokenExpiresAt).getTime() : 0;
   const isAboutToExpire = tokenExpiresAt > 0 && tokenExpiresAt - Date.now() < TOKEN_EXPIRY_BUFFER;
 
-  // Not yet due: skip if (a) interval hasn't elapsed AND (b) token is not about to expire
-  if (Date.now() - lastCheck < intervalMs && !isAboutToExpire) return;
+  // Not yet due: skip if interval hasn't elapsed and the token isn't near expiry.
+  if (nowMs - lastCheck < intervalMs && !isAboutToExpire) return;
 
   const reason = isAboutToExpire ? "token expiring soon" : `interval: ${intervalMin}min`;
   log(
